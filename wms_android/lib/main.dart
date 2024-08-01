@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'custom_appbar.dart';
 import 'custom_drawer.dart';
-import 'SSINDT01/SSINDT01_card.dart';
+// import 'SSINDT01/SSINDT01_card.dart';
 import 'SSFGDT04/SSFGDT04_main.dart';
+
 // import 'SSINDT01_CARD.dart';
 // import 'drawer.dart'; // Import the new drawer file
 // import 'appbar.dart'; // Import the custom AppBar
+
+import 'SSINDT01/cardTEST.dart';
 
 void main() {
   runApp(const MyApp());
@@ -57,7 +60,7 @@ class MyHomePage extends StatelessWidget {
               ListTile(
                 title: const Text('รับจากการสั่งซื้อ'),
                 onTap: () {
-                  _navigateToPage(context, const Ssindt01Card());
+                  _navigateToPage(context,  CardTest());
                 },
               ),
               ListTile(
