@@ -1,88 +1,277 @@
 import 'package:flutter/material.dart';
-// import 'package:wms_android/custom_appbar.dart';
-// import 'package:wms_android/custom_drawer.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:intl/intl.dart';
 
-class Ssindt01Form extends StatefulWidget {
-  // final Map<String, dynamic> datas;
-  // const Ssindt01Form({Key? key, required this.poReceiveNo}) : super(key: key);
-  // const Ssindt01Form({Key? key) : super(key: key);
-  const Ssindt01Form({Key? key}) : super(key: key);
+class form extends StatefulWidget {
+  final String poReceiveNo;
+
+  form({required this.poReceiveNo});
+
   @override
-  _Ssindt01FormState createState() => _Ssindt01FormState();
+  _FormPageState createState() => _FormPageState();
 }
 
-class _Ssindt01FormState extends State<Ssindt01Form> {
-  
+class _FormPageState extends State<form> {
+  String poNo = '';
+  String receiveNo = '';
+  String erpReceiveNo = '';
+  String pkWareCode = '';
+  String crDate = '';
+  String poTypeCode = '';
+  String receiveDate = '';
+  String wareCode = '';
+  String crBy = '';
+  String invoiceNo = '';
+  String invoiceDate = '';
+  String seller = '';
+  String poRemark = '';
+  String ouCode = '';
+  String updBy = '';
+  String updDate = '';
+
+  final TextEditingController poNoController = TextEditingController();
+  final TextEditingController receiveNoController = TextEditingController();
+  final TextEditingController erpReceiveNoController = TextEditingController();
+  final TextEditingController pkWareCodeController = TextEditingController();
+  final TextEditingController poTypeCodeController = TextEditingController();
+  final TextEditingController receiveDateController = TextEditingController();
+  final TextEditingController wareCodeController = TextEditingController();
+  final TextEditingController crByController = TextEditingController();
+  final TextEditingController invoiceNoController = TextEditingController();
+  final TextEditingController invoiceDateController = TextEditingController();
+  final TextEditingController sellerController = TextEditingController();
+  final TextEditingController poRemarkController = TextEditingController();
+  final TextEditingController ouCodeController = TextEditingController();
+  final TextEditingController updByController = TextEditingController();
+  final TextEditingController updDateController = TextEditingController();
+  final TextEditingController crDateController = TextEditingController();
+
+  final DateFormat inputFormat = DateFormat("dd/MM/yyyy HH:mm:ss");
+  final DateFormat displayFormat = DateFormat("dd/MM/yyyy");
+
+  @override
+  void initState() {
+    super.initState();
+    fetchReceiveHeadData(widget.poReceiveNo);
+  }
+
+  @override
+  void dispose() {
+    poNoController.dispose();
+    receiveNoController.dispose();
+    erpReceiveNoController.dispose();
+    pkWareCodeController.dispose();
+    poTypeCodeController.dispose();
+    receiveDateController.dispose();
+    wareCodeController.dispose();
+    crByController.dispose();
+    invoiceNoController.dispose();
+    invoiceDateController.dispose();
+    sellerController.dispose();
+    poRemarkController.dispose();
+    ouCodeController.dispose();
+    updByController.dispose();
+    updDateController.dispose();
+    crDateController.dispose();
+    super.dispose();
+  }
+
+  Future<void> fetchReceiveHeadData(String receiveNo) async {
+    final String apiUrl =
+        "http://172.16.0.82:8888/apex/wms/c/formtest/$receiveNo";
+
+    final Map<String, String> queryParams = {
+      'RECEIVE_NO': receiveNo,
+    };
+
+    final Uri uri = Uri.parse(apiUrl).replace(queryParameters: queryParams);
+
+    try {
+      final http.Response response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> items = data['items'];
+
+        if (items.isNotEmpty) {
+          final Map<String, dynamic> item = items[0];
+
+          setState(() {
+            poNo = item['po_no'] ?? '';
+            receiveNo = item['receive_no'] ?? '';
+            erpReceiveNo = item['erp_receive_no'] ?? '';
+            pkWareCode = item['pk_ware_code'] ?? '';
+            crDate = item['cr_date'] ?? '';
+            poTypeCode = item['po_type_code'] ?? '';
+            receiveDate = item['receive_date'] ?? '';
+            wareCode = item['ware_code'] ?? '';
+            crBy = item['cr_by'] ?? '';
+            invoiceNo = item['invoice_no'] ?? '';
+            invoiceDate = item['invoice_date'] ?? '';
+            seller = item['seller'] ?? '';
+            poRemark = item['po_remark'] ?? '';
+            ouCode = item['ou_code'] ?? '';
+            updBy = item['upd_by'] ?? '';
+            updDate = item['upd_date'] ?? '';
+
+            poNoController.text = poNo;
+            receiveNoController.text = receiveNo;
+            erpReceiveNoController.text = erpReceiveNo;
+            pkWareCodeController.text = pkWareCode;
+            crDateController.text = crDate.isNotEmpty
+                ? displayFormat.format(inputFormat.parse(crDate))
+                : '';
+            poTypeCodeController.text = poTypeCode;
+            receiveDateController.text = receiveDate;
+            wareCodeController.text = wareCode;
+            crByController.text = crBy;
+            invoiceNoController.text = invoiceNo;
+            invoiceDateController.text = invoiceDate;
+            sellerController.text = seller;
+            poRemarkController.text = poRemark;
+            ouCodeController.text = ouCode;
+            updByController.text = updBy;
+            updDateController.text = updDate;
+          });
+        } else {
+          print('No items found.');
+        }
+      } else {
+        print('Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime initialDate = DateTime.now();
+    if (crDate.isNotEmpty) {
+      try {
+        initialDate = displayFormat.parse(crDate);
+      } catch (e) {
+        print('Error parsing date: $e');
+      }
+    }
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        crDate = displayFormat.format(picked);
+        crDateController.text = crDate;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // final TextEditingController _firstNameController = TextEditingController(text: datas['po_no']);
-    // final TextEditingController _lastNameController = TextEditingController(text: datas['l_name']);
-    // final TextEditingController _fullNameController = TextEditingController(text: datas['full_name']);
-    // final TextEditingController _nickNameController = TextEditingController(text: datas['nick_name']);
-    // final TextEditingController _ageController = TextEditingController(text: datas['age'].toString());
-    // final TextEditingController _companyController = TextEditingController(text: datas['company']);
-    // final TextEditingController _positionController = TextEditingController(text: datas['position']);
-    // final TextEditingController _salaryController = TextEditingController(text: datas['salary'].toStringAsFixed(2));
-    // final TextEditingController _stockController = TextEditingController(text: datas['stock'].toStringAsFixed(2));
-    // final TextEditingController _bonusController = TextEditingController(text: datas['bonus'].toStringAsFixed(2));
-    // final TextEditingController _annualExpensesController = TextEditingController(text: datas['annual_expenses'].toStringAsFixed(2));
     return Scaffold(
-      // appBar: const CustomAppBar(),
-      // drawer: const CustomDrawer(),
-      body: Padding(
+      appBar: AppBar(
+        title: Text('Form Page'),
+      ),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        // child: Column(
-          // children: [
-          //   TextField(
-          //           controller: _po_noController,
-          //           decoration: const InputDecoration(labelText: 'เลขที่อ้างอิง (PO)'),
-          //         ),
-          //   TextField(
-          //           controller: _firstNameController,
-          //           decoration: const InputDecoration(labelText: 'ประเภทการรับ'),
-          //         ),
-          //   TextField(
-          //           controller: _firstNameController,
-          //           decoration: const InputDecoration(labelText: 'วันที่ตรวจรับ'),
-          //         ),
-          //   TextField(
-          //           controller: _firstNameController,
-          //           decoration: const InputDecoration(labelText: 'เลขที่ใบแจ้งหนี้'),
-          //         ),
-          //   TextField(
-          //           controller: _firstNameController,
-          //           decoration: const InputDecoration(labelText: 'วันที่ใบแจ้งหนี้'),
-          //         ),
-          //   TextField(
-          //           controller: _firstNameController,
-          //           decoration: const InputDecoration(labelText: 'หมายเหตุ'),
-          //         ),
-          //   TextField(
-          //           controller: _firstNameController,
-          //           decoration: const InputDecoration(labelText: 'ผู้ขาย'),
-          //         ),
-          //   TextField(
-          //           controller: _firstNameController,
-          //           decoration: const InputDecoration(labelText: 'เลขที่เอกสาร WMS'),
-          //         ),
-          //   TextField(
-          //           controller: _firstNameController,
-          //           decoration: const InputDecoration(labelText: 'รับเข้าคลัง'),
-          //         ),
-          //   TextField(
-          //           controller: _firstNameController,
-          //           decoration: const InputDecoration(labelText: 'เลขที่ใบรับคลัง'),
-          //         ),
-          //   TextField(
-          //           controller: _firstNameController,
-          //           decoration: const InputDecoration(labelText: 'ผู้รับ'),
-          //         ),
-          //   TextField(
-          //           controller: _firstNameController,
-          //           decoration: const InputDecoration(labelText: 'วันที่บันทึก'),
-          //         ),
-          // ],
-        // ),
+        child: Column(
+          children: [
+            TextField(
+              controller: poNoController,
+              decoration: InputDecoration(labelText: 'PO No'),
+            ),
+            TextField(
+              controller: receiveNoController,
+              decoration: InputDecoration(labelText: 'Receive No'),
+              readOnly: true,
+            ),
+            TextField(
+              controller: erpReceiveNoController,
+              decoration: InputDecoration(labelText: 'ERP Receive No'),
+            ),
+            TextField(
+              controller: pkWareCodeController,
+              decoration: InputDecoration(labelText: 'PK Ware Code'),
+            ),
+            GestureDetector(
+              onTap: () => _selectDate(context),
+              child: AbsorbPointer(
+                child: TextField(
+                  controller: crDateController,
+                  decoration: InputDecoration(labelText: 'CR Date'),
+                ),
+              ),
+            ),
+            TextField(
+              controller: poTypeCodeController,
+              decoration: InputDecoration(labelText: 'PO Type Code'),
+            ),
+            TextField(
+              controller: receiveDateController,
+              decoration: InputDecoration(labelText: 'Receive Date'),
+            ),
+            TextField(
+              controller: wareCodeController,
+              decoration: InputDecoration(
+                labelText: 'Ware Code',
+                filled: true,
+                fillColor: Colors.grey,
+              ),
+              readOnly: true,
+            ),
+            TextField(
+              controller: crByController,
+              decoration: InputDecoration(labelText: 'CR By'),
+            ),
+            TextField(
+              controller: invoiceNoController,
+              decoration: InputDecoration(labelText: 'Invoice No'),
+            ),
+            TextField(
+              controller: invoiceDateController,
+              decoration: InputDecoration(labelText: 'Invoice Date'),
+            ),
+            TextField(
+              controller: sellerController,
+              decoration: InputDecoration(
+                labelText: 'Seller',
+                filled: true,
+                fillColor: Colors.grey,
+              ),
+              readOnly: true,
+            ),
+            TextField(
+              controller: poRemarkController,
+              decoration: InputDecoration(labelText: 'PO Remark'),
+            ),
+            TextField(
+              controller: ouCodeController,
+              decoration: InputDecoration(labelText: 'OU Code'),
+            ),
+            TextField(
+              controller: updByController,
+              decoration: InputDecoration(
+                labelText: 'Upd By',
+                filled: true,
+                fillColor: Colors.grey,
+              ),
+              readOnly: true,
+            ),
+            TextField(
+              controller: updDateController,
+              decoration: InputDecoration(
+                labelText: 'Upd Date',
+                filled: true,
+                fillColor: Colors.grey,
+              ),
+              readOnly: true,
+            ),
+          ],
+        ),
       ),
     );
   }
