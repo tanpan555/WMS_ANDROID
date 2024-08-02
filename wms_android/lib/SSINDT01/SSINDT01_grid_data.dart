@@ -3,6 +3,7 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'SSINDT01_POPUP.dart';
 
 class Ssindt01GridData extends StatefulWidget {
   final Map<String, dynamic> datas;
@@ -71,11 +72,7 @@ class _Ssindt01GridDataState extends State<Ssindt01GridData> {
                             255, 255, 0, 0), // กำหนดสีพื้นหลังเป็นสีแดง
                       ),
                       onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) => LotDetail()),
-                        // );
+                        showLotDialog(context);
                       },
                       child: const Text(
                         'Lot',
