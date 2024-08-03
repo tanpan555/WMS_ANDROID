@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:wms_android/custom_appbar.dart';
-import 'package:wms_android/custom_drawer.dart';
-// import 'package:wms/form.dart';
 import 'SSINDT01_form.dart';
+// import 'package:wms/form.dart';
 
-class Ssindt01Card extends StatefulWidget {
-  const Ssindt01Card({Key? key}) : super(key: key);
+class CardTest extends StatefulWidget {
   @override
-  _Ssindt01CardState createState() => _Ssindt01CardState();
+  _CardTestState createState() => _CardTestState();
 }
 
-class _Ssindt01CardState extends State<Ssindt01Card> {
+class _CardTestState extends State<CardTest> {
   List<dynamic> data = [];
   List<dynamic> displayedData = [];
   bool isLoading = true;
@@ -191,11 +188,9 @@ class _Ssindt01CardState extends State<Ssindt01Card> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
-      drawer: const CustomDrawer(),
-      // appBar: AppBar(
-      //   title: Text('Warehouse Codes'),
-      // ),
+      appBar: AppBar(
+        title: Text('Warehouse Codes'),
+      ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : errorMessage.isNotEmpty
@@ -325,6 +320,16 @@ class _Ssindt01CardState extends State<Ssindt01Card> {
                                             'receive no: ${item['receive_no'] ?? 'No item'}\n'
                                             'Warehouse: ${item['warehouse'] ?? 'No item'}\n'),
                                         onTap: () async {
+                                          if (selectedwhCode == null) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                  'Please select a warehouse.'),
+                                            ),
+                                          );
+                                          return;
+                                        }
                                           final pPoNo = item['po_no'] ?? '';
                                           final vReceiveNo =
                                               item['receive_no'] ?? 'null';
@@ -336,51 +341,11 @@ class _Ssindt01CardState extends State<Ssindt01Card> {
                                                 pPoNo,
                                                 vReceiveNo,
                                                 selectedwhCode ?? '');
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: Text('PO Status'),
-                                                  content: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                          'Status: ${poStatus ?? 'No status available'}'),
-                                                      SizedBox(height: 8.0),
-                                                      Text(
-                                                          'Message: ${poMessage ?? 'No message available'}'),
-                                                      Text(
-                                                          'Step: ${poStep ?? 'No message available'}'),
-                                                      Text(
-                                                          'po_receive_no: ${poReceiveNo ?? 'No message available'}'),
-                                                    ],
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                      child: Text('OK'),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        Navigator.of(context)
-                                                            .push(
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                form(
-                                                                    poReceiveNo:
-                                                                        poReceiveNo ??
-                                                                            ''),
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
+                                            Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => form(poReceiveNo: poReceiveNo ?? ''),
+      ),
+    );
                                           }
                                           if (poStatus == '1' &&
                                               poStep == '9') {
@@ -474,45 +439,3 @@ class _Ssindt01CardState extends State<Ssindt01Card> {
     );
   }
 }
-
-// import 'package:flutter/material.dart';
-// import 'package:wms_android/custom_appbar.dart';
-// import 'package:wms_android/custom_drawer.dart';
-// import 'SSINDT01_form.dart';
-
-// class Ssindt01Card extends StatefulWidget {
-//   const Ssindt01Card({Key? key}) : super(key: key);
-
-//   @override
-//   _Ssindt01CardState createState() => _Ssindt01CardState();
-// }
-
-// class _Ssindt01CardState extends State<Ssindt01Card> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: const CustomAppBar(),
-//       drawer: const CustomDrawer(),
-//       body: Center(
-//         child: ElevatedButton(
-//           style: ElevatedButton.styleFrom(
-//             backgroundColor:
-//                 Color.fromARGB(255, 68, 0, 255), // กำหนดสีพื้นหลังเป็นสีแดง
-//           ),
-//           onPressed: () {
-//             Navigator.push(
-//               context,
-//               MaterialPageRoute(builder: (context) => const Ssindt01Form()),
-//             );
-//           },
-//           child: const Text(
-//             'Form',
-//             style: TextStyle(
-//               color: Colors.white, // กำหนดสีข้อความเป็นสีขาว
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

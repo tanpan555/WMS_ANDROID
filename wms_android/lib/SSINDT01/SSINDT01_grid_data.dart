@@ -6,9 +6,10 @@ import 'dart:convert';
 import 'SSINDT01_POPUP.dart';
 
 class Ssindt01GridData extends StatefulWidget {
-  final Map<String, dynamic> datas;
+  final String poReceiveNo;
+  final String? poPONO;
 
-  const Ssindt01GridData({super.key, required this.datas});
+  const Ssindt01GridData({super.key, required this.poReceiveNo, this.poPONO});
 
   @override
   _Ssindt01GridDataState createState() => _Ssindt01GridDataState();
@@ -17,15 +18,22 @@ class Ssindt01GridData extends StatefulWidget {
 class _Ssindt01GridDataState extends State<Ssindt01GridData> {
   late String P_ERP_OU_CODE;
   late String P_PREV_REC_NO;
+  late String P_OU_CODE;
+  late String P_REC_NO;
+  late String P_MODAL_LOT_REC_SEQ;
   String? itemDescription;
   String? code_Row;
 
   @override
   void initState() {
     super.initState();
-    // รับค่า datas จาก widget
-    P_ERP_OU_CODE = widget.datas['receiveNo'] ?? '';
-    P_PREV_REC_NO = widget.datas['receiveNo2'] ?? '';
+    // กำหนดค่าจาก widget
+    P_ERP_OU_CODE = '000'; // ตั้งค่า P_ERP_OU_CODE ตามที่ต้องการ
+    P_PREV_REC_NO = widget.poReceiveNo;
+    // กำหนดค่าเริ่มต้นให้ P_PO_NO
+    P_OU_CODE = '';
+    P_REC_NO = '';
+    P_MODAL_LOT_REC_SEQ = '';
     // เรียกใช้ฟังก์ชันเพื่อดึงข้อมูล
     _fetchData();
   }
@@ -33,9 +41,8 @@ class _Ssindt01GridDataState extends State<Ssindt01GridData> {
   List<DataRow> _dataRows = [];
 
   Future<void> _fetchData() async {
-    // URL ของ API ที่ต้องการเรียก
     final String apiUrl =
-        'http://172.16.0.82:8888/apex/wms/c/get_data_grid/$P_ERP_OU_CODE/$P_PREV_REC_NO';
+        'http://172.16.0.82:8888/apex/wms/c/get_data_grid/$P_ERP_OU_CODE/$P_PREV_REC_NO';;
 
     try {
       final response = await http.get(
@@ -48,36 +55,37 @@ class _Ssindt01GridDataState extends State<Ssindt01GridData> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         print('Received data: $data, type: ${data.runtimeType}');
+        print('P_OU_CODE: $P_ERP_OU_CODE type: ${P_ERP_OU_CODE.runtimeType}');
+        print('P_OU_CODE: $P_PREV_REC_NO type: ${P_PREV_REC_NO.runtimeType}');
+        // print('P_ERP_OU_CODE : $P_ERP_OU_CODE')
 
         if (data is Map && data.containsKey('items')) {
           final List<dynamic> items = data['items'];
           print('Items data: $items, type: ${items.runtimeType}');
 
           if (items is List && items.isNotEmpty) {
-            // สมมติว่า itemDescription มาจาก item แรกในรายการ
             itemDescription = items[0]['item_desc'] ?? 'ไม่มีข้อมูล';
-            code_Row = items[0]['rowid'] ?? 'rowID : มันไม่มา!!!'; // ดึงค่า rowid จากรายการแรก
+            code_Row = items[0]['rowid'] ?? 'rowID : มันไม่มา!!!';
             List<DataRow> fetchedRows = items.map<DataRow>((item) {
               return DataRow(
                 cells: [
                   DataCell(
                     Text(item['item'] ?? ''),
-                    onTap: () => _updateItemDescription(item), // เพิ่ม onTap เพื่อเรียกฟังก์ชัน _updateItemDescription
+                    onTap: () => _updateItemDescription(item),
                   ),
                   DataCell(Text(item['receive_qty'] ?? '')),
                   DataCell(
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(
-                            255, 255, 0, 0), // กำหนดสีพื้นหลังเป็นสีแดง
+                        backgroundColor: Color.fromARGB(255, 255, 0, 0),
                       ),
                       onPressed: () {
-                        showLotDialog(context);
+                        _dataPopUp(item);
                       },
                       child: const Text(
                         'Lot',
                         style: TextStyle(
-                          color: Colors.white, // กำหนดสีข้อความเป็นสีขาว
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -86,7 +94,6 @@ class _Ssindt01GridDataState extends State<Ssindt01GridData> {
                   DataCell(Text(item['locator_det'] ?? '')),
                   DataCell(Text(item['lot_total'] ?? '')),
                   DataCell(Text(item['uom'] ?? '')),
-                  // Add more cells as needed
                 ],
               );
             }).toList();
@@ -117,8 +124,25 @@ class _Ssindt01GridDataState extends State<Ssindt01GridData> {
   void _updateItemDescription(Map<String, dynamic> item) {
     setState(() {
       itemDescription = item['item_desc'] ?? 'ไม่มีข้อมูล';
-      code_Row = item['rowid'] ?? 'rowID : มันไม่มา!!!'; // อัพเดต code_Row ด้วย
+      code_Row = item['rowid'] ?? 'rowID : มันไม่มา!!!';
     });
+  }
+
+  void _dataPopUp(Map<String, dynamic> item) {
+    setState(() {
+      P_OU_CODE = item['ou_code']?.toString() ?? '';
+      P_REC_NO = item['receive_no']?.toString() ?? '';
+      P_MODAL_LOT_REC_SEQ = item['rec_seq']?.toString() ?? ''; // แปลง rec_seq เป็น String
+    });
+
+    showLotDialog(context, datas: {
+      'P_OU_CODE': P_OU_CODE,
+      'P_REC_NO': P_REC_NO,
+      'P_MODAL_LOT_REC_SEQ': P_MODAL_LOT_REC_SEQ,
+    });
+    print('P_OU_CODE: $P_OU_CODE type: ${P_OU_CODE.runtimeType}');
+    print('P_REC_NO: $P_REC_NO type: ${P_REC_NO.runtimeType}');
+    print('P_MODAL_LOT_REC_SEQ: $P_MODAL_LOT_REC_SEQ type: ${P_MODAL_LOT_REC_SEQ.runtimeType}');
   }
 
   @override
@@ -130,94 +154,83 @@ class _Ssindt01GridDataState extends State<Ssindt01GridData> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Container(
-              child: Row(
-                children: [
-                  Container(
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 69, 53, 193),
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        'ยกเลิก',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
+            Row(
+              children: [
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 69, 53, 193),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'ยกเลิก',
+                    style: TextStyle(
+                      color: Colors.white,
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.all(5.0),
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 69, 53, 193),
-                      ),
-                      onPressed: () {
-                        _fetchData(); // กดปุ่มดึง PO และอัพเดต DataTable
-                      },
-                      child: const Text(
-                        'ดึงPO',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
+                ),
+                SizedBox(width: 5.0),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 69, 53, 193),
+                  ),
+                  onPressed: () {
+                    _fetchData();
+                  },
+                  child: const Text(
+                    'ดึงPO',
+                    style: TextStyle(
+                      color: Colors.white,
                     ),
                   ),
-                  Container(
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 69, 53, 193),
-                      ),
-                      onPressed: () {
-                        // กดปุ่มลบ PO
-                      },
-                      child: const Text(
-                        'ลบPO',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
+                ),
+                SizedBox(width: 5.0),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 69, 53, 193),
+                  ),
+                  onPressed: () {
+                    // กดปุ่มลบ PO
+                  },
+                  child: const Text(
+                    'ลบPO',
+                    style: TextStyle(
+                      color: Colors.white,
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.all(5.0),
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 69, 53, 193),
-                      ),
-                      onPressed: () {
-                        // กดปุ่มเพิ่ม Tag
-                      },
-                      child: const Text(
-                        'เพิ่มTag',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
+                ),
+                SizedBox(width: 5.0),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 69, 53, 193),
+                  ),
+                  onPressed: () {
+                    // กดปุ่มเพิ่ม Tag
+                  },
+                  child: const Text(
+                    'เพิ่มTag',
+                    style: TextStyle(
+                      color: Colors.white,
                     ),
                   ),
-                  Spacer(),
-                  Container(
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 69, 53, 193),
-                      ),
-                      onPressed: () {
-                        // กดปุ่มถัดไป
-                      },
-                      child: const Text(
-                        'ถัดไป',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
+                ),
+                Spacer(),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 69, 53, 193),
+                  ),
+                  onPressed: () {
+                    // กดปุ่มถัดไป
+                  },
+                  child: const Text(
+                    'ถัดไป',
+                    style: TextStyle(
+                      color: Colors.white,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             Container(
               margin: EdgeInsets.all(5.0),
@@ -230,7 +243,7 @@ class _Ssindt01GridDataState extends State<Ssindt01GridData> {
               ),
               child: Center(
                 child: Text(
-                  '${widget.datas['receiveNo']}',
+                  '${widget.poPONO ?? ''}',
                   style: TextStyle(
                     fontSize: 26.0,
                     fontWeight: FontWeight.bold,
@@ -261,7 +274,7 @@ class _Ssindt01GridDataState extends State<Ssindt01GridData> {
                   ),
                   Center(
                     child: Text(
-                      '${widget.datas['receiveNo2']}',
+                      '$P_PREV_REC_NO',
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -288,9 +301,8 @@ class _Ssindt01GridDataState extends State<Ssindt01GridData> {
                     DataColumn(label: Text('Locator')),
                     DataColumn(label: Text('จำนวนรวม')),
                     DataColumn(label: Text('UOM')),
-                    // Add more columns as needed
                   ],
-                  rows: _dataRows, // ใช้ข้อมูลจากตัวแปร _dataRows
+                  rows: _dataRows,
                 ),
               ),
             ),
@@ -310,7 +322,7 @@ class _Ssindt01GridDataState extends State<Ssindt01GridData> {
                   ),
                   Center(
                     child: Text(
-                      itemDescription ?? '', // แสดงข้อมูลที่ดึงมาจาก API
+                      itemDescription ?? '',
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,

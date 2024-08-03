@@ -3,7 +3,7 @@ import 'custom_appbar.dart';
 import 'custom_drawer.dart';
 import 'SSINDT01/SSINDT01_card.dart';
 import 'SSFGDT04/SSFGDT04_main.dart';
-import 'SSINDT01/SSINDT01_grid_data.dart';
+// import 'SSINDT01/SSINDT01_grid_data.dart';
 
 
 void main() {
@@ -59,7 +59,7 @@ class MyHomePage extends StatelessWidget {
               ListTile(
                 title: const Text('รับจากการสั่งซื้อ'),
                 onTap: () {
-                  _navigateToPage(context, const Ssindt01Card());
+                  _navigateToPage(context,  CardTest());
                 },
               ),
               ListTile(
@@ -68,12 +68,12 @@ class MyHomePage extends StatelessWidget {
                   _navigateToPage(context, const Ssfgdt04Main());
                 },
               ),
-              ListTile(
-                title: const Text('Grid !!!!'),
-                onTap: () {
-                  _navigateToPage(context, Ssindt01GridData(datas: {'receiveNo': receiveNo, 'receiveNo2' : receiveNo2}));
-                },
-              ),
+              // ListTile(
+              //   title: const Text('Grid !!!!'),
+              //   onTap: () {
+              //     _navigateToPage(context, Ssindt01GridData(datas: {'receiveNo': receiveNo, 'receiveNo2' : receiveNo2}));
+              //   },
+              // ),
             ],
           ),
         ],
