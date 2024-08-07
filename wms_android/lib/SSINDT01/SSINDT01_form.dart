@@ -180,7 +180,6 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       print('Error: $e');
     }
   }
-  
 
   Future<void> updateForm_REMARK(
       String receiveNo,
