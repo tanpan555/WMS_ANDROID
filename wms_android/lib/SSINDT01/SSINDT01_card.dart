@@ -22,6 +22,7 @@ class _Ssindt01CardState extends State<Ssindt01Card> {
 
   List<dynamic> whCodes = [];
   String? selectedwhCode;
+  
 
   @override
   void initState() {
