@@ -4,7 +4,7 @@ import '../drawer.dart'; // Import the CustomDrawer
 import 'SSINDT01_FROM.dart'; // Import From
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-// import 'package:bs_flutter_card/bs_flutter_card.dart';
+
 
 class Ssindt01Card extends StatefulWidget {
   const Ssindt01Card({super.key});

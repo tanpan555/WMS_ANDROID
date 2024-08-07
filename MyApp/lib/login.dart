@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,41 +11,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _loadCredentials();
-  }
-
-  Future<void> _loadCredentials() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedUsername = prefs.getString('username') ?? '';
-    final savedPassword = prefs.getString('password') ?? '';
-    final rememberUsername = prefs.getBool('rememberUsername') ?? false;
-
-    if (rememberUsername) {
-      setState(() {
-        _usernameController.text = savedUsername;
-        _passwordController.text = savedPassword;
-        _rememberUsername = rememberUsername;
-      });
-    }
-  }
-
-  Future<void> _saveCredentials() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('username', _usernameController.text);
-    await prefs.setString('password', _passwordController.text);
-    await prefs.setBool('rememberUsername', _rememberUsername);
-  }
-
-  Future<void> _clearCredentials() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('username');
-    await prefs.remove('password');
-    await prefs.setBool('rememberUsername', false);
-  }
-
   bool get _isButtonEnabled {
     return _usernameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty;
@@ -57,11 +21,6 @@ class _LoginPageState extends State<LoginPage> {
     final password = _passwordController.text;
 
     if (username == 'SS-STAFF' && password == 'Soft2') {
-      if (_rememberUsername) {
-        _saveCredentials();
-      } else {
-        _clearCredentials();
-      }
       Navigator.pushReplacementNamed(context, '/');
     } else {
       // Clear the password field
