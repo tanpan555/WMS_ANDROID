@@ -4,12 +4,12 @@ import 'dart:convert';
 import 'SSINDT01_form.dart';
 // import 'package:wms/form.dart';
 
-class CardTest extends StatefulWidget {
+class Ssindt01Card extends StatefulWidget {
   @override
-  _CardTestState createState() => _CardTestState();
+  _Ssindt01CardState createState() => _Ssindt01CardState();
 }
 
-class _CardTestState extends State<CardTest> {
+class _Ssindt01CardState extends State<Ssindt01Card> {
   List<dynamic> data = [];
   List<dynamic> displayedData = [];
   bool isLoading = true;
@@ -343,7 +343,7 @@ class _CardTestState extends State<CardTest> {
                                                 selectedwhCode ?? '');
                                             Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => form(poReceiveNo: poReceiveNo ?? ''),
+        builder: (context) => Ssindt01Form(poReceiveNo: poReceiveNo ?? ''),
       ),
     );
                                           }

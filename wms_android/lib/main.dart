@@ -35,8 +35,8 @@ class MyHomePage extends StatelessWidget {
     );
   }
 
-  final String receiveNo = '000';
-  final String receiveNo2 = 'WM-D01-2309199';
+  // final String receiveNo = '000';
+  // final String receiveNo2 = 'WM-D01-2309199';
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class MyHomePage extends StatelessWidget {
         children: [
           ExpansionTile(
             leading: const Icon(
-              Icons.archive_outlined,
+              Icons.inventory_2_outlined,
               color: Colors.black,
             ),
             title: Text(
@@ -57,12 +57,20 @@ class MyHomePage extends StatelessWidget {
             ),
             children: <Widget>[
               ListTile(
+                leading: const Icon(
+                    Icons.arrow_circle_right_outlined
+                    // color: Colors.black,
+                  ),
                 title: const Text('รับจากการสั่งซื้อ'),
                 onTap: () {
-                  _navigateToPage(context,  CardTest());
+                  _navigateToPage(context,   Ssindt01Card());
                 },
               ),
               ListTile(
+                leading: const Icon(
+                    Icons.arrow_circle_right_outlined
+                    // color: Colors.black,
+                  ),
                 title: const Text('รับตรง (ไม่อ้าง PO)'),
                 onTap: () {
                   _navigateToPage(context, const Ssfgdt04Main());

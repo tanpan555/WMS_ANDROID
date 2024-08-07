@@ -39,7 +39,8 @@ class CustomDrawer extends StatelessWidget {
                         Navigator.pop(context);
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => CardTest()), // ลิงค์ไปยัง Page1() จาก page1.dart
+                          MaterialPageRoute(builder: (context) =>  Ssindt01Card()),
+                          // MaterialPageRoute(builder: (context) => const Ssindt01Card()), 
                         );
                       },
                     ),
