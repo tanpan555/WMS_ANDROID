@@ -3,6 +3,8 @@ import 'custom_appbar.dart';
 import 'custom_drawer.dart';
 import 'SSINDT01/SSINDT01_card.dart';
 import 'SSFGDT04/SSFGDT04_main.dart';
+import 'SSINDT01/SSINDT01_grid.dart';
+import 'SSINDT01/SSINDT01_grid_data.dart';
 // import 'SSINDT01/SSINDT01_grid_data.dart';
 
 
@@ -35,8 +37,8 @@ class MyHomePage extends StatelessWidget {
     );
   }
 
-  // final String receiveNo = '000';
-  // final String receiveNo2 = 'WM-D01-2309199';
+  final String poPONO = 'PO-CR0760-0003';
+  final String poReceiveNo = 'WM-D07-2408014';
 
   @override
   Widget build(BuildContext context) {
@@ -76,12 +78,28 @@ class MyHomePage extends StatelessWidget {
                   _navigateToPage(context, const Ssfgdt04Main());
                 },
               ),
-              // ListTile(
-              //   title: const Text('Grid !!!!'),
-              //   onTap: () {
-              //     _navigateToPage(context, Ssindt01GridData(datas: {'receiveNo': receiveNo, 'receiveNo2' : receiveNo2}));
-              //   },
-              // ),
+              ListTile(
+                title: const Text('TESTTTTT'),
+                onTap: () {
+                 Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) =>
+            Ssindt01GridData(poReceiveNo: poReceiveNo, poPONO: poPONO),
+      ),
+    );
+                },
+              ),
+              ListTile(
+                title: const Text('Grid !!!!'),
+                onTap: () {
+                 Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) =>
+            Ssindt01Grid(poReceiveNo: poReceiveNo, poPONO: poPONO),
+      ),
+    );
+                },
+              ),
             ],
           ),
         ],
