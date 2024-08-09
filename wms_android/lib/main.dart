@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'custom_appbar.dart';
 import 'custom_drawer.dart';
-import 'SSINDT01/SSINDT01_card.dart';
+import 'SSINDT01/SSINDT01_card_main.dart';
 import 'SSFGDT04/SSFGDT04_main.dart';
 import 'SSINDT01/SSINDT01_grid.dart';
 import 'SSINDT01/SSINDT01_grid_data.dart';
+import 'test_menu.dart';
 // import 'SSINDT01/SSINDT01_grid_data.dart';
 
 
@@ -65,7 +66,7 @@ class MyHomePage extends StatelessWidget {
                   ),
                 title: const Text('รับจากการสั่งซื้อ'),
                 onTap: () {
-                  _navigateToPage(context,   Ssindt01Card());
+                  _navigateToPage(context,   SSINDT01_MAIN());
                 },
               ),
               ListTile(
@@ -75,7 +76,7 @@ class MyHomePage extends StatelessWidget {
                   ),
                 title: const Text('รับตรง (ไม่อ้าง PO)'),
                 onTap: () {
-                  _navigateToPage(context, const Ssfgdt04Main());
+                  _navigateToPage(context, const SSFGDT04_MAIN());
                 },
               ),
               ListTile(
@@ -96,6 +97,17 @@ class MyHomePage extends StatelessWidget {
       MaterialPageRoute(
         builder: (context) =>
             Ssindt01Grid(poReceiveNo: poReceiveNo, poPONO: poPONO),
+      ),
+    );
+                },
+              ),
+              ListTile(
+                title: const Text('menu LV'),
+                onTap: () {
+                 Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) =>
+            TestMenu_LV_1(),
       ),
     );
                 },

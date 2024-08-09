@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'SSINDT01/SSINDT01_card.dart';
+import 'SSINDT01/SSINDT01_card_main.dart';
 import 'SSFGDT04/SSFGDT04_main.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -39,7 +39,7 @@ class CustomDrawer extends StatelessWidget {
                         Navigator.pop(context);
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) =>  Ssindt01Card()),
+                          MaterialPageRoute(builder: (context) =>  SSINDT01_MAIN()),
                           // MaterialPageRoute(builder: (context) => const Ssindt01Card()), 
                         );
                       },
@@ -50,7 +50,7 @@ class CustomDrawer extends StatelessWidget {
                         Navigator.pop(context);
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Ssfgdt04Main()), // ลิงค์ไปยัง Page1() จาก page1.dart
+                          MaterialPageRoute(builder: (context) => SSFGDT04_MAIN()), // ลิงค์ไปยัง Page1() จาก page1.dart
                         );
                       },
                     ),

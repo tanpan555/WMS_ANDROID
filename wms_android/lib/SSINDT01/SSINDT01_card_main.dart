@@ -5,13 +5,13 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
 import 'SSINDT01_form.dart';
 
-class Ssindt01Card extends StatefulWidget {
+class SSINDT01_MAIN extends StatefulWidget {
   // const Ssindt01Card({super.key});
   @override
-  _Ssindt01CardState createState() => _Ssindt01CardState();
+  _SSINDT01_MAINState createState() => _SSINDT01_MAINState();
 }
 
-class _Ssindt01CardState extends State<Ssindt01Card> {
+class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   List<dynamic> data = [];
   List<dynamic> displayedData = [];
   bool isLoading = true;
