@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
+import 'package:wms/test.dart';
 
 class GridPage extends StatefulWidget {
   final String poReceiveNo;
@@ -22,11 +23,41 @@ class _GridPageState extends State<GridPage> {
     super.initState();
     print('poReceiveNo: ${widget.poReceiveNo}');
     print('poPONO: ${widget.poPONO}');
-    sendGetRequestlineWMS();
+    
+    // sendGetRequestlineWMS();
+
   }
 
   String? poStatus;
   String? poMessage;
+
+    String? poStatusGrid;
+  String? poMessageGrid;
+
+  Future<void> chk_grid() async {
+    try {
+      final response = await http.get(Uri.parse('http://172.16.0.82:8888/apex/wms/c/chk_grid/${widget.poReceiveNo}'));
+  print(widget.poReceiveNo);
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final jsonData = json.decode(responseBody);
+        setState(() {
+          poStatusGrid = jsonData['po_status'];
+          poMessageGrid = jsonData['po_message'];
+        print(response.statusCode);
+        print(jsonData);
+        print(poStatusGrid);
+        print(poMessageGrid);
+
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
 
   Future<void> sendPostRequestlineWMS() async {
     final url = 'http://172.16.0.82:8888/apex/wms/c/get_po_test';
@@ -848,129 +879,159 @@ class _GridPageState extends State<GridPage> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Grid Page'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: sendPostRequestlineWMS,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-              ),
-              child: Text(
-                'ดึงข้อมูล',
-                style: TextStyle(color: Colors.white),
-              ),
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text('Grid Page'),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+            onPressed: sendPostRequestlineWMS,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+            ),
+            child: Text(
+              'ดึงข้อมูล',
+              style: TextStyle(color: Colors.white),
             ),
           ),
-        ],
-      ),
-      body: dataList.isEmpty
-          ? Center(child: Text('No data available'))
-          : SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                border: TableBorder(
-                    verticalInside: BorderSide(
-                        width: 0.1,
-                        color: Colors.black,
-                        style: BorderStyle.solid)),
-                columnSpacing: 12.0,
-                columns: [
-                  DataColumn(label: Text('')),
-                  DataColumn(label: Text('Item')),
-                  DataColumn(label: Text('จำนวนรับ')),
-                  DataColumn(label: Text('ค้างรับ')),
-                  DataColumn(label: Text('Locator')),
-                  DataColumn(label: Text('จำนวนรวม')),
-                  DataColumn(label: Text('UOM')),
-                ],
-                rows: dataList.map((data) {
-                  return DataRow(
-                    cells: [
-                      DataCell(
-                        ElevatedButton(
-                          onPressed: () {
-                            showLotDialog(
-                              context,
-                              data['item']?.toString() ?? '',
-                              data['item_desc']?.toString() ?? '',
-                              data['ou_code']?.toString() ?? '',
+        ),
+      ],
+    ),
+    body: dataList.isEmpty
+        ? Center(child: Text('No data available'))
+        : SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              border: TableBorder(
+                  verticalInside: BorderSide(
+                      width: 0.1,
+                      color: Colors.black,
+                      style: BorderStyle.solid)),
+              columnSpacing: 12.0,
+              columns: [
+                DataColumn(label: Text('')),
+                DataColumn(label: Text('Item')),
+                DataColumn(label: Text('จำนวนรับ')),
+                DataColumn(label: Text('ค้างรับ')),
+                DataColumn(label: Text('Locator')),
+                DataColumn(label: Text('จำนวนรวม')),
+                DataColumn(label: Text('UOM')),
+              ],
+              rows: dataList.map((data) {
+                return DataRow(
+                  cells: [
+                    DataCell(
+                      ElevatedButton(
+                        onPressed: () {
+                          showLotDialog(
+                            context,
+                            data['item']?.toString() ?? '',
+                            data['item_desc']?.toString() ?? '',
+                            data['ou_code']?.toString() ?? '',
+                            data['rec_seq']?.toString() ?? '',
+                          );
+                          getLotList(
+                              widget.poReceiveNo,
                               data['rec_seq']?.toString() ?? '',
-                            );
-                            getLotList(
-                                widget.poReceiveNo,
-                                data['rec_seq']?.toString() ?? '',
-                                data['ou_code']?.toString() ?? '');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.purple,
-                          ),
-                          child: Text('LOT',
-                              style: TextStyle(color: Colors.white)),
+                              data['ou_code']?.toString() ?? '');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.purple,
                         ),
+                        child: Text('LOT',
+                            style: TextStyle(color: Colors.white)),
                       ),
-                      DataCell(
-                        InkWell(
-                          onTap: () => _showDetailsDialog(data),
-                          child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(data['item']?.toString() ?? '')),
-                        ),
+                    ),
+                    DataCell(
+                      InkWell(
+                        onTap: () => _showDetailsDialog(data),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(data['item']?.toString() ?? '')),
                       ),
-                      DataCell(
-                        InkWell(
-                          onTap: () => _showDetailsDialog(data),
-                          child: Align(
-                              alignment: Alignment.centerLeft,
-                              child:
-                                  Text(data['receive_qty']?.toString() ?? '')),
-                        ),
+                    ),
+                    DataCell(
+                      InkWell(
+                        onTap: () => _showDetailsDialog(data),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child:
+                                Text(data['receive_qty']?.toString() ?? '')),
                       ),
-                      DataCell(
-                        InkWell(
-                          onTap: () => _showDetailsDialog(data),
-                          child: Align(
-                              alignment: Alignment.center,
-                              child:
-                                  Text(data['pending_qty']?.toString() ?? '')),
-                        ),
+                    ),
+                    DataCell(
+                      InkWell(
+                        onTap: () => _showDetailsDialog(data),
+                        child: Align(
+                            alignment: Alignment.center,
+                            child:
+                                Text(data['pending_qty']?.toString() ?? '')),
                       ),
-                      DataCell(
-                        InkWell(
-                          onTap: () => _showDetailsDialog(data),
-                          child: Align(
-                              alignment: Alignment.center,
-                              child:
-                                  Text(data['locator_det']?.toString() ?? '')),
-                        ),
+                    ),
+                    DataCell(
+                      InkWell(
+                        onTap: () => _showDetailsDialog(data),
+                        child: Align(
+                            alignment: Alignment.center,
+                            child:
+                                Text(data['locator_det']?.toString() ?? '')),
                       ),
-                      DataCell(
-                        InkWell(
-                          onTap: () => _showDetailsDialog(data),
-                          child: Align(
-                              alignment: Alignment.center,
-                              child:
-                                  Text(data['lot_total_nb']?.toString() ?? '')),
-                        ),
+                    ),
+                    DataCell(
+                      InkWell(
+                        onTap: () => _showDetailsDialog(data),
+                        child: Align(
+                            alignment: Alignment.center,
+                            child:
+                                Text(data['lot_total_nb']?.toString() ?? '')),
                       ),
-                      DataCell(
-                        InkWell(
-                          onTap: () => _showDetailsDialog(data),
-                          child: Align(
-                              alignment: Alignment.center,
-                              child: Text(data['uom']?.toString() ?? '')),
-                        ),
+                    ),
+                    DataCell(
+                      InkWell(
+                        onTap: () => _showDetailsDialog(data),
+                        child: Align(
+                            alignment: Alignment.center,
+                            child: Text(data['uom']?.toString() ?? '')),
                       ),
-                    ],
-                  );
-                }).toList(),
-              ),
+                    ),
+                  ],
+                );
+              }).toList(),
             ),
+          ),
+    bottomNavigationBar: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        onPressed: () async {
+  await chk_grid();
+if(poStatusGrid == '0'){
+   Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => testBarcode(poReceiveNo: widget.poReceiveNo, poPONO: widget.poPONO),
+      ),
+
     );
-  }
+}
+else if(poStatusGrid =='1'){
+
+   ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(poMessageGrid ??'')),
+          );
+}
+      
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+        ),
+        child: Text(
+          'NEXT',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    ),
+  );
+}
 }

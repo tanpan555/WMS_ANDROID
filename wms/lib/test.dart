@@ -1,23 +1,121 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:wms/verify.dart';
 
-class test extends StatefulWidget {
+class testBarcode extends StatefulWidget {
+    final String poReceiveNo;
+  final String? poPONO;
+
+testBarcode({required this.poReceiveNo, this.poPONO});
+
+
   @override
   _QRScannerPageState createState() => _QRScannerPageState();
 }
 
-class _QRScannerPageState extends State<test> {
+class _QRScannerPageState extends State<testBarcode> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? qrViewController;
-  final TextEditingController _textController = TextEditingController();
-  final TextEditingController _textController1 = TextEditingController();
-  final TextEditingController _textController2 = TextEditingController();
-  final TextEditingController _textController3 = TextEditingController();
-  final TextEditingController _textController4 = TextEditingController();
-  final TextEditingController _textController5 = TextEditingController();
-  final TextEditingController _textController6 = TextEditingController();
+  final TextEditingController BarcodeText = TextEditingController();
+  final TextEditingController locatorText = TextEditingController();
+  final TextEditingController LotNumber = TextEditingController();
+  final TextEditingController Quantity = TextEditingController();
+  final TextEditingController CurrentLocator = TextEditingController();
+  final TextEditingController LOT_QTY = TextEditingController();
+  final TextEditingController LOT_UNIT = TextEditingController();
   bool isCameraOpen = false;
+
+  List<dynamic> locatorCodes = [];
+  List<dynamic> data = [];
+  String? selectedlocatorCode;
+
+  Future<void> fetchlocatorCodes() async {
+    try {
+      final response = await http
+          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/c/locator'));
+
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final jsonData = json.decode(responseBody);
+
+        print('Fetched data: $jsonData');
+
+        setState(() {
+          locatorCodes = jsonData['items'];
+          print(locatorCodes);
+          if (data.isNotEmpty) {
+            selectedlocatorCode = locatorCodes[0]['location_code'];
+          }
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> chk_bar() async {
+    try {
+      // final response = await http.get(Uri.parse('http://172.16.0.82:8888/apex/wms/c/chk_barcode/WM-D01-2408086/2408130310'));
+      final response = await http.get(Uri.parse('http://172.16.0.82:8888/apex/wms/c/chk_barcode/${widget.poReceiveNo}/${BarcodeText.text}'));
+  print(widget.poReceiveNo);
+    print(BarcodeText.text);
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final jsonData = json.decode(responseBody);
+        setState(() {
+          data = jsonData['items'] ?? [];
+          LotNumber.text = jsonData['lot_number'] ?? '';
+        Quantity.text = jsonData['quantity'] ?? '';
+        CurrentLocator.text = jsonData['curr_loc'] ?? '';
+        LOT_QTY.text = jsonData['bal_qty'] ?? '';
+        LOT_QTY.text = jsonData['bal_lot'] ?? '';
+        print(response.statusCode);
+        print(responseBody);
+        print(data);
+
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+   Future<void> chk_loc() async {
+    try {
+      final response = await http.get(Uri.parse('http://172.16.0.82:8888/apex/wms/c/chk_loc/${widget.poReceiveNo}/${BarcodeText.text}/$selectedlocatorCode'));
+  print(widget.poReceiveNo);
+    print(BarcodeText);
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final jsonData = json.decode(responseBody);
+        setState(() {
+          data = jsonData['items'] ?? [];
+        print(response.statusCode);
+        print(responseBody);
+        print(data);
+
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  fetchlocatorCodes();
+  }
+
 
   @override
   void reassemble() {
@@ -29,14 +127,27 @@ class _QRScannerPageState extends State<test> {
   }
 
   @override
-  void dispose() {
-    qrViewController?.dispose();
-    super.dispose();
-  }
+void dispose() {
+  qrViewController?.dispose();
+  BarcodeText.dispose();
+  locatorText.dispose();
+  LotNumber.dispose();
+  Quantity.dispose();
+  CurrentLocator.dispose();
+  LOT_QTY.dispose();
+  LOT_UNIT.dispose();
+  super.dispose();
+}
+
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+      title: Text('Barcode Page'),
+    ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -61,60 +172,81 @@ class _QRScannerPageState extends State<test> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
-                  controller: _textController,
+                  controller: BarcodeText,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Scanned Data',
+                    labelText: 'BarcodeText',
+                  ),
+                ),
+              ),
+              Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: DropdownButton<String>(
+                        isExpanded: true,
+                        value: selectedlocatorCode,
+                        hint: Text('select locator'),
+                        items: locatorCodes.map((item) {
+                          return DropdownMenuItem<String>(
+                            value: item['location_code'],
+                            child: Text(item['location_code'] ?? 'No code'),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedlocatorCode = value;
+                             print(selectedlocatorCode);
+                             chk_loc();
+                          });
+                        },
+                      ),
+                    ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: LotNumber,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'LotNumber',
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
-                  controller: _textController1,
+                  controller: Quantity,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'test2',
+                    labelText: 'Quantity',
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
-                  controller: _textController2,
+                  controller: CurrentLocator,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'test3',
+                    labelText: 'CurrentLocator',
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
-                  controller: _textController3,
+                  controller: LOT_QTY,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'test4',
+                    labelText: 'LOT_QTY',
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
-                  controller: _textController4,
+                  controller: LOT_UNIT,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'test5',
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: _textController5,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'test6',
+                    labelText: 'LOT_UNIT',
                   ),
                 ),
               ),
@@ -132,10 +264,42 @@ class _QRScannerPageState extends State<test> {
                   },
                   child: Text(isCameraOpen ? 'ปิดกล้อง' : 'เปิดกล้อง'),
                 ),
+                
               ),
+               Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(widget.poReceiveNo),
+              ),
+               Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(widget.poPONO ?? 'No PO PONO provided'),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+        onPressed: () {
+          chk_bar();
+          Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Verify(poReceiveNo: widget.poReceiveNo, poPONO: widget.poPONO),
+      ),
+    );
+
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+        ),
+        child: Text(
+          'NEXT',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+            ),
+            
             ],
           ),
         ),
+        
       ),
     );
   }
@@ -146,7 +310,7 @@ class _QRScannerPageState extends State<test> {
     });
     controller.scannedDataStream.listen((scanData) {
       setState(() {
-        _textController.text = scanData.code ?? '';
+        BarcodeText.text = scanData.code ?? '';
       });
     });
   }

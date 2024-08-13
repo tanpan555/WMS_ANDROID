@@ -31,7 +31,6 @@ class _HomePageState extends State<HomePage> {
   final _pageOptions = [
     home(),
     CardTest(),
-    test(),
   ];
 
   void _onItemTapped(int index) {
@@ -59,10 +58,6 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.card_travel),
             label: 'CardTest',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.star),
-            label: 'test',
           ),
         ],
         currentIndex: _selectedIndex,
