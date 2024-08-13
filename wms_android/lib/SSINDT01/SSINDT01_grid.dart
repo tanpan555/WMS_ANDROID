@@ -34,7 +34,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   static const Map<int, TableColumnWidth> _columnWidths = {
     0: FixedColumnWidth(100),
     1: FixedColumnWidth(100),
-    2: FixedColumnWidth(50),
+    2: FixedColumnWidth(70),
     3: FixedColumnWidth(100),
     4: FixedColumnWidth(100),
     5: FixedColumnWidth(100),
@@ -329,36 +329,6 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     );
   }
 
-  Widget _buildTableCellWithButton(String buttonText, bool isHeader) {
-    return Padding(
-      padding: const EdgeInsets.all(0),
-      child: Center(
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor:
-                isHeader ? Colors.grey[200] : Color.fromARGB(255, 52, 60, 84),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            minimumSize: Size(40, 30),
-          ),
-          onPressed: () {
-            // showLotDialog(context);
-          },
-          child: Text(
-            buttonText,
-            style: TextStyle(
-              color: isHeader ? Colors.black : Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Future<void> deleteLot(String recNo, String pOu, String recSeq, String PoNo,
       String lotSeq, String PoSeq) async {
     final url = Uri.parse('http://172.16.0.82:8888/apex/wms/c/del_lot');
@@ -455,7 +425,28 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Lot Detail'),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5), // ปรับความโค้งมนของขอบ
+          ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Lot Detail',
+                style: TextStyle(
+                    // color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18),
+              ),
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+          insetPadding: EdgeInsets.zero,
           content: SizedBox(
             width: MediaQuery.of(context).size.width *
                 0.8, // Adjust width as needed
@@ -463,36 +454,9 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Divider(
-                    color: Colors.grey,
-                    thickness: 1,
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 103, 58, 183),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          minimumSize: Size(10, 20),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text(
-                          'Close',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 55),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
@@ -515,7 +479,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      const Spacer(),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
@@ -637,19 +601,18 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   }
 
   Widget _buildTable999({required String ou_code, required String rec_seq}) {
-    final int totalRowCount = getTotalRowCount();
+    // final int totalRowCount = getTotalRowCount();
     final Map<int, TableColumnWidth> columnWidths = {
-      0: FixedColumnWidth(100),
+      0: FixedColumnWidth(60),
       1: FixedColumnWidth(100),
       2: FixedColumnWidth(50),
       3: FixedColumnWidth(100),
       4: FixedColumnWidth(100),
       5: FixedColumnWidth(100),
-      6: FixedColumnWidth(100),
     };
 
-    String _selectedItem = '';
-    int _selectedItemCount = 0;
+    // String _selectedItem = '';
+    // int _selectedItemCount = 0;
 
     return Column(
       children: [
@@ -704,33 +667,34 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                             return TableRow(
                               children: [
                                 TableCell(
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          Color.fromARGB(255, 52, 60, 84),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
+                                  child: Center(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            Color.fromARGB(255, 52, 60, 84),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
+                                        minimumSize: Size(30, 20),
                                       ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 5),
-                                      minimumSize: Size(40, 30),
+                                      onPressed: () {
+                                        showDetailsLotDialog(
+                                            context, item, rec_seq, ou_code,
+                                            () async {
+                                          await getLotList(widget.poReceiveNo,
+                                              rec_seq, ou_code);
+                                          setState(() {});
+                                        });
+                                      },
+                                      child: Text('EDIT',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 11)),
                                     ),
-                                    onPressed: () {
-                                              showDetailsLotDialog(
-                                                  context,
-                                                  item,
-                                                  rec_seq,
-                                                  ou_code, () async {
-                                                await getLotList(
-                                                    widget.poReceiveNo,
-                                                    rec_seq,
-                                                    ou_code);
-                                                setState(() {});
-                                              });
-                                            },
-                                    child: Text('EDIT',
-                                        style: TextStyle(color: Colors.white)),
                                   ),
                                 ),
                                 _buildTableCell(
@@ -849,52 +813,137 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       String recSeq, String ou_code, Function onDelete) {
     String recNo = widget.poReceiveNo;
     String lotSeq = item['lot_seq']?.toString() ?? '';
-    String PoSeq = item['po_seq']?.toString() ?? '';
+    String poSeq = item['po_seq']?.toString() ?? '';
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          child: Container(
-            width: 400.0,
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text('Details for ${item['lot_product_no']}',
-                    style: TextStyle(fontSize: 20.0)),
-                SizedBox(height: 16.0),
-                Text('LOT Qty: ${item['lot_qty']}'),
-                Text('Manufacture Date: ${item['mfg_date']}'),
-                Text('Supplier: ${item['lot_supplier']}'),
-                Text('Lot Seq: ${item['lot_seq']}'),
-                Text('Po Seq: ${item['po_seq']}'),
-                SizedBox(height: 16.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    TextButton(
-                      child: Text('DELETE'),
-                      onPressed: () async {
-                        await deleteLot(
-                            recNo, ou_code, recSeq, recNo, lotSeq, PoSeq);
-                        Navigator.of(context).pop();
-                        if (onDelete != null) {
-                          await onDelete();
-                        }
-                      },
-                    ),
-                    TextButton(
-                      child: Text('Close'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5), // ปรับความโค้งมนของขอบ
+          ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'EDIT',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
                 ),
-              ],
+              ),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+          insetPadding: EdgeInsets.zero,
+          content: SingleChildScrollView(
+            child: Form(
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  TextFormField(
+                    initialValue: item['lot_product_no'],
+                    readOnly: true, // Make the field read-only
+                    decoration: const InputDecoration(
+                      labelText: 'Lot No.',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    initialValue: item['lot_qty']?.toString(),
+                    decoration: const InputDecoration(
+                      labelText: 'LOT QTY',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    initialValue: item['lot_supplier'],
+                    decoration: const InputDecoration(
+                      labelText: 'Supplier',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    initialValue: item['mfg_date'],
+                    decoration: const InputDecoration(
+                      labelText: 'Manufacture Date',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    initialValue: item['lot_seq']?.toString(),
+                    decoration: const InputDecoration(
+                      labelText: 'Lot Seq',
+                      labelStyle: const TextStyle(
+                        color: Colors.black87,
+                      ),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    initialValue: item['po_seq']?.toString(),
+                    decoration: const InputDecoration(
+                      labelText: 'Po Seq',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('DELETE', style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),),
+              onPressed: () async {
+                await deleteLot(recNo, ou_code, recSeq, recNo, lotSeq, poSeq);
+                Navigator.of(context).pop();
+                if (onDelete != null) {
+                  await onDelete();
+                }
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                minimumSize: Size(10, 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons
+                        .save_outlined, // You can use any other icon from Icons class
+                    color: Colors.white,
+                  ),
+                  const SizedBox(width: 5), // Spacing between icon and text
+                  const Text(
+                    'Save',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            )
+          ],
         );
       },
     );
@@ -923,7 +972,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
             text,
             style: TextStyle(
               fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
-              fontSize: isHeader ? 14 : 16,
+              fontSize: isHeader ? 14 : 14,
             ),
             overflow: TextOverflow.ellipsis, // Add ellipsis for overflow
             maxLines: 1, // Ensure single line
@@ -969,74 +1018,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 5),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 103, 58, 183),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            minimumSize: Size(10, 10),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                          ),
-                          onPressed: sendPostRequestlineWMS,
-                          child: const Text(
-                            'ดึง PO',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 103, 58, 183),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            minimumSize: Size(10, 10),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                          ),
-                          onPressed: () {
-                            // Code for Delete button
-                          },
-                          child: const Text(
-                            'ลบ PO',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 103, 58, 183),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            minimumSize: Size(10, 10),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                          ),
-                          onPressed: () {
-                            // Code for Print Tag button
-                          },
-                          child: const Text(
-                            'พิมพ์ Tag',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 35),
+                        const Spacer(),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
@@ -1105,7 +1087,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 28, // Adjust the font size as needed
+                  fontSize: 20, // Adjust the font size as needed
                 ),
               ),
             ),
@@ -1116,7 +1098,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
             style: TextStyle(
               color: Colors.black54,
               fontWeight: FontWeight.bold,
-              fontSize: 14, // Adjust the font size as needed
+              fontSize: 12, // Adjust the font size as needed
             ),
           ),
           const SizedBox(height: 8.0),
@@ -1126,12 +1108,82 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
-                fontSize: 24, // Adjust the font size as needed
+                fontSize: 18, // Adjust the font size as needed
               ),
             ),
           ),
-          const SizedBox(height: 25),
+          const SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  minimumSize: Size(10, 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                ),
+                onPressed: () {
+                  // Code for Cancel button
+                },
+                child: const Text(
+                  'ดึง PO',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12),
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  minimumSize: Size(10, 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                ),
+                onPressed: () {
+                  // Code for Delete button
+                },
+                child: const Text(
+                  'ลบ PO',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12),
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  minimumSize: Size(10, 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                ),
+                onPressed: () {
+                  // Code for Print Tag button
+                },
+                child: const Text(
+                  'พิมพ์ Tag',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
           _buildTable(),
+          const SizedBox(height: 16.0),
           // Add more fields here as needed
         ],
       ),
@@ -1206,36 +1258,42 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                 onTap: () => _showDetailsDialog(data),
                               ),
                               TableCell(
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Color.fromARGB(255, 52, 60, 84),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                                child: Center(
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Color.fromARGB(255, 52, 60, 84),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 5),
+                                      minimumSize: Size(30, 20),
                                     ),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 5),
-                                    minimumSize: Size(40, 30),
-                                  ),
 
-                                  onPressed: () {
-                                    showLotDialog(
-                                      context,
-                                      data['item']?.toString() ?? '',
-                                      data['item_desc']?.toString() ?? '',
-                                      data['ou_code']?.toString() ?? '',
-                                      data['rec_seq']?.toString() ?? '',
-                                    );
-                                    getLotList(
-                                widget.poReceiveNo,
-                                data['rec_seq']?.toString() ?? '',
-                                data['ou_code']?.toString() ?? '');
-                                  },
-                                  // style: ElevatedButton.styleFrom(
-                                  //   backgroundColor: Colors.purple,
-                                  // ),
-                                  child: Text('LOT',
-                                      style: TextStyle(color: Colors.white)),
+                                    onPressed: () {
+                                      showLotDialog(
+                                        context,
+                                        data['item']?.toString() ?? '',
+                                        data['item_desc']?.toString() ?? '',
+                                        data['ou_code']?.toString() ?? '',
+                                        data['rec_seq']?.toString() ?? '',
+                                      );
+                                      getLotList(
+                                          widget.poReceiveNo,
+                                          data['rec_seq']?.toString() ?? '',
+                                          data['ou_code']?.toString() ?? '');
+                                    },
+                                    // style: ElevatedButton.styleFrom(
+                                    //   backgroundColor: Colors.purple,
+                                    // ),
+                                    child: Text('LOT',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                        )),
+                                  ),
                                 ),
                               ),
                               _buildTableCell(
