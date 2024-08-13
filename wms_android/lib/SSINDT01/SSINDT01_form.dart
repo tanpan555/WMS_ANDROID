@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
-import 'SSINDT01_grid_data.dart';
+import 'SSINDT01_grid.dart';
 
 class Ssindt01Form extends StatefulWidget {
   final String poReceiveNo;
@@ -298,7 +298,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) =>
-            Ssindt01GridData(poReceiveNo: receiveNo, poPONO: poNo),
+            Ssindt01Grid(poReceiveNo: receiveNo, poPONO: poNo),
       ),
     );
   }

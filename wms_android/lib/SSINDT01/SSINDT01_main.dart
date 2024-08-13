@@ -237,7 +237,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Select Warehouse4444444'),
+          title: const Text('Select Warehouse'),
           content: SizedBox(
             width:
                 double.maxFinite, // Make the dialog width as wide as possible
@@ -506,11 +506,12 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                                 ),
                                 const SizedBox(height: 10),
                                 DropdownButtonFormField<String>(
+                                  value: selectedApCode,
                                   decoration: const InputDecoration(
                                     labelText: 'ผู้ขาย',
                                     border: OutlineInputBorder(),
                                   ),
-                                  items: displayedData.map((item) {
+                                  items: apCodes.map((item) {
                                     return DropdownMenuItem<String>(
                                       value: item['ap_code'],
                                       child: Column(
