@@ -25,12 +25,16 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   List<dynamic> whCodes = [];
   String? selectedwhCode;
 
+  String? _selectedValue;
+  String? fixedValue;
+
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    fixedValue = valueMapping[_selectedValue] ?? 'C';
     fetchApCodes();
     fetchwhCodes();
 
@@ -53,6 +57,19 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
     print('poStep : $poStep Type : ${poStep.runtimeType}');
   }
+
+  void _handleSelected(String? value) {
+    setState(() {
+      _selectedValue = value;
+      print('Selected value in handle: $_selectedValue');
+    });
+  }
+
+  final Map<String, String> valueMapping = {
+    'รายการรอรับดำเนินการ': 'A',
+    'รายการใบสั่งซื้อ': 'B',
+    'ทั้งหมด': 'C',
+  };
 
   Future<void> fetchApCodes() async {
     try {
@@ -107,12 +124,8 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
 
   Future<void> fetchWareCodes() async {
     try {
-      final apCodeParam = selectedApCode != null && selectedApCode != 'ทั้งหมด'
-          ? '?ap_code=$selectedApCode'
-          : '';
-      final response = await http.get(
-          Uri.parse('http://172.16.0.82:8888/apex/wms/c/list$apCodeParam'));
-
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/c/new_card_list/$fixedValue'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
@@ -120,7 +133,6 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
           data = jsonData['items'] ?? [];
           filterData();
           isLoading = false;
-          print('data : $data Type : ${data.runtimeType}');
         });
       } else {
         throw Exception('Failed to load data');
@@ -129,8 +141,6 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       setState(() {
         isLoading = false;
         errorMessage = e.toString();
-        print(
-            'errorMessage : $errorMessage Type : ${errorMessage.runtimeType}');
       });
     }
   }
@@ -391,7 +401,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
-        elevation: 8,
+        elevation: 5,
         child: ListTile(
           leading: Icon(Icons.check),
           title: Text(item['ap_name'] ?? 'No Name'),
@@ -408,179 +418,213 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       ),
     );
   }
+
 ////////////////////////////////////////////////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(),
       drawer: const CustomDrawer(),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : errorMessage.isNotEmpty
-              ? Center(child: Text('Error: $errorMessage'))
-              : Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black38),
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          final isPortrait = orientation == Orientation.portrait;
+
+          return isLoading
+              ? Center(child: CircularProgressIndicator())
+              : errorMessage.isNotEmpty
+                  ? Center(child: Text('Error: $errorMessage'))
+                  : Padding(
+                      padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(5.0),
-                            color: Colors.deepPurple,
-                            child: Row(
-                              children: [
-                                const Expanded(
-                                  child: Text(
-                                    'รับจากการสั่งซื้อ',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: _performSearch1,
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    foregroundColor: Colors.black54,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    padding: EdgeInsets.symmetric(horizontal: 12.0), // Adjust horizontal padding as needed
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 8.0), // Adjust vertical padding as needed
-                                    child: Text(
-                                      selectedwhCode ?? 'Select Warehouse',
-                                      style: const TextStyle(fontSize: 14.0), // Adjust font size if needed
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 5),
-                                TextButton(
-                                  onPressed: _clearSearch,
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    foregroundColor: Colors.black54,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                  ),
-                                  child: const Text('Clear'),
-                                ),
-                                const SizedBox(width: 5),
-                                TextButton(
-                                  onPressed: _performSearch,
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    foregroundColor: Colors.black54,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                  ),
-                                  child: const Text('Search'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              children: [
-                                DropdownButtonFormField<String>(
-                                  decoration: const InputDecoration(
-                                    labelText: 'ประเภทรายการ',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  items: <String>['1', '2'].map((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                  onChanged: (_) {},
-                                ),
-                                const SizedBox(height: 10),
-                                DropdownButtonFormField<String>(
-                                  value: selectedApCode,
-                                  decoration: const InputDecoration(
-                                    labelText: 'ผู้ขาย',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  items: apCodes.map((item) {
-                                    return DropdownMenuItem<String>(
-                                      value: item['ap_code'],
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            item['ap_name'] ?? 'No name',
-                                            style: TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 10.0,
+                          if (isPortrait) // Show search box only in portrait mode
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black38),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(5.0),
+                                    color: Colors.deepPurple,
+                                    child: Row(
+                                      children: [
+                                        const Expanded(
+                                          child: Text(
+                                            'รับจากการสั่งซื้อ',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: _performSearch1,
+                                          style: TextButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            foregroundColor: Colors.black54,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 12.0),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8.0),
+                                            child: Text(
+                                              selectedwhCode ??
+                                                  'Select Warehouse',
+                                              style: const TextStyle(
+                                                  fontSize: 14.0),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedApCode = value;
-                                      fetchWareCodes();
-                                    });
-                                  },
-                                ),
-                                const SizedBox(height: 10),
-                                TextField(
-                                  controller: searchController,
-                                  decoration: InputDecoration(
-                                    labelText: 'เลขที่เอกสาร',
-                                    border: OutlineInputBorder(),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(Icons.clear),
-                                      onPressed: () {
-                                        searchController.clear();
-                                        setState(() {
-                                          searchQuery = '';
-                                          filterData();
-                                        });
-                                      },
+                                        ),
+                                        const SizedBox(width: 5),
+                                        TextButton(
+                                          onPressed: _clearSearch,
+                                          style: TextButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            foregroundColor: Colors.black54,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                          ),
+                                          child: const Text('Clear'),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        TextButton(
+                                          onPressed: _performSearch,
+                                          style: TextButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            foregroundColor: Colors.black54,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                          ),
+                                          child: const Text('Search'),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      searchQuery = value;
-                                      filterData();
-                                    });
-                                  },
-                                ),
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      children: [
+                                        DropdownButtonFormField<String>(
+                                          isExpanded: true,
+                                          value: _selectedValue,
+                                          hint: Text('ประเภทรายการ'),
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    horizontal: 10.0),
+                                          ),
+                                          items: <String>[
+                                            'รายการรอรับดำเนินการ',
+                                            'รายการใบสั่งซื้อ',
+                                            'ทั้งหมด'
+                                          ].map((String value) {
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Text(value),
+                                            );
+                                          }).toList(),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _selectedValue = value;
+                                              fixedValue = valueMapping[
+                                                      _selectedValue] ??
+                                                  '';
+                                              fetchWareCodes();
+                                              print(
+                                                  'Selected value: $_selectedValue');
+                                              print('Fixed value: $fixedValue');
+                                            });
+                                          },
+                                        ),
+                                        const SizedBox(height: 10),
+                                        DropdownButtonFormField<String>(
+                                          value: selectedApCode,
+                                          decoration: const InputDecoration(
+                                            labelText: 'ผู้ขาย',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          items: apCodes.map((item) {
+                                            return DropdownMenuItem<String>(
+                                              value: item['ap_code'],
+                                              child: Text(
+                                                (item['ap_name'] ?? 'No name')
+                                                            .length >
+                                                        50
+                                                    ? '${(item['ap_name'] ?? 'No name').substring(0, 20)}...'
+                                                    : item['ap_name'] ??
+                                                        'No name',
+                                                style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 10.0,
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              selectedApCode = value;
+                                              fetchWareCodes();
+                                            });
+                                          },
+                                        ),
+                                        const SizedBox(height: 10),
+                                        TextField(
+                                          controller: searchController,
+                                          decoration: InputDecoration(
+                                            labelText: 'เลขที่เอกสาร',
+                                            border: OutlineInputBorder(),
+                                            suffixIcon: IconButton(
+                                              icon: Icon(Icons.clear),
+                                              onPressed: () {
+                                                searchController.clear();
+                                                setState(() {
+                                                  searchQuery = '';
+                                                  filterData();
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              searchQuery = value;
+                                              filterData();
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
+                          const SizedBox(height: 10),
+                          Expanded(
+                            child: displayedData.isEmpty
+                                ? Center(child: Text('No data available'))
+                                : ListView.builder(
+                                    controller: _scrollController,
+                                    itemCount: displayedData.length,
+                                    itemBuilder: (context, index) {
+                                      final item = displayedData[index];
+                                      return buildListTile(context, item);
+                                    },
+                                  ),
                           ),
                         ],
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    Flexible(
-                      child: displayedData.isEmpty
-                          ? Center(child: Text('No data available'))
-                          : ListView.builder(
-                              controller: _scrollController,
-                              itemCount: displayedData.length,
-                              itemBuilder: (context, index) {
-                                final item = displayedData[index];
-                                return buildListTile(context, item);
-                              },
-                            ),
-                    ),
-                  ],
-                ),
-                  ),
+                    );
+        },
+      ),
     );
   }
 }

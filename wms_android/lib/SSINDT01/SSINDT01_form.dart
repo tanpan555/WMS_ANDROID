@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
 import 'SSINDT01_grid.dart';
+import 'package:wms_android/SSINDT01/SSINDT01_main.dart';
 
 class Ssindt01Form extends StatefulWidget {
   final String poReceiveNo;
@@ -63,6 +64,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     super.initState();
     fetchReceiveHeadData(widget.poReceiveNo);
     fetchwhpoType();
+    cancelCode();
   }
 
   @override
@@ -84,6 +86,35 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     updDateController.dispose();
     crDateController.dispose();
     super.dispose();
+  }
+
+String? poStatus;
+  String? poMessage;
+  Future<void> fetchPoStatus() async {
+    final url =
+        'http://172.16.0.82:8888/apex/wms/c/chk_valid_inhead/${widget.poReceiveNo}';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+        setState(() {
+          poStatus = responseBody['po_status'];
+          poMessage = responseBody['po_message'];
+          print('po_status: $poStatus');
+          print('po_message: $poMessage');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('$poMessage')),
+          );
+        });
+      } else {
+        throw Exception('Failed to load PO status');
+      }
+    } catch (e) {
+      setState(() {
+        poStatus = 'Error';
+        poMessage = e.toString();
+      });
+    }
   }
 
   Future<void> fetchwhpoType() async {
@@ -179,6 +210,172 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     } catch (e) {
       print('Error: $e');
     }
+  }
+List<Map<String, dynamic>> cCode = [];
+  String? selectedcCode;
+  bool isLoading = true;
+String errorMessage = '';
+
+  Future<void> cancelCode() async {
+    try {
+      final response = await http.get(
+          Uri.parse('http://172.16.0.82:8888/apex/wms/c/cancel_from_list'));
+
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final jsonData = json.decode(responseBody);
+        setState(() {
+          cCode = (jsonData['items'] as List)
+              .map((item) => item as Map<String, dynamic>)
+              .toList();
+          selectedcCode = cCode.isNotEmpty ? cCode[0]['r'] : null;
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+        errorMessage = e.toString();
+      });
+    }
+  }
+
+  Future<void> cancel_from(String selectedcCode) async {
+    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/c/cancel_from');
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'v_rec': widget.poReceiveNo,
+        'v_cancel': selectedcCode,
+      }),
+    );
+
+    print('Cancel form with data: ${jsonEncode({
+          'v_rec': widget.poReceiveNo,
+          'v_cancel': selectedcCode,
+        })}');
+
+    if (response.statusCode == 200) {
+      try {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+        final poStatus = responseData['po_status'] ?? 'Unknown';
+        final pomsg = responseData['po_message'] ?? 'Unknown';
+        print('po_status: $poStatus');
+        print('po_message: $pomsg');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('$pomsg')),
+        );
+      } catch (e) {
+        print('Error parsing response: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to parse response')),
+        );
+      }
+    } else {
+      print('Failed to cancel: ${response.statusCode}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to cancel: ${response.statusCode}')),
+      );
+    }
+  }
+
+    void showCancelDialog() {
+    String? selectedcCode;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            width: 600.0,
+            height: 250.0,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text('Cancel', style: TextStyle(fontSize: 20.0)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    width: 350,
+                    child: DropdownButtonFormField<String>(
+                      value: selectedcCode,
+                      isExpanded: true,
+                      items: cCode.map((item) {
+                        return DropdownMenuItem<String>(
+                          value: item['r'],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item['r'] ?? 'No code',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                              ),
+                              Text(
+                                item['d'] ?? '',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: Colors.grey[600], fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        selectedcCode = newValue;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Cancel Code',
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                      ),
+                    ),
+                  ),
+                ),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: TextButton(
+                        child: Text('OK'),
+                        onPressed: () {
+                          if (selectedcCode != null) {
+                            Navigator.of(context).pop();
+                            cancel_from(selectedcCode!).then((_) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => SSINDT01_MAIN(),
+                              ));
+                            }).catchError((error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text('Error occurred: $error')),
+                              );
+                            });
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Please select a cancel code')),
+                            );
+                          }
+                        }),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<void> updateForm_REMARK(
@@ -303,6 +500,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     );
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -349,7 +548,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                           horizontal: 10, vertical: 5),
                     ),
                     onPressed: () {
-                      // Code for Cancel button
+                      showCancelDialog();
                     },
                     child: const Text(
                       'ยกเลิก',
@@ -371,6 +570,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                           horizontal: 10, vertical: 5),
                     ),
                     onPressed: () {
+                      fetchPoStatus();
                       _updateForm();
                     }, // Update onPressed to call _submitForm
                     // onPressed: _submitForm, // Update onPressed to call _submitForm

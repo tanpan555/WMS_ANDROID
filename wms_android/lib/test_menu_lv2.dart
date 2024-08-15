@@ -75,78 +75,82 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
 
   
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(),
-      drawer: const CustomDrawer(),
-      body: Padding(
-  padding: EdgeInsets.all(10.0),
-  child: Column(
-    children: dataMenu.map((item) {
-      // เช็คค่า card_value และกำหนดไอคอนตามที่ต้องการ
-      IconData iconData;
-      Color cardColor;
-      switch (item['card_value']) {
-        case 'รับจากการสั่งซื้อ':
-          iconData = Icons.arrow_circle_right_outlined;
-          cardColor = Colors.greenAccent;
-          break;
-        case 'รับตรง (ไม่อ้าง PO)':
-          iconData = Icons.arrow_circle_right_outlined;
-          cardColor = Colors.greenAccent;
-          break;
-        case 'Move Locator':
-          iconData = Icons.arrow_circle_right_outlined;
-          cardColor = Colors.greenAccent;
-          break;
-        case 'Move Warehouse':
-          iconData = Icons.arrow_circle_right_outlined;
-          cardColor = Colors.greenAccent;
-          break;
-        case 'เบิกจ่าย':
-          iconData = Icons.arrow_circle_right_outlined;
-          cardColor = Colors.greenAccent;
-          break;
-        case 'ตรวจนับ':
-          iconData = Icons.arrow_circle_right_outlined;
-          cardColor = Colors.greenAccent;
-          break;
-        case 'รับคืนจากการเบิกผลิตเพื่อผลผลิต':
-          iconData = Icons.shopping_bag_outlined;
-          cardColor = Colors.greenAccent;
-          break;
-        // เพิ่มกรณีอื่นๆ ตามที่ต้องการ
-        default:
-          iconData = Icons.help; // ไอคอนเริ่มต้น
-          cardColor = Colors.greenAccent;
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: const CustomAppBar(),
+    drawer: const CustomDrawer(),
+    body: Padding(
+      padding: EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              children: dataMenu.map((item) {
+                // Check card_value and set icon accordingly
+                IconData iconData;
+                Color cardColor;
+                switch (item['card_value']) {
+                  case 'รับจากการสั่งซื้อ':
+                    iconData = Icons.arrow_circle_right_outlined;
+                    cardColor = Colors.greenAccent;
+                    break;
+                  case 'รับตรง (ไม่อ้าง PO)':
+                    iconData = Icons.arrow_circle_right_outlined;
+                    cardColor = Colors.greenAccent;
+                    break;
+                  case 'Move Locator':
+                    iconData = Icons.arrow_circle_right_outlined;
+                    cardColor = Colors.greenAccent;
+                    break;
+                  case 'Move Warehouse':
+                    iconData = Icons.arrow_circle_right_outlined;
+                    cardColor = Colors.greenAccent;
+                    break;
+                  case 'เบิกจ่าย':
+                    iconData = Icons.arrow_circle_right_outlined;
+                    cardColor = Colors.greenAccent;
+                    break;
+                  case 'ตรวจนับ':
+                    iconData = Icons.arrow_circle_right_outlined;
+                    cardColor = Colors.greenAccent;
+                    break;
+                  case 'รับคืนจากการเบิกผลิตเพื่อผลผลิต':
+                    iconData = Icons.shopping_bag_outlined;
+                    cardColor = Colors.greenAccent;
+                    break;
+                  default:
+                    iconData = Icons.help; // Default icon
+                    cardColor = Colors.greenAccent;
+                }
 
-      }
+                return Card(
+                  elevation: 8.0,
+                  margin: EdgeInsets.symmetric(vertical: 8.0),
+                  color: cardColor,
+                  child: ListTile(
+                    leading: Icon(iconData),
+                    title: Text(item['card_value'] ?? 'No Name'),
+                    subtitle: Text(item['menu_id'] ?? ''),
+                    onTap: () {
+                      String pageName = item['page_main'] ?? '';
+                      Widget? pageWidget = _mapPageNameToWidget(pageName);
 
-      return Card(
-        elevation: 8.0,
-        margin: EdgeInsets.symmetric(vertical: 8.0),
-        color: cardColor,
-        child: ListTile(
-          leading: Icon(iconData), // เพิ่มไอคอน
-          title: Text(item['card_value'] ?? 'No Name'),
-          subtitle: Text(item['menu_id'] ?? ''),
-          onTap: () {
-            String pageName = item['page_main'] ?? '';
-            Widget? pageWidget = _mapPageNameToWidget(pageName);
+                      if (pageWidget != null) {
+                        _navigateToPage(context, pageWidget);
+                      } else {
+                        print('Page not found for name: $pageName');
+                      }
+                    },
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
-            if (pageWidget != null) {
-              _navigateToPage(context, pageWidget);
-            } else {
-              print('Page not found for name: $pageName');
-            }
-          },
-        ),
-      );
-    }).toList(),
-  ),
-),
-
-    );
-  }
 }

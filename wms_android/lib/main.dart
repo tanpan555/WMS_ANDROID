@@ -7,9 +7,6 @@ import 'test_menu_lv2.dart';
 import 'data_api.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 
-/////// เพื่อ Test !!!!!!!!!!
-// import 'SSINDT01/SSINDT01_grid.dart';
-/////// เพื่อ Test !!!!!!!!!!
 
 void main() {
   runApp(const MyApp());
@@ -28,6 +25,8 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(),
     );
   }
+
+  
 }
 
 class MyHomePage extends StatefulWidget {
@@ -38,20 +37,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<dynamic> dataMenu = [];
-  final ApiService _apiService = ApiService();
+   List<dynamic> dataMenu = [];
+   final ApiService _apiService = ApiService();
+
+
 
   @override
   void initState() {
     super.initState();
     fetchData(); // เรียกใช้ฟังก์ชันเพื่อโหลดข้อมูล
-    _apiService.fetchSessionid().then((_) {
+     _apiService.fetchSessionid().then((_) {
       setState(() {}); // อัปเดต UI หลังจากโหลดข้อมูล
     });
   }
-
-  String poPONO = "PO-CP1063-0487";
-  String poReceiveNo = "WM-D10-2407005";
 
   void _navigateToPage(BuildContext context, Widget page) {
     Navigator.push(
@@ -85,47 +83,20 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(),
-      drawer: const CustomDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            /////// เพื่อ Test !!!!!!!!!!
-            // Text(globals.APP_USER),
-            // ElevatedButton(
-            //   style: ElevatedButton.styleFrom(
-            //     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(12.0),
-            //     ),
-            //     minimumSize: Size(10, 10),
-            //     padding:
-            //         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            //   ),
-            //   onPressed: () {
-            //     Navigator.pop(context);
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //           builder: (context) => Ssindt01Grid(
-            //               poReceiveNo: poReceiveNo, poPONO: poPONO)),
-            //     );
-            //   },
-            //   child: const Text(
-            //     'Test',
-            //     style: TextStyle(
-            //       color: Colors.white,
-            //       fontWeight: FontWeight.bold,
-            //     ),
-            //   ),
-            // ),
-            /////// เพื่อ Test !!!!!!!!!!
-            const SizedBox(height: 20), // Spacing above the grid
-            Expanded(
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: const CustomAppBar(),
+    drawer: const CustomDrawer(),
+    body: Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          Text(globals.APP_USER),
+          const SizedBox(height: 20), // Spacing above the grid
+          Expanded(
+            child: SingleChildScrollView(
               child: GridView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -139,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemBuilder: (context, index) {
                   final item = dataMenu[index];
 
-                  // เช็คค่า card_value และกำหนดไอคอนและสีของ Card ตามที่ต้องการ
+                  // Check card_value and set icon and color accordingly
                   IconData iconData;
                   Color cardColor;
 
@@ -160,23 +131,22 @@ class _MyHomePageState extends State<MyHomePage> {
                       iconData = Icons.folder_outlined;
                       cardColor = Colors.greenAccent;
                       break;
-                    // เพิ่มกรณีอื่นๆ ตามที่ต้องการ
+                    // Add more cases as needed
                     default:
-                      iconData = Icons.help; // ไอคอนและสีเริ่มต้น
+                      iconData = Icons.help; // Default icon and color
                       cardColor = Colors.grey;
                   }
 
                   return GestureDetector(
                     onTap: () {
-                      // ทำงานเมื่อการ์ดถูกกด
-                      // ตัวอย่าง: แสดงข้อความ
+                      // Action when the card is tapped
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Clicked on ${item['card_value']}'),
                         ),
                       );
 
-                      // หรือคุณสามารถนำทางไปยังหน้าอื่น
+                      // Or navigate to another page
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -188,24 +158,22 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Card(
                       elevation: 4.0,
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
-                      color: cardColor, // กำหนดสีของ Card
+                      color: cardColor, // Set card color
                       shape: RoundedRectangleBorder(
                         borderRadius:
-                            BorderRadius.circular(5), // ปรับความโค้งมนของขอบ
+                            BorderRadius.circular(5), // Adjust border radius
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(15.0), // เพิ่ม padding
+                        padding: const EdgeInsets.all(15.0), // Add padding
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
                               iconData,
-                              size: 50, // ขนาดของไอคอน
+                              size: 50, // Icon size
                               color: Colors.black,
                             ),
-                            const SizedBox(
-                                height:
-                                    20), // เพิ่มช่องว่างระหว่างไอคอนกับข้อความ
+                            const SizedBox(height: 20), // Spacing between icon and text
                             Text(
                               item['card_value'] ?? 'No Name',
                               style: const TextStyle(
@@ -214,8 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(
-                                height: 8), // เพิ่มช่องว่างระหว่างข้อความ
+                            const SizedBox(height: 8), // Spacing between text
                             Text(
                               item['menu_id'] ?? '',
                               style: const TextStyle(
@@ -231,9 +198,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 }

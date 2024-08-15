@@ -57,6 +57,7 @@ class _TestMenu_LV_1State extends State<TestMenu_LV_1> {
             Text(globals.APP_USER),
             const SizedBox(height: 20), // Spacing above the grid
             Expanded(
+            child: SingleChildScrollView(
               child: GridView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -161,6 +162,7 @@ class _TestMenu_LV_1State extends State<TestMenu_LV_1> {
                   );
                 },
               ),
+            ),
             ),
           ],
         ),

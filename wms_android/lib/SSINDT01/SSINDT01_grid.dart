@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:intl/intl.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
 
@@ -29,7 +28,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     print('poReceiveNo: ${widget.poReceiveNo}');
     print('poPONO: ${widget.poPONO}');
     // sendGetRequestlineWMS();
-    sendPostRequestlineWMS();
+    // sendPostRequestlineWMS();
     _getLotTotal();
   }
 
@@ -50,42 +49,6 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   String? poMessage;
 
   Future<void> sendPostRequestlineWMS() async {
-    final url = 'http://172.16.0.82:8888/apex/wms/c/get_po_test';
-
-    final headers = {
-      'Content-Type': 'application/json',
-    };
-
-    final body = jsonEncode({
-      'p_po_no': widget.poPONO,
-      'p_receive_no': widget.poReceiveNo,
-    });
-    print('Request body: $body');
-
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: headers,
-        body: body,
-      );
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
-          poStatus = responseData['po_status'];
-          poMessage = responseData['po_message'];
-          // sendGetRequestlineWMS();
-        });
-        print('Success: $responseData');
-      } else {
-        print('Failed to post data. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
-
-  Future<void> sendPostRequestlineWMS2() async {
     final url = 'http://172.16.0.82:8888/apex/wms/c/get_po_test';
 
     final headers = {
@@ -480,37 +443,20 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   void showLotDialog(BuildContext context, String item, String item_desc,
       String ou_code, String rec_seq) async {
-    await getLotList(widget.poReceiveNo, rec_seq, ou_code);
 
     TextEditingController combinedController =
         TextEditingController(text: '$item $item_desc');
     TextEditingController lotCountController = TextEditingController();
-    setState(() {
-      sendGetRequestlineWMS();
-    });
+
+
+    await getLotList(widget.poReceiveNo, rec_seq, ou_code);
+    setState(() {});
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Lot Detail',
-                style: TextStyle(
-                    // color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18),
-              ),
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
+          title: const Text('Lot Detail'),
           content: SizedBox(
             width: MediaQuery.of(context).size.width *
                 0.8, // Adjust width as needed
@@ -518,13 +464,36 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Divider(
-                  //   color: Colors.grey,
-                  //   thickness: 1,
-                  // ),
+                  Divider(
+                    color: Colors.grey,
+                    thickness: 1,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 103, 58, 183),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          minimumSize: Size(10, 20),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text(
+                          'Close',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 55),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
@@ -547,7 +516,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                           ),
                         ),
                       ),
-                      const Spacer(),
+                      const SizedBox(width: 10),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
@@ -614,10 +583,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                     horizontal: 10, vertical: 5),
                               ),
                               onPressed: () async {
-                                await postLot(
-                                    widget.poReceiveNo, rec_seq, ou_code);
-                                await getLotList(
-                                    widget.poReceiveNo, rec_seq, ou_code);
+                                await postLot(widget.poReceiveNo, rec_seq, ou_code);
+                                await getLotList(widget.poReceiveNo, rec_seq, ou_code);
                                 await _getLotTotal();
                                 setState(() {});
                               },
@@ -641,8 +608,10 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 5),
                               ),
-                              onPressed: () {
-                                // Code for new button 2
+                              onPressed: () async {
+                                await postLot(widget.poReceiveNo, rec_seq, ou_code);
+                                await getLotList(widget.poReceiveNo, rec_seq, ou_code);
+                                setState(() {});
                               },
                               child: const Text(
                                 'ลบ',
@@ -668,8 +637,9 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     );
   }
 
+
   Widget _buildTable999({required String ou_code, required String rec_seq}) {
-    // final int totalRowCount = getTotalRowCount();
+    final int totalRowCount = getTotalRowCount();
     final Map<int, TableColumnWidth> columnWidths = {
       0: FixedColumnWidth(100),
       1: FixedColumnWidth(100),
@@ -742,28 +712,27 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                           Color.fromARGB(255, 52, 60, 84),
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(8.0),
+                                            BorderRadius.circular(10.0),
                                       ),
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10, vertical: 5),
-                                      minimumSize: Size(30, 20),
+                                      minimumSize: Size(40, 30),
                                     ),
                                     onPressed: () {
-                                      showDetailsLotDialog(
-                                          context, item, rec_seq, ou_code,
-                                          () async {
-                                        await getLotList(widget.poReceiveNo,
-                                            rec_seq, ou_code);
-                                        setState(() {});
-                                      });
-                                    },
-                                    child: Text(
-                                      'EDIT',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 11),
-                                    ),
+                                              showDetailsLotDialog(
+                                                  context,
+                                                  item,
+                                                  rec_seq,
+                                                  ou_code, () async {
+                                                await getLotList(
+                                                    widget.poReceiveNo,
+                                                    rec_seq,
+                                                    ou_code);
+                                                setState(() {});
+                                              });
+                                            },
+                                    child: Text('EDIT',
+                                        style: TextStyle(color: Colors.white)),
                                   ),
                                 ),
                                 _buildTableCell(
@@ -878,212 +847,56 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     );
   }
 
-  final DateFormat displayFormat = DateFormat("dd/MM/yyyy");
-  final DateFormat apiFormat = DateFormat("MM/dd/yyyy");
-
   void showDetailsLotDialog(BuildContext context, Map<String, dynamic> item,
       String recSeq, String ou_code, Function onDelete) {
     String recNo = widget.poReceiveNo;
     String lotSeq = item['lot_seq']?.toString() ?? '';
     String PoSeq = item['po_seq']?.toString() ?? '';
 
-    TextEditingController mfgDateController = TextEditingController(
-      text: item['mfg_date'] != null
-          ? displayFormat.format(apiFormat.parse(item['mfg_date']))
-          : '',
-    );
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5), // ปรับความโค้งมนของขอบ
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'EDIT',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+        return Dialog(
+          child: Container(
+            width: 400.0,
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('Details for ${item['lot_product_no']}',
+                    style: TextStyle(fontSize: 20.0)),
+                SizedBox(height: 16.0),
+                Text('LOT Qty: ${item['lot_qty']}'),
+                Text('Manufacture Date: ${item['mfg_date']}'),
+                Text('Supplier: ${item['lot_supplier']}'),
+                Text('Lot Seq: ${item['lot_seq']}'),
+                Text('Po Seq: ${item['po_seq']}'),
+                SizedBox(height: 16.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    TextButton(
+                      child: Text('DELETE'),
+                      onPressed: () async {
+                        await deleteLot(
+                            recNo, ou_code, recSeq, recNo, lotSeq, PoSeq);
+                        Navigator.of(context).pop();
+                        if (onDelete != null) {
+                          await onDelete();
+                        }
+                      },
+                    ),
+                    TextButton(
+                      child: Text('Close'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-          insetPadding: EdgeInsets.zero,
-          content: SingleChildScrollView(
-            child: Form(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(height: 10),
-                  TextFormField(
-                    initialValue: item['lot_product_no'],
-                    readOnly: true, // Make the field read-only
-                    decoration: const InputDecoration(
-                      labelText: 'Lot No.',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    initialValue: item['lot_qty']?.toString(),
-                    decoration: const InputDecoration(
-                      labelText: 'LOT QTY',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    initialValue: item['lot_supplier'],
-                    decoration: const InputDecoration(
-                      labelText: 'Supplier',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    controller: mfgDateController,
-                    decoration: InputDecoration(
-                      labelText: 'Manufacture Date',
-                      border: OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.calendar_today),
-                        onPressed: () async {
-                          // Trigger date picker when the icon is pressed
-                          DateTime initialDate = DateTime.now();
-                          if (mfgDateController.text.isNotEmpty) {
-                            try {
-                              initialDate =
-                                  displayFormat.parse(mfgDateController.text);
-                            } catch (e) {
-                              print('Error parsing date: $e');
-                            }
-                          }
-                          final DateTime? picked = await showDatePicker(
-                            context: context,
-                            initialDate: initialDate,
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2101),
-                          );
-                          if (picked != null) {
-                            final formattedDate = apiFormat.format(picked);
-                            setState(() {
-                              mfgDateController.text =
-                                  displayFormat.format(picked);
-                            });
-                            item['mfg_date'] = formattedDate;
-                          }
-                        },
-                      ),
-                    ),
-                    onTap: () async {
-                      // Prevents keyboard from appearing
-                      FocusScope.of(context).requestFocus(FocusNode());
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    initialValue: item['lot_seq']?.toString(),
-                    decoration: const InputDecoration(
-                      labelText: 'Lot Seq',
-                      labelStyle: const TextStyle(
-                        color: Colors.black87,
-                      ),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    initialValue: item['po_seq']?.toString(),
-                    decoration: const InputDecoration(
-                      labelText: 'Po Seq',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ],
-              ),
+              ],
             ),
           ),
-          actions: <Widget>[
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 255, 1, 1),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                minimumSize: Size(10, 10),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              ),
-              child: const Text(
-                'DELETE',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-              onPressed: () async {
-                await deleteLot(recNo, ou_code, recSeq, recNo, lotSeq, PoSeq);
-                Navigator.of(context).pop();
-                if (onDelete != null) {
-                  await onDelete();
-                }
-              },
-            ),
-
-            //////////////////////////////////////////////////////////////////////////
-            //  TextButton(
-            //   child: const Text(
-            //     'DELETE',
-            //     style:
-            //         TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            //   ),
-            //   onPressed: () async {
-            //     await deleteLot(recNo, ou_code, recSeq, recNo, lotSeq, poSeq);
-            //     Navigator.of(context).pop();
-            //     if (onDelete != null) {
-            //       await onDelete();
-            //     }
-            //   },
-            // ),
-            //////////////////////////////////////////////////////////////////////////////////
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                minimumSize: Size(10, 10),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(
-                    Icons
-                        .save_outlined, // You can use any other icon from Icons class
-                    color: Colors.white,
-                  ),
-                  const SizedBox(width: 5), // Spacing between icon and text
-                  const Text(
-                    'Save',
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            )
-          ],
         );
       },
     );
@@ -1127,74 +940,143 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       appBar: const CustomAppBar(), // Use the CustomAppBar
       drawer: const CustomDrawer(),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              child: Row(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: Size(10, 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'ย้อนกลับ',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Container(
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 103, 58, 183),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            minimumSize: Size(10, 20),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            'ย้อนกลับ',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 103, 58, 183),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            minimumSize: Size(10, 10),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                          ),
+                          onPressed: sendPostRequestlineWMS,
+                          child: const Text(
+                            'ดึง PO',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 103, 58, 183),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            minimumSize: Size(10, 10),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                          ),
+                          onPressed: () {
+                            // Code for Delete button
+                          },
+                          child: const Text(
+                            'ลบ PO',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 103, 58, 183),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            minimumSize: Size(10, 10),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                          ),
+                          onPressed: () {
+                            // Code for Print Tag button
+                          },
+                          child: const Text(
+                            'พิมพ์ Tag',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 35),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 103, 58, 183),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            minimumSize: Size(10, 10),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                          ),
+                          onPressed: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => Ssindt01Scanbarcode(),
+                            //   ),
+                            // ); // Code for Next button
+                          },
+                          child: const Text(
+                            'ถัดไป',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const Spacer(),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: Size(10, 10),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                    ),
-                    onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => Ssindt01Scanbarcode(),
-                      //   ),
-                      // ); // Code for Next button
-                    },
-                    child: const Text(
-                      'ถัดไป',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  const SizedBox(height: 16.0),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: _buildFormFields(),
                     ),
                   ),
+                  const SizedBox(height: 16.0),
                 ],
               ),
             ),
-            const SizedBox(height: 16.0),
-            Expanded(
-              child: SingleChildScrollView(
-                child: _buildFormFields(),
-              ),
-            ),
-            const SizedBox(height: 16.0),
-          ],
-        ),
-      ),
     );
   }
 
@@ -1223,7 +1105,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 20, // Adjust the font size as needed
+                  fontSize: 28, // Adjust the font size as needed
                 ),
               ),
             ),
@@ -1244,89 +1126,24 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
-                fontSize: 18, // Adjust the font size as needed
+                fontSize: 24, // Adjust the font size as needed
               ),
             ),
           ),
-          const SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  minimumSize: Size(10, 10),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                ),
-                onPressed: sendPostRequestlineWMS2,
-                child: const Text(
-                  'ดึง PO',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  minimumSize: Size(10, 10),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                ),
-                onPressed: () {
-                  // Code for Delete button
-                },
-                child: const Text(
-                  'ลบ PO',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  minimumSize: Size(10, 10),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                ),
-                onPressed: () {},
-                child: const Text(
-                  'พิมพ์ Tag',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 25),
           _buildTable(),
-          const SizedBox(height: 16.0),
           // Add more fields here as needed
         ],
       ),
     );
   }
 
+  int getTotalRowCount() {
+    return 2;
+  }
+
   Widget _buildTable() {
-    // final int totalRowCount = getTotalRowCount();
+    final int totalRowCount = getTotalRowCount();
 
     return Column(
       children: [
@@ -1394,11 +1211,11 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                     backgroundColor:
                                         Color.fromARGB(255, 52, 60, 84),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
+                                      borderRadius: BorderRadius.circular(10.0),
                                     ),
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10, vertical: 5),
-                                    minimumSize: Size(30, 20),
+                                    minimumSize: Size(40, 30),
                                   ),
 
                                   onPressed: () {
@@ -1410,21 +1227,15 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                       data['rec_seq']?.toString() ?? '',
                                     );
                                     getLotList(
-                                        widget.poReceiveNo,
-                                        data['rec_seq']?.toString() ?? '',
-                                        data['ou_code']?.toString() ?? '');
+                                widget.poReceiveNo,
+                                data['rec_seq']?.toString() ?? '',
+                                data['ou_code']?.toString() ?? '');
                                   },
                                   // style: ElevatedButton.styleFrom(
                                   //   backgroundColor: Colors.purple,
                                   // ),
-                                  child: Text(
-                                    'LOT',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
+                                  child: Text('LOT',
+                                      style: TextStyle(color: Colors.white)),
                                 ),
                               ),
                               _buildTableCell(
