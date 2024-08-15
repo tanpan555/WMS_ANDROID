@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
+import 'package:intl/intl.dart';
 
 class Ssindt01Grid extends StatefulWidget {
   final String poReceiveNo;
@@ -809,11 +810,20 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     );
   }
 
+  final DateFormat displayFormat = DateFormat("dd/MM/yyyy");
+  final DateFormat apiFormat = DateFormat("MM/dd/yyyy");
+
   void showDetailsLotDialog(BuildContext context, Map<String, dynamic> item,
       String recSeq, String ou_code, Function onDelete) {
     String recNo = widget.poReceiveNo;
     String lotSeq = item['lot_seq']?.toString() ?? '';
     String poSeq = item['po_seq']?.toString() ?? '';
+
+    TextEditingController mfgDateController = TextEditingController(
+      text: item['mfg_date'] != null
+          ? displayFormat.format(apiFormat.parse(item['mfg_date']))
+          : '',
+    );
 
     showDialog(
       context: context,
@@ -872,11 +882,44 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                   ),
                   SizedBox(height: 10),
                   TextFormField(
-                    initialValue: item['mfg_date'],
-                    decoration: const InputDecoration(
+                    controller: mfgDateController,
+                    decoration: InputDecoration(
                       labelText: 'Manufacture Date',
                       border: OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.calendar_today),
+                        onPressed: () async {
+                          // Trigger date picker when the icon is pressed
+                          DateTime initialDate = DateTime.now();
+                          if (mfgDateController.text.isNotEmpty) {
+                            try {
+                              initialDate =
+                                  displayFormat.parse(mfgDateController.text);
+                            } catch (e) {
+                              print('Error parsing date: $e');
+                            }
+                          }
+                          final DateTime? picked = await showDatePicker(
+                            context: context,
+                            initialDate: initialDate,
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2101),
+                          );
+                          if (picked != null) {
+                            final formattedDate = apiFormat.format(picked);
+                            setState(() {
+                              mfgDateController.text =
+                                  displayFormat.format(picked);
+                            });
+                            item['mfg_date'] = formattedDate;
+                          }
+                        },
+                      ),
                     ),
+                    onTap: () async {
+                      // Prevents keyboard from appearing
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    },
                   ),
                   SizedBox(height: 10),
                   TextFormField(
@@ -903,8 +946,11 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('DELETE', style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),),
+              child: const Text(
+                'DELETE',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
               onPressed: () async {
                 await deleteLot(recNo, ou_code, recSeq, recNo, lotSeq, poSeq);
                 Navigator.of(context).pop();
