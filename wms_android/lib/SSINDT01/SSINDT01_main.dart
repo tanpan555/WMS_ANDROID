@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:ui';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
 import 'SSINDT01_form.dart';
@@ -28,7 +29,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   String? _selectedValue;
   String? fixedValue;
 
-  final TextEditingController _searchController = TextEditingController();
+  // final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -120,6 +121,155 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     } catch (e) {
       print('Error: $e');
     }
+  }
+
+  void _showFilterDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              backgroundColor: Colors.transparent,
+              child: Stack(
+                children: [
+                  BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                    child: Container(
+                      color: Colors.black.withOpacity(0),
+                    ),
+                  ),
+                  AlertDialog(
+                    title: Text('Filter Options'),
+                    content: Container(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height * 0.7,
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            DropdownButton<String>(
+                              isExpanded: true,
+                              value: selectedwhCode,
+                              hint: Text('Select warehouse'),
+                              items: whCodes.map((item) {
+                                return DropdownMenuItem<String>(
+                                  value: item['ware_code'],
+                                  child: Text(item['ware_code'] ?? 'No code'),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedwhCode = value;
+                                });
+                              },
+                            ),
+                            DropdownButton<String>(
+                              isExpanded: true,
+                              value: _selectedValue,
+                              hint: Text('ประเภทสินค้า'),
+                              items: <String>[
+                                'รายการรอรับดำเนินการ',
+                                'รายการใบสั่งซื้อ',
+                                'ทั้งหมด'
+                              ].map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedValue = value;
+                                  fixedValue =
+                                      valueMapping[_selectedValue] ?? '';
+                                });
+                              },
+                            ),
+                            DropdownButton<String>(
+                              isExpanded: true,
+                              value: selectedApCode,
+                              hint: Text('ผู้ขาย'),
+                              items: apCodes.map((item) {
+                                return DropdownMenuItem<String>(
+                                  value: item['ap_code'],
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item['ap_code'] ?? 'No code',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12.0,
+                                        ),
+                                      ),
+                                      Text(
+                                        item['ap_name'] ?? 'No name',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 12.0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedApCode = value;
+                                });
+                              },
+                            ),
+                            TextField(
+                              controller: searchController,
+                              decoration: InputDecoration(
+                                labelText: 'Search',
+                                border: OutlineInputBorder(),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  searchQuery = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          setState(() {
+                            fetchWareCodes();
+                          });
+                        },
+                        child: Text('Apply'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Cancel'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void performSearch() {
+    filterData();
   }
 
   Future<void> fetchWareCodes() async {
@@ -239,75 +389,6 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       print('Error: $e');
     }
   }
-  //// class ด้านบนคือของพีทั้งหมด
-  /// class ด้านล่างคือของเอ็นจอย
-
-  void _performSearch1() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Select Warehouse'),
-          content: SizedBox(
-            width:
-                double.maxFinite, // Make the dialog width as wide as possible
-            child: StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-                return SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      DropdownButtonFormField<String>(
-                        value: selectedwhCode, // Selected value
-                        decoration: const InputDecoration(
-                          labelText: 'เลือกคลังปฏิบัติงาน',
-                          border: OutlineInputBorder(),
-                        ),
-                        items: whCodes.map((item) {
-                          return DropdownMenuItem<String>(
-                            value: item['ware_code'],
-                            child: Text(item['ware_code'] ?? 'No code'),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedwhCode = value;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                setState(() {
-                  // Update the button label with the selected value
-                  // Button label will automatically update
-                });
-              },
-              child: const Text('ตกลง'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _clearSearch() {
-    _searchController.clear();
-  }
-
-  void _performSearch() {
-    // Implement search functionality here
-    print('Searching for: ${_searchController.text}');
-  }
-
-  /////////////////////////////////////////////////////////////////////////////
 
   void handleTap(BuildContext context, Map<String, dynamic> item) async {
     if (selectedwhCode == null) {
@@ -458,44 +539,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                                           ),
                                         ),
                                         TextButton(
-                                          onPressed: _performSearch1,
-                                          style: TextButton.styleFrom(
-                                            backgroundColor: Colors.white,
-                                            foregroundColor: Colors.black54,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                            ),
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 12.0),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 8.0),
-                                            child: Text(
-                                              selectedwhCode ??
-                                                  'Select Warehouse',
-                                              style: const TextStyle(
-                                                  fontSize: 14.0),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 5),
-                                        TextButton(
-                                          onPressed: _clearSearch,
-                                          style: TextButton.styleFrom(
-                                            backgroundColor: Colors.white,
-                                            foregroundColor: Colors.black54,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                            ),
-                                          ),
-                                          child: const Text('Clear'),
-                                        ),
-                                        const SizedBox(width: 5),
-                                        TextButton(
-                                          onPressed: _performSearch,
+                                          onPressed: _showFilterDialog,
                                           style: TextButton.styleFrom(
                                             backgroundColor: Colors.white,
                                             foregroundColor: Colors.black54,
@@ -505,101 +549,6 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                                             ),
                                           ),
                                           child: const Text('Search'),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Column(
-                                      children: [
-                                        DropdownButtonFormField<String>(
-                                          isExpanded: true,
-                                          value: _selectedValue,
-                                          hint: Text('ประเภทรายการ'),
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                    horizontal: 10.0),
-                                          ),
-                                          items: <String>[
-                                            'รายการรอรับดำเนินการ',
-                                            'รายการใบสั่งซื้อ',
-                                            'ทั้งหมด'
-                                          ].map((String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(value),
-                                            );
-                                          }).toList(),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _selectedValue = value;
-                                              fixedValue = valueMapping[
-                                                      _selectedValue] ??
-                                                  '';
-                                              fetchWareCodes();
-                                              print(
-                                                  'Selected value: $_selectedValue');
-                                              print('Fixed value: $fixedValue');
-                                            });
-                                          },
-                                        ),
-                                        const SizedBox(height: 10),
-                                        DropdownButtonFormField<String>(
-                                          value: selectedApCode,
-                                          decoration: const InputDecoration(
-                                            labelText: 'ผู้ขาย',
-                                            border: OutlineInputBorder(),
-                                          ),
-                                          items: apCodes.map((item) {
-                                            return DropdownMenuItem<String>(
-                                              value: item['ap_code'],
-                                              child: Text(
-                                                (item['ap_name'] ?? 'No name')
-                                                            .length >
-                                                        50
-                                                    ? '${(item['ap_name'] ?? 'No name').substring(0, 20)}...'
-                                                    : item['ap_name'] ??
-                                                        'No name',
-                                                style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 10.0,
-                                                ),
-                                              ),
-                                            );
-                                          }).toList(),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              selectedApCode = value;
-                                              fetchWareCodes();
-                                            });
-                                          },
-                                        ),
-                                        const SizedBox(height: 10),
-                                        TextField(
-                                          controller: searchController,
-                                          decoration: InputDecoration(
-                                            labelText: 'เลขที่เอกสาร',
-                                            border: OutlineInputBorder(),
-                                            suffixIcon: IconButton(
-                                              icon: Icon(Icons.clear),
-                                              onPressed: () {
-                                                searchController.clear();
-                                                setState(() {
-                                                  searchQuery = '';
-                                                  filterData();
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              searchQuery = value;
-                                              filterData();
-                                            });
-                                          },
                                         ),
                                       ],
                                     ),

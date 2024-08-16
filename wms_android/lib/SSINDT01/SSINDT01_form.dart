@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
-import 'SSINDT01_grid.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_main.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_grid_data.dart';
 
@@ -89,7 +88,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     super.dispose();
   }
 
-String? poStatus;
+  String? poStatus;
   String? poMessage;
   Future<void> fetchPoStatus() async {
     final url =
@@ -212,10 +211,11 @@ String? poStatus;
       print('Error: $e');
     }
   }
-List<Map<String, dynamic>> cCode = [];
+
+  List<Map<String, dynamic>> cCode = [];
   String? selectedcCode;
   bool isLoading = true;
-String errorMessage = '';
+  String errorMessage = '';
 
   Future<void> cancelCode() async {
     try {
@@ -286,7 +286,7 @@ String errorMessage = '';
     }
   }
 
-    void showCancelDialog() {
+  void showCancelDialog() {
     String? selectedcCode;
 
     showDialog(
@@ -319,7 +319,8 @@ String errorMessage = '';
                               Text(
                                 item['r'] ?? 'No code',
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 12),
                               ),
                               Text(
                                 item['d'] ?? '',
@@ -496,12 +497,10 @@ String errorMessage = '';
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) =>
-            GridPage(poReceiveNo: receiveNo, poPONO: poNo),
+            Ssindt01Grid(poReceiveNo: receiveNo, poPONO: poNo),
       ),
     );
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
