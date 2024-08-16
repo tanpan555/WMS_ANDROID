@@ -6,6 +6,7 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
 import 'SSINDT01_grid.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_main.dart';
+import 'package:wms_android/SSINDT01/SSINDT01_grid_data.dart';
 
 class Ssindt01Form extends StatefulWidget {
   final String poReceiveNo;
@@ -495,7 +496,7 @@ String errorMessage = '';
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) =>
-            Ssindt01Grid(poReceiveNo: receiveNo, poPONO: poNo),
+            GridPage(poReceiveNo: receiveNo, poPONO: poNo),
       ),
     );
   }
