@@ -80,10 +80,28 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
     }
   }
 
+  String getTitle(P_MAIN_MENU) {
+    switch (P_MAIN_MENU) {
+      case 'IW.10.00.00':
+        return 'WMS คลังวัตถุดิบ';
+      case 'IW.20.00.00':
+        return 'WMS คลังสำเร็จรูป';
+      case 'IW.30.00.00':
+        return 'Bacode and Tag';
+      case 'IW.40.00.00':
+        return 'ตรวจนับประจำงวด';
+      default:
+        return 'error';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      backgroundColor: Color(0xFF17153B),
+      appBar: CustomAppBar(
+        title: getTitle(P_MAIN_MENU), // เรียกใช้ฟังก์ชัน getTitle
+      ),
       drawer: const CustomDrawer(),
       body: Padding(
         padding: EdgeInsets.all(10.0),

@@ -14,7 +14,7 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       drawer: const CustomDrawer(),
       body: Center(
         child: Text("รับตรง (ไม่อ้าง PO)"),

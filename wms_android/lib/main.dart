@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'custom_appbar.dart';
-import 'custom_drawer.dart';
+// import 'custom_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'test_menu_lv2.dart';
@@ -86,8 +86,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
-      drawer: const CustomDrawer(),
+      backgroundColor: Color(0xFF17153B),
+      appBar: CustomAppBar(title: 'Home'),
+      // drawer: const CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(

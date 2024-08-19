@@ -553,6 +553,26 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       borderRadius: BorderRadius.circular(4.0),
     );
 
+    // Determine the content for card_qc
+    Widget cardQcWidget;
+    if (item['card_qc'] == '#APP_IMAGES#rt_machine_on.png') {
+      cardQcWidget = Image.asset(
+        'assets/images/rt_machine_on.png',
+        width: 64.0,
+        height: 64.0,
+      );
+    } else if (item['card_qc'] == '#APP_IMAGES#rt_machine_off.png') {
+      cardQcWidget = Image.asset(
+        'assets/images/rt_machine_off.png',
+        width: 64.0,
+        height: 64.0,
+      );
+    } else if (item['card_qc'] == 'No item') {
+      cardQcWidget = SizedBox.shrink(); // No widget displayed
+    } else {
+      cardQcWidget = Text('');
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
       child: Card(
@@ -563,35 +583,38 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
         elevation: 5,
         child: ListTile(
           title: Text(item['ap_name'] ?? 'No Name'),
-          subtitle: RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text:
-                      ' ${item['receive_date'] ?? 'No Receive Date'} ${item['po_no'] ?? 'No PO_NO'} ${item['item_stype_desc'] ?? 'No item'}\n',
-                  style: DefaultTextStyle.of(context).style,
-                ),
-                TextSpan(
-                  text: 'สถานะ: ',
-                  style: DefaultTextStyle.of(context).style,
-                ),
-                WidgetSpan(
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
-                    decoration: statusDecoration,
-                    child: Text(
-                      '${item['status_desc'] ?? 'No Status'}',
-                      style: statusStyle,
-                    ),
+          subtitle: Row(
+            children: [
+              Expanded(
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text:
+                            '${item['receive_date'] ?? 'No Receive Date'} ${item['po_no'] ?? 'No PO_NO'} ${item['item_stype_desc'] ?? 'No item'}\n',
+                        style: TextStyle(color: Colors.black, fontSize: 12),
+                      ),
+                      TextSpan(
+                        text: '\n',
+                        style: DefaultTextStyle.of(context).style,
+                      ),
+                      WidgetSpan(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 4.0, vertical: 2.0),
+                          decoration: statusDecoration,
+                          child: Text(
+                            '${item['status_desc'] ?? 'No Status'}',
+                            style: statusStyle,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                TextSpan(
-                  text: '\nqc_yn: ${item['card_qc'] ?? 'No item'}\n',
-                  style: DefaultTextStyle.of(context).style,
-                ),
-              ],
-            ),
+              ),
+              cardQcWidget,
+            ],
           ),
           onTap: () => handleTap(context, item),
         ),
@@ -603,7 +626,8 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      backgroundColor: Color(0xFF17153B),
+      appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
       drawer: const CustomDrawer(),
       body: OrientationBuilder(
         builder: (context, orientation) {
@@ -617,7 +641,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
-                          if (isPortrait) // Show search box only in portrait mode
+                          if (isPortrait)
                             Container(
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.black38),

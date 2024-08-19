@@ -152,7 +152,8 @@ class _Ssindt01BarcodeState extends State<Ssindt01Barcode> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(), // Use the CustomAppBar
+      backgroundColor: Color(0xFF17153B),
+      appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'), // Use the CustomAppBar
       drawer: const CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

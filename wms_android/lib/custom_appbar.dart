@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
-  const CustomAppBar({super.key, this.title = 'WMS'});
+  CustomAppBar({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: false,
-      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+      backgroundColor: Color(0xFF17153B),
       leading: Builder(
         builder: (BuildContext context) {
           return IconButton(
@@ -22,16 +22,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         },
       ),
       title: GestureDetector(
-        onTap: () {
-          // Navigate back to the main page
-          Navigator.popUntil(context, (route) => route.isFirst);
-        },
+        // onTap: () {
+        // Navigate back to the main page
+        // Navigator.popUntil(context, (route) => route.isFirst);
+        // },
         child: Row(
+          // mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset(
-              'assets/images/app-logo.png',
-              height: 40.0, // Adjust the height as needed
+            IconButton(
+              icon: Icon(
+                Icons.arrow_back_outlined,
+                color: Colors.white, // ปรับสีไอคอนตามที่ต้องการ
+              ),
+              onPressed: () {
+                Navigator.pop(context); // ทำการย้อนกลับไปยังหน้าก่อนหน้า
+              },
             ),
+            // Image.asset(
+            //   'assets/images/app-logo.png',
+            //   height: 40.0, // Adjust the height as needed
+            // ),
             const SizedBox(width: 8.0),
             Text(
               title,

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
-import 'package:wms_android/bottombar.dart';  // Import the BottomBar
+import 'package:wms_android/bottombar.dart'; // Import the BottomBar
 
 class Ssindt01Verify extends StatefulWidget {
   final String poReceiveNo;
@@ -93,7 +93,8 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      backgroundColor: Color(0xFF17153B),
+      appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
       drawer: const CustomDrawer(),
       body: Column(
         children: [
@@ -101,7 +102,8 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
             child: dataList.isEmpty
                 ? Center(
                     child: Text('No data available',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)))
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)))
                 : SingleChildScrollView(
                     padding: EdgeInsets.all(8.0),
                     child: Column(
@@ -128,7 +130,8 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                                 SizedBox(height: 8.0),
                                 Row(
                                   children: [
-                                    Icon(Icons.assignment, color: Colors.grey[700]),
+                                    Icon(Icons.assignment,
+                                        color: Colors.grey[700]),
                                     SizedBox(width: 8.0),
                                     Expanded(
                                       child: Text(
@@ -141,7 +144,8 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                                 SizedBox(height: 4.0),
                                 Row(
                                   children: [
-                                    Icon(Icons.pending, color: Colors.orange[700]),
+                                    Icon(Icons.pending,
+                                        color: Colors.orange[700]),
                                     SizedBox(width: 8.0),
                                     Expanded(
                                       child: Text(
@@ -154,7 +158,8 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                                 SizedBox(height: 4.0),
                                 Row(
                                   children: [
-                                    Icon(Icons.location_on, color: Colors.blue[700]),
+                                    Icon(Icons.location_on,
+                                        color: Colors.blue[700]),
                                     SizedBox(width: 8.0),
                                     Expanded(
                                       child: Text(
@@ -178,7 +183,6 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                                   ],
                                 ),
                                 SizedBox(height: 4.0),
-                            
                               ],
                             ),
                           ),

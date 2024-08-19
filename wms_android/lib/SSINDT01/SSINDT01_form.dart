@@ -275,11 +275,9 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
         );
       } catch (e) {
         print('Error parsing response: $e');
-   
       }
     } else {
       print('Failed to cancel: ${response.statusCode}');
-    
     }
   }
 
@@ -354,9 +352,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => SSINDT01_MAIN(),
                               ));
-                            }).catchError((error) {
-                        
-                            });
+                            }).catchError((error) {});
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
@@ -409,10 +405,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
     if (response.statusCode == 200) {
       print('Update successful');
-   
     } else {
       print('Failed to update: ${response.statusCode}');
-  
     }
   }
 
@@ -495,7 +489,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      backgroundColor: Color(0xFF17153B),
+      appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
       drawer: const CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -550,24 +545,25 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                   ),
                   const Spacer(),
                   ElevatedButton(
-  style: ElevatedButton.styleFrom(
-    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12.0),
-    ),
-    minimumSize: const Size(10, 20),
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-  ),
-  onPressed: () {
-    fetchPoStatus();
-    _updateForm();
-  },
-  child: const Icon(
-    Icons.arrow_forward,  
-    color: Color.fromARGB(255, 255, 255, 255),
-    size: 24,  
-  ),
-),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      minimumSize: const Size(10, 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                    ),
+                    onPressed: () {
+                      fetchPoStatus();
+                      _updateForm();
+                    },
+                    child: const Icon(
+                      Icons.arrow_forward,
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      size: 24,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 16.0),
@@ -792,13 +788,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             readOnly: true,
           ),
         ],
-        
       ),
-      
-      
     );
-    
-    
   }
-
 }
