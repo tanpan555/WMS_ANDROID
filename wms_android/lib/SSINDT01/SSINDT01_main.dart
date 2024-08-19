@@ -38,7 +38,19 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     super.initState();
     fixedValue = valueMapping[_selectedValue] ?? 'C';
     fetchApCodes();
-    fetchwhCodes();
+
+   fetchwhCodes().then((_) {
+  checkWareCodeSelection();
+  setState(() {
+    isLoading = false;
+  });
+}).catchError((error) {
+  setState(() {
+    errorMessage = error.toString();
+    isLoading = false;
+  });
+});
+
 
     print(
         'searchController: $searchController  type: ${searchController.runtimeType}');
@@ -123,6 +135,47 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       print('Error: $e');
     }
   }
+
+  void checkWareCodeSelection() {
+    if (selectedwhCode == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showWareCodeDialog();
+      });
+    }
+  }
+
+  void showWareCodeDialog() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Select Warehouse Code'),
+        content: Container(
+           width: MediaQuery.of(context).size.width * 0.9,
+          child: DropdownButton<String>(
+                              isExpanded: true,
+                              value: selectedwhCode,
+                              hint: Text('เลือกคลังปฏิบัติการ'),
+                              items: whCodes.map((item) {
+                                return DropdownMenuItem<String>(
+                                  value: item['ware_code'],
+                                  child: Text(item['ware_code'] ?? 'No code'),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                Navigator.of(context).pop();
+                                setState(() {
+                                  selectedwhCode = value;
+                                });
+                              },
+                            ),
+        ),
+      );
+    },
+  );
+}
+
+
 
   void _showFilterDialog() {
     showDialog(
@@ -273,28 +326,49 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     filterData();
   }
 
-  Future<void> fetchWareCodes() async {
-    try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/c/new_card_list/$fixedValue'));
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final jsonData = json.decode(responseBody);
-        setState(() {
-          data = jsonData['items'] ?? [];
-          filterData();
-          isLoading = false;
-        });
-      } else {
-        throw Exception('Failed to load data');
-      }
-    } catch (e) {
+int _currentPage = 1;
+final int _itemsPerPage = 15;
+bool _hasMoreData = true;
+
+  Future<void> fetchWareCodes({int page = 1}) async {
+  try {
+    final response = await http.get(Uri.parse(
+        'http://172.16.0.82:8888/apex/wms/c/new_card_list/$fixedValue?page=$page&limit=$_itemsPerPage'));
+    if (response.statusCode == 200) {
+      final responseBody = utf8.decode(response.bodyBytes);
+      final jsonData = json.decode(responseBody);
+      final newData = jsonData['items'] ?? [];
       setState(() {
+        data.addAll(newData);
+        displayedData = data;
+        _hasMoreData = newData.length == _itemsPerPage;
         isLoading = false;
-        errorMessage = e.toString();
       });
+    } else {
+      throw Exception('Failed to load data');
     }
+  } catch (e) {
+    setState(() {
+      isLoading = false;
+      errorMessage = e.toString();
+    });
   }
+}
+Widget _buildLoadMoreButton() {
+  return Visibility(
+    visible: _hasMoreData,
+    child: ElevatedButton(
+      onPressed: () {
+        setState(() {
+          _currentPage++;
+          fetchWareCodes(page: _currentPage);
+        });
+      },
+      child: Text('แสดงเพิ่มเติม'),
+    ),
+  );
+}
+
 
   void filterData() {
     setState(() {
@@ -502,80 +576,84 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(),
-      drawer: const CustomDrawer(),
-      body: OrientationBuilder(
-        builder: (context, orientation) {
-          final isPortrait = orientation == Orientation.portrait;
+@override
+Widget build(BuildContext context) {
+  List<Widget> listItems = displayedData.map((item) {
+    return buildListTile(context, item);
+  }).toList();
 
-          return isLoading
-              ? Center(child: CircularProgressIndicator())
-              : errorMessage.isNotEmpty
-                  ? Center(child: Text('Error: $errorMessage'))
-                  : Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        children: [
-                          if (isPortrait) // Show search box only in portrait mode
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black38),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(5.0),
-                                    color: Colors.deepPurple,
-                                    child: Row(
-                                      children: [
-                                        const Expanded(
-                                          child: Text(
-                                            'รับจากการสั่งซื้อ',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ),
-                                        TextButton(
-                                          onPressed: _showFilterDialog,
-                                          style: TextButton.styleFrom(
-                                            backgroundColor: Colors.white,
-                                            foregroundColor: Colors.black54,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                            ),
-                                          ),
-                                          child: const Text('ค้นหา'),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          const SizedBox(height: 10),
-                          Expanded(
-                            child: displayedData.isEmpty
-                                ? Center(child: Text('No data available'))
-                                : ListView.builder(
-                                    controller: _scrollController,
-                                    itemCount: displayedData.length,
-                                    itemBuilder: (context, index) {
-                                      final item = displayedData[index];
-                                      return buildListTile(context, item);
-                                    },
-                                  ),
-                          ),
-                        ],
-                      ),
-                    );
-        },
-      ),
-      bottomNavigationBar: BottomBar(),
-    );
+  if (_hasMoreData) {
+    listItems.add(_buildLoadMoreButton());
   }
+
+  return Scaffold(
+    appBar: const CustomAppBar(),
+    drawer: const CustomDrawer(),
+    body: OrientationBuilder(
+      builder: (context, orientation) {
+        final isPortrait = orientation == Orientation.portrait;
+
+        return isLoading
+            ? Center(child: CircularProgressIndicator())
+            : errorMessage.isNotEmpty
+                ? Center(child: Text('Error: $errorMessage'))
+                : Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      children: [
+                        if (isPortrait) // Show search box only in portrait mode
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black38),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(5.0),
+                                  color: Colors.deepPurple,
+                                  child: Row(
+                                    children: [
+                                      const Expanded(
+                                        child: Text(
+                                          'รับจากการสั่งซื้อ',
+                                          style:
+                                              TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: _showFilterDialog,
+                                        style: TextButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                          foregroundColor: Colors.black54,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                        ),
+                                        child: const Text('ค้นหา'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        const SizedBox(height: 10),
+                        Expanded(
+                          child: ListView(
+                            controller: _scrollController,
+                            children: listItems,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+      },
+    ),
+    bottomNavigationBar: BottomBar(),
+  );
+}
+
+
 }
