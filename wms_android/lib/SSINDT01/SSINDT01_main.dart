@@ -34,23 +34,18 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   final ScrollController _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
-    fixedValue = valueMapping[_selectedValue] ?? 'C';
-    fetchApCodes();
-
-   fetchwhCodes().then((_) {
-  checkWareCodeSelection();
-  setState(() {
-    isLoading = false;
+void initState() {
+  super.initState();
+  fixedValue = valueMapping[_selectedValue] ?? 'C';
+  fetchApCodes().then((_) {
+    return fetchwhCodes();
+  }).then((_) {
+    if (selectedwhCode == null) {
+      _showSelectWareCodeDialog();
+    }
+  }).catchError((e) {
+    print('Error during fetch operations: $e');
   });
-}).catchError((error) {
-  setState(() {
-    errorMessage = error.toString();
-    isLoading = false;
-  });
-});
-
 
     print(
         'searchController: $searchController  type: ${searchController.runtimeType}');
@@ -135,47 +130,6 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       print('Error: $e');
     }
   }
-
-  void checkWareCodeSelection() {
-    if (selectedwhCode == null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        showWareCodeDialog();
-      });
-    }
-  }
-
-  void showWareCodeDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Select Warehouse Code'),
-        content: Container(
-           width: MediaQuery.of(context).size.width * 0.9,
-          child: DropdownButton<String>(
-                              isExpanded: true,
-                              value: selectedwhCode,
-                              hint: Text('เลือกคลังปฏิบัติการ'),
-                              items: whCodes.map((item) {
-                                return DropdownMenuItem<String>(
-                                  value: item['ware_code'],
-                                  child: Text(item['ware_code'] ?? 'No code'),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                Navigator.of(context).pop();
-                                setState(() {
-                                  selectedwhCode = value;
-                                });
-                              },
-                            ),
-        ),
-      );
-    },
-  );
-}
-
-
 
   void _showFilterDialog() {
     showDialog(
@@ -326,49 +280,36 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     filterData();
   }
 
-int _currentPage = 1;
-final int _itemsPerPage = 15;
-bool _hasMoreData = true;
+   int _displayLimit = 15;
 
-  Future<void> fetchWareCodes({int page = 1}) async {
-  try {
-    final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/c/new_card_list/$fixedValue?page=$page&limit=$_itemsPerPage'));
-    if (response.statusCode == 200) {
-      final responseBody = utf8.decode(response.bodyBytes);
-      final jsonData = json.decode(responseBody);
-      final newData = jsonData['items'] ?? [];
-      setState(() {
-        data.addAll(newData);
-        displayedData = data;
-        _hasMoreData = newData.length == _itemsPerPage;
-        isLoading = false;
-      });
-    } else {
-      throw Exception('Failed to load data');
-    }
-  } catch (e) {
+   void _loadMoreItems() {
     setState(() {
-      isLoading = false;
-      errorMessage = e.toString();
+      _displayLimit += 15;
     });
   }
-}
-Widget _buildLoadMoreButton() {
-  return Visibility(
-    visible: _hasMoreData,
-    child: ElevatedButton(
-      onPressed: () {
-        setState(() {
-          _currentPage++;
-          fetchWareCodes(page: _currentPage);
-        });
-      },
-      child: Text('แสดงเพิ่มเติม'),
-    ),
-  );
-}
 
+  Future<void> fetchWareCodes() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/c/new_card_list/$fixedValue'));
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final jsonData = json.decode(responseBody);
+        setState(() {
+          data = jsonData['items'] ?? [];
+          filterData();
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+        errorMessage = e.toString();
+      });
+    }
+  }
 
   void filterData() {
     setState(() {
@@ -464,7 +405,34 @@ Widget _buildLoadMoreButton() {
       print('Error: $e');
     }
   }
-
+ void _showSelectWareCodeDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Warehouse'),
+          content: DropdownButton<String>(
+                              isExpanded: true,
+                              value: selectedwhCode,
+                              hint: Text('เลือกคลังปฏิบัติการ'),
+                              items: whCodes.map((item) {
+                                return DropdownMenuItem<String>(
+                                  value: item['ware_code'],
+                                  child: Text(item['ware_code'] ?? 'No code'),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedwhCode = value;
+                                   Navigator.of(context).pop();
+                                });
+                              },
+                            ),
+      
+        );
+      },
+    );
+  }
   void handleTap(BuildContext context, Map<String, dynamic> item) async {
     if (selectedwhCode == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -578,14 +546,6 @@ Widget _buildLoadMoreButton() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 @override
 Widget build(BuildContext context) {
-  List<Widget> listItems = displayedData.map((item) {
-    return buildListTile(context, item);
-  }).toList();
-
-  if (_hasMoreData) {
-    listItems.add(_buildLoadMoreButton());
-  }
-
   return Scaffold(
     appBar: const CustomAppBar(),
     drawer: const CustomDrawer(),
@@ -617,8 +577,7 @@ Widget build(BuildContext context) {
                                       const Expanded(
                                         child: Text(
                                           'รับจากการสั่งซื้อ',
-                                          style:
-                                              TextStyle(color: Colors.white),
+                                          style: TextStyle(color: Colors.white),
                                         ),
                                       ),
                                       TextButton(
@@ -627,8 +586,7 @@ Widget build(BuildContext context) {
                                           backgroundColor: Colors.white,
                                           foregroundColor: Colors.black54,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
+                                            borderRadius: BorderRadius.circular(10.0),
                                           ),
                                         ),
                                         child: const Text('ค้นหา'),
@@ -641,11 +599,31 @@ Widget build(BuildContext context) {
                           ),
                         const SizedBox(height: 10),
                         Expanded(
-                          child: ListView(
-                            controller: _scrollController,
-                            children: listItems,
-                          ),
-                        ),
+  child: displayedData.isEmpty
+      ? Center(child: Text('No data available'))
+      : ListView.builder(
+          controller: _scrollController,
+          itemCount: (_displayLimit < displayedData.length)
+              ? _displayLimit + 1
+              : displayedData.length,
+          itemBuilder: (context, index) {
+            if (index == _displayLimit) {
+              return Center(
+                child: ElevatedButton(
+                  onPressed: _loadMoreItems,
+                  child: Text('แสดงเพิ่มเติม'),
+                ),
+              );
+            }
+            if (index < displayedData.length) {
+              final item = displayedData[index];
+              return buildListTile(context, item);
+            }
+            return Container();
+          },
+        ),
+),
+
                       ],
                     ),
                   );
@@ -654,6 +632,5 @@ Widget build(BuildContext context) {
     bottomNavigationBar: BottomBar(),
   );
 }
-
 
 }
