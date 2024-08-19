@@ -3,11 +3,9 @@ import 'custom_appbar.dart';
 import 'custom_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'bottombar.dart';
 import 'test_menu_lv2.dart';
-// import 'data_api.dart';
-import 'package:wms_android/Global_Parameter.dart' as globals;
-import 'SSINDT01/SSINDT01_barcode.dart';
+import 'login.dart';
+import 'bottombar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,11 +17,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Drawer Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(),
+      initialRoute: '/login', // Set LoginPage as the initial route
+      routes: {
+        '/login': (context) => LoginPage(),
+        '/home': (context) => const MyHomePage(),
+      },
     );
   }
 }
@@ -37,16 +35,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> dataMenu = [];
-
-  // final ApiService _apiService = ApiService();
+  late String sessionID;
+  String newSessionID = '';
 
   @override
-  void initState() {
-    super.initState();
-    fetchData(); // เรียกใช้ฟังก์ชันเพื่อโหลดข้อมูล
-    // _apiService.fetchSessionid().then((_) {
-    //   setState(() {}); // อัปเดต UI หลังจากโหลดข้อมูล
-    // });
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments as String?;
+    if (args != null) {
+      sessionID = args;
+      fetchData();
+      newSessionID = args;
+    }
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -57,9 +57,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> fetchData() async {
+    print('sessionID in Main : $sessionID Type : ${sessionID.runtimeType}');
     try {
-      final response = await http
-          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/c/menuLv1'));
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/c/menu_level_1/$sessionID'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -69,9 +70,10 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           dataMenu =
               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          print(globals.APP_USER);
         });
         print('dataMenu : $dataMenu');
+        print(
+            'newSessionID in Main : $newSessionID Type : ${newSessionID.runtimeType}');
       } else {
         throw Exception('Failed to load fetchData');
       }
@@ -90,7 +92,6 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            Text(globals.APP_USER),
             const SizedBox(height: 20), // Spacing above the grid
             Expanded(
               child: SingleChildScrollView(
@@ -147,8 +148,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                TestMenuLv2(menu_id: item['menu_id']),
+                            builder: (context) => TestMenuLv2(
+                                menu_id: item['menu_id'],
+                                sessionID: newSessionID),
                           ),
                         );
                       },
@@ -200,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-       bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }

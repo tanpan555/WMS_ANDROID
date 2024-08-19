@@ -6,7 +6,8 @@ String APP_USER = 'SS-STAFF';
 String P_OU_CODE = 'LIK';
 String P_ERP_OU_CODE = '000';
 String BROWSER_LANGUAGE = 'EN';
-int APP_SESSION = 0;
+String APP_SESSION = '';
+// int APP_SESSION = 0;
 int sessionid = 0;
 
 String poPONO = 'PO-CR0760-0003'; // Test

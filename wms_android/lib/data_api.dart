@@ -41,7 +41,10 @@ class ApiService {
         if (responseBody.isNotEmpty) {
           final data = jsonDecode(responseBody);
           final dataSessionId = data['app_session'];
-          globals.APP_SESSION = int.parse(dataSessionId);
+          // globals.APP_SESSION = int.parse(dataSessionId);
+          globals.APP_SESSION = dataSessionId;
+          print('globals.APP_SESSION');
+          print(globals.APP_SESSION);
         } else {
           print('Empty response body.');
         }
