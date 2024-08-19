@@ -49,26 +49,26 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
             children: [
-              IconButton(
-                icon: const FaIcon(
-                  FontAwesomeIcons.user,
-                  size: 18.0,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  // Define your onPressed action here
-                },
-              ),
-              IconButton(
-                icon: const FaIcon(
-                  FontAwesomeIcons.angleDown,
-                  size: 15.0,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  // Define your onPressed action here
-                },
-              ),
+              // IconButton(
+              //   icon: const FaIcon(
+              //     FontAwesomeIcons.user,
+              //     size: 18.0,
+              //     color: Colors.white,
+              //   ),
+              //   onPressed: () {
+              //     // Define your onPressed action here
+              //   },
+              // ),
+              // IconButton(
+              //   icon: const FaIcon(
+              //     FontAwesomeIcons.angleDown,
+              //     size: 15.0,
+              //     color: Colors.white,
+              //   ),
+              //   onPressed: () {
+              //     // Define your onPressed action here
+              //   },
+              // ),
             ],
           ),
         ),

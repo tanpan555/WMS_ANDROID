@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_main.dart';
@@ -102,9 +103,9 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           poMessage = responseBody['po_message'];
           print('po_status: $poStatus');
           print('po_message: $poMessage');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('$poMessage')),
-          );
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(content: Text('$poMessage')),
+          // );
         });
       } else {
         throw Exception('Failed to load PO status');
@@ -274,15 +275,11 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
         );
       } catch (e) {
         print('Error parsing response: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to parse response')),
-        );
+   
       }
     } else {
       print('Failed to cancel: ${response.statusCode}');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to cancel: ${response.statusCode}')),
-      );
+    
     }
   }
 
@@ -358,10 +355,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                                 builder: (context) => SSINDT01_MAIN(),
                               ));
                             }).catchError((error) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text('Error occurred: $error')),
-                              );
+                        
                             });
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -415,14 +409,10 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
     if (response.statusCode == 200) {
       print('Update successful');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Update successful')),
-      );
+   
     } else {
       print('Failed to update: ${response.statusCode}');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update: ${response.statusCode}')),
-      );
+  
     }
   }
 
@@ -539,7 +529,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                   const SizedBox(width: 5),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                      backgroundColor: const Color.fromARGB(255, 255, 43, 43),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0),
                       ),
@@ -560,28 +550,24 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                   ),
                   const Spacer(),
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: const Size(10, 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                    ),
-                    onPressed: () {
-                      fetchPoStatus();
-                      _updateForm();
-                    }, // Update onPressed to call _submitForm
-                    // onPressed: _submitForm, // Update onPressed to call _submitForm
-                    child: const Text(
-                      'ถัดไป',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+  style: ElevatedButton.styleFrom(
+    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12.0),
+    ),
+    minimumSize: const Size(10, 20),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+  ),
+  onPressed: () {
+    fetchPoStatus();
+    _updateForm();
+  },
+  child: const Icon(
+    Icons.arrow_forward,  
+    color: Color.fromARGB(255, 255, 255, 255),
+    size: 24,  
+  ),
+),
                 ],
               ),
               const SizedBox(height: 16.0),
@@ -595,6 +581,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 
@@ -805,56 +792,13 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             readOnly: true,
           ),
         ],
+        
       ),
+      
+      
     );
+    
+    
   }
 
-  // Widget _buildDatePickerField(
-  //     {required String label, required TextEditingController controller}) {
-  //   return TextFormField(
-  //     controller: controller,
-  //     decoration: InputDecoration(
-  //       labelText: label,
-  //       border: OutlineInputBorder(),
-  //       suffixIcon: IconButton(
-  //         icon: const Icon(Icons.calendar_today),
-  //         onPressed: () {
-  //           _selectDate(context, controller);
-  //         },
-  //       ),
-  //     ),
-  //     readOnly: true,
-  //     onTap: () {
-  //       _selectDate(context, controller);
-  //     },
-  //   );
-  // }
-
-  // Widget _buildTextField({required String label}) {
-  //   return TextField(
-  //     decoration: InputDecoration(
-  //       labelText: label,
-  //       border: OutlineInputBorder(),
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildDisabledTextField(
-  //     {required String label, required String initialValue}) {
-  //   return TextFormField(
-  //     initialValue: initialValue,
-  //     enabled: false,
-  //     style: const TextStyle(
-  //       color: Colors.black87,
-  //     ),
-  //     decoration: InputDecoration(
-  //       filled: true,
-  //       fillColor: Colors.grey[300],
-  //       labelText: label,
-  //       labelStyle: const TextStyle(
-  //         color: Colors.black87,
-  //       ),
-  //     ),
-  //   );
-  // }
 }

@@ -3,6 +3,7 @@ import 'custom_appbar.dart';
 import 'custom_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'bottombar.dart';
 import 'SSINDT01/SSINDT01_main.dart';
 import 'SSFGDT04/SSFGDT04_main.dart';
 // Import หน้าหรือ widgets ต่างๆ ที่คุณต้องการนำทางไป
@@ -150,6 +151,7 @@ Widget build(BuildContext context) {
         ],
       ),
     ),
+    bottomNavigationBar: BottomBar(),
   );
 }
 

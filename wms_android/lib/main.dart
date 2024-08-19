@@ -3,6 +3,7 @@ import 'custom_appbar.dart';
 import 'custom_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'bottombar.dart';
 import 'test_menu_lv2.dart';
 // import 'data_api.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -90,18 +91,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             Text(globals.APP_USER),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => Ssindt01Barcode(
-                        poReceiveNo: globals.poReceiveNo,
-                        poPONO: globals.poPONO,
-                      ),
-                    ),
-                  );
-                },
-                child: Text('barcode')),
             const SizedBox(height: 20), // Spacing above the grid
             Expanded(
               child: SingleChildScrollView(
@@ -211,6 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+       bottomNavigationBar: BottomBar(),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:ui';
+import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
 import 'SSINDT01_form.dart';
@@ -140,7 +141,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                     ),
                   ),
                   AlertDialog(
-                    title: Text('Filter Options'),
+                    title: Text('ตัวเลือกการกรอง'),
                     content: Container(
                       width: MediaQuery.of(context).size.width * 0.9,
                       constraints: BoxConstraints(
@@ -153,7 +154,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                             DropdownButton<String>(
                               isExpanded: true,
                               value: selectedwhCode,
-                              hint: Text('Select warehouse'),
+                              hint: Text('เลือกคลังปฏิบัติการ'),
                               items: whCodes.map((item) {
                                 return DropdownMenuItem<String>(
                                   value: item['ware_code'],
@@ -228,7 +229,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                             TextField(
                               controller: searchController,
                               decoration: InputDecoration(
-                                labelText: 'Search',
+                                labelText: 'ค้นหา',
                                 border: OutlineInputBorder(),
                               ),
                               onChanged: (value) {
@@ -249,13 +250,13 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                             fetchWareCodes();
                           });
                         },
-                        child: Text('Apply'),
+                        child: Text('ยืนยัน'),
                       ),
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: Text('Cancel'),
+                        child: Text('ยกเลิก'),
                       ),
                     ],
                   ),
@@ -548,7 +549,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                                                   BorderRadius.circular(10.0),
                                             ),
                                           ),
-                                          child: const Text('Search'),
+                                          child: const Text('ค้นหา'),
                                         ),
                                       ],
                                     ),
@@ -574,6 +575,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                     );
         },
       ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }

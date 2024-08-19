@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
+import 'package:wms_android/bottombar.dart';
 
 class SSFGDT04_MAIN extends StatefulWidget {
   const SSFGDT04_MAIN({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
       body: Center(
         child: Text("รับตรง (ไม่อ้าง PO)"),
       ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }

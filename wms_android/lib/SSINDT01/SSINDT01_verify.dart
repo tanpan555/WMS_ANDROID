@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
+import 'package:wms_android/bottombar.dart';  // Import the BottomBar
 
 class Ssindt01Verify extends StatefulWidget {
   final String poReceiveNo;
@@ -94,132 +95,127 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
     return Scaffold(
       appBar: const CustomAppBar(),
       drawer: const CustomDrawer(),
-      body: dataList.isEmpty
-          ? Center(
-              child: Text('No data available',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)))
-          : SingleChildScrollView(
-              padding: EdgeInsets.all(8.0),
-              child: Column(
-                children: dataList.map((data) {
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8.0),
-                    elevation: 6.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Item: ${data['item'] ?? 'N/A'}',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.deepPurple,
+      body: Column(
+        children: [
+          Expanded(
+            child: dataList.isEmpty
+                ? Center(
+                    child: Text('No data available',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)))
+                : SingleChildScrollView(
+                    padding: EdgeInsets.all(8.0),
+                    child: Column(
+                      children: dataList.map((data) {
+                        return Card(
+                          margin: EdgeInsets.symmetric(vertical: 8.0),
+                          elevation: 6.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Item: ${data['item'] ?? 'N/A'}',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.deepPurple,
+                                  ),
+                                ),
+                                SizedBox(height: 8.0),
+                                Row(
+                                  children: [
+                                    Icon(Icons.assignment, color: Colors.grey[700]),
+                                    SizedBox(width: 8.0),
+                                    Expanded(
+                                      child: Text(
+                                        'จำนวนรับ: ${data['receive_qty']?.toString() ?? 'N/A'}',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 4.0),
+                                Row(
+                                  children: [
+                                    Icon(Icons.pending, color: Colors.orange[700]),
+                                    SizedBox(width: 8.0),
+                                    Expanded(
+                                      child: Text(
+                                        'Pending Quantity: ${data['pending_qty']?.toString() ?? 'N/A'}',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 4.0),
+                                Row(
+                                  children: [
+                                    Icon(Icons.location_on, color: Colors.blue[700]),
+                                    SizedBox(width: 8.0),
+                                    Expanded(
+                                      child: Text(
+                                        'Locator: ${data['locator_det']?.toString() ?? 'N/A'}',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 4.0),
+                                Row(
+                                  children: [
+                                    Icon(Icons.check, color: Colors.blue[700]),
+                                    SizedBox(width: 8.0),
+                                    Expanded(
+                                      child: Text(
+                                        'Product No: ${data['lot_product_no']?.toString() ?? 'N/A'}',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 4.0),
+                            
+                              ],
                             ),
                           ),
-                          SizedBox(height: 8.0),
-                          Row(
-                            children: [
-                              Icon(Icons.assignment, color: Colors.grey[700]),
-                              SizedBox(width: 8.0),
-                              Expanded(
-                                child: Text(
-                                  'Received Quantity: ${data['receive_qty']?.toString() ?? 'N/A'}',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 4.0),
-                          Row(
-                            children: [
-                              Icon(Icons.pending, color: Colors.orange[700]),
-                              SizedBox(width: 8.0),
-                              Expanded(
-                                child: Text(
-                                  'Pending Quantity: ${data['pending_qty']?.toString() ?? 'N/A'}',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 4.0),
-                          Row(
-                            children: [
-                              Icon(Icons.location_on, color: Colors.blue[700]),
-                              SizedBox(width: 8.0),
-                              Expanded(
-                                child: Text(
-                                  'Locator: ${data['locator_det']?.toString() ?? 'N/A'}',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 4.0),
-                          Row(
-                            children: [
-                              Icon(Icons.format_list_numbered,
-                                  color: Colors.green[700]),
-                              SizedBox(width: 8.0),
-                              Expanded(
-                                child: Text(
-                                  'Total Quantity: ${data['lot_total_nb']?.toString() ?? 'N/A'}',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 4.0),
-                          Row(
-                            children: [
-                              Icon(Icons.transform, color: Colors.purple[700]),
-                              SizedBox(width: 8.0),
-                              Expanded(
-                                child: Text(
-                                  'UOM: ${data['uom']?.toString() ?? 'N/A'}',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                        );
+                      }).toList(),
                     ),
+                  ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () {
+                chk_sub();
+                if (poStatus == '0') {
+                  showCustomDialog(context);
+                } else if (poStatus == '1') {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(poMessage!)),
                   );
-                }).toList(),
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+                padding: EdgeInsets.symmetric(vertical: 15.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+              ),
+              child: Text(
+                'ยืนยัน',
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ElevatedButton(
-          onPressed: () {
-            chk_sub();
-            if (poStatus == '0') {
-              showCustomDialog(context);
-            } else if (poStatus == '1') {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(poMessage!)),
-              );
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.deepPurple,
-            padding: EdgeInsets.symmetric(vertical: 15.0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
           ),
-          child: Text(
-            'Submit',
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ),
+        ],
       ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 
@@ -228,17 +224,17 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirmation'),
-          content: Text('Are you sure you want to submit?'),
+          title: Text('ยืนยัน'),
+          content: Text('ยืนยันหรือไม่?'),
           actions: [
             TextButton(
-              child: Text('Cancel'),
+              child: Text('ยกเลิก'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('OK'),
+              child: Text('ยืนยัน'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
