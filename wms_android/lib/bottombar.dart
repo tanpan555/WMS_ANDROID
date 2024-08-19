@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wms_android/Global_Parameter.dart' as globals;
 
 class BottomBar extends StatefulWidget {
   @override
@@ -7,15 +8,23 @@ class BottomBar extends StatefulWidget {
 
 class _BottomBarState extends State<BottomBar> {
   int _selectedIndex = 0; // Initial index for the bottom bar
+  String sessionID = '';
 
   void _onItemTapped(int index) {
     setState(() {
+      sessionID = globals.APP_SESSION;
       _selectedIndex = index;
+      print(
+          'sessionID in BottomBar : $sessionID Type : ${sessionID.runtimeType}');
     });
 
     switch (index) {
       case 0:
-        Navigator.pushNamed(context, '/home'); // Navigate to Home
+        Navigator.pushReplacementNamed(
+          context,
+          '/home',
+          arguments: sessionID, // ส่ง sessionID เป็น arguments
+        );
         break;
       case 1:
         _showRightDrawer(context); // Show the drawer from the right
