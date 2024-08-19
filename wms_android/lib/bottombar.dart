@@ -15,7 +15,7 @@ class _BottomBarState extends State<BottomBar> {
 
     switch (index) {
       case 0:
-        Navigator.pushNamed(context, '/'); // Navigate to Home
+        Navigator.pushNamed(context, '/home'); // Navigate to Home
         break;
       case 1:
         _showRightDrawer(context); // Show the drawer from the right
@@ -36,7 +36,9 @@ class _BottomBarState extends State<BottomBar> {
           expand: false,
           builder: (_, controller) {
             return Container(
-              margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.3), // Adjust width here
+              margin: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width *
+                      0.3), // Adjust width here
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -77,7 +79,8 @@ class _BottomBarState extends State<BottomBar> {
     return Container(
       height: 60, // Adjust the height of the background area here
       decoration: BoxDecoration(
-        color: const Color.fromRGBO(255, 255, 255, 1), // Set the background color
+        color:
+            const Color.fromRGBO(255, 255, 255, 1), // Set the background color
       ),
       child: BottomNavigationBar(
         showSelectedLabels: false, // Hide selected labels
@@ -97,7 +100,8 @@ class _BottomBarState extends State<BottomBar> {
         onTap: _onItemTapped,
         iconSize: 25, // Set the icon size here
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white, // Set to transparent to use the container's color
+        backgroundColor:
+            Colors.white, // Set to transparent to use the container's color
       ),
     );
   }

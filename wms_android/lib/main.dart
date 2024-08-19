@@ -109,29 +109,30 @@ class _MyHomePageState extends State<MyHomePage> {
                     final item = dataMenu[index];
 
                     // Check card_value and set icon and color accordingly
-                    IconData iconData;
+                    // IconData iconData;
                     Color cardColor;
+                    String imagePath;
 
                     switch (item['card_value']) {
                       case 'WMS คลังวัตถุดิบ':
-                        iconData = Icons.inventory_2_outlined;
-                        cardColor = Colors.blueAccent;
+                        imagePath = 'assets/images/open-box2.png';
+                        cardColor = Colors.greenAccent;
                         break;
                       case 'WMS คลังสำเร็จรูป':
-                        iconData = Icons.shopping_bag_outlined;
-                        cardColor = Colors.orangeAccent;
+                        imagePath = 'assets/images/box1.png';
+                        cardColor = Colors.blueAccent;
                         break;
                       case 'พิมพ์ Tag':
-                        iconData = Icons.discount_outlined;
-                        cardColor = Colors.greenAccent;
+                        imagePath = 'assets/images/barcode-scanner.png';
+                        cardColor = Colors.pinkAccent;
                         break;
                       case 'ตรวจนับประจำงวด':
-                        iconData = Icons.folder_outlined;
-                        cardColor = Colors.greenAccent;
+                        imagePath = 'assets/images/open-box2.png';
+                        cardColor = Colors.orangeAccent;
                         break;
                       // Add more cases as needed
                       default:
-                        iconData = Icons.help; // Default icon and color
+                        imagePath = 'assets/images/open-box2.png';
                         cardColor = Colors.grey;
                     }
 
@@ -167,27 +168,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                iconData,
-                                size: 50, // Icon size
-                                color: Colors.black,
+                              Image.asset(
+                                imagePath, // ใช้ imagePath ที่กำหนดไว้ใน switch
+                                width: 70, // กำหนดขนาดของภาพ
                               ),
-                              const SizedBox(
-                                  height: 20), // Spacing between icon and text
+                              const SizedBox(height: 20),
                               Text(
                                 item['card_value'] ?? 'No Name',
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 8), // Spacing between text
-                              Text(
-                                item['menu_id'] ?? '',
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.black54,
                                 ),
                               ),
                             ],
@@ -203,6 +194,15 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       bottomNavigationBar: BottomBar(),
+    );
+  }
+
+  Widget images(String imageData, {required double size}) {
+    return Image.asset(
+      imageData,
+      width: size,
+      height: size,
+      fit: BoxFit.cover,
     );
   }
 }

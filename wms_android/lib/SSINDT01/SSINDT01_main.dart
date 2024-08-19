@@ -131,156 +131,163 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     }
   }
 
- void _showFilterDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (context, setState) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            insetPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-            child: Container(
-              padding: EdgeInsets.all(20.0),
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.5,
-              child: SingleChildScrollView( 
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'ตัวเลือกการกรอง',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    DropdownButton<String>(
-                      isExpanded: true,
-                      value: selectedwhCode,
-                      hint: Text('เลือกคลังปฏิบัติการ'),
-                      items: whCodes.map((item) {
-                        return DropdownMenuItem<String>(
-                          value: item['ware_code'],
-                          child: Text(item['ware_code'] ?? 'No code'),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedwhCode = value;
-                        });
-                      },
-                    ),
-                    SizedBox(height: 15),
-                    DropdownButton<String>(
-                      isExpanded: true,
-                      value: _selectedValue,
-                      hint: Text(
-                        'ประเภทสินค้า',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                      items: <String>[
-                        'รายการรอรับดำเนินการ',
-                        'รายการใบสั่งซื้อ',
-                        'ทั้งหมด',
-                      ].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedValue = value;
-                          fixedValue = valueMapping[_selectedValue] ?? '';
-                        });
-                      },
-                    ),
-                    SizedBox(height: 15),
-                    DropdownButton<String>(
-                      isExpanded: true,
-                      value: selectedApCode,
-                      hint: Text('ผู้ขาย'),
-                      items: apCodes.map((item) {
-                        return DropdownMenuItem<String>(
-                          value: item['ap_code'],
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item['ap_code'] ?? 'No code',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                item['ap_name'] ?? 'No name',
-                                style: TextStyle(color: Colors.grey,fontSize: 8),
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedApCode = value;
-                        });
-                      },
-                    ),
-                    SizedBox(height: 15),
-                    TextField(
-                      controller: searchController,
-                      decoration: InputDecoration(
-                        labelText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          searchQuery = value;
-                        });
-                      },
-                    ),
-                    SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            setState(() {
-                              fetchWareCodes();
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                          ),
-                          child: Text('ยืนยัน',style:
-                                                  TextStyle(color: Colors.white,fontSize: 20),),
+  void _showFilterDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              insetPadding:
+                  EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+              child: Container(
+                padding: EdgeInsets.all(20.0),
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height * 0.5,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'ตัวเลือกการกรอง',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.red,
-                          ),
-                          child: Text('ยกเลิก',style:
-                                                  TextStyle(color: Colors.white,fontSize: 20),),
+                      ),
+                      SizedBox(height: 20),
+                      DropdownButton<String>(
+                        isExpanded: true,
+                        value: selectedwhCode,
+                        hint: Text('เลือกคลังปฏิบัติการ'),
+                        items: whCodes.map((item) {
+                          return DropdownMenuItem<String>(
+                            value: item['ware_code'],
+                            child: Text(item['ware_code'] ?? 'No code'),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedwhCode = value;
+                          });
+                        },
+                      ),
+                      SizedBox(height: 15),
+                      DropdownButton<String>(
+                        isExpanded: true,
+                        value: _selectedValue,
+                        hint: Text(
+                          'ประเภทสินค้า',
+                          style: TextStyle(fontSize: 16.0),
                         ),
-                      ],
-                    ),
-                  ],
+                        items: <String>[
+                          'รายการรอรับดำเนินการ',
+                          'รายการใบสั่งซื้อ',
+                          'ทั้งหมด',
+                        ].map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedValue = value;
+                            fixedValue = valueMapping[_selectedValue] ?? '';
+                          });
+                        },
+                      ),
+                      SizedBox(height: 15),
+                      DropdownButton<String>(
+                        isExpanded: true,
+                        value: selectedApCode,
+                        hint: Text('ผู้ขาย'),
+                        items: apCodes.map((item) {
+                          return DropdownMenuItem<String>(
+                            value: item['ap_code'],
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item['ap_code'] ?? 'No code',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  item['ap_name'] ?? 'No name',
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 8),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedApCode = value;
+                          });
+                        },
+                      ),
+                      SizedBox(height: 15),
+                      TextField(
+                        controller: searchController,
+                        decoration: InputDecoration(
+                          labelText: 'ค้นหา',
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            searchQuery = value;
+                          });
+                        },
+                      ),
+                      SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              setState(() {
+                                fetchWareCodes();
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                            ),
+                            child: Text(
+                              'ยืนยัน',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: Colors.red,
+                            ),
+                            child: Text(
+                              'ยกเลิก',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
-      );
-    },
-  );
-}
-
+            );
+          },
+        );
+      },
+    );
+  }
 
   void performSearch() {
     filterData();
