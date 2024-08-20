@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -8,41 +7,26 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isHomePage = ModalRoute.of(context)?.settings.name == '/home';
     return AppBar(
       centerTitle: false,
       backgroundColor: Color(0xFF17153B),
-      leading: Builder(
-        builder: (BuildContext context) {
-          return IconButton(
-            icon: const Icon(Icons.menu, color: Colors.white),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-          );
-        },
-      ),
-      title: GestureDetector(
-        // onTap: () {
-        // Navigate back to the main page
-        // Navigator.popUntil(context, (route) => route.isFirst);
-        // },
-        child: Row(
-          // mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
+      leading: isHomePage
+          ? null
+          : IconButton(
               icon: Icon(
                 Icons.arrow_back_outlined,
-                color: Colors.white, // ปรับสีไอคอนตามที่ต้องการ
+                color: Colors.white,
               ),
               onPressed: () {
-                Navigator.pop(context); // ทำการย้อนกลับไปยังหน้าก่อนหน้า
+                Navigator.pop(context);
               },
             ),
-            // Image.asset(
-            //   'assets/images/app-logo.png',
-            //   height: 40.0, // Adjust the height as needed
-            // ),
+      title: GestureDetector(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(),
             const SizedBox(width: 8.0),
             Text(
               title,
@@ -55,35 +39,35 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ],
         ),
       ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            children: [
-              // IconButton(
-              //   icon: const FaIcon(
-              //     FontAwesomeIcons.user,
-              //     size: 18.0,
-              //     color: Colors.white,
-              //   ),
-              //   onPressed: () {
-              //     // Define your onPressed action here
-              //   },
-              // ),
-              // IconButton(
-              //   icon: const FaIcon(
-              //     FontAwesomeIcons.angleDown,
-              //     size: 15.0,
-              //     color: Colors.white,
-              //   ),
-              //   onPressed: () {
-              //     // Define your onPressed action here
-              //   },
-              // ),
-            ],
-          ),
-        ),
-      ],
+      // actions: [
+      //   Padding(
+      //     padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      //     child: Row(
+      //       children: [
+      //         IconButton(
+      //           icon: const FaIcon(
+      //             FontAwesomeIcons.user,
+      //             size: 18.0,
+      //             color: Colors.white,
+      //           ),
+      //           onPressed: () {
+      //             // Define your onPressed action here
+      //           },
+      //         ),
+      //         IconButton(
+      //           icon: const FaIcon(
+      //             FontAwesomeIcons.angleDown,
+      //             size: 15.0,
+      //             color: Colors.white,
+      //           ),
+      //           onPressed: () {
+      //             // Define your onPressed action here
+      //           },
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ],
     );
   }
 

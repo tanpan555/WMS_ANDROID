@@ -183,7 +183,7 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
                       break;
 
                     //// ตรวจนับประจำงวด
-                    case 'ประมวนผลก่อนตรวจนับ_IW.40.00.00':
+                    case 'ประมวลผลก่อนตรวจนับ_IW.40.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
                       cardColor = Colors.greenAccent;
                       break;
@@ -209,9 +209,12 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
                     margin: EdgeInsets.symmetric(vertical: 8.0),
                     color: cardColor,
                     child: ListTile(
-                      leading: Icon(iconData),
+                      leading: Icon(
+                        iconData, // ไอคอนที่คุณต้องการ
+                        color: Colors.black, // กำหนดสีไอคอนเป็นสีดำ
+                      ),
                       title: Text(item['card_value'] ?? 'No Name'),
-                      subtitle: Text(item['menu_id'] ?? ''),
+                      // subtitle: Text(item['menu_id'] ?? ''),
                       onTap: () {
                         String pageName = item['page_main'] ?? '';
                         Widget? pageWidget = _mapPageNameToWidget(pageName);
