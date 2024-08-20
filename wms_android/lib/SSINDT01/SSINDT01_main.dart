@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
-import 'package:wms_android/custom_drawer.dart';
+// import 'package:wms_android/custom_drawer.dart';
 import 'SSINDT01_form.dart';
 
 class SSINDT01_MAIN extends StatefulWidget {
@@ -36,7 +36,8 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   @override
   void initState() {
     super.initState();
-    fixedValue = valueMapping[_selectedValue] ?? 'C';
+    // fixedValue = valueMapping[_selectedValue] ?? 'C';
+
     fetchApCodes().then((_) {
       return fetchwhCodes();
     }).then((_) {
@@ -439,6 +440,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
               setState(() {
                 selectedwhCode = value;
                 Navigator.of(context).pop();
+                _showFilterDialog();
               });
             },
           ),
@@ -628,7 +630,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
-      drawer: const CustomDrawer(),
+      // drawer: const CustomDrawer(),
       body: OrientationBuilder(
         builder: (context, orientation) {
           final isPortrait = orientation == Orientation.portrait;

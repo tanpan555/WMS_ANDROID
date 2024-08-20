@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/custom_appbar.dart';
-import 'package:wms_android/custom_drawer.dart';
+// import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/bottombar.dart'; // Import the BottomBar
 
 class Ssindt01Verify extends StatefulWidget {
@@ -95,7 +95,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
-      drawer: const CustomDrawer(),
+      // drawer: const CustomDrawer(),
       body: Column(
         children: [
           Expanded(

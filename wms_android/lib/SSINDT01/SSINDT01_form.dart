@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
-import 'package:wms_android/custom_drawer.dart';
+// import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_main.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_grid_data.dart';
 
@@ -491,7 +491,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
-      drawer: const CustomDrawer(),
+      // drawer: const CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

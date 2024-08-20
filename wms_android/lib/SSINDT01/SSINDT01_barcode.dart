@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/custom_appbar.dart';
-import 'package:wms_android/custom_drawer.dart';
+// import 'package:wms_android/custom_drawer.dart';
 import 'SSINDT01_verify.dart';
 
 class Ssindt01Barcode extends StatefulWidget {
@@ -154,7 +154,7 @@ class _Ssindt01BarcodeState extends State<Ssindt01Barcode> {
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'), // Use the CustomAppBar
-      drawer: const CustomDrawer(),
+      // drawer: const CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
