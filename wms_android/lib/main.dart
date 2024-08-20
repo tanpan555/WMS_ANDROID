@@ -173,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 imagePath, // ใช้ imagePath ที่กำหนดไว้ใน switch
                                 width: 70, // กำหนดขนาดของภาพ
                               ),
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 10),
                               Text(
                                 item['card_value'] ?? 'No Name',
                                 style: const TextStyle(

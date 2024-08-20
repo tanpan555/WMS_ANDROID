@@ -80,15 +80,7 @@ class _LoginPageState extends State<LoginPage> {
         height: screenHeight,
         width: screenWidth,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 231, 231, 231), // White
-              const Color.fromARGB(255, 17, 0, 56), // Purple
-            ],
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            stops: [0, 0.6],
-          ),
+          color: Color.fromARGB(255, 17, 0, 56), // Use the solid purple color
         ),
         child: Center(
           child: SingleChildScrollView(
@@ -117,6 +109,15 @@ class _LoginPageState extends State<LoginPage> {
                                 height: screenHeight * 0.2,
                               ),
                               const SizedBox(height: 10),
+                              Text(
+                                'Warehouse Management', // Title text
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
                               TextFormField(
                                 controller: _usernameController,
                                 style: TextStyle(
@@ -127,33 +128,31 @@ class _LoginPageState extends State<LoginPage> {
                                     padding: const EdgeInsets.all(13),
                                     child: Icon(
                                       Icons.person,
-                                      color: Color.fromARGB(255, 112, 112, 112),
+                                      color: Color.fromARGB(255, 255, 255, 255),
                                       size: 20,
                                     ),
                                   ),
                                   hintText: 'Username',
                                   hintStyle: TextStyle(
                                     fontSize: 14,
-                                    color: Color.fromARGB(255, 112, 112, 112),
+                                    color: Color.fromARGB(255, 255, 255, 255),
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
                                     borderSide: BorderSide(
-                                      color: Color.fromARGB(
-                                          255, 112, 112, 112), // Border color
+                                      color: Color.fromARGB(255, 255, 255, 255), // Border color
                                     ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
                                     borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 112, 112, 112),
+                                      color: Color.fromARGB(255, 255, 255, 255),
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
                                     borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 17, 0,
-                                          56), // Focused border color
+                                      color: Color.fromARGB(255, 255, 255, 255), // Focused border color
                                     ),
                                   ),
                                   errorText: _usernameError.isNotEmpty
@@ -173,31 +172,31 @@ class _LoginPageState extends State<LoginPage> {
                                     padding: const EdgeInsets.all(16),
                                     child: FaIcon(
                                       FontAwesomeIcons.key,
-                                      color: Color.fromARGB(255, 112, 112, 112),
+                                      color: Color.fromARGB(255, 255, 255, 255),
                                       size: 15,
                                     ),
                                   ),
                                   hintText: 'Password',
                                   hintStyle: TextStyle(
                                     fontSize: 14,
-                                    color: Color.fromARGB(255, 112, 112, 112),
+                                    color: Color.fromARGB(255, 255, 255, 255),
                                   ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
                                     borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 112, 112, 112),
+                                      color: Color.fromARGB(255, 255, 255, 255),
                                     ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
                                     borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 112, 112, 112),
+                                      color: Color.fromARGB(255, 255, 255, 255),
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
                                     borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 17, 0, 56),
+                                      color: Color.fromARGB(255, 255, 255, 255),
                                     ),
                                   ),
                                   errorText: _passwordError.isNotEmpty
@@ -205,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
                                       : null,
                                 ),
                               ),
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 10),
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton(
@@ -229,14 +228,14 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 0),
                               TextButton(
                                 onPressed: _forgotPassword,
                                 child: Text(
                                   'Forgot Password?',
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: Color.fromARGB(255, 17, 0, 56),
+                                    color: Color.fromARGB(255, 180, 180, 180),
                                     decoration: TextDecoration
                                         .underline, // Underline text
                                   ),

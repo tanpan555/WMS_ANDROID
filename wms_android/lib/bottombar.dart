@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
+import '../login.dart';
 
 class BottomBar extends StatefulWidget {
   @override
@@ -63,6 +64,11 @@ class _BottomBarState extends State<BottomBar> {
                     leading: Icon(Icons.logout_outlined),
                     title: Text('Sign Out'),
                     onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ),
+                      );
                       // Handle Settings tap
                     },
                   ),

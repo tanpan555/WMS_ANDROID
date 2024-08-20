@@ -622,7 +622,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               return DropdownMenuItem<String>(
                 value: value['po_type_code'],
                 child: Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
+                  width: MediaQuery.of(context).size.width * 0.5,
                   child: Text(
                     value['po_type_code'],
                     overflow: TextOverflow.ellipsis,
