@@ -6,16 +6,21 @@ import 'dart:convert';
 import 'bottombar.dart';
 import 'SSINDT01/SSINDT01_main.dart';
 import 'SSFGDT04/SSFGDT04_main.dart';
+import 'SSFGDT12/SSFGDT12_main.dart';
 // Import หน้าหรือ widgets ต่างๆ ที่คุณต้องการนำทางไป
 
 class TestMenuLv2 extends StatefulWidget {
   final String sessionID;
   final String menu_id;
+  final String p_attr1;
+  final String p_ou_code;
 
   const TestMenuLv2({
     Key? key,
     required this.sessionID,
     required this.menu_id,
+    required this.p_attr1,
+    required this.p_ou_code,
   }) : super(key: key);
   @override
   _TestMenuLv2State createState() => _TestMenuLv2State();
@@ -72,6 +77,9 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
         return SSINDT01_MAIN();
       case 'SSFGDT04_MAIN':
         return SSFGDT04_MAIN();
+      case 'SSFGDT12_MAIN':
+        return SSFGDT12_MAIN(
+            p_attr1: widget.p_attr1, p_ou_code: widget.p_ou_code);
       // case 'YET_ANOTHER_PAGE':
       //   return YetAnotherPage();
       // เพิ่มเคสอื่นๆ ที่ต้องการแมป

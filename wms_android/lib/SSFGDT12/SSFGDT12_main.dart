@@ -1,66 +1,31 @@
 import 'package:flutter/material.dart';
-import 'custom_appbar.dart';
-import 'custom_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'test_menu_lv2.dart';
-import 'login.dart';
-import 'bottombar.dart';
-import 'package:wms_android/Global_Parameter.dart' as globals;
+import 'dart:ui';
+import 'package:wms_android/bottombar.dart';
+import 'package:wms_android/custom_appbar.dart';
+import 'SSFGDT12_search.dart';
 
-void main() {
-  runApp(const MyApp());
+class SSFGDT12_MAIN extends StatefulWidget {
+  final String p_attr1;
+  final String p_ou_code;
+
+  const SSFGDT12_MAIN({
+    Key? key,
+    required this.p_attr1,
+    required this.p_ou_code,
+  }) : super(key: key);
+  @override
+  _SSFGDT12_MAINState createState() => _SSFGDT12_MAINState();
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
+  List<dynamic> data = [];
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: '/login',
-      routes: {
-        '/login': (context) => LoginPage(),
-        '/home': (context) => const MyHomePage(),
-      },
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class SessionManager {
-  static final SessionManager _instance = SessionManager._internal();
-  factory SessionManager() => _instance;
-  SessionManager._internal();
-
-  String _sessionID = '';
-
-  String get sessionID => _sessionID;
-
-  set sessionID(String value) {
-    _sessionID = value;
-  }
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  List<dynamic> dataMenu = [];
-  late String sessionID;
-  String newSessionID = '';
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args = ModalRoute.of(context)?.settings.arguments as String?;
-    if (args != null) {
-      SessionManager().sessionID = args;
-      fetchData();
-    }
+  void initState() {
+    super.initState();
+    fetchData();
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -71,11 +36,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> fetchData() async {
-    String sessionID = SessionManager().sessionID;
-    print('sessionID in Main : $sessionID Type : ${sessionID.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/c/menu_level_1/$sessionID'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/ware_code/${widget.p_ou_code}/${widget.p_attr1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -83,10 +46,9 @@ class _MyHomePageState extends State<MyHomePage> {
         print('Fetched data: $jsonDecode');
 
         setState(() {
-          dataMenu =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          data = List<Map<String, dynamic>>.from(responseData['items'] ?? []);
         });
-        print('dataMenu : $dataMenu');
+        print('dataMenu : $data');
       } else {
         throw Exception('Failed to load fetchData');
       }
@@ -100,8 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'Home'),
-      drawer: const CustomDrawer(),
+      appBar: CustomAppBar(title: 'ผลการตรวจนับ'),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -118,48 +79,36 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisSpacing: 5, // Vertical spacing between cards
                     childAspectRatio: 1.0, // Aspect ratio for each card
                   ),
-                  itemCount: dataMenu.length,
+                  itemCount: data.length,
                   itemBuilder: (context, index) {
-                    final item = dataMenu[index];
+                    final item = data[index];
 
                     // Check card_value and set icon and color accordingly
                     // IconData iconData;
                     Color cardColor;
                     String imagePath;
-                    String p_attr1;
-                    String p_ou_code;
 
-                    switch (item['card_value']) {
+                    switch (item['ware_code']) {
                       case 'WMS คลังวัตถุดิบ':
-                        imagePath = 'assets/images/open-box2.png';
+                        imagePath = 'assets/images/warehouse_blue.png';
                         cardColor = Colors.greenAccent;
-                        p_attr1 = globals.Raw_Material;
-                        p_ou_code = globals.P_ERP_OU_CODE;
                         break;
                       case 'WMS คลังสำเร็จรูป':
-                        imagePath = 'assets/images/box1.png';
+                        imagePath = 'assets/images/warehouse_blue.png';
                         cardColor = Colors.blueAccent;
-                        p_attr1 = globals.Finishing;
-                        p_ou_code = globals.P_ERP_OU_CODE;
                         break;
                       case 'พิมพ์ Tag':
-                        imagePath = 'assets/images/barcode-scanner.png';
+                        imagePath = 'assets/images/warehouse_blue.png';
                         cardColor = Colors.pinkAccent;
-                        p_attr1 = '';
-                        p_ou_code = globals.P_ERP_OU_CODE;
                         break;
                       case 'ตรวจนับประจำงวด':
-                        imagePath = 'assets/images/open-box2.png';
+                        imagePath = 'assets/images/warehouse_blue.png';
                         cardColor = Colors.orangeAccent;
-                        p_attr1 = '';
-                        p_ou_code = globals.P_ERP_OU_CODE;
                         break;
                       // Add more cases as needed
                       default:
-                        imagePath = 'assets/images/open-box2.png';
-                        cardColor = Colors.grey;
-                        p_attr1 = '';
-                        p_ou_code = globals.P_ERP_OU_CODE;
+                        imagePath = 'assets/images/warehouse2.png';
+                        cardColor = Colors.red;
                     }
 
                     return GestureDetector(
@@ -167,19 +116,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         // Action when the card is tapped
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Clicked on ${item['card_value']}'),
+                            content: Text('Clicked on ${item['ware_code']}'),
                           ),
                         );
-
                         // Or navigate to another page
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TestMenuLv2(
-                              menu_id: item['menu_id'],
-                              sessionID: SessionManager().sessionID,
-                              p_attr1: p_attr1,
-                              p_ou_code: p_ou_code,
+                            builder: (context) => Ssfgdt12Search(
+                              pWareCode: item['ware_code'] != null
+                                  ? item['ware_code']
+                                  : 'NULL!!!!',
                             ),
                           ),
                         );
@@ -203,7 +150,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                               const SizedBox(height: 10),
                               Text(
-                                item['card_value'] ?? 'No Name',
+                                item['ware_code'] ??
+                                    'ย่ำแย่ๆ ware_code = null!!!!!!',
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: Colors.black,
@@ -223,15 +171,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       bottomNavigationBar: BottomBar(),
-    );
-  }
-
-  Widget images(String imageData, {required double size}) {
-    return Image.asset(
-      imageData,
-      width: size,
-      height: size,
-      fit: BoxFit.cover,
     );
   }
 }
