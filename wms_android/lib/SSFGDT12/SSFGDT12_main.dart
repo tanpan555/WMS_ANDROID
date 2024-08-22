@@ -26,6 +26,8 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
   void initState() {
     super.initState();
     fetchData();
+    print(widget.p_attr1);
+    print(widget.p_ou_code);
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -89,22 +91,22 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
                     String imagePath;
 
                     switch (item['ware_code']) {
-                      case 'WMS คลังวัตถุดิบ':
+                      case 'WH000-1':
                         imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.greenAccent;
+                        cardColor = Colors.amber;
                         break;
-                      case 'WMS คลังสำเร็จรูป':
+                      case 'WH000':
                         imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.blueAccent;
+                        cardColor = Colors.amber;
                         break;
-                      case 'พิมพ์ Tag':
+                      case 'WH001':
                         imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.pinkAccent;
+                        cardColor = Colors.amber;
                         break;
-                      case 'ตรวจนับประจำงวด':
-                        imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.orangeAccent;
-                        break;
+                      // case 'ตรวจนับประจำงวด':
+                      //   imagePath = 'assets/images/warehouse_blue.png';
+                      //   cardColor = Colors.orangeAccent;
+                      //   break;
                       // Add more cases as needed
                       default:
                         imagePath = 'assets/images/warehouse2.png';
@@ -124,9 +126,9 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => Ssfgdt12Search(
-                              pWareCode: item['ware_code'] != null
-                                  ? item['ware_code']
-                                  : 'NULL!!!!',
+                              pWareCode: item['ware_code'],
+                              pWareName: item['ware_name'],
+                              p_ou_code: widget.p_ou_code,
                             ),
                           ),
                         );
@@ -150,14 +152,22 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
                               ),
                               const SizedBox(height: 10),
                               Text(
-                                item['ware_code'] ??
-                                    'ย่ำแย่ๆ ware_code = null!!!!!!',
+                                item['ware_code'] ?? 'null!!!!!!',
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              // const SizedBox(height: 10),
+                              // Text(
+                              //   item['ware_name'] ?? 'null!!!!!!',
+                              //   style: const TextStyle(
+                              //     fontSize: 12,
+                              //     color: Colors.black,
+                              //     fontWeight: FontWeight.bold,
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
