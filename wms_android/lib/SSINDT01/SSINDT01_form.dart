@@ -425,6 +425,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       initialDate: initialDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
     if (picked != null) {
       setState(() {
@@ -449,6 +450,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       initialDate: initialDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
     if (picked != null) {
       setState(() {
@@ -616,6 +618,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             decoration: const InputDecoration(
               labelText: 'ประเภทรายการ',
               border: OutlineInputBorder(),
+              labelStyle: TextStyle(color: Colors.white),
             ),
             value: selectedPoType,
             items: poType.map<DropdownMenuItem<String>>((dynamic value) {
@@ -626,6 +629,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                   child: Text(
                     value['po_type_code'],
                     overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               );
@@ -643,22 +647,42 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             decoration: InputDecoration(
               labelText: 'วันที่เลือก',
               border: OutlineInputBorder(),
+              labelStyle: TextStyle(
+                color: Colors.white,
+              ),
+              hintStyle: TextStyle(
+                color: Colors.white70,
+              ),
               suffixIcon: IconButton(
-                icon: const Icon(Icons.calendar_today),
+                icon: const Icon(Icons.calendar_today,
+                    color: Colors.white), 
                 onPressed: () {
                   _selectReceiveDate(context);
                 },
               ),
             ),
+            style: TextStyle(
+              color: Colors.white,
+            ),
             readOnly: true,
             onTap: () => _selectReceiveDate(context),
           ),
+
           const SizedBox(height: 16.0),
           TextFormField(
             controller: invoiceNoController,
             decoration: InputDecoration(
               labelText: 'เลขที่ใบแจ้งหนี้ *',
               border: OutlineInputBorder(),
+              labelStyle: TextStyle(
+                color: Colors.white,
+              ),
+              hintStyle: TextStyle(
+                color: Colors.white70,
+              ),
+            ),
+            style: TextStyle(
+              color: Colors.white, 
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -667,27 +691,41 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               return null;
             },
           ),
+
           const SizedBox(height: 16.0),
           TextFormField(
             controller: invoiceDateController,
             decoration: InputDecoration(
               labelText: 'วันที่ใบแจ้งหนี้',
               border: OutlineInputBorder(),
+              labelStyle: TextStyle(
+                color: Colors.white,
+              ),
+              hintStyle: TextStyle(
+                color: Colors.white70,
+              ),
               suffixIcon: IconButton(
-                icon: const Icon(Icons.calendar_today),
+                icon: const Icon(Icons.calendar_today,
+                    color: Colors.white),
                 onPressed: () {
                   _selectInvoiceDate(context);
                 },
               ),
             ),
+            style: TextStyle(
+              color: Colors.white,
+            ),
             readOnly: true,
             onTap: () => _selectInvoiceDate(context),
           ),
+
           const SizedBox(height: 16.0),
           TextFormField(
             controller: poRemarkController,
             decoration: InputDecoration(
-                border: OutlineInputBorder(), labelText: 'PO Remark'),
+                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.white),
+                labelText: 'PO Remark'),
           ),
           const SizedBox(height: 16.0),
 

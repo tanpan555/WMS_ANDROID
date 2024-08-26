@@ -330,71 +330,69 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       print('Error: $e');
     }
   }
+void _showDetailsDialog(Map<String, dynamic> data) {
+  TextEditingController receiveQtyController = TextEditingController(
+    text: data['receive_qty']?.toString().replaceAll(',', '') ?? '',
+  );
 
-  void _showDetailsDialog(Map<String, dynamic> data) {
-    TextEditingController receiveQtyController = TextEditingController(
-      text: data['receive_qty']?.toString().replaceAll(',', '') ?? '',
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          title: Container(
-            padding: EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.blueAccent, Colors.lightBlue],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        title: Container(
+          padding: EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blueAccent, Colors.lightBlue],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            child: Text(
-              data['item'],
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+          ),
+          child: Text(
+            data['item'],
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          contentPadding:
-              EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-          content: SizedBox(
-            width: 300.0,
-            height: 75.0,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: TextField(
-                      controller: receiveQtyController,
-                      decoration: InputDecoration(
-                        labelText: 'แก้ไขจำนวนรับ',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+        content: SizedBox(
+          width: 300.0,
+          height: 75.0,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: TextField(
+                    controller: receiveQtyController,
+                    decoration: InputDecoration(
+                      labelText: 'แก้ไขจำนวนรับ',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                      keyboardType: TextInputType.number,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                     ),
+                    keyboardType: TextInputType.number,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          actions: <Widget>[
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        ),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   TextButton(
                     child: Text(
@@ -402,47 +400,45 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                       style: TextStyle(color: Colors.red),
                     ),
                     onPressed: () {
-                      deleteReceiveQty(
-                          data['receive_no'], data['rec_seq'].toString());
+                      deleteReceiveQty(data['receive_no'], data['rec_seq'].toString());
                       Navigator.of(context).pop();
                     },
                   ),
-                  Row(
-                    children: [
-                      SizedBox(height: 16),
-                      ElevatedButton(
-                        child: Text(
-                          'Apply',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                        ),
-                        onPressed: () {
-                          final updatedQty = receiveQtyController.text;
-                          updateReceiveQty(data['rowid'], updatedQty);
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      ElevatedButton(
-                        child: Text('Close'),
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    child: Text(
+                      'Apply',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                    ),
+                    onPressed: () {
+                      final updatedQty = receiveQtyController.text;
+                      updateReceiveQty(data['rowid'], updatedQty);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    child: Text('Close'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ],
               ),
             ),
-          ],
-        );
-      },
-    );
-  }
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
 
   Future<void> deleteLot(String recNo, String pOu, String recSeq, String PoNo,
       String lotSeq, String PoSeq) async {
@@ -635,55 +631,54 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                               style: TextStyle(color: Colors.grey)),
                       SizedBox(height: 16),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(width: 16),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                            ),
-                            child: Text('ADD',
-                                style: TextStyle(color: Colors.white)),
-                            onPressed: () async {
-                              await postLot(widget.poReceiveNo, recSeq, ouCode);
-                              await getLotList(
-                                  widget.poReceiveNo, recSeq, ouCode);
-                              setState(() {});
-                            },
-                          ),
-                          SizedBox(width: 16),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.greenAccent,
-                            ),
-                            child: Text('GENLOT',
-                                style: TextStyle(color: Colors.white)),
-                            onPressed: () async {
-                              await genLot(
-                                  widget.poReceiveNo,
-                                  widget.poPONO.toString(),
-                                  recSeq,
-                                  lotCountController.text,
-                                  ouCode);
-                              await getLotList(
-                                  widget.poReceiveNo, recSeq, ouCode);
-                              setState(() {});
-                            },
-                          ),
-                          SizedBox(width: 16),
-                          ElevatedButton(
-                            child: Text('OK'),
-                            onPressed: () async {
-                              Navigator.of(context).pop();
-                              await fetchPoStatus(recSeq);
-                              if (poreject == '1') {
-                                showCustomDialog(context, widget.poReceiveNo,
-                                    recSeq, ouCode);
-                              }
-                            },
-                          ),
-                        ],
-                      ),
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: <Widget>[
+    Column(
+      children: <Widget>[
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+          ),
+          child: Text('ADD', style: TextStyle(color: Colors.white)),
+          onPressed: () async {
+            await postLot(widget.poReceiveNo, recSeq, ouCode);
+            await getLotList(widget.poReceiveNo, recSeq, ouCode);
+            setState(() {});
+          },
+        ),
+        SizedBox(height: 16), // Add space between buttons
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.greenAccent,
+          ),
+          child: Text('GENLOT', style: TextStyle(color: Colors.white)),
+          onPressed: () async {
+            await genLot(
+                widget.poReceiveNo,
+                widget.poPONO.toString(),
+                recSeq,
+                lotCountController.text,
+                ouCode);
+            await getLotList(widget.poReceiveNo, recSeq, ouCode);
+            setState(() {});
+          },
+        ),
+        SizedBox(height: 16), // Add space between buttons
+        ElevatedButton(
+          child: Text('OK'),
+          onPressed: () async {
+            Navigator.of(context).pop();
+            await fetchPoStatus(recSeq);
+            if (poreject == '1') {
+              showCustomDialog(context, widget.poReceiveNo, recSeq, ouCode);
+            }
+          },
+        ),
+      ],
+    ),
+  ],
+)
+
                     ],
                   ),
                 ),
@@ -993,6 +988,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
             initialDate: initialDate,
             firstDate: DateTime(2000),
             lastDate: DateTime(2101),
+            initialEntryMode: DatePickerEntryMode.calendarOnly,
           );
           if (picked != null) {
             controller.text = displayFormat.format(picked);
