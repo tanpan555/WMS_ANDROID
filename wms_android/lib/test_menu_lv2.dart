@@ -9,6 +9,7 @@ import 'bottombar.dart';
 import 'SSINDT01/SSINDT01_main.dart';
 import 'SSFGDT04/SSFGDT04_main.dart';
 import 'SSFGDT12/SSFGDT12_main.dart';
+import 'SSFGDT31/SSFGDT31_MAIN.dart';
 // Import หน้าหรือ widgets ต่างๆ ที่คุณต้องการนำทางไป
 
 class TestMenuLv2 extends StatefulWidget {
@@ -86,6 +87,8 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
             p_attr1: widget.p_attr1, p_ou_code: widget.p_ou_code);
       // case 'YET_ANOTHER_PAGE':
       //   return YetAnotherPage();
+      case 'SSFGDT31_MAIN':
+        return SSFGDT31_MAIN();
       // เพิ่มเคสอื่นๆ ที่ต้องการแมป
       default:
         return null; // ถ้าไม่พบหน้า
