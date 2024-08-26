@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:ui'; // Import for BackdropFilter
 import 'data_api.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -120,24 +120,40 @@ class _LoginPageState extends State<LoginPage> {
                               const SizedBox(height: 20),
                               TextFormField(
                                 controller: _usernameController,
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                    color: Colors
+                                        .white), // Change text color to white
                                 decoration: InputDecoration(
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.white,
+                                  prefixIcon: Padding(
+                                    padding: const EdgeInsets.all(13),
+                                    child: Icon(
+                                      Icons.person,
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      size: 20,
                                     ),
                                   ),
-                                  // prefixIcon: Icon(
-                                  //   Icons.person,
-                                  //   color: Colors.white,
-                                  // ),
-                                  hintText: 'Login',
+                                  hintText: 'Username',
                                   hintStyle: TextStyle(
                                     fontSize: 14,
-                                    color: Colors.white,
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(
+                                      color: Color.fromARGB(255, 255, 255, 255), // Border color
+                                    ),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(
+                                      color: Color.fromARGB(255, 255, 255, 255), // Focused border color
+                                    ),
                                   ),
                                   errorText: _usernameError.isNotEmpty
                                       ? _usernameError
@@ -148,117 +164,46 @@ class _LoginPageState extends State<LoginPage> {
                               TextFormField(
                                 controller: _passwordController,
                                 obscureText: true,
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                    color: Colors
+                                        .white), // Change text color to white
                                 decoration: InputDecoration(
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.white,
+                                  prefixIcon: Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: FaIcon(
+                                      FontAwesomeIcons.key,
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      size: 15,
                                     ),
                                   ),
-                                  // prefixIcon: Icon(
-                                  //   Icons.person,
-                                  //   color: Colors.white,
-                                  // ),
                                   hintText: 'Password',
                                   hintStyle: TextStyle(
                                     fontSize: 14,
-                                    color: Colors.white,
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                    ),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                    ),
                                   ),
                                   errorText: _passwordError.isNotEmpty
                                       ? _passwordError
                                       : null,
                                 ),
                               ),
-                              const SizedBox(height: 10),
-                              // TextFormField(
-                              //   controller: _usernameController,
-                              //   style: TextStyle(
-                              //       color: Colors
-                              //           .white), // Change text color to white
-                              //   decoration: InputDecoration(
-                              //     prefixIcon: Padding(
-                              //       padding: const EdgeInsets.all(13),
-                              //       child: Icon(
-                              //         Icons.person,
-                              //         color: Color.fromARGB(255, 255, 255, 255),
-                              //         size: 20,
-                              //       ),
-                              //     ),
-                              //     hintText: 'Username',
-                              //     hintStyle: TextStyle(
-                              //       fontSize: 14,
-                              //       color: Color.fromARGB(255, 255, 255, 255),
-                              //     ),
-                              //     border: OutlineInputBorder(
-                              //       borderRadius: BorderRadius.circular(8.0),
-                              //       borderSide: BorderSide(
-                              //         color: Color.fromARGB(255, 255, 255, 255), // Border color
-                              //       ),
-                              //     ),
-                              //     enabledBorder: OutlineInputBorder(
-                              //       borderRadius: BorderRadius.circular(8.0),
-                              //       borderSide: BorderSide(
-                              //         color: Color.fromARGB(255, 255, 255, 255),
-                              //       ),
-                              //     ),
-                              //     focusedBorder: OutlineInputBorder(
-                              //       borderRadius: BorderRadius.circular(8.0),
-                              //       borderSide: BorderSide(
-                              //         color: Color.fromARGB(255, 255, 255, 255), // Focused border color
-                              //       ),
-                              //     ),
-                              //     errorText: _usernameError.isNotEmpty
-                              //         ? _usernameError
-                              //         : null,
-                              //   ),
-                              // ),
-                              // const SizedBox(height: 10),
-                              // TextFormField(
-                              //   controller: _passwordController,
-                              //   obscureText: true,
-                              //   style: TextStyle(
-                              //       color: Colors
-                              //           .white), // Change text color to white
-                              //   decoration: InputDecoration(
-                              //     prefixIcon: Padding(
-                              //       padding: const EdgeInsets.all(16),
-                              //       child: FaIcon(
-                              //         FontAwesomeIcons.key,
-                              //         color: Color.fromARGB(255, 255, 255, 255),
-                              //         size: 15,
-                              //       ),
-                              //     ),
-                              //     hintText: 'Password',
-                              //     hintStyle: TextStyle(
-                              //       fontSize: 14,
-                              //       color: Color.fromARGB(255, 255, 255, 255),
-                              //     ),
-                              //     border: OutlineInputBorder(
-                              //       borderRadius: BorderRadius.circular(8.0),
-                              //       borderSide: BorderSide(
-                              //         color: Color.fromARGB(255, 255, 255, 255),
-                              //       ),
-                              //     ),
-                              //     enabledBorder: OutlineInputBorder(
-                              //       borderRadius: BorderRadius.circular(8.0),
-                              //       borderSide: BorderSide(
-                              //         color: Color.fromARGB(255, 255, 255, 255),
-                              //       ),
-                              //     ),
-                              //     focusedBorder: OutlineInputBorder(
-                              //       borderRadius: BorderRadius.circular(8.0),
-                              //       borderSide: BorderSide(
-                              //         color: Color.fromARGB(255, 255, 255, 255),
-                              //       ),
-                              //     ),
-                              //     errorText: _passwordError.isNotEmpty
-                              //         ? _passwordError
-                              //         : null,
-                              //   ),
-                              // ),
                               const SizedBox(height: 10),
                               SizedBox(
                                 width: double.infinity,

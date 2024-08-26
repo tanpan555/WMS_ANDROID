@@ -33,61 +33,78 @@ class _BottomBarState extends State<BottomBar> {
     }
   }
 
-  void _showRightDrawer(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.4, // Initial height
-          maxChildSize: 0.8, // Maximum height
-          minChildSize: 0.2, // Minimum height
-          expand: false,
-          builder: (_, controller) {
-            return Container(
-              margin: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width *
-                      0.3), // Adjust width here
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  bottomLeft: Radius.circular(20),
+void _showRightDrawer(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    enableDrag: true,
+    builder: (context) {
+      return DraggableScrollableSheet(
+        initialChildSize: 1.0,
+        minChildSize: 0.41,
+        maxChildSize: 1.0,
+        expand: false,
+        builder: (_, controller) {
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Stack(
+              children: [
+                Container(
+                  color: Colors.transparent,
                 ),
-              ),
-              child: ListView(
-                controller: controller,
-                children: [
-                  ListTile(
-                    leading: Icon(Icons.logout_outlined),
-                    title: Text('Sign Out'),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => LoginPage(),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.6, 
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(20),
+                        bottomRight: Radius.circular(20),
+                      ),
+                    ),
+                    child: ListView(
+                      controller: controller,
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.logout_outlined),
+                          title: Text('Sign Out'),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                      // Handle Settings tap
-                    },
+                        ListTile(
+                          leading: Icon(Icons.password_outlined),
+                          title: Text('Change Password'),
+                          onTap: () {
+                                print('Change Password');
+                          },
+                        ),
+              
+                      ],
+                    ),
                   ),
-                  ListTile(
-                    leading: Icon(Icons.password_outlined),
-                    title: Text('Change Password'),
-                    onTap: () {
-                      // Handle Profile tap
-                    },
-                  ),
-                  // Add more list tiles as needed
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
+
+
 
   @override
   Widget build(BuildContext context) {

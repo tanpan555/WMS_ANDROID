@@ -32,9 +32,8 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(),
-      drawer: const CustomDrawer(),
       body: Center(
-        child: Text("Move Locator \n session: $currentSessionID"),
+        child: Text("Move Locator \n session: $currentSessionID \n LocCode: ${widget.LocCode}"),
       ),
       bottomNavigationBar: BottomBar(),
     );

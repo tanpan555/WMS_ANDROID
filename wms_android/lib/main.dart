@@ -96,135 +96,136 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+
+  
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'Home'),
-      drawer: const CustomDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 20), // Spacing above the grid
-            Expanded(
-              child: SingleChildScrollView(
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Number of columns
-                    crossAxisSpacing: 5, // Horizontal spacing between cards
-                    mainAxisSpacing: 5, // Vertical spacing between cards
-                    childAspectRatio: 1.0, // Aspect ratio for each card
-                  ),
-                  itemCount: dataMenu.length,
-                  itemBuilder: (context, index) {
-                    final item = dataMenu[index];
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Color(0xFF17153B),
+    appBar: CustomAppBar(title: 'Home'), // No drawer needed
+    body: Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          Expanded(
+            child: SingleChildScrollView(
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                  childAspectRatio: 1.0, 
+                ),
+                itemCount: dataMenu.length,
+                itemBuilder: (context, index) {
+                  final item = dataMenu[index];
 
-                    // Check card_value and set icon and color accordingly
-                    // IconData iconData;
-                    Color cardColor;
-                    String imagePath;
-                    String p_attr1;
-                    String p_ou_code;
+                  Color cardColor;
+                  String imagePath;
+                  String p_attr1;
+                  String p_ou_code;
 
-                    switch (item['card_value']) {
-                      case 'WMS คลังวัตถุดิบ':
-                        imagePath = 'assets/images/open-box2.png';
-                        cardColor = Colors.greenAccent;
-                        p_attr1 = globals.Raw_Material;
-                        p_ou_code = globals.P_ERP_OU_CODE;
-                        break;
-                      case 'WMS คลังสำเร็จรูป':
-                        imagePath = 'assets/images/box1.png';
-                        cardColor = Colors.blueAccent;
-                        p_attr1 = globals.Finishing;
-                        p_ou_code = globals.P_ERP_OU_CODE;
-                        break;
-                      case 'พิมพ์ Tag':
-                        imagePath = 'assets/images/barcode-scanner.png';
-                        cardColor = Colors.pinkAccent;
-                        p_attr1 = '';
-                        p_ou_code = globals.P_ERP_OU_CODE;
-                        break;
-                      case 'ตรวจนับประจำงวด':
-                        imagePath = 'assets/images/open-box2.png';
-                        cardColor = Colors.orangeAccent;
-                        p_attr1 = '';
-                        p_ou_code = globals.P_ERP_OU_CODE;
-                        break;
-                      // Add more cases as needed
-                      default:
-                        imagePath = 'assets/images/open-box2.png';
-                        cardColor = Colors.grey;
-                        p_attr1 = '';
-                        p_ou_code = globals.P_ERP_OU_CODE;
-                    }
+                  switch (item['card_value']) {
+                    case 'WMS คลังวัตถุดิบ':
+                      imagePath = 'assets/images/open-box2.png';
+                      cardColor = Colors.greenAccent;
+                      p_attr1 = globals.Raw_Material;
+                      p_ou_code = globals.P_ERP_OU_CODE;
+                      break;
+                    case 'WMS คลังสำเร็จรูป':
+                      imagePath = 'assets/images/box1.png';
+                      cardColor = Colors.blueAccent;
+                      p_attr1 = globals.Finishing;
+                      p_ou_code = globals.P_ERP_OU_CODE;
+                      break;
+                    case 'พิมพ์ Tag':
+                      imagePath = 'assets/images/barcode-scanner.png';
+                      cardColor = Colors.pinkAccent;
+                      p_attr1 = '';
+                      p_ou_code = globals.P_ERP_OU_CODE;
+                      break;
+                    case 'ตรวจนับประจำงวด':
+                      imagePath = 'assets/images/open-box2.png';
+                      cardColor = Colors.orangeAccent;
+                      p_attr1 = '';
+                      p_ou_code = globals.P_ERP_OU_CODE;
+                      break;
+                    // Add more cases as needed
+                    default:
+                      imagePath = 'assets/images/open-box2.png';
+                      cardColor = Colors.grey;
+                      p_attr1 = '';
+                      p_ou_code = globals.P_ERP_OU_CODE;
+                  }
 
-                    return GestureDetector(
-                      onTap: () {
-                        // Action when the card is tapped
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Clicked on ${item['card_value']}'),
-                          ),
-                        );
-
-                        // Or navigate to another page
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TestMenuLv2(
-                              menu_id: item['menu_id'],
-                              sessionID: SessionManager().sessionID,
-                              p_attr1: p_attr1,
-                              p_ou_code: p_ou_code,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Card(
-                        elevation: 4.0,
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        color: cardColor, // Set card color
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(5), // Adjust border radius
+                  return GestureDetector(
+                    onTap: () {
+                      // Action when the card is tapped
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Clicked on ${item['card_value']}'),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0), // Add padding
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                imagePath, // ใช้ imagePath ที่กำหนดไว้ใน switch
-                                width: 70, // กำหนดขนาดของภาพ
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                item['card_value'] ?? 'No Name',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                      );
+
+                      // Or navigate to another page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TestMenuLv2(
+                            menu_id: item['menu_id'],
+                            sessionID: SessionManager().sessionID,
+                            p_attr1: p_attr1,
+                            p_ou_code: p_ou_code,
                           ),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      elevation: 4.0,
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      color: cardColor, // Set card color
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(5), // Adjust border radius
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0), // Add padding
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              imagePath, // Use imagePath from switch
+                              width: 70, // Set image size
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              item['card_value'] ?? 'No Name',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-      bottomNavigationBar: BottomBar(),
-    );
-  }
+    ),
+    bottomNavigationBar: BottomBar(),
+  );
+}
+
 
   Widget images(String imageData, {required double size}) {
     return Image.asset(

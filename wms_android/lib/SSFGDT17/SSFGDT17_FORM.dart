@@ -85,49 +85,40 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     String? poStatus;
   String? poMessage;
 
-  Future<void> chk_validateSave() async {
-    final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/validateSave_INHeadXfer_WMS';
+Future<void> chk_validateSave() async {
+  final url = Uri.parse(
+      'http://172.16.0.82:8888/apex/wms/SSFGDT17/validateSave_INHeadXfer_WMS/$P_OU_CODE/$ERP_OU_CODE/${widget.po_doc_no}/$APP_USER');
 
-    final headers = {
-      'Content-Type': 'application/json',
-    };
+  final headers = {
+    'Content-Type': 'application/json',
+  };
 
-    final body = jsonEncode({
-      'p_ou_code': P_OU_CODE,
-      'P_ERP_OU_CODE': ERP_OU_CODE,
-      'APP_USER': APP_USER,
-      'p_doc_type': widget.po_doc_no,
+  print('headers : $headers Type : ${headers.runtimeType}');
+  print('URL : $url');
 
-    });
+  try {
+    final response = await http.get(
+      url,
+      headers: headers,
+    );
 
-    print('headers : $headers Type : ${headers.runtimeType}');
-    print('body : $body Type : ${body.runtimeType}');
-
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: headers,
-        body: body,
-      );
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
-          poStatus = responseData['po_status'];
-          poMessage = responseData['po_message'];
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      setState(() {
+        poStatus = responseData['po_status'];
+        poMessage = responseData['po_message'];
 
         print('poStatus: $poStatus');
         print('poMessage: $poMessage');
-
-        });
-      } else {
-        print('Failed to post data. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
+      });
+    } else {
+      print('Failed to fetch data. Status code: ${response.statusCode}');
     }
+  } catch (e) {
+    print('Error: $e');
   }
+}
+
 
   String _formatDate(DateTime date) {
     return "${date.day}/${date.month}/${date.year}";
@@ -162,6 +153,7 @@ Widget build(BuildContext context) {
           builder: (context) => SSFGDT17_BARCODE(po_doc_no: widget.po_doc_no ?? '',po_doc_type: widget.po_doc_type,LocCode: widget.LocCode),
         ),
       );
+      chk_validateSave();
                 print('Go Next');
               },
             ),

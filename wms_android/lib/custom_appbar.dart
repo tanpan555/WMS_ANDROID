@@ -1,32 +1,37 @@
 import 'package:flutter/material.dart';
+// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
-  CustomAppBar({super.key, required this.title});
+  const CustomAppBar({super.key, this.title = 'WMS'});
 
   @override
   Widget build(BuildContext context) {
-    final isHomePage = ModalRoute.of(context)?.settings.name == '/home';
     return AppBar(
       centerTitle: false,
-      backgroundColor: Color(0xFF17153B),
-      leading: isHomePage
-          ? null
-          : IconButton(
-              icon: Icon(
-                Icons.arrow_back_outlined,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
+      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+      // leading: Builder(
+      //   builder: (BuildContext context) {
+      //     return IconButton(
+      //       icon: const Icon(Icons.menu, color: Colors.white),
+      //       onPressed: () {
+      //         Scaffold.of(context).openDrawer();
+      //       },
+      //     );
+      //   },
+      // ),
       title: GestureDetector(
+        onTap: () {
+          // Navigate back to the main page
+          Navigator.popUntil(context, (route) => route.isFirst);
+        },
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(),
+            Image.asset(
+              'assets/images/app-logo.png',
+              height: 40.0, // Adjust the height as needed
+            ),
             const SizedBox(width: 8.0),
             Text(
               title,
@@ -39,35 +44,35 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ],
         ),
       ),
-      // actions: [
-      //   Padding(
-      //     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      //     child: Row(
-      //       children: [
-      //         IconButton(
-      //           icon: const FaIcon(
-      //             FontAwesomeIcons.user,
-      //             size: 18.0,
-      //             color: Colors.white,
-      //           ),
-      //           onPressed: () {
-      //             // Define your onPressed action here
-      //           },
-      //         ),
-      //         IconButton(
-      //           icon: const FaIcon(
-      //             FontAwesomeIcons.angleDown,
-      //             size: 15.0,
-      //             color: Colors.white,
-      //           ),
-      //           onPressed: () {
-      //             // Define your onPressed action here
-      //           },
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ],
+      actions: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            children: [
+              // IconButton(
+              //   icon: const FaIcon(
+              //     FontAwesomeIcons.user,
+              //     size: 18.0,
+              //     color: Colors.white,
+              //   ),
+              //   onPressed: () {
+              //     // Define your onPressed action here
+              //   },
+              // ),
+              // IconButton(
+              //   icon: const FaIcon(
+              //     FontAwesomeIcons.angleDown,
+              //     size: 15.0,
+              //     color: Colors.white,
+              //   ),
+              //   onPressed: () {
+              //     // Define your onPressed action here
+              //   },
+              // ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

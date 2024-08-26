@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:wms_android/SSFGDT17/SSFGDT17_MAIN.dart';
+import 'package:wms_android/SSFGDT17/SSFGDT17_MENU.dart';
 import 'custom_appbar.dart';
 import 'custom_drawer.dart';
 import 'package:http/http.dart' as http;
@@ -77,6 +79,8 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
         return SSINDT01_MAIN();
       case 'SSFGDT04_MAIN':
         return SSFGDT04_MAIN();
+      case 'SSFGDT17_MAIN':
+      return SSFGDT17_MENU();
       case 'SSFGDT12_MAIN':
         return SSFGDT12_MAIN(
             p_attr1: widget.p_attr1, p_ou_code: widget.p_ou_code);
@@ -110,7 +114,7 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
       appBar: CustomAppBar(
         title: getTitle(P_MAIN_MENU), // เรียกใช้ฟังก์ชัน getTitle
       ),
-      drawer: const CustomDrawer(),
+      // drawer: const CustomDrawer(),
       body: Padding(
         padding: EdgeInsets.all(10.0),
         child: Column(
