@@ -7,6 +7,7 @@ import 'package:wms_android/custom_appbar.dart';
 // import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_main.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_grid_data.dart';
+import 'SSINDT01_WARE.dart';
 
 class Ssindt01Form extends StatefulWidget {
   final String poReceiveNo;
@@ -281,94 +282,121 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     }
   }
 
-  void showCancelDialog() {
-    String? selectedcCode;
+ void showCancelDialog() {
+  String? selectedcCode;
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Container(
-            width: 600.0,
-            height: 250.0,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text('Cancel', style: TextStyle(fontSize: 20.0)),
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: Container(
+          width: 600.0,
+          height: 250.0,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Container(
-                    width: 350,
-                    child: DropdownButtonFormField<String>(
-                      value: selectedcCode,
-                      isExpanded: true,
-                      items: cCode.map((item) {
-                        return DropdownMenuItem<String>(
-                          value: item['r'],
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: DropdownButtonFormField<String>(
+                  value: selectedcCode,
+                  isExpanded: true,
+                  items: cCode.map((item) {
+                    return DropdownMenuItem<String>(
+                      value: item['r'],
+                      child: Container(
+                        width: 250.0, 
+                        child: Row(
+                          children: [
+                       Text(
                                 item['r'] ?? 'No code',
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 12),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
                               ),
-                              Text(
+                    
+                            SizedBox(width: 8),
+                            Flexible(
+                              child:
+                               Text(
                                 item['d'] ?? '',
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    color: Colors.grey[600], fontSize: 12),
+                                  color: Colors.grey[600],
+                                  fontSize: 14,
+                                ),
                               ),
-                            ],
+                            ),
+                            
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectedcCode = newValue;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Cancel Code',
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: TextButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                      if (selectedcCode != null) {
+                        Navigator.of(context).pop();
+                        cancel_from(selectedcCode!).then((_) {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => SSINDT01_MAIN(pWareCode: '', pWareName: '', p_ou_code: '',),
+                            ),
+                          );
+                        }).catchError((error) {
+       
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('An error occurred: $error'),
+                            ),
+                          );
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Please select a cancel code'),
                           ),
                         );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        selectedcCode = newValue;
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Cancel Code',
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                      ),
-                    ),
+                      }
+                    },
                   ),
                 ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: TextButton(
-                        child: Text('OK'),
-                        onPressed: () {
-                          if (selectedcCode != null) {
-                            Navigator.of(context).pop();
-                            cancel_from(selectedcCode!).then((_) {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => SSINDT01_MAIN(),
-                              ));
-                            }).catchError((error) {});
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text('Please select a cancel code')),
-                            );
-                          }
-                        }),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
 
   Future<void> updateForm_REMARK(
       String receiveNo,
@@ -472,7 +500,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
     if (invoiceNo.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('กรอก INVOICE NO ก่อน')),
+        SnackBar(content: Text('ต้องระบุข้อมูลที่จำเป็น * ให้ครบถ้วน !!!')),
       );
       return;
     }
@@ -491,7 +519,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF17153B),
+      backgroundColor: Color.fromRGBO(23, 21, 59, 1),
       appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
       // drawer: const CustomDrawer(),
       body: Padding(
@@ -614,33 +642,42 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           //   initialValue: widget.item['title'] ?? 'PO-XX1234-5678',
           // ),
           const SizedBox(height: 16.0),
-          DropdownButtonFormField<String>(
-            decoration: const InputDecoration(
-              labelText: 'ประเภทรายการ',
-              border: OutlineInputBorder(),
-              labelStyle: TextStyle(color: Colors.white),
-            ),
-            value: selectedPoType,
-            items: poType.map<DropdownMenuItem<String>>((dynamic value) {
-              return DropdownMenuItem<String>(
-                value: value['po_type_code'],
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  child: Text(
-                    value['po_type_code'],
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                selectedPoType = newValue;
-                poTypeCodeController.text = newValue ?? '';
-              });
-            },
+          Container(
+  decoration: BoxDecoration(
+    color: Color.fromRGBO(23, 21, 59, 1),
+    borderRadius: BorderRadius.circular(8.0), 
+  ),
+  child: DropdownButtonFormField<String>(
+    decoration: const InputDecoration(
+      labelText: 'ประเภทรายการ',
+      border: OutlineInputBorder(),
+      labelStyle: TextStyle(color: Colors.white),
+      fillColor: Color.fromRGBO(23, 21, 59, 1),
+      filled: true,
+    ),
+    value: selectedPoType,
+    items: poType.map<DropdownMenuItem<String>>((dynamic value) {
+      return DropdownMenuItem<String>(
+        value: value['po_type_code'],
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.5,
+          child: Text(
+            value['po_type_code'],
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(color: Colors.white),
           ),
+        ),
+      );
+    }).toList(),
+    onChanged: (newValue) {
+      setState(() {
+        selectedPoType = newValue;
+        poTypeCodeController.text = newValue ?? '';
+      });
+    },
+    dropdownColor: Color.fromRGBO(23, 21, 59, 1),
+  ),
+),
           const SizedBox(height: 16.0),
           TextFormField(
             controller: receiveDateController,

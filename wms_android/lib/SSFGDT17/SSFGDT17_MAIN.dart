@@ -229,7 +229,7 @@ Future<void> data_card_list() async {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
     child: Card(
-      color: const Color(0xFF5BF5BF),
+      color: const Color.fromRGBO(204,235,252,1.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),

@@ -29,11 +29,11 @@ class CustomDrawer extends StatelessWidget {
                       title: const Text('รับจากการสั่งซื้อ'),
                       onTap: () {
                         Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SSINDT01_MAIN()),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => SSINDT01_MAIN()),
+                        // );
                       },
                     ),
                     ListTile(

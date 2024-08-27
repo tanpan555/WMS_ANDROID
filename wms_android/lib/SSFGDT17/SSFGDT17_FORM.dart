@@ -28,7 +28,6 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   final P_OU_CODE = gb.P_OU_CODE;
   final APP_USER = gb.APP_USER;
 
-  // Initialize controllers with default values
   late final TextEditingController po_doc_noText = TextEditingController(text: widget.po_doc_no);
   late final TextEditingController po_doc_typeText = TextEditingController(text: widget.po_doc_type ?? '');
   late final TextEditingController CR_DATE = TextEditingController();
@@ -212,7 +211,7 @@ Widget build(BuildContext context) {
       child: TextField(
         controller: controller,
         style: TextStyle(color: Colors.white),
-        readOnly: true, // Prevent user from typing
+        readOnly: true,
         onTap: () => _selectDate(context),
         decoration: InputDecoration(
           labelText: label,

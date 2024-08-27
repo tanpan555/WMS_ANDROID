@@ -4,10 +4,31 @@ import 'dart:ui'; // Import for BackdropFilter
 import 'data_api.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 
+import 'package:flutter/services.dart'; // Import this for TextInputFormatter
+
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final upperCaseText = newValue.text.toUpperCase();
+    return newValue.copyWith(
+      text: upperCaseText,
+      selection: newValue.selection.copyWith(
+        baseOffset: upperCaseText.length,
+        extentOffset: upperCaseText.length,
+      ),
+    );
+  }
+}
+
 
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
@@ -40,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
       });
     }
     if (username.isNotEmpty && password.isNotEmpty) {
-      if (username == '1234' && password == '12345678') {
+      if (username == 'SS-STAFF' && password == 'Soft2') {
         Navigator.pushReplacementNamed(
           context,
           '/home',
@@ -119,47 +140,49 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               const SizedBox(height: 20),
                               TextFormField(
-                                controller: _usernameController,
-                                style: TextStyle(
-                                    color: Colors
-                                        .white), // Change text color to white
-                                decoration: InputDecoration(
-                                  prefixIcon: Padding(
-                                    padding: const EdgeInsets.all(13),
-                                    child: Icon(
-                                      Icons.person,
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                      size: 20,
-                                    ),
-                                  ),
-                                  hintText: 'Username',
-                                  hintStyle: TextStyle(
-                                    fontSize: 14,
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 255, 255, 255), // Border color
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 255, 255, 255), // Focused border color
-                                    ),
-                                  ),
-                                  errorText: _usernameError.isNotEmpty
-                                      ? _usernameError
-                                      : null,
-                                ),
-                              ),
+  controller: _usernameController,
+  inputFormatters: [
+    UpperCaseTextFormatter(), // Apply the UpperCaseTextFormatter
+  ],
+  style: TextStyle(
+    color: Colors.white,
+  ),
+  decoration: InputDecoration(
+    prefixIcon: Padding(
+      padding: const EdgeInsets.all(13),
+      child: Icon(
+        Icons.person,
+        color: Color.fromARGB(255, 255, 255, 255),
+        size: 20,
+      ),
+    ),
+    hintText: 'Username',
+    hintStyle: TextStyle(
+      fontSize: 14,
+      color: Color.fromARGB(255, 255, 255, 255),
+    ),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: BorderSide(
+        color: Color.fromARGB(255, 255, 255, 255),
+      ),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: BorderSide(
+        color: Color.fromARGB(255, 255, 255, 255),
+      ),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: BorderSide(
+        color: Color.fromARGB(255, 255, 255, 255),
+      ),
+    ),
+    errorText: _usernameError.isNotEmpty ? _usernameError : null,
+  ),
+),
+
                               const SizedBox(height: 10),
                               TextFormField(
                                 controller: _passwordController,

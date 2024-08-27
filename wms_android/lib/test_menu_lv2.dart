@@ -9,7 +9,7 @@ import 'bottombar.dart';
 import 'SSINDT01/SSINDT01_main.dart';
 import 'SSFGDT04/SSFGDT04_main.dart';
 import 'SSFGDT12/SSFGDT12_main.dart';
-import 'SSFGDT31/SSFGDT31_MAIN.dart';
+import 'package:wms_android/SSINDT01/SSINDT01_WARE.dart';
 // Import หน้าหรือ widgets ต่างๆ ที่คุณต้องการนำทางไป
 
 class TestMenuLv2 extends StatefulWidget {
@@ -77,7 +77,7 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
   Widget? _mapPageNameToWidget(String pageName) {
     switch (pageName) {
       case 'SSINDT01_MAIN':
-        return SSINDT01_MAIN();
+        return SSFGDT01_WARE(p_attr1: widget.p_attr1, p_ou_code: widget.p_ou_code);
       case 'SSFGDT04_MAIN':
         return SSFGDT04_MAIN();
       case 'SSFGDT17_MAIN':

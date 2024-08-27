@@ -9,6 +9,15 @@ import 'SSINDT01_form.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
 class SSINDT01_MAIN extends StatefulWidget {
+ final String pWareCode;
+  final String pWareName;
+  final String p_ou_code;
+  SSINDT01_MAIN({
+    Key? key,
+    required this.pWareCode,
+    required this.pWareName,
+    required this.p_ou_code,
+  }) : super(key: key);
   // const Ssindt01Card({super.key});
   @override
   _SSINDT01_MAINState createState() => _SSINDT01_MAINState();
@@ -35,39 +44,38 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   final ScrollController _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
-    // fixedValue = valueMapping[_selectedValue] ?? 'C';
+void initState() {
+  super.initState();
 
-    fetchApCodes().then((_) {
-      return fetchwhCodes();
-    }).then((_) {
-      if (selectedwhCode == null) {
-        _showSelectWareCodeDialog();
-      }
-    }).catchError((e) {
-      print('Error during fetch operations: $e');
+  _selectedValue = 'ทั้งหมด';
+  selectedwhCode = widget.pWareCode;
+//   fetchApCodes;
+// fetchwhCodes;
+  // fetchApCodes().then((_) {
+  //   return fetchwhCodes();
+  // }).catchError((e) {
+  //   print('Error during fetch operations: $e');
+  // });
+
+_initializeData();
+
+}
+
+Future<void> _initializeData() async {
+  try {
+    // Fetch AP codes and wait for it to complete
+    await fetchApCodes();
+    // Fetch warehouse codes and wait for it to complete
+    await fetchwhCodes();
+  } catch (e) {
+    print('Error during fetch operations: $e');
+  } finally {
+    // Show the filter dialog after fetching data
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showFilterDialog();
     });
-
-    print(
-        'searchController: $searchController  type: ${searchController.runtimeType}');
-    print(
-        '_scrollController: $_scrollController  type: ${_scrollController.runtimeType}');
-    print(
-        'selectedwhCode: $selectedwhCode  type: ${selectedwhCode.runtimeType}');
-    print('whCodes: $whCodes  type: ${whCodes.runtimeType}');
-    print(
-        'selectedApCode: $selectedApCode  type: ${selectedApCode.runtimeType}');
-    print('apCodes: $apCodes  type: ${apCodes.runtimeType}');
-    print('searchQuery: $searchQuery  type: ${searchQuery.runtimeType}');
-    print('errorMessage: $errorMessage  type: ${errorMessage.runtimeType}');
-    print('isLoading: $isLoading  type: ${isLoading.runtimeType}');
-    print('displayedData: $displayedData  type: ${displayedData.runtimeType}');
-    print('data: $data  type: ${data.runtimeType}');
-    print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
-    print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
-    print('poStep : $poStep Type : ${poStep.runtimeType}');
   }
+}
 
   void _handleSelected(String? value) {
     setState(() {
@@ -336,6 +344,9 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                             onPressed: () {
                               Navigator.of(context).pop();
                               setState(() {
+                                if(_selectedValue == 'ทั้งหมด'){
+                                  fixedValue = 'C';
+                                }
                                 fetchWareCodes();
                               });
                             },
@@ -655,7 +666,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
       child: Card(
-        color: const Color(0xFF5BF5BF),
+        color: const Color.fromRGBO(204,235,252,1),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
