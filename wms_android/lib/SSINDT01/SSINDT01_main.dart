@@ -8,6 +8,8 @@ import 'package:wms_android/custom_appbar.dart';
 import 'SSINDT01_form.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
+import 'package:wms_android/Global_Parameter.dart' as gb;
+
 class SSINDT01_MAIN extends StatefulWidget {
  final String pWareCode;
   final String pWareName;
@@ -30,6 +32,8 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   String errorMessage = '';
   TextEditingController searchController = TextEditingController();
   String searchQuery = '';
+
+  String? ATTR = gb.Raw_Material;
 
   List<dynamic> apCodes = [];
   String? selectedApCode;
@@ -387,7 +391,7 @@ Future<void> _initializeData() async {
   Future<void> fetchWareCodes() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/c/new_card_list/$fixedValue'));
+          'http://172.16.0.82:8888/apex/wms/c/new_card_list/$fixedValue/$ATTR'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);

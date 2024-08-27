@@ -77,7 +77,7 @@ Future<void> _launchUrl() async {
    '&LH_AP_NAME=$LH_AP_NAME'
    '&LH_CUR_CODE=$LH_CUR_CODE'
    '&LH_RATE=$LH_RATE'
-   '&P_RECEIVE_NO=RS-D02-6011001' //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+   '&P_RECEIVE_NO=RS-D02-6011001' //<<<<<<<<<<<<<<<<<< เปลี่ยนตรงนี้เป็น ${revNo ?? ''} <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
    '&P_ERP_OU_CODE=$P_ERP_OU_CODE'
    '&P_OU_CODE=$P_OU_CODE'
    '&P_LIN_ID=$P_LIN_ID'
