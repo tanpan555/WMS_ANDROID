@@ -10,10 +10,11 @@ class Ssfgdt12Card extends StatefulWidget {
   final String docNo;
   final String date;
   final String status;
-  final String pWareCode;
+  final String pWareCode; // ware code ที่มาจากเลือ lov
   final int p_flag;
   final String browser_language;
   final String p_ou_code;
+  final String p_attr1;
   Ssfgdt12Card({
     Key? key,
     required this.docNo,
@@ -23,6 +24,7 @@ class Ssfgdt12Card extends StatefulWidget {
     required this.p_flag,
     required this.browser_language,
     required this.p_ou_code,
+    required this.p_attr1,
   }) : super(key: key);
   @override
   _Ssfgdt12CardState createState() => _Ssfgdt12CardState();
@@ -172,6 +174,12 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                               docNo: item['doc_no'],
                               pOuCode: widget.p_ou_code,
                               browser_language: widget.browser_language,
+                              wareCode: item['ware_code'] ?? 'ware_code',
+                              pWareCode: widget.pWareCode,
+                              p_attr1: widget.p_attr1,
+                              // wareCode: item['ware_code'] == null
+                              // ? 'ware_code  !!!'
+                              // : item['ware_code'],
                             ),
                           ),
                         );

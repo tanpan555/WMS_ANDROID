@@ -129,6 +129,7 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
                               pWareCode: item['ware_code'],
                               pWareName: item['ware_name'],
                               p_ou_code: widget.p_ou_code,
+                              p_attr1: widget.p_attr1,
                             ),
                           ),
                         );

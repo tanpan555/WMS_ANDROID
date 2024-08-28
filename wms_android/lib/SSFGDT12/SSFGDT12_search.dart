@@ -12,11 +12,13 @@ class Ssfgdt12Search extends StatefulWidget {
   final String pWareCode;
   final String pWareName;
   final String p_ou_code;
+  final String p_attr1;
   Ssfgdt12Search({
     Key? key,
     required this.pWareCode,
     required this.pWareName,
     required this.p_ou_code,
+    required this.p_attr1,
   }) : super(key: key);
   @override
   _Ssfgdt12SearchState createState() => _Ssfgdt12SearchState();
@@ -278,6 +280,7 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                                     p_flag: p_flag,
                                     browser_language: globals.BROWSER_LANGUAGE,
                                     p_ou_code: widget.p_ou_code,
+                                    p_attr1: widget.p_attr1,
                                   )
                                   //
                                   );

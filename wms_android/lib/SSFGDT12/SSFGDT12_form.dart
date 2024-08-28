@@ -5,16 +5,23 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
+import 'SSFGDT12_grid.dart';
 
 class Ssfgdt12Form extends StatefulWidget {
   final String docNo;
   final String pOuCode;
   final String browser_language;
+  final String wareCode; // ware code ที่มาจาก API แต่เป็น null
+  final String pWareCode; // ware code ที่มาจากเลือ lov
+  final String p_attr1;
   Ssfgdt12Form({
     Key? key,
     required this.docNo,
     required this.pOuCode,
     required this.browser_language,
+    required this.wareCode,
+    required this.pWareCode,
+    required this.p_attr1,
   }) : super(key: key);
   @override
   _Ssfgdt12FormState createState() => _Ssfgdt12FormState();
@@ -56,6 +63,8 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   void initState() {
     super.initState();
     fetchData();
+    print(
+        'wareCode : ${widget.wareCode} Type : ${widget.wareCode.runtimeType}');
   }
 
   @override
@@ -94,18 +103,18 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
           print('Fetched data: $jsonDecode');
 
           setState(() {
-            staffCode = item['po_no'] ?? '';
-            docDate = item['receive_no'] ?? '';
-            nbStaffName = item['erp_receive_no'] ?? '';
-            nbStaffCountName = item['pk_ware_code'] ?? '';
-            countStaff = item['cr_date'] ?? '';
-            nbCountStaff = item['po_type_code'] ?? '';
-            updBy = item['receive_date'] ?? '';
-            updDate = item['ware_code'] ?? '';
-            remark = item['cr_by'] ?? '';
-            status = item['invoice_no'] ?? '';
-            updBy1 = item['invoice_date'] ?? '';
-            nbCountDate = item['seller'] ?? '';
+            staffCode = item['staff_code'] ?? '';
+            docDate = item['doc_date'] ?? '';
+            nbStaffName = item['nb_staff_name'] ?? '';
+            nbStaffCountName = item['nb_staff_count_name'] ?? '';
+            countStaff = item['count_staff'] ?? '';
+            nbCountStaff = item['nb_count_staff'] ?? '';
+            updBy = item['upd_by'] ?? '';
+            updDate = item['upd_date'] ?? '';
+            remark = item['remark'] ?? '';
+            status = item['status'] ?? '';
+            updBy1 = item['upd_by1'] ?? '';
+            nbCountDate = item['nb_count_date'] ?? '';
             docNo = widget.docNo;
 
             staffCodeController.text = staffCode;
@@ -203,7 +212,25 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                       width: 20.0,
                       height: 20.0,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Ssfgdt12Grid(
+                            nbCountStaff: nbCountStaff,
+                            nbCountDate: nbCountDate,
+                            docNo: docNo,
+                            status: status,
+                            wareCode: widget.wareCode,
+                            pOuCode: widget.pOuCode,
+                            pWareCode: widget.pWareCode,
+                            docDate: docDate,
+                            countStaff: countStaff,
+                            p_attr1: widget.p_attr1,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
