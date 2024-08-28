@@ -24,7 +24,8 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
   TextEditingController _noteController = TextEditingController();
   TextEditingController _erpDocNoController = TextEditingController();
   TextEditingController _custController = TextEditingController();
-  // TextEditingController _fgCodeController = TextEditingController();
+  TextEditingController _searchController =
+      TextEditingController(); // เพิ่ม Controller สำหรับการค้นหา
 
   @override
   void initState() {
@@ -100,7 +101,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  //เลขที่ใบเบิก WMS*//
+                  // เลขที่ใบเบิก WMS* //
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: TextField(
@@ -143,20 +144,15 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                 ),
                               ))
                           .toList(),
-                      // validator: (value) {
-                      //   if (value == null) {
-                      //     return 'Please select';
-                      //   }
-                      //   return null;
-                      // },
-                      onChanged: (value) {
+                      onChanged: (String? value) {
                         setState(() {
-                          selectedValue = value.toString();
+                          selectedDocType = value;
                         });
                       },
                       onSaved: (value) {
-                        selectedValue = value.toString();
+                        selectedDocType = value;
                       },
+                      value: selectedDocType, // Set the default selected value
                       buttonStyleData: const ButtonStyleData(
                         padding: EdgeInsets.only(right: 8),
                       ),
@@ -180,7 +176,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                     ),
                   ),
 
-                  //วันที่บันทึก//
+                  // วันที่บันทึก //
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: TextField(
@@ -195,7 +191,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                     ),
                   ),
 
-                  //เลขที่เอกสารอ้างอิง//
+                  // เลขที่เอกสารอ้างอิง //
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: TextField(
@@ -210,7 +206,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                     ),
                   ),
 
-                  //เลขที่คำสั่งผลผลิต*//
+                  // เลขที่คำสั่งผลผลิต* //
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: GestureDetector(
@@ -222,86 +218,172 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Container(
-                                padding: const EdgeInsets.all(16),
-                                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                              child: StatefulBuilder(
+                                builder: (context, setState) {
+                                  return Container(
+                                    padding: const EdgeInsets.all(16),
+                                    height:
+                                        300, // ปรับความสูงของ Popup ตามต้องการ
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          'เลขที่คำสั่งผลผลิต',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'เลขที่คำสั่งผลผลิต',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            IconButton(
+                                              icon: Icon(Icons.close),
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // ปิด Popup
+                                              },
+                                            ),
+                                          ],
                                         ),
-                                        IconButton(
-                                          icon: Icon(Icons.close),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // ปิด Popup
+                                        const SizedBox(height: 10),
+                                        // ช่องค้นหา
+                                        TextField(
+                                          controller: _searchController,
+                                          decoration: InputDecoration(
+                                            hintText: 'ค้นหา...',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          onChanged: (query) {
+                                            setState(() {});
                                           },
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Expanded(
+                                          child: ListView.builder(
+                                            itemCount: modonoItems
+                                                .where((item) {
+                                                  // แปลง schid เป็น int ก่อนการเปรียบเทียบ
+                                                  final schidString =
+                                                      item['schid'].toString();
+                                                  final fgCode = item['fg_code']
+                                                      .toString();
+                                                  final custName =
+                                                      item['cust_name']
+                                                          .toString();
+                                                  final searchQuery =
+                                                      _searchController.text
+                                                          .trim();
+
+                                                  // ตรวจสอบว่า searchQuery เป็นจำนวนเต็มหรือไม่
+                                                  final searchQueryInt =
+                                                      int.tryParse(searchQuery);
+
+                                                  // แปลง schid เป็น int ถ้าค่ามันเป็นจำนวนเต็ม
+                                                  final schidInt =
+                                                      int.tryParse(schidString);
+
+                                                  // เปรียบเทียบกับ searchQuery
+                                                  return (searchQueryInt !=
+                                                              null &&
+                                                          schidInt != null &&
+                                                          schidInt ==
+                                                              searchQueryInt) ||
+                                                      schidString.contains(
+                                                          searchQuery) ||
+                                                      fgCode.contains(
+                                                          searchQuery) ||
+                                                      custName.contains(
+                                                          searchQuery);
+                                                })
+                                                .toList()
+                                                .length,
+                                            itemBuilder: (context, index) {
+                                              final filteredItems =
+                                                  modonoItems.where((item) {
+                                                final schidString =
+                                                    item['schid'].toString();
+                                                final fgCode =
+                                                    item['fg_code'].toString();
+                                                final custName =
+                                                    item['cust_name']
+                                                        .toString();
+                                                final searchQuery =
+                                                    _searchController.text
+                                                        .trim();
+
+                                                final searchQueryInt =
+                                                    int.tryParse(searchQuery);
+                                                final schidInt =
+                                                    int.tryParse(schidString);
+
+                                                return (searchQueryInt !=
+                                                            null &&
+                                                        schidInt != null &&
+                                                        schidInt ==
+                                                            searchQueryInt) ||
+                                                    schidString.contains(
+                                                        searchQuery) ||
+                                                    fgCode.contains(
+                                                        searchQuery)||
+                                                    custName
+                                                        .contains(searchQuery);
+                                              }).toList();
+
+                                              final item = filteredItems[index];
+                                              final schid =
+                                                  item['schid'].toString();
+                                              final fgCode =
+                                                  item['fg_code'].toString();
+                                              final custName =
+                                                  item['cust_name'].toString();
+                                              // final displayValue =
+                                              //     '$schid  $fgCode  $custName';
+
+                                              return ListTile(
+                                                contentPadding: EdgeInsets.zero,
+                                                title: RichText(
+                                                  text: TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                        text: '$schid\n',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                            '$fgCode  $custName',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  setState(() {
+                                                    selectedMoDoNo = schid;
+                                                    _custController.text =
+                                                        '$fgCode  $custName';
+                                                  });
+                                                  Navigator.of(context).pop();
+                                                },
+                                              );
+                                            },
+                                          ),
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 10),
-                                    Expanded(
-                                      child: ListView.builder(
-                                        itemCount: modonoItems.length,
-                                        itemBuilder: (context, index) {
-                                          final item = modonoItems[index];
-                                          final schid =
-                                              item['schid'].toString();
-                                          final fgCode =
-                                              item['fg_code'].toString();
-                                          final custName =
-                                              item['cust_name'].toString();
-                                          final displayValue =
-                                              '$schid  $fgCode  $custName';
-
-                                          return ListTile(
-                                            contentPadding: EdgeInsets.zero,
-                                            title: RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: '$schid\n',
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: '$fgCode  $custName',
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              setState(() {
-                                                selectedMoDoNo = schid;
-                                                _custController.text =
-                                                    '$fgCode  $custName';
-                                              });
-                                              Navigator.of(context).pop();
-                                            },
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  );
+                                },
                               ),
                             );
                           },
@@ -327,7 +409,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                     ),
                   ),
 
-                  //ลูกค้า//
+                  // ลูกค้า //
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: TextField(
@@ -342,7 +424,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                     ),
                   ),
 
-                  //หมายเหตุ//
+                  // หมายเหตุ //
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: TextField(
@@ -357,7 +439,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                     ),
                   ),
 
-                  //เลขที่เอกสาร ERP//
+                  // เลขที่เอกสาร ERP //
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: TextField(
