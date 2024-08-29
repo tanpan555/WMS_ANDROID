@@ -9,7 +9,7 @@ import 'SSFGDT12_grid.dart';
 
 class Ssfgdt12Form extends StatefulWidget {
   final String docNo;
-  final String pOuCode;
+  final String pErpOuCode;
   final String browser_language;
   final String wareCode; // ware code ที่มาจาก API แต่เป็น null
   final String pWareCode; // ware code ที่มาจากเลือ lov
@@ -17,7 +17,7 @@ class Ssfgdt12Form extends StatefulWidget {
   Ssfgdt12Form({
     Key? key,
     required this.docNo,
-    required this.pOuCode,
+    required this.pErpOuCode,
     required this.browser_language,
     required this.wareCode,
     required this.pWareCode,
@@ -88,7 +88,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/formPageData/${widget.pOuCode}/${widget.docNo}/${widget.browser_language}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/formPageData/${widget.pErpOuCode}/${widget.docNo}/${widget.browser_language}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
@@ -222,7 +222,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                             docNo: docNo,
                             status: status,
                             wareCode: widget.wareCode,
-                            pOuCode: widget.pOuCode,
+                            pErpOuCode: widget.pErpOuCode,
                             pWareCode: widget.pWareCode,
                             docDate: docDate,
                             countStaff: countStaff,

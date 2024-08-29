@@ -15,7 +15,7 @@ class Ssfgdt12Grid extends StatefulWidget {
   final String status;
   // final String browser_language;
   final String wareCode; // ware code ที่มาจาก API แต่เป็น null
-  final String pOuCode;
+  final String pErpOuCode;
   final String pWareCode; // ware code ที่มาจากเลือ lov
   final String docDate;
   final String countStaff;
@@ -28,7 +28,7 @@ class Ssfgdt12Grid extends StatefulWidget {
     required this.status,
     // required this.browser_language,
     required this.wareCode,
-    required this.pOuCode,
+    required this.pErpOuCode,
     required this.pWareCode,
     required this.docDate,
     required this.countStaff,
@@ -129,7 +129,8 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     print('status : ${widget.status} Type : ${widget.status.runtimeType}');
     print(
         'wareCode : ${widget.wareCode} Type : ${widget.wareCode.runtimeType}');
-    print('pOuCode : ${widget.pOuCode} Type : ${widget.pOuCode.runtimeType}');
+    print(
+        'pErpOuCode : ${widget.pErpOuCode} Type : ${widget.pErpOuCode.runtimeType}');
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -142,7 +143,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/cradGrid/${widget.pOuCode}/${widget.docNo}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/cradGrid/${widget.pErpOuCode}/${widget.docNo}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -166,7 +167,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   Future<void> checkData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/checkDataGrid/${widget.pOuCode}/${widget.docNo}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/checkDataGrid/${widget.pErpOuCode}/${widget.docNo}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> dataBarcodeList =
@@ -212,7 +213,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
 
   Future<void> submitData(String condition) async {
     print(
-        'widget.pOuCode : ${widget.pOuCode} type : ${widget.pOuCode.runtimeType}');
+        'widget.pErpOuCode : ${widget.pErpOuCode} type : ${widget.pErpOuCode.runtimeType}');
     print('widget.docNo : ${widget.docNo} type : ${widget.docNo.runtimeType}');
     print(
         'widget.docDate : ${widget.docDate} type : ${widget.docDate.runtimeType}');
@@ -231,7 +232,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     };
 
     final body = jsonEncode({
-      'P_ERP_OU_CODE': widget.pOuCode,
+      'P_ERP_OU_CODE': widget.pErpOuCode,
       'p_doc_no': widget.docNo,
       'p_doc_date': widget.docDate,
       'p_nb_count_date': widget.nbCountDate,
@@ -328,7 +329,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         'dataLocator in  fetchDataBarcode: $dataLocator Type : ${dataLocator.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/dataBarcode/${widget.pOuCode}/${widget.docNo}/${widget.pWareCode}/$appUser/$dataLocator/$barcodeTextString'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/dataBarcode/${widget.pErpOuCode}/${widget.docNo}/${widget.pWareCode}/$appUser/$dataLocator/$barcodeTextString'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> dataBarcodeList =
@@ -617,7 +618,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                   item['count_qty'],
                                   item['remark'] ?? '',
                                   widget.docNo,
-                                  widget.pOuCode,
+                                  widget.pErpOuCode,
                                   item['seq'],
                                   item['item_code'],
                                 );
@@ -1358,7 +1359,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                 context,
                                 SSFGDT12_MAIN(
                                   p_attr1: widget.p_attr1,
-                                  p_ou_code: widget.pOuCode,
+                                  pErpOuCode: widget.pErpOuCode,
                                 )
                                 //
                                 );

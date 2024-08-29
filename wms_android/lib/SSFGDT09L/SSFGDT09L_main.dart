@@ -1,33 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:ui';
+// import 'dart:ui';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
-import 'SSFGDT12_search.dart';
+import 'SSFGDT09L_menu.dart';
 
-class SSFGDT12_MAIN extends StatefulWidget {
-  final String p_attr1;
+class SSFGDT09L_MAIN extends StatefulWidget {
+  final String pAttr1;
   final String pErpOuCode;
+  final String pOuCode;
 
-  const SSFGDT12_MAIN({
+  const SSFGDT09L_MAIN({
     Key? key,
-    required this.p_attr1,
+    required this.pAttr1,
     required this.pErpOuCode,
+    required this.pOuCode,
   }) : super(key: key);
   @override
-  _SSFGDT12_MAINState createState() => _SSFGDT12_MAINState();
+  _SSFGDT09L_MAINState createState() => _SSFGDT09L_MAINState();
 }
 
-class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
-  List<dynamic> data = [];
+class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
+  List<dynamic> dataWareCode = [];
 
   @override
   void initState() {
     super.initState();
     fetchData();
-    print(widget.p_attr1);
-    print(widget.pErpOuCode);
+    print(
+        'widget.pAttr1 : ${widget.pAttr1} Type : ${widget.pAttr1.runtimeType}');
+    print(
+        'widget.pErpOuCode : ${widget.pErpOuCode} Type : ${widget.pErpOuCode.runtimeType}');
+    print(
+        'widget.pOuCode : ${widget.pOuCode} Type : ${widget.pOuCode.runtimeType}');
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -40,7 +46,7 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/ware_code/${widget.pErpOuCode}/${widget.p_attr1}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/selectWareCode/${widget.pAttr1}/${widget.pErpOuCode}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -48,9 +54,10 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
         print('Fetched data: $jsonDecode');
 
         setState(() {
-          data = List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          dataWareCode =
+              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
         });
-        print('dataMenu : $data');
+        print('dataWareCode : $dataWareCode');
       } else {
         throw Exception('Failed to load fetchData');
       }
@@ -64,7 +71,7 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'ผลการตรวจนับ'),
+      appBar: CustomAppBar(title: 'เบิกจ่าย'),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -81,12 +88,9 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
                     mainAxisSpacing: 5, // Vertical spacing between cards
                     childAspectRatio: 1.0, // Aspect ratio for each card
                   ),
-                  itemCount: data.length,
+                  itemCount: dataWareCode.length,
                   itemBuilder: (context, index) {
-                    final item = data[index];
-
-                    // Check card_value and set icon and color accordingly
-                    // IconData iconData;
+                    final item = dataWareCode[index];
                     Color cardColor;
                     String imagePath;
 
@@ -103,11 +107,6 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
                         imagePath = 'assets/images/warehouse_blue.png';
                         cardColor = Colors.amber;
                         break;
-                      // case 'ตรวจนับประจำงวด':
-                      //   imagePath = 'assets/images/warehouse_blue.png';
-                      //   cardColor = Colors.orangeAccent;
-                      //   break;
-                      // Add more cases as needed
                       default:
                         imagePath = 'assets/images/warehouse2.png';
                         cardColor = Colors.red;
@@ -115,21 +114,20 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
 
                     return GestureDetector(
                       onTap: () {
-                        // Action when the card is tapped
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('Clicked on ${item['ware_code']}'),
                           ),
                         );
-                        // Or navigate to another page
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Ssfgdt12Search(
+                            builder: (context) => Ssfgdt09lMenu(
                               pWareCode: item['ware_code'],
                               pWareName: item['ware_name'],
                               pErpOuCode: widget.pErpOuCode,
-                              p_attr1: widget.p_attr1,
+                              pOuCode: widget.pOuCode,
+                              pAttr1: widget.pAttr1,
                             ),
                           ),
                         );
@@ -137,19 +135,18 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
                       child: Card(
                         elevation: 4.0,
                         margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        color: cardColor, // Set card color
+                        color: cardColor,
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(5), // Adjust border radius
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(15.0), // Add padding
+                          padding: const EdgeInsets.all(15.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset(
-                                imagePath, // ใช้ imagePath ที่กำหนดไว้ใน switch
-                                width: 70, // กำหนดขนาดของภาพ
+                                imagePath,
+                                width: 70,
                               ),
                               const SizedBox(height: 10),
                               Text(
@@ -160,15 +157,6 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              // const SizedBox(height: 10),
-                              // Text(
-                              //   item['ware_name'] ?? 'null!!!!!!',
-                              //   style: const TextStyle(
-                              //     fontSize: 12,
-                              //     color: Colors.black,
-                              //     fontWeight: FontWeight.bold,
-                              //   ),
-                              // ),
                             ],
                           ),
                         ),

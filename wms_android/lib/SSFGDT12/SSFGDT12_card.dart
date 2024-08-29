@@ -13,7 +13,7 @@ class Ssfgdt12Card extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจากเลือ lov
   final int p_flag;
   final String browser_language;
-  final String p_ou_code;
+  final String pErpOuCode;
   final String p_attr1;
   Ssfgdt12Card({
     Key? key,
@@ -23,7 +23,7 @@ class Ssfgdt12Card extends StatefulWidget {
     required this.pWareCode,
     required this.p_flag,
     required this.browser_language,
-    required this.p_ou_code,
+    required this.pErpOuCode,
     required this.p_attr1,
   }) : super(key: key);
   @override
@@ -61,8 +61,8 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
     try {
       // ตรวจสอบว่า widget.docNo มีค่าหรือไม่
       final String endpoint = widget.docNo != ''
-          ? 'http://172.16.0.82:8888/apex/wms/SSFGDT12/selectCard/${widget.p_flag}/${widget.p_ou_code}/${widget.docNo}/${widget.status}/${widget.browser_language}'
-          : 'http://172.16.0.82:8888/apex/wms/SSFGDT12/selectCard/${widget.p_flag}/${widget.p_ou_code}/$data_null/${widget.status}/${widget.browser_language}';
+          ? 'http://172.16.0.82:8888/apex/wms/SSFGDT12/selectCard/${widget.p_flag}/${widget.pErpOuCode}/${widget.docNo}/${widget.status}/${widget.browser_language}'
+          : 'http://172.16.0.82:8888/apex/wms/SSFGDT12/selectCard/${widget.p_flag}/${widget.pErpOuCode}/$data_null/${widget.status}/${widget.browser_language}';
 
       print('Fetching data from: $endpoint');
 
@@ -172,7 +172,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                           MaterialPageRoute(
                             builder: (context) => Ssfgdt12Form(
                               docNo: item['doc_no'],
-                              pOuCode: widget.p_ou_code,
+                              pErpOuCode: widget.pErpOuCode,
                               browser_language: widget.browser_language,
                               wareCode: item['ware_code'] ?? 'ware_code',
                               pWareCode: widget.pWareCode,
