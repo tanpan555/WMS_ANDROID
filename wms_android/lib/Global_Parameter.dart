@@ -1,4 +1,5 @@
 // lib/globals.dart
+
 library wms_android.globals;
 
 // bool isLoggedIn = false;
@@ -15,3 +16,4 @@ String ATTR1 = '';
 
 String APP_SESSION = '';
 int sessionid = 0;
+

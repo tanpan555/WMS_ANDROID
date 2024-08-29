@@ -4,23 +4,23 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
-import 'SSINDT01_main.dart';
+import 'SSFGDT17_MENU.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 
-class SSFGDT01_WARE extends StatefulWidget {
+class SSFGDT17_WARE extends StatefulWidget {
   final String p_attr1;
   final String p_ou_code;
 
-  const SSFGDT01_WARE({
+  const SSFGDT17_WARE({
     Key? key,
     required this.p_attr1,
     required this.p_ou_code,
   }) : super(key: key);
   @override
-  _SSFGDT01_WAREState createState() => _SSFGDT01_WAREState();
+  _SSFGDT17_WAREState createState() => _SSFGDT17_WAREState();
 }
 
-class _SSFGDT01_WAREState extends State<SSFGDT01_WARE> {
+class _SSFGDT17_WAREState extends State<SSFGDT17_WARE> {
   List<dynamic> data = [];
 
   @override
@@ -65,7 +65,7 @@ class _SSFGDT01_WAREState extends State<SSFGDT01_WARE> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'ผลการตรวจนับ'),
+      appBar: CustomAppBar(title: 'Move Locator'),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -86,7 +86,8 @@ class _SSFGDT01_WAREState extends State<SSFGDT01_WARE> {
                         ),
                       ),
                     ),
-                  ),// Spacing above the grid
+                  ),
+            // const SizedBox(height: 20), // Spacing above the grid
             Expanded(
               child: SingleChildScrollView(
                 child: GridView.builder(
@@ -110,15 +111,15 @@ class _SSFGDT01_WAREState extends State<SSFGDT01_WARE> {
                     switch (item['ware_code']) {
                       case 'WH000-1':
                         imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.white;
+                        cardColor = const Color.fromARGB(255, 255, 255, 255);
                         break;
                       case 'WH000':
                         imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.white;
+                        cardColor = const Color.fromARGB(255, 255, 255, 255);
                         break;
                       case 'WH001':
                         imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.white;
+                        cardColor = const Color.fromARGB(255, 255, 255, 255);
                         break;
                       // case 'ตรวจนับประจำงวด':
                       //   imagePath = 'assets/images/warehouse_blue.png';
@@ -127,15 +128,22 @@ class _SSFGDT01_WAREState extends State<SSFGDT01_WARE> {
                       // Add more cases as needed
                       default:
                         imagePath = 'assets/images/warehouse2.png';
-                        cardColor = Colors.red;
+                        cardColor = const Color.fromARGB(255, 255, 255, 255);
                     }
 
                     return GestureDetector(
                       onTap: () {
+                        // Action when the card is tapped
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Clicked on ${item['ware_code']}'),
+                          ),
+                        );
+                        // Or navigate to another page
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SSINDT01_MAIN(
+                            builder: (context) => SSFGDT17_MENU(
                               pWareCode: item['ware_code'],
                               pWareName: item['ware_name'],
                               p_ou_code: widget.p_ou_code,

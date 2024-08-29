@@ -203,16 +203,15 @@ Widget build(BuildContext context) {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
         controller: controller,
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.black),
         readOnly: readOnly,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: Colors.white),
+          labelStyle: TextStyle(color: Colors.black),
           filled: true,
-          fillColor: readOnly ? Colors.grey[600] : Colors.black,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
+          fillColor: readOnly ? Colors.grey[300] : Colors.white,
+           border: InputBorder.none,
+                
         ),
       ),
     );
@@ -223,17 +222,16 @@ Widget build(BuildContext context) {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
         controller: controller,
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.black),
         readOnly: true,
         onTap: () => _selectDate(context),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: Colors.white),
+          labelStyle: TextStyle(color: Colors.black),
           filled: true,
-          fillColor: Colors.black,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
+          fillColor: Colors.white,
+          border: InputBorder.none
+            
         ),
       ),
     );

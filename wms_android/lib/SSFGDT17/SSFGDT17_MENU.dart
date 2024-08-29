@@ -6,7 +6,16 @@ import 'package:wms_android/bottombar.dart';
 import 'SSFGDT17_MAIN.dart';
 
 class SSFGDT17_MENU extends StatefulWidget {
-  const SSFGDT17_MENU({Key? key}) : super(key: key);
+  final String pWareCode;
+  final String pWareName;
+  final String p_ou_code;
+
+  SSFGDT17_MENU({
+    Key? key,
+    required this.pWareCode,
+    required this.pWareName,
+    required this.p_ou_code,
+  }) : super(key: key);
 
   @override
   _SSFGDT17_MENUState createState() => _SSFGDT17_MENUState();
@@ -61,7 +70,7 @@ class _SSFGDT17_MENUState extends State<SSFGDT17_MENU> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SSFGDT17_MAIN(),
+                                  builder: (context) => SSFGDT17_MAIN(pWareCode: widget.pWareCode),
                                 ),
                               );
                             },
@@ -94,7 +103,7 @@ class _SSFGDT17_MENUState extends State<SSFGDT17_MENU> {
                                       Text(
                                         item['card_value'] ?? 'No Name',
                                         style: const TextStyle(
-                                          fontSize: 12.0,
+                                          fontSize: 24.0,
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -112,7 +121,7 @@ class _SSFGDT17_MENUState extends State<SSFGDT17_MENU> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SSFGDT17_CREATE(),
+                                  builder: (context) => SSFGDT17_CREATE(pWareCode: widget.pWareCode),
                                 ),
                               );
                             },
@@ -144,7 +153,7 @@ class _SSFGDT17_MENUState extends State<SSFGDT17_MENU> {
                                       Text(
                                         'สร้างเอกสาร',
                                         style: const TextStyle(
-                                          fontSize: 12.0,
+                                          fontSize: 24.0,
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
                                         ),

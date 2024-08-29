@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wms_android/SSFGDT17/SSFGD17_WARE.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_MAIN.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_MENU.dart';
 import 'custom_appbar.dart';
@@ -88,7 +89,7 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
       case 'SSFGDT04_MAIN':
         return SSFGDT04_MAIN();
       case 'SSFGDT17_MAIN':
-        return SSFGDT17_MENU();
+        return SSFGDT17_WARE(p_attr1: widget.p_attr1, p_ou_code: widget.p_ou_code,);
       case 'SSFGDT09L_MAIN':
         return SSFGDT09L_MAIN(
             pAttr1: widget.p_attr1,

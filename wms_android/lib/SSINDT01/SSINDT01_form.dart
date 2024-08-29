@@ -650,10 +650,11 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   child: DropdownButtonFormField<String>(
     decoration: const InputDecoration(
       labelText: 'ประเภทรายการ',
-      border: OutlineInputBorder(),
-      labelStyle: TextStyle(color: Colors.white),
-      fillColor: Color.fromRGBO(23, 21, 59, 1),
-      filled: true,
+       filled: true,
+          fillColor: Colors.white,
+          border: InputBorder.none,
+      labelStyle: TextStyle(color: Colors.black),
+   
     ),
     value: selectedPoType,
     items: poType.map<DropdownMenuItem<String>>((dynamic value) {
@@ -664,7 +665,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           child: Text(
             value['po_type_code'],
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.black),
           ),
         ),
       );
@@ -675,7 +676,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
         poTypeCodeController.text = newValue ?? '';
       });
     },
-    dropdownColor: Color.fromRGBO(23, 21, 59, 1),
+    dropdownColor: Color.fromRGBO(255, 255, 255, 1),
   ),
 ),
           const SizedBox(height: 16.0),
@@ -683,23 +684,25 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             controller: receiveDateController,
             decoration: InputDecoration(
               labelText: 'วันที่เลือก',
-              border: OutlineInputBorder(),
+              filled: true,
+          fillColor: Colors.white,
+          border: InputBorder.none,
               labelStyle: TextStyle(
-                color: Colors.white,
+                color: Colors.black,
               ),
               hintStyle: TextStyle(
                 color: Colors.white70,
               ),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.calendar_today,
-                    color: Colors.white), 
+                    color: Colors.black), 
                 onPressed: () {
                   _selectReceiveDate(context);
                 },
               ),
             ),
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.black,
             ),
             readOnly: true,
             onTap: () => _selectReceiveDate(context),
@@ -710,16 +713,18 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             controller: invoiceNoController,
             decoration: InputDecoration(
               labelText: 'เลขที่ใบแจ้งหนี้ *',
-              border: OutlineInputBorder(),
+              filled: true,
+          fillColor: Colors.white,
+          border: InputBorder.none,
               labelStyle: TextStyle(
-                color: Colors.white,
+                color: Colors.black,
               ),
               hintStyle: TextStyle(
                 color: Colors.white70,
               ),
             ),
             style: TextStyle(
-              color: Colors.white, 
+              color: Colors.black, 
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -734,23 +739,25 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             controller: invoiceDateController,
             decoration: InputDecoration(
               labelText: 'วันที่ใบแจ้งหนี้',
-              border: OutlineInputBorder(),
+               filled: true,
+          fillColor: Colors.white,
+          border: InputBorder.none,
               labelStyle: TextStyle(
-                color: Colors.white,
+                color: Colors.black,
               ),
               hintStyle: TextStyle(
                 color: Colors.white70,
               ),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.calendar_today,
-                    color: Colors.white),
+                    color: Colors.black),
                 onPressed: () {
                   _selectInvoiceDate(context);
                 },
               ),
             ),
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.black,
             ),
             readOnly: true,
             onTap: () => _selectInvoiceDate(context),
@@ -760,8 +767,10 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           TextFormField(
             controller: poRemarkController,
             decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelStyle: TextStyle(color: Colors.white),
+                 filled: true,
+          fillColor: Colors.white,
+          border: InputBorder.none,
+                labelStyle: TextStyle(color: Colors.black),
                 labelText: 'PO Remark'),
           ),
           const SizedBox(height: 16.0),

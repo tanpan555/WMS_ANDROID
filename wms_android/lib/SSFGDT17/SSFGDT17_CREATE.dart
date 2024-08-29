@@ -9,9 +9,10 @@ import 'package:wms_android/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-
+import 'package:wms_android/Global_Parameter.dart' as gb;
 class SSFGDT17_CREATE extends StatefulWidget {
-  const SSFGDT17_CREATE({Key? key}) : super(key: key);
+  final String pWareCode;
+  const SSFGDT17_CREATE({Key? key, required this.pWareCode,}) : super(key: key);
 
   @override
   _SSFGDT17_CREATEState createState() => _SSFGDT17_CREATEState();
@@ -27,10 +28,12 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   void initState() {
     super.initState();
     currentSessionID = SessionManager().sessionID;
+    selectedwhCode = widget.pWareCode;
+    print(selectedwhCode);
     fetchwhCodes();
     fetchwhOUTCodes();
     fetchDocType();
-    print(currentSessionID);
+   
   }
 
   Future<void> fetchwhCodes() async {
@@ -47,7 +50,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
         setState(() {
           whCodes = jsonData['items'];
           if (whCodes.isNotEmpty) {
-            selectedwhCode = whCodes[0]['ware_code'];
+            selectedwhCode = widget.pWareCode;
           }
         });
       } else {

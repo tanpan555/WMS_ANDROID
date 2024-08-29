@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
@@ -9,7 +10,11 @@ import 'package:intl/intl.dart';
 
 
 class SSFGDT17_MAIN extends StatefulWidget {
-  const SSFGDT17_MAIN({Key? key}) : super(key: key);
+  final String pWareCode;
+  const SSFGDT17_MAIN({
+    Key? key,
+    required this.pWareCode,
+  }) : super(key: key);
 
   @override
   _SSFGDT17_MAINState createState() => _SSFGDT17_MAINState();
@@ -29,13 +34,16 @@ String? docNumberFilter;
 void initState() {
   super.initState();
   currentSessionID = SessionManager().sessionID;
-
+selectedwhCode = widget.pWareCode;
+print(selectedwhCode);
   _dateController.text = selectedDate != null ? DateFormat('dd/MM/yyyy').format(selectedDate!) : '';
   WidgetsBinding.instance.addPostFrameCallback((_) {
-    if (selectedwhCode == null) {
-      fetchwhCodes().then((_) {
-        _showSelectWareCodeDialog();
-      });
+    if (selectedwhCode != null) {
+     
+        _filterDialog();
+        // _showSelectWareCodeDialog();
+        
+      
     }
   });
   fetchDocType();
@@ -118,24 +126,49 @@ void dispose() {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('เลือกคลังสินค้า'),
-          content: DropdownButton<String>(
-            isExpanded: true,
-            value: selectedwhCode,
-            hint: const Text('เลือกคลังปฏิบัติการ'),
-            items: whCodes.map((item) {
-              return DropdownMenuItem<String>(
-                value: item['ware_code'],
-                child: Text(item['ware_code'] ?? 'No code'),
-              );
-            }).toList(),
-            onChanged: (value) {
-              setState(() {
-                selectedwhCode = value;
-                Navigator.of(context).pop();
-                _filterDialog();
-              });
-            },
-          ),
+          content: DropdownSearch<String>(
+                          popupProps: PopupProps.menu(
+                            showSearchBox: true,
+                            showSelectedItems: true,
+                            disabledItemFn: (String s) => s.startsWith('I'),
+                            itemBuilder: (context, item, isSelected) {
+                              final wareCode = item;
+                              final description = whCodes.firstWhere(
+                                      (element) =>
+                                          element['ware_code'] == wareCode,
+                                      orElse: () => {
+                                            'ware_code': wareCode,
+                                            'description': 'No description'
+                                          })['description'] ??
+                                  'คลัง $wareCode';
+                              return ListTile(
+                                title: Text(wareCode),
+                                subtitle: Text(description),
+                                selected: isSelected,
+                              );
+                            },
+                            constraints: BoxConstraints(
+                              maxHeight: 300,
+                            ),
+                          ),
+                          items: whCodes
+                              .map((item) =>
+                                  item['ware_code'] as String? ?? 'No code')
+                              .toList(),
+                          dropdownDecoratorProps: DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                              labelText: "เลือกคลัง",
+                              hintText: "เลือกคลัง",
+                            ),
+                          ),
+                          onChanged: (String? value) {
+                            setState(() {
+                              selectedwhCode = value;
+                              Navigator.of(context).pop();
+                            });
+                          },
+                          selectedItem: selectedwhCode,
+                        ),
         );
       },
     );

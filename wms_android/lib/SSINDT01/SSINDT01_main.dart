@@ -173,6 +173,13 @@ Future<void> _initializeData() async {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                       Text(
+                        'คลัง $selectedwhCode',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       SizedBox(height: 20),
                       // DropdownButton<String>(
                       //   isExpanded: true,
@@ -190,50 +197,50 @@ Future<void> _initializeData() async {
                       //     });
                       //   },
                       // ),
-                      Flexible(
-                        child: DropdownSearch<String>(
-                          popupProps: PopupProps.menu(
-                            showSearchBox: true,
-                            showSelectedItems: true,
-                            disabledItemFn: (String s) => s.startsWith('I'),
-                            itemBuilder: (context, item, isSelected) {
-                              final wareCode = item;
-                              final description = whCodes.firstWhere(
-                                      (element) =>
-                                          element['ware_code'] == wareCode,
-                                      orElse: () => {
-                                            'ware_code': wareCode,
-                                            'description': 'No description'
-                                          })['description'] ??
-                                  'คลัง $wareCode';
-                              return ListTile(
-                                title: Text(wareCode),
-                                subtitle: Text(description),
-                                selected: isSelected,
-                              );
-                            },
-                            constraints: BoxConstraints(
-                              maxHeight: 300,
-                            ),
-                          ),
-                          items: whCodes
-                              .map((item) =>
-                                  item['ware_code'] as String? ?? 'No code')
-                              .toList(),
-                          dropdownDecoratorProps: DropDownDecoratorProps(
-                            dropdownSearchDecoration: InputDecoration(
-                              labelText: "เลือกคลัง",
-                              hintText: "เลือกคลัง",
-                            ),
-                          ),
-                          onChanged: (String? value) {
-                            setState(() {
-                              selectedwhCode = value;
-                            });
-                          },
-                          selectedItem: selectedwhCode,
-                        ),
-                      ),
+                      // Flexible(
+                      //   child: DropdownSearch<String>(
+                      //     popupProps: PopupProps.menu(
+                      //       showSearchBox: true,
+                      //       showSelectedItems: true,
+                      //       disabledItemFn: (String s) => s.startsWith('I'),
+                      //       itemBuilder: (context, item, isSelected) {
+                      //         final wareCode = item;
+                      //         final description = whCodes.firstWhere(
+                      //                 (element) =>
+                      //                     element['ware_code'] == wareCode,
+                      //                 orElse: () => {
+                      //                       'ware_code': wareCode,
+                      //                       'description': 'No description'
+                      //                     })['description'] ??
+                      //             'คลัง $wareCode';
+                      //         return ListTile(
+                      //           title: Text(wareCode),
+                      //           subtitle: Text(description),
+                      //           selected: isSelected,
+                      //         );
+                      //       },
+                      //       constraints: BoxConstraints(
+                      //         maxHeight: 300,
+                      //       ),
+                      //     ),
+                      //     items: whCodes
+                      //         .map((item) =>
+                      //             item['ware_code'] as String? ?? 'No code')
+                      //         .toList(),
+                      //     dropdownDecoratorProps: DropDownDecoratorProps(
+                      //       dropdownSearchDecoration: InputDecoration(
+                      //         labelText: "เลือกคลัง",
+                      //         hintText: "เลือกคลัง",
+                      //       ),
+                      //     ),
+                      //     onChanged: (String? value) {
+                      //       setState(() {
+                      //         selectedwhCode = value;
+                      //       });
+                      //     },
+                      //     selectedItem: selectedwhCode,
+                      //   ),
+                      // ),
 
                       SizedBox(height: 15),
                       DropdownSearch<String>(
@@ -476,6 +483,11 @@ Future<void> _initializeData() async {
       'p_po_no': poNo,
       'p_receive_no': receiveNo,
       'p_wh_code': selectedwhCode,
+      'APP_SESSION': gb.APP_SESSION,
+      'APP_USER': gb.APP_USER,
+      'P_OU_CODE': gb.P_OU_CODE,
+      'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
+
     });
 
     print('headers : $headers Type : ${headers.runtimeType}');
