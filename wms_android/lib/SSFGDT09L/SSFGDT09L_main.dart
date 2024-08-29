@@ -97,15 +97,15 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
                     switch (item['ware_code']) {
                       case 'WH000-1':
                         imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.amber;
+                        cardColor = Colors.white;
                         break;
                       case 'WH000':
                         imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.amber;
+                        cardColor = Colors.white;
                         break;
                       case 'WH001':
                         imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.amber;
+                        cardColor = Colors.white;
                         break;
                       default:
                         imagePath = 'assets/images/warehouse2.png';
@@ -114,11 +114,6 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
 
                     return GestureDetector(
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Clicked on ${item['ware_code']}'),
-                          ),
-                        );
                         Navigator.push(
                           context,
                           MaterialPageRoute(

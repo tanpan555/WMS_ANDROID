@@ -93,15 +93,15 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
                     switch (item['ware_code']) {
                       case 'WH000-1':
                         imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.amber;
+                        cardColor = Colors.white;
                         break;
                       case 'WH000':
                         imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.amber;
+                        cardColor = Colors.white;
                         break;
                       case 'WH001':
                         imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.amber;
+                        cardColor = Colors.white;
                         break;
                       // case 'ตรวจนับประจำงวด':
                       //   imagePath = 'assets/images/warehouse_blue.png';
@@ -115,13 +115,6 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
 
                     return GestureDetector(
                       onTap: () {
-                        // Action when the card is tapped
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Clicked on ${item['ware_code']}'),
-                          ),
-                        );
-                        // Or navigate to another page
                         Navigator.push(
                           context,
                           MaterialPageRoute(

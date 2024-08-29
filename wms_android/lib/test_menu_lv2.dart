@@ -9,9 +9,11 @@ import 'bottombar.dart';
 import 'SSINDT01/SSINDT01_main.dart';
 import 'SSFGDT04/SSFGDT04_main.dart';
 import 'SSFGDT12/SSFGDT12_main.dart';
+import 'SSFGDT09L/SSFGDT09L_main.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_WARE.dart';
 import 'SSFGDT31/SSFGDT31_MAIN.dart';
 import 'Global_Parameter.dart' as gb;
+import 'package:wms_android/Global_Parameter.dart' as globals;
 // Import หน้าหรือ widgets ต่างๆ ที่คุณต้องการนำทางไป
 
 class TestMenuLv2 extends StatefulWidget {
@@ -44,8 +46,6 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
     print('P_MAIN_MENU : $P_MAIN_MENU');
     print('=======================================');
     print(gb.ATTR1);
-
-
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -83,14 +83,20 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
   Widget? _mapPageNameToWidget(String pageName) {
     switch (pageName) {
       case 'SSINDT01_MAIN':
-        return SSFGDT01_WARE(p_attr1: widget.p_attr1, p_ou_code: widget.p_ou_code);
+        return SSFGDT01_WARE(
+            p_attr1: widget.p_attr1, p_ou_code: widget.p_ou_code);
       case 'SSFGDT04_MAIN':
         return SSFGDT04_MAIN();
       case 'SSFGDT17_MAIN':
-      return SSFGDT17_MENU();
+        return SSFGDT17_MENU();
+      case 'SSFGDT09L_MAIN':
+        return SSFGDT09L_MAIN(
+            pAttr1: widget.p_attr1,
+            pErpOuCode: widget.p_ou_code,
+            pOuCode: globals.P_OU_CODE);
       case 'SSFGDT12_MAIN':
         return SSFGDT12_MAIN(
-            p_attr1: widget.p_attr1, p_ou_code: widget.p_ou_code);
+            p_attr1: widget.p_attr1, pErpOuCode: widget.p_ou_code);
       // case 'YET_ANOTHER_PAGE':
       //   return YetAnotherPage();
       case 'SSFGDT31_MAIN':
