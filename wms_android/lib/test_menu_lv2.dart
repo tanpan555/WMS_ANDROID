@@ -11,6 +11,7 @@ import 'SSFGDT04/SSFGDT04_main.dart';
 import 'SSFGDT12/SSFGDT12_main.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_WARE.dart';
 import 'SSFGDT31/SSFGDT31_MAIN.dart';
+import 'Global_Parameter.dart' as gb;
 // Import หน้าหรือ widgets ต่างๆ ที่คุณต้องการนำทางไป
 
 class TestMenuLv2 extends StatefulWidget {
@@ -41,6 +42,10 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
     fetchData();
 
     print('P_MAIN_MENU : $P_MAIN_MENU');
+    print('=======================================');
+    print(gb.ATTR1);
+
+
   }
 
   void _navigateToPage(BuildContext context, Widget page) {

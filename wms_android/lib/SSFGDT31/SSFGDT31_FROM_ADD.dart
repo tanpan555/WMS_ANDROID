@@ -33,6 +33,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     fetchFromItems();
     fetchDocTypeItems();
     fetchModonoItems();
+
   }
 
   Future<void> fetchFromItems() async {
@@ -369,12 +370,14 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                                   ),
                                                 ),
                                                 onTap: () {
+                                                  
                                                   setState(() {
                                                     selectedMoDoNo = schid;
                                                     _custController.text =
                                                         '$fgCode  $custName';
+                                                        fetchModonoItems();
                                                   });
-                                                  Navigator.of(context).pop();
+                                           Navigator.of(context).pop();
                                                 },
                                               );
                                             },

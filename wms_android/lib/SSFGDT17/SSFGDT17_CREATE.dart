@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_FORM.dart';
 import 'package:wms_android/custom_appbar.dart';
-import 'package:wms_android/custom_drawer.dart';
+// import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/main.dart';
 import 'package:http/http.dart' as http;
@@ -260,14 +260,20 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                         whOUTCode,
                         LocOUTCode,
                       );
-  if(poStatus == '0'){
-    Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => SSFGDT17_FORM(po_doc_no: po_doc_no ?? '',po_doc_type: po_doc_type,LocCode : LocCode),
-        ),
-      );
-
-  }
+                      if (poStatus == '0') {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SSFGDT17_FORM(
+                                po_doc_no: po_doc_no ?? '',
+                                po_doc_type: po_doc_type,
+                                LocCode: LocCode,
+                                selectedwhCode: selectedwhCode,
+                                selectedLocCode: selectedLocCode,
+                                whOUTCode: whOUTCode,
+                                LocOUTCode: LocOUTCode),
+                          ),
+                        );
+                      }
 
                       // ScaffoldMessenger.of(context).showSnackBar(
                       //   SnackBar(

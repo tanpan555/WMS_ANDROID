@@ -50,7 +50,8 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   @override
 void initState() {
   super.initState();
-
+  print('+----------------------------------------');
+  print(gb.ATTR1);
   _selectedValue = 'ทั้งหมด';
   selectedwhCode = widget.pWareCode;
 //   fetchApCodes;

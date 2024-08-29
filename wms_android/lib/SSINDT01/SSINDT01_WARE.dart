@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'SSINDT01_main.dart';
+import 'package:wms_android/Global_Parameter.dart' as gb;
 
 class SSFGDT01_WARE extends StatefulWidget {
   final String p_attr1;
@@ -40,7 +41,7 @@ class _SSFGDT01_WAREState extends State<SSFGDT01_WARE> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/ware_code/${widget.p_ou_code}/${widget.p_attr1}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/ware_code/${widget.p_ou_code}/${gb.ATTR1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);

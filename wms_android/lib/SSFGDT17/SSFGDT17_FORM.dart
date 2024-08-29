@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:wms_android/custom_appbar.dart';
-import 'package:wms_android/custom_drawer.dart';
+// import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/main.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
@@ -15,7 +15,13 @@ class SSFGDT17_FORM extends StatefulWidget {
   final String? po_doc_type;
   final String? LocCode;
 
-  SSFGDT17_FORM({required this.po_doc_no, this.po_doc_type , this.LocCode});
+  final String? selectedwhCode;
+  final String? selectedLocCode;
+  final String? whOUTCode;
+  final String? LocOUTCode;
+
+
+  SSFGDT17_FORM({required this.po_doc_no, this.po_doc_type , this.LocCode,this.selectedwhCode,this.selectedLocCode,this.whOUTCode,this.LocOUTCode});
 
   @override
   _SSFGDT17_FORMState createState() => _SSFGDT17_FORMState();
@@ -49,6 +55,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     print('P_OU_CODE: $P_OU_CODE');
     print('APP_USER: $APP_USER');
     print('LocCode: ${widget.LocCode}');
+    print(widget.selectedwhCode);
   }
 
   @override
@@ -149,7 +156,13 @@ Widget build(BuildContext context) {
               onPressed: () {
                 Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => SSFGDT17_BARCODE(po_doc_no: widget.po_doc_no ?? '',po_doc_type: widget.po_doc_type,LocCode: widget.LocCode),
+          builder: (context) => SSFGDT17_BARCODE(po_doc_no: widget.po_doc_no ?? '',
+          po_doc_type: widget.po_doc_type,
+          LocCode: widget.LocCode,
+          selectedwhCode: widget.selectedwhCode,
+                                selectedLocCode: widget.selectedLocCode,
+                                whOUTCode: widget.whOUTCode,
+                                LocOUTCode: widget.LocOUTCode),
         ),
       );
       chk_validateSave();

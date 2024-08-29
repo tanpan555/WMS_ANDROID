@@ -48,6 +48,7 @@ class SessionManager {
   }
 }
 
+
 class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> dataMenu = [];
   late String sessionID;
@@ -134,24 +135,31 @@ Widget build(BuildContext context) {
                       imagePath = 'assets/images/open-box2.png';
                       cardColor = Colors.greenAccent;
                       p_attr1 = globals.Raw_Material;
-                      p_ou_code = globals.P_ERP_OU_CODE;
+                      
+                      
+        
+                     p_ou_code = globals.P_ERP_OU_CODE;
                       break;
                     case 'WMS คลังสำเร็จรูป':
                       imagePath = 'assets/images/box1.png';
                       cardColor = Colors.blueAccent;
                       p_attr1 = globals.Finishing;
+                    
+                     
                       p_ou_code = globals.P_ERP_OU_CODE;
                       break;
                     case 'พิมพ์ Tag':
                       imagePath = 'assets/images/barcode-scanner.png';
                       cardColor = Colors.pinkAccent;
                       p_attr1 = '';
+     
                       p_ou_code = globals.P_ERP_OU_CODE;
                       break;
                     case 'ตรวจนับประจำงวด':
                       imagePath = 'assets/images/open-box2.png';
                       cardColor = Colors.orangeAccent;
                       p_attr1 = '';
+  
                       p_ou_code = globals.P_ERP_OU_CODE;
                       break;
                     // Add more cases as needed
@@ -159,18 +167,27 @@ Widget build(BuildContext context) {
                       imagePath = 'assets/images/open-box2.png';
                       cardColor = Colors.grey;
                       p_attr1 = '';
+      
                       p_ou_code = globals.P_ERP_OU_CODE;
                   }
 
                   return GestureDetector(
                     onTap: () {
+
+                      if(p_attr1 == globals.Raw_Material){
+                        globals.ATTR1 = 'Raw Material';
+                      }
+                      else if(p_attr1 == globals.Finishing)
+                      {
+                        globals.ATTR1 = 'Finishing';
+                      }
                       // Action when the card is tapped
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Clicked on ${item['card_value']}'),
                         ),
-                      );
-
+                      );  
+           
                       // Or navigate to another page
                       Navigator.push(
                         context,
@@ -180,6 +197,7 @@ Widget build(BuildContext context) {
                             sessionID: SessionManager().sessionID,
                             p_attr1: p_attr1,
                             p_ou_code: p_ou_code,
+  
                           ),
                         ),
                       );
