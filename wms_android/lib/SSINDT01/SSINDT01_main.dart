@@ -638,96 +638,100 @@ Future<void> _initializeData() async {
     }
   }
 
-  Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
-    // Define a map for status values to colors
-    Map<String, Color> statusColors = {
-      'ตรวจรับบางส่วน': Colors.orange,
-      'บันทึก': Colors.blue,
-      'รอยืนยัน': Colors.yellow,
-      'ปกติ': Colors.grey,
-      'อนุมัติ': Colors.green,
-    };
+Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
+  // Define a map for status values to colors
+  Map<String, Color> statusColors = {
+    'ตรวจรับบางส่วน': Colors.orange,
+    'บันทึก': Colors.blue,
+    'รอยืนยัน': Colors.yellow,
+    'ปกติ': Colors.grey,
+    'อนุมัติ': Colors.green,
+  };
 
-    Color statusColor = statusColors[item['status_desc']] ?? Colors.grey;
+  Color statusColor = statusColors[item['status_desc']] ?? Colors.grey;
 
-    TextStyle statusStyle = TextStyle(
-      color: statusColor,
-      fontWeight: FontWeight.bold,
+  TextStyle statusStyle = TextStyle(
+    color: statusColor,
+    fontWeight: FontWeight.bold,
+  );
+
+  BoxDecoration statusDecoration = BoxDecoration(
+    border: Border.all(color: statusColor, width: 2.0),
+    borderRadius: BorderRadius.circular(4.0),
+  );
+
+  // Determine the content for card_qc
+  Widget cardQcWidget;
+  if (item['card_qc'] == '#APP_IMAGES#rt_machine_on.png') {
+    cardQcWidget = Image.asset(
+      'assets/images/rt_machine_on.png',
+      width: 64.0,
+      height: 64.0,
     );
-
-    BoxDecoration statusDecoration = BoxDecoration(
-      border: Border.all(color: statusColor, width: 2.0),
-      borderRadius: BorderRadius.circular(4.0),
+  } else if (item['card_qc'] == '#APP_IMAGES#rt_machine_off.png') {
+    cardQcWidget = Image.asset(
+      'assets/images/rt_machine_off.png',
+      width: 64.0,
+      height: 64.0,
     );
-
-    // Determine the content for card_qc
-    Widget cardQcWidget;
-    if (item['card_qc'] == '#APP_IMAGES#rt_machine_on.png') {
-      cardQcWidget = Image.asset(
-        'assets/images/rt_machine_on.png',
-        width: 64.0,
-        height: 64.0,
-      );
-    } else if (item['card_qc'] == '#APP_IMAGES#rt_machine_off.png') {
-      cardQcWidget = Image.asset(
-        'assets/images/rt_machine_off.png',
-        width: 64.0,
-        height: 64.0,
-      );
-    } else if (item['card_qc'] == 'No item') {
-      cardQcWidget = SizedBox.shrink(); // No widget displayed
-    } else {
-      cardQcWidget = Text('');
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-      child: Card(
-        color: const Color.fromRGBO(204,235,252,1),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        elevation: 5,
-        child: ListTile(
-          title: Text(item['ap_name'] ?? 'No Name'),
-          subtitle: Row(
-            children: [
-              Expanded(
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text:
-                            '${item['receive_date'] ?? 'No Receive Date'} ${item['po_no'] ?? 'No PO_NO'} ${item['item_stype_desc'] ?? 'No item'}\n',
-                        style: TextStyle(color: Colors.black, fontSize: 12),
-                      ),
-                      TextSpan(
-                        text: '\n',
-                        style: DefaultTextStyle.of(context).style,
-                      ),
-                      WidgetSpan(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 4.0, vertical: 2.0),
-                          decoration: statusDecoration,
-                          child: Text(
-                            '${item['status_desc'] ?? 'No Status'}',
-                            style: statusStyle,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              cardQcWidget,
-            ],
-          ),
-          onTap: () => handleTap(context, item),
-        ),
-      ),
-    );
+  } else if (item['card_qc'] == 'No item') {
+    cardQcWidget = SizedBox.shrink(); // No widget displayed
+  } else {
+    cardQcWidget = Text('');
   }
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+    child: Card(
+      color: const Color.fromRGBO(204, 235, 252, 1),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      elevation: 5,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            title: Text(item['ap_name'] ?? 'No Name'),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+                      decoration: statusDecoration,
+                      child: Text(
+                        '${item['status_desc'] ?? 'No Status'}',
+                        style: statusStyle,
+                      ),
+                    ),
+                    SizedBox(width: 8.0),
+                    cardQcWidget,
+                  ],
+                ),
+                Text(
+                  '${item['po_date'] ?? ''} ${item['po_no'] ?? ''} \n${item['item_stype_desc'] ?? '\n'}'
+                  '${item['receive_date'] ?? ''} ${item['receive_no'] ?? ''} ${item['warehouse'] ?? ''}',
+                  style: TextStyle(color: Colors.black, fontSize: 12),
+                ),
+                SizedBox(height: 8.0),
+                
+              ],
+            ),
+            contentPadding: EdgeInsets.all(16.0),
+            onTap: () => handleTap(context, item),
+          ),
+        ],
+        
+      ),
+      
+    ),
+    
+  );
+  
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////
   @override
