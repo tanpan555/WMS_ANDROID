@@ -16,7 +16,14 @@ class Ssindt01Verify extends StatefulWidget {
   final String poReceiveNo;
   final String? poPONO;
 
-  Ssindt01Verify({required this.poReceiveNo, this.poPONO});
+  final String pWareCode;
+  final String pWareName;
+  final String p_ou_code;
+
+  Ssindt01Verify({required this.poReceiveNo, this.poPONO,
+    required this.pWareCode,
+    required this.pWareName,
+    required this.p_ou_code,});
 
   @override
   _Ssindt01VerifyState createState() => _Ssindt01VerifyState();
@@ -38,8 +45,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
   String P_RECEIVE_NO = '';
   String? report;
   String? allreport;
-  String? report1;
-  String? report2;
+
 
   @override
   void initState() {
@@ -425,9 +431,9 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => SSINDT01_MAIN(
-                              pWareCode: '',
-                              pWareName: '',
-                              p_ou_code: '',
+                              pWareCode: widget.pWareCode,
+                              pWareName: widget.pWareName,
+                              p_ou_code: widget.p_ou_code,
                             ),
                           ),
                         );

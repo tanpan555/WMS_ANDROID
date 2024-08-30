@@ -8,11 +8,20 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_main.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_grid_data.dart';
 import 'SSINDT01_WARE.dart';
+import 'package:wms_android/Global_Parameter.dart' as gb;
 
 class Ssindt01Form extends StatefulWidget {
   final String poReceiveNo;
+  final String pWareCode;
+  final String pWareName;
+  final String p_ou_code;
 
-  Ssindt01Form({required this.poReceiveNo});
+  Ssindt01Form({
+    required this.poReceiveNo,
+    required this.pWareCode,
+    required this.pWareName,
+    required this.p_ou_code,
+  });
 
   @override
   _Ssindt01FormState createState() => _Ssindt01FormState();
@@ -67,6 +76,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     fetchReceiveHeadData(widget.poReceiveNo);
     fetchwhpoType();
     cancelCode();
+    print('============================');
+    print(wareCode);
   }
 
   @override
@@ -245,6 +256,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     }
   }
 
+  String? pomsg;
   Future<void> cancel_from(String selectedcCode) async {
     final url = Uri.parse('http://172.16.0.82:8888/apex/wms/c/cancel_from');
     final response = await http.put(
@@ -255,12 +267,14 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       body: jsonEncode({
         'v_rec': widget.poReceiveNo,
         'v_cancel': selectedcCode,
+        'APP_USER': gb.APP_USER,
       }),
     );
 
     print('Cancel form with data: ${jsonEncode({
           'v_rec': widget.poReceiveNo,
           'v_cancel': selectedcCode,
+          'APP_USER': gb.APP_USER,
         })}');
 
     if (response.statusCode == 200) {
@@ -271,9 +285,6 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
         final pomsg = responseData['po_message'] ?? 'Unknown';
         print('po_status: $poStatus');
         print('po_message: $pomsg');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$pomsg')),
-        );
       } catch (e) {
         print('Error parsing response: $e');
       }
@@ -282,7 +293,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     }
   }
 
- void showCancelDialog() {
+  void showCancelDialog() {
   String? selectedcCode;
 
   showDialog(
@@ -311,22 +322,20 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                     return DropdownMenuItem<String>(
                       value: item['r'],
                       child: Container(
-                        width: 250.0, 
+                        width: 250.0,
                         child: Row(
                           children: [
-                       Text(
-                                item['r'] ?? 'No code',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
+                            Text(
+                              item['r'] ?? 'No code',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
                               ),
-                    
+                            ),
                             SizedBox(width: 8),
                             Flexible(
-                              child:
-                               Text(
+                              child: Text(
                                 item['d'] ?? '',
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -335,7 +344,6 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                                 ),
                               ),
                             ),
-                            
                           ],
                         ),
                       ),
@@ -358,36 +366,80 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               Spacer(),
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: TextButton(
-                    child: Text('OK'),
-                    onPressed: () {
-                      if (selectedcCode != null) {
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      child: Text('Cancel'),
+                      onPressed: () {
                         Navigator.of(context).pop();
-                        cancel_from(selectedcCode!).then((_) {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => SSINDT01_MAIN(pWareCode: '', pWareName: '', p_ou_code: '',),
-                            ),
+                      },
+                    ),
+                    TextButton(
+                      child: Text('OK'),
+                      onPressed: () {
+                        if (selectedcCode != null) {
+                          Navigator.of(context).pop();
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('คำเตือน'),
+                                content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('ตกลง'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+
+                                      cancel_from(selectedcCode!).then((_) {
+                                        Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SSINDT01_MAIN(
+                                              pWareCode: widget.pWareCode,
+                                              pWareName: widget.pWareName,
+                                              p_ou_code: widget.p_ou_code,
+                                            ),
+                                          ),
+                                        );
+                                      }).catchError((error) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                'An error occurred: $error'),
+                                          ),
+                                        );
+                                      });
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
                           );
-                        }).catchError((error) {
-       
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('An error occurred: $error'),
-                            ),
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('คำเตือน'),
+                                content: Text('โปรดเลือกเหตุยกเลิก'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('ตกลง'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
                           );
-                        });
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Please select a cancel code'),
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -397,6 +449,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     },
   );
 }
+
 
   Future<void> updateForm_REMARK(
       String receiveNo,
@@ -499,19 +552,32 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     final poTypeCode = selectedPoType?.split(' ').first ?? '';
 
     if (invoiceNo.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('ต้องระบุข้อมูลที่จำเป็น * ให้ครบถ้วน !!!')),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('คำเตือน'),
+            content: Text('ต้องระบุข้อมูลที่จำเป็น * ให้ครบถ้วน !!!'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
       );
       return;
     }
-
     await updateForm_REMARK(
         receiveNo, poRemark, receiveDate, invoiceDate, invoiceNo, poTypeCode);
 
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) =>
-            Ssindt01Grid(poReceiveNo: receiveNo, poPONO: poNo),
+            Ssindt01Grid(poReceiveNo: receiveNo, poPONO: poNo, pWareCode: widget.pWareCode, pWareName: widget.pWareName, p_ou_code: widget.p_ou_code,),
       ),
     );
   }
@@ -643,50 +709,49 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           // ),
           const SizedBox(height: 16.0),
           Container(
-  decoration: BoxDecoration(
-    color: Color.fromRGBO(23, 21, 59, 1),
-    borderRadius: BorderRadius.circular(8.0), 
-  ),
-  child: DropdownButtonFormField<String>(
-    decoration: const InputDecoration(
-      labelText: 'ประเภทรายการ',
-       filled: true,
-          fillColor: Colors.white,
-          border: InputBorder.none,
-      labelStyle: TextStyle(color: Colors.black),
-   
-    ),
-    value: selectedPoType,
-    items: poType.map<DropdownMenuItem<String>>((dynamic value) {
-      return DropdownMenuItem<String>(
-        value: value['po_type_code'],
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.5,
-          child: Text(
-            value['po_type_code'],
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(color: Colors.black),
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(23, 21, 59, 1),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                labelText: 'ประเภทรายการ',
+                filled: true,
+                fillColor: Colors.white,
+                border: InputBorder.none,
+                labelStyle: TextStyle(color: Colors.black),
+              ),
+              value: selectedPoType,
+              items: poType.map<DropdownMenuItem<String>>((dynamic value) {
+                return DropdownMenuItem<String>(
+                  value: value['po_type_code'],
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Text(
+                      value['po_type_code'],
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                );
+              }).toList(),
+              onChanged: (newValue) {
+                setState(() {
+                  selectedPoType = newValue;
+                  poTypeCodeController.text = newValue ?? '';
+                });
+              },
+              dropdownColor: Color.fromRGBO(255, 255, 255, 1),
+            ),
           ),
-        ),
-      );
-    }).toList(),
-    onChanged: (newValue) {
-      setState(() {
-        selectedPoType = newValue;
-        poTypeCodeController.text = newValue ?? '';
-      });
-    },
-    dropdownColor: Color.fromRGBO(255, 255, 255, 1),
-  ),
-),
           const SizedBox(height: 16.0),
           TextFormField(
             controller: receiveDateController,
             decoration: InputDecoration(
               labelText: 'วันที่เลือก',
               filled: true,
-          fillColor: Colors.white,
-          border: InputBorder.none,
+              fillColor: Colors.white,
+              border: InputBorder.none,
               labelStyle: TextStyle(
                 color: Colors.black,
               ),
@@ -694,8 +759,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                 color: Colors.white70,
               ),
               suffixIcon: IconButton(
-                icon: const Icon(Icons.calendar_today,
-                    color: Colors.black), 
+                icon: const Icon(Icons.calendar_today, color: Colors.black),
                 onPressed: () {
                   _selectReceiveDate(context);
                 },
@@ -714,8 +778,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             decoration: InputDecoration(
               labelText: 'เลขที่ใบแจ้งหนี้ *',
               filled: true,
-          fillColor: Colors.white,
-          border: InputBorder.none,
+              fillColor: Colors.white,
+              border: InputBorder.none,
               labelStyle: TextStyle(
                 color: Colors.black,
               ),
@@ -724,7 +788,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               ),
             ),
             style: TextStyle(
-              color: Colors.black, 
+              color: Colors.black,
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -739,9 +803,9 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             controller: invoiceDateController,
             decoration: InputDecoration(
               labelText: 'วันที่ใบแจ้งหนี้',
-               filled: true,
-          fillColor: Colors.white,
-          border: InputBorder.none,
+              filled: true,
+              fillColor: Colors.white,
+              border: InputBorder.none,
               labelStyle: TextStyle(
                 color: Colors.black,
               ),
@@ -749,8 +813,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                 color: Colors.white70,
               ),
               suffixIcon: IconButton(
-                icon: const Icon(Icons.calendar_today,
-                    color: Colors.black),
+                icon: const Icon(Icons.calendar_today, color: Colors.black),
                 onPressed: () {
                   _selectInvoiceDate(context);
                 },
@@ -767,9 +830,9 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           TextFormField(
             controller: poRemarkController,
             decoration: InputDecoration(
-                 filled: true,
-          fillColor: Colors.white,
-          border: InputBorder.none,
+                filled: true,
+                fillColor: Colors.white,
+                border: InputBorder.none,
                 labelStyle: TextStyle(color: Colors.black),
                 labelText: 'PO Remark'),
           ),

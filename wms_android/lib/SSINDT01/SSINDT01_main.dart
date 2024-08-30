@@ -550,28 +550,35 @@ Future<void> _initializeData() async {
 
   void handleTap(BuildContext context, Map<String, dynamic> item) async {
     if (selectedwhCode == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please select a warehouse.'),
-        ),
-      );
+      AlertDialog(
+            title: Text('คำเตือน'),
+            content: Text('โปรดเลือกคลังสินค้า'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
       return;
     }
     final pPoNo = item['po_no'] ?? '';
     final vReceiveNo = item['receive_no'] ?? 'null';
-    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              'WH: $selectedwhCode Pono: $pPoNo RecNo: $vReceiveNo'),
-                        ),
-                      );
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //                     SnackBar(
+    //                       content: Text(
+    //                           'WH: $selectedwhCode Pono: $pPoNo RecNo: $vReceiveNo'),
+    //                     ),
+    //                   );
     await fetchPoStatus(pPoNo, vReceiveNo);
 
     if (poStatus == '0') {
       await sendPostRequest(pPoNo, vReceiveNo, selectedwhCode ?? '');
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => Ssindt01Form(poReceiveNo: poReceiveNo ?? ''),
+          builder: (context) => Ssindt01Form(poReceiveNo: poReceiveNo ?? '', pWareCode: widget.pWareCode ?? '', pWareName: widget.pWareName, p_ou_code: widget.p_ou_code,),
         ),
       );
     } else if (poStatus == '1' && poStep == '9') {
@@ -579,16 +586,16 @@ Future<void> _initializeData() async {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('PO Status'),
+            title: Text('คำเตือน'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Status: ${poStatus ?? 'No status available'}'),
-                SizedBox(height: 8.0),
-                Text('Message: ${poMessage ?? 'No message available'}'),
-                SizedBox(height: 8.0),
-                Text('Step: ${poStep ?? 'No message available'}'),
+                // Text('Status: ${poStatus ?? 'No status available'}'),
+                // SizedBox(height: 8.0),
+                Text('${poMessage ?? 'No message available'}'),
+                // SizedBox(height: 8.0),
+                // Text('Step: ${poStep ?? 'No message available'}'),
               ],
             ),
             actions: [
@@ -613,15 +620,15 @@ Future<void> _initializeData() async {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('PO Status'),
+            title: Text('คำเตือน'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Status: ${poStatus ?? 'No status available'}'),
-                SizedBox(height: 8.0),
-                Text('Message: ${poMessage ?? 'No message available'}'),
-                Text('Step: ${poStep ?? 'No message available'}'),
+                // Text('Status: ${poStatus ?? 'No status available'}'),
+                // SizedBox(height: 8.0),
+                Text('${poMessage ?? 'No message available'}'),
+                // Text('Step: ${poStep ?? 'No message available'}'),
               ],
             ),
             actions: [
