@@ -30,6 +30,7 @@ class Ssfgdt12Form extends StatefulWidget {
 class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   //
   List<dynamic> dataForm = [];
+
   String staffCode = '';
   String docDate = '';
   String nbStaffName = '';
@@ -44,6 +45,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   String nbCountDate = '';
   String docNo = '';
 
+  final FocusNode _focusNode = FocusNode();
   final TextEditingController staffCodeController = TextEditingController();
   final TextEditingController docDateController = TextEditingController();
   final TextEditingController nbStaffNameController = TextEditingController();
@@ -63,12 +65,18 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   void initState() {
     super.initState();
     fetchData();
-    print(
-        'wareCode : ${widget.wareCode} Type : ${widget.wareCode.runtimeType}');
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) {
+        selectNbCountStaff(
+          nbCountStaff,
+        );
+      }
+    });
   }
 
   @override
   void dispose() {
+    _focusNode.dispose();
     staffCodeController.dispose();
     docDateController.dispose();
     nbStaffNameController.dispose();
@@ -130,6 +138,39 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
             updBy1Controller.text = updBy1;
             nbCountDateController.text = nbCountDate;
             docNoController.text = docNo;
+          });
+        } else {
+          print('No items found.');
+        }
+      } else {
+        print('Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> selectNbCountStaff(String nbCountStaff) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/select_nbCountStaff/${widget.pErpOuCode}/${widget.docNo}/$nbCountStaff'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> items = data['items'];
+        print(items);
+        if (items.isNotEmpty) {
+          final Map<String, dynamic> item = items[0];
+          //
+
+          //
+          print('Fetched data: $jsonDecode');
+
+          setState(() {
+            nbStaffCountName = item['nb_staff_count_name'] ?? '';
+
+            nbStaffCountNameController.text = staffCode;
           });
         } else {
           print('No items found.');
@@ -301,6 +342,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                     //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
                       controller: nbCountStaffController,
+                      focusNode: _focusNode,
                       // readOnly: true,
                       decoration: InputDecoration(
                         border: InputBorder.none,

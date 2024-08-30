@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
+import 'package:intl/intl.dart';
 import 'SSFGDT12_main.dart';
 import 'SSFGDT12_barcode.dart';
 
@@ -691,11 +692,14 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     int seq,
     String item_code,
   ) {
-    // สร้าง TextEditingController สำหรับแต่ละฟิลด์
+    String formattedSysQty =
+        NumberFormat('#,###,###,###,###,###').format(sys_qty);
+    String formattedDiffQty =
+        NumberFormat('#,###,###,###,###,###').format(diff_qty);
     TextEditingController sysQtyController =
-        TextEditingController(text: sys_qty.toString());
+        TextEditingController(text: formattedSysQty);
     TextEditingController diffQtyController =
-        TextEditingController(text: diff_qty.toString());
+        TextEditingController(text: formattedDiffQty);
     TextEditingController countQtyController =
         TextEditingController(text: count_qty.toString());
     TextEditingController remarkController =
