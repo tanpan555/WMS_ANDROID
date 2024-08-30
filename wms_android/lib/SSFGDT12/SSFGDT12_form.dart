@@ -167,7 +167,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
       backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'ผลการตรวจนับ'),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             Row(
@@ -251,6 +251,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                     //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
                       controller: nbCountDateController,
+                      readOnly: true,
                       onTap: () => _selectDate(context),
                       decoration: InputDecoration(
                         border: InputBorder.none,
@@ -258,6 +259,10 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                         fillColor: Colors.white,
                         labelText: 'วันที่ตรวจนับ',
                         labelStyle: const TextStyle(
+                          color: Colors.black87,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.calendar_today,
                           color: Colors.black87,
                         ),
                       ),

@@ -82,16 +82,17 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
       backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'ผลการตรวจนับ'),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextFormField(
               initialValue: '${widget.pWareCode} ${widget.pWareName}',
+              readOnly: true,
               // onTap: () => _selectDate(context),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: Colors.grey[300],
                 labelText: 'ware house',
                 labelStyle: const TextStyle(
                   color: Colors.black87,
@@ -129,6 +130,10 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 fillColor: Colors.white,
                 labelText: 'เลือก วันที่',
                 labelStyle: const TextStyle(
+                  color: Colors.black87,
+                ),
+                suffixIcon: Icon(
+                  Icons.calendar_today,
                   color: Colors.black87,
                 ),
               ),
@@ -182,49 +187,104 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    _controller.clear();
-                    _dateController.clear();
-                    setState(() {
-                      pDocNo = '';
-                      selectedDate = '';
-                      selectedItem = 'รอตรวจนับ';
-                      status = 'N';
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
+                // ElevatedButton(
+                //   onPressed: () {
+                //     _controller.clear();
+                //     _dateController.clear();
+                //     setState(() {
+                //       pDocNo = '';
+                //       selectedDate = '';
+                //       selectedItem = 'รอตรวจนับ';
+                //       status = 'N';
+                //     });
+                //   },
+                //   style: ElevatedButton.styleFrom(
+                //     backgroundColor: Colors.white,
+                //   ),
+                //   child: const Text('Clear'),
+                // ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  child: const Text('Clear'),
-                ),
-                ElevatedButton(
-                  onPressed:
-                      // pDocNo.isNotEmpty &&
-                      // selectedDate.isNotEmpty &&
-                      selectedItem.isNotEmpty
-                          ? () {
-                              _navigateToPage(
-                                  context,
-                                  Ssfgdt12Card(
-                                    docNo: pDocNo,
-                                    date: selectedDate,
-                                    status: status,
-                                    pWareCode: widget.pWareCode,
-                                    p_flag: p_flag,
-                                    browser_language: globals.BROWSER_LANGUAGE,
-                                    pErpOuCode: widget.pErpOuCode,
-                                    p_attr1: widget.p_attr1,
-                                  )
-                                  //
-                                  );
-                            }
-                          : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
+                  child: IconButton(
+                    iconSize: 20.0,
+                    icon: Image.asset(
+                      'assets/images/eraser_red.png',
+                      width: 20.0,
+                      height: 20.0,
+                    ),
+                    onPressed: () {
+                      _controller.clear();
+                      _dateController.clear();
+                      setState(() {
+                        pDocNo = '';
+                        selectedDate = '';
+                        selectedItem = 'รอตรวจนับ';
+                        status = 'N';
+                      });
+                    },
                   ),
-                  child: const Text('Search'),
                 ),
+                //////////////////////////////////////////////////////
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: IconButton(
+                    iconSize: 20.0,
+                    icon: Image.asset(
+                      'assets/images/search_color.png',
+                      width: 20.0,
+                      height: 20.0,
+                    ),
+                    onPressed: () {
+                      _navigateToPage(
+                          context,
+                          Ssfgdt12Card(
+                            docNo: pDocNo,
+                            date: selectedDate,
+                            status: status,
+                            pWareCode: widget.pWareCode,
+                            p_flag: p_flag,
+                            browser_language: globals.BROWSER_LANGUAGE,
+                            pErpOuCode: widget.pErpOuCode,
+                            p_attr1: widget.p_attr1,
+                          )
+                          //
+                          );
+                    },
+                  ),
+                ),
+                // ElevatedButton(
+                //   onPressed:
+                //       // pDocNo.isNotEmpty &&
+                //       // selectedDate.isNotEmpty &&
+                //       selectedItem.isNotEmpty
+                //           ? () {
+                //               _navigateToPage(
+                //                   context,
+                //                   Ssfgdt12Card(
+                //                     docNo: pDocNo,
+                //                     date: selectedDate,
+                //                     status: status,
+                //                     pWareCode: widget.pWareCode,
+                //                     p_flag: p_flag,
+                //                     browser_language: globals.BROWSER_LANGUAGE,
+                //                     pErpOuCode: widget.pErpOuCode,
+                //                     p_attr1: widget.p_attr1,
+                //                   )
+                //                   //
+                //                   );
+                //             }
+                //           : null,
+                //   style: ElevatedButton.styleFrom(
+                //     backgroundColor: Colors.white,
+                //   ),
+                //   child: const Text('Search'),
+                // ),
               ],
             ),
           ],

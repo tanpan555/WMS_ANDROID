@@ -483,40 +483,40 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                   // Check card_value and set icon accordingly
                   // String combinedValue = '${item['card_value']}';
                   // IconData iconData;
-                  Color cardColor;
-                  String statusText;
-                  switch (item['status']) {
-                    ////      WMS คลังวัตถุดิบ
-                    case 'N':
-                      // iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Color.fromRGBO(246, 250, 112, 1.0);
-                      statusText = 'รอตรวจนับ';
-                      break;
-                    case 'T':
-                      // iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Color.fromRGBO(208, 206, 206, 1.0);
-                      statusText = 'กำลังตรวจนับ';
-                      break;
-                    case 'X':
-                      // iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Color.fromRGBO(146, 208, 80, 1.0);
-                      statusText = 'ยื่นยันตรวจนับแล้ว';
-                      break;
-                    case 'A':
-                      // iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Color.fromRGBO(208, 206, 206, 1.0);
-                      statusText = 'กำลังปรับปรุงจำนวน/มูลค่า';
-                      break;
-                    case 'B':
-                      // iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Color.fromRGBO(146, 208, 80, 1.0);
-                      statusText = 'ยืนยันปรับปรุงจำนวน/มูลค่าแล้ว';
-                      break;
-                    default:
-                      // iconData = Icons.help; // Default icon
-                      cardColor = Colors.grey;
-                      statusText = 'Unknown';
-                  }
+                  // Color cardColor;
+                  // String statusText;
+                  // switch (item['status']) {
+                  //   ////      WMS คลังวัตถุดิบ
+                  //   case 'N':
+                  //     // iconData = Icons.arrow_circle_right_outlined;
+                  //     cardColor = Color.fromRGBO(246, 250, 112, 1.0);
+                  //     statusText = 'รอตรวจนับ';
+                  //     break;
+                  //   case 'T':
+                  //     // iconData = Icons.arrow_circle_right_outlined;
+                  //     cardColor = Color.fromRGBO(208, 206, 206, 1.0);
+                  //     statusText = 'กำลังตรวจนับ';
+                  //     break;
+                  //   case 'X':
+                  //     // iconData = Icons.arrow_circle_right_outlined;
+                  //     cardColor = Color.fromRGBO(146, 208, 80, 1.0);
+                  //     statusText = 'ยื่นยันตรวจนับแล้ว';
+                  //     break;
+                  //   case 'A':
+                  //     // iconData = Icons.arrow_circle_right_outlined;
+                  //     cardColor = Color.fromRGBO(208, 206, 206, 1.0);
+                  //     statusText = 'กำลังปรับปรุงจำนวน/มูลค่า';
+                  //     break;
+                  //   case 'B':
+                  //     // iconData = Icons.arrow_circle_right_outlined;
+                  //     cardColor = Color.fromRGBO(146, 208, 80, 1.0);
+                  //     statusText = 'ยืนยันปรับปรุงจำนวน/มูลค่าแล้ว';
+                  //     break;
+                  //   default:
+                  //     // iconData = Icons.help; // Default icon
+                  //     cardColor = Color.fromRGBO(204, 235, 252, 1.0);
+                  //     statusText = 'Unknown';
+                  // }
 
                   return Card(
                     elevation: 8.0,
@@ -525,7 +525,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       borderRadius:
                           BorderRadius.circular(15.0), // กำหนดมุมโค้งของ Card
                     ),
-                    color: cardColor,
+                    color: Color.fromRGBO(204, 235, 252, 1.0),
                     child: InkWell(
                       onTap: () {
                         // Navigator.push(
@@ -602,61 +602,66 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                               ],
                             ),
                           ),
-                          Positioned(
-                            top: 8.0,
-                            right: 8.0,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 12.0, vertical: 6.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12.0),
-                                border:
-                                    Border.all(color: Colors.black, width: 2.0),
-                              ),
-                              child: Text(
-                                statusText, // แสดง STATUS ที่ได้จาก switch case
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
+                          // Positioned(
+                          //   top: 8.0,
+                          //   right: 8.0,
+                          //   child: Container(
+                          //     padding: EdgeInsets.symmetric(
+                          //         horizontal: 12.0, vertical: 6.0),
+                          //     decoration: BoxDecoration(
+                          //       color: Colors.white,
+                          //       borderRadius: BorderRadius.circular(12.0),
+                          //       border:
+                          //           Border.all(color: Colors.black, width: 2.0),
+                          //     ),
+                          //     child: Text(
+                          //       statusText, // แสดง STATUS ที่ได้จาก switch case
+                          //       style: TextStyle(
+                          //         color: Colors.black,
+                          //         fontWeight: FontWeight.bold,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                           Positioned(
                             bottom: 8.0,
                             right: 8.0,
                             child: GestureDetector(
                               onTap: () {
-                                showDetailsDialog(
-                                  context,
-                                  item['sys_qty'],
-                                  item['diff_qty'],
-                                  item['rowid'],
-                                  item['count_qty'],
-                                  item['remark'] ?? '',
-                                  widget.docNo,
-                                  widget.pErpOuCode,
-                                  item['seq'],
-                                  item['item_code'],
-                                );
+                                // showDetailsDialog(
+                                //   context,
+                                //   item['sys_qty'],
+                                //   item['diff_qty'],
+                                //   item['rowid'],
+                                //   item['count_qty'],
+                                //   item['remark'] ?? '',
+                                //   widget.docNo,
+                                //   widget.pErpOuCode,
+                                //   item['seq'],
+                                //   item['item_code'],
+                                // );
                               },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 12.0, vertical: 6.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  border: Border.all(
-                                      color: Colors.black, width: 2.0),
+                              child: IconButton(
+                                iconSize: 20.0,
+                                icon: Image.asset(
+                                  'assets/images/edit (1).png',
+                                  width: 20.0,
+                                  height: 20.0,
                                 ),
-                                child: Text(
-                                  'Edit',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                onPressed: () {
+                                  showDetailsDialog(
+                                    context,
+                                    item['sys_qty'],
+                                    item['diff_qty'],
+                                    item['rowid'],
+                                    item['count_qty'],
+                                    item['remark'] ?? '',
+                                    widget.docNo,
+                                    widget.pErpOuCode,
+                                    item['seq'],
+                                    item['item_code'],
+                                  );
+                                },
                               ),
                             ),
                           ),
@@ -711,28 +716,58 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                   TextFormField(
                     controller: sysQtyController,
                     readOnly: true,
-                    decoration:
-                        InputDecoration(labelText: 'จำนวนคงเหลือในระบบ'),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.grey[300],
+                      labelText: 'จำนวนคงเหลือในระบบ',
+                      labelStyle: const TextStyle(
+                        color: Colors.black87,
+                      ),
+                    ),
                     keyboardType: TextInputType.number,
                   ),
                   SizedBox(height: 8.0),
                   TextFormField(
                     controller: diffQtyController,
                     readOnly: true,
-                    decoration: InputDecoration(labelText: 'ผลต่างการตรวจนับ'),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.grey[300],
+                      labelText: 'ผลต่างการตรวจนับ',
+                      labelStyle: const TextStyle(
+                        color: Colors.black87,
+                      ),
+                    ),
                     keyboardType: TextInputType.number,
                   ),
                   SizedBox(height: 8.0),
                   TextFormField(
                     controller: countQtyController,
-                    decoration:
-                        InputDecoration(labelText: 'จำนวนที่ตรวจนับได้'),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: 'จำนวนที่ตรวจได้',
+                      labelStyle: const TextStyle(
+                        color: Colors.black87,
+                      ),
+                    ),
                     keyboardType: TextInputType.number,
                   ),
                   SizedBox(height: 8.0),
                   TextFormField(
                     controller: remarkController,
-                    decoration: InputDecoration(labelText: 'หมายเหตุสินค้า'),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: 'หมายเหตุสินค้า',
+                      labelStyle: const TextStyle(
+                        color: Colors.black87,
+                      ),
+                    ),
                     // keyboardType: TextInputType.number,
                   ),
                   SizedBox(height: 8.0),

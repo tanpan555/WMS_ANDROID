@@ -217,7 +217,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
       backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'ผลการตรวจนับ'),
       body: Padding(
-        padding: EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
