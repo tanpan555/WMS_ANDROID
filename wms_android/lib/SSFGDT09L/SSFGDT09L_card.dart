@@ -214,7 +214,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 10.0),
+                                SizedBox(height: 20.0),
                                 Text(
                                   '${item['po_date']} ${item['po_no']} ${item['item_stype_desc']}',
                                   style: TextStyle(color: Colors.black),
@@ -246,9 +246,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
-                                      height:
-                                          10.0), // เพิ่มระยะห่างระหว่างสถานะและไอคอน
+                                  // SizedBox(height: 5.0),
                                   SizedBox(
                                     width: 100,
                                     height: 40,

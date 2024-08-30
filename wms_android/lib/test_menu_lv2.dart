@@ -80,31 +80,31 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
     }
   }
 
-  // ฟังก์ชันที่ใช้ในการแมปชื่อเพจกับ Widget
   Widget? _mapPageNameToWidget(String pageName) {
-    switch (pageName) {
-      case 'SSINDT01_MAIN':
+    String checkPage = '$pageName ${widget.p_attr1}';
+    switch (checkPage) {
+      case 'SSINDT01_MAIN Raw Material':
         return SSFGDT01_WARE(
             p_attr1: widget.p_attr1, p_ou_code: widget.p_ou_code);
-      case 'SSFGDT04_MAIN':
+      case 'SSFGDT04_MAIN Raw Material':
         return SSFGDT04_MAIN();
-      case 'SSFGDT17_MAIN':
-        return SSFGDT17_WARE(p_attr1: widget.p_attr1, p_ou_code: widget.p_ou_code,);
-      case 'SSFGDT09L_MAIN':
+      case 'SSFGDT17_MAIN Raw Material':
+        return SSFGDT17_WARE(
+          p_attr1: widget.p_attr1,
+          p_ou_code: widget.p_ou_code,
+        );
+      case 'SSFGDT09L_MAIN Raw Material':
         return SSFGDT09L_MAIN(
             pAttr1: widget.p_attr1,
             pErpOuCode: widget.p_ou_code,
             pOuCode: globals.P_OU_CODE);
-      case 'SSFGDT12_MAIN':
+      case 'SSFGDT12_MAIN Raw Material':
         return SSFGDT12_MAIN(
             p_attr1: widget.p_attr1, pErpOuCode: widget.p_ou_code);
-      // case 'YET_ANOTHER_PAGE':
-      //   return YetAnotherPage();
-      case 'SSFGDT31_MAIN':
+      case 'SSFGDT31_MAIN Raw Material':
         return SSFGDT31_MAIN();
-      // เพิ่มเคสอื่นๆ ที่ต้องการแมป
       default:
-        return null; // ถ้าไม่พบหน้า
+        return null;
     }
   }
 

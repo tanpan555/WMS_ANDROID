@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-// import 'package:wms_android/bottombar.dart';
+import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 
@@ -506,6 +506,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }

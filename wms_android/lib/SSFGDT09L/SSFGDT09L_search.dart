@@ -71,7 +71,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
     );
 
     if (pickedDate != null) {
-      String formattedDate = new DateFormat('dd-MM-yyyy').format(pickedDate);
+      String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
       setState(() {
         dateController.text = formattedDate;
         selectedDate = dateController.text;
@@ -100,18 +100,13 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
               TextFormField(
                 readOnly: true,
                 decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: BorderRadius.circular(5.5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: BorderRadius.circular(5.5),
-                  ),
-                  hintText: '${widget.pWareCode}  ${widget.pWareName}',
-                  hintStyle: TextStyle(color: Colors.blue),
+                  border: InputBorder.none,
                   filled: true,
-                  fillColor: Colors.blue[50],
+                  fillColor: Colors.grey[300],
+                  labelText: '${widget.pWareCode}  ${widget.pWareName}',
+                  labelStyle: const TextStyle(
+                    color: Colors.black87,
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -125,18 +120,13 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                         ))
                     .toList(),
                 decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: BorderRadius.circular(5.5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: BorderRadius.circular(5.5),
-                  ),
-                  hintText: 'สถานะ',
-                  hintStyle: TextStyle(color: Colors.blue),
+                  border: InputBorder.none,
                   filled: true,
-                  fillColor: Colors.blue[50],
+                  fillColor: Colors.white,
+                  labelText: 'ประเภทรายการ',
+                  labelStyle: const TextStyle(
+                    color: Colors.black87,
+                  ),
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -171,18 +161,13 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
               TextFormField(
                 controller: pSoNoController,
                 decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: BorderRadius.circular(5.5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: BorderRadius.circular(5.5),
-                  ),
-                  hintText: 'เลขที่ใบตรวจนับ',
-                  hintStyle: TextStyle(color: Colors.blue),
+                  border: InputBorder.none,
                   filled: true,
-                  fillColor: Colors.blue[50],
+                  fillColor: Colors.white,
+                  labelText: 'เลขที่เอกสาร',
+                  labelStyle: const TextStyle(
+                    color: Colors.black87,
+                  ),
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -197,19 +182,17 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                 readOnly: true,
                 onTap: () => _selectDate(context),
                 decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: BorderRadius.circular(5.5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: BorderRadius.circular(5.5),
-                  ),
-                  hintText: 'เลือกวันที่',
-                  hintStyle: TextStyle(color: Colors.blue),
+                  border: InputBorder.none,
                   filled: true,
-                  fillColor: Colors.blue[50],
-                  prefixIcon: Icon(Icons.calendar_today, color: Colors.blue),
+                  fillColor: Colors.white,
+                  labelText: 'วันที่เบิกจ่าย',
+                  labelStyle: const TextStyle(
+                    color: Colors.black87,
+                  ),
+                  suffixIcon: Icon(
+                    Icons.calendar_today,
+                    color: Colors.black87,
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -218,50 +201,85 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        pSoNo = '';
-                        selectedDate = '';
-                        selectedItem = 'ระหว่างบันทึก';
-                        statusDESC = 'ระหว่างบันทึก';
-                        dateController.clear();
-                        pSoNoController.clear();
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    child: const Text('Clear'),
+                    child: IconButton(
+                      iconSize: 20.0,
+                      icon: Image.asset(
+                        'assets/images/eraser_red.png',
+                        width: 20.0,
+                        height: 20.0,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          pSoNo = '';
+                          selectedDate = '';
+                          selectedItem = 'ระหว่างบันทึก';
+                          statusDESC = 'ระหว่างบันทึก';
+                          dateController.clear();
+                          pSoNoController.clear();
+                        });
+                      },
+                    ),
                   ),
-                  ElevatedButton(
-                    onPressed: selectedItem.isNotEmpty
-                        ? () {
-                            _navigateToPage(
-                                context,
-                                Ssfgdt09lCard(
-                                  pErpOuCode: widget.pErpOuCode,
-                                  pOuCode: widget.pOuCode,
-                                  pAttr1: widget.pAttr1,
-                                  pAppUser: appUser,
-                                  pFlag: pFlag,
-                                  pStatusDESC: statusDESC,
-                                  pSoNo: pSoNo == null || pSoNo == ''
-                                      ? 'null'
-                                      : pSoNo,
-                                  pDocDate:
-                                      selectedDate == null || selectedDate == ''
-                                          ? 'null'
-                                          : selectedDate,
-                                )
-                                //
-                                );
-                          }
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
+                  //////////////////////////////////////////////////////
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    child: const Text('Search'),
+                    child: IconButton(
+                      iconSize: 20.0,
+                      icon: Image.asset(
+                        'assets/images/search_color.png',
+                        width: 20.0,
+                        height: 20.0,
+                      ),
+                      onPressed: selectedItem.isNotEmpty
+                          ? () {
+                              if (selectedDate != '') {
+                                DateTime parsedDate = DateFormat('dd/MM/yyyy')
+                                    .parse(selectedDate);
+                                String formattedDate =
+                                    DateFormat('dd-MM-yyyy').format(parsedDate);
+
+                                setState(() {
+                                  selectedDate = formattedDate;
+                                });
+
+                                _navigateToPage(
+                                  context,
+                                  Ssfgdt09lCard(
+                                      pErpOuCode: widget.pErpOuCode,
+                                      pOuCode: widget.pOuCode,
+                                      pAttr1: widget.pAttr1,
+                                      pAppUser: appUser,
+                                      pFlag: pFlag,
+                                      pStatusDESC: statusDESC,
+                                      pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                                      pDocDate: formattedDate == ''
+                                          ? 'null'
+                                          : formattedDate),
+                                );
+                              } else {
+                                _navigateToPage(
+                                    context,
+                                    Ssfgdt09lCard(
+                                        pErpOuCode: widget.pErpOuCode,
+                                        pOuCode: widget.pOuCode,
+                                        pAttr1: widget.pAttr1,
+                                        pAppUser: appUser,
+                                        pFlag: pFlag,
+                                        pStatusDESC: statusDESC,
+                                        pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                                        pDocDate: 'null'));
+                              }
+                            }
+                          : null,
+                    ),
                   ),
                 ],
               ),

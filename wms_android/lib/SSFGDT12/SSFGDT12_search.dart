@@ -187,22 +187,6 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // ElevatedButton(
-                //   onPressed: () {
-                //     _controller.clear();
-                //     _dateController.clear();
-                //     setState(() {
-                //       pDocNo = '';
-                //       selectedDate = '';
-                //       selectedItem = 'รอตรวจนับ';
-                //       status = 'N';
-                //     });
-                //   },
-                //   style: ElevatedButton.styleFrom(
-                //     backgroundColor: Colors.white,
-                //   ),
-                //   child: const Text('Clear'),
-                // ),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -258,33 +242,6 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                     },
                   ),
                 ),
-                // ElevatedButton(
-                //   onPressed:
-                //       // pDocNo.isNotEmpty &&
-                //       // selectedDate.isNotEmpty &&
-                //       selectedItem.isNotEmpty
-                //           ? () {
-                //               _navigateToPage(
-                //                   context,
-                //                   Ssfgdt12Card(
-                //                     docNo: pDocNo,
-                //                     date: selectedDate,
-                //                     status: status,
-                //                     pWareCode: widget.pWareCode,
-                //                     p_flag: p_flag,
-                //                     browser_language: globals.BROWSER_LANGUAGE,
-                //                     pErpOuCode: widget.pErpOuCode,
-                //                     p_attr1: widget.p_attr1,
-                //                   )
-                //                   //
-                //                   );
-                //             }
-                //           : null,
-                //   style: ElevatedButton.styleFrom(
-                //     backgroundColor: Colors.white,
-                //   ),
-                //   child: const Text('Search'),
-                // ),
               ],
             ),
           ],

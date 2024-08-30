@@ -76,7 +76,23 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            const SizedBox(height: 20), // Spacing above the grid
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              margin: const EdgeInsets.only(
+                  bottom: 8.0), // Add some space below the container
+              color: Colors
+                  .greenAccent, // Customize the background color of the container
+              child: Center(
+                child: Text(
+                  'เลือกคลังปฏิบัติงาน',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
+              ),
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: GridView.builder(

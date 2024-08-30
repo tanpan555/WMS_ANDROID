@@ -69,23 +69,23 @@ class _Ssfgdt09lMenuState extends State<Ssfgdt09lMenu> {
             Expanded(
                 child: ListView(
               children: dataMenu[0]['items'].map<Widget>((item) {
-                IconData iconData;
+                // IconData iconData;
                 Color cardColor;
                 String imagePath;
 
                 switch (item['card_name']) {
                   case 'ค้นหาเอกสาร':
-                    iconData = Icons.search;
+                    // iconData = Icons.search;
                     cardColor = Colors.grey[300]!;
                     imagePath = 'assets/images/search_doc.png';
                     break;
                   case 'สร้างเอกสาร':
-                    iconData = Icons.list;
+                    // iconData = Icons.list;
                     cardColor = Colors.grey[300]!;
                     imagePath = 'assets/images/add_doc.png';
                     break;
                   default:
-                    iconData = Icons.help_outline;
+                    // iconData = Icons.help_outline;
                     cardColor = Colors.grey;
                     imagePath = 'assets/images/dt_alert.png';
                 }
@@ -100,7 +100,7 @@ class _Ssfgdt09lMenuState extends State<Ssfgdt09lMenu> {
                       width: 70,
                     ),
                     title: Text('ค้นหาเอกสาร'),
-                    trailing: Icon(iconData),
+                    // trailing: Icon(iconData),
                     onTap: () {
                       String cardName = item['card_name'] ?? '';
                       Widget? pageWidget = checkName(cardName);

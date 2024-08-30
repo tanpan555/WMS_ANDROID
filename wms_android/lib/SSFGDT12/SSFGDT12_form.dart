@@ -150,10 +150,10 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
     }
   }
 
-  Future<void> selectNbCountStaff(String nbCountStaff) async {
+  Future<void> selectNbCountStaff(String nbStaffCountName) async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/select_nbCountStaff/${widget.pErpOuCode}/${widget.docNo}/$nbCountStaff'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/select_nbCountStaffName/${widget.pErpOuCode}/${widget.docNo}/$nbStaffCountName'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
@@ -170,13 +170,16 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
           setState(() {
             nbStaffCountName = item['nb_staff_count_name'] ?? '';
 
-            nbStaffCountNameController.text = staffCode;
+            nbStaffCountNameController.text = nbStaffCountName;
           });
         } else {
           print('No items found.');
         }
       } else {
-        print('Failed to load data. Status code: ${response.statusCode}');
+        print(
+            '999999 Failed to load data. Status code: ${response.statusCode}');
+        print(
+            'nbStaffCountName : $nbStaffCountName type : ${nbStaffCountName.runtimeType}');
       }
     } catch (e) {
       print('Error: $e');
