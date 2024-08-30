@@ -5,6 +5,7 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'SSFGDT12_main.dart';
+import 'SSFGDT12_barcode.dart';
 
 class Ssfgdt12Grid extends StatefulWidget {
   // final String pOuCode;
@@ -41,22 +42,22 @@ class Ssfgdt12Grid extends StatefulWidget {
 class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   List<dynamic> dataCard = []; // data ของ card ทั้งหมด
   List<dynamic> dataCheck = []; // check data ก็กดยื่นยันคลังสินค้า
-  List<dynamic> dataLocatorList = []; // data list locator
-  List<dynamic> dataGradeStatuslist = []; // data list status
-  List<dynamic> dataBarcodeList = []; // dataหลังจากแสกน barcode
+  // List<dynamic> dataLocatorList = []; // data list locator
+  // List<dynamic> dataGradeStatuslist = []; // data list status
+  // List<dynamic> dataBarcodeList = []; // dataหลังจากแสกน barcode
   List<dynamic> dataSubmit = []; //
-  final FocusNode _focusNode = FocusNode();
-  int seqNumberBarcode = 0; // เก็บต่า seq ที่ได้หลังจากแสกน barcode
-  String dataLocator = ''; // เก็บค่า locator ตรวจนับ
-  String barcodeTextString = ''; // เก็บ barcode
-  String wareCodeBarcode = ''; // เก็บต่า wareCode ที่ได้หลังจากแสกน barcode
-  String itemCodeBarcode = ''; // เก็บต่า itemCode ที่ได้หลังจากแสกน barcode
-  String lotNumberBarcode = ''; // เก็บค่า lot Number
-  String countQuantityBarcode = ''; // เก็บค่า count Quantity
-  String locatorCodeBarcode =
-      ''; // เก็บต่า locator ระบบ ที่ได้หลังจากแสกน barcode
-  String dataGridStatus = ''; //  เก็บชื่อ status barcode
-  String statusGridBarcode = ''; // เก็บ status barcode
+  // final FocusNode _focusNode = FocusNode();
+  // int seqNumberBarcode = 0; // เก็บต่า seq ที่ได้หลังจากแสกน barcode
+  // String dataLocator = ''; // เก็บค่า locator ตรวจนับ
+  // String barcodeTextString = ''; // เก็บ barcode
+  // String wareCodeBarcode = ''; // เก็บต่า wareCode ที่ได้หลังจากแสกน barcode
+  // String itemCodeBarcode = ''; // เก็บต่า itemCode ที่ได้หลังจากแสกน barcode
+  // String lotNumberBarcode = ''; // เก็บค่า lot Number
+  // String countQuantityBarcode = ''; // เก็บค่า count Quantity
+  // String locatorCodeBarcode =
+  //     ''; // เก็บต่า locator ระบบ ที่ได้หลังจากแสกน barcode
+  // String dataGridStatus = ''; //  เก็บชื่อ status barcode
+  // String statusGridBarcode = ''; // เก็บ status barcode
   int vCouQty = 0; // เก็บค่า v_cou_qty
   String appUser = globals.APP_USER;
   String selectedStatusSubmit = 'ให้จำนวนนับเป็นศูนย์';
@@ -68,30 +69,30 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     'ให้จำนวนนับเป็นศูนย์',
     'ให้จำนวนนับเท่ากับในระบบ',
   ];
-  final TextEditingController barcodeTextController = TextEditingController();
-  final TextEditingController wareCodeBarcodeController =
-      TextEditingController();
-  final TextEditingController itemCodeBarcodeController =
-      TextEditingController();
-  final TextEditingController lotNumberBarcodeController =
-      TextEditingController();
-  final TextEditingController countQuantityBarcodeController =
-      TextEditingController();
-  final TextEditingController locatorCodeBarcodeController =
-      TextEditingController();
+  // final TextEditingController barcodeTextController = TextEditingController();
+  // final TextEditingController wareCodeBarcodeController =
+  //     TextEditingController();
+  // final TextEditingController itemCodeBarcodeController =
+  //     TextEditingController();
+  // final TextEditingController lotNumberBarcodeController =
+  //     TextEditingController();
+  // final TextEditingController countQuantityBarcodeController =
+  //     TextEditingController();
+  // final TextEditingController locatorCodeBarcodeController =
+  // TextEditingController();
   // String sysQty = '';
   // String diffQty = '';
   // String rowID = ''
 
   @override
   void dispose() {
-    _focusNode.dispose();
-    barcodeTextController.dispose();
-    wareCodeBarcodeController.dispose();
-    itemCodeBarcodeController.dispose();
-    lotNumberBarcodeController.dispose();
-    countQuantityBarcodeController.dispose();
-    locatorCodeBarcodeController.dispose();
+    // _focusNode.dispose();
+    // barcodeTextController.dispose();
+    // wareCodeBarcodeController.dispose();
+    // itemCodeBarcodeController.dispose();
+    // lotNumberBarcodeController.dispose();
+    // countQuantityBarcodeController.dispose();
+    // locatorCodeBarcodeController.dispose();
     super.dispose();
   }
 
@@ -99,28 +100,29 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   void initState() {
     super.initState();
     fetchData();
-    fetchDataLocator();
-    fetchDataGradeStatus();
-    _focusNode.addListener(() {
-      if (!_focusNode.hasFocus) {
-        if (dataLocator.isNotEmpty) {
-          print(
-              'have data !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-          fetchDataBarcode(barcodeTextString, dataLocator);
-          print(
-              'barcodeTextString in check focus: $barcodeTextString Type: ${barcodeTextString.runtimeType}');
-          print(
-              'dataLocator in check focus: $dataLocator Type: ${dataLocator.runtimeType}');
-        } else {
-          print(
-              'no data !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-          print(
-              'barcodeTextString in check focus: $barcodeTextString Type: ${barcodeTextString.runtimeType}');
-          print(
-              'dataLocator in check focus: $dataLocator Type: ${dataLocator.runtimeType}');
-        }
-      }
-    });
+    // fetchDataLocator();
+    // fetchDataGradeStatus();
+    // _focusNode.addListener(() {
+    //   if (!_focusNode.hasFocus) {
+    //     if (dataLocator.isNotEmpty) {
+    //       print(
+    //           'have data !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    //       fetchDataBarcode(barcodeTextString, dataLocator);
+    //       print(
+    //           'barcodeTextString in check focus: $barcodeTextString Type: ${barcodeTextString.runtimeType}');
+    //       print(
+    //           'dataLocator in check focus: $dataLocator Type: ${dataLocator.runtimeType}');
+    //     } else {
+    //       print(
+    //           'no data !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    //       print(
+    //           'barcodeTextString in check focus: $barcodeTextString Type: ${barcodeTextString.runtimeType}');
+    //       print(
+    //           'dataLocator in check focus: $dataLocator Type: ${dataLocator.runtimeType}');
+    //     }
+    //   }
+    // }
+    // );
     print(
         'nbCountStaff : ${widget.nbCountStaff} Type : ${widget.nbCountStaff.runtimeType}');
     print(
@@ -272,98 +274,98 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     }
   }
 
-  Future<void> fetchDataLocator() async {
-    try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/selsectLocator/${widget.pWareCode}'));
+  // Future<void> fetchDataLocator() async {
+  //   try {
+  //     final response = await http.get(Uri.parse(
+  //         'http://172.16.0.82:8888/apex/wms/SSFGDT12/selsectLocator/${widget.pWareCode}'));
 
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
-        print('Fetched data: $responseData');
+  //     if (response.statusCode == 200) {
+  //       final responseBody = utf8.decode(response.bodyBytes);
+  //       final responseData = jsonDecode(responseBody);
+  //       print('Fetched data: $responseData');
 
-        setState(() {
-          dataLocatorList =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
-        print('dataLocatorList : $dataLocatorList');
-      } else {
-        throw Exception('fetchDataLocator Failed to load fetchData');
-      }
-    } catch (e) {
-      setState(() {});
-      print('ERROR IN Fetch Data : $e');
-    }
-  }
+  //       setState(() {
+  //         dataLocatorList =
+  //             List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+  //       });
+  //       print('dataLocatorList : $dataLocatorList');
+  //     } else {
+  //       throw Exception('fetchDataLocator Failed to load fetchData');
+  //     }
+  //   } catch (e) {
+  //     setState(() {});
+  //     print('ERROR IN Fetch Data : $e');
+  //   }
+  // }
 
-  Future<void> fetchDataGradeStatus() async {
-    try {
-      final response = await http.get(
-          Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT12/gradeStatus'));
+  // Future<void> fetchDataGradeStatus() async {
+  //   try {
+  //     final response = await http.get(
+  //         Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT12/gradeStatus'));
 
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
-        print('Fetched data: $responseData');
+  //     if (response.statusCode == 200) {
+  //       final responseBody = utf8.decode(response.bodyBytes);
+  //       final responseData = jsonDecode(responseBody);
+  //       print('Fetched data: $responseData');
 
-        setState(() {
-          dataGradeStatuslist =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
-        print('dataGradeStatuslist : $dataGradeStatuslist');
-      } else {
-        throw Exception(
-            'fetchDatadataGradeStatuslist Failed to load fetchData');
-      }
-    } catch (e) {
-      setState(() {});
-      print('ERROR IN Fetch Data : $e');
-    }
-  }
+  //       setState(() {
+  //         dataGradeStatuslist =
+  //             List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+  //       });
+  //       print('dataGradeStatuslist : $dataGradeStatuslist');
+  //     } else {
+  //       throw Exception(
+  //           'fetchDatadataGradeStatuslist Failed to load fetchData');
+  //     }
+  //   } catch (e) {
+  //     setState(() {});
+  //     print('ERROR IN Fetch Data : $e');
+  //   }
+  // }
 
-  Future<void> fetchDataBarcode(
-      String barcodeTextString, String dataLocator) async {
-    print(
-        'barcodeTextString in fetchDataBarcode: $barcodeTextString Type : ${barcodeTextString.runtimeType}');
-    print(
-        'dataLocator in  fetchDataBarcode: $dataLocator Type : ${dataLocator.runtimeType}');
-    try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/dataBarcode/${widget.pErpOuCode}/${widget.docNo}/${widget.pWareCode}/$appUser/$dataLocator/$barcodeTextString'));
+  // Future<void> fetchDataBarcode(
+  //     String barcodeTextString, String dataLocator) async {
+  //   print(
+  //       'barcodeTextString in fetchDataBarcode: $barcodeTextString Type : ${barcodeTextString.runtimeType}');
+  //   print(
+  //       'dataLocator in  fetchDataBarcode: $dataLocator Type : ${dataLocator.runtimeType}');
+  //   try {
+  //     final response = await http.get(Uri.parse(
+  //         'http://172.16.0.82:8888/apex/wms/SSFGDT12/dataBarcode/${widget.pErpOuCode}/${widget.docNo}/${widget.pWareCode}/$appUser/$dataLocator/$barcodeTextString'));
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> dataBarcodeList =
-            jsonDecode(utf8.decode(response.bodyBytes));
-        final List<dynamic> items = dataBarcodeList['items'];
-        print(items);
-        if (items.isNotEmpty) {
-          final Map<String, dynamic> item = items[0];
-          //
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> dataBarcodeList =
+  //           jsonDecode(utf8.decode(response.bodyBytes));
+  //       final List<dynamic> items = dataBarcodeList['items'];
+  //       print(items);
+  //       if (items.isNotEmpty) {
+  //         final Map<String, dynamic> item = items[0];
+  //         //
 
-          //
-          print('Fetched dataBarcodeList: $jsonDecode');
+  //         //
+  //         print('Fetched dataBarcodeList: $jsonDecode');
 
-          setState(() {
-            seqNumberBarcode = item['p_count_seq'] ?? '';
-            wareCodeBarcode = widget.pWareCode;
-            itemCodeBarcode = item['p_item_code'] ?? '';
-            locatorCodeBarcode = item['p_curr_loc'] ?? '';
+  //         setState(() {
+  //           seqNumberBarcode = item['p_count_seq'] ?? '';
+  //           wareCodeBarcode = widget.pWareCode;
+  //           itemCodeBarcode = item['p_item_code'] ?? '';
+  //           locatorCodeBarcode = item['p_curr_loc'] ?? '';
 
-            wareCodeBarcodeController.text = wareCodeBarcode;
-            itemCodeBarcodeController.text = itemCodeBarcode;
-            locatorCodeBarcodeController.text = locatorCodeBarcode;
-          });
-        } else {
-          print('No items found.');
-        }
-      } else {
-        print(
-            'dataBarcodeList  Failed to load data. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('dataBarcodeList Error: $e');
-    }
-  }
+  //           wareCodeBarcodeController.text = wareCodeBarcode;
+  //           itemCodeBarcodeController.text = itemCodeBarcode;
+  //           locatorCodeBarcodeController.text = locatorCodeBarcode;
+  //         });
+  //       } else {
+  //         print('No items found.');
+  //       }
+  //     } else {
+  //       print(
+  //           'dataBarcodeList  Failed to load data. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('dataBarcodeList Error: $e');
+  //   }
+  // }
 
   Future<void> updateDataGridDetail(int updatedCountQty, String updatedRemark,
       String ou_code, String doc_no, int seq) async {
@@ -417,7 +419,23 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    showAddItemDialog();
+                    // showAddItemDialog();
+                    _navigateToPage(
+                        context,
+                        Ssfgdt12Barcode(
+                          nbCountStaff: widget.nbCountStaff,
+                          nbCountDate: widget.nbCountDate,
+                          docNo: widget.docNo,
+                          status: widget.status,
+                          wareCode: widget.wareCode,
+                          pErpOuCode: widget.pErpOuCode,
+                          pWareCode: widget.pWareCode,
+                          docDate: widget.docDate,
+                          countStaff: widget.countStaff,
+                          p_attr1: widget.p_attr1,
+                        )
+                        //
+                        );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -765,374 +783,374 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     );
   }
 
-  void showAddItemDialog() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              title: Text('Scan Manual Add'),
-              content: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: BorderSide(color: Colors.grey),
-                            ),
-                            child: const Text('ย้อนกลับ'),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Container(
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          color: Colors.yellow[200],
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${widget.docNo}',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Container(
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          color: Colors.yellow[200],
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '$seqNumberBarcode',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      DropdownButtonFormField<String>(
-                        value: dataLocator.isNotEmpty ? dataLocator : null,
-                        items: dataLocatorList
-                            .map((item) => DropdownMenuItem<String>(
-                                  value: item['location_code'],
-                                  child: Text(item['location_code']),
-                                ))
-                            .toList(),
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          hintText: 'Locator ตรวจนับ',
-                          hintStyle: TextStyle(color: Colors.blue),
-                          filled: true,
-                          fillColor: Colors.blue[50],
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            dataLocator = value ?? '';
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: barcodeTextController,
-                              focusNode: _focusNode,
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(5.5),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Colors.transparent),
-                                  // borderRadius: BorderRadius.circular(5.5),
-                                ),
-                                // hintText: 'เลขที่เอกสาร',
-                                // hintStyle: const TextStyle(color: Colors.blue),
-                                labelText: "Barcode",
-                                labelStyle: TextStyle(color: Colors.black),
-                                filled: true,
-                                fillColor: Colors.white,
-                              ),
-                              onChanged: (value) {
-                                setState(() {
-                                  barcodeTextString = value;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: wareCodeBarcodeController,
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            // borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          // hintText: 'เลขที่เอกสาร',
-                          // hintStyle: const TextStyle(color: Colors.blue),
-                          labelText: "Warehouse",
-                          labelStyle: TextStyle(color: Colors.black),
-                          filled: true,
-                          fillColor: Colors.grey[350],
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: itemCodeBarcodeController,
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            // borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          // hintText: 'เลขที่เอกสาร',
-                          // hintStyle: const TextStyle(color: Colors.blue),
-                          labelText: "item code",
-                          labelStyle: TextStyle(color: Colors.black),
-                          filled: true,
-                          fillColor: Colors.grey[350],
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: lotNumberBarcodeController,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            // borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          // hintText: 'เลขที่เอกสาร',
-                          // hintStyle: const TextStyle(color: Colors.blue),
-                          labelText: "Lot Number",
-                          labelStyle: TextStyle(color: Colors.black),
-                          filled: true,
-                          fillColor: Colors.white,
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            lotNumberBarcode = value;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: countQuantityBarcodeController,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            // borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          // hintText: 'เลขที่เอกสาร',
-                          // hintStyle: const TextStyle(color: Colors.blue),
-                          labelText: "Count Quantity",
-                          labelStyle: TextStyle(color: Colors.black),
-                          filled: true,
-                          fillColor: Colors.white,
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            countQuantityBarcode = value;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: locatorCodeBarcodeController,
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.transparent),
-                            // borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          // hintText: 'เลขที่เอกสาร',
-                          // hintStyle: const TextStyle(color: Colors.blue),
-                          labelText: "Locator ระบบ",
-                          labelStyle: TextStyle(color: Colors.black),
-                          filled: true,
-                          fillColor: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      DropdownButtonFormField<String>(
-                        value:
-                            dataGridStatus.isNotEmpty ? dataGridStatus : null,
-                        items: dataGradeStatuslist
-                            .map((item) => DropdownMenuItem<String>(
-                                  value: item['d'],
-                                  child: Text(item['d']),
-                                ))
-                            .toList(),
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          hintText: 'Locator ตรวจนับ',
-                          hintStyle: TextStyle(color: Colors.blue),
-                          filled: true,
-                          fillColor: Colors.blue[50],
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            dataGridStatus = value ?? '';
-                            switch (dataGridStatus) {
-                              case 'สภาพปกติ/ของดี':
-                                statusGridBarcode = '01';
-                                break;
-                              case 'สภาพรอคัด/แยกซ่อม':
-                                statusGridBarcode = '02';
-                                break;
-                              case 'ชำรุด/เสียหาย':
-                                statusGridBarcode = '03';
-                                break;
-                              default:
-                                statusGridBarcode = 'Unknown';
-                            }
-                          });
-                        },
-                      ),
-                      Row(
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              // Navigator.of(context).pop();
-                              setState(() {
-                                dataLocator = '';
-                                barcodeTextString = '';
-                                wareCodeBarcode = '';
-                                itemCodeBarcode = '';
-                                lotNumberBarcode = '';
-                                countQuantityBarcode = '';
-                                locatorCodeBarcode = '';
-                                dataGridStatus = '';
-                                statusGridBarcode = '';
-                                dataLocatorList.clear();
-                                barcodeTextController.clear();
-                                wareCodeBarcodeController.clear();
-                                itemCodeBarcodeController.clear();
-                                lotNumberBarcodeController.clear();
-                                countQuantityBarcodeController.clear();
-                                locatorCodeBarcodeController.clear();
-                                dataGradeStatuslist.clear();
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                            ),
-                            child: const Text('Clear'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Navigator.of(context).pop();
-                              setState(() {
-                                print(
-                                    'dataLocator : $dataLocator Type : ${dataLocator.runtimeType}');
-                                print(
-                                    'barcodeTextString : $barcodeTextString Type : ${barcodeTextString.runtimeType}');
-                                print(
-                                    'wareCodeBarcode : $wareCodeBarcode Type : ${wareCodeBarcode.runtimeType}');
-                                print(
-                                    'itemCodeBarcode : $itemCodeBarcode Type : ${itemCodeBarcode.runtimeType}');
-                                print(
-                                    'lotNumberBarcode : $lotNumberBarcode Type : ${lotNumberBarcode.runtimeType}');
-                                print(
-                                    'countQuantityBarcode : $countQuantityBarcode Type : ${countQuantityBarcode.runtimeType}');
-                                print(
-                                    'locatorCodeBarcode : $locatorCodeBarcode Type : ${locatorCodeBarcode.runtimeType}');
-                                print(
-                                    'dataGridStatus : $dataGridStatus Type : ${dataGridStatus.runtimeType}');
-                                print(
-                                    'statusGridBarcode : $statusGridBarcode Type : ${statusGridBarcode.runtimeType}');
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                            ),
-                            child: const Text('Save'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ));
-        });
-  }
+  // void showAddItemDialog() {
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //             title: Text('Scan Manual Add'),
+  //             content: SingleChildScrollView(
+  //               child: Padding(
+  //                 padding: const EdgeInsets.all(16.0),
+  //                 child: Column(
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   children: [
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                       children: [
+  //                         ElevatedButton(
+  //                           onPressed: () {
+  //                             Navigator.of(context).pop();
+  //                           },
+  //                           style: ElevatedButton.styleFrom(
+  //                             backgroundColor: Colors.white,
+  //                             side: BorderSide(color: Colors.grey),
+  //                           ),
+  //                           child: const Text('ย้อนกลับ'),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     Container(
+  //                       padding: const EdgeInsets.all(12.0),
+  //                       decoration: BoxDecoration(
+  //                         color: Colors.yellow[200],
+  //                         border: Border.all(
+  //                           color: Colors.black,
+  //                           width: 2.0,
+  //                         ),
+  //                         borderRadius: BorderRadius.circular(8.0),
+  //                       ),
+  //                       child: Center(
+  //                         child: Text(
+  //                           '${widget.docNo}',
+  //                           style: TextStyle(
+  //                             color: Colors.black,
+  //                             fontWeight: FontWeight.bold,
+  //                             fontSize: 20,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     Container(
+  //                       padding: const EdgeInsets.all(12.0),
+  //                       decoration: BoxDecoration(
+  //                         color: Colors.yellow[200],
+  //                         border: Border.all(
+  //                           color: Colors.black,
+  //                           width: 2.0,
+  //                         ),
+  //                         borderRadius: BorderRadius.circular(8.0),
+  //                       ),
+  //                       child: Center(
+  //                         child: Text(
+  //                           '$seqNumberBarcode',
+  //                           style: TextStyle(
+  //                             color: Colors.black,
+  //                             fontWeight: FontWeight.bold,
+  //                             fontSize: 20,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     DropdownButtonFormField<String>(
+  //                       value: dataLocator.isNotEmpty ? dataLocator : null,
+  //                       items: dataLocatorList
+  //                           .map((item) => DropdownMenuItem<String>(
+  //                                 value: item['location_code'],
+  //                                 child: Text(item['location_code']),
+  //                               ))
+  //                           .toList(),
+  //                       decoration: InputDecoration(
+  //                         enabledBorder: OutlineInputBorder(
+  //                           borderSide: BorderSide(color: Colors.transparent),
+  //                           borderRadius: BorderRadius.circular(5.5),
+  //                         ),
+  //                         focusedBorder: OutlineInputBorder(
+  //                           borderSide: BorderSide(color: Colors.transparent),
+  //                           borderRadius: BorderRadius.circular(5.5),
+  //                         ),
+  //                         hintText: 'Locator ตรวจนับ',
+  //                         hintStyle: TextStyle(color: Colors.blue),
+  //                         filled: true,
+  //                         fillColor: Colors.blue[50],
+  //                       ),
+  //                       onChanged: (value) {
+  //                         setState(() {
+  //                           dataLocator = value ?? '';
+  //                         });
+  //                       },
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     Row(
+  //                       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                       children: [
+  //                         Expanded(
+  //                           child: TextFormField(
+  //                             controller: barcodeTextController,
+  //                             focusNode: _focusNode,
+  //                             decoration: InputDecoration(
+  //                               enabledBorder: OutlineInputBorder(
+  //                                 borderSide: const BorderSide(
+  //                                     color: Colors.transparent),
+  //                                 borderRadius: BorderRadius.circular(5.5),
+  //                               ),
+  //                               focusedBorder: OutlineInputBorder(
+  //                                 borderSide: const BorderSide(
+  //                                     color: Colors.transparent),
+  //                                 // borderRadius: BorderRadius.circular(5.5),
+  //                               ),
+  //                               // hintText: 'เลขที่เอกสาร',
+  //                               // hintStyle: const TextStyle(color: Colors.blue),
+  //                               labelText: "Barcode",
+  //                               labelStyle: TextStyle(color: Colors.black),
+  //                               filled: true,
+  //                               fillColor: Colors.white,
+  //                             ),
+  //                             onChanged: (value) {
+  //                               setState(() {
+  //                                 barcodeTextString = value;
+  //                               });
+  //                             },
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     TextFormField(
+  //                       controller: wareCodeBarcodeController,
+  //                       readOnly: true,
+  //                       decoration: InputDecoration(
+  //                         enabledBorder: OutlineInputBorder(
+  //                           borderSide:
+  //                               const BorderSide(color: Colors.transparent),
+  //                           borderRadius: BorderRadius.circular(5.5),
+  //                         ),
+  //                         focusedBorder: OutlineInputBorder(
+  //                           borderSide:
+  //                               const BorderSide(color: Colors.transparent),
+  //                           // borderRadius: BorderRadius.circular(5.5),
+  //                         ),
+  //                         // hintText: 'เลขที่เอกสาร',
+  //                         // hintStyle: const TextStyle(color: Colors.blue),
+  //                         labelText: "Warehouse",
+  //                         labelStyle: TextStyle(color: Colors.black),
+  //                         filled: true,
+  //                         fillColor: Colors.grey[350],
+  //                       ),
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     TextFormField(
+  //                       controller: itemCodeBarcodeController,
+  //                       readOnly: true,
+  //                       decoration: InputDecoration(
+  //                         enabledBorder: OutlineInputBorder(
+  //                           borderSide:
+  //                               const BorderSide(color: Colors.transparent),
+  //                           borderRadius: BorderRadius.circular(5.5),
+  //                         ),
+  //                         focusedBorder: OutlineInputBorder(
+  //                           borderSide:
+  //                               const BorderSide(color: Colors.transparent),
+  //                           // borderRadius: BorderRadius.circular(5.5),
+  //                         ),
+  //                         // hintText: 'เลขที่เอกสาร',
+  //                         // hintStyle: const TextStyle(color: Colors.blue),
+  //                         labelText: "item code",
+  //                         labelStyle: TextStyle(color: Colors.black),
+  //                         filled: true,
+  //                         fillColor: Colors.grey[350],
+  //                       ),
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     TextFormField(
+  //                       controller: lotNumberBarcodeController,
+  //                       decoration: InputDecoration(
+  //                         enabledBorder: OutlineInputBorder(
+  //                           borderSide:
+  //                               const BorderSide(color: Colors.transparent),
+  //                           borderRadius: BorderRadius.circular(5.5),
+  //                         ),
+  //                         focusedBorder: OutlineInputBorder(
+  //                           borderSide:
+  //                               const BorderSide(color: Colors.transparent),
+  //                           // borderRadius: BorderRadius.circular(5.5),
+  //                         ),
+  //                         // hintText: 'เลขที่เอกสาร',
+  //                         // hintStyle: const TextStyle(color: Colors.blue),
+  //                         labelText: "Lot Number",
+  //                         labelStyle: TextStyle(color: Colors.black),
+  //                         filled: true,
+  //                         fillColor: Colors.white,
+  //                       ),
+  //                       onChanged: (value) {
+  //                         setState(() {
+  //                           lotNumberBarcode = value;
+  //                         });
+  //                       },
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     TextFormField(
+  //                       controller: countQuantityBarcodeController,
+  //                       decoration: InputDecoration(
+  //                         enabledBorder: OutlineInputBorder(
+  //                           borderSide:
+  //                               const BorderSide(color: Colors.transparent),
+  //                           borderRadius: BorderRadius.circular(5.5),
+  //                         ),
+  //                         focusedBorder: OutlineInputBorder(
+  //                           borderSide:
+  //                               const BorderSide(color: Colors.transparent),
+  //                           // borderRadius: BorderRadius.circular(5.5),
+  //                         ),
+  //                         // hintText: 'เลขที่เอกสาร',
+  //                         // hintStyle: const TextStyle(color: Colors.blue),
+  //                         labelText: "Count Quantity",
+  //                         labelStyle: TextStyle(color: Colors.black),
+  //                         filled: true,
+  //                         fillColor: Colors.white,
+  //                       ),
+  //                       onChanged: (value) {
+  //                         setState(() {
+  //                           countQuantityBarcode = value;
+  //                         });
+  //                       },
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     TextFormField(
+  //                       controller: locatorCodeBarcodeController,
+  //                       readOnly: true,
+  //                       decoration: InputDecoration(
+  //                         enabledBorder: OutlineInputBorder(
+  //                           borderSide:
+  //                               const BorderSide(color: Colors.transparent),
+  //                           borderRadius: BorderRadius.circular(5.5),
+  //                         ),
+  //                         focusedBorder: OutlineInputBorder(
+  //                           borderSide:
+  //                               const BorderSide(color: Colors.transparent),
+  //                           // borderRadius: BorderRadius.circular(5.5),
+  //                         ),
+  //                         // hintText: 'เลขที่เอกสาร',
+  //                         // hintStyle: const TextStyle(color: Colors.blue),
+  //                         labelText: "Locator ระบบ",
+  //                         labelStyle: TextStyle(color: Colors.black),
+  //                         filled: true,
+  //                         fillColor: Colors.white,
+  //                       ),
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     DropdownButtonFormField<String>(
+  //                       value:
+  //                           dataGridStatus.isNotEmpty ? dataGridStatus : null,
+  //                       items: dataGradeStatuslist
+  //                           .map((item) => DropdownMenuItem<String>(
+  //                                 value: item['d'],
+  //                                 child: Text(item['d']),
+  //                               ))
+  //                           .toList(),
+  //                       decoration: InputDecoration(
+  //                         enabledBorder: OutlineInputBorder(
+  //                           borderSide: BorderSide(color: Colors.transparent),
+  //                           borderRadius: BorderRadius.circular(5.5),
+  //                         ),
+  //                         focusedBorder: OutlineInputBorder(
+  //                           borderSide: BorderSide(color: Colors.transparent),
+  //                           borderRadius: BorderRadius.circular(5.5),
+  //                         ),
+  //                         hintText: 'Locator ตรวจนับ',
+  //                         hintStyle: TextStyle(color: Colors.blue),
+  //                         filled: true,
+  //                         fillColor: Colors.blue[50],
+  //                       ),
+  //                       onChanged: (value) {
+  //                         setState(() {
+  //                           dataGridStatus = value ?? '';
+  //                           switch (dataGridStatus) {
+  //                             case 'สภาพปกติ/ของดี':
+  //                               statusGridBarcode = '01';
+  //                               break;
+  //                             case 'สภาพรอคัด/แยกซ่อม':
+  //                               statusGridBarcode = '02';
+  //                               break;
+  //                             case 'ชำรุด/เสียหาย':
+  //                               statusGridBarcode = '03';
+  //                               break;
+  //                             default:
+  //                               statusGridBarcode = 'Unknown';
+  //                           }
+  //                         });
+  //                       },
+  //                     ),
+  //                     Row(
+  //                       children: [
+  //                         ElevatedButton(
+  //                           onPressed: () {
+  //                             // Navigator.of(context).pop();
+  //                             setState(() {
+  //                               dataLocator = '';
+  //                               barcodeTextString = '';
+  //                               wareCodeBarcode = '';
+  //                               itemCodeBarcode = '';
+  //                               lotNumberBarcode = '';
+  //                               countQuantityBarcode = '';
+  //                               locatorCodeBarcode = '';
+  //                               dataGridStatus = '';
+  //                               statusGridBarcode = '';
+  //                               dataLocatorList.clear();
+  //                               barcodeTextController.clear();
+  //                               wareCodeBarcodeController.clear();
+  //                               itemCodeBarcodeController.clear();
+  //                               lotNumberBarcodeController.clear();
+  //                               countQuantityBarcodeController.clear();
+  //                               locatorCodeBarcodeController.clear();
+  //                               dataGradeStatuslist.clear();
+  //                             });
+  //                           },
+  //                           style: ElevatedButton.styleFrom(
+  //                             backgroundColor: Colors.white,
+  //                           ),
+  //                           child: const Text('Clear'),
+  //                         ),
+  //                         ElevatedButton(
+  //                           onPressed: () {
+  //                             // Navigator.of(context).pop();
+  //                             setState(() {
+  //                               print(
+  //                                   'dataLocator : $dataLocator Type : ${dataLocator.runtimeType}');
+  //                               print(
+  //                                   'barcodeTextString : $barcodeTextString Type : ${barcodeTextString.runtimeType}');
+  //                               print(
+  //                                   'wareCodeBarcode : $wareCodeBarcode Type : ${wareCodeBarcode.runtimeType}');
+  //                               print(
+  //                                   'itemCodeBarcode : $itemCodeBarcode Type : ${itemCodeBarcode.runtimeType}');
+  //                               print(
+  //                                   'lotNumberBarcode : $lotNumberBarcode Type : ${lotNumberBarcode.runtimeType}');
+  //                               print(
+  //                                   'countQuantityBarcode : $countQuantityBarcode Type : ${countQuantityBarcode.runtimeType}');
+  //                               print(
+  //                                   'locatorCodeBarcode : $locatorCodeBarcode Type : ${locatorCodeBarcode.runtimeType}');
+  //                               print(
+  //                                   'dataGridStatus : $dataGridStatus Type : ${dataGridStatus.runtimeType}');
+  //                               print(
+  //                                   'statusGridBarcode : $statusGridBarcode Type : ${statusGridBarcode.runtimeType}');
+  //                             });
+  //                           },
+  //                           style: ElevatedButton.styleFrom(
+  //                             backgroundColor: Colors.white,
+  //                           ),
+  //                           child: const Text('Save'),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ));
+  //       });
+  // }
 
   void showDialogconfirm() {
     showDialog(

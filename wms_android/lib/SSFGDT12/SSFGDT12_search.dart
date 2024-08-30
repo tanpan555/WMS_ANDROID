@@ -86,38 +86,30 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
         child: Column(
           children: [
             TextFormField(
-              readOnly: true,
+              initialValue: '${widget.pWareCode} ${widget.pWareName}',
+              // onTap: () => _selectDate(context),
               decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.transparent),
-                  borderRadius: BorderRadius.circular(5.5),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.transparent),
-                  borderRadius: BorderRadius.circular(5.5),
-                ),
-                hintText: '${widget.pWareCode}  ${widget.pWareName}',
-                hintStyle: TextStyle(color: Colors.blue),
+                border: InputBorder.none,
                 filled: true,
-                fillColor: Colors.blue[50],
+                fillColor: Colors.white,
+                labelText: 'ware house',
+                labelStyle: const TextStyle(
+                  color: Colors.black87,
+                ),
               ),
             ),
             const SizedBox(height: 10),
+            //////////////////////////////////////////////////////////////////////////////////////
             TextFormField(
               controller: _controller,
               decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.transparent),
-                  borderRadius: BorderRadius.circular(5.5),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.transparent),
-                  borderRadius: BorderRadius.circular(5.5),
-                ),
-                hintText: 'เลขที่ใบตรวจนับ',
-                hintStyle: TextStyle(color: Colors.blue),
+                border: InputBorder.none,
                 filled: true,
-                fillColor: Colors.blue[50],
+                fillColor: Colors.white,
+                labelText: 'เลขที่ตรวจนับ',
+                labelStyle: const TextStyle(
+                  color: Colors.black87,
+                ),
               ),
               onChanged: (value) {
                 setState(() {
@@ -126,27 +118,23 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
               },
             ),
             const SizedBox(height: 20),
+            //////////////////////////////////////////////////////////////////////////////////////
             TextFormField(
               controller: _dateController,
               readOnly: true,
               onTap: () => _selectDate(context),
               decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.transparent),
-                  borderRadius: BorderRadius.circular(5.5),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.transparent),
-                  borderRadius: BorderRadius.circular(5.5),
-                ),
-                hintText: 'เลือกวันที่',
-                hintStyle: TextStyle(color: Colors.blue),
+                border: InputBorder.none,
                 filled: true,
-                fillColor: Colors.blue[50],
-                prefixIcon: Icon(Icons.calendar_today, color: Colors.blue),
+                fillColor: Colors.white,
+                labelText: 'เลือก วันที่',
+                labelStyle: const TextStyle(
+                  color: Colors.black87,
+                ),
               ),
             ),
             const SizedBox(height: 20),
+            //////////////////////////////////////////////////////////////////////////////////////
             DropdownButtonFormField<String>(
               value: selectedItem,
               items: dropdownItems
@@ -156,18 +144,13 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                       ))
                   .toList(),
               decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.transparent),
-                  borderRadius: BorderRadius.circular(5.5),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.transparent),
-                  borderRadius: BorderRadius.circular(5.5),
-                ),
-                hintText: 'สถานะ',
-                hintStyle: TextStyle(color: Colors.blue),
+                border: InputBorder.none,
                 filled: true,
-                fillColor: Colors.blue[50],
+                fillColor: Colors.white,
+                labelText: 'สถานะ',
+                labelStyle: const TextStyle(
+                  color: Colors.black87,
+                ),
               ),
               onChanged: (value) {
                 setState(() {
@@ -194,57 +177,8 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 });
               },
             ),
-
-            // DropdownButtonFormField<String>(
-            //   value: selectedItem,
-            //   // value: selectedItem.isEmpty ? null : selectedItem,
-            //   items: dropdownItems
-            //       .map((item) => DropdownMenuItem<String>(
-            //             value: item,
-            //             child: Text(item),
-            //           ))
-            //       .toList(),
-            //   decoration: InputDecoration(
-            //     enabledBorder: OutlineInputBorder(
-            //       borderSide: BorderSide(color: Colors.transparent),
-            //       borderRadius: BorderRadius.circular(5.5),
-            //     ),
-            //     focusedBorder: OutlineInputBorder(
-            //       borderSide: BorderSide(color: Colors.transparent),
-            //       borderRadius: BorderRadius.circular(5.5),
-            //     ),
-            //     hintText: 'สถานะ',
-            //     hintStyle: TextStyle(color: Colors.blue),
-            //     filled: true,
-            //     fillColor: Colors.blue[50],
-            //   ),
-            //   onChanged: (value) {
-            //     setState(() {
-            //       selectedItem = value ?? '';
-            //       // กำหนดค่า STATUS ตามตัวเลือกที่เลือก
-            //       switch (selectedItem) {
-            //         case 'รอตรวจนับ':
-            //           status = 'N';
-            //           break;
-            //         case 'กำลังตรวจนับ':
-            //           status = 'T';
-            //           break;
-            //         case 'ยื่นยันตรวจนับแล้ว':
-            //           status = 'X';
-            //           break;
-            //         case 'กำลังปรับปรุงจำนวน/มูลค่า':
-            //           status = 'A';
-            //           break;
-            //         case 'ยืนยันปรับปรุงจำนวน/มูลค่าแล้ว':
-            //           status = 'B';
-            //           break;
-            //         default:
-            //           status = 'Unknown';
-            //       }
-            //     });
-            //   },
-            // ),
             const SizedBox(height: 20),
+            //////////////////////////////////////////////////////////////////////////////////////
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

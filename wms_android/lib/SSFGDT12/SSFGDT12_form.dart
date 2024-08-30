@@ -161,33 +161,6 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
     }
   }
 
-  // Future<void> fetchData() async {
-  //   try {
-  //     final response = await http.get(Uri.parse(
-  //         'http://172.16.0.82:8888/apex/wms/SSFGDT12/formPageData/${widget.pOuCode}/${widget.docNo}/${widget.browser_language}'));
-
-  //     if (response.statusCode == 200) {
-  //       final responseBody = utf8.decode(response.bodyBytes);
-  //       final responseData = jsonDecode(responseBody);
-  //       //
-
-  //         //
-  //       print('Fetched data: $jsonDecode');
-
-  //       setState(() {
-  //         dataForm =
-  //             List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-  //       });
-  //       print('dataForm : $dataForm');
-  //     } else {
-  //       throw Exception('Failed to load fetchData');
-  //     }
-  //   } catch (e) {
-  //     setState(() {});
-  //     print('ERROR IN Fetch Data : $e');
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -241,133 +214,97 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                 child: Column(
                   children: [
                     TextFormField(
+                      style: const TextStyle(
+                        color: Colors.black87,
+                      ),
                       controller: docNoController,
-                      readOnly: true,
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          // borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        // hintText: 'เลขที่เอกสาร',
-                        // hintStyle: const TextStyle(color: Colors.blue),
-                        labelText: "เลขที่เอกสาร",
-                        labelStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none,
                         filled: true,
-                        fillColor: Colors.grey[350],
+                        fillColor: Colors.grey[300],
+                        labelText: 'เลขที่เอกสาร',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                        ),
                       ),
+                      readOnly: true,
                     ),
                     const SizedBox(height: 10),
+                    //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
-                      controller: docDateController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        labelText: 'วันที่เตรียมการตรวจนับ',
-                        labelStyle: TextStyle(color: Colors.black),
-                        filled: true,
-                        fillColor: Colors.grey[350],
+                      style: const TextStyle(
+                        color: Colors.black87,
                       ),
+                      controller: docDateController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.grey[300],
+                        labelText: 'วันที่เตรียมการตรวจนับ',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                        ),
+                      ),
+                      readOnly: true,
                     ),
                     const SizedBox(height: 10),
+                    //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
                       controller: nbCountDateController,
-                      readOnly: true,
                       onTap: () => _selectDate(context),
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        labelText: 'วันที่ตรวจนับ',
-                        labelStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none,
                         filled: true,
                         fillColor: Colors.white,
-                        prefixIcon:
-                            Icon(Icons.calendar_today, color: Colors.black),
+                        labelText: 'วันที่ตรวจนับ',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
+                    //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
                       controller: staffCodeController,
                       readOnly: true,
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        labelText: 'ผู้เตรียมข้อมูลตรวจนับ',
-                        labelStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none,
                         filled: true,
-                        fillColor: Colors.grey[350],
+                        fillColor: Colors.grey[300],
+                        labelText: 'ผู้เตรียมข้อมูลตรวจนับ',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
+                    //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
                       controller: nbStaffNameController,
                       readOnly: true,
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        labelText: '',
-                        labelStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none,
                         filled: true,
-                        fillColor: Colors.grey[350],
+                        fillColor: Colors.grey[300],
+                        labelText: '',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
+                    //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
                       controller: nbCountStaffController,
                       // readOnly: true,
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        labelText: 'ผู้ทำการตรวจนับ',
-                        labelStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none,
                         filled: true,
                         fillColor: Colors.white,
+                        labelText: 'ผู้ทำการตรวจนับ',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                        ),
                       ),
                       onChanged: (value) {
                         setState(() {
@@ -376,111 +313,82 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                       },
                     ),
                     const SizedBox(height: 10),
+                    //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
                       controller: nbStaffCountNameController,
                       readOnly: true,
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        labelText: '',
-                        labelStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none,
                         filled: true,
-                        fillColor: Colors.grey[350],
+                        fillColor: Colors.grey[300],
+                        labelText: '',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
+                    //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
                       controller: remarkController,
                       readOnly: true,
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        labelText: 'คำอธิบาย',
-                        labelStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none,
                         filled: true,
-                        fillColor: Colors.grey[350],
+                        fillColor: Colors.grey[300],
+                        labelText: 'คำอธิบาย',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
+                    //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
                       controller: statusController,
                       readOnly: true,
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        labelText: 'สถานะเอกสาร',
-                        labelStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none,
                         filled: true,
-                        fillColor: Colors.grey[350],
+                        fillColor: Colors.grey[300],
+                        labelText: 'สถานะเอกสาร',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
+                    //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
                       controller: updBy1Controller,
                       readOnly: true,
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        labelText: 'ผู้ปรับปรุงล่าสุด',
-                        labelStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none,
                         filled: true,
-                        fillColor: Colors.grey[350],
+                        fillColor: Colors.grey[300],
+                        labelText: 'ผู้ปรับปรุงล่าสุด',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
+                    //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
                       controller: updDateController,
                       readOnly: true,
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(5.5),
-                        ),
-                        labelText: 'วันที่ปรับปรุงล่าสุด',
-                        labelStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none,
                         filled: true,
-                        fillColor: Colors.grey[350],
+                        fillColor: Colors.grey[300],
+                        labelText: 'วันที่ปรับปรุงล่าสุด',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
+                    //////////////////////////////////////////////////////////////////////////////////////
                   ],
                 ),
               ),
