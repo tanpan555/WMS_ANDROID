@@ -33,6 +33,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     fetchwhCodes();
     fetchwhOUTCodes();
     fetchDocType();
+    fetchLocationCodes();
    
   }
 
@@ -46,6 +47,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
         final jsonData = json.decode(responseBody);
 
         print('Fetched data: $jsonData');
+        fetchLocationCodes();
 
         setState(() {
           whCodes = jsonData['items'];
@@ -228,6 +230,23 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              margin: const EdgeInsets.only(
+                  bottom: 8.0), // Add some space below the container
+              color: const Color.fromARGB(255, 255, 242,
+                  204), // Customize the background color of the container
+              child: Center(
+                child: Text(
+                  'คลังสินค้า $selectedwhCode',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
+              ),
+            ),
             Expanded(
               child: Card(
                 margin: EdgeInsets.all(16.0),

@@ -61,109 +61,53 @@ class _SSFGDT17_MENUState extends State<SSFGDT17_MENU> {
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                               child: Column(
-                                  // Add your child widgets here
+                   
                                   ),
                             ),
                           const SizedBox(height: 10),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
+                         
+                            Card(
+              color: Color.fromARGB(255, 231, 231, 231),
+              child: ListTile(
+                leading: Image.asset(
+                  'assets/images/search_doc.png',
+                  width: 40,
+                  height: 40,
+                ),
+                title: Text('ค้นหาเอกสาร', style: TextStyle(fontSize: 18)),
+                onTap: () {
+                  Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => SSFGDT17_MAIN(pWareCode: widget.pWareCode),
                                 ),
                               );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              padding: EdgeInsets.zero,
-                            ),
-                            child: SizedBox(
-                              width: double
-                                  .infinity, // Make the card fill the screen width
-                              child: Card(
-                                elevation: 4.0,
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                color: Colors.grey,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        imagePath,
-                                        width: 70.0,
-                                      ),
-                                      const SizedBox(height: 10.0),
-                                      Text(
-                                        item['card_value'] ?? 'No Name',
-                                        style: const TextStyle(
-                                          fontSize: 24.0,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                },
+              ),
+            ),
+    
                           const SizedBox(height: 8),
-                          ElevatedButton(
-                            onPressed: () {
-                              
-                              Navigator.push(
+                         Card(
+              color: Color.fromARGB(255, 231, 231, 231),
+              child: ListTile(
+                leading: Image.asset(
+                  'assets/images/add_doc.png',
+                  width: 40,
+                  height: 40,
+                ),
+                title: Text('สร้างเอกสาร', style: TextStyle(fontSize: 18)),
+                onTap: () {
+                     Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => SSFGDT17_CREATE(pWareCode: widget.pWareCode),
                                 ),
                               );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              padding: EdgeInsets.zero,
-                            ),
-                            child: SizedBox(
-                              width: double.infinity,
-                              child: Card(
-                                elevation: 4.0,
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                color: Colors.grey,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        'assets/images/add_doc.png',
-                                        width: 70.0,
-                                      ),
-                                      const SizedBox(height: 10.0),
-                                      Text(
-                                        'สร้างเอกสาร',
-                                        style: const TextStyle(
-                                          fontSize: 24.0,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                },
+              ),
+            ),
+                            
+                          
                         ],
                       ),
                     );

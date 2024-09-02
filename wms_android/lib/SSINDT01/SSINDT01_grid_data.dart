@@ -1451,31 +1451,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                             } else if (snapshot.data == '1') {
                                               return ElevatedButton(
                                                 onPressed: () async {
-                                                  // showLotDialog(
-                                                  //   context,
-                                                  //   data['item']?.toString() ??
-                                                  //       '',
-                                                  //   data['item_desc']
-                                                  //           ?.toString() ??
-                                                  //       '',
-                                                  //   data['ou_code']
-                                                  //           ?.toString() ??
-                                                  //       '',
-                                                  //   data['rec_seq']
-                                                  //           ?.toString() ??
-                                                  //       '',
-                                                  // );
-
-                                                  // getLotList(
-                                                  //   widget.poReceiveNo,
-                                                  //   data['rec_seq']
-                                                  //           ?.toString() ??
-                                                  //       '',
-                                                  //   data['ou_code']
-                                                  //           ?.toString() ??
-                                                  //       '',
-                                                  // );
-
+                                      
                                                   final result =
                                                       await Navigator.push<
                                                           Map<String, String>>(

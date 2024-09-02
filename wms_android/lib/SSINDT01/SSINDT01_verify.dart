@@ -52,7 +52,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
     super.initState();
     sendGetRequestlineWMS();
     // chk_sub();
-    fetchPDFData();
+    // fetchPDFData();
 
     reportServer = 'http://172.16.0.82:8888/jri/report?&_repName=/$reportname'
         '&_repFormat=pdf&_dataSource=wms'
@@ -444,15 +444,16 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
               onPressed: () {
                 
                 Navigator.of(context).pop();
+                fetchPDFData();
                 _launchUrl();
 
                 Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => SSINDT01_MAIN(
-                              pWareCode: '',
-                              pWareName: '',
-                              p_ou_code: '',
+                              pWareCode: widget.pWareCode,
+                              pWareName: widget.pWareName,
+                              p_ou_code: widget.p_ou_code,
                             ),
                           ),
                         );

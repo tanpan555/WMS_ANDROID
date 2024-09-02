@@ -298,7 +298,11 @@ Future<void> data_card_list() async {
             ),
           ],
         ),
-        // onTap: {},
+        onTap:() {
+          print('${item['doc_number'] ?? 'No doc_number'} ');
+
+          print('test');
+        },
       ),
     ),
   );
