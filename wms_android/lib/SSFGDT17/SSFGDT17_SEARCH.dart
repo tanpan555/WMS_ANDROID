@@ -47,6 +47,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
 
   void _resetForm() {
     _formKey.currentState?.reset();
+    _documentNumberController.clear();
     _dateController.clear();
     setState(() {
       selectedValue = 'ทั้งหมด';

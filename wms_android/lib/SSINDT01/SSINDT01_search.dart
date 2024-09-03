@@ -71,6 +71,23 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
     }
   }
 
+  void _resetForm() {
+  setState(() {
+    // Resetting the selected value to the initial default value
+    _selectedValue = 'ทั้งหมด';
+    
+    // Resetting the selected AP code to the initial default value
+    selectedApCode = 'ทั้งหมด';
+    
+    // Clearing the document number text field
+    _documentNumberController.clear();
+
+    // Optionally reset any error message
+    errorMessage = '';
+  });
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -186,6 +203,16 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    ElevatedButton(
+                      onPressed: _resetForm,
+                      child: Image.asset('assets/images/eraser_red.png', width: 50, height: 25),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red[300],
+                        padding: EdgeInsets.all(10),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
                    ElevatedButton(
   onPressed: () {
     final documentNumber = _documentNumberController.text;
