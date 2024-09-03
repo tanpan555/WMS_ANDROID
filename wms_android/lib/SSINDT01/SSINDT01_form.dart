@@ -105,7 +105,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   String? poMessage;
   Future<void> fetchPoStatus() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/c/chk_valid_inhead/${widget.poReceiveNo}';
+        'http://172.16.0.82:8888/apex/wms/c/chk_valid_inhead/${widget.poReceiveNo}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -268,6 +268,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
         'v_rec': widget.poReceiveNo,
         'v_cancel': selectedcCode,
         'APP_USER': gb.APP_USER,
+        'p_ou': gb.P_OU_CODE,
+        'p_erp_ou': gb.P_ERP_OU_CODE,
       }),
     );
 

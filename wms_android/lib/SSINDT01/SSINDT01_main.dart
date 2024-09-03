@@ -387,7 +387,7 @@ Future<void> _initializeData() async {
   Future<void> fetchPoStatus(String poNo, String? receiveNo) async {
     final String receiveNoParam = receiveNo ?? 'null';
     final String apiUrl =
-        'http://172.16.0.82:8888/apex/wms/c/check_rcv/$poNo/$receiveNoParam';
+        'http://172.16.0.82:8888/apex/wms/c/check_rcv/$poNo/$receiveNoParam/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}';
 
     try {
       final response = await http.get(Uri.parse(apiUrl));

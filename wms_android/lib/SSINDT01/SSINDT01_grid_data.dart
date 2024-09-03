@@ -10,6 +10,7 @@ import 'package:wms_android/custom_appbar.dart';
 import 'SSINDT01_verify.dart';
 import 'package:wms_android/bottombar.dart';
 // import 'package:wms/test.dart';
+import 'package:wms_android/Global_Parameter.dart' as gb;
 
 class Ssindt01Grid extends StatefulWidget {
   final String poReceiveNo;
@@ -49,7 +50,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   Future<void> chk_grid() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/c/chk_grid/${widget.poReceiveNo}'));
+          'http://172.16.0.82:8888/apex/wms/c/chk_grid/${widget.poReceiveNo}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}'));
       print(widget.poReceiveNo);
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -180,6 +181,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       'v_rec_seq': v_rec_seq,
       'v_lot_qty': v_lot_qty,
       'OU_CODE': OU_CODE,
+      'APP_USER': gb.APP_USER,
     });
 
     print('Request body: $body');
@@ -507,6 +509,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
         'p_po_seq': PoSeq,
         'p_lot_seq': lotSeq,
         'p_ou': pOu,
+        'APP_USER': gb.APP_USER,
       }),
     );
 
@@ -1179,7 +1182,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   String? poreject;
   Future<void> fetchPoStatus(String recSeq) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/c/check_valid_savelot/${widget.poReceiveNo}/$recSeq';
+        'http://172.16.0.82:8888/apex/wms/c/check_valid_savelot/${widget.poReceiveNo}/$recSeq/${gb.P_OU_CODE}/${gb.APP_USER}';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -1608,6 +1611,7 @@ class _LotDialogState extends State<LotDialog> {
       'v_rec_seq': v_rec_seq,
       'v_lot_qty': v_lot_qty,
       'OU_CODE': OU_CODE,
+      'APP_USER': gb.APP_USER,
     });
     try {
       final response =
@@ -1979,7 +1983,7 @@ class _LotDialogState extends State<LotDialog> {
   String? poreject;
   Future<void> fetchPoStatus(String recSeq) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/c/check_valid_savelot/${widget.poReceiveNo}/$recSeq';
+        'http://172.16.0.82:8888/apex/wms/c/check_valid_savelot/${widget.poReceiveNo}/$recSeq/${gb.P_OU_CODE}/${gb.APP_USER}';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -2062,6 +2066,7 @@ class _LotDialogState extends State<LotDialog> {
         'p_po_seq': PoSeq,
         'p_lot_seq': lotSeq,
         'p_ou': pOu,
+        'APP_USER': gb.APP_USER,
       }),
     );
 
