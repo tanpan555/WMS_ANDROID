@@ -41,7 +41,9 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
   List<dynamic> dataLocatorList = []; // data list locator
   List<dynamic> dataGradeStatuslist = []; // data list status
   List<dynamic> dataBarcodeList = []; // dataหลังจากแสกน barcode
-  int seqNumberBarcode = 0; // เก็บต่า seq ที่ได้หลังจากแสกน barcode
+  int seqNumberBarcodeInt = 0; // เก็บต่า seq ที่ได้หลังจากแสกน barcode type int
+  String seqNumberBarcodeString =
+      ''; // เก็บต่า seq ที่ได้หลังจากแสกน barcode type String
   String dataLocator = ''; // เก็บค่า locator ตรวจนับ
   String barcodeTextString = ''; // เก็บ barcode
   String wareCodeBarcode = ''; // เก็บต่า wareCode ที่ได้หลังจากแสกน barcode
@@ -49,8 +51,8 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
   String lotNumberBarcode = ''; // เก็บค่า lot Number
   String countQuantityBarcode = ''; // เก็บค่า count Quantity
   String locatorCodeBarcode = '';
-  String dataGridStatus = ''; //  เก็บชื่อ status barcode
-  String statusGridBarcode = ''; // เก็บ status barcode
+  String dataGridStatus = 'สภาพปกติ/ของดี'; //  เก็บชื่อ status barcode
+  String statusGridBarcode = '01'; // เก็บ status barcode
   String appUser = globals.APP_USER;
   final FocusNode _focusNode = FocusNode();
   final TextEditingController barcodeTextController = TextEditingController();
@@ -124,7 +126,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
   Future<void> fetchDataLocator() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/selsectLocator/${widget.pWareCode}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_BarcodeSelsectLocator/${widget.pWareCode}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -147,8 +149,8 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
 
   Future<void> fetchDataGradeStatus() async {
     try {
-      final response = await http.get(
-          Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT12/gradeStatus'));
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_BarcodeSelectGradeStatus'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -178,7 +180,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
         'dataLocator in  fetchDataBarcode: $dataLocator Type : ${dataLocator.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/dataBarcode/${widget.pErpOuCode}/${widget.docNo}/${widget.pWareCode}/$appUser/$dataLocator/$barcodeTextString'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_BarcodeSelectDataBarcode/${widget.pErpOuCode}/${widget.docNo}/${widget.pWareCode}/$appUser/$dataLocator/$barcodeTextString'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> dataBarcodeList =
@@ -190,7 +192,8 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
           print('Fetched dataBarcodeList: $jsonDecode');
 
           setState(() {
-            seqNumberBarcode = item['p_count_seq'] ?? '';
+            seqNumberBarcodeInt = item['p_count_seq'] ?? '';
+            seqNumberBarcodeString = item['p_count_seq'].toString();
             wareCodeBarcode = widget.pWareCode;
             itemCodeBarcode = item['p_item_code'] ?? '';
             locatorCodeBarcode = item['p_curr_loc'] ?? '';
@@ -215,7 +218,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'ผลการตรวจนับ'),
+      appBar: CustomAppBar(title: 'Scan Manual Add'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -257,7 +260,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                 ),
                 child: Center(
                   child: Text(
-                    '$seqNumberBarcode',
+                    '$seqNumberBarcodeString',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -415,7 +418,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   border: InputBorder.none,
                   filled: true,
                   fillColor: Colors.white,
-                  labelText: 'Locator ตรวจนับ',
+                  labelText: 'สภาพ',
                   labelStyle: const TextStyle(
                     color: Colors.black87,
                   ),
@@ -454,8 +457,8 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                         lotNumberBarcode = '';
                         countQuantityBarcode = '';
                         locatorCodeBarcode = '';
-                        dataGridStatus = '';
-                        statusGridBarcode = '';
+                        dataGridStatus = 'สภาพปกติ/ของดี';
+                        statusGridBarcode = '01';
                         dataLocatorList.clear();
                         barcodeTextController.clear();
                         wareCodeBarcodeController.clear();
@@ -469,7 +472,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                     ),
-                    child: const Text('Clear'),
+                    child: const Text('ยกเลิก'),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -498,7 +501,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                     ),
-                    child: const Text('Save'),
+                    child: const Text('ยืนยัน'),
                   ),
                 ],
               ),

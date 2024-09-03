@@ -99,7 +99,7 @@ class _Ssfgdt09lMenuState extends State<Ssfgdt09lMenu> {
                       imagePath,
                       width: 70,
                     ),
-                    title: Text('ค้นหาเอกสาร'),
+                    title: Text('${item['card_name']}'),
                     // trailing: Icon(iconData),
                     onTap: () {
                       String cardName = item['card_name'] ?? '';

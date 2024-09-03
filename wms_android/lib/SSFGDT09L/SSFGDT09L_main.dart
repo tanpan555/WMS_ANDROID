@@ -46,7 +46,7 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/selectWareCode/${widget.pAttr1}/${widget.pErpOuCode}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SelectWareCode/${widget.pAttr1}/${widget.pErpOuCode}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);

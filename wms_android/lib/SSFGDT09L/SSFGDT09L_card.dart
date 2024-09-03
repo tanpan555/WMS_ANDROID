@@ -3,6 +3,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
+import 'package:wms_android/Global_Parameter.dart' as globals;
+import 'SSFGDT09L_form.dart';
+import 'SSFGDT09L_grid.dart';
 
 class Ssfgdt09lCard extends StatefulWidget {
   final String pErpOuCode;
@@ -34,6 +37,9 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   String statusCard = '';
   String messageCard = '';
   String goToStep = '';
+  String sessionID = globals.APP_SESSION;
+  String pDocNoGetInHead = '';
+  String pDocTypeGetInHead = '';
 
   @override
   void initState() {
@@ -62,7 +68,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/searchCard/${widget.pErpOuCode}/${widget.pAttr1}/${widget.pAppUser}/${widget.pFlag}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${widget.pErpOuCode}/${widget.pAttr1}/${widget.pAppUser}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -83,53 +89,160 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     }
   }
 
-  Future<void> checkStatusCard(String pReceiveNo) async {
+  Future<void> checkStatusCard(
+      String pReceiveNo, String pDocNo, String pDocType) async {
+    print('po_status $pReceiveNo Type: ${pReceiveNo.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/checkStatusCard/${widget.pOuCode}/${widget.pErpOuCode}/$pReceiveNo'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_check_ISSDirect_validate/${widget.pOuCode}/${widget.pErpOuCode}/$pReceiveNo'));
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data =
-            jsonDecode(utf8.decode(response.bodyBytes));
-        final List<dynamic> items = data['items'];
-        print(items);
-        if (items.isNotEmpty) {
-          final Map<String, dynamic> item = items[0];
-          //
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataStatusCard = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print(
+            'dataStatusCard : $dataStatusCard type : ${dataStatusCard.runtimeType}');
 
-          //
-          print('Fetched data: $jsonDecode');
+        //
+        print('Fetched data: $jsonDecode');
 
-          setState(() {
-            statusCard = item['po_status'] ?? '';
-            messageCard = item['po_message'] ?? '';
-            goToStep = item['po_goto_step'] ?? '';
-          });
-        } else {
-          print('No items found.');
-        }
+        setState(() {
+          // statusCard = dataStatusCard['po_status'] ?? '';
+          // messageCard = dataStatusCard['po_message'] ?? '';
+          // goToStep = dataStatusCard['po_goto_step'] ?? '';
+          checkGoTostep(
+            dataStatusCard['po_status'] ?? '',
+            dataStatusCard['po_message'] ?? '',
+            dataStatusCard['po_goto_step'] ?? '',
+            pDocNo,
+            pDocType,
+          );
+
+          print(
+              'po_status : ${dataStatusCard['po_status']} Type: ${dataStatusCard['po_status'.runtimeType]}');
+          print(
+              'po_message : ${dataStatusCard['po_message']} Type: ${dataStatusCard['po_message'.runtimeType]}');
+          print(
+              'po_goto_step : ${dataStatusCard['po_goto_step']} Type: ${dataStatusCard['po_goto_step'.runtimeType]}');
+        });
+        // } else {
+        //   print('No items found.');
+        // }
       } else {
-        print('Failed to load data. Status code: ${response.statusCode}');
+        print(
+            'checkStatusCard Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (e) {
       setState(() {});
-      print('ERROR IN Fetch Data : $e');
+      print('checkStatusCard ERROR IN Fetch Data : $e');
     }
   }
 
-  // void checkGoTostep(String statusCard, String messageCard, String goToStep) {
-  //   //
-  //   print('statusCard : $statusCard Type : ${statusCard.runtimeType}');
-  //   print('messageCard : $messageCard Type : ${messageCard.runtimeType}');
-  //   print('goToStep : $goToStep Type : ${goToStep.runtimeType}');
-  //   switch (goToStep) {
-  //     case '2':
-  //     return
-  //     break;
-  //     default:
-  //     return print('Status Card Error!!!');
-  //   }
-  // }
+  void checkGoTostep(String statusCard, String messageCard, String goToStep,
+      String pDocNo, String pDocType) {
+    //
+    print('statusCard : $statusCard Type : ${statusCard.runtimeType}');
+    print('messageCard : $messageCard Type : ${messageCard.runtimeType}');
+    print('goToStep : $goToStep Type : ${goToStep.runtimeType}');
+    if (statusCard == '1') {
+      showMessageStatusCard(context, messageCard);
+    }
+    if (statusCard == '0') {
+      getInhead(
+        goToStep,
+        pDocNo,
+        pDocType,
+      );
+    }
+  }
+
+  Future<void> getInhead(
+      String goToStep, String pDocNo, String pDocType) async {
+    print('pDocNo $pDocNo Type: ${pDocNo.runtimeType}');
+    print('pDocType $pDocType Type: ${pDocType.runtimeType}');
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_INHEAD/${widget.pOuCode}/${widget.pErpOuCode}/$sessionID/$pDocNo/$pDocType/${widget.pAppUser}'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> dataGetInHead =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        print(
+            'dataGetInHead : $dataGetInHead type : ${dataGetInHead.runtimeType}');
+
+        //
+        print('Fetched data: $jsonDecode');
+
+        setState(() {
+          pDocNoGetInHead = dataGetInHead['po_doc_no'] ?? '';
+          pDocTypeGetInHead = dataGetInHead['po_doc_type'] ?? '';
+          getInheadStpe(
+            dataGetInHead['po_doc_no'] ?? '',
+            dataGetInHead['po_doc_type'] ?? '',
+            dataGetInHead['po_status'],
+            dataGetInHead['po_message'],
+            goToStep,
+          );
+
+          print(
+              'po_doc_type : ${dataGetInHead['po_doc_type']} Type: ${dataGetInHead['po_doc_type'.runtimeType]}');
+          print(
+              'po_doc_no : ${dataGetInHead['po_doc_no']} Type: ${dataGetInHead['po_doc_no'.runtimeType]}');
+          print(
+              'po_status : ${dataGetInHead['po_status']} Type: ${dataGetInHead['po_status'.runtimeType]}');
+          print(
+              'po_message : ${dataGetInHead['po_message']} Type: ${dataGetInHead['po_message'.runtimeType]}');
+        });
+        // } else {
+        //   print('No items found.');
+        // }
+      } else {
+        print(
+            'getInhead Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      setState(() {});
+      print('getInhead ERROR IN Fetch Data : $e');
+    }
+  }
+
+  void getInheadStpe(String pDocNoGetInHead, String pDocTypeGetInHead,
+      String poStatus, String poMessage, String goToStep) {
+    if (poStatus == '1') {
+      showMessageStatusCard(context, poMessage);
+    }
+    if (poStatus == '0') {
+      switch (goToStep) {
+        case '2':
+          return _navigateToPage(
+              context,
+              Ssfgdt09lForm(
+                pWareCode: widget.pErpOuCode,
+                pAttr1: widget.pAttr1,
+                pDocNo: pDocNoGetInHead,
+                pDocType: pDocTypeGetInHead,
+              ));
+        case '3':
+          return _navigateToPage(
+              context,
+              Ssfgdt09lGrid(
+                pWareCode: widget.pErpOuCode,
+                pAttr1: widget.pAttr1,
+                statusCase: '3',
+              ));
+        case '4':
+          return _navigateToPage(
+              context,
+              Ssfgdt09lGrid(
+                pWareCode: widget.pErpOuCode,
+                pAttr1: widget.pAttr1,
+                statusCase: '4',
+              ));
+        default:
+          return null;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +306,15 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                     color: cardColor,
                     child: InkWell(
                       onTap: () {
-                        checkStatusCard(item['po_no']);
+                        checkStatusCard(item['po_no'] ?? '',
+                            item['p_doc_no'] ?? '', item['p_doc_type'] ?? '');
+
+                        print(
+                            'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
+                        print(
+                            'p_doc_no in Card : ${item['p_doc_no']} Type : ${item['p_doc_no'].runtimeType}');
+                        print(
+                            'p_doc_type in Card : ${item['p_doc_type']} Type : ${item['p_doc_type'].runtimeType}');
                       },
                       borderRadius: BorderRadius.circular(15.0),
                       child: Stack(
@@ -269,6 +390,63 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
         ),
       ),
       bottomNavigationBar: BottomBar(),
+    );
+  }
+
+  void showMessageStatusCard(
+    BuildContext context,
+    String messageCard,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(
+                Icons.notification_important,
+                color: Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'Error',
+                style: TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    messageCard,
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text('ย้อนกลับ'),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
