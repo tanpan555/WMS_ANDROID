@@ -96,7 +96,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/formPageData/${widget.pErpOuCode}/${widget.docNo}/${widget.browser_language}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_2_SelectDataForm/${widget.pErpOuCode}/${widget.docNo}/${widget.browser_language}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
@@ -153,7 +153,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   Future<void> selectNbCountStaff(String nbStaffCountName) async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/select_nbCountStaffName/${widget.pErpOuCode}/${widget.docNo}/$nbStaffCountName'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_2_Select_nbCountStaffName/${widget.pErpOuCode}/${widget.docNo}/$nbStaffCountName'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =

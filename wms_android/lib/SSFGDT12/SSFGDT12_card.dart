@@ -61,8 +61,8 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
     try {
       // ตรวจสอบว่า widget.docNo มีค่าหรือไม่
       final String endpoint = widget.docNo != ''
-          ? 'http://172.16.0.82:8888/apex/wms/SSFGDT12/selectCard/${widget.p_flag}/${widget.pErpOuCode}/${widget.docNo}/${widget.status}/${widget.browser_language}'
-          : 'http://172.16.0.82:8888/apex/wms/SSFGDT12/selectCard/${widget.p_flag}/${widget.pErpOuCode}/$data_null/${widget.status}/${widget.browser_language}';
+          ? 'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_1_SelectDataCard/${widget.pErpOuCode}/${widget.docNo}/${widget.status}/${widget.browser_language}'
+          : 'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_1_SelectDataCard/${widget.pErpOuCode}/$data_null/${widget.status}/${widget.browser_language}';
 
       print('Fetching data from: $endpoint');
 
@@ -139,7 +139,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                     case 'X':
                       // iconData = Icons.arrow_circle_right_outlined;
                       cardColor = Color.fromRGBO(146, 208, 80, 1.0);
-                      statusText = 'ยื่นยันตรวจนับแล้ว';
+                      statusText = 'ยืนยันตรวจนับแล้ว';
                       break;
                     case 'A':
                       // iconData = Icons.arrow_circle_right_outlined;
@@ -164,7 +164,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                       borderRadius:
                           BorderRadius.circular(15.0), // กำหนดมุมโค้งของ Card
                     ),
-                    color: cardColor,
+                    color: Color.fromRGBO(204, 235, 252, 1.0),
                     child: InkWell(
                       onTap: () {
                         Navigator.push(
@@ -226,7 +226,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 12.0, vertical: 6.0),
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: cardColor,
                                 borderRadius: BorderRadius.circular(12.0),
                                 border:
                                     Border.all(color: Colors.black, width: 2.0),

@@ -34,9 +34,10 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
   final TextEditingController _controller = TextEditingController();
   final String sDateFormat = "dd/MM/yyyy";
   final List<String> dropdownItems = [
+    'ทั้งหมด',
     'รอตรวจนับ',
     'กำลังตรวจนับ',
-    'ยื่นยันตรวจนับแล้ว',
+    'ยืนยันตรวจนับแล้ว',
     'กำลังปรับปรุงจำนวน/มูลค่า',
     'ยืนยันปรับปรุงจำนวน/มูลค่าแล้ว',
   ]; // รายการใน dropdown
@@ -107,7 +108,7 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 border: InputBorder.none,
                 filled: true,
                 fillColor: Colors.white,
-                labelText: 'เลขที่ตรวจนับ',
+                labelText: 'เลขที่ใบตรวจนับ',
                 labelStyle: const TextStyle(
                   color: Colors.black87,
                 ),
@@ -128,7 +129,7 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 border: InputBorder.none,
                 filled: true,
                 fillColor: Colors.white,
-                labelText: 'เลือก วันที่',
+                labelText: 'วันที่เตรียมข้อมูลตรวจนับ',
                 labelStyle: const TextStyle(
                   color: Colors.black87,
                 ),
@@ -161,13 +162,16 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 setState(() {
                   selectedItem = value ?? '';
                   switch (selectedItem) {
+                    case 'ทั้งหมด':
+                      status = '1';
+                      break;
                     case 'รอตรวจนับ':
                       status = 'N';
                       break;
                     case 'กำลังตรวจนับ':
                       status = 'T';
                       break;
-                    case 'ยื่นยันตรวจนับแล้ว':
+                    case 'ยืนยันตรวจนับแล้ว':
                       status = 'X';
                       break;
                     case 'กำลังปรับปรุงจำนวน/มูลค่า':
