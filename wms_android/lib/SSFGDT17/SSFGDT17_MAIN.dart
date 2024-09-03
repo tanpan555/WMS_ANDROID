@@ -488,7 +488,7 @@ String? poStatus;
                           const SizedBox(height: 10),
                           Expanded(
                             child: data.isEmpty
-                                ? const Center(child: Text('ไม่มีข้อมูล',style: TextStyle(color: Colors.white),))
+                                ? const Center(child: Text('No Data Available',style: TextStyle(color: Colors.white),))
                                 : ListView.builder(
                                     controller: _scrollController,
                                     itemCount: (_displayLimit < data.length)

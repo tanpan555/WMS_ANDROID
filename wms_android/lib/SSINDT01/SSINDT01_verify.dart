@@ -288,6 +288,65 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
       // drawer: const CustomDrawer(),
       body: Column(
         children: [
+          Row(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      minimumSize: const Size(10, 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'ย้อนกลับ',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  
+                ]),
+                const SizedBox(width: 8.0),
+          Container(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              margin: const EdgeInsets.only(
+                  bottom: 8.0), // Add some space below the container
+              color: const Color.fromARGB(255, 255, 242,
+                  204), // Customize the background color of the container
+              child: Center(
+                child: Text(
+                  '${widget.poPONO}',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              margin: const EdgeInsets.only(
+                  bottom: 8.0), // Add some space below the container
+              color: const Color.fromARGB(255, 255, 255, 255), // Customize the background color of the container
+              child: Center(
+                child: Text(
+                  '${widget.poReceiveNo}',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
+              ),
+            ),
           Expanded(
             child: dataList.isEmpty
                 ? Center(

@@ -1345,6 +1345,22 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                   204), // Customize the background color of the container
               child: Center(
                 child: Text(
+                  '${widget.poPONO}',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              margin: const EdgeInsets.only(
+                  bottom: 8.0), // Add some space below the container
+              color: const Color.fromARGB(255, 255, 255, 255), // Customize the background color of the container
+              child: Center(
+                child: Text(
                   '${widget.poReceiveNo}',
                   style: TextStyle(
                     fontSize: 20,
