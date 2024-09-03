@@ -1,19 +1,28 @@
 import 'dart:convert';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:wms_android/SSFGDT17/SSFGD17_BARCODE.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:wms_android/Global_Parameter.dart' as gb;
 
 
 class SSFGDT17_MAIN extends StatefulWidget {
-  final String pWareCode;
+ final String pWareCode;
+  final String? selectedValue;
+  final String documentNumber;
+  final String dateController;
+
   const SSFGDT17_MAIN({
     Key? key,
     required this.pWareCode,
+    this.selectedValue,
+    required this.documentNumber,
+    required this.dateController,
   }) : super(key: key);
 
   @override
@@ -25,6 +34,9 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
   List<dynamic> whCodes = [];
   String? selectedwhCode;
   String? docData;
+
+  
+  
   DateTime? selectedDate;
 String? docNumberFilter;
   final TextEditingController _docNumberController = TextEditingController();
@@ -33,21 +45,23 @@ String? docNumberFilter;
   @override
 void initState() {
   super.initState();
+  
   currentSessionID = SessionManager().sessionID;
 selectedwhCode = widget.pWareCode;
 print(selectedwhCode);
-  _dateController.text = selectedDate != null ? DateFormat('dd/MM/yyyy').format(selectedDate!) : '';
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    if (selectedwhCode != null) {
-     
-        _filterDialog();
-        // _showSelectWareCodeDialog();
-        
-      
-    }
-  });
-  fetchDocType();
-  data_card_list();
+  // _dateController.text = selectedDate != null ? DateFormat('dd/MM/yyyy').format(selectedDate!) : '';
+   _dateController.text = widget.dateController;
+  _selectedStatusValue = widget.selectedValue;
+  docNumberFilter = widget.documentNumber;
+fetchDocType().then((data) {
+      setState(() {
+        print('docData: $docData');
+        data_card_list();
+      });
+    }).catchError((e) {
+      print('Error fetching doc type: $e');
+    });
+  
 }
 
 @override
@@ -98,81 +112,23 @@ void dispose() {
     }
   }
 
-  Future<void> fetchDocType() async {
-    try {
-      final url = Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/default_doc_type');
-      final response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-      });
 
-      if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-        print(jsonData);
-        setState(() {
-          docData = jsonData['DOC_TYPE'];
-        });
-      } else {
-        throw Exception('Failed to load DOC_TYPE');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
+Future<void> fetchDocType() async {
+  final response = await http.get(Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/default_doc_type'));
 
-  void _showSelectWareCodeDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('เลือกคลังสินค้า'),
-          content: DropdownSearch<String>(
-                          popupProps: PopupProps.menu(
-                            showSearchBox: true,
-                            showSelectedItems: true,
-                            disabledItemFn: (String s) => s.startsWith('I'),
-                            itemBuilder: (context, item, isSelected) {
-                              final wareCode = item;
-                              final description = whCodes.firstWhere(
-                                      (element) =>
-                                          element['ware_code'] == wareCode,
-                                      orElse: () => {
-                                            'ware_code': wareCode,
-                                            'description': 'No description'
-                                          })['description'] ??
-                                  'คลัง $wareCode';
-                              return ListTile(
-                                title: Text(wareCode),
-                                subtitle: Text(description),
-                                selected: isSelected,
-                              );
-                            },
-                            constraints: BoxConstraints(
-                              maxHeight: 300,
-                            ),
-                          ),
-                          items: whCodes
-                              .map((item) =>
-                                  item['ware_code'] as String? ?? 'No code')
-                              .toList(),
-                          dropdownDecoratorProps: DropDownDecoratorProps(
-                            dropdownSearchDecoration: InputDecoration(
-                              labelText: "เลือกคลัง",
-                              hintText: "เลือกคลัง",
-                            ),
-                          ),
-                          onChanged: (String? value) {
-                            setState(() {
-                              selectedwhCode = value;
-                              Navigator.of(context).pop();
-                            });
-                          },
-                          selectedItem: selectedwhCode,
-                        ),
-        );
-      },
-    );
+  if (response.statusCode == 200) {
+    // Parse the JSON data
+    final Map<String, dynamic> data = json.decode(response.body);
+    docData = data['DOC_TYPE'];
+    print(docData);
+  } else {
+    // Handle the error
+    throw Exception('Failed to load data');
   }
+}
+
+
+
 
 String? _selectedStatusValue = 'ทั้งหมด';
   String? fixedValue = '0';
@@ -195,49 +151,62 @@ String? _selectedStatusValue = 'ทั้งหมด';
   bool isLoading = true;
   String errorMessage = '';
 
-Future<void> data_card_list() async {
-  try {
-    final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$fixedValue/000/$docData'));
-    if (response.statusCode == 200) {
-      final responseBody = utf8.decode(response.bodyBytes);
-      final jsonData = json.decode(responseBody);
+  Future<void> data_card_list() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$fixedValue/000/$docData'));
 
-      List<dynamic> fetchedData = jsonData['items'] ?? [];
-      
-      if (selectedDate != null) {
-        fetchedData = fetchedData.where((item) {
-          DateTime? itemDate;
-          try {
-            itemDate = DateFormat('dd/MM/yyyy').parse(item['doc_date'] ?? '');
-          } catch (e) {
-            return false;
-          }
-          return itemDate != null && itemDate.isAtSameMomentAs(selectedDate!);
-        }).toList();
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final jsonData = json.decode(responseBody);
+
+        List<dynamic> fetchedData = jsonData['items'] ?? [];
+
+        // Convert dateController text to DateTime
+        DateTime? filterDate;
+        try {
+          filterDate = DateFormat('dd/MM/yyyy').parse(_dateController.text);
+        } catch (e) {
+          print('Date format error: $e');
+        }
+
+        if (filterDate != null) {
+          fetchedData = fetchedData.where((item) {
+            DateTime? itemDate;
+            try {
+              itemDate = DateFormat('dd/MM/yyyy').parse(item['doc_date'] ?? '');
+            } catch (e) {
+              return false;
+            }
+            return itemDate != null && itemDate.isAtSameMomentAs(filterDate!);
+          }).toList();
+        }
+
+        if (docNumberFilter != null && docNumberFilter!.isNotEmpty) {
+          fetchedData = fetchedData.where((item) {
+            return (item['doc_number'] ?? '').contains(docNumberFilter!);
+          }).toList();
+        }
+
+        setState(() {
+          data = fetchedData;
+          print(data);
+          isLoading = false;
+        });
+        print('http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$fixedValue/000/$docData');
+      } else {
+        throw Exception('Failed to load data');
       }
-
-      if (docNumberFilter != null && docNumberFilter!.isNotEmpty) {
-        fetchedData = fetchedData.where((item) {
-          return (item['doc_number'] ?? '').contains(docNumberFilter!);
-        }).toList();
-      }
-
+    } catch (e) {
       setState(() {
-        data = fetchedData;
-        print(data);
         isLoading = false;
+        errorMessage = e.toString();
       });
-    } else {
-      throw Exception('Failed to load data');
     }
-  } catch (e) {
-    setState(() {
-      isLoading = false;
-      errorMessage = e.toString();
-    });
   }
-}
+
+String? doc_no;
+String? doc_out;
 
 
  Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
@@ -299,9 +268,43 @@ Future<void> data_card_list() async {
           ],
         ),
         onTap:() {
-          print('${item['doc_number'] ?? 'No doc_number'} ');
+          print('${item['doc_no'] ?? 'No doc_no'} ');
+          print('${item['doc_type'] ?? 'No doc_type'} ');
+          doc_no = item['doc_no'];
+          doc_out = item['doc_type'];
+          chk_validateSave();
+          // print('$poStatus $poMessage $goToStep' );
 
-          print('test');
+        if(poStatus == '1'){
+          print(poMessage);
+
+        }
+        else if(poStatus == '0'){
+          if(goToStep == '2'){
+            print('ไปหน้า Form');
+          }
+          else if(goToStep == '3'){
+            print('ไปหน้า barcode');
+            // Navigator.of(context).push(
+            //           MaterialPageRoute(
+            //             builder: (context) => SSFGDT17_BARCODE(
+            //                 po_doc_no: doc_no ?? '',
+            //                 po_doc_type: doc_out,
+            //                 LocCode: '',
+            //                 selectedwhCode: '',
+            //                 selectedLocCode: '',
+            //                 whOUTCode: '',
+            //                 LocOUTCode: ''),
+            //           ),
+            //         );
+
+          }
+          else if(goToStep == '4'){
+            print('ไปหน้ายืนยัน');
+
+          }
+        }
+
         },
       ),
     ),
@@ -317,95 +320,125 @@ Future<void> data_card_list() async {
       _displayLimit += 15;
     });
   }
- void _filterDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return AlertDialog(
-            title: const Text('ตัวกรองค้นหา'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                DropdownButton<String>(
-                  isExpanded: true,
-                  value: _selectedStatusValue,
-                  hint: const Text('ประเภทรายการ'),
-                  items: <String>[
-                    'ทั้งหมด',
-                    'ปกติ',
-                    'ยกเลิก',
-                    'รับโอนแล้ว',
-                  ].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _selectedStatusValue = value;
-                      fixedValue = valueMapping[_selectedStatusValue] ?? '';
-                    });
-                  },
-                ),
-                SizedBox(height: 10),
-                TextField(
-                  controller: _docNumberController,
-                  decoration: const InputDecoration(
-                    labelText: 'เลขที่ใบโอน',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      docNumberFilter = value;
-                    });
-                  },
-                ),
-                SizedBox(height: 10),
-                TextField(
-                  controller: _dateController,
-                  decoration: const InputDecoration(
-                    labelText: 'วันที่',
-                    border: OutlineInputBorder(),
-                  ),
-                  readOnly: true,
-                  onTap: _selectDate,
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    fixedValue = '0';
-                    docNumberFilter = '';
-                    _docNumberController.clear();
-                    _dateController.clear();
-                    selectedDate = null;
-                  });
+//  void _filterDialog() {
+//   showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return StatefulBuilder(
+//         builder: (BuildContext context, StateSetter setState) {
+//           return AlertDialog(
+//             title: const Text('ตัวกรองค้นหา'),
+//             content: Column(
+//               mainAxisSize: MainAxisSize.min,
+//               children: [
+//                 DropdownButton<String>(
+//                   isExpanded: true,
+//                   value: _selectedStatusValue,
+//                   hint: const Text('ประเภทรายการ'),
+//                   items: <String>[
+//                     'ทั้งหมด',
+//                     'ปกติ',
+//                     'ยกเลิก',
+//                     'รับโอนแล้ว',
+//                   ].map((String value) {
+//                     return DropdownMenuItem<String>(
+//                       value: value,
+//                       child: Text(value),
+//                     );
+//                   }).toList(),
+//                   onChanged: (String? value) {
+//                     setState(() {
+//                       _selectedStatusValue = value;
+//                       fixedValue = valueMapping[_selectedStatusValue] ?? '';
+//                     });
+//                   },
+//                 ),
+//                 SizedBox(height: 10),
+//                 TextField(
+//                   controller: _docNumberController,
+//                   decoration: const InputDecoration(
+//                     labelText: 'เลขที่ใบโอน',
+//                     border: OutlineInputBorder(),
+//                   ),
+//                   onChanged: (value) {
+//                     setState(() {
+//                       docNumberFilter = value;
+//                     });
+//                   },
+//                 ),
+//                 SizedBox(height: 10),
+//                 TextField(
+//                   controller: _dateController,
+//                   decoration: const InputDecoration(
+//                     labelText: 'วันที่',
+//                     border: OutlineInputBorder(),
+//                   ),
+//                   readOnly: true,
+//                   onTap: _selectDate,
+//                 ),
+//               ],
+//             ),
+//             actions: [
+//               TextButton(
+//                 onPressed: () {
+//                   setState(() {
+//                     fixedValue = '0';
+//                     docNumberFilter = '';
+//                     _docNumberController.clear();
+//                     _dateController.clear();
+//                     selectedDate = null;
+//                   });
         
-                },
-                child: const Text('Clear Filter'),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    docNumberFilter = _docNumberController.text;
-                  });
-                  Navigator.of(context).pop();
-                  data_card_list();
-                },
-                child: const Text('ค้นหา'),
-              ),
-            ],
-          );
-        },
-      );
-    },
-  );
-}
+//                 },
+//                 child: const Text('Clear Filter'),
+//               ),
+//               TextButton(
+//                 onPressed: () {
+//                   setState(() {
+//                     docNumberFilter = _docNumberController.text;
+//                   });
+//                   Navigator.of(context).pop();
+//                   data_card_list();
+//                 },
+//                 child: const Text('ค้นหา'),
+//               ),
+//             ],
+//           );
+//         },
+//       );
+//     },
+//   );
+// }
+
+String? poStatus;
+  String? poMessage;
+  String? goToStep;
+
+  Future<void> chk_validateSave() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/check_TFLOCDirect_validate/$doc_no/$doc_out/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}'));
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final jsonData = json.decode(responseBody);
+        setState(() {
+          poStatus = jsonData['po_status'];
+          poMessage = jsonData['po_message'];
+          goToStep = jsonData['po_goto_step'];
+          print(response.statusCode);
+          print(jsonData);
+          print(poStatus);
+          print(poMessage);
+          print(goToStep);
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
 
 
   @override
@@ -425,40 +458,37 @@ Future<void> data_card_list() async {
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
+                          
                           if (isPortrait)
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black38),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(5.0),
-                                    color: Colors.deepPurple,
-                                    child: Row(
-                                      children: [
-                                        const Expanded(
-                                          child: Text(
-                                            'Move Locator',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: _filterDialog,
-                                          child: const Text('ค้นหา'),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            Row(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      minimumSize: const Size(10, 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'ย้อนกลับ',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ]
+                ),
                           const SizedBox(height: 10),
                           Expanded(
                             child: data.isEmpty
-                                ? const Center(child: Text('ไม่มีข้อมูล'))
+                                ? const Center(child: Text('ไม่มีข้อมูล',style: TextStyle(color: Colors.white),))
                                 : ListView.builder(
                                     controller: _scrollController,
                                     itemCount: (_displayLimit < data.length)

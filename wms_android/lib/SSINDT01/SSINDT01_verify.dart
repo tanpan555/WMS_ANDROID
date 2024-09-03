@@ -293,7 +293,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                 ? Center(
                     child: Text('No data available',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)))
+                            fontSize: 18, fontWeight: FontWeight.bold,color: Colors.white)))
                 : SingleChildScrollView(
                     padding: EdgeInsets.all(8.0),
                     child: Column(
@@ -431,9 +431,12 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => SSINDT01_MAIN(
-                              pWareCode: widget.pWareCode,
-                              pWareName: widget.pWareName,
-                              p_ou_code: widget.p_ou_code,
+                               pWareCode: widget.pWareCode,
+          pWareName: widget.pWareName,
+          p_ou_code: widget.p_ou_code,
+           selectedValue: 'ทั้งหมด', // Updated parameter name
+          apCode: 'ทั้งหมด',
+          documentNumber: '',
                             ),
                           ),
                         );
@@ -451,9 +454,12 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => SSINDT01_MAIN(
-                              pWareCode: widget.pWareCode,
-                              pWareName: widget.pWareName,
-                              p_ou_code: widget.p_ou_code,
+                             pWareCode: widget.pWareCode,
+          pWareName: widget.pWareName,
+          p_ou_code: widget.p_ou_code,
+         selectedValue: 'ทั้งหมด',
+          apCode: 'ทั้งหมด',
+          documentNumber: '',
                             ),
                           ),
                         );

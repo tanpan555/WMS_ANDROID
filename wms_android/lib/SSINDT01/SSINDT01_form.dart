@@ -393,13 +393,16 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                                       Navigator.of(context).pop();
 
                                       cancel_from(selectedcCode!).then((_) {
-                                        Navigator.of(context).pushReplacement(
+                                        Navigator.of(context).pop(
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 SSINDT01_MAIN(
-                                              pWareCode: widget.pWareCode,
-                                              pWareName: widget.pWareName,
-                                              p_ou_code: widget.p_ou_code,
+                                            pWareCode: widget.pWareCode,
+                                                pWareName: widget.pWareName,
+                                                p_ou_code: widget.p_ou_code,
+                                                selectedValue: 'ทั้งหมด',
+                                                apCode: 'ทั้งหมด',
+                                                documentNumber: '',
                                             ),
                                           ),
                                         );

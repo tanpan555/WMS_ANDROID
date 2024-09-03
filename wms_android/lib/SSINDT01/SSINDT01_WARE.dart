@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:wms_android/SSINDT01/SSINDT01_search.dart';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:wms_android/bottombar.dart';
@@ -132,16 +133,28 @@ class _SSFGDT01_WAREState extends State<SSFGDT01_WARE> {
 
                     return GestureDetector(
                       onTap: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => SSINDT01_MAIN(
+                        //       pWareCode: item['ware_code'],
+                        //       pWareName: item['ware_name'],
+                        //       p_ou_code: widget.p_ou_code,
+                        //     ),
+                        //   ),
+                        // );
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SSINDT01_MAIN(
-                              pWareCode: item['ware_code'],
+                            builder: (context) => SSINDT01_SEARCH(
+                                           pWareCode: item['ware_code'],
                               pWareName: item['ware_name'],
                               p_ou_code: widget.p_ou_code,
                             ),
                           ),
                         );
+
+    
                       },
                       child: Card(
                         elevation: 4.0,

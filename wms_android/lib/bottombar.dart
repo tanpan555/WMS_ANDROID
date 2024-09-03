@@ -12,26 +12,22 @@ class _BottomBarState extends State<BottomBar> {
   String sessionID = '';
 
   void _onItemTapped(int index) {
-    setState(() {
-      sessionID = globals.APP_SESSION;
-      _selectedIndex = index;
-      print(
-          'sessionID in BottomBar : $sessionID Type : ${sessionID.runtimeType}');
-    });
+  setState(() {
+    sessionID = globals.APP_SESSION;
+    _selectedIndex = index;
+    print('sessionID in BottomBar : $sessionID Type : ${sessionID.runtimeType}');
+  });
 
-    switch (index) {
-      case 0:
-        Navigator.pushReplacementNamed(
-          context,
-          '/home',
-          arguments: sessionID, // ส่ง sessionID เป็น arguments
-        );
-        break;
-      case 1:
-        _showRightDrawer(context); // Show the drawer from the right
-        break;
-    }
+  switch (index) {
+    case 0:
+      // Replace the entire navigation stack with the home page
+     Navigator.popUntil(context, (route) => route.isFirst);
+      break;
+    case 1:
+      _showRightDrawer(context); // Show the drawer from the right
+      break;
   }
+}
 
 void _showRightDrawer(BuildContext context) {
   showModalBottomSheet(

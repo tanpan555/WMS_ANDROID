@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_CREATE.dart';
+import 'package:wms_android/SSFGDT17/SSFGDT17_SEARCH.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/bottombar.dart';
@@ -79,7 +80,7 @@ class _SSFGDT17_MENUState extends State<SSFGDT17_MENU> {
                   Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SSFGDT17_MAIN(pWareCode: widget.pWareCode),
+                                  builder: (context) => SSFGDT17_SEARCH(pWareCode: widget.pWareCode),
                                 ),
                               );
                 },
