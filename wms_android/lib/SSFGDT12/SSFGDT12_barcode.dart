@@ -470,9 +470,21 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
+                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      minimumSize: const Size(10, 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
                     ),
-                    child: const Text('ยกเลิก'),
+                    child: const Text(
+                      'ยกเลิก',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -499,9 +511,21 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
+                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      minimumSize: const Size(10, 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
                     ),
-                    child: const Text('ยืนยัน'),
+                    child: const Text(
+                      'ยืนยัน',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ],
               ),

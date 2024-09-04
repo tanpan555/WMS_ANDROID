@@ -308,9 +308,21 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
+                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    minimumSize: const Size(10, 20),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   ),
-                  child: const Text('ยกเลิก'),
+                  child: const Text(
+                    'ยกเลิก',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -332,18 +344,42 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                         );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
+                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    minimumSize: const Size(10, 20),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   ),
-                  child: const Text('บันทึกสินค้าเพิ่มเติม'),
+                  child: const Text(
+                    'บันทึกสินค้าเพิ่มเติม',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     checkData();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
+                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    minimumSize: const Size(10, 20),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   ),
-                  child: const Text('ยืนยัน'),
+                  child: const Text(
+                    'ยืนยัน',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -667,10 +703,22 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                               Navigator.of(context).pop();
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: BorderSide(color: Colors.grey),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 103, 58, 183),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              minimumSize: const Size(10, 20),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
                             ),
-                            child: const Text('ย้อนกลับ'),
+                            child: const Text(
+                              'ย้อนกลับ',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                           ElevatedButton(
                             onPressed: () {
@@ -678,10 +726,22 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                               // Navigator.of(context).pop();
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: BorderSide(color: Colors.grey),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 103, 58, 183),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              minimumSize: const Size(10, 20),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
                             ),
-                            child: const Text('ยืนยัน'),
+                            child: const Text(
+                              'ยืนยัน',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ],
                       )
@@ -697,44 +757,58 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              title: Row(
-                children: [
-                  Icon(
-                    Icons.notification_important,
-                    color: Colors.red,
-                  ),
-                  SizedBox(width: 8),
-                  Text('แจ้งเตือน'),
-                ],
-              ),
-              content: SingleChildScrollView(
+            title: Row(
+              children: [
+                Icon(
+                  Icons.notification_important,
+                  color: Colors.red,
+                ),
+                SizedBox(width: 8),
+                Text('แจ้งเตือน'),
+              ],
+            ),
+            content: Expanded(
+              child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('ตรวจพบสินค้าที่ไม่ระบุจำนวนนับ'),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 8),
+                      // Expanded(
+                      // Container(
+                      // width: 200,
                       DropdownButtonFormField<String>(
                         value: selectedStatusSubmit,
+                        style: TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          color: Colors.black87,
+                        ),
                         items: dropdownStatusSubmit
                             .map((item) => DropdownMenuItem<String>(
                                   value: item,
-                                  child: Text(item),
+                                  child: Text(
+                                    item,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+
+                                  // child: Text(
+                                  //   item,
+                                  //   overflow: TextOverflow.ellipsis,
+                                  // ),
                                 ))
                             .toList(),
                         decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(5.5),
-                          ),
-                          labelText: "สถานะ",
-                          labelStyle: TextStyle(color: Colors.black),
+                          border: InputBorder.none,
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: Colors.grey[300],
+                          labelText: 'สถานะ',
+                          labelStyle: const TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                            color: Colors.black87,
+                          ),
                         ),
                         onChanged: (value) {
                           setState(() {
@@ -751,20 +825,35 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                             }
                           });
                         },
+                        // ),
                       ),
-                      const SizedBox(height: 10),
+
+                      // ),
+                      const SizedBox(height: 8),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: BorderSide(color: Colors.grey),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 103, 58, 183),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              minimumSize: const Size(10, 20),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
                             ),
-                            child: const Text('ย้อนกลับ'),
+                            child: const Text(
+                              'ย้อนกลับ',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                           ElevatedButton(
                             onPressed: () {
@@ -772,17 +861,31 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                               // Navigator.of(context).pop();
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: BorderSide(color: Colors.grey),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 103, 58, 183),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              minimumSize: const Size(10, 20),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
                             ),
-                            child: const Text('ยืนยัน'),
+                            child: const Text(
+                              'ยืนยัน',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ],
                       )
                     ],
                   ),
                 ),
-              ));
+              ),
+            ),
+          );
         });
   }
 
@@ -912,18 +1015,42 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                               Navigator.of(context).pop();
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: BorderSide(color: Colors.grey),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 103, 58, 183),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              minimumSize: const Size(10, 20),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
                             ),
-                            child: const Text('ย้อนกลับ'),
+                            child: const Text(
+                              'ย้อนกลับ',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                           ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: BorderSide(color: Colors.grey),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 103, 58, 183),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              minimumSize: const Size(10, 20),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
                             ),
-                            child: const Text('ยืนยัน'),
+                            child: const Text(
+                              'ยืนยัน',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ],
                       )
@@ -975,10 +1102,22 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                   );
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: BorderSide(color: Colors.grey),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 103, 58, 183),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              minimumSize: const Size(10, 20),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
                             ),
-                            child: const Text('ยืนยัน'),
+                            child: const Text(
+                              'ยืนยัน',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ],
                       )
