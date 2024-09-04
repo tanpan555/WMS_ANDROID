@@ -33,9 +33,13 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   String? selectLovMoDoNo;
   int returnStatusLovMoDoNo = 0;
   String selectedDate = '';
+  String custName = '';
+  String noteData = '';
   //'${item['schid']} ${item['fg_code']} ${item['cust_name']}')
   // final String sDateFormat = "dd-MM-yyyy";
   TextEditingController dateController = TextEditingController();
+  TextEditingController custNameController = TextEditingController();
+  TextEditingController noteDataController = TextEditingController();
 
   @override
   void initState() {
@@ -48,6 +52,8 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   @override
   void dispose() {
     dateController.dispose();
+    custNameController.dispose();
+    noteDataController.dispose();
     // pSoNoController.dispose();
     super.dispose();
   }
@@ -113,21 +119,30 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
           'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectCust/$pMoDoNo'));
 
       if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
-        print('Fetched data: $jsonDecode');
+        final Map<String, dynamic> data =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> items = data['items'];
+        print(items);
+        if (items.isNotEmpty) {
+          final Map<String, dynamic> item = items[0];
+          //
 
-        setState(() {
-          dataLovMoDoNo =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
-        print('dataLovMoDoNo : $dataLovMoDoNo');
+          //
+          print('Fetched data: $jsonDecode');
+
+          setState(() {
+            custName = item['cust'] ?? '';
+
+            custNameController.text = custName;
+          });
+        } else {
+          print('No items found.');
+        }
       } else {
-        throw Exception('dataLovMoDoNo Failed to load fetchData');
+        print('Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      setState(() {});
-      print('dataLovMoDoNo ERROR IN Fetch Data : $e');
+      print('Error: $e');
     }
   }
 
@@ -345,6 +360,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                           if (selectedItem.isNotEmpty) {
                             returnStatusLovMoDoNo = selectedItem['schid'] ?? '';
                             selectLovMoDoNo = selectedItem['schid'].toString();
+                            selectCust(returnStatusLovMoDoNo);
                           }
                         });
                         print(
@@ -357,16 +373,37 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                     const SizedBox(height: 20),
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
+                      controller: custNameController,
                       readOnly: true,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         filled: true,
                         fillColor: Colors.grey[300],
-                        labelText: '22345321',
+                        labelText: 'ลูกค้า',
                         labelStyle: const TextStyle(
                           color: Colors.black87,
                         ),
                       ),
+                    ),
+                    const SizedBox(height: 20),
+                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    TextFormField(
+                      controller: noteDataController,
+                      // readOnly: true,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.grey[300],
+                        labelText: 'หมายเหตุ',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                        ),
+                      ),
+                      onChanged: (value) => {
+                        setState(() {
+                          noteData = value;
+                        }),
+                      },
                     ),
                     const SizedBox(height: 20),
                     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

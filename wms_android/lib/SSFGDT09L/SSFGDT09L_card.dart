@@ -303,7 +303,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
                     ),
-                    color: cardColor,
+                    color: Color.fromRGBO(204, 235, 252, 1.0),
                     child: InkWell(
                       onTap: () {
                         checkStatusCard(item['po_no'] ?? '',
@@ -326,9 +326,10 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                               children: [
                                 InkWell(
                                   onTap: () {},
-                                  child: SizedBox(
+                                  child: Container(
                                     width: 100,
                                     height: 40,
+                                    // color: cardColor, // เปลี่ยนสีพื้นหลังที่นี่
                                     child: Image.asset(
                                       'assets/images/printer.png',
                                       fit: BoxFit.contain,
@@ -354,10 +355,10 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 12.0, vertical: 6.0),
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
+                                      color: cardColor,
                                       borderRadius: BorderRadius.circular(12.0),
                                       border: Border.all(
-                                          color: Colors.black, width: 2.0),
+                                          color: cardColor, width: 2.0),
                                     ),
                                     child: Text(
                                       statusText,

@@ -86,21 +86,21 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextFormField(
-              initialValue: '${widget.pWareCode} ${widget.pWareName}',
-              readOnly: true,
-              // onTap: () => _selectDate(context),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                filled: true,
-                fillColor: Colors.grey[300],
-                labelText: 'ware house',
-                labelStyle: const TextStyle(
-                  color: Colors.black87,
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
+            // TextFormField(
+            //   initialValue: '${widget.pWareCode} ${widget.pWareName}',
+            //   readOnly: true,
+            //   // onTap: () => _selectDate(context),
+            //   decoration: InputDecoration(
+            //     border: InputBorder.none,
+            //     filled: true,
+            //     fillColor: Colors.grey[300],
+            //     labelText: 'ware house',
+            //     labelStyle: const TextStyle(
+            //       color: Colors.black87,
+            //     ),
+            //   ),
+            // ),
+            // const SizedBox(height: 10),
             //////////////////////////////////////////////////////////////////////////////////////
             TextFormField(
               controller: _controller,
@@ -189,7 +189,7 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
             const SizedBox(height: 20),
             //////////////////////////////////////////////////////////////////////////////////////
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   decoration: BoxDecoration(
@@ -215,6 +215,7 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                     },
                   ),
                 ),
+                const SizedBox(width: 20),
                 //////////////////////////////////////////////////////
                 Container(
                   decoration: BoxDecoration(
