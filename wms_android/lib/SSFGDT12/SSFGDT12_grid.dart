@@ -767,124 +767,117 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                 Text('แจ้งเตือน'),
               ],
             ),
-            content: Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('ตรวจพบสินค้าที่ไม่ระบุจำนวนนับ'),
-                      const SizedBox(height: 8),
-                      // Expanded(
-                      // Container(
-                      // width: 200,
-                      DropdownButtonFormField<String>(
-                        value: selectedStatusSubmit,
-                        style: TextStyle(
+            // content: Expanded(
+            content: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('ตรวจพบสินค้าที่ไม่ระบุจำนวนนับ'),
+                    const SizedBox(height: 8),
+
+                    /////////////////////////////////////////////////
+                    DropdownButtonFormField<String>(
+                      value: selectedStatusSubmit,
+                      style: TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        color: Colors.black87,
+                      ),
+                      items: dropdownStatusSubmit
+                          .map((item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ))
+                          .toList(),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.grey[300],
+                        labelText: 'สถานะ',
+                        labelStyle: const TextStyle(
                           overflow: TextOverflow.ellipsis,
                           color: Colors.black87,
                         ),
-                        items: dropdownStatusSubmit
-                            .map((item) => DropdownMenuItem<String>(
-                                  value: item,
-                                  child: Text(
-                                    item,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-
-                                  // child: Text(
-                                  //   item,
-                                  //   overflow: TextOverflow.ellipsis,
-                                  // ),
-                                ))
-                            .toList(),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          filled: true,
-                          fillColor: Colors.grey[300],
-                          labelText: 'สถานะ',
-                          labelStyle: const TextStyle(
-                            overflow: TextOverflow.ellipsis,
-                            color: Colors.black87,
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedStatusSubmit = value ?? '';
+                          switch (selectedStatusSubmit) {
+                            case 'ให้จำนวนนับเป็นศูนย์':
+                              statusCondition = '1';
+                              break;
+                            case 'ให้จำนวนนับเท่ากับในระบบ':
+                              statusCondition = '2';
+                              break;
+                            default:
+                              statusCondition = 'Unknown';
+                          }
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    //////////////////////////////////////////////////
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 103, 58, 183),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            minimumSize: const Size(10, 20),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                          ),
+                          child: const Text(
+                            'ย้อนกลับ',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedStatusSubmit = value ?? '';
-                            switch (selectedStatusSubmit) {
-                              case 'ให้จำนวนนับเป็นศูนย์':
-                                statusCondition = '1';
-                                break;
-                              case 'ให้จำนวนนับเท่ากับในระบบ':
-                                statusCondition = '2';
-                                break;
-                              default:
-                                statusCondition = 'Unknown';
-                            }
-                          });
-                        },
-                        // ),
-                      ),
-
-                      // ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 103, 58, 183),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              minimumSize: const Size(10, 20),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
+                        ElevatedButton(
+                          onPressed: () {
+                            submitData(statusCondition);
+                            // Navigator.of(context).pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 103, 58, 183),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
                             ),
-                            child: const Text(
-                              'ย้อนกลับ',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            minimumSize: const Size(10, 20),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                          ),
+                          child: const Text(
+                            'ยืนยัน',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              submitData(statusCondition);
-                              // Navigator.of(context).pop();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 103, 58, 183),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              minimumSize: const Size(10, 20),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                            ),
-                            child: const Text(
-                              'ยืนยัน',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ),
             ),
+            // ),
           );
         });
   }
