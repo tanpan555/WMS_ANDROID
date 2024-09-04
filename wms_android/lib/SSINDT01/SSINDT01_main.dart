@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -57,6 +59,8 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   @override
 void initState() {
   super.initState();
+  print('Card Global Ware Code: ${gb.P_WARE_CODE}');
+                        log('Card Global Ware Code: ${gb.P_WARE_CODE}');
   print('+----------------------------------------');
   print(gb.ATTR1);
   print(widget.selectedValue);
@@ -715,27 +719,28 @@ Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
                             ),
                             Row(
                 children: [
-                            ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: const Size(10, 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text(
-                      'ย้อนกลับ',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),],),
+                  //           ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(12.0),
+                  //     ),
+                  //     minimumSize: const Size(10, 20),
+                  //     padding: const EdgeInsets.symmetric(
+                  //         horizontal: 10, vertical: 5),
+                  //   ),
+                  //   onPressed: () {
+                  //     Navigator.of(context).pop();
+                  //   },
+                  //   child: const Text(
+                  //     'ย้อนกลับ',
+                  //     style: TextStyle(
+                  //       color: Colors.white,
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  // ),
+                  ],),
                           const SizedBox(height: 10),
                           Expanded(
                             child: displayedData.isEmpty

@@ -97,19 +97,19 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
           child: Column(
             children: [
               //////////////////////////////////////////////////////////////
-              // TextFormField(
-              //   readOnly: true,
-              //   decoration: InputDecoration(
-              //     border: InputBorder.none,
-              //     filled: true,
-              //     fillColor: Colors.grey[300],
-              //     labelText: '${widget.pWareCode}  ${widget.pWareName}',
-              //     labelStyle: const TextStyle(
-              //       color: Colors.black87,
-              //     ),
-              //   ),
-              // ),
-              // const SizedBox(height: 20),
+              TextFormField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  labelText: '${widget.pWareCode}  ${widget.pWareName}',
+                  labelStyle: const TextStyle(
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               //////////////////////////////////////////////////////////////
               DropdownButtonFormField<String>(
                 value: selectedItem,
@@ -199,7 +199,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
               //////////////////////////////////////////////////////////////
               const SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
                     decoration: BoxDecoration(
@@ -225,7 +225,6 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                       },
                     ),
                   ),
-                  const SizedBox(width: 20),
                   //////////////////////////////////////////////////////
                   Container(
                     decoration: BoxDecoration(

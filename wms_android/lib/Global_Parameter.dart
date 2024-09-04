@@ -11,6 +11,7 @@ String Raw_Material = 'Raw Material';
 String Finishing = 'Finishing';
 
 String ATTR1 = '';
+String P_WARE_CODE = '';
 //////
 
 

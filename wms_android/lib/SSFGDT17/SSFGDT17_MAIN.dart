@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:wms_android/SSFGDT17/SSFGD17_BARCODE.dart';
+import 'package:wms_android/SSFGDT17/SSFGD17_VERIFY.dart';
+import 'package:wms_android/SSFGDT17/SSFGDT17_BARCODE.dart';
+import 'package:wms_android/SSFGDT17/SSFGDT17_FORM.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/bottombar.dart';
@@ -272,36 +274,85 @@ String? doc_out;
           print('${item['doc_type'] ?? 'No doc_type'} ');
           doc_no = item['doc_no'];
           doc_out = item['doc_type'];
-          chk_validateSave();
+          chk_validate();
+          chk_validate_inhead();
+          print('poStatusinhead: $poStatusinhead');
           // print('$poStatus $poMessage $goToStep' );
 
         if(poStatus == '1'){
           print(poMessage);
+          showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('คำเตือน'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('${poMessage ?? 'No message available'}'),
+              ],
+            ),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
 
         }
         else if(poStatus == '0'){
           if(goToStep == '2'){
             print('ไปหน้า Form');
+            if(poStatusinhead == '0'){
+              Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => SSFGDT17_FORM(
+                            po_doc_no: doc_no ?? '',
+                            po_doc_type: doc_out,
+                            LocCode: '',
+                            selectedwhCode: '',
+                            selectedLocCode: '',
+                            whOUTCode: '',
+                            LocOUTCode: ''),
+                      ),
+                    );
+            }
           }
           else if(goToStep == '3'){
             print('ไปหน้า barcode');
-            // Navigator.of(context).push(
-            //           MaterialPageRoute(
-            //             builder: (context) => SSFGDT17_BARCODE(
-            //                 po_doc_no: doc_no ?? '',
-            //                 po_doc_type: doc_out,
-            //                 LocCode: '',
-            //                 selectedwhCode: '',
-            //                 selectedLocCode: '',
-            //                 whOUTCode: '',
-            //                 LocOUTCode: ''),
-            //           ),
-            //         );
-
+            if(poStatusinhead == '0'){
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => SSFGDT17_BARCODE(
+                            po_doc_no: doc_no ?? '',
+                            po_doc_type: doc_out,
+                            LocCode: '',
+                            selectedwhCode: '',
+                            selectedLocCode: '',
+                            whOUTCode: '',
+                            LocOUTCode: ''),
+                      ),
+                    );
+            }
           }
           else if(goToStep == '4'){
             print('ไปหน้ายืนยัน');
-
+            if(poStatusinhead == '0'){
+              Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => SSFGD17_VERIFY(
+                            po_doc_no: doc_no ?? '',
+                            po_doc_type: doc_out,
+                            selectedwhCode: '',),
+                      ),
+                    );
+            }
           }
         }
 
@@ -414,7 +465,7 @@ String? poStatus;
   String? poMessage;
   String? goToStep;
 
-  Future<void> chk_validateSave() async {
+  Future<void> chk_validate() async {
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGDT17/check_TFLOCDirect_validate/$doc_no/$doc_out/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}'));
@@ -430,6 +481,28 @@ String? poStatus;
           print(poStatus);
           print(poMessage);
           print(goToStep);
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  String? poStatusinhead;
+
+  Future<void> chk_validate_inhead() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/get_INHeadXfer_WMS/$doc_no/$doc_out/${widget.pWareCode}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}/${gb.APP_USER}'));
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final jsonData = json.decode(responseBody);
+        setState(() {
+          poStatusinhead = jsonData['po_status'];
+ 
+          print('poStatusinhead: $poStatusinhead');
         });
       } else {
         throw Exception('Failed to load data');
@@ -460,31 +533,31 @@ String? poStatus;
                         children: [
                           
                           if (isPortrait)
-                            Row(
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: const Size(10, 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'ย้อนกลับ',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ]
-                ),
+                //             Row(
+                // children: [
+                //   // ElevatedButton(
+                //   //   style: ElevatedButton.styleFrom(
+                //   //     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                //   //     shape: RoundedRectangleBorder(
+                //   //       borderRadius: BorderRadius.circular(12.0),
+                //   //     ),
+                //   //     minimumSize: const Size(10, 20),
+                //   //     padding: const EdgeInsets.symmetric(
+                //   //         horizontal: 10, vertical: 5),
+                //   //   ),
+                //   //   onPressed: () {
+                //   //     Navigator.pop(context);
+                //   //   },
+                //   //   child: const Text(
+                //   //     'ย้อนกลับ',
+                //   //     style: TextStyle(
+                //   //       color: Colors.white,
+                //   //       fontWeight: FontWeight.bold,
+                //   //     ),
+                //   //   ),
+                //   // ),
+                // ]
+                // ),
                           const SizedBox(height: 10),
                           Expanded(
                             child: data.isEmpty
@@ -518,7 +591,5 @@ String? poStatus;
       ),
       bottomNavigationBar: BottomBar(),
     );
-  }
-
-  
+  } 
 }

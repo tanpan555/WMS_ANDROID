@@ -97,7 +97,7 @@ class _Ssfgdt09lMenuState extends State<Ssfgdt09lMenu> {
                   child: ListTile(
                     leading: Image.asset(
                       imagePath,
-                      width: 45,
+                      width: 70,
                     ),
                     title: Text('${item['card_name']}'),
                     // trailing: Icon(iconData),

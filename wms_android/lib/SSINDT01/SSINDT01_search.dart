@@ -8,6 +8,7 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:wms_android/Global_Parameter.dart' as gb;
 
 class SSINDT01_SEARCH extends StatefulWidget {
 final String pWareCode;
@@ -44,6 +45,9 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
     _selectedValue = 'ทั้งหมด';
     fetchApCodes();
     // print('$selectedApCode' ?? 'test');
+
+    print('Search Global Ware Code: ${gb.P_WARE_CODE}');
+                        log('Search Global Ware Code: ${gb.P_WARE_CODE}');
   }
 
   Future<void> fetchApCodes() async {

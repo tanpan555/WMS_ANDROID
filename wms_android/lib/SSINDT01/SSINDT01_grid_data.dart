@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -20,10 +21,13 @@ class Ssindt01Grid extends StatefulWidget {
   final String pWareName;
   final String p_ou_code;
 
-  Ssindt01Grid({required this.poReceiveNo, this.poPONO,
+  Ssindt01Grid({
+    required this.poReceiveNo,
+    this.poPONO,
     required this.pWareCode,
     required this.pWareName,
-    required this.p_ou_code,});
+    required this.p_ou_code,
+  });
   @override
   _Ssindt01GridState createState() => _Ssindt01GridState();
 }
@@ -31,6 +35,7 @@ class Ssindt01Grid extends StatefulWidget {
 class _Ssindt01GridState extends State<Ssindt01Grid> {
   List<Map<String, dynamic>> dataList = [];
   List<Map<String, dynamic>> dataLotList = [];
+
 
   @override
   void initState() {
@@ -249,7 +254,6 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   Future<void> sendGetRequestlineWMS() async {
     final url =
         'http://172.16.0.82:8888/apex/wms/c/pull_po/${widget.poReceiveNo}';
-
     final headers = {
       'Content-Type': 'application/json; charset=UTF-8',
     };
@@ -270,6 +274,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
           dataList =
               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
         });
+        print('RUN sendGetRequestlineWMS ********************');
         print('Success: $dataList');
       } else {
         print('Failed to get data. Status code: ${response.statusCode}');
@@ -315,6 +320,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       body: jsonEncode({
         'rec_no': recNo,
         'rec_seq': recSeq,
+        'p_erp_ou': gb.P_ERP_OU_CODE,
+        'APP_USER': gb.APP_USER,
       }),
     );
 
@@ -1220,27 +1227,27 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               width: double.infinity,
               child: Row(
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: const Size(10, 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'ย้อนกลับ',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(12.0),
+                  //     ),
+                  //     minimumSize: const Size(10, 20),
+                  //     padding: const EdgeInsets.symmetric(
+                  //         horizontal: 10, vertical: 5),
+                  //   ),
+                  //   onPressed: () {
+                  //     Navigator.pop(context);
+                  //   },
+                  //   child: const Text(
+                  //     'ย้อนกลับ',
+                  //     style: TextStyle(
+                  //       color: Colors.white,
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  // ),
                   const SizedBox(width: 8.0),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -1281,6 +1288,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 8.0),
+                 
                   const Spacer(),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -1299,8 +1308,10 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                           MaterialPageRoute(
                             builder: (context) => Ssindt01Verify(
                               poReceiveNo: widget.poReceiveNo,
-                              poPONO: widget.poPONO, pWareCode: widget.pWareCode, pWareName: widget.pWareName, p_ou_code: widget.p_ou_code
-                              ,
+                              poPONO: widget.poPONO,
+                              pWareCode: widget.pWareCode,
+                              pWareName: widget.pWareName,
+                              p_ou_code: widget.p_ou_code,
                             ),
                           ),
                         );
@@ -1314,10 +1325,19 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                         //   ),
                         // );
 
-                        AlertDialog(
+                        showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
             title: Text('คำเตือน'),
-            content: Text(poMessageGrid ?? ''),
-            actions: <Widget>[
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('${poMessageGrid ?? 'No message available'}'),
+              ],
+            ),
+            actions: [
               TextButton(
                 child: Text('OK'),
                 onPressed: () {
@@ -1326,6 +1346,21 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               ),
             ],
           );
+        },
+      );
+
+                        AlertDialog(
+                          title: Text('คำเตือน'),
+                          content: Text(poMessageGrid ?? ''),
+                          actions: <Widget>[
+                            TextButton(
+                              child: Text('OK'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
                       }
                     },
                     child: const Icon(
@@ -1340,9 +1375,9 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               margin: const EdgeInsets.only(
-                  bottom: 8.0), // Add some space below the container
+                  bottom: 8.0),
               color: const Color.fromARGB(255, 255, 242,
-                  204), // Customize the background color of the container
+                  204),
               child: Center(
                 child: Text(
                   '${widget.poPONO}',
@@ -1357,8 +1392,9 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               margin: const EdgeInsets.only(
-                  bottom: 8.0), // Add some space below the container
-              color: const Color.fromARGB(255, 255, 255, 255), // Customize the background color of the container
+                  bottom: 8.0),
+              color: const Color.fromARGB(255, 255, 255,
+                  255),
               child: Center(
                 child: Text(
                   '${widget.poReceiveNo}',
@@ -1370,209 +1406,167 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                 ),
               ),
             ),
-            // const SizedBox(height: 16.0),
-            dataList.isEmpty
-                ? Center(child: Text('No data available'))
-                : Expanded(
-                    child: ListView.builder(
-                      itemCount: dataList.length,
-                      itemBuilder: (context, index) {
-                        final data = dataList[index];
-                        final rowColor =
-                            index.isEven ? Colors.white : Colors.grey[100];
+            // const SizedBox(height: 16.0), 
+           dataList.isEmpty
+    ? Center(child: Text('No data available',style: TextStyle(color: Colors.white),))
+    : Expanded(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await sendGetRequestlineWMS();
+          },
+          child: ListView.builder(
+            itemCount: dataList.length,
+            itemBuilder: (context, index) {
+              final data = dataList[index];
+              final rowColor = index.isEven ? Colors.white : Colors.grey[100];
 
-                        return InkWell(
-                          onTap: () {
-                            _showDetailsDialog(data);
-                          },
-                          child: Card(
-                            elevation: 5,
-                            margin: EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+              return InkWell(
+                onTap: () {
+                  _showDetailsDialog(data);
+                },
+                child: Card(
+                  elevation: 5,
+                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  color: Color.fromRGBO(204, 235, 252, 1.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.white,
+                          Colors.blueGrey[50]!,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          spreadRadius: 2,
+                          blurRadius: 6,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Item: ${data['item']?.toString() ?? ''}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Colors.blueGrey[800],
+                              ),
                             ),
-                            color: Color.fromRGBO(204, 235, 252, 1.0),
-                            child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.white,
-                                      Colors.blueGrey[50]!
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 6,
-                                      offset: Offset(0, 3),
-                                    ),
-                                  ],
-                                ),
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Item: ${data['item']?.toString() ?? ''}',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                            color: Colors.blueGrey[800],
+                          ],
+                        ),
+                        SizedBox(height: 12),
+                        Divider(color: Colors.grey[300]),
+                        SizedBox(height: 12),
+                        _buildInfoRow2({
+                          'จำนวนรับ :': data['receive_qty']?.toString() ?? '-',
+                          'ค้างรับ :': data['pending_qty']?.toString() ?? '-',
+                        }),
+                        _buildInfoRow2({
+                          'จำนวนรวม :': data['lot_total_nb']?.toString() ?? '-',
+                          'UOM :': data['UOM']?.toString() ?? '-',
+                        }),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '    Locator : ${data['locator_det']?.toString() ?? 'ไม่มีข้อมูล'}',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ),
+                            FutureBuilder<String?>(
+                              future: fetchvResultStatus(data['item']?.toString() ?? ''),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return Text('Error');
+                                } else if (snapshot.data == '1') {
+                                  return ElevatedButton(
+                                    onPressed: () async {
+                                      final result = await Navigator.push<Map<String, String>>(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => LotDialog(
+                                            item: data['item']?.toString() ?? '',
+                                            itemDesc: data['item_desc']?.toString() ?? '',
+                                            ouCode: data['ou_code']?.toString() ?? '',
+                                            recSeq: data['rec_seq']?.toString() ?? '',
+                                            poReceiveNo: widget.poReceiveNo,
+                                            poPONO: widget.poPONO ?? '',
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 12),
-                                    Divider(color: Colors.grey[300]),
-                                    SizedBox(height: 12),
-                                    _buildInfoRow2({
-                                      'จำนวนรับ :':
-                                          data['receive_qty']?.toString() ??
-                                              '-',
-                                      'ค้างรับ :':
-                                          data['pending_qty']?.toString() ??
-                                              '-',
-                                    }),
-                                    _buildInfoRow2({
-                                      'จำนวนรวม :':
-                                          data['lot_total_nb']?.toString() ??
-                                              '-',
-                                      'UOM :': data['UOM']?.toString() ?? '-',
-                                    }),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            '    Locator : ${data['locator_det']?.toString() ?? 'ไม่มีข้อมูล'}',
-                                            style: TextStyle(fontSize: 14),
-                                          ),
-                                        ),
-                                        FutureBuilder<String?>(
-                                          future: fetchvResultStatus(
-                                              data['item']?.toString() ?? ''),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState ==
-                                                ConnectionState.waiting) {
-                                              return CircularProgressIndicator();
-                                            } else if (snapshot.hasError) {
-                                              return Text('Error');
-                                            } else if (snapshot.data == '1') {
-                                              return ElevatedButton(
-                                                onPressed: () async {
-                                      
-                                                  final result =
-                                                      await Navigator.push<
-                                                          Map<String, String>>(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          LotDialog(
-                                                        item: data['item']
-                                                                ?.toString() ??
-                                                            '',
-                                                        itemDesc: data[
-                                                                    'item_desc']
-                                                                ?.toString() ??
-                                                            '',
-                                                        ouCode: data['ou_code']
-                                                                ?.toString() ??
-                                                            '',
-                                                        recSeq: data['rec_seq']
-                                                                ?.toString() ??
-                                                            '',
-                                                        poReceiveNo:
-                                                            widget.poReceiveNo,
-                                                        poPONO:
-                                                            widget.poPONO ?? '',
-                                                      ),
-                                                      fullscreenDialog: true,
-                                                    ),
-                                                  );
-                                           
-                                                  if (result != null) {
-                                                    setState(() {
-                                                       
-                                                      if (result['status'] ==
-                                                          'dialog') {
-                                                        print('===dialog===');
-                                                        print(
-                                                            result['message']);
-                                                            fetchPoStatus(result?['recSeq'] ??
-                                                              '');
-                                                        showCustomDialog(
-                                                          context,
-                                                          result?['poReceiveNo'] ??
-                                                              '',
-                                                          result?['recSeq'] ??
-                                                              '',
-                                                          result?['ouCode'] ??
-                                                              '',
-                                                        );
-                                                      } else if (result[
-                                                              'status'] ==
-                                                          'pass') {
-                                                        print('===pass===');
-                                                      }
-                                                    });
-                                                  }
-                                                  log(result?['status'] ?? '');
-                                                  log(result?['poReceiveNo'] ??
-                                                      '');
-                                                  log(result?['recSeq'] ?? '');
-                                                  log(result?['ouCode'] ?? '');
+                                          fullscreenDialog: true,
+                                        )
+                                      );
 
-                                                  // print(result);
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      Colors.purple,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                  ),
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 20),
-                                                ),
-                                                child: Text(
-                                                  'LOT',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              );
-                                            } else {
-                                              return Container();
-                                            }
-                                          },
-                                        ),
-                                      ],
+                                      if (result != null) {
+                                        Timer(Duration(seconds: 1), () {
+  print('************************************');
+    sendGetRequestlineWMS();
+});
+
+                                        print("Dialog result: $result");
+                                        log(result['status'] ?? '');
+                                        log(result['poReceiveNo'] ?? '');
+                                        log(result['recSeq'] ?? '');
+                                        log(result['ouCode'] ?? '');
+                                      }
+
+                            
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.purple,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      padding: EdgeInsets.symmetric(horizontal: 20),
                                     ),
-                                    SizedBox(height: 12),
-                                  ],
-                                )),
-                          ),
-                        );
-                      },
+                                    child: Text(
+                                      'LOT',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12),
+                      ],
                     ),
                   ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+  
           ],
         ),
       ),
       bottomNavigationBar: BottomBar(),
     );
+    
   }
 }
 
@@ -1645,17 +1639,17 @@ class _LotDialogState extends State<LotDialog> {
         // );
 
         AlertDialog(
-            title: Text('คำเตือน'),
-            content: Text(poMessage ?? "เพิ่มข้อมูลเรียบร้อย"),
-            actions: <Widget>[
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
+          title: Text('คำเตือน'),
+          content: Text(poMessage ?? "เพิ่มข้อมูลเรียบร้อย"),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
 
         // Call sendGetRequestlineWMS after successfully generating lot
         await sendGetRequestlineWMS();
@@ -2265,7 +2259,8 @@ class _LotDialogState extends State<LotDialog> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
-                              color: Color.fromRGBO(204, 235, 252, 1.0), // Set your desired card color here
+                              color: Color.fromRGBO(204, 235, 252,
+                                  1.0), // Set your desired card color here
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Column(
@@ -2367,28 +2362,25 @@ class _LotDialogState extends State<LotDialog> {
               child: ElevatedButton(
                 child: Text('OK'),
                 onPressed: () async {
-                  String dialog = 'dialog';
+                  // String dialog = 'dialog';
                   await fetchPoStatus(widget.recSeq);
-                  if (poStatus == '1') {
+                  if (poreject == '1') {
                     Navigator.pop(context, {
                       'status': 'dialog',
                       'poReceiveNo': widget.poReceiveNo,
                       'recSeq': widget.recSeq,
-                      'ouCode': widget.ouCode
+                      'ouCode': widget.ouCode,
                     });
-                  } else if (poStatus == '0') {
+                    showCustomDialog(context, widget.poReceiveNo, widget.recSeq,
+                        widget.ouCode);
+                  } else if (poreject == '0') {
                     Navigator.pop(context, {
                       'status': 'pass',
                       'poReceiveNo': widget.poReceiveNo,
                       'recSeq': widget.recSeq,
-                      'ouCode': widget.ouCode
-                    });
+                      'ouCode': widget.ouCode,
+                    });    
                   }
-                  // if (poreject == '1') {
-                  //   showCustomDialog(context, widget.poReceiveNo,
-                  //       widget.recSeq, widget.ouCode);
-
-                  // }
                 },
               ),
             ),

@@ -384,38 +384,17 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
         ) ??
         false;
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
-      appBar: const CustomAppBar(),
-      body: Center(
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: const Color(0xFF17153B),
+    appBar: const CustomAppBar(title: 'Move Locator'),
+    body: Center(
+      child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Row(
               children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    minimumSize: const Size(10, 20),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    'ย้อนกลับ',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
                 const Spacer(),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -424,8 +403,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     minimumSize: const Size(10, 20),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   ),
                   onPressed: () {
                     chk_validateSave();
@@ -434,8 +412,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title:
-                                Text('การบันทึก และส่งข้อมูลเข้า ERP สมบูรณ์'),
+                            title: Text('การบันทึก และส่งข้อมูลเข้า ERP สมบูรณ์'),
                             content: Text('เลขที่เอกสาร : ${widget.po_doc_no}'),
                             actions: <Widget>[
                               TextButton(
@@ -445,8 +422,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => SSFGDT17_CREATE(
-                                          pWareCode:
-                                              widget.selectedwhCode ?? ''),
+                                        pWareCode: widget.selectedwhCode ?? ''),
                                     ),
                                   );
                                 },
@@ -486,8 +462,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
               width: 365,
               height: 75,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
                 margin: const EdgeInsets.only(bottom: 8.0),
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
@@ -514,8 +489,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
               width: 365,
               height: 75,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
                 margin: const EdgeInsets.only(bottom: 8.0),
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
@@ -542,8 +516,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
               width: 365,
               height: 75,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
                 margin: const EdgeInsets.only(bottom: 8.0),
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
@@ -566,7 +539,8 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
               ),
             ),
             const SizedBox(height: 16.0),
-            Expanded(
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.4,
               child: ListView.builder(
                 controller: _scrollController,
                 itemCount: (_displayLimit < items.length)
@@ -583,9 +557,8 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
                   }
                   final item = items[index];
                   return Card(
-                    color: Color.fromRGBO(204, 235, 252, 1.0),
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 16.0),
+                    color: const Color.fromRGBO(204, 235, 252, 1.0),
+                    margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                     elevation: 4.0,
                     child: ListTile(
                       contentPadding: const EdgeInsets.all(16.0),
@@ -612,7 +585,10 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
-    );
-  }
+    ),
+    bottomNavigationBar: BottomBar(),
+  );
+}
+
+
 }

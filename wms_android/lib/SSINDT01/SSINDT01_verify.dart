@@ -56,7 +56,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
 
     reportServer = 'http://172.16.0.82:8888/jri/report?&_repName=/$reportname'
         '&_repFormat=pdf&_dataSource=wms'
-        '&_outFilename=${widget.poReceiveNo}.pdf'
+        '&_outFilename=$erp_doc_no.pdf'
         '&_repLocale=en_US';
 
     P_RECEIVE_NO = "&P_RECEIVE_NO=${revNo ?? ''}";
@@ -81,7 +81,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
         '&LH_AP_NAME=$LH_AP_NAME'
         '&LH_CUR_CODE=$LH_CUR_CODE'
         '&LH_RATE=$LH_RATE'
-        '&P_RECEIVE_NO=RS-D02-6011001' //<<<<<<<<<<<<<<<<<< เปลี่ยนตรงนี้เป็น ${revNo ?? ''} <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        '&P_RECEIVE_NO=$erp_doc_no' //<<<<<<<<<<<<<<<<<< เปลี่ยนตรงนี้เป็น $erp_doc_no <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         '&P_ERP_OU_CODE=$P_ERP_OU_CODE'
         '&P_OU_CODE=$P_OU_CODE'
         '&P_LIN_ID=$P_LIN_ID'
@@ -214,6 +214,8 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
         LT_SIGN1 = data['LT_SIGN1'];
         LT_SIGN2 = data['LT_SIGN2'];
         LT_SIGN3 = data['LT_SIGN3'];
+_launchUrl();
+
       } else {
         print('Failed to load data, status code: ${response.statusCode}');
       }
@@ -290,27 +292,27 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
         children: [
           Row(
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: const Size(10, 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'ย้อนกลับ',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(12.0),
+                  //     ),
+                  //     minimumSize: const Size(10, 20),
+                  //     padding: const EdgeInsets.symmetric(
+                  //         horizontal: 10, vertical: 5),
+                  //   ),
+                  //   onPressed: () {
+                  //     Navigator.pop(context);
+                  //   },
+                  //   child: const Text(
+                  //     'ย้อนกลับ',
+                  //     style: TextStyle(
+                  //       color: Colors.white,
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  // ),
                   
                 ]),
                 const SizedBox(width: 8.0),
@@ -443,8 +445,8 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-              onPressed: () {
-                chk_sub();
+              onPressed: ()async {
+                await chk_sub();
                 // if (poStatus == '0') {
                 //   showCustomDialog(context);
                 // } else if (poStatus == '1') {
@@ -480,13 +482,13 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('ยืนยัน'),
-          content: Text('$erp_doc_no RS-D02-6011001'),
+          content: Text('$erp_doc_no'),
           actions: [
             TextButton(
               child: Text('ยกเลิก'),
               onPressed: () {
                 // Navigator.of(context).pop();
-                  Navigator.push(
+                  Navigator.pop(
                           context,
                           MaterialPageRoute(
                             builder: (context) => SSINDT01_MAIN(
@@ -507,9 +509,8 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                 
                 Navigator.of(context).pop();
                 fetchPDFData();
-                _launchUrl();
 
-                Navigator.push(
+                Navigator.pop(
                           context,
                           MaterialPageRoute(
                             builder: (context) => SSINDT01_MAIN(

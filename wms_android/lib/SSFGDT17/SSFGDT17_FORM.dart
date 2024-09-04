@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:wms_android/SSFGDT17/SSFGDT17_BARCODE.dart';
 import 'package:wms_android/custom_appbar.dart';
 // import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/main.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:http/http.dart' as http;
-import 'SSFGD17_BARCODE.dart';
 
 class SSFGDT17_FORM extends StatefulWidget {
   final String po_doc_no;
@@ -140,32 +140,32 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBar(title: 'Move Locator',),
       body: Column(
         children: [
           Row(
             children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  minimumSize: const Size(10, 20),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  'ย้อนกลับ',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              // ElevatedButton(
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(12.0),
+              //     ),
+              //     minimumSize: const Size(10, 20),
+              //     padding:
+              //         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              //   ),
+              //   onPressed: () {
+              //     Navigator.pop(context);
+              //   },
+              //   child: const Text(
+              //     'ย้อนกลับ',
+              //     style: TextStyle(
+              //       color: Colors.white,
+              //       fontWeight: FontWeight.bold,
+              //     ),
+              //   ),
+              // ),
               const Spacer(),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -177,8 +177,8 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 ),
-                onPressed: () {
-                  chk_validateSave();
+                onPressed: () async{
+                  await chk_validateSave();
                   if (poStatus == '0') {
                     Navigator.of(context).push(
                       MaterialPageRoute(

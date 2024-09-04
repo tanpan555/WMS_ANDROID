@@ -225,7 +225,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: const CustomAppBar(),
+      appBar: const CustomAppBar(title: 'Move Locator',),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
