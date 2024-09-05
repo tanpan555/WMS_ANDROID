@@ -1543,8 +1543,8 @@ await chk_grid();
                                                             fullscreenDialog:
                                                                 true,
                                                           ));
-
-                                                  if (result != null) {
+                                            print("Dialog result: $result");
+                                                  if (result == null) {
                                                     Timer(Duration(seconds: 1),
                                                         () {
                                                       print(
@@ -1554,11 +1554,7 @@ await chk_grid();
 
                                                     print(
                                                         "Dialog result: $result");
-                                                    log(result['status'] ?? '');
-                                                    log(result['poReceiveNo'] ??
-                                                        '');
-                                                    log(result['recSeq'] ?? '');
-                                                    log(result['ouCode'] ?? '');
+                                         
                                                   }
                                                 },
                                                 style: ElevatedButton.styleFrom(
@@ -1824,38 +1820,39 @@ class _LotDialogState extends State<LotDialog> {
   final DateFormat apiFormat = DateFormat("MM/dd/yyyy");
 
   void showDetailsLotDialog(BuildContext context, Map<String, dynamic> item,
-      String recSeq, String ou_code, Function refreshCallback) {
-    String recNo = widget.poReceiveNo;
-    String lotSeq = item['lot_seq']?.toString() ?? '';
-    String poSeq = item['po_seq']?.toString() ?? '';
+    String recSeq, String ou_code, Function refreshCallback) {
+  String recNo = widget.poReceiveNo;
+  String lotSeq = item['lot_seq']?.toString() ?? '';
+  String poSeq = item['po_seq']?.toString() ?? '';
 
-    TextEditingController lotQtyController = TextEditingController(
-      text: item['lot_qty']?.toString() ?? '',
-    );
-    TextEditingController mfgDateController = TextEditingController(
-      text: item['mfg_date'] != null
-          ? displayFormat.format(displayFormat.parse(item['mfg_date']))
-          : '',
-    );
-    TextEditingController lotSupplierController = TextEditingController(
-      text: item['lot_supplier']?.toString() ?? '',
-    );
+  TextEditingController lotQtyController = TextEditingController(
+    text: item['lot_qty']?.toString() ?? '',
+  );
+  TextEditingController mfgDateController = TextEditingController(
+    text: item['mfg_date'] != null
+        ? displayFormat.format(displayFormat.parse(item['mfg_date']))
+        : '',
+  );
+  TextEditingController lotSupplierController = TextEditingController(
+    text: item['lot_supplier']?.toString() ?? '',
+  );
 
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: false,
-      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      barrierColor: Colors.black54, // Background color with some transparency
-      transitionDuration: const Duration(milliseconds: 200),
-      pageBuilder: (BuildContext context, Animation<double> animation,
-          Animation<double> secondaryAnimation) {
-        return Center(
-          child: Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: Container(
-              padding: EdgeInsets.all(16.0),
+  showGeneralDialog(
+    context: context,
+    barrierDismissible: false,
+    barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+    barrierColor: Colors.black54, // Background color with some transparency
+    transitionDuration: const Duration(milliseconds: 200),
+    pageBuilder: (BuildContext context, Animation<double> animation,
+        Animation<double> secondaryAnimation) {
+      return Center(
+        child: Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -1938,23 +1935,25 @@ class _LotDialogState extends State<LotDialog> {
               ),
             ),
           ),
-        );
-      },
-      transitionBuilder: (BuildContext context, Animation<double> animation,
-          Animation<double> secondaryAnimation, Widget child) {
-        return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0.0, 1.0),
-            end: Offset.zero,
-          ).animate(animation),
-          child: FadeTransition(
-            opacity: animation,
-            child: child,
-          ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+    transitionBuilder: (BuildContext context, Animation<double> animation,
+        Animation<double> secondaryAnimation, Widget child) {
+      return SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(0.0, 1.0),
+          end: Offset.zero,
+        ).animate(animation),
+        child: FadeTransition(
+          opacity: animation,
+          child: child,
+        ),
+      );
+    },
+  );
+}
+
 
   Widget _buildTextField({
     required TextEditingController controller,
@@ -2199,6 +2198,12 @@ class _LotDialogState extends State<LotDialog> {
                 ],
               ),
               onPressed: () async {
+                    Navigator.pop(context, {
+                      'status': 'dialog',
+                      'poReceiveNo': widget.poReceiveNo,
+                      'recSeq': widget.recSeq,
+                      'ouCode': widget.ouCode,
+                    });
                 Navigator.of(context).pop();
                 await updateOkLot(poReceiveNo, recSeq, ouCode);
                 await sendGetRequestlineWMS();
@@ -2213,12 +2218,13 @@ class _LotDialogState extends State<LotDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'LOT Details'),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Color(0xFF17153B),
+    appBar: CustomAppBar(title: 'LOT Details'),
+    body: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             TextField(
@@ -2281,76 +2287,69 @@ class _LotDialogState extends State<LotDialog> {
               ],
             ),
             SizedBox(height: 16),
-            Expanded(
-              child: dataLotList.isNotEmpty
-                  ? SingleChildScrollView(
-                      child: Column(
-                        children: dataLotList.map((item) {
-                          return SizedBox(
-                            width: 300.0, // Set your desired width here
-                            child: Card(
-                              elevation: 4.0,
-                              margin: EdgeInsets.symmetric(vertical: 8.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              color: Color.fromRGBO(204, 235, 252,
-                                  1.0), // Set your desired card color here
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                        'Seq: ${item['lot_seq_nb']?.toString() ?? ''}'),
-                                    SizedBox(height: 8),
-                                    Text(
-                                        'Lot QTY: ${item['lot_qty']?.toString() ?? ''}'),
-                                    SizedBox(height: 8),
-                                    Text(
-                                        'MFG Date: ${item['mfg_date']?.toString() ?? ''}'),
-                                    SizedBox(height: 8),
-                                    Text(
-                                        'Lot ผู้ผลิต: ${item['lot_supplier']?.toString() ?? ''}'),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      'Product No: ${item['lot_product_no']?.toString() ?? ''}',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(height: 16),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        showDetailsLotDialog(
-                                            context,
-                                            item,
-                                            widget.recSeq,
-                                            widget.ouCode, () async {
-                                          await getLotList(widget.poReceiveNo,
-                                              widget.recSeq, widget.ouCode);
-                                          setState(() {});
-                                        });
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.purple,
-                                      ),
-                                      child: Text('EDIT',
-                                          style:
-                                              TextStyle(color: Colors.white)),
-                                    ),
-                                  ],
+            dataLotList.isNotEmpty
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: dataLotList.length,
+                    itemBuilder: (context, index) {
+                      var item = dataLotList[index];
+                      return SizedBox(
+                        width: 300.0,
+                        child: Card(
+                          elevation: 4.0,
+                          margin: EdgeInsets.symmetric(vertical: 8.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          color: Color.fromRGBO(204, 235, 252, 1.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Seq: ${item['lot_seq_nb']?.toString() ?? ''}'),
+                                SizedBox(height: 8),
+                                Text('Lot QTY: ${item['lot_qty']?.toString() ?? ''}'),
+                                SizedBox(height: 8),
+                                Text('MFG Date: ${item['mfg_date']?.toString() ?? ''}'),
+                                SizedBox(height: 8),
+                                Text('Lot ผู้ผลิต: ${item['lot_supplier']?.toString() ?? ''}'),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Product No: ${item['lot_product_no']?.toString() ?? ''}',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                              ),
+                                SizedBox(height: 16),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    showDetailsLotDialog(
+                                        context,
+                                        item,
+                                        widget.recSeq,
+                                        widget.ouCode, () async {
+                                      await getLotList(widget.poReceiveNo,
+                                          widget.recSeq, widget.ouCode);
+                                      setState(() {});
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.purple,
+                                  ),
+                                  child: Text('EDIT',
+                                      style: TextStyle(color: Colors.white)),
+                                ),
+                              ],
                             ),
-                          );
-                        }).toList(),
-                      ),
-                    )
-                  : Center(
-                      child: Text('No LOT details available',
-                          style: TextStyle(color: Colors.white)),
-                    ),
-            ),
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                : Center(
+                    child: Text('No LOT details available',
+                        style: TextStyle(color: Colors.white)),
+                  ),
             SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2397,15 +2396,8 @@ class _LotDialogState extends State<LotDialog> {
               child: ElevatedButton(
                 child: Text('OK'),
                 onPressed: () async {
-                  // String dialog = 'dialog';
                   await fetchPoStatus(widget.recSeq);
                   if (poreject == '1') {
-                    Navigator.pop(context, {
-                      'status': 'dialog',
-                      'poReceiveNo': widget.poReceiveNo,
-                      'recSeq': widget.recSeq,
-                      'ouCode': widget.ouCode,
-                    });
                     showCustomDialog(context, widget.poReceiveNo, widget.recSeq,
                         widget.ouCode);
                   } else if (poreject == '0') {
@@ -2422,6 +2414,8 @@ class _LotDialogState extends State<LotDialog> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
