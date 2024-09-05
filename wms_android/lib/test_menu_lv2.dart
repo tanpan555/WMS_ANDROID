@@ -11,6 +11,7 @@ import 'SSINDT01/SSINDT01_main.dart';
 import 'SSFGDT04/SSFGDT04_main.dart';
 import 'SSFGDT12/SSFGDT12_main.dart';
 import 'SSFGDT09L/SSFGDT09L_main.dart';
+import 'SSFGDT04/SSFGDT04_main.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_WARE.dart';
 import 'SSFGDT31/SSFGDT31_MAIN.dart';
 import 'Global_Parameter.dart' as gb;
@@ -87,7 +88,8 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
         return SSFGDT01_WARE(
             p_attr1: widget.p_attr1, p_ou_code: widget.p_ou_code);
       case 'SSFGDT04_MAIN Raw Material':
-        return SSFGDT04_MAIN();
+        return SSFGDT04_MAIN(
+            p_attr1: widget.p_attr1, p_ou_code: widget.p_ou_code);
       case 'SSFGDT17_MAIN Raw Material':
         return SSFGDT17_WARE(
           p_attr1: widget.p_attr1,

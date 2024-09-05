@@ -1,0 +1,63 @@
+Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
+    Map<String, Color> statusColors = {
+      'ระหว่างบันทึก': Colors.orange, 
+      'ยืนยันการรับ': Colors.blue,
+      'ยกเลิก': Colors.green,
+    };
+
+    Color statusColor = statusColors[item['card_status_desc']] ?? Colors.grey;
+
+    TextStyle statusStyle = TextStyle(
+      color: statusColor,
+      fontWeight: FontWeight.bold,
+    );
+
+    BoxDecoration statusDecoration = BoxDecoration(
+      border: Border.all(color: statusColor, width: 2.0),
+      borderRadius: BorderRadius.circular(4.0),
+    );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+      child: Card(
+        color: const Color.fromRGBO(204, 235, 252, 1.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        elevation: 5,
+        child: ListTile(
+          title: Text(item['ap_name'] ?? 'No Namer'),
+          subtitle: Row(
+            children: [
+              Expanded(
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '${item['po_no'] ?? ''} '
+                            '${item['item_stype_desc'] ?? ''}\n',
+                        style: TextStyle(color: Colors.black, fontSize: 12),
+                      ),
+                      if (item['card_status_desc'] != null)
+                        WidgetSpan(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 4.0, vertical: 2.0),
+                            decoration: statusDecoration,
+                            child: Text(
+                              '${item['card_status_desc'] ?? 'No Status'}',
+                              style: statusStyle,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          // onTap: {},
+        ),
+      ),
+    );
+  }
