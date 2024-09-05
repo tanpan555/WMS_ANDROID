@@ -43,7 +43,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     print('poReceiveNo: ${widget.poReceiveNo}');
     print('poPONO: ${widget.poPONO}');
     print('********************************************');
-    // sendGetRequestlineWMS();
+    sendGetRequestlineWMS();
   }
 
   String? poStatus;
@@ -124,7 +124,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
         setState(() {
           poStatus = responseData['po_status'];
           poMessage = responseData['po_message'];
-          sendGetRequestlineWMS();
+          // sendGetRequestlineWMS();
         });
         print('Success: $responseData');
       } else {
@@ -1259,7 +1259,11 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 5),
                     ),
-                    onPressed: sendPostRequestlineWMS,
+                    onPressed: () async{
+                      await sendPostRequestlineWMS();
+                      await sendGetRequestlineWMS();
+                      },
+                    // onPressed : sendPostRequestlineWMS,
                     child: const Text(
                       'ดึง PO',
                       style: TextStyle(
