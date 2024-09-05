@@ -1676,7 +1676,7 @@ class _LotDialogState extends State<LotDialog> {
 
         AlertDialog(
           title: Text('คำเตือน'),
-          content: Text(poMessage ?? "เพิ่มข้อมูลเรียบร้อย"),
+          content: Text(poMessage ?? ''),
           actions: <Widget>[
             TextButton(
               child: Text('OK'),
@@ -2224,6 +2224,26 @@ class _LotDialogState extends State<LotDialog> {
 
   final NumberFormat numberFormat = NumberFormat("#,##0");
 
+   void _showAlertDialogGenLot(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('คำเตือน'),
+          content: Text('$poMessage'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
 Widget build(BuildContext context) {
   return Scaffold(
@@ -2393,6 +2413,11 @@ Widget build(BuildContext context) {
                             widget.recSeq,
                             lotCountController.text,
                             widget.ouCode);
+                            print(poStatus);
+                            print(poMessage);
+                            if(poStatus == '1'){
+                              _showAlertDialogGenLot(context);
+                            }
                         await getLotList(
                             widget.poReceiveNo, widget.recSeq, widget.ouCode);
                         setState(() {});
