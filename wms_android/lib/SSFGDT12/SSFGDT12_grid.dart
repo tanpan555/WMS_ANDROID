@@ -22,7 +22,6 @@ class Ssfgdt12Grid extends StatefulWidget {
   final String docDate;
   final String countStaff;
   final String p_attr1;
-  final String statuForCHK;
   Ssfgdt12Grid({
     Key? key,
     required this.nbCountStaff,
@@ -36,7 +35,6 @@ class Ssfgdt12Grid extends StatefulWidget {
     required this.docDate,
     required this.countStaff,
     required this.p_attr1,
-    required this.statuForCHK,
   }) : super(key: key);
   @override
   _Ssfgdt12GridState createState() => _Ssfgdt12GridState();
@@ -61,7 +59,6 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   String messageCancel = '';
   String vRetCancel = '';
   String vChkStatusCancel = '';
-  String chkStatus = '';
 
   @override
   void dispose() {
@@ -104,8 +101,6 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         setState(() {
           dataCard =
               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-
-          String chkStatus = widget.status;
         });
         print('dataCard : $dataCard');
       } else {
@@ -306,31 +301,29 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (widget.statuForCHK != 'X') ...[
-                  ElevatedButton(
-                    onPressed: () {
-                      showDialogconfirmCancel(
-                        widget.docNo,
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: const Size(10, 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
+                ElevatedButton(
+                  onPressed: () {
+                    showDialogconfirmCancel(
+                      widget.docNo,
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
-                    child: const Text(
-                      'ยกเลิก',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    minimumSize: const Size(10, 20),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  ),
+                  child: const Text(
+                    'ยกเลิก',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
+                ),
                 ElevatedButton(
                   onPressed: () {
                     _navigateToPage(
@@ -367,31 +360,27 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     ),
                   ),
                 ),
-                if (widget.statuForCHK == 'X' ||
-                    widget.statuForCHK == 'N' ||
-                    widget.statuForCHK == 'T') ...[
-                  ElevatedButton(
-                    onPressed: () {
-                      checkData();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: const Size(10, 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
+                ElevatedButton(
+                  onPressed: () {
+                    checkData();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
-                    child: const Text(
-                      'ยืนยัน',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    minimumSize: const Size(10, 20),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  ),
+                  child: const Text(
+                    'ยืนยัน',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
+                ),
               ],
             ),
             const SizedBox(height: 10),

@@ -645,26 +645,24 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                     ),
                   ),
                   const Spacer(),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: const Size(10, 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
+                  Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: IconButton(
+                    iconSize: 20.0,
+                    icon: Image.asset(
+                      'assets/images/right.png',
+                      width: 20.0,
+                      height: 20.0,
                     ),
                     onPressed: () {
-                      fetchPoStatus();
+                        fetchPoStatus();
                       _updateForm();
                     },
-                    child: const Icon(
-                      Icons.arrow_forward,
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      size: 24,
-                    ),
                   ),
+                ),
                 ],
               ),
               const SizedBox(height: 16.0),

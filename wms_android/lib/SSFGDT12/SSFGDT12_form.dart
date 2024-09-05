@@ -14,7 +14,6 @@ class Ssfgdt12Form extends StatefulWidget {
   final String wareCode; // ware code ที่มาจาก API แต่เป็น null
   final String pWareCode; // ware code ที่มาจากเลือ lov
   final String p_attr1;
-  // final String status;
   Ssfgdt12Form({
     Key? key,
     required this.docNo,
@@ -23,7 +22,6 @@ class Ssfgdt12Form extends StatefulWidget {
     required this.wareCode,
     required this.pWareCode,
     required this.p_attr1,
-    // required this.status,
   }) : super(key: key);
   @override
   _Ssfgdt12FormState createState() => _Ssfgdt12FormState();
@@ -46,7 +44,6 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   String updBy1 = '';
   String nbCountDate = '';
   String docNo = '';
-  String statuForCHK = '';
 
   final FocusNode _focusNode = FocusNode();
   final TextEditingController staffCodeController = TextEditingController();
@@ -127,7 +124,6 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
             updBy1 = item['upd_by1'] ?? '';
             nbCountDate = item['nb_count_date'] ?? '';
             docNo = widget.docNo;
-            statuForCHK = item['statusforchk'];
 
             staffCodeController.text = staffCode;
             docDateController.text = docDate;
@@ -248,7 +244,6 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                             docDate: docDate,
                             countStaff: countStaff,
                             p_attr1: widget.p_attr1,
-                            statuForCHK: statuForCHK,
                           ),
                         ),
                       );

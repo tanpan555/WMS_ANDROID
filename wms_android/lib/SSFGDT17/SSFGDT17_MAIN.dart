@@ -319,7 +319,7 @@ String? doc_out;
                             selectedwhCode: '',
                             selectedLocCode: '',
                             whOUTCode: '',
-                            LocOUTCode: ''),
+                            LocOUTCode: '', pWareCode: '',),
                       ),
                     );
             }

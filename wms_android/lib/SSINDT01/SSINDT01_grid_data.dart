@@ -36,7 +36,6 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   List<Map<String, dynamic>> dataList = [];
   List<Map<String, dynamic>> dataLotList = [];
 
-
   @override
   void initState() {
     super.initState();
@@ -1289,20 +1288,22 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                     ),
                   ),
                   const SizedBox(width: 8.0),
-                 
+
                   const Spacer(),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: const Size(10, 10),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
+                  Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: IconButton(
+                    iconSize: 20.0,
+                    icon: Image.asset(
+                      'assets/images/right.png',
+                      width: 20.0,
+                      height: 20.0,
                     ),
                     onPressed: () async {
-                      await chk_grid();
+await chk_grid();
                       if (poStatusGrid == '0') {
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -1326,28 +1327,29 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                         // );
 
                         showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('คำเตือน'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('${poMessageGrid ?? 'No message available'}'),
-              ],
-            ),
-            actions: [
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('คำเตือน'),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      '${poMessageGrid ?? 'No message available'}'),
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
 
                         AlertDialog(
                           title: Text('คำเตือน'),
@@ -1363,21 +1365,17 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                         );
                       }
                     },
-                    child: const Icon(
-                      Icons.arrow_forward,
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      size: 24,
-                    ),
                   ),
+                ),
+                
                 ],
               ),
             ),
+            const SizedBox(height: 8.0),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              margin: const EdgeInsets.only(
-                  bottom: 8.0),
-              color: const Color.fromARGB(255, 255, 242,
-                  204),
+              margin: const EdgeInsets.only(bottom: 8.0),
+              color: const Color.fromARGB(255, 255, 242, 204),
               child: Center(
                 child: Text(
                   '${widget.poPONO}',
@@ -1391,10 +1389,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              margin: const EdgeInsets.only(
-                  bottom: 8.0),
-              color: const Color.fromARGB(255, 255, 255,
-                  255),
+              margin: const EdgeInsets.only(bottom: 8.0),
+              color: const Color.fromARGB(255, 255, 255, 255),
               child: Center(
                 child: Text(
                   '${widget.poReceiveNo}',
@@ -1406,167 +1402,206 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                 ),
               ),
             ),
-            // const SizedBox(height: 16.0), 
-           dataList.isEmpty
-    ? Center(child: Text('No data available',style: TextStyle(color: Colors.white),))
-    : Expanded(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            await sendGetRequestlineWMS();
-          },
-          child: ListView.builder(
-            itemCount: dataList.length,
-            itemBuilder: (context, index) {
-              final data = dataList[index];
-              final rowColor = index.isEven ? Colors.white : Colors.grey[100];
+            // const SizedBox(height: 16.0),
+            dataList.isEmpty
+                ? Center(
+                    child: Text(
+                    'No data available',
+                    style: TextStyle(color: Colors.white),
+                  ))
+                : Expanded(
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        await sendGetRequestlineWMS();
+                      },
+                      child: ListView.builder(
+                        itemCount: dataList.length,
+                        itemBuilder: (context, index) {
+                          final data = dataList[index];
+                          final rowColor =
+                              index.isEven ? Colors.white : Colors.grey[100];
 
-              return InkWell(
-                onTap: () {
-                  _showDetailsDialog(data);
-                },
-                child: Card(
-                  elevation: 5,
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  color: Color.fromRGBO(204, 235, 252, 1.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.white,
-                          Colors.blueGrey[50]!,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 2,
-                          blurRadius: 6,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Item: ${data['item']?.toString() ?? ''}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Colors.blueGrey[800],
+                          return InkWell(
+                            onTap: () {
+                              _showDetailsDialog(data);
+                            },
+                            child: Card(
+                              elevation: 5,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 12),
-                        Divider(color: Colors.grey[300]),
-                        SizedBox(height: 12),
-                        _buildInfoRow2({
-                          'จำนวนรับ :': data['receive_qty']?.toString() ?? '-',
-                          'ค้างรับ :': data['pending_qty']?.toString() ?? '-',
-                        }),
-                        _buildInfoRow2({
-                          'จำนวนรวม :': data['lot_total_nb']?.toString() ?? '-',
-                          'UOM :': data['UOM']?.toString() ?? '-',
-                        }),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                '    Locator : ${data['locator_det']?.toString() ?? 'ไม่มีข้อมูล'}',
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            ),
-                            FutureBuilder<String?>(
-                              future: fetchvResultStatus(data['item']?.toString() ?? ''),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return CircularProgressIndicator();
-                                } else if (snapshot.hasError) {
-                                  return Text('Error');
-                                } else if (snapshot.data == '1') {
-                                  return ElevatedButton(
-                                    onPressed: () async {
-                                      final result = await Navigator.push<Map<String, String>>(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => LotDialog(
-                                            item: data['item']?.toString() ?? '',
-                                            itemDesc: data['item_desc']?.toString() ?? '',
-                                            ouCode: data['ou_code']?.toString() ?? '',
-                                            recSeq: data['rec_seq']?.toString() ?? '',
-                                            poReceiveNo: widget.poReceiveNo,
-                                            poPONO: widget.poPONO ?? '',
+                              color: Color.fromRGBO(204, 235, 252, 1.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.white,
+                                      Colors.blueGrey[50]!,
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      spreadRadius: 2,
+                                      blurRadius: 6,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Item: ${data['item']?.toString() ?? ''}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                            color: Colors.blueGrey[800],
                                           ),
-                                          fullscreenDialog: true,
-                                        )
-                                      );
-
-                                      if (result != null) {
-                                        Timer(Duration(seconds: 1), () {
-  print('************************************');
-    sendGetRequestlineWMS();
-});
-
-                                        print("Dialog result: $result");
-                                        log(result['status'] ?? '');
-                                        log(result['poReceiveNo'] ?? '');
-                                        log(result['recSeq'] ?? '');
-                                        log(result['ouCode'] ?? '');
-                                      }
-
-                            
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.purple,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      padding: EdgeInsets.symmetric(horizontal: 20),
+                                        ),
+                                      ],
                                     ),
-                                    child: Text(
-                                      'LOT',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    SizedBox(height: 12),
+                                    Divider(color: Colors.grey[300]),
+                                    SizedBox(height: 12),
+                                    _buildInfoRow2({
+                                      'จำนวนรับ :':
+                                          data['receive_qty']?.toString() ??
+                                              '-',
+                                      'ค้างรับ :':
+                                          data['pending_qty']?.toString() ??
+                                              '-',
+                                    }),
+                                    _buildInfoRow2({
+                                      'จำนวนรวม :':
+                                          data['lot_total_nb']?.toString() ??
+                                              '-',
+                                      'UOM :': data['UOM']?.toString() ?? '-',
+                                    }),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            '    Locator : ${data['locator_det']?.toString() ?? 'ไม่มีข้อมูล'}',
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                        ),
+                                        FutureBuilder<String?>(
+                                          future: fetchvResultStatus(
+                                              data['item']?.toString() ?? ''),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return CircularProgressIndicator();
+                                            } else if (snapshot.hasError) {
+                                              return Text('Error');
+                                            } else if (snapshot.data == '1') {
+                                              return ElevatedButton(
+                                                onPressed: () async {
+                                                  final result =
+                                                      await Navigator.push<
+                                                              Map<String,
+                                                                  String>>(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    LotDialog(
+                                                              item: data['item']
+                                                                      ?.toString() ??
+                                                                  '',
+                                                              itemDesc: data[
+                                                                          'item_desc']
+                                                                      ?.toString() ??
+                                                                  '',
+                                                              ouCode: data[
+                                                                          'ou_code']
+                                                                      ?.toString() ??
+                                                                  '',
+                                                              recSeq: data[
+                                                                          'rec_seq']
+                                                                      ?.toString() ??
+                                                                  '',
+                                                              poReceiveNo: widget
+                                                                  .poReceiveNo,
+                                                              poPONO: widget
+                                                                      .poPONO ??
+                                                                  '',
+                                                            ),
+                                                            fullscreenDialog:
+                                                                true,
+                                                          ));
+
+                                                  if (result != null) {
+                                                    Timer(Duration(seconds: 1),
+                                                        () {
+                                                      print(
+                                                          '************************************');
+                                                      sendGetRequestlineWMS();
+                                                    });
+
+                                                    print(
+                                                        "Dialog result: $result");
+                                                    log(result['status'] ?? '');
+                                                    log(result['poReceiveNo'] ??
+                                                        '');
+                                                    log(result['recSeq'] ?? '');
+                                                    log(result['ouCode'] ?? '');
+                                                  }
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.purple,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                  ),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 20),
+                                                ),
+                                                child: Text(
+                                                  'LOT',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              );
+                                            } else {
+                                              return Container();
+                                            }
+                                          },
+                                        ),
+                                      ],
                                     ),
-                                  );
-                                } else {
-                                  return Container();
-                                }
-                              },
+                                    SizedBox(height: 12),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ],
-                        ),
-                        SizedBox(height: 12),
-                      ],
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-  
           ],
         ),
       ),
       bottomNavigationBar: BottomBar(),
     );
-    
   }
 }
 
@@ -2379,7 +2414,7 @@ class _LotDialogState extends State<LotDialog> {
                       'poReceiveNo': widget.poReceiveNo,
                       'recSeq': widget.recSeq,
                       'ouCode': widget.ouCode,
-                    });    
+                    });
                   }
                 },
               ),

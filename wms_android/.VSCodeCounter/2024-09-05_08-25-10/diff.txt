@@ -1,0 +1,44 @@
+Date : 2024-09-05 08:25:10
+Directory : c:\Users\h\Downloads\App\wms_android
+Total : 15 files,  -2 codes, 44 comments, 6 blanks, all 48 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Dart     |         15 |         -2 |         44 |          6 |         48 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                      | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                         |         15 |         -2 |         44 |          6 |         48 |
+| lib                                                                       |         15 |         -2 |         44 |          6 |         48 |
+| lib (Files)                                                               |          1 |          1 |          0 |          0 |          1 |
+| lib\SSFGDT12                                                              |          2 |        -15 |         10 |         -1 |         -6 |
+| lib\SSFGDT17                                                              |          7 |         -2 |         34 |          0 |         32 |
+| lib\SSINDT01                                                              |          5 |         14 |          0 |          7 |         21 |
++---------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                  | language | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| c:\Users\h\Downloads\App\wms_android\lib\Global_Parameter.dart            | Dart     |          1 |          0 |          0 |          1 |
+| c:\Users\h\Downloads\App\wms_android\lib\SSFGDT12\SSFGDT12_grid.dart      | Dart     |         -2 |         -4 |         -1 |         -7 |
+| c:\Users\h\Downloads\App\wms_android\lib\SSFGDT12\SSFGDT12_search.dart    | Dart     |        -13 |         14 |          0 |          1 |
+| c:\Users\h\Downloads\App\wms_android\lib\SSFGDT17\SSFGD17T_WARE.dart      | Dart     |        168 |         24 |         13 |        205 |
+| c:\Users\h\Downloads\App\wms_android\lib\SSFGDT17\SSFGD17_BARCODE.dart    | Dart     |       -413 |         -1 |        -35 |       -449 |
+| c:\Users\h\Downloads\App\wms_android\lib\SSFGDT17\SSFGD17_VERIFY.dart     | Dart     |        -25 |          0 |          1 |        -24 |
+| c:\Users\h\Downloads\App\wms_android\lib\SSFGDT17\SSFGD17_WARE.dart       | Dart     |       -168 |        -24 |        -13 |       -205 |
+| c:\Users\h\Downloads\App\wms_android\lib\SSFGDT17\SSFGDT17_BARCODE.dart   | Dart     |        398 |          1 |         35 |        434 |
+| c:\Users\h\Downloads\App\wms_android\lib\SSFGDT17\SSFGDT17_FORM.dart      | Dart     |        -21 |         21 |          0 |          0 |
+| c:\Users\h\Downloads\App\wms_android\lib\SSFGDT17\SSFGDT17_MAIN.dart      | Dart     |         59 |         13 |         -1 |         71 |
+| c:\Users\h\Downloads\App\wms_android\lib\SSINDT01\SSINDT01_WARE.dart      | Dart     |          4 |          0 |          2 |          6 |
+| c:\Users\h\Downloads\App\wms_android\lib\SSINDT01\SSINDT01_grid_data.dart | Dart     |          4 |          0 |          2 |          6 |
+| c:\Users\h\Downloads\App\wms_android\lib\SSINDT01\SSINDT01_main.dart      | Dart     |          3 |          0 |          1 |          4 |
+| c:\Users\h\Downloads\App\wms_android\lib\SSINDT01\SSINDT01_search.dart    | Dart     |          3 |          0 |          1 |          4 |
+| c:\Users\h\Downloads\App\wms_android\lib\SSINDT01\SSINDT01_verify.dart    | Dart     |          0 |          0 |          1 |          1 |
+| Total                                                                     |          |         -2 |         44 |          6 |         48 |
++---------------------------------------------------------------------------+----------+------------+------------+------------+------------+

@@ -20,6 +20,9 @@ class SSFGDT17_BARCODE extends StatefulWidget {
   final String? whOUTCode;
   final String? LocOUTCode;
 
+  final String? pWareCode;
+  final String? pWareName;
+
   SSFGDT17_BARCODE(
       {required this.po_doc_no,
       this.po_doc_type,
@@ -27,7 +30,7 @@ class SSFGDT17_BARCODE extends StatefulWidget {
       this.selectedwhCode,
       this.selectedLocCode,
       this.whOUTCode,
-      this.LocOUTCode});
+      this.LocOUTCode, this.pWareCode, this.pWareName});
 
   @override
   _SSFGDT17_BARCODEState createState() => _SSFGDT17_BARCODEState();
@@ -61,6 +64,9 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   void initState() {
     super.initState();
     currentSessionID = SessionManager().sessionID;
+    print('BARCODE  =============================');
+    print('pWareCode: ${widget.pWareCode}');
+    print('pWareName: ${widget.pWareName}');
     print(widget.LocCode);
     if (widget.LocCode == 'null') {
       LOCATOR_FROM.text = '';
@@ -299,40 +305,42 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
       appBar: const CustomAppBar(title: 'Move Locator',),
       body: Column(
         children: [
+          const SizedBox(height: 8.0),
           Row(
             children: [
                   const Spacer(),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: const Size(10, 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
+                  Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: IconButton(
+                    iconSize: 20.0,
+                    icon: Image.asset(
+                      'assets/images/right.png',
+                      width: 20.0,
+                      height: 20.0,
                     ),
-                    onPressed: () 
-                    async 
-                    {
-                    await chk_validateSave();
+                    onPressed: () async {
+                        await chk_validateSave();
                   if (poStatus == '0') {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => SSFGD17_VERIFY(
                             po_doc_no: widget.po_doc_no,
                             po_doc_type: widget.po_doc_type,
-                            selectedwhCode: widget.selectedwhCode),
+                            selectedwhCode: widget.selectedwhCode,
+                            pWareCode: widget.pWareCode,
+                            pWareName: widget.pWareName,
+                            ),
                       ),
                     );
                   }
                     },
-                    child: const Icon(
-                      Icons.arrow_forward,
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      size: 24,
-                    ),
                   ),
+                ),
+                const SizedBox(width: 8.0),
+                
             ],
           ),
           Expanded(

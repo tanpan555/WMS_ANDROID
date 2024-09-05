@@ -487,20 +487,25 @@ _launchUrl();
             TextButton(
               child: Text('ยกเลิก'),
               onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
                 // Navigator.of(context).pop();
-                  Navigator.pop(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SSINDT01_MAIN(
-                               pWareCode: widget.pWareCode,
-          pWareName: widget.pWareName,
-          p_ou_code: widget.p_ou_code,
-           selectedValue: 'ทั้งหมด', // Updated parameter name
-          apCode: 'ทั้งหมด',
-          documentNumber: '',
-                            ),
-                          ),
-                        );
+          //         Navigator.push(
+          //                 context,
+          //                 MaterialPageRoute(
+          //                   builder: (context) => SSINDT01_MAIN(
+          //                      pWareCode: widget.pWareCode,
+          // pWareName: widget.pWareName,
+          // p_ou_code: widget.p_ou_code,
+          //  selectedValue: 'ทั้งหมด', // Updated parameter name
+          // apCode: 'ทั้งหมด',
+          // documentNumber: '',
+          //                   ),
+          //                 ),
+          //               );
               },
             ),
             TextButton(
@@ -508,21 +513,26 @@ _launchUrl();
               onPressed: () {
                 
                 Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
                 fetchPDFData();
 
-                Navigator.pop(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SSINDT01_MAIN(
-                             pWareCode: widget.pWareCode,
-          pWareName: widget.pWareName,
-          p_ou_code: widget.p_ou_code,
-         selectedValue: 'ทั้งหมด',
-          apCode: 'ทั้งหมด',
-          documentNumber: '',
-                            ),
-                          ),
-                        );
+        //         Navigator.pop(
+        //                   context,
+        //                   MaterialPageRoute(
+        //                     builder: (context) => SSINDT01_MAIN(
+        //                      pWareCode: widget.pWareCode,
+        //   pWareName: widget.pWareName,
+        //   p_ou_code: widget.p_ou_code,
+        //  selectedValue: 'ทั้งหมด',
+        //   apCode: 'ทั้งหมด',
+        //   documentNumber: '',
+        //                     ),
+        //                   ),
+        //                 );
               },
             ),
           ],

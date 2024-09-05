@@ -22,6 +22,8 @@ class SSFGDT17_MENU extends StatefulWidget {
   _SSFGDT17_MENUState createState() => _SSFGDT17_MENUState();
 }
 
+
+
 class _SSFGDT17_MENUState extends State<SSFGDT17_MENU> {
   bool isLoading = false;
   String errorMessage = '';
@@ -31,6 +33,15 @@ class _SSFGDT17_MENUState extends State<SSFGDT17_MENU> {
   final Map<String, String> item = {
     'card_value': 'ค้นหาเอกสาร',
   };
+
+  
+  @override
+  void initState() {
+    super.initState();
+  print('pWareCode: ${widget.pWareCode}');
+  print('pWareName: ${widget.pWareName}');
+  print('p_ou_code: ${widget.p_ou_code}');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +91,9 @@ class _SSFGDT17_MENUState extends State<SSFGDT17_MENU> {
                   Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SSFGDT17_SEARCH(pWareCode: widget.pWareCode),
+                                  builder: (context) => SSFGDT17_SEARCH(
+                                    pWareCode: widget.pWareCode,
+                                    ),
                                 ),
                               );
                 },
@@ -101,7 +114,10 @@ class _SSFGDT17_MENUState extends State<SSFGDT17_MENU> {
                      Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SSFGDT17_CREATE(pWareCode: widget.pWareCode),
+                                  builder: (context) => SSFGDT17_CREATE(
+                                    pWareCode: widget.pWareCode,
+                                    pWareName: widget.pWareName,
+                                    ),
                                 ),
                               );
                 },

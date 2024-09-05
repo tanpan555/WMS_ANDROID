@@ -12,7 +12,8 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 class SSFGDT17_CREATE extends StatefulWidget {
   final String pWareCode;
-  const SSFGDT17_CREATE({Key? key, required this.pWareCode,}) : super(key: key);
+  final String? pWareName;
+  const SSFGDT17_CREATE({Key? key, required this.pWareCode, required this.pWareName,}) : super(key: key);
 
   @override
   _SSFGDT17_CREATEState createState() => _SSFGDT17_CREATEState();
@@ -29,6 +30,9 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     super.initState();
     currentSessionID = SessionManager().sessionID;
     selectedwhCode = widget.pWareCode;
+    print('CREATE  =============================');
+    print('pWareCode: ${widget.pWareCode}');
+    print('pWareName: ${widget.pWareName}');
     print(selectedwhCode);
     fetchwhCodes();
     fetchwhOUTCodes();
@@ -259,13 +263,13 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                   onStepTapped: (index) {
                     setState(() {
                       _currentStep = index;
-                      if (_currentStep == 2) {
+                      if (_currentStep == 1) {
                         fetchwhOUTCodes();
                       }
                     });
                   },
                   onStepContinue: () async {
-                    if (_currentStep < 3) {
+                    if (_currentStep < 2) {
                       setState(() {
                         _currentStep += 1;
                       });
@@ -292,7 +296,9 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                                 selectedwhCode: selectedwhCode,
                                 selectedLocCode: selectedLocCode,
                                 whOUTCode: whOUTCode,
-                                LocOUTCode: LocOUTCode),
+                                LocOUTCode: LocOUTCode,
+                                pWareCode: widget.pWareCode,
+                                pWareName: widget.pWareName,),
                           ),
                         );
                       }
@@ -313,52 +319,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                     }
                   },
                   steps: [
-                    Step(
-                      title: Text(
-                        'เลือกคลัง',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      content: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(height: 10),
-                          DropdownSearch<String>(
-                            items: whCodes
-                                .map((item) => item['ware_code'] as String)
-                                .toList(),
-                            selectedItem: selectedwhCode,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedwhCode = value;
-                                fetchLocationCodes();
-                              });
-                            },
-                            dropdownDecoratorProps: DropDownDecoratorProps(
-                              dropdownSearchDecoration: InputDecoration(
-                                labelText: "เลือกคลัง",
-                                border: OutlineInputBorder(),
-                                labelStyle: TextStyle(
-                                    color: Colors.black, fontSize: 16),
-                                hintStyle: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                            popupProps: PopupProps.menu(
-                              showSearchBox: true,
-                              searchFieldProps: TextFieldProps(
-                                decoration: InputDecoration(
-                                  hintText: "ค้นหาคลัง",
-                                  hintStyle: TextStyle(color: Colors.black),
-                                ),
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              constraints: BoxConstraints(
-                                maxHeight: 250,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  
                     Step(
                       title: Text(
                         'เลือก Location ต้นทาง',
@@ -547,7 +508,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                         ElevatedButton(
                           onPressed: onStepContinue,
                           child: Text(
-                            _currentStep == 3 ? 'สร้าง' : 'ต่อไป',
+                            _currentStep == 2 ? 'สร้าง' : 'ต่อไป',
                             style: TextStyle(color: Colors.white),
                           ),
                           style: ElevatedButton.styleFrom(

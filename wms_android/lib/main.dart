@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wms_android/SSINDT01/SSINDT01_WARE.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_search.dart';
 import 'custom_appbar.dart';
 import 'custom_drawer.dart';
@@ -23,11 +24,12 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginPage(),
         '/home': (context) => const MyHomePage(),
-        
       },
+ 
     );
   }
 }
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});

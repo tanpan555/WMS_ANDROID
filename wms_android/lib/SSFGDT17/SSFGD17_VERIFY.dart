@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_CREATE.dart';
+import 'package:wms_android/SSFGDT17/SSFGDT17_SEARCH.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/bottombar.dart';
@@ -16,8 +17,11 @@ class SSFGD17_VERIFY extends StatefulWidget {
   final String? po_doc_type;
   final String? selectedwhCode;
 
+  final String? pWareCode;
+  final String? pWareName;
+
   const SSFGD17_VERIFY(
-      {required this.po_doc_no, this.po_doc_type, this.selectedwhCode});
+      {required this.po_doc_no, this.po_doc_type, this.selectedwhCode, this.pWareCode, this.pWareName});
 
   @override
   _SSFGD17_VERIFYState createState() => _SSFGD17_VERIFYState();
@@ -46,6 +50,9 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
   void initState() {
     super.initState();
     currentSessionID = SessionManager().sessionID;
+    print('VERIFY  =============================');
+    print('pWareCode: ${widget.pWareCode}');
+    print('pWareName: ${widget.pWareName}');
 
     fetchData();
     getList();
@@ -393,20 +400,24 @@ Widget build(BuildContext context) {
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+            const SizedBox(height: 8.0),
             Row(
               children: [
                 const Spacer(),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    minimumSize: const Size(10, 20),
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  onPressed: () {
-                    chk_validateSave();
+                  child: IconButton(
+                    iconSize: 20.0,
+                    icon: Image.asset(
+                      'assets/images/right.png',
+                      width: 20.0,
+                      height: 20.0,
+                    ),
+                    onPressed: () async{
+                        await chk_validateSave();
                     if (poStatus == '0') {
                       showDialog(
                         context: context,
@@ -418,13 +429,10 @@ Widget build(BuildContext context) {
                               TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SSFGDT17_CREATE(
-                                        pWareCode: widget.selectedwhCode ?? ''),
-                                    ),
-                                  );
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
                                 },
                                 child: Text('OK'),
                               ),
@@ -433,15 +441,13 @@ Widget build(BuildContext context) {
                         },
                       );
                     }
-                  },
-                  child: const Icon(
-                    Icons.arrow_forward,
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    size: 24,
+                    },
                   ),
                 ),
+              const SizedBox(width: 8.0),
               ],
             ),
+            const SizedBox(height: 8.0),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               margin: const EdgeInsets.only(bottom: 8.0),
@@ -540,48 +546,56 @@ Widget build(BuildContext context) {
             ),
             const SizedBox(height: 16.0),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.4,
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: (_displayLimit < items.length)
-                    ? _displayLimit + 1
-                    : items.length,
-                itemBuilder: (context, index) {
-                  if (index == _displayLimit) {
-                    return Center(
-                      child: ElevatedButton(
-                        onPressed: _loadMoreItems,
-                        child: const Text('แสดงเพิ่มเติม'),
-                      ),
-                    );
-                  }
-                  final item = items[index];
-                  return Card(
-                    color: const Color.fromRGBO(204, 235, 252, 1.0),
-                    margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                    elevation: 4.0,
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(16.0),
-                      title: Text(
-                        'Item : ${item['item_code']}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Lots No: ${item['lots_no']}'),
-                          Text('ต้นทาง: ${item['location_code']}'),
-                          Text('จำนวนโอน: ${item['pack_qty']}'),
-                          Text('ปลายทาง: ${item['to_loc']}'),
-                          Text('seq ${item['seq']}'),
-                        ],
-                      ),
-                      onTap: () => _showItemDialog(item),
-                    ),
-                  );
-                },
+  height: MediaQuery.of(context).size.height * 0.4,
+  child: items.isEmpty
+      ? const Center(
+          child: Text(
+            'no data available',
+            style: TextStyle(fontSize: 18.0, color: Colors.white),
+          ),
+        )
+      : ListView.builder(
+          controller: _scrollController,
+          itemCount: (_displayLimit < items.length)
+              ? _displayLimit + 1
+              : items.length,
+          itemBuilder: (context, index) {
+            if (index == _displayLimit) {
+              return Center(
+                child: ElevatedButton(
+                  onPressed: _loadMoreItems,
+                  child: const Text('แสดงเพิ่มเติม'),
+                ),
+              );
+            }
+            final item = items[index];
+            return Card(
+              color: const Color.fromRGBO(204, 235, 252, 1.0),
+              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              elevation: 4.0,
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(16.0),
+                title: Text(
+                  'Item : ${item['item_code']}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Lots No: ${item['lots_no']}'),
+                    Text('ต้นทาง: ${item['location_code']}'),
+                    Text('จำนวนโอน: ${item['pack_qty']}'),
+                    Text('ปลายทาง: ${item['to_loc']}'),
+                    Text('seq ${item['seq']}'),
+                  ],
+                ),
+                onTap: () => _showItemDialog(item),
               ),
-            ),
+            );
+          },
+        ),
+)
+
           ],
         ),
       ),
