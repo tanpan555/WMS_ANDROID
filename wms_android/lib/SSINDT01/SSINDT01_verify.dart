@@ -371,7 +371,7 @@ _launchUrl();
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Item: ${data['item'] ?? 'N/A'}',
+                                  'Item: ${data['item'] ?? ''}',
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
@@ -386,7 +386,7 @@ _launchUrl();
                                     SizedBox(width: 8.0),
                                     Expanded(
                                       child: Text(
-                                        'จำนวนรับ: ${data['receive_qty']?.toString() ?? 'N/A'}',
+                                        'จำนวนรับ: ${data['receive_qty']?.toString() ?? ''}',
                                         style: TextStyle(fontSize: 16),
                                       ),
                                     ),
@@ -400,7 +400,7 @@ _launchUrl();
                                     SizedBox(width: 8.0),
                                     Expanded(
                                       child: Text(
-                                        'Pending Quantity: ${data['pending_qty']?.toString() ?? 'N/A'}',
+                                        'Pending Quantity: ${data['pending_qty']?.toString() ?? ''}',
                                         style: TextStyle(fontSize: 16),
                                       ),
                                     ),
@@ -414,7 +414,7 @@ _launchUrl();
                                     SizedBox(width: 8.0),
                                     Expanded(
                                       child: Text(
-                                        'Locator: ${data['locator_det']?.toString() ?? 'N/A'}',
+                                        'Locator: ${data['locator_det']?.toString() ?? ''}',
                                         style: TextStyle(fontSize: 16),
                                       ),
                                     ),
@@ -427,7 +427,7 @@ _launchUrl();
                                     SizedBox(width: 8.0),
                                     Expanded(
                                       child: Text(
-                                        'Product No: ${data['lot_product_no']?.toString() ?? 'N/A'}',
+                                        'Product No: ${data['lot_product_no']?.toString() ?? ''}',
                                         style: TextStyle(fontSize: 16),
                                       ),
                                     ),

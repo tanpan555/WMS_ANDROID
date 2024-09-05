@@ -12,6 +12,7 @@ import 'SSINDT01_verify.dart';
 import 'package:wms_android/bottombar.dart';
 // import 'package:wms/test.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import 'package:intl/intl.dart';
 
 class Ssindt01Grid extends StatefulWidget {
   final String poReceiveNo;
@@ -2217,6 +2218,8 @@ class _LotDialogState extends State<LotDialog> {
     );
   }
 
+  final NumberFormat numberFormat = NumberFormat("#,##0");
+
   @override
 Widget build(BuildContext context) {
   return Scaffold(
@@ -2310,7 +2313,9 @@ Widget build(BuildContext context) {
                               children: [
                                 Text('Seq: ${item['lot_seq_nb']?.toString() ?? ''}'),
                                 SizedBox(height: 8),
-                                Text('Lot QTY: ${item['lot_qty']?.toString() ?? ''}'),
+                                Text(
+  'Lot QTY: ${item['lot_qty'] != null ? numberFormat.format(item['lot_qty']) : ''}',
+),
                                 SizedBox(height: 8),
                                 Text('MFG Date: ${item['mfg_date']?.toString() ?? ''}'),
                                 SizedBox(height: 8),
