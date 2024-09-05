@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-// import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
+//////////////////////////
+///
+///
+///                         เหลือทำปุ่มต่างๆ
+///
+///
+///
+///
+///
+///
+///
+///
+///////////////////////////
 class Ssfgdt09lForm extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจากเลือ lov
   final String pAttr1;
