@@ -351,36 +351,36 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
                   const SizedBox(height: 8),
                   _buildTextField(DOC_NO, 'เลขที่เอกสาร', readOnly: true),
                   _buildTextField(BARCODE, 'Barcode', readOnly: false),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 72, 199, 85),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                    ),
-                    child: const Text(
-                      'Submit',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    onPressed: fetchBarcodeData,
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                    ),
-                    child: const Text(
-                      'Open Camera',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    onPressed: _scanQRCode,
-                  ),
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: const Color.fromARGB(255, 72, 199, 85),
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(12.0),
+                  //     ),
+                  //   ),
+                  //   child: const Text(
+                  //     'Submit',
+                  //     style: TextStyle(
+                  //       color: Colors.white,
+                  //     ),
+                  //   ),
+                  //   onPressed: fetchBarcodeData,
+                  // ),
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(12.0),
+                  //     ),
+                  //   ),
+                  //   child: const Text(
+                  //     'Open Camera',
+                  //     style: TextStyle(
+                  //       color: Colors.white,
+                  //     ),
+                  //   ),
+                  //   onPressed: _scanQRCode,
+                  // ),
                   _buildTextField(LOCATOR_FROM, 'Locator ต้นทาง',
                       readOnly: true),
                   _buildTextField(ITEM_CODE, 'Item Code', readOnly: false),

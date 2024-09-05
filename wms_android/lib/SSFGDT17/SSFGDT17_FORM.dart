@@ -490,7 +490,7 @@ String? pomsg;
                   _buildTextField(NB_TO_WH, 'คลังปลายทาง', readOnly: true),
                   _buildTextField(STAFF_CODE, 'ผู้บันทึก'),
                   _buildTextField(PO_REMARK, 'หมายเหตุ'),
-                  _buildTextField(REF_ERP, 'เลขที่เอกสาร ERP'),
+                  _buildTextField(REF_ERP, 'เลขที่เอกสาร ERP', readOnly: true),
                 ],
               ),
             ),

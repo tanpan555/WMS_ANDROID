@@ -239,7 +239,7 @@ String? doc_out;
       ),
       elevation: 5,
       child: ListTile(
-        title: Text(item['doc_number'] ?? 'No doc_number'),
+        title: Text(item['doc_number'] ?? 'No doc_number',style: TextStyle(fontSize: 14),),
         subtitle: Row(
           children: [
             Expanded(

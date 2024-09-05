@@ -335,7 +335,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                                 .toList(),
                             selectedItem:
                                 locCode.isNotEmpty ? locCode.first : null,
-                            itemAsString: (item) => item['location_code'] ?? '',
+                            itemAsString: (item) => '${item['location_code']}' ?? '',
                             onChanged: (value) {
                               setState(() {
                                 selectedLocCode = value?['location_code'];
@@ -391,7 +391,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                                 .toList(),
                             selectedItem:
                                 whOUTCode.isNotEmpty ? whOUTCode.first : null,
-                            itemAsString: (item) => item['ware_code'] ?? '',
+                            itemAsString: (item) => '${item['ware_code']} - ${item['ware_name']}' ?? '',
                             onChanged: (value) {
                               setState(() {
                                 selectedwhOUTCode = value?['ware_code'];
