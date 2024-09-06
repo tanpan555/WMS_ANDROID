@@ -142,6 +142,8 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
             updBy1Controller.text = updBy1;
             nbCountDateController.text = nbCountDate;
             docNoController.text = docNo;
+
+            print('statuForCHK : $statuForCHK');
           });
         } else {
           print('No items found.');

@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:wms_android/Global_Parameter.dart' as globals;
+import 'SSFGDT09L_grid.dart';
 
 //////////////////////////
 ///
@@ -71,10 +73,14 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   String updDate = '';
   String updProgID = '';
   String docDate = '';
+  int testChk = 0; //
 
   String soNoForChk = ''; // ref_no สำหรับ check
   String shidForChk = ''; // mo_do_no สำหรับ check
   String pMessageErr = ''; // message หลังจาก check    so_no == shid
+
+  String statusSubmit = '';
+  String messageSubmit = '';
 
   TextEditingController custNameController = TextEditingController();
   TextEditingController ouCodeController = TextEditingController();
@@ -322,7 +328,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     }
   }
 
-  Future<void> chkCust(String custCode, String arCode) async {
+  Future<void> chkCust(String custCode, String arCode, int testChk) async {
     // cutuCode ---------------- mo do no
     // acCode ---------------------- ref no
     print('custCode  chkCust  : $custCode');
@@ -342,6 +348,9 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
               'pMessageErr :: $pMessageErr  type :: ${pMessageErr.runtimeType}');
           if (pMessageErr.isNotEmpty) {
             showDialogErrorCHK(pMessageErr);
+          }
+          if (testChk == 1) {
+            submitData();
           }
         });
       } else {
@@ -384,6 +393,67 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
       }
     } catch (e) {
       print('2');
+      print('Error: $e');
+    }
+  }
+
+  Future<void> submitData() async {
+    final url =
+        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_UpdateForm';
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'pOuCode': widget.pOuCode,
+      'pErpOuCode': widget.pErpOuCode,
+      'pDocNo': docNo,
+      'pAppUser': globals.APP_USER,
+    });
+    print('Request body: $body');
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataSubmit = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print('dataSubmit : $dataSubmit type : ${dataSubmit.runtimeType}');
+        setState(() {
+          statusSubmit = dataSubmit['po_status'];
+          messageSubmit = dataSubmit['po_message'];
+
+          if (statusSubmit == '1') {
+            showDialogErrorCHK(messageSubmit);
+          }
+          if (statusSubmit == '0') {
+            _navigateToPage(
+                context,
+                Ssfgdt09lGrid(
+                  pWareCode: widget.pWareCode,
+                  pAttr1: widget.pAttr1,
+                  docNo: widget.pDocNo,
+                  docType: widget.pDocType,
+                  // test
+                  statusCase: 'test1',
+                ));
+          }
+
+          print(
+              'statusSubmit in Function submitData : $statusSubmit type : ${statusSubmit.runtimeType}');
+          print(
+              'messageSubmit in Function submitData : $messageSubmit type : ${messageSubmit.runtimeType}');
+        });
+      } else {
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+      }
+    } catch (e) {
       print('Error: $e');
     }
   }
@@ -453,7 +523,13 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                       width: 20.0,
                       height: 20.0,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      chkCust(
+                        shidForChk.isNotEmpty ? shidForChk : 'null',
+                        returnStatusLovRefNo.isNotEmpty ? soNoForChk : 'null',
+                        testChk = 1,
+                      );
+                    },
                   ),
                 ),
               ],
@@ -665,10 +741,12 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             shidForChk = selectedItem['schid'].toString();
                             print(selectedItem['schid'].toString());
                             chkCust(
-                                shidForChk.isNotEmpty ? shidForChk : 'null',
-                                returnStatusLovRefNo.isNotEmpty
-                                    ? soNoForChk
-                                    : 'null');
+                              shidForChk.isNotEmpty ? shidForChk : 'null',
+                              returnStatusLovRefNo.isNotEmpty
+                                  ? soNoForChk
+                                  : 'null',
+                              testChk = 0,
+                            );
                           }
                         });
                         print(

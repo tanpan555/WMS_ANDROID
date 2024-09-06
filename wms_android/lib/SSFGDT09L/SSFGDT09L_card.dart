@@ -219,7 +219,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
               Ssfgdt09lForm(
                   pWareCode: widget.pErpOuCode,
                   pAttr1: widget.pAttr1,
-                  pDocNo: 'RMO1-WMS-24090008',
+                  pDocNo: 'RMO1-WMS-24090028',
                   pDocType: 'RMO1',
                   // pDocNo: pDocNoGetInHead,
                   // pDocType: pDocTypeGetInHead,
@@ -231,7 +231,12 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
               Ssfgdt09lGrid(
                 pWareCode: widget.pErpOuCode,
                 pAttr1: widget.pAttr1,
-                statusCase: '3',
+                docNo: 'RMO1-WMS-24090028',
+                docType: 'RMO1',
+                // docNo: pDocNoGetInHead,
+                // docType: pDocTypeGetInHead,
+                // test
+                statusCase: 'test3',
               ));
         case '4':
           return _navigateToPage(
@@ -239,7 +244,12 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
               Ssfgdt09lGrid(
                 pWareCode: widget.pErpOuCode,
                 pAttr1: widget.pAttr1,
-                statusCase: '4',
+                docNo: 'RMO1-WMS-24090028',
+                docType: 'RMO1',
+                // docNo: pDocNoGetInHead,
+                // docType: pDocTypeGetInHead,
+                // test
+                statusCase: 'test4',
               ));
         default:
           return null;
