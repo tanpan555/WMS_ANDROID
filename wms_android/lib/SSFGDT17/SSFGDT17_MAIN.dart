@@ -231,26 +231,31 @@ String? doc_out;
   );
 
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-    child: Card(
-      color: const Color.fromRGBO(204,235,252,1.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      elevation: 5,
-      child: ListTile(
-        title: Text(item['doc_number'] ?? 'No doc_number',style: TextStyle(fontSize: 14),),
-        subtitle: Row(
-          children: [
-            Expanded(
-              child: RichText(
+  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+  child: Card(
+    color: const Color.fromRGBO(204, 235, 252, 1.0),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20.0),
+    ),
+    elevation: 5,
+    child: Column(
+      children: [
+        ListTile(
+          title: Center(
+            child: Text(
+              item['doc_number'] ?? 'No doc_number',
+              style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),
+            ),
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Divider(
+                color: const Color.fromARGB(255, 0, 0, 0),
+              ),
+              RichText(
                 text: TextSpan(
                   children: [
-                    TextSpan(
-                      text: '${item['doc_date'] ?? 'No doc_date'} '
-                          '${item['from_warehouse'] ?? 'No WAREHOUSE'}\n',
-                      style: TextStyle(color: Colors.black, fontSize: 12),
-                    ),
                     if (item['status_desc'] != null)
                       WidgetSpan(
                         child: Container(
@@ -263,103 +268,111 @@ String? doc_out;
                           ),
                         ),
                       ),
+                    TextSpan(
+                      text: '\n \n',
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                    ),
+                    TextSpan(
+                      text: '${item['doc_date'] ?? 'No doc_date'} ${item['from_warehouse'] ?? 'No WAREHOUSE'}',
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                    ),
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
-        onTap:() {
-          print('${item['doc_no'] ?? 'No doc_no'} ');
-          print('${item['doc_type'] ?? 'No doc_type'} ');
-          doc_no = item['doc_no'];
-          doc_out = item['doc_type'];
-          chk_validate();
-          chk_validate_inhead();
-          print('poStatusinhead: $poStatusinhead');
-          // print('$poStatus $poMessage $goToStep' );
-
-        if(poStatus == '1'){
-          print(poMessage);
-          showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('คำเตือน'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('${poMessage ?? 'No message available'}'),
-              ],
-            ),
-            actions: [
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
             ],
-          );
-        },
-      );
+          ),
+          onTap: () {
+            print('${item['doc_no'] ?? 'No doc_no'} ');
+            print('${item['doc_type'] ?? 'No doc_type'} ');
+            doc_no = item['doc_no'];
+            doc_out = item['doc_type'];
+            chk_validate();
+            chk_validate_inhead();
+            print('poStatusinhead: $poStatusinhead');
+            // print('$poStatus $poMessage $goToStep');
 
-        }
-        else if(poStatus == '0'){
-          if(goToStep == '2'){
-            print('ไปหน้า Form');
-            if(poStatusinhead == '0'){
-              Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => SSFGDT17_FORM(
-                            po_doc_no: doc_no ?? '',
-                            po_doc_type: doc_out,
-                            LocCode: '',
-                            selectedwhCode: '',
-                            selectedLocCode: '',
-                            whOUTCode: '',
-                            LocOUTCode: '', pWareCode: '',),
+            if (poStatus == '1') {
+              print(poMessage);
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('คำเตือน'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('${poMessage ?? 'No message available'}'),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        child: Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
                       ),
-                    );
-            }
-          }
-          else if(goToStep == '3'){
-            print('ไปหน้า barcode');
-            if(poStatusinhead == '0'){
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => SSFGDT17_BARCODE(
-                            po_doc_no: doc_no ?? '',
-                            po_doc_type: doc_out,
-                            LocCode: '',
-                            selectedwhCode: '',
-                            selectedLocCode: '',
-                            whOUTCode: '',
-                            LocOUTCode: ''),
+                    ],
+                  );
+                },
+              );
+            } else if (poStatus == '0') {
+              if (goToStep == '2') {
+                print('ไปหน้า Form');
+                if (poStatusinhead == '0') {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SSFGDT17_FORM(
+                        po_doc_no: doc_no ?? '',
+                        po_doc_type: doc_out,
+                        LocCode: '',
+                        selectedwhCode: '',
+                        selectedLocCode: '',
+                        whOUTCode: '',
+                        LocOUTCode: '',
+                        pWareCode: '',
                       ),
-                    );
-            }
-          }
-          else if(goToStep == '4'){
-            print('ไปหน้ายืนยัน');
-            if(poStatusinhead == '0'){
-              Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => SSFGD17_VERIFY(
-                            po_doc_no: doc_no ?? '',
-                            po_doc_type: doc_out,
-                            selectedwhCode: '',),
+                    ),
+                  );
+                }
+              } else if (goToStep == '3') {
+                print('ไปหน้า barcode');
+                if (poStatusinhead == '0') {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SSFGDT17_BARCODE(
+                        po_doc_no: doc_no ?? '',
+                        po_doc_type: doc_out,
+                        LocCode: '',
+                        selectedwhCode: '',
+                        selectedLocCode: '',
+                        whOUTCode: '',
+                        LocOUTCode: '',
                       ),
-                    );
+                    ),
+                  );
+                }
+              } else if (goToStep == '4') {
+                print('ไปหน้ายืนยัน');
+                if (poStatusinhead == '0') {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SSFGD17_VERIFY(
+                        po_doc_no: doc_no ?? '',
+                        po_doc_type: doc_out,
+                        selectedwhCode: '',
+                      ),
+                    ),
+                  );
+                }
+              }
             }
-          }
-        }
-
-        },
-      ),
+          },
+        ),
+      ],
     ),
-  );
+  ),
+);
 }
 
 

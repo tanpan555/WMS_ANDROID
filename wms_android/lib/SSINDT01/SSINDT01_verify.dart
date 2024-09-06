@@ -20,10 +20,13 @@ class Ssindt01Verify extends StatefulWidget {
   final String pWareName;
   final String p_ou_code;
 
-  Ssindt01Verify({required this.poReceiveNo, this.poPONO,
+  Ssindt01Verify({
+    required this.poReceiveNo,
+    this.poPONO,
     required this.pWareCode,
     required this.pWareName,
-    required this.p_ou_code,});
+    required this.p_ou_code,
+  });
 
   @override
   _Ssindt01VerifyState createState() => _Ssindt01VerifyState();
@@ -45,7 +48,6 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
   String P_RECEIVE_NO = '';
   String? report;
   String? allreport;
-
 
   @override
   void initState() {
@@ -214,8 +216,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
         LT_SIGN1 = data['LT_SIGN1'];
         LT_SIGN2 = data['LT_SIGN2'];
         LT_SIGN3 = data['LT_SIGN3'];
-_launchUrl();
-
+        _launchUrl();
       } else {
         print('Failed to load data, status code: ${response.statusCode}');
       }
@@ -283,205 +284,207 @@ _launchUrl();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
-      // drawer: const CustomDrawer(),
-      body: Column(
-        children: [
-          Row(
-                children: [
-                  // ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(12.0),
-                  //     ),
-                  //     minimumSize: const Size(10, 20),
-                  //     padding: const EdgeInsets.symmetric(
-                  //         horizontal: 10, vertical: 5),
-                  //   ),
-                  //   onPressed: () {
-                  //     Navigator.pop(context);
-                  //   },
-                  //   child: const Text(
-                  //     'ย้อนกลับ',
-                  //     style: TextStyle(
-                  //       color: Colors.white,
-                  //       fontWeight: FontWeight.bold,
-                  //     ),
-                  //   ),
-                  // ),
-                  
-                ]),
-                const SizedBox(width: 8.0),
-          Container(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              margin: const EdgeInsets.only(
-                  bottom: 8.0), // Add some space below the container
-              color: const Color.fromARGB(255, 255, 242,
-                  204), // Customize the background color of the container
-              child: Center(
-                child: Text(
-                  '${widget.poPONO}',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 0, 0, 0),
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Color(0xFF17153B),
+    appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
+    body: Column(
+      children: [
+        // Add a Row for Confirm button and widget.poPONO
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Flexible Text widget for poPONO
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  color: const Color.fromARGB(255, 255, 242, 204),
+                  child: Center(
+                    child: Text(
+                      '${widget.poPONO}',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      ),
+                      overflow: TextOverflow.ellipsis, // Handles overflow
+                    ),
                   ),
                 ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              margin: const EdgeInsets.only(
-                  bottom: 8.0), // Add some space below the container
-              color: const Color.fromARGB(255, 255, 255, 255), // Customize the background color of the container
-              child: Center(
-                child: Text(
-                  '${widget.poReceiveNo}',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ),
-              ),
-            ),
-          Expanded(
-            child: dataList.isEmpty
-                ? Center(
-                    child: Text('No data available',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold,color: Colors.white)))
-                : SingleChildScrollView(
-                    padding: EdgeInsets.all(8.0),
-                    child: Column(
-                      children: dataList.map((data) {
-                        return Card(
-                          margin: EdgeInsets.symmetric(vertical: 8.0),
-                          elevation: 6.0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
+              const SizedBox(width: 4,),
+              ElevatedButton(
+                onPressed: () async {
+              await chk_sub();
+              if(poStatus == '1')
+                                  {
+                                       await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Center(child: Text('คำเตือน')),
+        content: Text(poMessage ?? ''),
+        actions: <Widget>[
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+          ),
+        ],
+      );
+    },
+  );
+                                
+}else if(poStatus == '0'){
+                                      showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Center(child: Text('$erp_doc_no')),
+                        actions: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                child: Text('ยืนยัน'),
+                                onPressed: () async {
+                                  showCustomDialog(context);   
+                                },
+                              ),
+                            ],
                           ),
-                          child: Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Item: ${data['item'] ?? ''}',
+                        ],
+                      );
+                    },
+                  );
+                                  }
+                                  
+               
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 212, 245, 212),
+                  padding: EdgeInsets.symmetric(vertical: 15.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                ),
+                child: Text(
+                  'Confirm',
+                  style: TextStyle(color: Colors.black, fontSize: 16),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: dataList.isEmpty
+              ? Center(
+                  child: Text('No data available',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white)))
+              : SingleChildScrollView(
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
+                    children: dataList.map((data) {
+                      return Card(
+                        margin: EdgeInsets.symmetric(vertical: 8.0),
+                        elevation: 6.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        color: Color.fromRGBO(204, 235, 252, 1.0),
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Center(
+                                child: Text(
+                                  ' ${data['item'] ?? ''}',
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.deepPurple,
+                                    color: const Color.fromARGB(255, 0, 0, 0),
                                   ),
                                 ),
-                                SizedBox(height: 8.0),
-                                Row(
+                              ),
+                              Divider(color: const Color.fromARGB(255, 0, 0, 0)),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Icon(Icons.assignment,
-                                        color: Colors.grey[700]),
+                                    Expanded(
+                                      child: Text(
+                                        'จำนวนรับ: ${data['receive_qty']?.toString() ?? '-'}',
+                                        style: TextStyle(fontSize: 16),
+                                        softWrap: false,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
                                     SizedBox(width: 8.0),
                                     Expanded(
                                       child: Text(
-                                        'จำนวนรับ: ${data['receive_qty']?.toString() ?? ''}',
+                                        'ค้างรับ: ${data['pending_qty']?.toString() ?? '-'}',
                                         style: TextStyle(fontSize: 16),
+                                        softWrap: false,
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 4.0),
-                                Row(
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Icon(Icons.pending,
-                                        color: Colors.orange[700]),
+                                    Expanded(
+                                      child: Text(
+                                        'Locator: ${data['locator_det']?.toString() ?? '-'}',
+                                        style: TextStyle(fontSize: 16),
+                                        softWrap: false,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
                                     SizedBox(width: 8.0),
                                     Expanded(
                                       child: Text(
-                                        'Pending Quantity: ${data['pending_qty']?.toString() ?? ''}',
+                                        'Lot No: ${data['lot_product_no']?.toString() ?? '-'}',
                                         style: TextStyle(fontSize: 16),
+                                        softWrap: false,
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 4.0),
-                                Row(
-                                  children: [
-                                    Icon(Icons.location_on,
-                                        color: Colors.blue[700]),
-                                    SizedBox(width: 8.0),
-                                    Expanded(
-                                      child: Text(
-                                        'Locator: ${data['locator_det']?.toString() ?? ''}',
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 4.0),
-                                Row(
-                                  children: [
-                                    Icon(Icons.check, color: Colors.blue[700]),
-                                    SizedBox(width: 8.0),
-                                    Expanded(
-                                      child: Text(
-                                        'Product No: ${data['lot_product_no']?.toString() ?? ''}',
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 4.0),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        );
-                      }).toList(),
-                    ),
+                        ),
+                      );
+                    }).toList(),
                   ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: ()async {
-                await chk_sub();
-                // if (poStatus == '0') {
-                //   showCustomDialog(context);
-                // } else if (poStatus == '1') {
-                //   ScaffoldMessenger.of(context).showSnackBar(
-                //     SnackBar(content: Text(poMessage!)),
-                //   );
-                // }
-
-                 showCustomDialog(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
-                padding: EdgeInsets.symmetric(vertical: 15.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
                 ),
-              ),
-              child: Text(
-                'ยืนยัน',
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomBar(),
-    );
-  }
+        ),
+      ],
+    ),
+    bottomNavigationBar: BottomBar(),
+  );
+}
+
 
   void showCustomDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('ยืนยัน'),
+          title: Text('ต้องการพิมพ์เอกสารใบรับหรือไม่'),
           content: Text('$erp_doc_no'),
           actions: [
             TextButton(
@@ -492,47 +495,17 @@ _launchUrl();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
-                // Navigator.of(context).pop();
-          //         Navigator.push(
-          //                 context,
-          //                 MaterialPageRoute(
-          //                   builder: (context) => SSINDT01_MAIN(
-          //                      pWareCode: widget.pWareCode,
-          // pWareName: widget.pWareName,
-          // p_ou_code: widget.p_ou_code,
-          //  selectedValue: 'ทั้งหมด', // Updated parameter name
-          // apCode: 'ทั้งหมด',
-          // documentNumber: '',
-          //                   ),
-          //                 ),
-          //               );
               },
             ),
             TextButton(
               child: Text('ยืนยัน'),
               onPressed: () {
-                
-                Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 fetchPDFData();
-
-        //         Navigator.pop(
-        //                   context,
-        //                   MaterialPageRoute(
-        //                     builder: (context) => SSINDT01_MAIN(
-        //                      pWareCode: widget.pWareCode,
-        //   pWareName: widget.pWareName,
-        //   p_ou_code: widget.p_ou_code,
-        //  selectedValue: 'ทั้งหมด',
-        //   apCode: 'ทั้งหมด',
-        //   documentNumber: '',
-        //                     ),
-        //                   ),
-        //                 );
               },
             ),
           ],

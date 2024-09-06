@@ -680,265 +680,284 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     );
   }
 
-  // @override
-  Widget _buildFormFields() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black38),
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            style: const TextStyle(
+Widget _buildFormFields() {
+  return Container(
+    padding: const EdgeInsets.all(16.0),
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.black38),
+      borderRadius: BorderRadius.circular(5.0),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          style: const TextStyle(
+            color: Colors.black87,
+          ),
+          controller: poNoController,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey[300],
+            labelText: 'เลขที่อ้างอิง (PO)',
+            labelStyle: const TextStyle(
               color: Colors.black87,
             ),
-            controller: poNoController,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[300],
-              labelText: 'เลขที่อ้างอิง (PO)*',
-              labelStyle: const TextStyle(
-                color: Colors.black87,
-              ),
-            ),
-            readOnly: true,
+            border: InputBorder.none,
           ),
-          // _buildDisabledTextField(
-          //   label: 'เลขที่อ้างอิง (PO)*',
-          //   initialValue: widget.item['title'] ?? 'PO-XX1234-5678',
-          // ),
-          const SizedBox(height: 16.0),
-          Container(
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(23, 21, 59, 1),
-              borderRadius: BorderRadius.circular(8.0),
+          readOnly: true,
+        ),
+        const SizedBox(height: 16.0),
+        Container(
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(23, 21, 59, 1),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: DropdownButtonFormField<String>(
+            decoration: const InputDecoration(
+              labelText: 'ประเภทการรับ',
+              filled: true,
+              fillColor: Colors.white,
+              border: InputBorder.none,
+              labelStyle: TextStyle(color: Colors.black),
             ),
-            child: DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                labelText: 'ประเภทรายการ',
-                filled: true,
-                fillColor: Colors.white,
-                border: InputBorder.none,
-                labelStyle: TextStyle(color: Colors.black),
-              ),
-              value: selectedPoType,
-              items: poType.map<DropdownMenuItem<String>>((dynamic value) {
-                return DropdownMenuItem<String>(
-                  value: value['po_type_code'],
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    child: Text(
-                      value['po_type_code'],
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Colors.black),
-                    ),
+            value: selectedPoType,
+            items: poType.map<DropdownMenuItem<String>>((dynamic value) {
+              return DropdownMenuItem<String>(
+                value: value['po_type_code'],
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: Text(
+                    value['po_type_code'],
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.black),
                   ),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  selectedPoType = newValue;
-                  poTypeCodeController.text = newValue ?? '';
-                });
-              },
-              dropdownColor: Color.fromRGBO(255, 255, 255, 1),
-            ),
-          ),
-          const SizedBox(height: 16.0),
-          TextFormField(
-            controller: receiveDateController,
-            decoration: InputDecoration(
-              labelText: 'วันที่เลือก',
-              filled: true,
-              fillColor: Colors.white,
-              border: InputBorder.none,
-              labelStyle: TextStyle(
-                color: Colors.black,
-              ),
-              hintStyle: TextStyle(
-                color: Colors.white70,
-              ),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.calendar_today, color: Colors.black),
-                onPressed: () {
-                  _selectReceiveDate(context);
-                },
-              ),
-            ),
-            style: TextStyle(
-              color: Colors.black,
-            ),
-            readOnly: true,
-            onTap: () => _selectReceiveDate(context),
-          ),
-
-          const SizedBox(height: 16.0),
-          TextFormField(
-            controller: invoiceNoController,
-            decoration: InputDecoration(
-              labelText: 'เลขที่ใบแจ้งหนี้ *',
-              filled: true,
-              fillColor: Colors.white,
-              border: InputBorder.none,
-              labelStyle: TextStyle(
-                color: Colors.black,
-              ),
-              hintStyle: TextStyle(
-                color: Colors.white70,
-              ),
-            ),
-            style: TextStyle(
-              color: Colors.black,
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'กรุณากรอกเลขที่ใบแจ้งหนี้';
-              }
-              return null;
+                ),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedPoType = newValue;
+                poTypeCodeController.text = newValue ?? '';
+              });
             },
+            dropdownColor: Color.fromRGBO(255, 255, 255, 1),
           ),
+        ),
+        const SizedBox(height: 16.0),
+        TextFormField(
+          controller: receiveDateController,
+          decoration: InputDecoration(
+            labelText: 'วันที่เลือก',
+            filled: true,
+            fillColor: Colors.white,
+            border: InputBorder.none,
+            labelStyle: TextStyle(
+              color: Colors.black,
+            ),
+            hintStyle: TextStyle(
+              color: Colors.white70,
+            ),
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.calendar_today, color: Colors.black),
+              onPressed: () {
+                _selectReceiveDate(context);
+              },
+            ),
+          ),
+          style: TextStyle(
+            color: Colors.black,
+          ),
+          readOnly: true,
+          onTap: () => _selectReceiveDate(context),
+        ),
+        const SizedBox(height: 16.0),
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: invoiceNoController,
+                decoration: InputDecoration(
+                  labelText: 'เลขที่ใบแจ้งหนี้ *',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: InputBorder.none,
+                  labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12
+                  ),
+                  hintStyle: TextStyle(
+                    color: Colors.white70,
+                  ),
+                ),
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'กรุณากรอกเลขที่ใบแจ้งหนี้';
+                  }
+                  return null;
+                },
+              ),
 
-          const SizedBox(height: 16.0),
-          TextFormField(
-            controller: invoiceDateController,
-            decoration: InputDecoration(
-              labelText: 'วันที่ใบแจ้งหนี้',
+            ),
+            const SizedBox(width: 16.0),
+            Expanded(
+              child: TextFormField(
+                controller: invoiceDateController,
+                decoration: InputDecoration(
+                  labelText: 'วันที่ใบแจ้งหนี้',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: InputBorder.none,
+                  labelStyle: TextStyle(
+                    color: Colors.black,
+                 
+                  ),
+                  hintStyle: TextStyle(
+                    color: Colors.white70,
+                    
+                  ),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.calendar_today, color: Colors.black),
+                    onPressed: () {
+                      _selectInvoiceDate(context);
+                    },
+                  ),
+                ),
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+                readOnly: true,
+                onTap: () => _selectInvoiceDate(context),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16.0),
+        TextFormField(
+          controller: poRemarkController,
+          decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
               border: InputBorder.none,
-              labelStyle: TextStyle(
-                color: Colors.black,
-              ),
-              hintStyle: TextStyle(
-                color: Colors.white70,
-              ),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.calendar_today, color: Colors.black),
-                onPressed: () {
-                  _selectInvoiceDate(context);
-                },
+              labelStyle: TextStyle(color: Colors.black),
+              labelText: 'PO Remark'),
+        ),
+        const SizedBox(height: 16.0),
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                style: const TextStyle(
+                  color: Colors.black87,
+                ),
+                controller: sellerController,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  labelText: 'ผู้ขาย',
+                  labelStyle: const TextStyle(
+                    color: Colors.black87,
+                  ),
+                  border: InputBorder.none,
+                ),
+                readOnly: true,
               ),
             ),
-            style: TextStyle(
-              color: Colors.black,
+            const SizedBox(width: 16.0),
+            Expanded(
+              child: TextFormField(
+                style: const TextStyle(
+                  color: Colors.black87,
+                ),
+                controller: crByController,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  labelText: 'ผู้รับ',
+                  labelStyle: const TextStyle(
+                    color: Colors.black87,
+                  ),
+                  border: InputBorder.none,
+                ),
+                readOnly: true,
+              ),
             ),
-            readOnly: true,
-            onTap: () => _selectInvoiceDate(context),
+          ],
+        ),
+        const SizedBox(height: 16.0),
+        TextFormField(
+          style: const TextStyle(
+            color: Colors.black87,
           ),
+          controller: receiveNoController,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey[300],
+            labelText: 'เลขที่เอกสาร WMS',
+            labelStyle: const TextStyle(
+              color: Colors.black87,
+              
+            ),
+             border: InputBorder.none,
+          ),
+          readOnly: true,
+        ),
+        const SizedBox(height: 16.0),
+        TextFormField(
+          style: const TextStyle(
+            color: Colors.black87,
+          ),
+          controller: wareCodeController,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey[300],
+            labelText: 'ประเภทการรับ',
+            labelStyle: const TextStyle(
+              color: Colors.black87,
+            ),
+            border: InputBorder.none,
+          ),
+          readOnly: true,
+        ),
+        const SizedBox(height: 16.0),
+        TextFormField(
+          style: const TextStyle(
+            color: Colors.black87,
+          ),
+          controller: erpReceiveNoController,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey[300],
+            labelText: 'เลขที่ใบรับคลัง',
+            labelStyle: const TextStyle(
+              color: Colors.black87,
+            ),
+            border: InputBorder.none,
+          ),
+          readOnly: true,
+        ),
+        const SizedBox(height: 16.0),
+        TextFormField(
+          style: const TextStyle(
+            color: Colors.black87,
+          ),
+          controller: crDateController,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey[300],
+            labelText: 'วันที่บันทึก',
+            labelStyle: const TextStyle(
+              color: Colors.black87,
+            ),
+            border: InputBorder.none,
+          ),
+          readOnly: true,
+        ),
+      ],
+    ),
+  );
+}
 
-          const SizedBox(height: 16.0),
-          TextFormField(
-            controller: poRemarkController,
-            decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                border: InputBorder.none,
-                labelStyle: TextStyle(color: Colors.black),
-                labelText: 'PO Remark'),
-          ),
-          const SizedBox(height: 16.0),
-
-          TextFormField(
-            style: const TextStyle(
-              color: Colors.black87,
-            ),
-            controller: sellerController,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[300],
-              labelText: 'ผู้ขาย',
-              labelStyle: const TextStyle(
-                color: Colors.black87,
-              ),
-            ),
-            readOnly: true,
-          ),
-          const SizedBox(height: 16.0),
-          TextFormField(
-            style: const TextStyle(
-              color: Colors.black87,
-            ),
-            controller: receiveNoController,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[300],
-              labelText: 'เลขที่เอกสาร WMS*',
-              labelStyle: const TextStyle(
-                color: Colors.black87,
-              ),
-            ),
-            readOnly: true,
-          ),
-          const SizedBox(height: 16.0),
-          TextFormField(
-            style: const TextStyle(
-              color: Colors.black87,
-            ),
-            controller: wareCodeController,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[300],
-              labelText: 'รับเข้าคลัง',
-              labelStyle: const TextStyle(
-                color: Colors.black87,
-              ),
-            ),
-            readOnly: true,
-          ),
-          const SizedBox(height: 16.0),
-          TextFormField(
-            style: const TextStyle(
-              color: Colors.black87,
-            ),
-            controller: erpReceiveNoController,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[300],
-              labelText: 'เลขที่ใบรับคลัง',
-              labelStyle: const TextStyle(
-                color: Colors.black87,
-              ),
-            ),
-            readOnly: true,
-          ),
-          const SizedBox(height: 16.0),
-          TextFormField(
-            style: const TextStyle(
-              color: Colors.black87,
-            ),
-            controller: crByController,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[300],
-              labelText: 'ผู้รับ',
-              labelStyle: const TextStyle(
-                color: Colors.black87,
-              ),
-            ),
-            readOnly: true,
-          ),
-          const SizedBox(height: 16.0),
-          const SizedBox(height: 16.0),
-          TextFormField(
-            style: const TextStyle(
-              color: Colors.black87,
-            ),
-            controller: crDateController,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[300],
-              labelText: 'วันที่บันทึก',
-              labelStyle: const TextStyle(
-                color: Colors.black87,
-              ),
-            ),
-            readOnly: true,
-          ),
-        ],
-      ),
-    );
-  }
 }

@@ -211,7 +211,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                       onPressed: _resetForm,
                       child: Image.asset('assets/images/eraser_red.png', width: 50, height: 25),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red[300],
+                        backgroundColor: Colors.grey[300],
                         padding: EdgeInsets.all(10),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
@@ -243,7 +243,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
     );
   },
   style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue[300],
+    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
     padding: const EdgeInsets.all(10),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10),

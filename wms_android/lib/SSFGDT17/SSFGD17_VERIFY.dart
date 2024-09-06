@@ -399,24 +399,32 @@ Widget build(BuildContext context) {
     body: Center(
       child: SingleChildScrollView(
         child: Column(
-          children: <Widget>[
-            const SizedBox(height: 8.0),
-            Row(
-              children: [
-                const Spacer(),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
+          children: <Widget>[         
+              Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child:
+          Container(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              // margin: const EdgeInsets.only(bottom: 8.0),
+              color: const Color.fromARGB(255, 255, 242, 204),
+              child: Center(
+                child: Text(
+                  '${widget.po_doc_no}',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 0, 0, 0),
                   ),
-                  child: IconButton(
-                    iconSize: 20.0,
-                    icon: Image.asset(
-                      'assets/images/right.png',
-                      width: 20.0,
-                      height: 20.0,
-                    ),
-                    onPressed: () async{
+                ),
+              ),
+            ),),
+            const SizedBox(width: 4,),
+            ElevatedButton(
+                onPressed: () async{
                         await chk_validateSave();
                     if (poStatus == '0') {
                       showDialog(
@@ -442,28 +450,23 @@ Widget build(BuildContext context) {
                       );
                     }
                     },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 212, 245, 212),
+                  padding: EdgeInsets.symmetric(vertical: 12.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
                 ),
-              const SizedBox(width: 8.0),
-              ],
-            ),
-            const SizedBox(height: 8.0),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              margin: const EdgeInsets.only(bottom: 8.0),
-              color: const Color.fromARGB(255, 255, 242, 204),
-              child: Center(
                 child: Text(
-                  '${widget.po_doc_no}',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
+                  'Confirm',
+                  style: TextStyle(color: Colors.black, fontSize: 16),
                 ),
               ),
+           
+            ],
             ),
-            const SizedBox(height: 8.0),
+            ),
+            // const SizedBox(height: 8.0),
             SizedBox(
               width: 365,
               height: 75,
@@ -537,7 +540,9 @@ Widget build(BuildContext context) {
                     labelText: 'วันที่บันทึกโอน',
                     labelStyle: TextStyle(
                       color: Colors.black87,
+                      
                     ),
+                    suffixIcon: Icon(Icons.calendar_today, color: Colors.black),
                     border: InputBorder.none,
                   ),
                   readOnly: true,

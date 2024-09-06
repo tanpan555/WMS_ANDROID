@@ -654,6 +654,9 @@ Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Divider(
+                                        color:
+                                            const Color.fromARGB(255, 0, 0, 0)),
                 Row(
                   children: [
                     Container(
@@ -668,6 +671,7 @@ Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
                     cardQcWidget,
                   ],
                 ),
+                
                 Text(
                   '${item['po_date'] ?? ''} ${item['po_no'] ?? ''} \n${item['item_stype_desc'] ?? '\n'}'
                   '${item['receive_date'] ?? ''} ${item['receive_no'] ?? ''} ${item['warehouse'] ?? ''}',

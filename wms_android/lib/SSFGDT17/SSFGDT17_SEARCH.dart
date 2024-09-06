@@ -143,7 +143,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                       onPressed: _resetForm,
                       child: Image.asset('assets/images/eraser_red.png', width: 50, height: 25),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red[300],
+                        backgroundColor: Colors.grey[300],
                         padding: EdgeInsets.all(10),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
@@ -174,7 +174,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                       },
                       child: Image.asset('assets/images/search_color.png', width: 50, height: 25),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue[300],
+                        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                         padding: EdgeInsets.all(10),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
