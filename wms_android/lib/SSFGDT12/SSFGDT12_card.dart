@@ -124,6 +124,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                   // IconData iconData;
                   Color cardColor;
                   String statusText;
+                  String iconImageYorN;
                   switch (item['status']) {
                     ////      WMS คลังวัตถุดิบ
                     case 'N':
@@ -156,6 +157,17 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                       cardColor = Colors.grey;
                       statusText = 'Unknown';
                   }
+                  switch (item['status']) {
+                    ////      WMS คลังวัตถุดิบ
+                    case 'N':
+                      iconImageYorN = 'assets/images/rt_machine_off.png';
+                      break;
+                    case 'X':
+                      iconImageYorN = 'assets/images/rt_machine_on.png';
+                      break;
+                    default:
+                      iconImageYorN = 'assets/images/rt_machine_off.png';
+                  }
 
                   return Card(
                     elevation: 8.0,
@@ -177,6 +189,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                               wareCode: item['ware_code'] ?? 'ware_code',
                               pWareCode: widget.pWareCode,
                               p_attr1: widget.p_attr1,
+                              // status: item['status'] ?? '',
                               // wareCode: item['ware_code'] == null
                               // ? 'ware_code  !!!'
                               // : item['ware_code'],
@@ -222,22 +235,35 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                           Positioned(
                             top: 8.0,
                             right: 8.0,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 12.0, vertical: 6.0),
-                              decoration: BoxDecoration(
-                                color: cardColor,
-                                borderRadius: BorderRadius.circular(12.0),
-                                border:
-                                    Border.all(color: Colors.black, width: 2.0),
-                              ),
-                              child: Text(
-                                statusText, // แสดง STATUS ที่ได้จาก switch case
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 12.0, vertical: 6.0),
+                                  decoration: BoxDecoration(
+                                    color: cardColor,
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    border: Border.all(
+                                        color: cardColor, width: 2.0),
+                                  ),
+                                  child: Text(
+                                    statusText,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                // SizedBox(height: 5.0),
+                                SizedBox(
+                                  width: 100,
+                                  height: 40,
+                                  child: Image.asset(
+                                    iconImageYorN,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],

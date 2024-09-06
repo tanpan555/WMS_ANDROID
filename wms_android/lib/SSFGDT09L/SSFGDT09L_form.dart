@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-// import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
+//////////////////////////
+///
+///
+///                         เหลือทำปุ่มต่างๆ
+///
+///
+///
+///
+///
+///
+///
+///
+///////////////////////////
 class Ssfgdt09lForm extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจากเลือ lov
   final String pAttr1;
@@ -32,6 +44,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   List<dynamic> dataLovDocType = [];
   List<dynamic> dataLovMoDoNo = [];
   List<dynamic> dataLovRefNo = [];
+  List<dynamic> dataLovCancel = [];
   String? selectLovDocType;
   String returnStatusLovDocType = '';
   // -----------------------------
@@ -40,6 +53,9 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   // -----------------------------
   String? selectLovRefNo;
   String returnStatusLovRefNo = '';
+  // -----------------------------
+  String? selectLovCancel;
+  String returnStatusLovCancel = '';
   // -----------------------------
   String custName = ''; // cust_code + cust_name
   String ouCode = '';
@@ -56,6 +72,9 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   String updProgID = '';
   String docDate = '';
 
+  String arCodeForChk = '';
+  String custCodeForChk = '';
+  String pMessageErr = '';
   TextEditingController custNameController = TextEditingController();
   TextEditingController ouCodeController = TextEditingController();
   TextEditingController docNoController = TextEditingController();
@@ -77,6 +96,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     fetchData();
     lovDocType();
     lovMoDoNo();
+    lovCancel();
   }
 
   @override
@@ -158,9 +178,11 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
           print('No items found.');
         }
       } else {
-        print('Failed to load data. Status code: ${response.statusCode}');
+        print(
+            'fetchData     Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (e) {
+      print('1');
       print('Error: $e');
     }
   }
@@ -237,7 +259,32 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     }
   }
 
+  Future<void> lovCancel() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_Cancel'));
+
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        print('Fetched data: $jsonDecode');
+
+        setState(() {
+          dataLovCancel =
+              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+        });
+        print('dataLovCancel : $dataLovCancel');
+      } else {
+        throw Exception('dataLovCancel Failed to load fetchData');
+      }
+    } catch (e) {
+      setState(() {});
+      print('dataLovCancel ERROR IN Fetch Data : $e');
+    }
+  }
+
   Future<void> selectCust(int pMoDoNo) async {
+    print('pMoDoNo in selectCust   : $pMoDoNo type : ${pMoDoNo.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectCust/$pMoDoNo'));
@@ -263,7 +310,42 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
           print('No items found.');
         }
       } else {
-        print('Failed to load data. Status code: ${response.statusCode}');
+        print(
+            'pMoDoNo in selectCust   else: $pMoDoNo type : ${pMoDoNo.runtimeType}');
+        print(
+            'selectCust   Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('2');
+      print('Error: $e');
+    }
+  }
+
+  Future<void> chkCust(String custCode, String arCode) async {
+    // cutuCode ---------------- mo do no
+    // acCode ---------------------- ref no
+    print('custCode  chkCust  : $custCode');
+    print('arCode  chkCust  : $arCode');
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_ChkCust/$arCode/$custCode'));
+
+      if (response.statusCode == 200) {
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataMessage = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print('dataMessage : $dataMessage type : ${dataMessage.runtimeType}');
+        setState(() {
+          pMessageErr = dataMessage['p_message_err'];
+          print(
+              'pMessageErr :: $pMessageErr  type :: ${pMessageErr.runtimeType}');
+          if (pMessageErr.isNotEmpty) {
+            showDialogErrorCHK(pMessageErr);
+          }
+        });
+      } else {
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print('รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
       print('Error: $e');
@@ -298,8 +380,31 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         child: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Spacer(),
+                ElevatedButton(
+                  onPressed: () {
+                    showDialogLovCancel();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    minimumSize: const Size(10, 20),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  ),
+                  child: const Text(
+                    'ยกเลิก',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+
+                // const Spacer(),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -461,6 +566,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                           // Update variables based on selected item
                           if (selectedItem.isNotEmpty) {
                             returnStatusLovRefNo = selectedItem['so_no'] ?? '';
+                            arCodeForChk = selectedItem['ar_code'] ?? '';
                           }
                         });
                         print(
@@ -519,6 +625,16 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             returnStatusLovMoDoNo = selectedItem['schid'] ?? '';
                             selectLovMoDoNo = selectedItem['schid'].toString();
                             selectCust(returnStatusLovMoDoNo);
+                            //////-----------------------------------------------
+                            custCodeForChk = selectedItem['schid'].toString();
+                            print(selectedItem['schid'].toString());
+                            chkCust(
+                                custCodeForChk.isNotEmpty
+                                    ? custCodeForChk
+                                    : 'null',
+                                returnStatusLovRefNo.isNotEmpty
+                                    ? arCodeForChk
+                                    : 'null');
                           }
                         });
                         print(
@@ -595,15 +711,222 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     );
   }
 
-  // void showDialogSearchLovDocType() {
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text('Search'),
-  //           content: SingleChildScrollView(
+  void showDialogLovCancel() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                // Icon(
+                //   Icons.notification_important,
+                //   color: Colors.red,
+                // ),
+                // SizedBox(width: 8),
+                Text('สาเหตุการยกเลิก'),
+              ],
+            ),
+            // content: Expanded(
+            content: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Text('ตรวจพบสินค้าที่ไม่ระบุจำนวนนับ'),
+                    // const SizedBox(height: 8),
+                    /////////////////////////////////////////////////
+                    DropdownSearch<String>(
+                      popupProps: PopupProps.menu(
+                        showSearchBox: true,
+                        showSelectedItems: true,
+                        itemBuilder: (context, item, isSelected) {
+                          return ListTile(
+                            title: Text(item),
+                            selected: isSelected,
+                          );
+                        },
+                        constraints: BoxConstraints(
+                          maxHeight: 250,
+                        ),
+                      ),
+                      items: dataLovCancel
+                          .map<String>((item) => '${item['d']}')
+                          .toList(),
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          border: InputBorder.none,
+                          filled: true,
+                          fillColor: Colors.white,
+                          labelText: 'สาเหตุการยกเลิก',
+                          labelStyle: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectLovCancel = value;
 
-  //           ),
-  //         );
-  //       });
+                          // Find the selected item
+                          var selectedItem = dataLovCancel.firstWhere(
+                            (item) => '${item['d']}' == value,
+                            orElse: () => <String, dynamic>{}, // แก้ไข orElse
+                          );
+                          // Update variables based on selected item
+                          if (selectedItem.isNotEmpty) {
+                            returnStatusLovCancel = selectedItem['r'] ?? '';
+                          }
+                        });
+                        print(
+                            'dataLovCancel in body: $dataLovCancel type: ${dataLovCancel.runtimeType}');
+                        // print(selectedItem);
+                        print(
+                            'returnStatusLovCancel in body: $returnStatusLovCancel type: ${returnStatusLovCancel.runtimeType}');
+                      },
+                      selectedItem: selectLovCancel,
+                    ),
+                    const SizedBox(height: 8),
+                    //////////////////////////////////////////////////
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 103, 58, 183),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            minimumSize: const Size(10, 20),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                          ),
+                          child: const Text(
+                            'ย้อนกลับ',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 103, 58, 183),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            minimumSize: const Size(10, 20),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                          ),
+                          child: const Text(
+                            'ยืนยัน',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+            // ),
+          );
+        });
+  }
+
+  void showDialogErrorCHK(String pMessageErr) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                Icon(
+                  Icons.notification_important,
+                  color: Colors.red,
+                ),
+                SizedBox(width: 8),
+                Text('แจ้งเตือน'),
+              ],
+            ),
+            // content: Expanded(
+            content: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('$pMessageErr'),
+                    const SizedBox(height: 8),
+                    /////////////////////////////////////////////////
+
+                    const SizedBox(height: 8),
+                    //////////////////////////////////////////////////
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 103, 58, 183),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            minimumSize: const Size(10, 20),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                          ),
+                          child: const Text(
+                            'ย้อนกลับ',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        // ElevatedButton(
+                        //   onPressed: () {},
+                        //   style: ElevatedButton.styleFrom(
+                        //     backgroundColor:
+                        //         const Color.fromARGB(255, 103, 58, 183),
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(12.0),
+                        //     ),
+                        //     minimumSize: const Size(10, 20),
+                        //     padding: const EdgeInsets.symmetric(
+                        //         horizontal: 10, vertical: 5),
+                        //   ),
+                        //   child: const Text(
+                        //     'ยืนยัน',
+                        //     style: TextStyle(
+                        //       color: Colors.white,
+                        //       fontWeight: FontWeight.bold,
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+            // ),
+          );
+        });
+  }
 }
