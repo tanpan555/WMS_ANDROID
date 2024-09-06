@@ -1010,7 +1010,13 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      Text('ต้องการยกเลิกยืนยันตรวจนับ หรือไม่ !!!'),
+                      Text(
+                        'ต้องการยกเลิกยืนยันตรวจนับ หรือไม่ !!!',
+                        style: TextStyle(
+                          fontSize: 24,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

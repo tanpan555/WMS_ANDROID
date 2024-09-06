@@ -72,9 +72,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   String updProgID = '';
   String docDate = '';
 
-  String arCodeForChk = '';
-  String custCodeForChk = '';
-  String pMessageErr = '';
+  String soNoForChk = ''; // ref_no สำหรับ check
+  String shidForChk = ''; // mo_do_no สำหรับ check
+  String pMessageErr = ''; // message หลังจาก check    so_no == shid
+
   TextEditingController custNameController = TextEditingController();
   TextEditingController ouCodeController = TextEditingController();
   TextEditingController docNoController = TextEditingController();
@@ -352,6 +353,41 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     }
   }
 
+  Future<void> changeRefNo(String soNoForChk) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_ChangeRefNo/$soNoForChk'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> items = data['items'];
+        print(items);
+        if (items.isNotEmpty) {
+          final Map<String, dynamic> item = items[0];
+          //
+
+          //
+          print('Fetched data: $jsonDecode');
+
+          setState(() {
+            custName = item['ar_code_name'] ?? '';
+
+            custNameController.text = custName;
+          });
+        } else {
+          print('No items found.');
+        }
+      } else {
+        print(
+            'selectCust   Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('2');
+      print('Error: $e');
+    }
+  }
+
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -566,7 +602,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                           // Update variables based on selected item
                           if (selectedItem.isNotEmpty) {
                             returnStatusLovRefNo = selectedItem['so_no'] ?? '';
-                            arCodeForChk = selectedItem['ar_code'] ?? '';
+                            soNoForChk = selectedItem['so_no'].toString();
                           }
                         });
                         print(
@@ -580,7 +616,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
                     ///
                     const SizedBox(height: 20),
-                    // -----------------------------
+                    // ----------------------------------------------------------------------------------------------------------------------------------
                     DropdownSearch<String>(
                       popupProps: PopupProps.menu(
                         showSearchBox: true,
@@ -626,14 +662,12 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             selectLovMoDoNo = selectedItem['schid'].toString();
                             selectCust(returnStatusLovMoDoNo);
                             //////-----------------------------------------------
-                            custCodeForChk = selectedItem['schid'].toString();
+                            shidForChk = selectedItem['schid'].toString();
                             print(selectedItem['schid'].toString());
                             chkCust(
-                                custCodeForChk.isNotEmpty
-                                    ? custCodeForChk
-                                    : 'null',
+                                shidForChk.isNotEmpty ? shidForChk : 'null',
                                 returnStatusLovRefNo.isNotEmpty
-                                    ? arCodeForChk
+                                    ? soNoForChk
                                     : 'null');
                           }
                         });
