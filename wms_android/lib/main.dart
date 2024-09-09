@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_WARE.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_search.dart';
 import 'custom_appbar.dart';
-import 'custom_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'test_menu_lv2.dart';
@@ -25,11 +24,9 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/home': (context) => const MyHomePage(),
       },
- 
     );
   }
 }
-
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});

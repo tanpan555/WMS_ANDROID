@@ -3,7 +3,6 @@ import 'package:wms_android/SSFGDT17/SSFGD17T_WARE.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_MAIN.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_MENU.dart';
 import 'custom_appbar.dart';
-import 'custom_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'bottombar.dart';
