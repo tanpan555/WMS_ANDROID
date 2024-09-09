@@ -245,7 +245,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   Future<void> lovRefNo() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT12_Step_2_SelectLovRefNo'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovRefNo'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -335,7 +335,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     print('arCode  chkCust  : $arCode');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_ChkCust/$arCode/$custCode'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_ChkCust/$arCode/$custCode'));
 
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
