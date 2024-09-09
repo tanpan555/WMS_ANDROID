@@ -281,13 +281,13 @@ String? doc_out;
               ),
             ],
           ),
-          onTap: () {
+          onTap: () async {
             print('${item['doc_no'] ?? 'No doc_no'} ');
             print('${item['doc_type'] ?? 'No doc_type'} ');
             doc_no = item['doc_no'];
             doc_out = item['doc_type'];
-            chk_validate();
-            chk_validate_inhead();
+            await chk_validate();
+            await chk_validate_inhead();
             print('poStatusinhead: $poStatusinhead');
             // print('$poStatus $poMessage $goToStep');
 
@@ -541,7 +541,7 @@ String? poStatus;
               : errorMessage.isNotEmpty
                   ? Center(child: Text('Error: $errorMessage'))
                   : Padding(
-                      padding: const EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
                           
@@ -571,7 +571,7 @@ String? poStatus;
                 //   // ),
                 // ]
                 // ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 4),
                           Expanded(
                             child: data.isEmpty
                                 ? const Center(child: Text('No Data Available',style: TextStyle(color: Colors.white),))

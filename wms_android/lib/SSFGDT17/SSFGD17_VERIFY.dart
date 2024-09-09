@@ -21,7 +21,11 @@ class SSFGD17_VERIFY extends StatefulWidget {
   final String? pWareName;
 
   const SSFGD17_VERIFY(
-      {required this.po_doc_no, this.po_doc_type, this.selectedwhCode, this.pWareCode, this.pWareName});
+      {required this.po_doc_no,
+      this.po_doc_type,
+      this.selectedwhCode,
+      this.pWareCode,
+      this.pWareName});
 
   @override
   _SSFGD17_VERIFYState createState() => _SSFGD17_VERIFYState();
@@ -391,223 +395,292 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
         ) ??
         false;
   }
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: const Color(0xFF17153B),
-    appBar: const CustomAppBar(title: 'Move Locator'),
-    body: Center(
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[         
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF17153B),
+      appBar: const CustomAppBar(title: 'Move Locator'),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
               Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child:
-          Container(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              // margin: const EdgeInsets.only(bottom: 8.0),
-              color: const Color.fromARGB(255, 255, 242, 204),
-              child: Center(
-                child: Text(
-                  '${widget.po_doc_no}',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ),
-              ),
-            ),),
-            const SizedBox(width: 4,),
-            ElevatedButton(
-                onPressed: () async{
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        // margin: const EdgeInsets.only(bottom: 8.0),
+                        color: const Color.fromARGB(255, 255, 242, 204),
+                        child: Center(
+                          child: Text(
+                            '${widget.po_doc_no}',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 4,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
                         await chk_validateSave();
-                    if (poStatus == '0') {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('การบันทึก และส่งข้อมูลเข้า ERP สมบูรณ์'),
-                            content: Text('เลขที่เอกสาร : ${widget.po_doc_no}'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('OK'),
-                              ),
-                            ],
+                        if (poStatus == '0') {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text(
+                                    'การบันทึก และส่งข้อมูลเข้า ERP สมบูรณ์'),
+                                content:
+                                    Text('เลขที่เอกสาร : ${widget.po_doc_no}'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
                           );
-                        },
-                      );
-                    }
-                    },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 212, 245, 212),
-                  padding: EdgeInsets.symmetric(vertical: 12.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                ),
-                child: Text(
-                  'Confirm',
-                  style: TextStyle(color: Colors.black, fontSize: 16),
-                ),
-              ),
-           
-            ],
-            ),
-            ),
-            // const SizedBox(height: 8.0),
-            SizedBox(
-              width: 365,
-              height: 75,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                margin: const EdgeInsets.only(bottom: 8.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: TextFormField(
-                  style: const TextStyle(
-                    color: Colors.black87,
-                  ),
-                  controller: NB_WARE_CODEController,
-                  decoration: const InputDecoration(
-                    labelText: 'Warehouse ต้นทาง',
-                    labelStyle: TextStyle(
-                      color: Colors.black87,
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 212, 245, 212),
+                        padding: EdgeInsets.symmetric(vertical: 12.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
+                      child: Text(
+                        'Confirm',
+                        style: TextStyle(color: Colors.black, fontSize: 16),
+                      ),
                     ),
-                    border: InputBorder.none,
-                  ),
-                  readOnly: true,
-                ),
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            SizedBox(
-              width: 365,
-              height: 75,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                margin: const EdgeInsets.only(bottom: 8.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: TextFormField(
-                  style: const TextStyle(
-                    color: Colors.black87,
-                  ),
-                  controller: NB_TO_WHController,
-                  decoration: const InputDecoration(
-                    labelText: 'Warehouse ปลายทาง',
-                    labelStyle: TextStyle(
-                      color: Colors.black87,
-                    ),
-                    border: InputBorder.none,
-                  ),
-                  readOnly: true,
-                ),
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            SizedBox(
-              width: 365,
-              height: 75,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                margin: const EdgeInsets.only(bottom: 8.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: TextFormField(
-                  style: const TextStyle(
-                    color: Colors.black87,
-                  ),
-                  controller: CR_DATEController,
-                  decoration: const InputDecoration(
-                    labelText: 'วันที่บันทึกโอน',
-                    labelStyle: TextStyle(
-                      color: Colors.black87,
-                      
-                    ),
-                    suffixIcon: Icon(Icons.calendar_today, color: Colors.black),
-                    border: InputBorder.none,
-                  ),
-                  readOnly: true,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            SizedBox(
-  height: MediaQuery.of(context).size.height * 0.4,
-  child: items.isEmpty
-      ? const Center(
-          child: Text(
-            'no data available',
-            style: TextStyle(fontSize: 18.0, color: Colors.white),
-          ),
-        )
-      : ListView.builder(
-          controller: _scrollController,
-          itemCount: (_displayLimit < items.length)
-              ? _displayLimit + 1
-              : items.length,
-          itemBuilder: (context, index) {
-            if (index == _displayLimit) {
-              return Center(
-                child: ElevatedButton(
-                  onPressed: _loadMoreItems,
-                  child: const Text('แสดงเพิ่มเติม'),
-                ),
-              );
-            }
-            final item = items[index];
-            return Card(
-              color: const Color.fromRGBO(204, 235, 252, 1.0),
-              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              elevation: 4.0,
-              child: ListTile(
-                contentPadding: const EdgeInsets.all(16.0),
-                title: Text(
-                  'Item : ${item['item_code']}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text('Lots No: ${item['lots_no']}'),
-                    Text('ต้นทาง: ${item['location_code']}'),
-                    Text('จำนวนโอน: ${item['pack_qty']}'),
-                    Text('ปลายทาง: ${item['to_loc']}'),
-                    Text('seq ${item['seq']}'),
                   ],
                 ),
-                onTap: () => _showItemDialog(item),
               ),
-            );
-          },
+              // const SizedBox(height: 8.0),
+              Column(
+  children: [
+    SizedBox(
+      width: 300, // Set your desired width here
+      child: TextFormField(
+        style: const TextStyle(
+          color: Colors.black87,
         ),
-)
-
-          ],
+        controller: NB_WARE_CODEController,
+        decoration: const InputDecoration(
+          labelText: 'Warehouse ต้นทาง',
+          labelStyle: TextStyle(
+            color: Colors.black87,
+          ),
+          border: InputBorder.none,
+          filled: true,
+          fillColor: Color.fromRGBO(224, 224, 224, 1),
         ),
+        readOnly: true,
       ),
     ),
-    bottomNavigationBar: BottomBar(),
-  );
-}
+    const SizedBox(height: 8.0),
+    SizedBox(
+      width: 300, // Set your desired width here
+      child: TextFormField(
+        style: const TextStyle(
+          color: Colors.black87,
+        ),
+        controller: NB_TO_WHController,
+        decoration: const InputDecoration(
+          labelText: 'Warehouse ปลายทาง',
+          labelStyle: TextStyle(
+            color: Colors.black87,
+          ),
+          border: InputBorder.none,
+          filled: true,
+          fillColor: Color.fromRGBO(224, 224, 224, 1),
+        ),
+        readOnly: true,
+      ),
+    ),
+    const SizedBox(height: 8.0),
+    SizedBox(
+      width: 300, // Set your desired width here
+      child: TextFormField(
+        style: const TextStyle(
+          color: Colors.black87,
+        ),
+        controller: CR_DATEController,
+        decoration: const InputDecoration(
+          labelText: 'วันที่บันทึกโอน',
+          labelStyle: TextStyle(
+            color: Colors.black87,
+          ),
+          suffixIcon: Icon(Icons.calendar_today, color: Colors.black),
+          border: InputBorder.none,
+          filled: true,
+          fillColor: Color.fromRGBO(224, 224, 224, 1),
+        ),
+        readOnly: true,
+      ),
+    ),
+  ],
+),
 
+              // SizedBox(
+              //   width: 365,
+              //   height: 75,
+              //   child: Container(
+              //     padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              //     margin: const EdgeInsets.only(bottom: 8.0),
+              //     decoration: BoxDecoration(
+              //       color: Colors.grey[300],
+              //       borderRadius: BorderRadius.circular(8.0),
+              //     ),
+              //     child: TextFormField(
+              //       style: const TextStyle(
+              //         color: Colors.black87,
+              //       ),
+              //       controller: NB_WARE_CODEController,
+              //       decoration: const InputDecoration(
+              //         labelText: 'Warehouse ต้นทาง',
+              //         labelStyle: TextStyle(
+              //           color: Colors.black87,
+              //         ),
+              //         border: InputBorder.none,
+              //       ),
+              //       readOnly: true,
+              //     ),
+              //   ),
+              // ),
+              // const SizedBox(height: 8.0),
+              // SizedBox(
+              //   width: 365,
+              //   height: 75,
+              //   child: Container(
+              //     padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              //     margin: const EdgeInsets.only(bottom: 8.0),
+              //     decoration: BoxDecoration(
+              //       color: Colors.grey[300],
+              //       borderRadius: BorderRadius.circular(8.0),
+              //     ),
+              //     child: TextFormField(
+              //       style: const TextStyle(
+              //         color: Colors.black87,
+              //       ),
+              //       controller: NB_TO_WHController,
+              //       decoration: const InputDecoration(
+              //         labelText: 'Warehouse ปลายทาง',
+              //         labelStyle: TextStyle(
+              //           color: Colors.black87,
+              //         ),
+              //         border: InputBorder.none,
+              //       ),
+              //       readOnly: true,
+              //     ),
+              //   ),
+              // ),
+              // const SizedBox(height: 8.0),
+              // SizedBox(
+              //   width: 365,
+              //   height: 75,
+              //   child: Container(
+              //     padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              //     margin: const EdgeInsets.only(bottom: 8.0),
+              //     decoration: BoxDecoration(
+              //       color: Colors.grey[300],
+              //       borderRadius: BorderRadius.circular(8.0),
+              //     ),
+              //     child: TextFormField(
+              //       style: const TextStyle(
+              //         color: Colors.black87,
+              //       ),
+              //       controller: CR_DATEController,
+              //       decoration: const InputDecoration(
+              //         labelText: 'วันที่บันทึกโอน',
+              //         labelStyle: TextStyle(
+              //           color: Colors.black87,
 
+              //         ),
+              //         suffixIcon: Icon(Icons.calendar_today, color: Colors.black),
+              //         border: InputBorder.none,
+              //       ),
+              //       readOnly: true,
+              //     ),
+              //   ),
+              // ),
+              const SizedBox(height: 16.0),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.4,
+                child: items.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'no data available',
+                          style: TextStyle(fontSize: 18.0, color: Colors.white),
+                        ),
+                      )
+                    : ListView.builder(
+                        controller: _scrollController,
+                        itemCount: (_displayLimit < items.length)
+                            ? _displayLimit + 1
+                            : items.length,
+                        itemBuilder: (context, index) {
+                          if (index == _displayLimit) {
+                            return Center(
+                              child: ElevatedButton(
+                                onPressed: _loadMoreItems,
+                                child: const Text('แสดงเพิ่มเติม'),
+                              ),
+                            );
+                          }
+                          final item = items[index];
+                          return Card(
+                            color: const Color.fromRGBO(204, 235, 252, 1.0),
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 16.0),
+                            elevation: 4.0,
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.all(16.0),
+                              title: Text(
+                                'Item : ${item['item_code']}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text('Lots No: ${item['lots_no']}'),
+                                  Text('ต้นทาง: ${item['location_code']}'),
+                                  Text('จำนวนโอน: ${item['pack_qty']}'),
+                                  Text('ปลายทาง: ${item['to_loc']}'),
+                                  Text('seq ${item['seq']}'),
+                                ],
+                              ),
+                              onTap: () => _showItemDialog(item),
+                            ),
+                          );
+                        },
+                      ),
+              )
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: BottomBar(),
+    );
+  }
 }
