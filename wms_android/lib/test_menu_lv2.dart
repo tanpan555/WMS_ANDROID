@@ -3,6 +3,7 @@ import 'package:wms_android/SSFGDT17/SSFGD17T_WARE.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_MAIN.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_MENU.dart';
 import 'custom_appbar.dart';
+import 'custom_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'bottombar.dart';
@@ -84,12 +85,15 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
     String checkPage = '$pageName ${widget.p_attr1}';
     switch (checkPage) {
       case 'SSINDT01_MAIN Raw Material':
+      case 'SSINDT01_MAIN Finishing':
         return SSFGDT01_WARE(
             p_attr1: widget.p_attr1, p_ou_code: widget.p_ou_code);
       case 'SSFGDT04_MAIN Raw Material':
+      case 'SSFGDT04_MAIN Finishing':
         return SSFGDT04_MAIN(
             p_attr1: widget.p_attr1, p_ou_code: widget.p_ou_code);
       case 'SSFGDT17_MAIN Raw Material':
+      case 'SSFGDT17_MAIN Finishing':
         return SSFGDT17_WARE(
           p_attr1: widget.p_attr1,
           p_ou_code: widget.p_ou_code,
@@ -104,6 +108,7 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
             p_attr1: widget.p_attr1, pErpOuCode: widget.p_ou_code);
       case 'SSFGDT31_MAIN Raw Material':
         return SSFGDT31_MAIN();
+
       default:
         return null;
     }
@@ -251,7 +256,7 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
                         if (pageWidget != null) {
                           _navigateToPage(context, pageWidget);
                         } else {
-                          print('Page not found for name: $pageName');
+                          print('Page not found for name: $pageName ${widget.p_attr1}');
                         }
                       },
                     ),
