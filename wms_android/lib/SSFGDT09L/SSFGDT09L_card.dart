@@ -235,6 +235,10 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                 docType: 'RMO1',
                 // docNo: pDocNoGetInHead,
                 // docType: pDocTypeGetInHead,
+                pErpOuCode: widget.pErpOuCode,
+                pOuCode: widget.pOuCode,
+                pAppUser: globals.APP_USER,
+                moDoNo: '23030004',
                 // test
                 statusCase: 'test3',
               ));
@@ -248,6 +252,10 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                 docType: 'RMO1',
                 // docNo: pDocNoGetInHead,
                 // docType: pDocTypeGetInHead,
+                pErpOuCode: widget.pErpOuCode,
+                pOuCode: widget.pOuCode,
+                pAppUser: globals.APP_USER,
+                moDoNo: '23030004',
                 // test
                 statusCase: 'test4',
               ));

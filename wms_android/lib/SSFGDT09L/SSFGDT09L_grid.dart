@@ -6,14 +6,18 @@ import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
+import 'SSFGDT09L_barcode.dart';
 
 class Ssfgdt09lGrid extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจากเลือ lov
   final String pAttr1;
   final String docNo;
   final String docType;
-  // final String moDoNo;
+  final String moDoNo;
   // final String refNo;
+  final String pErpOuCode;
+  final String pOuCode;
+  final String pAppUser;
   final String statusCase;
   Ssfgdt09lGrid({
     Key? key,
@@ -21,8 +25,11 @@ class Ssfgdt09lGrid extends StatefulWidget {
     required this.pAttr1,
     required this.docNo,
     required this.docType,
-    // required this.moDoNo,
+    required this.moDoNo,
     // required this.refNo,
+    required this.pErpOuCode,
+    required this.pOuCode,
+    required this.pAppUser,
     required this.statusCase,
   }) : super(key: key);
   @override
@@ -139,12 +146,23 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
       'attribute4': 'test attribute4 5',
     },
   ];
+
+  String deleteStatus = '';
+  String deleteMessage = '';
+
   @override
   void initState() {
     super.initState();
     fetchData();
     print('docNo : ${widget.docNo} Type : ${widget.docNo.runtimeType}');
     print('docType : ${widget.docType} Type : ${widget.docType.runtimeType}');
+  }
+
+  void _navigateToPage(BuildContext context, Widget page) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => page),
+    );
   }
 
   Future<void> fetchData() async {
@@ -210,6 +228,42 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
     }
   }
 
+  Future<void> deleteCard(String pSeq, String pItemCode) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_deleteCardGrid/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}/$pSeq/$pItemCode/${widget.pAppUser}'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> items = data['items'];
+        print(items);
+        if (items.isNotEmpty) {
+          final Map<String, dynamic> item = items[0];
+          //
+
+          //
+          print('Fetched data: $jsonDecode');
+
+          setState(() {
+            deleteStatus = item['po_status'] ?? '';
+            deleteMessage = item['po_message'] ?? '';
+
+            showDialogMessageDelete(context, deleteStatus, deleteMessage);
+          });
+        } else {
+          print('No items found.');
+        }
+      } else {
+        print(
+            'selectCust   Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('2');
+      print('Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -263,9 +317,10 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
             const SizedBox(height: 10),
             // --------------------------------------------------------------------
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
+                  flex: 5,
                   child: Container(
                     padding: const EdgeInsets.all(12.0),
                     decoration: BoxDecoration(
@@ -290,6 +345,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                   ),
                 ),
                 Expanded(
+                  flex: 3,
                   child: Container(
                     padding: const EdgeInsets.all(12.0),
                     decoration: BoxDecoration(
@@ -303,7 +359,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                     ),
                     child: Center(
                       child: Text(
-                        '230303001',
+                        widget.moDoNo,
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -322,7 +378,20 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _navigateToPage(
+                        context,
+                        Ssfgdt09lBarcode(
+                          pWareCode: widget.pWareCode,
+                          pErpOuCode: widget.pErpOuCode,
+                          pOuCode: widget.pOuCode,
+                          pAttr1: widget.pAttr1,
+                          pAppUser: widget.pAppUser,
+                          pDocNo: widget.docNo,
+                          pDocType: widget.docType,
+                          pMoDoNO: widget.moDoNo,
+                        ));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
                     shape: RoundedRectangleBorder(
@@ -456,24 +525,17 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                 //   ),
                                 // ),
                                 // SizedBox(height: 20.0),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        'Item : ${item['item_code'] ?? ''}',
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        'Lot No : ${item['lots_no'] ?? ''}',
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  'Item : ${item['item_code'] ?? ''}',
+                                  style: TextStyle(color: Colors.black),
                                 ),
+
+                                SizedBox(height: 4.0),
+                                Text(
+                                  'Lot No : ${item['lots_no'] ?? ''}',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+
                                 SizedBox(height: 4.0),
                                 // -------------------------------------------------------------
                                 Row(
@@ -597,7 +659,12 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                                        showDialogComfirmDelete(
+                                            context,
+                                            item['seq'] ?? '',
+                                            item['item_code'] ?? '');
+                                      },
                                       child: Container(
                                         width: 30,
                                         height: 30,
@@ -731,7 +798,13 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Save'),
+              child: const Text('ย้อนกลับ'),
+              onPressed: () {
+                Navigator.of(context).pop(); // ปิด Dialog เมื่อกดปุ่มนี้
+              },
+            ),
+            TextButton(
+              child: const Text('ยืนยัน'),
               onPressed: () async {
                 int updatedPackQty =
                     int.tryParse(packQtyController.text) ?? packQty;
@@ -742,27 +815,19 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                 setState(() {});
               },
             ),
-            TextButton(
-              child: const Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop(); // ปิด Dialog เมื่อกดปุ่มนี้
-              },
-            ),
           ],
         );
       },
     );
   }
 
-  void showDialogcomf(
-    BuildContext context,
-    String messageCard,
-  ) {
+  void showDialogComfirmDelete(
+      BuildContext context, String pSeq, String pItemCode) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Row(
+          title: const Row(
             children: [
               Icon(
                 Icons.notification_important,
@@ -770,8 +835,77 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
               ),
               SizedBox(width: 10),
               Text(
-                'Error',
-                style: TextStyle(color: Colors.red),
+                'แจ้งแตือน',
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  const Text(
+                    'ต้องการลบรายการหรือไม่ ?',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text('ย้อนกลับ'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Navigator.of(context).pop();
+                          deleteCard(pSeq, pItemCode);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text('ยืนยัน'),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showDialogMessageDelete(
+    BuildContext context,
+    String status,
+    String messageDelete,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Row(
+            children: [
+              Icon(
+                Icons.notification_important,
+                color: Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'แจ้งแตือน',
+                style: TextStyle(color: Colors.black),
               ),
             ],
           ),
@@ -782,24 +916,39 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                 children: [
                   const SizedBox(height: 10),
                   Text(
-                    messageCard,
-                    style: TextStyle(color: Colors.red),
+                    messageDelete,
+                    style: const TextStyle(color: Colors.red),
                   ),
                   const SizedBox(height: 10),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: BorderSide(color: Colors.grey),
+                      if (status == '1') ...[
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.grey),
+                          ),
+                          child: const Text('ย้อนกลับ'),
                         ),
-                        child: const Text('ย้อนกลับ'),
-                      ),
+                      ],
+                      if (status != '1') ...[
+                        ElevatedButton(
+                          onPressed: () async {
+                            Navigator.of(context).pop();
+                            await fetchData();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.grey),
+                          ),
+                          child: const Text('ยืนยัน'),
+                        ),
+                      ]
                     ],
                   )
                 ],
