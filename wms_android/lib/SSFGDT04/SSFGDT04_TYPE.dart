@@ -4,8 +4,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../custom_appbar.dart';
 import '../bottombar.dart';
-import 'SSFGDT04_FORM.dart'; // เพิ่มการนำเข้าไฟล์ FROM.dart
+// import 'SSFGDT04_FORM.dart'; // เพิ่มการนำเข้าไฟล์ FROM.dart
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import 'SSFGDT04_FORM.dart';
 
 class SSFGDT04_TYPE extends StatefulWidget {
   final String pWareCode;
@@ -87,7 +88,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
 
     final body = jsonEncode({
       'P_DOC_TYPE': p_doc_type,
-      'P_WARE_CODE': 'WH001',
+      'P_WARE_CODE': gb.P_WARE_CODE,
       'P_OU_CODE': gb.P_OU_CODE,
       'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
       'APP_SESSION': gb.APP_SESSION,

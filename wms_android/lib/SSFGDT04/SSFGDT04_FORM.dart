@@ -6,40 +6,52 @@ import '../bottombar.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:intl/intl.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import 'SSFGDT04_GRID.dart';
+// import 'package:dropdown_search/dropdown_search.dart';
 
 class SSFGDT04_FORM extends StatefulWidget {
-  final String pWareCode; // ware code ที่มาจากเลือ lov
-  // final String pAttr1;
+  final String pWareCode;
   final String po_doc_no;
   final String? po_doc_type;
+
   SSFGDT04_FORM({
     Key? key,
     required this.pWareCode,
-    // required this.pAttr1,
     required this.po_doc_no,
     required this.po_doc_type,
   }) : super(key: key);
+
   // SSFGDT04_FORM({required this.po_doc_no, this.po_doc_type});
   @override
   _SSFGDT04_FORMState createState() => _SSFGDT04_FORMState();
 }
 
 class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
+  // late DateFormat _dateTimeFormatter;
   List<Map<String, dynamic>> fromItems = [];
   List<Map<String, dynamic>> docTypeItems = [];
-  List<Map<String, dynamic>> modonoItems = [];
+  List<Map<String, dynamic>> saffCodeItems = [];
+  List<Map<String, dynamic>> refReceiveItems = [];
+  List<Map<String, dynamic>> refNoItems = [];
+  List<Map<String, dynamic>> cancelItems = [];
   String? selectedDocType;
-  String? selectedMoDoNo;
-  // String? selectedValue;
+  String? selectedSaffCode;
+  String? selectedRefReceive;
+  String? selectedRefNo;
+  String? selectedCancel;
+  String? selectedValue;
+  String? p_ref_no;
+  String? mo_do_no;
 
   TextEditingController _docNoController = TextEditingController();
   TextEditingController _docDateController = TextEditingController();
   TextEditingController _refNoController = TextEditingController();
-  TextEditingController _refReceiveController =
-      TextEditingController(); // REF_RECEIVE
+  // TextEditingController _refReceiveController =
+  //     TextEditingController(); // REF_RECEIVE
   TextEditingController _oderNoController = TextEditingController(); // order_no
   TextEditingController _moDoNoController = TextEditingController(); // mo_do_no
-  // staff_code
+  TextEditingController _staffCodeController =
+      TextEditingController(); // staff_code
   TextEditingController _noteController = TextEditingController();
   TextEditingController _erpDocNoController = TextEditingController();
   TextEditingController _custController = TextEditingController();
@@ -47,16 +59,17 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
       TextEditingController(); // เพิ่ม Controller สำหรับการค้นหา
 
   // เพิ่ม DateFormat สำหรับฟอร์แมทวันที่
-  // final TextEditingController _docDateController = TextEditingController();
   final DateFormat _dateTimeFormatter = DateFormat('dd/MM/yyyy');
 
   @override
   void initState() {
-    _docDateController.text = _dateTimeFormatter.format(DateTime.now());
     super.initState();
     fetchFromItems();
     fetchDocTypeItems();
-    // fetchModonoItems();
+    fetchSaffCodeItems();
+    fetchRefReceiveItems();
+    fetchRefNoItems();
+    fetchCancelItems();
   }
 
   Future<void> fetchFromItems() async {
@@ -64,10 +77,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     print('po_doc_no : ${widget.po_doc_no} : ${widget.po_doc_no.runtimeType}');
     print(
         'po_doc_type : ${widget.po_doc_type} Type : ${widget.po_doc_type.runtimeType}');
-    final response = await http
-        //http://172.16.0.82:8888/apex/wms/SSFGDT04/form/:P_OU_CODE/:P_DOC_NO/:P_DOC_TYPE
-        .get(Uri.parse(
-            'http://172.16.0.82:8888/apex/wms/SSFGDT04/form/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}'));
+    final response = await http.get(Uri.parse(
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/form/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}'));
     print(response.statusCode);
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -75,13 +86,18 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
       setState(() {
         fromItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
         if (fromItems.isNotEmpty) {
-          // _docNoController.text = widget.po_doc_no;
           _docNoController.text = fromItems[0]['doc_no'] ?? '';
-          _docDateController.text = fromItems[0]['cr_date'] ?? '';
+          if (fromItems[0]['cr_date'] != null &&
+              fromItems[0]['cr_date'].isNotEmpty) {
+            // แปลงค่าจาก String เป็น DateTime แล้วฟอร์แมตใหม่
+            DateTime parsedDate = DateTime.parse(fromItems[0]['cr_date']);
+            _docDateController.text = _dateTimeFormatter.format(parsedDate);
+          }
           _refNoController.text = fromItems[0]['ref_no'] ?? ''; // REF_RECEIVE
           _oderNoController.text = fromItems[0]['order_no'] ?? ''; // order_no
           _moDoNoController.text = fromItems[0]['mo_do_no'] ?? ''; // mo_do_no
-          // staff_code
+          _staffCodeController.text =
+              fromItems[0]['staff_code'] ?? ''; // staff_code
           _noteController.text = fromItems[0]['note'] ?? '';
           _erpDocNoController.text = fromItems[0]['erp_doc_no'] ?? '';
         }
@@ -109,20 +125,213 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     }
   }
 
-  // Future<void> fetchModonoItems() async {
-  //   final response = await http
-  //       .get(Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT31/mo_do_no'));
+  Future<void> fetchSaffCodeItems() async {
+    final response = await http.get(Uri.parse(
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/SSFGDT04_STAFF_CODE/${gb.P_ERP_OU_CODE}'));
 
-  //   if (response.statusCode == 200) {
-  //     final responseBody = utf8.decode(response.bodyBytes);
-  //     final data = jsonDecode(responseBody);
-  //     setState(() {
-  //       modonoItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-  //     });
-  //   } else {
-  //     throw Exception('Failed to load MO_DO_NO items');
+    if (response.statusCode == 200) {
+      final responseBody = utf8.decode(response.bodyBytes);
+      final data = jsonDecode(responseBody);
+      setState(() {
+        saffCodeItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+      });
+    } else {
+      throw Exception('Failed to load STAFF_CODE items');
+    }
+  }
+
+  Future<void> fetchRefReceiveItems() async {
+    final response = await http.get(Uri.parse(
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/SSFGDT04_SCREEN2_REFRECEIVE/${gb.ATTR1}/${widget.pWareCode}'));
+
+    if (response.statusCode == 200) {
+      final responseBody = utf8.decode(response.bodyBytes);
+      final data = jsonDecode(responseBody);
+      setState(() {
+        refReceiveItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+      });
+    } else {
+      throw Exception('Failed to load REFRECEIVE items');
+    }
+  }
+
+  Future<void> fetchRefNoItems() async {
+    final response = await http.get(
+        Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT04/SSFGDT04_REF_NO'));
+
+    if (response.statusCode == 200) {
+      final responseBody = utf8.decode(response.bodyBytes);
+      final data = jsonDecode(responseBody);
+      setState(() {
+        refNoItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+      });
+    } else {
+      throw Exception('Failed to load REFNO items');
+    }
+  }
+
+  Future<void> fetchCancelItems() async {
+    final response = await http.get(
+        Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT04/SSFGDT04_CANCEL'));
+
+    if (response.statusCode == 200) {
+      final responseBody = utf8.decode(response.bodyBytes);
+      final data = jsonDecode(responseBody);
+      setState(() {
+        cancelItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+      });
+    } else {
+      throw Exception('Failed to load CANCEL items');
+    }
+  }
+
+  String? poStatus;
+  String? poMessage;
+  String? po_doc_no;
+  // String? po_doc_type;
+
+  Future<void> save_INHeadNonePO_WMS(String? po_doc_no) async {
+    final url =
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/validateSave_INHeadNonePO_WMS/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${gb.APP_USER}';
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    print(po_doc_no);
+    print(gb.P_OU_CODE);
+    print(gb.P_ERP_OU_CODE);
+    print(gb.APP_SESSION);
+    print(gb.APP_USER);
+
+    final body = jsonEncode({
+      'V_DOC_NO': po_doc_no,
+      'P_WARE_CODE': gb.P_WARE_CODE,
+      'P_OU_CODE': gb.P_OU_CODE,
+      'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
+      'APP_SESSION': gb.APP_SESSION,
+      // 'APP_USER': gb.APP_USER,
+      // 'p_ware_code': 'WH001',
+    });
+
+    print('headers : $headers Type : ${headers.runtimeType}');
+    print('body : $body Type : ${body.runtimeType}');
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        setState(() {
+          po_doc_no = responseData['po_doc_no'];
+          // po_doc_type = responseData['po_doc_type'];
+          poStatus = responseData['po_status'];
+          poMessage = responseData['po_message'];
+
+          print('po_doc_no : $po_doc_no Type : ${po_doc_no.runtimeType}');
+          // print('po_doc_type : $po_doc_type Type : ${po_doc_type.runtimeType}');
+          print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
+          print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
+        });
+      } else {
+        print('Failed to post data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  // Future<void> wms_ith(String? po_doc_no, String? po_doc_type) async {
+  //   // ใช้ตัวแปรที่มีอยู่โดยตรง
+  //   final url =
+  //       // 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_wms_ith/${gb.P_WARE_CODE}/${_refNoController.text}/${po_doc_type}/${_oderNoController.text}/${_moDoNoController.text}/${_staffCodeController.text}/${_noteController.text}/${gb.APP_USER}/${po_doc_no}/${gb.P_OU_CODE}/${gb.ATTR1}';
+
+  //       'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_wms_ith';
+
+  //   const headers = {
+  //     'Content-Type': 'application/json',
+  //   };
+
+  //   final body = jsonEncode({
+  //     'P_WARE_CODE': gb.P_WARE_CODE,
+  //     'P_OU_CODE': gb.P_OU_CODE,
+  //     // 'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
+  //     'P_REF_RECEIVE': _refNoController.text,
+  //     'P_ORDER_NO': _oderNoController.text,
+  //     'P_MO_DO_NO': _moDoNoController.text,
+  //     'P_STAFF_CODE': _staffCodeController.text,
+  //     'P_NOTE': _noteController.text,
+  //     'APP_USER': gb.APP_USER,
+  //     'P_DOC_NO': po_doc_no,
+  //     'P_ATTR1': gb.ATTR1,
+  //     'P_DOC_TYPE': po_doc_type,
+  //   });
+
+  // print('headers : $headers Type : ${headers.runtimeType}');
+  //   print('body : $body Type : ${body.runtimeType}');
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(url),
+  //       headers: headers,
+  //       body: body,
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> responseData = jsonDecode(response.body);
+  //       setState(() {
+  //         po_doc_no = responseData['po_doc_no'];
+  //         po_doc_type = responseData['po_doc_type'];
+  //         // อัปเดตค่าตามต้องการ
+  //       });
+  //     } else {
+  //       print('Failed to post data. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error: $e');
   //   }
   // }
+
+  Future<void> update(String? po_doc_type, String? po_doc_no) async {
+    print('Hiiiiiiiii');
+    print(
+        'update called with po_doc_type: $po_doc_type, po_doc_no: $po_doc_no');
+    final url =
+        Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_wms_ith');
+    final response = await http.put(url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'P_WARE_CODE': gb.P_WARE_CODE,
+          'P_OU_CODE': gb.P_OU_CODE,
+          // 'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
+          'P_REF_RECEIVE': _refNoController.text,
+          'P_ORDER_NO': _oderNoController.text,
+          'P_MO_DO_NO': _moDoNoController.text,
+          'P_STAFF_CODE': _staffCodeController.text,
+          'P_NOTE': _noteController.text,
+          'APP_USER': gb.APP_USER,
+          'P_DOC_NO': po_doc_no,
+          'P_ATTR1': gb.ATTR1,
+          'P_DOC_TYPE': po_doc_type,
+        })
+
+        // print('Updating receive_qty with data: ${jsonEncode({
+        //       'rowid': rowid,
+        //       'receive_qty': receiveQty,
+        //     })}'
+        );
+
+    if (response.statusCode == 200) {
+      print('Receive quantity updated successfully');
+      fetchFromItems();
+    } else {
+      print('Failed to update receive quantity: ${response.statusCode}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,29 +345,203 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  //ปุ่ม ถัดไป//
+                  // ปุ่ม ถัดไป และ ยกเลิก //
                   Padding(
                     padding: const EdgeInsets.only(bottom: 0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Handle "Next" button press here
-                        // For example, you might want to validate the form and navigate to another screen
-                      },
-                      child: Image.asset(
-                        'assets/images/right.png', // เปลี่ยนเป็นเส้นทางของรูปภาพของคุณ
-                        width: 20, // ปรับขนาดตามที่ต้องการ
-                        height: 20, // ปรับขนาดตามที่ต้องการ
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 255, 255, 255),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // ปุ่ม ยกเลิก //
+                        ElevatedButton(
+                          onPressed: () {
+                            // แสดง popup ยืนยันการยกเลิก
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('สาเหตุการยกเลิก'),
+                                  content: SizedBox(
+                                    width: 300, // กำหนดความกว้างที่ต้องการ
+                                    height: 150, // กำหนดความสูงที่ต้องการ
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        DropdownButtonFormField2<String>(
+                                          isExpanded: true,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                            labelText: 'สาเหตุการยกเลิก',
+                                            labelStyle: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          items: cancelItems.map((item) {
+                                            return DropdownMenuItem<String>(
+                                              // เชื่อมต่อ cancel_code และ cancel_desc ใน value
+                                              value:
+                                                  '${item['cancel_code'] ?? 'N/A'} ${item['cancel_desc'] ?? 'N/A'}',
+                                              child: Text(
+                                                '${item['cancel_code'] ?? 'N/A'} ${item['cancel_desc'] ?? 'N/A'}',
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              selectedCancel = value;
+                                            });
+                                          },
+                                          onSaved: (value) {
+                                            selectedCancel = value;
+                                          },
+                                          value:
+                                              selectedCancel, // Set the default selected value
+                                          buttonStyleData:
+                                              const ButtonStyleData(
+                                            padding: EdgeInsets.only(right: 8),
+                                          ),
+                                          iconStyleData: const IconStyleData(
+                                            icon: Icon(
+                                              Icons.arrow_drop_down,
+                                              color: Color.fromARGB(
+                                                  255, 113, 113, 113),
+                                            ),
+                                            iconSize: 24,
+                                          ),
+                                          dropdownStyleData: DropdownStyleData(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: Colors.white,
+                                            ),
+                                            maxHeight: 150,
+                                          ),
+                                          menuItemStyleData:
+                                              const MenuItemStyleData(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 5),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        // ปิด popup
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('ไม่'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        // ทำงานเมื่อกดปุ่มยืนยันการยกเลิก
+                                        Navigator.of(context)
+                                            .pop(); // ปิด popup
+                                        // เพิ่มโค้ดการยกเลิกการดำเนินการที่นี่
+                                      },
+                                      child: const Text('ใช่'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: const Text(
+                            'ยกเลิก',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(
+                                255, 255, 68, 68), // สีปุ่มยกเลิก
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            minimumSize: const Size(70, 40),
+                            padding: const EdgeInsets.all(0),
+                          ),
                         ),
-                        minimumSize:
-                            const Size(50, 40), // ปรับขนาดตามที่ต้องการ
-                        padding:
-                            const EdgeInsets.all(0), // ปรับให้ไม่มี padding
-                      ),
+
+                        // const SizedBox(width: 10), // ระยะห่างระหว่างปุ่ม
+                        // ปุ่ม ถัดไป //
+                        ElevatedButton(
+                          onPressed: () async {
+                            print('Hiiiiiiiiiiiiiiiiiiiiiiiiiii');
+                            // เรียกใช้งานฟังก์ชันเพื่ออัปเดตข้อมูล Form ก่อน
+                            await update(widget.po_doc_type, widget.po_doc_no);
+
+                            // ตรวจสอบเงื่อนไขก่อนบันทึกข้อมูล
+                            if (poStatus == '0') {
+                              await save_INHeadNonePO_WMS(selectedValue ?? '');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SSFGDT04_GRID(
+                                    po_doc_no:
+                                        widget.po_doc_no, // ส่งค่า po_doc_no
+                                    po_doc_type: widget.po_doc_type ??
+                                        '', // ส่งค่า po_doc_type
+                                    pWareCode: widget.pWareCode,
+                                    p_ref_no: _refNoController.text ?? '',
+                                    mo_do_no: _moDoNoController.text ?? '',
+                                  ),
+                                ),
+                              );
+                            } else if (poStatus == '1') {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('คำเตือน'),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('${poMessage}'),
+                                      ],
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        child: Text('OK'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                            // เพิ่มโค้ดสำหรับการทำงานของปุ่มถัดไปที่นี่
+                          },
+                          child: Image.asset(
+                            'assets/images/right.png', // เปลี่ยนเป็นเส้นทางของรูปภาพของคุณ
+                            width: 20, // ปรับขนาดตามที่ต้องการ
+                            height: 20, // ปรับขนาดตามที่ต้องการ
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 255, 255, 255),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            minimumSize: const Size(60, 40),
+                            padding: const EdgeInsets.all(0),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
 
@@ -199,7 +582,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 child: Text(
                                   item['doc_desc'] ?? 'doc_desc = null',
                                   style: const TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 16,
                                     color: Colors.black,
                                   ),
                                 ),
@@ -272,31 +655,481 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                   ),
 
                   // อ้างอิงใบนำส่งเลขที่ //
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 8),
+                  //   child: TextField(
+                  //     decoration: InputDecoration(
+                  //       labelText: 'อ้างอิงใบนำส่งเลขที่',
+                  //       filled: true,
+                  //       fillColor: Colors.white,
+                  //       labelStyle: TextStyle(color: Colors.black),
+                  //       border: InputBorder.none,
+                  //     ),
+                  //     controller: _refNoController,
+                  //   ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: 'อ้างอิงใบนำส่งเลขที่',
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelStyle: TextStyle(color: Colors.black),
-                        border: InputBorder.none,
+                    child: GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Dialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: StatefulBuilder(
+                                builder: (context, setState) {
+                                  return Container(
+                                    padding: const EdgeInsets.all(16),
+                                    height:
+                                        300, // ปรับความสูงของ Popup ตามต้องการ
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'อ้างอิงใบนำส่งเลขที่',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            IconButton(
+                                              icon: Icon(Icons.close),
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // ปิด Popup
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        // ช่องค้นหา
+                                        TextField(
+                                          controller: _searchController,
+                                          decoration: InputDecoration(
+                                            hintText: 'ค้นหา',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          onChanged: (query) {
+                                            setState(() {});
+                                          },
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Expanded(
+                                          child: ListView.builder(
+                                            itemCount: refReceiveItems
+                                                .where((item) {
+                                                  // แปลง schid เป็น int ก่อนการเปรียบเทียบ
+                                                  final docString =
+                                                      item['doc'].toString();
+                                                  // final fgCode = item['fg_code']
+                                                  //     .toString();
+                                                  // final empName =
+                                                  //     item['emp_name']
+                                                  // .toString();
+                                                  final searchQuery =
+                                                      _searchController.text
+                                                          .trim();
+
+                                                  // ตรวจสอบว่า searchQuery เป็นจำนวนเต็มหรือไม่
+                                                  final searchQueryInt =
+                                                      int.tryParse(searchQuery);
+
+                                                  // แปลง schid เป็น int ถ้าค่ามันเป็นจำนวนเต็ม
+                                                  final docInt =
+                                                      int.tryParse(docString);
+
+                                                  // เปรียบเทียบกับ searchQuery
+                                                  return (searchQueryInt !=
+                                                              null &&
+                                                          docInt != null &&
+                                                          docInt ==
+                                                              searchQueryInt) ||
+                                                      docString.contains(
+                                                          searchQuery);
+
+                                                  // ||
+                                                  // fgCode.contains(
+                                                  //     searchQuery) ||
+                                                  // empName.contains(
+                                                  //     searchQuery);
+                                                })
+                                                .toList()
+                                                .length,
+                                            itemBuilder: (context, index) {
+                                              final filteredItems =
+                                                  refReceiveItems.where((item) {
+                                                final docString =
+                                                    item['doc'].toString();
+                                                // final fgCode =
+                                                //     item['fg_code'].toString();
+                                                // final empName =
+                                                //     item['d'].toString();
+                                                final searchQuery =
+                                                    _searchController.text
+                                                        .trim();
+
+                                                final searchQueryInt =
+                                                    int.tryParse(searchQuery);
+                                                final docInt =
+                                                    int.tryParse(docString);
+
+                                                return (searchQueryInt !=
+                                                            null &&
+                                                        docInt != null &&
+                                                        docInt ==
+                                                            searchQueryInt) ||
+                                                    docString
+                                                        .contains(searchQuery);
+                                                //     ||
+                                                // // fgCode.contains(
+                                                // //     searchQuery) ||
+                                                // empName
+                                                //     .contains(searchQuery);
+                                              }).toList();
+
+                                              final item = filteredItems[index];
+                                              final doc =
+                                                  item['doc'].toString();
+                                              // final fgCode =
+                                              //     item['fg_code'].toString();
+                                              // final empName =
+                                              //     item['d'].toString();
+                                              // final displayValue =
+                                              //     '$schid  $fgCode  $custName';
+
+                                              return ListTile(
+                                                contentPadding: EdgeInsets.zero,
+                                                title: RichText(
+                                                  text: TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                        text: '$doc',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      // TextSpan(
+                                                      //   text: '$empName',
+                                                      //   style: TextStyle(
+                                                      //     fontSize: 12,
+                                                      //     fontWeight:
+                                                      //         FontWeight.normal,
+                                                      //     color: Colors.black,
+                                                      //   ),
+                                                      // ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  Navigator.of(context).pop();
+                                                  setState(() {
+                                                    selectedRefReceive = doc;
+                                                    // _custController.text =
+                                                    //     '$empName';
+                                                    fetchRefReceiveItems();
+                                                  });
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: AbsorbPointer(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            labelText: 'อ้างอิงใบนำส่งเลขที่',
+                            filled: true,
+                            fillColor: Colors.white,
+                            labelStyle: TextStyle(color: Colors.black),
+                            border: InputBorder.none,
+                            suffixIcon: Icon(
+                              Icons.list,
+                              color: Colors.black,
+                            ),
+                          ),
+                          controller:
+                              TextEditingController(text: selectedRefReceive),
+                        ),
                       ),
-                      controller: _refNoController,
                     ),
                   ),
+
                   // อ้างอิง SO //
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 8),
+                  //   child: TextField(
+                  //     decoration: InputDecoration(
+                  //       labelText: 'อ้างอิง SO',
+                  //       filled: true,
+                  //       fillColor: Colors.white,
+                  //       labelStyle: TextStyle(color: Colors.black),
+                  //       border: InputBorder.none,
+                  //     ),
+                  //     controller: _oderNoController,
+                  //   ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: 'อ้างอิง SO',
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelStyle: TextStyle(color: Colors.black),
-                        border: InputBorder.none,
+                    child: GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Dialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: StatefulBuilder(
+                                builder: (context, setState) {
+                                  return Container(
+                                    padding: const EdgeInsets.all(16),
+                                    height:
+                                        300, // ปรับความสูงของ Popup ตามต้องการ
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'อ้างอิง SO',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            IconButton(
+                                              icon: Icon(Icons.close),
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // ปิด Popup
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        // ช่องค้นหา
+                                        TextField(
+                                          controller: _searchController,
+                                          decoration: InputDecoration(
+                                            hintText: 'ค้นหา',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          onChanged: (query) {
+                                            setState(() {});
+                                          },
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Expanded(
+                                          child: ListView.builder(
+                                            itemCount: refNoItems
+                                                .where((item) {
+                                                  // แปลง schid เป็น int ก่อนการเปรียบเทียบ
+                                                  final soNoString =
+                                                      item['so_no'].toString();
+                                                  final soDateDisp =
+                                                      item['so_date_disp']
+                                                          .toString();
+                                                  final soDate = item['so_date']
+                                                      .toString();
+                                                  final soRemark =
+                                                      item['so_remark']
+                                                          .toString();
+                                                  final arName = item['ar_name']
+                                                      .toString();
+                                                  final arCode = item['ar_code']
+                                                      .toString();
+                                                  final searchQuery =
+                                                      _searchController.text
+                                                          .trim();
+
+                                                  // ตรวจสอบว่า searchQuery เป็นจำนวนเต็มหรือไม่
+                                                  final searchQueryInt =
+                                                      int.tryParse(searchQuery);
+
+                                                  // แปลง schid เป็น int ถ้าค่ามันเป็นจำนวนเต็ม
+                                                  final soNoInt =
+                                                      int.tryParse(soNoString);
+
+                                                  // เปรียบเทียบกับ searchQuery
+                                                  return (searchQueryInt !=
+                                                              null &&
+                                                          soNoInt != null &&
+                                                          soNoInt ==
+                                                              searchQueryInt) ||
+                                                      soNoString.contains(
+                                                          searchQuery) ||
+                                                      soDateDisp.contains(
+                                                          searchQuery) ||
+                                                      soDate.contains(
+                                                          searchQuery) ||
+                                                      soRemark.contains(
+                                                          searchQuery) ||
+                                                      arName.contains(
+                                                          searchQuery) ||
+                                                      arCode.contains(
+                                                          searchQuery);
+                                                })
+                                                .toList()
+                                                .length,
+                                            itemBuilder: (context, index) {
+                                              final filteredItems =
+                                                  refReceiveItems.where((item) {
+                                                final soNoString =
+                                                    item['so_no'].toString();
+                                                final soDateDisp =
+                                                    item['so_date_disp']
+                                                        .toString();
+                                                final soDate =
+                                                    item['so_date'].toString();
+                                                final soRemark =
+                                                    item['so_remark']
+                                                        .toString();
+                                                final arName =
+                                                    item['ar_name'].toString();
+                                                final arCode =
+                                                    item['ar_code'].toString();
+                                                final searchQuery =
+                                                    _searchController.text
+                                                        .trim();
+
+                                                final searchQueryInt =
+                                                    int.tryParse(searchQuery);
+                                                final soNoInt =
+                                                    int.tryParse(soNoString);
+
+                                                return (searchQueryInt !=
+                                                            null &&
+                                                        soNoInt != null &&
+                                                        soNoInt ==
+                                                            searchQueryInt) ||
+                                                    soNoString.contains(
+                                                        searchQuery) ||
+                                                    soDateDisp.contains(
+                                                        searchQuery) ||
+                                                    soDate.contains(
+                                                        searchQuery) ||
+                                                    soRemark.contains(
+                                                        searchQuery) ||
+                                                    arName.contains(
+                                                        searchQuery) ||
+                                                    arCode
+                                                        .contains(searchQuery);
+                                              }).toList();
+
+                                              final item = filteredItems[index];
+                                              final soNo =
+                                                  item['so_no'].toString();
+                                              final soDateDisp =
+                                                  item['so_date_disp']
+                                                      .toString();
+                                              final soDate =
+                                                  item['so_date'].toString();
+                                              final soRemark =
+                                                  item['so_remark'].toString();
+                                              final arName =
+                                                  item['ar_name'].toString();
+                                              final arCode =
+                                                  item['ar_code'].toString();
+                                              // final displayValue =
+                                              //     '$schid  $fgCode  $custName';
+
+                                              return ListTile(
+                                                contentPadding: EdgeInsets.zero,
+                                                title: RichText(
+                                                  text: TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                        text: '$soNo\n',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text: '$soDateDisp'
+                                                            '$soDate',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text: '$soRemark'
+                                                            '$arName'
+                                                            '$arCode',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  Navigator.of(context).pop();
+                                                  setState(() {
+                                                    selectedRefNo = soNo;
+                                                    // _custController.text =
+                                                    //     '$empName';
+                                                    fetchRefNoItems();
+                                                  });
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: AbsorbPointer(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            labelText: 'อ้างอิง SO',
+                            filled: true,
+                            fillColor: Colors.white,
+                            labelStyle: TextStyle(color: Colors.black),
+                            border: InputBorder.none,
+                            suffixIcon: Icon(
+                              Icons.list,
+                              color: Colors.black,
+                            ),
+                          ),
+                          controller:
+                              TextEditingController(text: selectedRefNo),
+                        ),
                       ),
-                      controller: _oderNoController,
                     ),
                   ),
 
@@ -331,8 +1164,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 builder: (context, setState) {
                                   return Container(
                                     padding: const EdgeInsets.all(16),
-                                    height:
-                                        300, // ปรับความสูงของ Popup ตามต้องการ
+                                    height: 300, // Adjust the height as needed
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -342,7 +1174,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              'เลขที่คำสั่งผลผลิต',
+                                              'ผู้รับมอบสินค้า',
                                               style: TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.bold),
@@ -351,13 +1183,13 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                               icon: Icon(Icons.close),
                                               onPressed: () {
                                                 Navigator.of(context)
-                                                    .pop(); // ปิด Popup
+                                                    .pop(); // Close popup
                                               },
                                             ),
                                           ],
                                         ),
                                         const SizedBox(height: 10),
-                                        // ช่องค้นหา
+                                        // Search Field
                                         TextField(
                                           controller: _searchController,
                                           decoration: InputDecoration(
@@ -371,84 +1203,64 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                         const SizedBox(height: 10),
                                         Expanded(
                                           child: ListView.builder(
-                                            itemCount: modonoItems
+                                            itemCount: saffCodeItems
                                                 .where((item) {
-                                                  // แปลง schid เป็น int ก่อนการเปรียบเทียบ
-                                                  final schidString =
-                                                      item['schid'].toString();
-                                                  final fgCode = item['fg_code']
-                                                      .toString();
-                                                  final custName =
-                                                      item['cust_name']
+                                                  final empIdString =
+                                                      item['emp_id'].toString();
+                                                  final empName =
+                                                      item['emp_name']
                                                           .toString();
                                                   final searchQuery =
                                                       _searchController.text
                                                           .trim();
-
-                                                  // ตรวจสอบว่า searchQuery เป็นจำนวนเต็มหรือไม่
                                                   final searchQueryInt =
                                                       int.tryParse(searchQuery);
+                                                  final empIdInt =
+                                                      int.tryParse(empIdString);
 
-                                                  // แปลง schid เป็น int ถ้าค่ามันเป็นจำนวนเต็ม
-                                                  final schidInt =
-                                                      int.tryParse(schidString);
-
-                                                  // เปรียบเทียบกับ searchQuery
                                                   return (searchQueryInt !=
                                                               null &&
-                                                          schidInt != null &&
-                                                          schidInt ==
+                                                          empIdInt != null &&
+                                                          empIdInt ==
                                                               searchQueryInt) ||
-                                                      schidString.contains(
+                                                      empIdString.contains(
                                                           searchQuery) ||
-                                                      fgCode.contains(
-                                                          searchQuery) ||
-                                                      custName.contains(
+                                                      empName.contains(
                                                           searchQuery);
                                                 })
                                                 .toList()
                                                 .length,
                                             itemBuilder: (context, index) {
                                               final filteredItems =
-                                                  modonoItems.where((item) {
-                                                final schidString =
-                                                    item['schid'].toString();
-                                                final fgCode =
-                                                    item['fg_code'].toString();
-                                                final custName =
-                                                    item['cust_name']
-                                                        .toString();
+                                                  saffCodeItems.where((item) {
+                                                final empIdString =
+                                                    item['emp_id'].toString();
+                                                final empName =
+                                                    item['emp_name'].toString();
                                                 final searchQuery =
                                                     _searchController.text
                                                         .trim();
-
                                                 final searchQueryInt =
                                                     int.tryParse(searchQuery);
-                                                final schidInt =
-                                                    int.tryParse(schidString);
+                                                final empIdInt =
+                                                    int.tryParse(empIdString);
 
                                                 return (searchQueryInt !=
                                                             null &&
-                                                        schidInt != null &&
-                                                        schidInt ==
+                                                        empIdInt != null &&
+                                                        empIdInt ==
                                                             searchQueryInt) ||
-                                                    schidString.contains(
+                                                    empIdString.contains(
                                                         searchQuery) ||
-                                                    fgCode.contains(
-                                                        searchQuery) ||
-                                                    custName
+                                                    empName
                                                         .contains(searchQuery);
                                               }).toList();
 
                                               final item = filteredItems[index];
-                                              final schid =
-                                                  item['schid'].toString();
-                                              final fgCode =
-                                                  item['fg_code'].toString();
-                                              final custName =
-                                                  item['cust_name'].toString();
-                                              // final displayValue =
-                                              //     '$schid  $fgCode  $custName';
+                                              final empId =
+                                                  item['emp_id'].toString();
+                                              final empName =
+                                                  item['emp_name'].toString();
 
                                               return ListTile(
                                                 contentPadding: EdgeInsets.zero,
@@ -456,7 +1268,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                   text: TextSpan(
                                                     children: [
                                                       TextSpan(
-                                                        text: '$schid\n',
+                                                        text: '$empId\n',
                                                         style: TextStyle(
                                                           fontSize: 12,
                                                           fontWeight:
@@ -465,8 +1277,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                         ),
                                                       ),
                                                       TextSpan(
-                                                        text:
-                                                            '$fgCode  $custName',
+                                                        text: '$empName',
                                                         style: TextStyle(
                                                           fontSize: 12,
                                                           fontWeight:
@@ -480,10 +1291,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                 onTap: () {
                                                   Navigator.of(context).pop();
                                                   setState(() {
-                                                    selectedMoDoNo = schid;
-                                                    _custController.text =
-                                                        '$fgCode  $custName';
-                                                    // fetchModonoItems();
+                                                    selectedSaffCode = empName;
+                                                    _staffCodeController.text =
+                                                        empName;
+                                                    fetchSaffCodeItems();
                                                   });
                                                 },
                                               );
@@ -502,7 +1313,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                       child: AbsorbPointer(
                         child: TextField(
                           decoration: InputDecoration(
-                            labelText: 'เลขที่คำสั่งผลผลิต*',
+                            labelText: 'ผู้รับมอบสินค้า*',
                             filled: true,
                             fillColor: Colors.white,
                             labelStyle: TextStyle(color: Colors.black),
@@ -512,27 +1323,28 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                               color: Colors.black,
                             ),
                           ),
-                          controller:
-                              TextEditingController(text: selectedMoDoNo),
+                          controller: _staffCodeController.text.isNotEmpty
+                              ? _staffCodeController
+                              : TextEditingController(text: selectedSaffCode),
                         ),
                       ),
                     ),
                   ),
 
-                  // ลูกค้า //
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: 'ผู้รับมอบสินค้า*',
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelStyle: TextStyle(color: Colors.black),
-                        border: InputBorder.none,
-                      ),
-                      controller: _custController,
-                    ),
-                  ),
+                  // // ลูกค้า //
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 8),
+                  //   child: TextField(
+                  //     decoration: InputDecoration(
+                  //       labelText: 'ผู้รับมอบสินค้า*',
+                  //       filled: true,
+                  //       fillColor: Colors.white,
+                  //       labelStyle: TextStyle(color: Colors.black),
+                  //       border: InputBorder.none,
+                  //     ),
+                  //     controller: _custController,
+                  //   ),
+                  // ),
 
                   // หมายเหตุ //
                   Padding(

@@ -4,6 +4,7 @@ import '../bottombar.dart';
 import 'SSFGDT04_SEARCH.dart';
 import 'SSFGDT04_TYPE.dart';
 
+
 class SSFGDT04_SCREEN2 extends StatelessWidget {
   final String pWareCode;
   final String pErpOuCode;
@@ -67,11 +68,8 @@ class SSFGDT04_SCREEN2 extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => SSFGDT04_TYPE(
-                              pWareCode: pWareCode,
-                              pErpOuCode: pErpOuCode,
-                            )),
+                    MaterialPageRoute(builder: (context) => SSFGDT04_TYPE(pWareCode: pWareCode,
+                        pErpOuCode: pErpOuCode,)),
                   );
                   // Action for "สร้างเอกสาร"
                 },

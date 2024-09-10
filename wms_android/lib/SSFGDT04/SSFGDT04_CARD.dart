@@ -11,15 +11,14 @@ class SSFGDT04_CARD extends StatefulWidget {
   final String date;
   final String status;
   final String pWareCode;
-  // final String pOuCode;
   final String pErpOuCode;
+
   SSFGDT04_CARD({
     Key? key,
     required this.soNo,
     required this.date,
     required this.status,
     required this.pWareCode,
-    // required this.pOuCode,
     required this.pErpOuCode,
   }) : super(key: key);
 
@@ -61,7 +60,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
 
   Future<void> fetchData() async {
     final String endpoint = widget.soNo.isNotEmpty
-        ? 'http://172.16.0.82:8888/apex/wms/SSFGDT04/card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}'
+        ? 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}'
         : 'http://172.16.0.82:8888/apex/wms/SSFGDT12/selectCard/${gb.P_ERP_OU_CODE}/$data_null/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}';
 
     // print('Fetching data from: $endpoint');
