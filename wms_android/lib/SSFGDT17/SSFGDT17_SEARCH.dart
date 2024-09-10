@@ -150,9 +150,14 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                     const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () {
-                        final documentNumber = _documentNumberController.text;
+    final documentNumber = _documentNumberController.text.isEmpty
+                            ? 'null'
+                            : _documentNumberController.text;
 
-    
+                            final selectedDate = _selectedDate == null
+                            ? 'null'
+                            : DateFormat('dd/MM/yyyy').format(_selectedDate!);
+
     // Debugging output
     print(selectedValue);
     print(documentNumber);
@@ -166,7 +171,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
           pWareCode: widget.pWareCode,
         selectedValue: selectedValue,
         documentNumber: documentNumber,
-        dateController: _dateController.text,
+        dateController: selectedDate,
         ),
       ),
     );

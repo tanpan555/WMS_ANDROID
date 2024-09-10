@@ -42,7 +42,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
 String? docNumberFilter;
   final TextEditingController _docNumberController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-
+String? DateSend;
   @override
 void initState() {
   super.initState();
@@ -54,7 +54,15 @@ print(selectedwhCode);
    _dateController.text = widget.dateController;
   _selectedStatusValue = widget.selectedValue;
   docNumberFilter = widget.documentNumber;
-fetchDocType().then((data) {
+  print('=====================');
+  print(widget.documentNumber);
+  print(widget.dateController);
+  print(_dateController.text);
+
+  DateSend = widget.dateController;
+  if (DateSend != null) {
+    DateSend = DateSend!.replaceAll('/', '-');
+    fetchDocType().then((data) {
       setState(() {
         print('docData: $docData');
         data_card_list();
@@ -62,6 +70,8 @@ fetchDocType().then((data) {
     }).catchError((e) {
       print('Error fetching doc type: $e');
     });
+  }
+
   
 }
 
@@ -155,7 +165,8 @@ String? _selectedStatusValue = 'ทั้งหมด';
   Future<void> data_card_list() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$fixedValue/000/$docData'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$fixedValue/000/$docData/$DateSend/${widget.documentNumber}'));
+          
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -164,37 +175,37 @@ String? _selectedStatusValue = 'ทั้งหมด';
         List<dynamic> fetchedData = jsonData['items'] ?? [];
 
         // Convert dateController text to DateTime
-        DateTime? filterDate;
-        try {
-          filterDate = DateFormat('dd/MM/yyyy').parse(_dateController.text);
-        } catch (e) {
-          print('Date format error: $e');
-        }
+        // DateTime? filterDate;
+        // try {
+        //   filterDate = DateFormat('dd/MM/yyyy').parse(_dateController.text);
+        // } catch (e) {
+        //   print('Date format error: $e');
+        // }
 
-        if (filterDate != null) {
-          fetchedData = fetchedData.where((item) {
-            DateTime? itemDate;
-            try {
-              itemDate = DateFormat('dd/MM/yyyy').parse(item['doc_date'] ?? '');
-            } catch (e) {
-              return false;
-            }
-            return itemDate != null && itemDate.isAtSameMomentAs(filterDate!);
-          }).toList();
-        }
+        // if (filterDate != null) {
+        //   fetchedData = fetchedData.where((item) {
+        //     DateTime? itemDate;
+        //     try {
+        //       itemDate = DateFormat('dd/MM/yyyy').parse(item['doc_date'] ?? '');
+        //     } catch (e) {
+        //       return false;
+        //     }
+        //     return itemDate != null && itemDate.isAtSameMomentAs(filterDate!);
+        //   }).toList();
+        // }
 
-        if (docNumberFilter != null && docNumberFilter!.isNotEmpty) {
-          fetchedData = fetchedData.where((item) {
-            return (item['doc_number'] ?? '').contains(docNumberFilter!);
-          }).toList();
-        }
+        // if (docNumberFilter != null && docNumberFilter!.isNotEmpty) {
+        //   fetchedData = fetchedData.where((item) {
+        //     return (item['doc_number'] ?? '').contains(docNumberFilter!);
+        //   }).toList();
+        // }
 
         setState(() {
           data = fetchedData;
           print(data);
           isLoading = false;
         });
-        print('http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$fixedValue/000/$docData');
+        print('http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$fixedValue/000/$docData/null/null');
       } else {
         throw Exception('Failed to load data');
       }
