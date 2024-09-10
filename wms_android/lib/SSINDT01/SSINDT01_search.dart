@@ -11,11 +11,16 @@ import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 
 class SSINDT01_SEARCH extends StatefulWidget {
-final String pWareCode;
-final String pWareName;
-final String p_ou_code;
+  final String pWareCode;
+  final String pWareName;
+  final String p_ou_code;
 
-  const SSINDT01_SEARCH({Key? key, required this.pWareCode, required this.pWareName, required this.p_ou_code}) : super(key: key);
+  const SSINDT01_SEARCH(
+      {Key? key,
+      required this.pWareCode,
+      required this.pWareName,
+      required this.p_ou_code})
+      : super(key: key);
 
   @override
   _SSINDT01_SEARCHState createState() => _SSINDT01_SEARCHState();
@@ -36,7 +41,8 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
   String errorMessage = '';
   String? _selectedValue = 'ทั้งหมด';
 
-  final TextEditingController _documentNumberController = TextEditingController();
+  final TextEditingController _documentNumberController =
+      TextEditingController();
 
   @override
   void initState() {
@@ -47,7 +53,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
     // print('$selectedApCode' ?? 'test');
 
     print('Search Global Ware Code: ${gb.P_WARE_CODE}');
-                        log('Search Global Ware Code: ${gb.P_WARE_CODE}');
+    log('Search Global Ware Code: ${gb.P_WARE_CODE}');
   }
 
   Future<void> fetchApCodes() async {
@@ -76,21 +82,14 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
   }
 
   void _resetForm() {
-  setState(() {
-    // Resetting the selected value to the initial default value
-    _selectedValue = 'ทั้งหมด';
-    
-    // Resetting the selected AP code to the initial default value
-    selectedApCode = 'ทั้งหมด';
-    
-    // Clearing the document number text field
-    _documentNumberController.clear();
+    setState(() {
+      _selectedValue = 'ทั้งหมด';
+      selectedApCode = 'ทั้งหมด';
 
-    // Optionally reset any error message
-    errorMessage = '';
-  });
-}
-
+      _documentNumberController.clear();
+      errorMessage = '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,92 +107,89 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
               children: [
                 const SizedBox(height: 16),
                 DropdownSearch<String>(
-                        popupProps: PopupProps.menu(
-                          showSearchBox: true,
-                          showSelectedItems: true,
-                          itemBuilder: (context, item, isSelected) {
-                            return ListTile(
-                              title: Text(item),
-                              selected: isSelected,
-                            );
-                          },
-                          constraints: BoxConstraints(
-                            maxHeight: 250,
-                          ),
+                  popupProps: PopupProps.menu(
+                    showSearchBox: true,
+                    showSelectedItems: true,
+                    itemBuilder: (context, item, isSelected) {
+                      return ListTile(
+                        title: Text(item),
+                        selected: isSelected,
+                      );
+                    },
+                    constraints: BoxConstraints(
+                      maxHeight: 250,
+                    ),
+                  ),
+                  items: <String>[
+                    'รายการรอรับดำเนินการ',
+                    'รายการใบสั่งซื้อ',
+                    'ทั้งหมด',
+                  ],
+                  dropdownDecoratorProps: DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: "ประเภทสินค้า",
+                      hintText: "เลือกประเภทสินค้า",
+                      hintStyle: TextStyle(fontSize: 16.0),
+                    ),
+                  ),
+                  onChanged: (String? value) {
+                    setState(() {
+                      _selectedValue = value;
+                    });
+                  },
+                  selectedItem: _selectedValue,
+                ),
+                SizedBox(height: 15),
+                DropdownSearch<String>(
+                  popupProps: PopupProps.menu(
+                    showSearchBox: true,
+                    showSelectedItems: true,
+                    itemBuilder: (context, item, isSelected) {
+                      // Find the corresponding item details from apCodes
+                      final apCodeItem = apCodes.firstWhere(
+                        (element) => element['ap_code'] == item,
+                        orElse: () => {'ap_name': 'No name'},
+                      );
+                      return ListTile(
+                        title: Text(
+                          item,
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        items: <String>[
-                          'รายการรอรับดำเนินการ',
-                          'รายการใบสั่งซื้อ',
-                          'ทั้งหมด',
-                        ],
-                        dropdownDecoratorProps: DropDownDecoratorProps(
-                          dropdownSearchDecoration: InputDecoration(
-                            border: InputBorder.none,
-                    filled: true,
-                    fillColor: Colors.white,
-                            labelText: "ประเภทสินค้า",
-                            hintText: "เลือกประเภทสินค้า",
-                            hintStyle: TextStyle(fontSize: 16.0),
-                          ),
+                        subtitle: Text(
+                          apCodeItem['ap_name'] ?? 'No name',
+                          style: TextStyle(color: Colors.grey, fontSize: 8),
                         ),
-                        onChanged: (String? value) {
-                          setState(() {
-                            _selectedValue = value;
-                       
-                          });
-                        },
-                        selectedItem: _selectedValue,
-                      ),
-                      SizedBox(height: 15),
-                      DropdownSearch<String>(
-                        popupProps: PopupProps.menu(
-                          showSearchBox: true,
-                          showSelectedItems: true,
-                          itemBuilder: (context, item, isSelected) {
-                            // Find the corresponding item details from apCodes
-                            final apCodeItem = apCodes.firstWhere(
-                              (element) => element['ap_code'] == item,
-                              orElse: () => {'ap_name': 'No name'},
-                            );
-                            return ListTile(
-                              title: Text(
-                                item,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              subtitle: Text(
-                                apCodeItem['ap_name'] ?? 'No name',
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 8),
-                              ),
-                              selected: isSelected,
-                            );
-                          },
-                          constraints: BoxConstraints(
-                            maxHeight: 300,
-                          ),
-                        ),
-                        items: apCodes
-                            .map((item) => item['ap_code'] as String)
-                            .toList(),
-                        dropdownDecoratorProps: DropDownDecoratorProps(
-                          dropdownSearchDecoration: InputDecoration(
-                            border: InputBorder.none,
-                    filled: true,
-                    fillColor: Colors.white,
-                            labelText: "ผู้ขาย",
-                            hintText: "เลือกผู้ขาย",
-                          ),
-                        ),
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectedApCode = value;
-                          });
-                        },
-                        selectedItem: selectedApCode,
-                      ),
+                        selected: isSelected,
+                      );
+                    },
+                    constraints: BoxConstraints(
+                      maxHeight: 300,
+                    ),
+                  ),
+                  items:
+                      apCodes.map((item) => item['ap_code'] as String).toList(),
+                  dropdownDecoratorProps: DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: "ผู้ขาย",
+                      hintText: "เลือกผู้ขาย",
+                    ),
+                  ),
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedApCode = value;
+                    });
+                  },
+                  selectedItem: selectedApCode,
+                ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  controller: _documentNumberController, 
+                  controller: _documentNumberController,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     labelText: 'เลขที่เอกสาร',
@@ -209,50 +205,55 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                   children: [
                     ElevatedButton(
                       onPressed: _resetForm,
-                      child: Image.asset('assets/images/eraser_red.png', width: 50, height: 25),
+                      child: Image.asset('assets/images/eraser_red.png',
+                          width: 50, height: 25),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey[300],
                         padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
                     const SizedBox(width: 20),
-                   ElevatedButton(
-  onPressed: () {
-    final documentNumber = _documentNumberController.text;
-    final apCode = selectedApCode ?? 'ทั้งหมด';
-    
-    // Debugging output
-    print(_selectedValue);
-    print(apCode); 
-    print(documentNumber);
-    log(apCode);
+                    ElevatedButton(
+                      onPressed: () {
+                        final documentNumber =
+                            _documentNumberController.text.isNotEmpty
+                                ? _documentNumberController.text
+                                : 'null';
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SSINDT01_MAIN(
-          pWareCode: widget.pWareCode,
-          pWareName: widget.pWareName,
-          p_ou_code: widget.p_ou_code,
-          selectedValue: _selectedValue ?? 'ทั้งหมด', // Updated parameter name
-          apCode: apCode,
-          documentNumber: documentNumber,
-        ),
-      ),
-    );
-  },
-  style: ElevatedButton.styleFrom(
-    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-    padding: const EdgeInsets.all(10),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10),
-    ),
-  ),
-  child: Image.asset('assets/images/search_color.png', width: 50, height: 25),
-),
+                        final apCode = selectedApCode ?? 'ทั้งหมด';
 
+                        print(_selectedValue);
+                        print(apCode);
+                        print(documentNumber);
+                        log(apCode);
 
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SSINDT01_MAIN(
+                              pWareCode: widget.pWareCode,
+                              pWareName: widget.pWareName,
+                              p_ou_code: widget.p_ou_code,
+                              selectedValue: _selectedValue ?? 'ทั้งหมด',
+                              apCode: apCode,
+                              documentNumber: documentNumber,
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 255, 255, 255),
+                        padding: const EdgeInsets.all(10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Image.asset('assets/images/search_color.png',
+                          width: 50, height: 25),
+                    ),
                   ],
                 ),
               ],

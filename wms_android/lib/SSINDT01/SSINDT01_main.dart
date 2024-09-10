@@ -9,6 +9,7 @@ import 'package:wms_android/custom_appbar.dart';
 // import 'package:wms_android/custom_drawer.dart';
 import 'SSINDT01_form.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'dart:async';
 
 import 'package:wms_android/Global_Parameter.dart' as gb;
 
@@ -16,7 +17,7 @@ class SSINDT01_MAIN extends StatefulWidget {
 final String pWareCode;
   final String pWareName;
   final String p_ou_code;
-  final String selectedValue; // Changed parameter name
+  final String selectedValue;
   final String apCode;
   final String documentNumber;
 
@@ -25,7 +26,7 @@ final String pWareCode;
     required this.pWareCode,
     required this.pWareName,
     required this.p_ou_code,
-    required this.selectedValue, // Changed parameter name
+    required this.selectedValue,
     required this.apCode,
     required this.documentNumber,
   }) : super(key: key);
@@ -59,35 +60,45 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   @override
 void initState() {
   super.initState();
-  print('Card Global Ware Code: ${gb.P_WARE_CODE}');
-                        log('Card Global Ware Code: ${gb.P_WARE_CODE}');
-  print('+----------------------------------------');
-  print(gb.ATTR1);
-  print(widget.selectedValue);
+
+  // Initialize values
   fixedValue = valueMapping[widget.selectedValue] ?? '';
-  print(fixedValue);
-   print(widget.apCode);
   _selectedValue = 'ทั้งหมด';
   selectedwhCode = widget.pWareCode;
   selectedApCode = widget.apCode;
-  searchQuery = widget.documentNumber;
-fetchWareCodes();
-// _initializeData();
-
+  
+  // Use a variable to hold the documentNumber with default value
+  String documentNumber = widget.documentNumber;
+  
+  // Debug statements
+  print('Card Global Ware Code: ${gb.P_WARE_CODE}');
+  log('Card Global Ware Code: ${gb.P_WARE_CODE}');
+  print('+----------------------------------------');
+  print(gb.ATTR1);
+  print(widget.selectedValue);
+  print(fixedValue);
+  print(widget.apCode);
+  print('Original widget.documentNumber: ${widget.documentNumber}');
+  
+  if (selectedApCode == 'ทั้งหมด') {
+    selectedApCode = 'null';
+  }
+  
+  print('Document Number (with default if null): $documentNumber');
+  
+  fetchWareCodes();
 }
+
 
 Future<void> _initializeData() async {
   try {
-    // Fetch AP codes and wait for it to complete
     await fetchApCodes();
-    // Fetch warehouse codes and wait for it to complete
-    await fetchwhCodes();
+await fetchwhCodes();
   } catch (e) {
     print('Error during fetch operations: $e');
   } finally {
-    // Show the filter dialog after fetching data
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // _showFilterDialog();
     });
   }
 }
@@ -333,9 +344,9 @@ Future<void> _initializeData() async {
   //   );
   // }
 
-  void performSearch() {
-    filterData();
-  }
+  // void performSearch() {
+  //   filterData();
+  // }
 
   int _displayLimit = 15;
 
@@ -345,20 +356,45 @@ Future<void> _initializeData() async {
     });
   }
 
+  // Future<void> fetchWareCodes() async {
+  //   try {
+  //     final response = await http.get(Uri.parse(
+  //         'http://172.16.0.82:8888/apex/wms/c/new_card_list/$fixedValue/$ATTR'));
+  //     if (response.statusCode == 200) {
+  //       final responseBody = utf8.decode(response.bodyBytes);
+  //       final jsonData = json.decode(responseBody);
+  //       setState(() {
+  //         data = jsonData['items'] ?? [];
+  //         filterData();
+  //         isLoading = false;
+  //       });
+  //       print(data);
+  //       print('http://172.16.0.82:8888/apex/wms/c/new_card_list/$fixedValue/$ATTR');
+  //     } else {
+  //       throw Exception('Failed to load data');
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       isLoading = false;
+  //       errorMessage = e.toString();
+  //     });
+  //   }
+  // }
+
   Future<void> fetchWareCodes() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/c/new_card_list/$fixedValue/$ATTR'));
+          'http://172.16.0.82:8888/apex/wms/c/Card_list_01/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
         setState(() {
           data = jsonData['items'] ?? [];
-          filterData();
+          // filterData();
           isLoading = false;
         });
         print(data);
-        print('http://172.16.0.82:8888/apex/wms/c/new_card_list/$fixedValue/$ATTR');
+        print('http://172.16.0.82:8888/apex/wms/c/Card_list_01/$selectedApCode/$ATTR/$searchQuery/$fixedValue');
       } else {
         throw Exception('Failed to load data');
       }
@@ -370,19 +406,19 @@ Future<void> _initializeData() async {
     }
   }
 
-  void filterData() {
-    setState(() {
-      displayedData = data.where((item) {
-        final poNo = item['po_no']?.toString().toLowerCase() ?? '';
-        final matchesSearchQuery = poNo.contains(searchQuery.toLowerCase());
-        final matchesApCode =
-            selectedApCode == 'ทั้งหมด' || item['ap_code'] == selectedApCode;
-        return matchesSearchQuery && matchesApCode;
-      }).toList();
-      print(
-          'displayedData : $displayedData Type : ${displayedData.runtimeType}');
-    });
-  }
+  // void filterData() {
+  //   setState(() {
+  //     displayedData = data.where((item) {
+  //       final poNo = item['po_no']?.toString().toLowerCase() ?? '';
+  //       final matchesSearchQuery = poNo.contains(searchQuery.toLowerCase());
+  //       final matchesApCode =
+  //           selectedApCode == 'ทั้งหมด' || item['ap_code'] == selectedApCode;
+  //       return matchesSearchQuery && matchesApCode;
+  //     }).toList();
+  //     print(
+  //         'displayedData : $displayedData Type : ${displayedData.runtimeType}');
+  //   });
+  // }
 
   String? poStatus;
   String? poMessage;
@@ -743,14 +779,14 @@ Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
                   ],),
                           const SizedBox(height: 10),
                           Expanded(
-                            child: displayedData.isEmpty
-                                ? Center(child: Text('No data available'))
+                            child: data.isEmpty
+                                ? Center(child: Text('No data available', style: TextStyle(color: Colors.white),))
                                 : ListView.builder(
                                     controller: _scrollController,
                                     itemCount:
-                                        (_displayLimit < displayedData.length)
+                                        (_displayLimit < data.length)
                                             ? _displayLimit + 1
-                                            : displayedData.length,
+                                            : data.length,
                                     itemBuilder: (context, index) {
                                       if (index == _displayLimit) {
                                         return Center(
@@ -760,8 +796,8 @@ Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
                                           ),
                                         );
                                       }
-                                      if (index < displayedData.length) {
-                                        final item = displayedData[index];
+                                      if (index < data.length) {
+                                        final item = data[index];
                                         return buildListTile(context, item);
                                       }
                                       return Container();
