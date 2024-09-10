@@ -108,7 +108,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                 const SizedBox(height: 16),
                 DropdownSearch<String>(
                   popupProps: PopupProps.menu(
-                    showSearchBox: true,
+                    showSearchBox: false,
                     showSelectedItems: true,
                     itemBuilder: (context, item, isSelected) {
                       return ListTile(
@@ -117,13 +117,14 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                       );
                     },
                     constraints: BoxConstraints(
-                      maxHeight: 250,
+                      maxHeight: 175,
                     ),
                   ),
                   items: <String>[
+                    'ทั้งหมด',
                     'รายการรอรับดำเนินการ',
                     'รายการใบสั่งซื้อ',
-                    'ทั้งหมด',
+
                   ],
                   dropdownDecoratorProps: DropDownDecoratorProps(
                     dropdownSearchDecoration: InputDecoration(
