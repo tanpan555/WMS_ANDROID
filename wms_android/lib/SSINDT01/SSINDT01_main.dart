@@ -597,7 +597,7 @@ Future<void> _initializeData() async {
   }
 
 Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
-  // Define a map for status values to colors
+  // Define a map for status values to background colors
   Map<String, Color> statusColors = {
     'ตรวจรับบางส่วน': Colors.orange,
     'บันทึก': Colors.blue,
@@ -606,16 +606,18 @@ Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
     'อนุมัติ': Colors.green,
   };
 
-  Color statusColor = statusColors[item['status_desc']] ?? Colors.grey;
+  Color statusColor = statusColors[item['status_desc']] ?? Colors.white;
 
   TextStyle statusStyle = TextStyle(
-    color: statusColor,
+    color: Colors.white,
     fontWeight: FontWeight.bold,
   );
 
   BoxDecoration statusDecoration = BoxDecoration(
-    border: Border.all(color: statusColor, width: 2.0),
-    borderRadius: BorderRadius.circular(4.0),
+    color: statusColor, // Set background color from statusColors
+    borderRadius: BorderRadius.circular(12.0),
+                             
+    
   );
 
   // Determine the content for card_qc
@@ -633,7 +635,7 @@ Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
       height: 64.0,
     );
   } else if (item['card_qc'] == 'No item') {
-    cardQcWidget = SizedBox.shrink(); // No widget displayed
+    cardQcWidget = SizedBox.shrink();
   } else {
     cardQcWidget = Text('');
   }
@@ -654,14 +656,13 @@ Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Divider(
-                                        color:
-                                            const Color.fromARGB(255, 0, 0, 0)),
+                Divider(color: const Color.fromARGB(255, 0, 0, 0)),
                 Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+                      padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
                       decoration: statusDecoration,
+                      
                       child: Text(
                         '${item['status_desc'] ?? 'No Status'}',
                         style: statusStyle,
@@ -671,28 +672,23 @@ Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
                     cardQcWidget,
                   ],
                 ),
-                
                 Text(
                   '${item['po_date'] ?? ''} ${item['po_no'] ?? ''} \n${item['item_stype_desc'] ?? '\n'}'
                   '${item['receive_date'] ?? ''} ${item['receive_no'] ?? ''} ${item['warehouse'] ?? ''}',
                   style: TextStyle(color: Colors.black, fontSize: 12),
                 ),
                 SizedBox(height: 8.0),
-                
               ],
             ),
             contentPadding: EdgeInsets.all(16.0),
             onTap: () => handleTap(context, item),
           ),
         ],
-        
       ),
-      
     ),
-    
   );
-  
 }
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
