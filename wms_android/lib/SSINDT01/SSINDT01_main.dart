@@ -54,15 +54,15 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   String? _selectedValue;
   String? fixedValue;
 
-  // final TextEditingController _searchController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
+    String? nextLink;
+  String? prevLink;
+
 
   @override
 void initState() {
   super.initState();
 
   // Initialize values
-  fixedValue = valueMapping[widget.selectedValue] ?? '';
   _selectedValue = 'ทั้งหมด';
   selectedwhCode = widget.pWareCode;
   selectedApCode = widget.apCode;
@@ -90,321 +90,77 @@ void initState() {
 }
 
 
-Future<void> _initializeData() async {
-  try {
-    await fetchApCodes();
-await fetchwhCodes();
-  } catch (e) {
-    print('Error during fetch operations: $e');
-  } finally {
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+Future<void> fetchWareCodes([String? url]) async {
+  setState(() {
+    isLoading = true; // Show loading indicator while fetching data
+  });
+
+  final String requestUrl = url ??
+      'http://172.16.0.82:8888/apex/wms/c/Card_list_01/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue';
+
+  try {
+    final response = await http.get(Uri.parse(requestUrl));
+
+    if (response.statusCode == 200) {
+      final responseBody = utf8.decode(response.bodyBytes);
+      final parsedResponse = json.decode(responseBody);
+
+      setState(() {
+        if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+          data = parsedResponse['items'];
+        } else {
+          data = [];
+        }
+
+        List<dynamic> links = parsedResponse['links'] ?? [];
+        nextLink = getLink(links, 'next');
+        prevLink = getLink(links, 'prev');
+        isLoading = false;
+      });
+    } else {
+      // Handle HTTP error responses
+      setState(() {
+        isLoading = false;
+        errorMessage = 'Failed to load data: ${response.statusCode}';
+      });
+      print('HTTP Error: ${response.statusCode} - ${response.reasonPhrase}');
+    }
+  } catch (e) {
+    // Handle exceptions that may occur
+    setState(() {
+      isLoading = false;
+      errorMessage = 'Error occurred: $e';
     });
+    print('Exception: $e');
   }
 }
 
-  void _handleSelected(String? value) {
-    setState(() {
-      _selectedValue = widget.selectedValue;
-      print('Selected value in handle: $_selectedValue');
-    });
+
+    String? getLink(List<dynamic> links, String rel) {
+    final link = links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
+    return link != null ? link['href'] : null;
   }
 
-  final Map<String, String> valueMapping = {
-    'รายการรอรับดำเนินการ': 'A',
-    'รายการใบสั่งซื้อ': 'B',
-    'ทั้งหมด': 'C',
-  };
-
-  Future<void> fetchApCodes() async {
-    try {
-      final response = await http
-          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/c/AP_CODE'));
-
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final jsonData = json.decode(responseBody);
-        setState(() {
-          apCodes = jsonData['items'] ?? [];
-          apCodes.insert(0, {'ap_code': 'ทั้งหมด', 'ap_name': 'ทั้งหมด'});
-          selectedApCode = 'ทั้งหมด';
-          fetchWareCodes();
-        });
-      } else {
-        throw Exception('Failed to load AP codes');
-      }
-    } catch (e) {
+  void _loadNextPage() {
+    if (nextLink != null) {
       setState(() {
-        errorMessage = e.toString();
-        print(
-            'errorMessage : $errorMessage Type : ${errorMessage.runtimeType}');
+        print('nextLink $nextLink');
+        isLoading = true;
       });
+      fetchWareCodes(nextLink);
     }
   }
 
-  Future<void> fetchwhCodes() async {
-    try {
-      final response = await http
-          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/WH/WHCode'));
-
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final jsonData = json.decode(responseBody);
-
-        print('Fetched data: $jsonData');
-
-        setState(() {
-          whCodes = jsonData['items'];
-          if (data.isNotEmpty) {
-            selectedwhCode = whCodes[0]['ware_code'];
-          }
-        });
-      } else {
-        throw Exception('Failed to load data');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
-
-  // void _showFilterDialog() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return StatefulBuilder(
-  //         builder: (context, setState) {
-  //           return Dialog(
-  //             shape: RoundedRectangleBorder(
-  //               borderRadius: BorderRadius.circular(20),
-  //             ),
-  //             insetPadding:
-  //                 EdgeInsets.symmetric(horizontal: 50.0, vertical: 50.0),
-  //             child: Container(
-  //               padding: EdgeInsets.all(15.0),
-  //               // width: MediaQuery.of(context).size.width * 0.9,
-  //               // height: MediaQuery.of(context).size.height * 0.7,
-  //               child: SingleChildScrollView(
-  //                 child: Column(
-  //                   mainAxisSize: MainAxisSize.min,
-  //                   children: [
-  //                     Text(
-  //                       'ตัวเลือกการกรอง',
-  //                       style: TextStyle(
-  //                         fontSize: 20.0,
-  //                         fontWeight: FontWeight.bold,
-  //                       ),
-  //                     ),
-  //                      Text(
-  //                       'คลัง $selectedwhCode',
-  //                       style: TextStyle(
-  //                         fontSize: 20.0,
-  //                         fontWeight: FontWeight.bold,
-  //                       ),
-  //                     ),
-    
-  //                     SizedBox(height: 15),
-  //                     DropdownSearch<String>(
-  //                       popupProps: PopupProps.menu(
-  //                         showSearchBox: true,
-  //                         showSelectedItems: true,
-  //                         itemBuilder: (context, item, isSelected) {
-  //                           return ListTile(
-  //                             title: Text(item),
-  //                             selected: isSelected,
-  //                           );
-  //                         },
-  //                         constraints: BoxConstraints(
-  //                           maxHeight: 250,
-  //                         ),
-  //                       ),
-  //                       items: <String>[
-  //                         'รายการรอรับดำเนินการ',
-  //                         'รายการใบสั่งซื้อ',
-  //                         'ทั้งหมด',
-  //                       ],
-  //                       dropdownDecoratorProps: DropDownDecoratorProps(
-  //                         dropdownSearchDecoration: InputDecoration(
-  //                           labelText: "ประเภทสินค้า",
-  //                           hintText: "เลือกประเภทสินค้า",
-  //                           hintStyle: TextStyle(fontSize: 16.0),
-  //                         ),
-  //                       ),
-  //                       onChanged: (String? value) {
-  //                         setState(() {
-  //                           _selectedValue = value;
-  //                           fixedValue = valueMapping[_selectedValue] ?? '';
-  //                         });
-  //                       },
-  //                       selectedItem: _selectedValue,
-  //                     ),
-  //                     SizedBox(height: 15),
-  //                     DropdownSearch<String>(
-  //                       popupProps: PopupProps.menu(
-  //                         showSearchBox: true,
-  //                         showSelectedItems: true,
-  //                         itemBuilder: (context, item, isSelected) {
-  //                           // Find the corresponding item details from apCodes
-  //                           final apCodeItem = apCodes.firstWhere(
-  //                             (element) => element['ap_code'] == item,
-  //                             orElse: () => {'ap_name': 'No name'},
-  //                           );
-  //                           return ListTile(
-  //                             title: Text(
-  //                               item,
-  //                               style: TextStyle(fontWeight: FontWeight.bold),
-  //                             ),
-  //                             subtitle: Text(
-  //                               apCodeItem['ap_name'] ?? 'No name',
-  //                               style:
-  //                                   TextStyle(color: Colors.grey, fontSize: 8),
-  //                             ),
-  //                             selected: isSelected,
-  //                           );
-  //                         },
-  //                         constraints: BoxConstraints(
-  //                           maxHeight: 300,
-  //                         ),
-  //                       ),
-  //                       items: apCodes
-  //                           .map((item) => item['ap_code'] as String)
-  //                           .toList(),
-  //                       dropdownDecoratorProps: DropDownDecoratorProps(
-  //                         dropdownSearchDecoration: InputDecoration(
-  //                           labelText: "ผู้ขาย",
-  //                           hintText: "เลือกผู้ขาย",
-  //                         ),
-  //                       ),
-  //                       onChanged: (String? value) {
-  //                         setState(() {
-  //                           selectedApCode = value;
-  //                         });
-  //                       },
-  //                       selectedItem: selectedApCode,
-  //                     ),
-
-  //                     SizedBox(height: 15),
-  //                     TextField(
-  //                       controller: searchController,
-  //                       decoration: InputDecoration(
-  //                         labelText: 'ค้นหา',
-  //                         border: OutlineInputBorder(),
-  //                       ),
-  //                       onChanged: (value) {
-  //                         setState(() {
-  //                           searchQuery = value;
-  //                         });
-  //                       },
-  //                     ),
-  //                     SizedBox(height: 15),
-  //                     Row(
-  //                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //                       children: [
-  //                         TextButton(
-  //                           onPressed: () {
-  //                             Navigator.of(context).pop();
-  //                           },
-  //                           style: TextButton.styleFrom(
-  //                             backgroundColor: Colors.red,
-  //                           ),
-  //                           child: Text(
-  //                             'ยกเลิก',
-  //                             style:
-  //                                 TextStyle(color: Colors.white, fontSize: 20),
-  //                           ),
-  //                         ),
-  //                         ElevatedButton(
-  //                           onPressed: () {
-  //                             Navigator.of(context).pop();
-  //                             setState(() {
-  //                               if(_selectedValue == 'ทั้งหมด'){
-  //                                 fixedValue = 'C';
-  //                               }
-  //                               fetchWareCodes();
-  //                             });
-  //                           },
-  //                           style: ElevatedButton.styleFrom(
-  //                             backgroundColor: Colors.green,
-  //                           ),
-  //                           child: Text(
-  //                             'ยืนยัน',
-  //                             style:
-  //                                 TextStyle(color: Colors.white, fontSize: 20),
-  //                           ),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //             ),
-  //           );
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
-
-  // void performSearch() {
-  //   filterData();
-  // }
-
-  int _displayLimit = 15;
-
-  void _loadMoreItems() {
-    setState(() {
-      _displayLimit += 15;
-    });
-  }
-
-  // Future<void> fetchWareCodes() async {
-  //   try {
-  //     final response = await http.get(Uri.parse(
-  //         'http://172.16.0.82:8888/apex/wms/c/new_card_list/$fixedValue/$ATTR'));
-  //     if (response.statusCode == 200) {
-  //       final responseBody = utf8.decode(response.bodyBytes);
-  //       final jsonData = json.decode(responseBody);
-  //       setState(() {
-  //         data = jsonData['items'] ?? [];
-  //         filterData();
-  //         isLoading = false;
-  //       });
-  //       print(data);
-  //       print('http://172.16.0.82:8888/apex/wms/c/new_card_list/$fixedValue/$ATTR');
-  //     } else {
-  //       throw Exception('Failed to load data');
-  //     }
-  //   } catch (e) {
-  //     setState(() {
-  //       isLoading = false;
-  //       errorMessage = e.toString();
-  //     });
-  //   }
-  // }
-
-  Future<void> fetchWareCodes() async {
-    try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/c/Card_list_01/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue'));
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final jsonData = json.decode(responseBody);
-        setState(() {
-          data = jsonData['items'] ?? [];
-          // filterData();
-          isLoading = false;
-        });
-        print(data);
-        print('http://172.16.0.82:8888/apex/wms/c/Card_list_01/$selectedApCode/$ATTR/$searchQuery/$fixedValue');
-      } else {
-        throw Exception('Failed to load data');
-      }
-    } catch (e) {
+  void _loadPrevPage() {
+    if (prevLink != null) {
       setState(() {
-        isLoading = false;
-        errorMessage = e.toString();
+        isLoading = true;
       });
+      fetchWareCodes(prevLink); 
     }
   }
+
 
   // void filterData() {
   //   setState(() {
@@ -725,92 +481,69 @@ Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
   );
 }
 
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: const Color(0xFF17153B),
+    appBar: const CustomAppBar(title: 'Move Locator'),
+    body: OrientationBuilder(
+      builder: (context, orientation) {
+        final isPortrait = orientation == Orientation.portrait;
 
-
-////////////////////////////////////////////////////////////////////////////////////////////
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
-      // drawer: const CustomDrawer(),
-      body: OrientationBuilder(
-        builder: (context, orientation) {
-          final isPortrait = orientation == Orientation.portrait;
-
-          return isLoading
-              ? Center(child: CircularProgressIndicator())
-              : errorMessage.isNotEmpty
-                  ? Center(child: Text('Error: $errorMessage'))
-                  : Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        children: [
-                          if (isPortrait)
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black38),
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              if (isPortrait)
+                const SizedBox(height: 4),
+              Expanded(
+                child: isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : errorMessage.isNotEmpty
+                        ? Center(
+                            child: Text(
+                              'Error: $errorMessage',
+                              style: const TextStyle(color: Colors.white),
                             ),
-                            Row(
-                children: [
-                  //           ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(12.0),
-                  //     ),
-                  //     minimumSize: const Size(10, 20),
-                  //     padding: const EdgeInsets.symmetric(
-                  //         horizontal: 10, vertical: 5),
-                  //   ),
-                  //   onPressed: () {
-                  //     Navigator.of(context).pop();
-                  //   },
-                  //   child: const Text(
-                  //     'ย้อนกลับ',
-                  //     style: TextStyle(
-                  //       color: Colors.white,
-                  //       fontWeight: FontWeight.bold,
-                  //     ),
-                  //   ),
-                  // ),
-                  ],),
-                          const SizedBox(height: 10),
-                          Expanded(
-                            child: data.isEmpty
-                                ? Center(child: Text('No data available', style: TextStyle(color: Colors.white),))
-                                : ListView.builder(
-                                    controller: _scrollController,
-                                    itemCount:
-                                        (_displayLimit < data.length)
-                                            ? _displayLimit + 1
-                                            : data.length,
-                                    itemBuilder: (context, index) {
-                                      if (index == _displayLimit) {
-                                        return Center(
-                                          child: ElevatedButton(
-                                            onPressed: _loadMoreItems,
-                                            child: Text('แสดงเพิ่มเติม'),
-                                          ),
-                                        );
-                                      }
-                                      if (index < data.length) {
-                                        final item = data[index];
-                                        return buildListTile(context, item);
-                                      }
-                                      return Container();
-                                    },
+                          )
+                        : data.isEmpty
+                            ? const Center(
+                                child: Text(
+                                  'No Data Available',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              )
+                            : ListView(
+                                children: [
+                                  // Build the list items
+                                  ...data.map((item) => buildListTile(context, item)).toList(),
+                                  // Add spacing if needed
+                                  const SizedBox(height: 10),
+                                  // Previous and Next buttons
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: prevLink != null ? _loadPrevPage : null,
+                                        child: const Text('Previous'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: nextLink != null ? _loadNextPage : null,
+                                        child: const Text('Next'),
+                                      ),
+                                    ],
                                   ),
-                          ),
-                        ],
-                      ),
-                    );
-        },
-      ),
-      bottomNavigationBar: BottomBar(),
-    );
-  }
+                                ],
+                              ),
+              ),
+            ],
+          ),
+        );
+      },
+    ),
+    bottomNavigationBar: BottomBar(),
+  );
+}
+
 }
 

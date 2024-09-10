@@ -17,13 +17,14 @@ class SSFGDT17_MAIN extends StatefulWidget {
   final String? selectedValue;
   final String documentNumber;
   final String dateController;
+  final String docData1;
 
   const SSFGDT17_MAIN({
     Key? key,
     required this.pWareCode,
     this.selectedValue,
     required this.documentNumber,
-    required this.dateController,
+    required this.dateController, required this.docData1,
   }) : super(key: key);
 
   @override
@@ -36,7 +37,8 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
   String? selectedwhCode;
   String? docData;
 
-  
+  String? nextLink;
+  String? prevLink;
   
   DateTime? selectedDate;
 String? docNumberFilter;
@@ -55,6 +57,7 @@ print(selectedwhCode);
   _selectedStatusValue = widget.selectedValue;
   docNumberFilter = widget.documentNumber;
   print('=====================');
+  print(widget.docData1);
   print(widget.documentNumber);
   print(widget.dateController);
   print(_dateController.text);
@@ -62,15 +65,9 @@ print(selectedwhCode);
   DateSend = widget.dateController;
   if (DateSend != null) {
     DateSend = DateSend!.replaceAll('/', '-');
-    fetchDocType().then((data) {
-      setState(() {
-        print('docData: $docData');
-        data_card_list();
-      });
-    }).catchError((e) {
-      print('Error fetching doc type: $e');
-    });
+    
   }
+   data_card_list();
 
   
 }
@@ -98,46 +95,24 @@ void dispose() {
 }
 
 
-  Future<void> fetchwhCodes() async {
-    try {
-      final response = await http
-          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/WH/WHCode'));
-
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final jsonData = json.decode(responseBody);
-
-        print('Fetched data: $jsonData');
-
-        setState(() {
-          whCodes = jsonData['items'];
-          if (whCodes.isNotEmpty) {
-            selectedwhCode = whCodes[0]['ware_code'];
-          }
-        });
-      } else {
-        throw Exception('Failed to load data');
-      }
-    } catch (e) {
-      print('Error: $e');
+void _loadNextPage() {
+    if (nextLink != null) {
+      setState(() {
+        print('nextLink $nextLink');
+        isLoading = true;
+      });
+      data_card_list(nextLink);
     }
   }
 
-
-Future<void> fetchDocType() async {
-  final response = await http.get(Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/default_doc_type'));
-
-  if (response.statusCode == 200) {
-    // Parse the JSON data
-    final Map<String, dynamic> data = json.decode(response.body);
-    docData = data['DOC_TYPE'];
-    print(docData);
-  } else {
-    // Handle the error
-    throw Exception('Failed to load data');
+  void _loadPrevPage() {
+    if (prevLink != null) {
+      setState(() {
+        isLoading = true;
+      });
+      data_card_list(prevLink); 
+    }
   }
-}
-
 
 
 
@@ -162,50 +137,27 @@ String? _selectedStatusValue = 'ทั้งหมด';
   bool isLoading = true;
   String errorMessage = '';
 
-  Future<void> data_card_list() async {
+ Future<void> data_card_list([String? url]) async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$fixedValue/000/$docData/$DateSend/${widget.documentNumber}'));
-          
+      final uri = url ?? 'http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$fixedValue/000/${widget.docData1}/$DateSend/${widget.documentNumber}';
+      final response = await http.get(Uri.parse(uri));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
-        final jsonData = json.decode(responseBody);
-
-        List<dynamic> fetchedData = jsonData['items'] ?? [];
-
-        // Convert dateController text to DateTime
-        // DateTime? filterDate;
-        // try {
-        //   filterDate = DateFormat('dd/MM/yyyy').parse(_dateController.text);
-        // } catch (e) {
-        //   print('Date format error: $e');
-        // }
-
-        // if (filterDate != null) {
-        //   fetchedData = fetchedData.where((item) {
-        //     DateTime? itemDate;
-        //     try {
-        //       itemDate = DateFormat('dd/MM/yyyy').parse(item['doc_date'] ?? '');
-        //     } catch (e) {
-        //       return false;
-        //     }
-        //     return itemDate != null && itemDate.isAtSameMomentAs(filterDate!);
-        //   }).toList();
-        // }
-
-        // if (docNumberFilter != null && docNumberFilter!.isNotEmpty) {
-        //   fetchedData = fetchedData.where((item) {
-        //     return (item['doc_number'] ?? '').contains(docNumberFilter!);
-        //   }).toList();
-        // }
+        final parsedResponse = json.decode(responseBody);
 
         setState(() {
-          data = fetchedData;
-          print(data);
+          if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+            data = parsedResponse['items'];
+          } else {
+            data = [];
+          }
+
+          List<dynamic> links = parsedResponse['links'] ?? [];
+          nextLink = getLink(links, 'next');
+          prevLink = getLink(links, 'prev');
           isLoading = false;
         });
-        print('http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$fixedValue/000/$docData/null/null');
       } else {
         throw Exception('Failed to load data');
       }
@@ -217,6 +169,10 @@ String? _selectedStatusValue = 'ทั้งหมด';
     }
   }
 
+   String? getLink(List<dynamic> links, String rel) {
+    final link = links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
+    return link != null ? link['href'] : null;
+  }
 String? doc_no;
 String? doc_out;
 
@@ -394,95 +350,6 @@ String? doc_out;
       _displayLimit += 15;
     });
   }
-//  void _filterDialog() {
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return StatefulBuilder(
-//         builder: (BuildContext context, StateSetter setState) {
-//           return AlertDialog(
-//             title: const Text('ตัวกรองค้นหา'),
-//             content: Column(
-//               mainAxisSize: MainAxisSize.min,
-//               children: [
-//                 DropdownButton<String>(
-//                   isExpanded: true,
-//                   value: _selectedStatusValue,
-//                   hint: const Text('ประเภทรายการ'),
-//                   items: <String>[
-//                     'ทั้งหมด',
-//                     'ปกติ',
-//                     'ยกเลิก',
-//                     'รับโอนแล้ว',
-//                   ].map((String value) {
-//                     return DropdownMenuItem<String>(
-//                       value: value,
-//                       child: Text(value),
-//                     );
-//                   }).toList(),
-//                   onChanged: (String? value) {
-//                     setState(() {
-//                       _selectedStatusValue = value;
-//                       fixedValue = valueMapping[_selectedStatusValue] ?? '';
-//                     });
-//                   },
-//                 ),
-//                 SizedBox(height: 10),
-//                 TextField(
-//                   controller: _docNumberController,
-//                   decoration: const InputDecoration(
-//                     labelText: 'เลขที่ใบโอน',
-//                     border: OutlineInputBorder(),
-//                   ),
-//                   onChanged: (value) {
-//                     setState(() {
-//                       docNumberFilter = value;
-//                     });
-//                   },
-//                 ),
-//                 SizedBox(height: 10),
-//                 TextField(
-//                   controller: _dateController,
-//                   decoration: const InputDecoration(
-//                     labelText: 'วันที่',
-//                     border: OutlineInputBorder(),
-//                   ),
-//                   readOnly: true,
-//                   onTap: _selectDate,
-//                 ),
-//               ],
-//             ),
-//             actions: [
-//               TextButton(
-//                 onPressed: () {
-//                   setState(() {
-//                     fixedValue = '0';
-//                     docNumberFilter = '';
-//                     _docNumberController.clear();
-//                     _dateController.clear();
-//                     selectedDate = null;
-//                   });
-        
-//                 },
-//                 child: const Text('Clear Filter'),
-//               ),
-//               TextButton(
-//                 onPressed: () {
-//                   setState(() {
-//                     docNumberFilter = _docNumberController.text;
-//                   });
-//                   Navigator.of(context).pop();
-//                   data_card_list();
-//                 },
-//                 child: const Text('ค้นหา'),
-//               ),
-//             ],
-//           );
-//         },
-//       );
-//     },
-//   );
-// }
 
 String? poStatus;
   String? poMessage;
@@ -535,57 +402,69 @@ String? poStatus;
     }
   }
 
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: const Color(0xFF17153B),
+    appBar: const CustomAppBar(title: 'Move Locator'),
+    body: OrientationBuilder(
+      builder: (context, orientation) {
+        final isPortrait = orientation == Orientation.portrait;
 
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
-      appBar: const CustomAppBar(title: 'Move Locator'),
-      body: OrientationBuilder(
-        builder: (context, orientation) {
-          final isPortrait = orientation == Orientation.portrait;
-          return isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : errorMessage.isNotEmpty
-                  ? Center(child: Text('Error: $errorMessage'))
-                  : Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [                
-                          if (isPortrait)
-                          const SizedBox(height: 4),
-                          Expanded(
-                            child: data.isEmpty
-                                ? const Center(child: Text('No Data Available',style: TextStyle(color: Colors.white),))
-                                : ListView.builder(
-                                    controller: _scrollController,
-                                    itemCount: (_displayLimit < data.length)
-                                        ? _displayLimit + 1
-                                        : data.length,
-                                    itemBuilder: (context, index) {
-                                      if (index == _displayLimit) {
-                                        return Center(
-                                          child: ElevatedButton(
-                                            onPressed: _loadMoreItems,
-                                            child: const Text('แสดงเพิ่มเติม'),
-                                          ),
-                                        );
-                                      }
-                                      if (index < data.length) {
-                                        final item = data[index];
-                                        return buildListTile(context, item);
-                                      }
-                                      return Container();
-                                    },
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              if (isPortrait)
+                const SizedBox(height: 4),
+              Expanded(
+                child: isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : errorMessage.isNotEmpty
+                        ? Center(
+                            child: Text(
+                              'Error: $errorMessage',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          )
+                        : data.isEmpty
+                            ? const Center(
+                                child: Text(
+                                  'No Data Available',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              )
+                            : ListView(
+                                children: [
+                                  // Build the list items
+                                  ...data.map((item) => buildListTile(context, item)).toList(),
+                                  // Add spacing if needed
+                                  const SizedBox(height: 10),
+                                  // Previous and Next buttons
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: prevLink != null ? _loadPrevPage : null,
+                                        child: const Text('Previous'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: nextLink != null ? _loadNextPage : null,
+                                        child: const Text('Next'),
+                                      ),
+                                    ],
                                   ),
-                          ),
-                        ],
-                      ),
-                    );
-        },
-      ),
-      bottomNavigationBar: BottomBar(),
-    );
-  } 
+                                ],
+                              ),
+              ),
+            ],
+          ),
+        );
+      },
+    ),
+    bottomNavigationBar: BottomBar(),
+  );
+}
+
+
 }

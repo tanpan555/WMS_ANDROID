@@ -24,14 +24,15 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
   String? selectedValue;
   final List<String> statusItems = ['ทั้งหมด', 'ปกติ', 'ยกเลิก','รับโอนแล้ว'];
   String? docData;
+  String? docData1;
 
-  @override
-  void initState() {
-    super.initState();
-    selectedValue = 'ทั้งหมด';
-    
-    // print('docData : $docData');
-  }
+@override
+void initState() {
+  super.initState();
+  selectedValue = 'ทั้งหมด';
+  fetchDocType();
+}
+
 
 
 
@@ -53,6 +54,21 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
       _selectedDate = null;
     });
   }
+
+  Future<void> fetchDocType() async {
+  final response = await http.get(Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/default_doc_type'));
+
+  if (response.statusCode == 200) {
+    final Map<String, dynamic> data = json.decode(response.body);
+    setState(() {
+      docData1 = data['DOC_TYPE'];
+    });
+    print('Fetched docData1: $docData1');
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -149,40 +165,37 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                     ),
                     const SizedBox(width: 20),
                     ElevatedButton(
-                      onPressed: () {
-    final documentNumber = _documentNumberController.text.isEmpty
-                            ? 'null'
-                            : _documentNumberController.text;
-
-                            final selectedDate = _selectedDate == null
-                            ? 'null'
-                            : DateFormat('dd/MM/yyyy').format(_selectedDate!);
+  onPressed: () {
+    final documentNumber = _documentNumberController.text.isEmpty ? 'null' : _documentNumberController.text;
+    final selectedDate = _selectedDate == null ? 'null' : DateFormat('dd/MM/yyyy').format(_selectedDate!);
 
     // Debugging output
     print(selectedValue);
     print(documentNumber);
-    print('date ${_dateController.text}'); 
-  
+    print('date ${_dateController.text}');
+    print('docData1: $docData1'); // Ensure docData1 is correctly fetched
 
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => SSFGDT17_MAIN(
           pWareCode: widget.pWareCode,
-        selectedValue: selectedValue,
-        documentNumber: documentNumber,
-        dateController: selectedDate,
+          selectedValue: selectedValue,
+          documentNumber: documentNumber,
+          dateController: selectedDate,
+          docData1: docData1 ?? '' // Handle null case
         ),
       ),
     );
-                      },
-                      child: Image.asset('assets/images/search_color.png', width: 50, height: 25),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                        padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
+  },
+  child: Image.asset('assets/images/search_color.png', width: 50, height: 25),
+  style: ElevatedButton.styleFrom(
+    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+    padding: EdgeInsets.all(10),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+  ),
+),
+
                   ],
                 ),
               ],
