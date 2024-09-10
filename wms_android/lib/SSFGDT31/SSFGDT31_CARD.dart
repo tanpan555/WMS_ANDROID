@@ -8,8 +8,9 @@ class SSFGDT31_CARD extends StatefulWidget {
   final String soNo;
   final String statusDesc;
   final String wareCode;
+  final String? receiveDate;
 
-  SSFGDT31_CARD({required this.soNo, required this.statusDesc, required this.wareCode});
+  SSFGDT31_CARD({required this.soNo, required this.statusDesc, required this.wareCode, this.receiveDate});
 
   @override
   _SSFGDT31_CARDPageState createState() => _SSFGDT31_CARDPageState();
@@ -17,17 +18,23 @@ class SSFGDT31_CARD extends StatefulWidget {
 
 class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
   List<dynamic> data = [];
-  bool isLoading = true;  // Added to manage loading state
-  String errorMessage = '';  // Added to handle error messages
-
+  bool isLoading = true; 
+  String errorMessage = ''; 
+  String? DateSend;
   @override
-  void initState() {
-    super.initState();
+void initState() {
+  super.initState();
+  DateSend = widget.receiveDate;
+  if (DateSend != null) {
+    DateSend = DateSend!.replaceAll('/', '-');
     fetchData();
   }
+  print(DateSend);
+}
+
 
  Future<void> fetchData() async {
-  final String apiUrl = "http://172.16.0.82:8888/apex/wms/SSFGDT31/Card/${widget.soNo}/${widget.statusDesc}/${widget.wareCode}/null";
+  final String apiUrl = "http://172.16.0.82:8888/apex/wms/SSFGDT31/Card_Test/${widget.soNo}/${widget.statusDesc}/${widget.wareCode}/$DateSend";
   try {
     final response = await http.get(Uri.parse(apiUrl));
     print(apiUrl);
@@ -37,9 +44,9 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
 
       setState(() {
         if (parsedResponse is Map && parsedResponse.containsKey('items')) {
-          data = parsedResponse['items'];  // Extract the list from the 'items' key
+          data = parsedResponse['items']; 
         } else {
-          data = [];  // Handle the case where 'items' key is not present
+          data = []; 
         }
         isLoading = false;
       });
@@ -203,9 +210,3 @@ Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
     );
   }
 }
-
-// void main() {
-//   runApp(MaterialApp(
-//     home: SSFGDT31_CARD(soNo: '', statusDesc: 'ปกติ', wareCode: 'WH001'),
-//   ));
-// }

@@ -6,7 +6,7 @@ import '../bottombar.dart';
 import 'SSFGDT31_CARD.dart'; // นำเข้าไฟล์ที่สร้างหน้า SSFGDT31_CARD
 
 class SSFGDT31_SEARCH_DOC extends StatefulWidget {
- final String pWareCode;
+  final String pWareCode;
 
   SSFGDT31_SEARCH_DOC({
     Key? key,
@@ -29,17 +29,18 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
     'รับเข้าคลัง',
   ];
 
-
   String? selectedValue;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _dateController = TextEditingController();
-final TextEditingController searchController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     print(widget.pWareCode);
-    _dateController.text = _selectedDate == null ? '' : DateFormat('dd/MM/yyyy').format(_selectedDate!);
+    _dateController.text = _selectedDate == null
+        ? ''
+        : DateFormat('dd/MM/yyyy').format(_selectedDate!);
   }
 
   @override
@@ -74,26 +75,34 @@ final TextEditingController searchController = TextEditingController();
                   items: statusItems
                       .map((item) => DropdownMenuItem<String>(
                             value: item,
-                            child: Text(item, style: const TextStyle(fontSize: 14, color: Colors.black)),
+                            child: Text(item,
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.black)),
                           ))
                       .toList(),
-                  validator: (value) => value == null ? 'Please select a status.' : null,
+                  validator: (value) =>
+                      value == null ? 'Please select a status.' : null,
                   onChanged: (value) {
                     setState(() {
                       selectedValue = value;
                     });
                   },
                   onSaved: (value) => selectedValue = value,
-                  buttonStyleData: const ButtonStyleData(padding: EdgeInsets.only(right: 8)),
+                  buttonStyleData:
+                      const ButtonStyleData(padding: EdgeInsets.only(right: 8)),
                   iconStyleData: const IconStyleData(
-                    icon: Icon(Icons.arrow_drop_down, color: Color.fromARGB(255, 113, 113, 113)),
+                    icon: Icon(Icons.arrow_drop_down,
+                        color: Color.fromARGB(255, 113, 113, 113)),
                     iconSize: 24,
                   ),
                   dropdownStyleData: DropdownStyleData(
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.white),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.white),
                     maxHeight: 150,
                   ),
-                  menuItemStyleData: const MenuItemStyleData(padding: EdgeInsets.symmetric(horizontal: 16)),
+                  menuItemStyleData: const MenuItemStyleData(
+                      padding: EdgeInsets.symmetric(horizontal: 16)),
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -117,7 +126,8 @@ final TextEditingController searchController = TextEditingController();
                     labelStyle: TextStyle(color: Colors.black),
                     filled: true,
                     fillColor: Colors.white,
-                    suffixIcon: Icon(Icons.calendar_today_outlined, color: Colors.black),
+                    suffixIcon: Icon(Icons.calendar_today_outlined,
+                        color: Colors.black),
                   ),
                   onTap: () async {
                     DateTime? selectedDate = await showDatePicker(
@@ -129,7 +139,8 @@ final TextEditingController searchController = TextEditingController();
                     if (selectedDate != null && selectedDate != _selectedDate) {
                       setState(() {
                         _selectedDate = selectedDate;
-                        _dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate);
+                        _dateController.text =
+                            DateFormat('dd/MM/yyyy').format(selectedDate);
                       });
                     }
                   },
@@ -142,27 +153,50 @@ final TextEditingController searchController = TextEditingController();
                       onPressed: () {
                         // Handle reset action (optional)
                       },
-                      child: Image.asset('assets/images/eraser_red.png', width: 50, height: 25),
+                      child: Image.asset('assets/images/eraser_red.png',
+                          width: 50, height: 25),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey[300],
                         padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
                     const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () {
-                        final documentNumber = searchController.text.isEmpty ? 'null' : searchController.text;
+                        // If searchController is empty, use 'null' for documentNumber
+                        final documentNumber = searchController.text.isEmpty
+                            ? 'null'
+                            : searchController.text;
+
+                        // If _selectedDate is null, use 'null' for selectedDate
+                        final selectedDate = _selectedDate == null
+                            ? 'null'
+                            : DateFormat('dd/MM/yyyy').format(_selectedDate!);
+
+                        // Push to SSFGDT31_CARD with the selected values
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SSFGDT31_CARD(soNo: documentNumber, statusDesc: 'ทั้งหมด', wareCode: widget.pWareCode,)),
+                          MaterialPageRoute(
+                            builder: (context) => SSFGDT31_CARD(
+                              soNo: documentNumber,
+                              statusDesc: selectedValue ??
+                                  'ทั้งหมด', // Default to 'ทั้งหมด' if no status is selected
+                              wareCode: widget.pWareCode,
+                              receiveDate:
+                                  selectedDate, // Pass the selected date
+                            ),
+                          ),
                         );
                       },
-                      child: Image.asset('assets/images/search_color.png', width: 50, height: 25),
+                      child: Image.asset('assets/images/search_color.png',
+                          width: 50, height: 25),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
                   ],
