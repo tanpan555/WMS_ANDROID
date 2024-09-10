@@ -635,11 +635,11 @@ await fetchwhCodes();
 Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
   // Define a map for status values to background colors
   Map<String, Color> statusColors = {
-    'ตรวจรับบางส่วน': Colors.orange,
-    'บันทึก': Colors.blue,
-    'รอยืนยัน': Colors.yellow,
-    'ปกติ': Colors.grey,
-    'อนุมัติ': Colors.green,
+    'ตรวจรับบางส่วน': const Color.fromARGB(255, 17, 109, 110),
+    'บันทึก': const Color.fromARGB(255, 118, 113, 113),
+    'รอยืนยัน': const Color.fromARGB(255, 246, 250, 112),
+    'ปกติ': const Color.fromARGB(255, 186, 186, 186),
+    'อนุมัติ': const Color.fromARGB(255, 146, 208, 80),
   };
 
   Color statusColor = statusColors[item['status_desc']] ?? Colors.white;
