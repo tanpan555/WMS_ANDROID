@@ -6,6 +6,13 @@ import '../bottombar.dart';
 import 'SSFGDT31_CARD.dart'; // นำเข้าไฟล์ที่สร้างหน้า SSFGDT31_CARD
 
 class SSFGDT31_SEARCH_DOC extends StatefulWidget {
+ final String pWareCode;
+
+  SSFGDT31_SEARCH_DOC({
+    Key? key,
+    required this.pWareCode,
+  }) : super(key: key);
+
   @override
   _SSFGDT31_SEARCH_DOCState createState() => _SSFGDT31_SEARCH_DOCState();
 }
@@ -22,14 +29,17 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
     'รับเข้าคลัง',
   ];
 
+
   String? selectedValue;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _dateController = TextEditingController();
+final TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _dateController.text = _selectedDate == null ? '' : DateFormat('yyyy-MM-dd').format(_selectedDate!);
+    print(widget.pWareCode);
+    _dateController.text = _selectedDate == null ? '' : DateFormat('dd/MM/yyyy').format(_selectedDate!);
   }
 
   @override
@@ -87,6 +97,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                 ),
                 const SizedBox(height: 16),
                 TextField(
+                  controller: searchController,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     labelText: 'เลขที่เอกสาร',
@@ -118,7 +129,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                     if (selectedDate != null && selectedDate != _selectedDate) {
                       setState(() {
                         _selectedDate = selectedDate;
-                        _dateController.text = DateFormat('yyyy-MM-dd').format(selectedDate);
+                        _dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate);
                       });
                     }
                   },
@@ -133,7 +144,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                       },
                       child: Image.asset('assets/images/eraser_red.png', width: 50, height: 25),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red[300],
+                        backgroundColor: Colors.grey[300],
                         padding: EdgeInsets.all(10),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
@@ -141,14 +152,15 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                     const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () {
+                        final documentNumber = searchController.text.isEmpty ? 'null' : searchController.text;
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SSFGDT31_CARD()),
+                          MaterialPageRoute(builder: (context) => SSFGDT31_CARD(soNo: documentNumber, statusDesc: 'ทั้งหมด', wareCode: widget.pWareCode,)),
                         );
                       },
                       child: Image.asset('assets/images/search_color.png', width: 50, height: 25),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue[300],
+                        backgroundColor: Colors.white,
                         padding: EdgeInsets.all(10),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),

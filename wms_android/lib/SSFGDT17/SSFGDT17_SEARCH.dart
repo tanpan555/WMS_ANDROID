@@ -22,19 +22,21 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
   final _dateController = TextEditingController();
   DateTime? _selectedDate;
   String? selectedValue;
-  final List<String> statusItems = ['ทั้งหมด', 'ปกติ', 'ยกเลิก', 'รับโอนแล้ว'];
+  final List<String> statusItems = ['ทั้งหมด', 'ปกติ', 'ยกเลิก','รับโอนแล้ว'];
   String? docData;
 
   @override
   void initState() {
     super.initState();
     selectedValue = 'ทั้งหมด';
-
+    
     // print('docData : $docData');
   }
 
-  final TextEditingController _documentNumberController =
-      TextEditingController();
+
+
+
+  final TextEditingController _documentNumberController = TextEditingController();
 
   @override
   void dispose() {
@@ -55,9 +57,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: 'Move Locator',
-      ),
+      appBar: const CustomAppBar(title: 'Move Locator',),
       backgroundColor: const Color(0xFF17153B),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),
@@ -80,13 +80,10 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                   items: statusItems
                       .map((item) => DropdownMenuItem<String>(
                             value: item,
-                            child: Text(item,
-                                style: const TextStyle(
-                                    fontSize: 14, color: Colors.black)),
+                            child: Text(item, style: const TextStyle(fontSize: 14, color: Colors.black)),
                           ))
                       .toList(),
-                  validator: (value) =>
-                      value == null ? 'Please select a status.' : null,
+                  validator: (value) => value == null ? 'Please select a status.' : null,
                   onChanged: (value) {
                     setState(() {
                       selectedValue = value;
@@ -95,8 +92,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                   onSaved: (value) => selectedValue = value,
                   value: selectedValue,
                   style: TextStyle(color: Colors.black),
-                  icon: const Icon(Icons.arrow_drop_down,
-                      color: Color.fromARGB(255, 113, 113, 113)),
+                  icon: const Icon(Icons.arrow_drop_down, color: Color.fromARGB(255, 113, 113, 113)),
                   dropdownColor: Colors.white,
                 ),
                 const SizedBox(height: 16),
@@ -121,8 +117,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                     labelStyle: TextStyle(color: Colors.black),
                     filled: true,
                     fillColor: Colors.white,
-                    suffixIcon: Icon(Icons.calendar_today_outlined,
-                        color: Colors.black),
+                    suffixIcon: Icon(Icons.calendar_today_outlined, color: Colors.black),
                   ),
                   onTap: () async {
                     DateTime? selectedDate = await showDatePicker(
@@ -134,8 +129,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                     if (selectedDate != null && selectedDate != _selectedDate) {
                       setState(() {
                         _selectedDate = selectedDate;
-                        _dateController.text =
-                            DateFormat('dd/MM/yyyy').format(selectedDate);
+                        _dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate);
                       });
                     }
                   },
@@ -146,13 +140,11 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                   children: [
                     ElevatedButton(
                       onPressed: _resetForm,
-                      child: Image.asset('assets/images/eraser_red.png',
-                          width: 50, height: 25),
+                      child: Image.asset('assets/images/eraser_red.png', width: 50, height: 25),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey[300],
                         padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
                     const SizedBox(width: 20),
@@ -160,31 +152,30 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                       onPressed: () {
                         final documentNumber = _documentNumberController.text;
 
-                        // Debugging output
-                        print(selectedValue);
-                        print(documentNumber);
-                        print('date ${_dateController.text}');
+    
+    // Debugging output
+    print(selectedValue);
+    print(documentNumber);
+    print('date ${_dateController.text}'); 
+  
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SSFGDT17_MAIN(
-                              pWareCode: widget.pWareCode,
-                              selectedValue: selectedValue,
-                              documentNumber: documentNumber,
-                              dateController: _dateController.text,
-                            ),
-                          ),
-                        );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SSFGDT17_MAIN(
+          pWareCode: widget.pWareCode,
+        selectedValue: selectedValue,
+        documentNumber: documentNumber,
+        dateController: _dateController.text,
+        ),
+      ),
+    );
                       },
-                      child: Image.asset('assets/images/search_color.png',
-                          width: 50, height: 25),
+                      child: Image.asset('assets/images/search_color.png', width: 50, height: 25),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 255, 255, 255),
+                        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                         padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
                   ],

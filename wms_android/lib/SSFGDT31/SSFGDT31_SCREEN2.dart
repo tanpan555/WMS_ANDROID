@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
 import '../custom_appbar.dart';
 import '../bottombar.dart';
-import 'SSFGDT31_SEARCH_DOC.dart'; // ตรวจสอบให้แน่ใจว่าชื่อไฟล์และชื่อคลาสตรงกัน
+import 'SSFGDT31_SEARCH_DOC.dart'; // Make sure the file name and class name match
 import 'SSFGDT31_ADD_DOC.dart';
 
-class SSFGDT31_SCREEN2 extends StatelessWidget {
+class SSFGDT31_SCREEN2 extends StatefulWidget {
+  final String pWareCode;
+
+  SSFGDT31_SCREEN2({
+    Key? key,
+    required this.pWareCode,
+  }) : super(key: key);
+
+  @override
+  _SSFGDT31_SCREEN2State createState() => _SSFGDT31_SCREEN2State();
+}
+
+class _SSFGDT31_SCREEN2State extends State<SSFGDT31_SCREEN2> {
+@override
+  void initState() {
+    super.initState();
+  print('pWareCode: ${widget.pWareCode}');
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +47,9 @@ class SSFGDT31_SCREEN2 extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => SSFGDT31_SEARCH_DOC()),
+                        builder: (context) => SSFGDT31_SEARCH_DOC(
+                          pWareCode: widget.pWareCode
+                        )),
                   );
                 },
               ),
@@ -46,9 +67,9 @@ class SSFGDT31_SCREEN2 extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SSFGDT31_ADD_DOC()),
+                    MaterialPageRoute(
+                        builder: (context) => SSFGDT31_ADD_DOC()),
                   );
-                  // Action for "สร้างเอกสาร"
                 },
               ),
             ),

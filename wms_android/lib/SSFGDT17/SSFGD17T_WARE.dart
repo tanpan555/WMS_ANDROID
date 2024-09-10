@@ -127,7 +127,7 @@ class _SSFGDT17_WAREState extends State<SSFGDT17_WARE> {
                       //   break;
                       // Add more cases as needed
                       default:
-                        imagePath = 'assets/images/warehouse2.png';
+                        imagePath = 'assets/images/warehouse_blue.png';
                         cardColor = const Color.fromARGB(255, 255, 255, 255);
                     }
 

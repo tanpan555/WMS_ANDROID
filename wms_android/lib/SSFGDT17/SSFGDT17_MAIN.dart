@@ -11,8 +11,9 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 
+
 class SSFGDT17_MAIN extends StatefulWidget {
-  final String pWareCode;
+ final String pWareCode;
   final String? selectedValue;
   final String documentNumber;
   final String dateController;
@@ -35,23 +36,25 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
   String? selectedwhCode;
   String? docData;
 
+  
+  
   DateTime? selectedDate;
-  String? docNumberFilter;
+String? docNumberFilter;
   final TextEditingController _docNumberController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-
-    currentSessionID = SessionManager().sessionID;
-    selectedwhCode = widget.pWareCode;
-    print(selectedwhCode);
-    // _dateController.text = selectedDate != null ? DateFormat('dd/MM/yyyy').format(selectedDate!) : '';
-    _dateController.text = widget.dateController;
-    _selectedStatusValue = widget.selectedValue;
-    docNumberFilter = widget.documentNumber;
-    fetchDocType().then((data) {
+void initState() {
+  super.initState();
+  
+  currentSessionID = SessionManager().sessionID;
+selectedwhCode = widget.pWareCode;
+print(selectedwhCode);
+  // _dateController.text = selectedDate != null ? DateFormat('dd/MM/yyyy').format(selectedDate!) : '';
+   _dateController.text = widget.dateController;
+  _selectedStatusValue = widget.selectedValue;
+  docNumberFilter = widget.documentNumber;
+fetchDocType().then((data) {
       setState(() {
         print('docData: $docData');
         data_card_list();
@@ -59,30 +62,31 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     }).catchError((e) {
       print('Error fetching doc type: $e');
     });
-  }
+  
+}
 
-  @override
-  void dispose() {
-    _docNumberController.dispose();
-    _dateController.dispose();
-    super.dispose();
-  }
+@override
+void dispose() {
+  _docNumberController.dispose();
+  _dateController.dispose();
+  super.dispose();
+}
+   void _selectDate() async {
+  final DateTime? pickedDate = await showDatePicker(
+    context: context,
+    initialDate: selectedDate ?? DateTime.now(),
+    firstDate: DateTime(2000),
+    lastDate: DateTime(2101),
+  );
 
-  void _selectDate() async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-
-    if (pickedDate != null && pickedDate != selectedDate) {
-      setState(() {
-        selectedDate = pickedDate;
-        _dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
-      });
-    }
+  if (pickedDate != null && pickedDate != selectedDate) {
+    setState(() {
+      selectedDate = pickedDate;
+      _dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
+    });
   }
+}
+
 
   Future<void> fetchwhCodes() async {
     try {
@@ -109,22 +113,25 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     }
   }
 
-  Future<void> fetchDocType() async {
-    final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/default_doc_type'));
 
-    if (response.statusCode == 200) {
-      // Parse the JSON data
-      final Map<String, dynamic> data = json.decode(response.body);
-      docData = data['DOC_TYPE'];
-      print(docData);
-    } else {
-      // Handle the error
-      throw Exception('Failed to load data');
-    }
+Future<void> fetchDocType() async {
+  final response = await http.get(Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/default_doc_type'));
+
+  if (response.statusCode == 200) {
+    // Parse the JSON data
+    final Map<String, dynamic> data = json.decode(response.body);
+    docData = data['DOC_TYPE'];
+    print(docData);
+  } else {
+    // Handle the error
+    throw Exception('Failed to load data');
   }
+}
 
-  String? _selectedStatusValue = 'ทั้งหมด';
+
+
+
+String? _selectedStatusValue = 'ทั้งหมด';
   String? fixedValue = '0';
 
   void _handleSelected(String? value) {
@@ -187,8 +194,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
           print(data);
           isLoading = false;
         });
-        print(
-            'http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$fixedValue/000/$docData');
+        print('http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$fixedValue/000/$docData');
       } else {
         throw Exception('Failed to load data');
       }
@@ -200,176 +206,174 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     }
   }
 
-  String? doc_no;
-  String? doc_out;
+String? doc_no;
+String? doc_out;
 
-  Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
-    Map<String, Color> statusColors = {
-      'ยกเลิก': Colors.orange,
-      'รับโอน': Colors.blue,
-      'ปกติ': Colors.green,
-    };
 
-    Color statusColor = statusColors[item['status_desc']] ?? Colors.grey;
+ Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
+  Map<String, Color> statusColors = {
+    'ยกเลิก': Colors.orange,
+    'รับโอน': Colors.blue,
+    'ปกติ': Colors.green,
+  };
 
-    TextStyle statusStyle = TextStyle(
-      color: statusColor,
-      fontWeight: FontWeight.bold,
-    );
+  Color statusColor = statusColors[item['status_desc']] ?? Colors.grey;
 
-    BoxDecoration statusDecoration = BoxDecoration(
-      border: Border.all(color: statusColor, width: 2.0),
-      borderRadius: BorderRadius.circular(4.0),
-    );
+  TextStyle statusStyle = TextStyle(
+    color: statusColor,
+    fontWeight: FontWeight.bold,
+  );
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-      child: Card(
-        color: const Color.fromRGBO(204, 235, 252, 1.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        elevation: 5,
-        child: Column(
-          children: [
-            ListTile(
-              title: Center(
-                child: Text(
-                  item['doc_number'] ?? 'No doc_number',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
+  BoxDecoration statusDecoration = BoxDecoration(
+    border: Border.all(color: statusColor, width: 2.0),
+    borderRadius: BorderRadius.circular(4.0),
+  );
+
+  return Padding(
+  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+  child: Card(
+    color: const Color.fromRGBO(204, 235, 252, 1.0),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20.0),
+    ),
+    elevation: 5,
+    child: Column(
+      children: [
+        ListTile(
+          title: Center(
+            child: Text(
+              item['doc_number'] ?? 'No doc_number',
+              style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),
+            ),
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Divider(
+                color: const Color.fromARGB(255, 0, 0, 0),
+              ),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    if (item['status_desc'] != null)
+                      WidgetSpan(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 4.0, vertical: 2.0),
+                          decoration: statusDecoration,
+                          child: Text(
+                            '${item['status_desc'] ?? 'No Status'}',
+                            style: statusStyle,
+                          ),
+                        ),
+                      ),
+                    TextSpan(
+                      text: '\n \n',
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                    ),
+                    TextSpan(
+                      text: '${item['doc_date'] ?? 'No doc_date'} ${item['from_warehouse'] ?? 'No WAREHOUSE'} ${item['staff_name'] ?? ''}',
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                    ),
+                  ],
                 ),
               ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Divider(
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                  ),
-                  RichText(
-                    text: TextSpan(
+            ],
+          ),
+          onTap: () async {
+            print('${item['doc_no'] ?? 'No doc_no'} ');
+            print('${item['doc_type'] ?? 'No doc_type'} ');
+            doc_no = item['doc_no'];
+            doc_out = item['doc_type'];
+            await chk_validate();
+            await chk_validate_inhead();
+            print('poStatusinhead: $poStatusinhead');
+            // print('$poStatus $poMessage $goToStep');
+
+            if (poStatus == '1') {
+              print(poMessage);
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('คำเตือน'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (item['status_desc'] != null)
-                          WidgetSpan(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 4.0, vertical: 2.0),
-                              decoration: statusDecoration,
-                              child: Text(
-                                '${item['status_desc'] ?? 'No Status'}',
-                                style: statusStyle,
-                              ),
-                            ),
-                          ),
-                        TextSpan(
-                          text: '\n \n',
-                          style: TextStyle(color: Colors.black, fontSize: 12),
-                        ),
-                        TextSpan(
-                          text:
-                              '${item['doc_date'] ?? 'No doc_date'} ${item['from_warehouse'] ?? 'No WAREHOUSE'}',
-                          style: TextStyle(color: Colors.black, fontSize: 12),
-                        ),
+                        Text('${poMessage ?? 'No message available'}'),
                       ],
                     ),
-                  ),
-                ],
-              ),
-              onTap: () async {
-                print('${item['doc_no'] ?? 'No doc_no'} ');
-                print('${item['doc_type'] ?? 'No doc_type'} ');
-                doc_no = item['doc_no'];
-                doc_out = item['doc_type'];
-                await chk_validate();
-                await chk_validate_inhead();
-                print('poStatusinhead: $poStatusinhead');
-                // print('$poStatus $poMessage $goToStep');
-
-                if (poStatus == '1') {
-                  print(poMessage);
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('คำเตือน'),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('${poMessage ?? 'No message available'}'),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            child: Text('OK'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
+                    actions: [
+                      TextButton(
+                        child: Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
                   );
-                } else if (poStatus == '0') {
-                  if (goToStep == '2') {
-                    print('ไปหน้า Form');
-                    if (poStatusinhead == '0') {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SSFGDT17_FORM(
-                            po_doc_no: doc_no ?? '',
-                            po_doc_type: doc_out,
-                            LocCode: '',
-                            selectedwhCode: '',
-                            selectedLocCode: '',
-                            whOUTCode: '',
-                            LocOUTCode: '',
-                            pWareCode: '',
-                          ),
-                        ),
-                      );
-                    }
-                  } else if (goToStep == '3') {
-                    print('ไปหน้า barcode');
-                    if (poStatusinhead == '0') {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SSFGDT17_BARCODE(
-                            po_doc_no: doc_no ?? '',
-                            po_doc_type: doc_out,
-                            LocCode: '',
-                            selectedwhCode: '',
-                            selectedLocCode: '',
-                            whOUTCode: '',
-                            LocOUTCode: '',
-                          ),
-                        ),
-                      );
-                    }
-                  } else if (goToStep == '4') {
-                    print('ไปหน้ายืนยัน');
-                    if (poStatusinhead == '0') {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SSFGD17_VERIFY(
-                            po_doc_no: doc_no ?? '',
-                            po_doc_type: doc_out,
-                            selectedwhCode: '',
-                          ),
-                        ),
-                      );
-                    }
-                  }
+                },
+              );
+            } else if (poStatus == '0') {
+              if (goToStep == '2') {
+                print('ไปหน้า Form');
+                if (poStatusinhead == '0') {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SSFGDT17_FORM(
+                        po_doc_no: doc_no ?? '',
+                        po_doc_type: doc_out,
+                        LocCode: '',
+                        selectedwhCode: '',
+                        selectedLocCode: '',
+                        whOUTCode: '',
+                        LocOUTCode: '',
+                        pWareCode: '',
+                      ),
+                    ),
+                  );
                 }
-              },
-            ),
-          ],
+              } else if (goToStep == '3') {
+                print('ไปหน้า barcode');
+                if (poStatusinhead == '0') {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SSFGDT17_BARCODE(
+                        po_doc_no: doc_no ?? '',
+                        po_doc_type: doc_out,
+                        LocCode: '',
+                        selectedwhCode: '',
+                        selectedLocCode: '',
+                        whOUTCode: '',
+                        LocOUTCode: '',
+                      ),
+                    ),
+                  );
+                }
+              } else if (goToStep == '4') {
+                print('ไปหน้ายืนยัน');
+                if (poStatusinhead == '0') {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SSFGD17_VERIFY(
+                        po_doc_no: doc_no ?? '',
+                        po_doc_type: doc_out,
+                        selectedwhCode: '',
+                      ),
+                    ),
+                  );
+                }
+              }
+            }
+          },
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  ),
+);
+}
+
 
   int _displayLimit = 15;
   final ScrollController _scrollController = ScrollController();
@@ -447,7 +451,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
 //                     _dateController.clear();
 //                     selectedDate = null;
 //                   });
-
+        
 //                 },
 //                 child: const Text('Clear Filter'),
 //               ),
@@ -469,7 +473,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
 //   );
 // }
 
-  String? poStatus;
+String? poStatus;
   String? poMessage;
   String? goToStep;
 
@@ -509,7 +513,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
         final jsonData = json.decode(responseBody);
         setState(() {
           poStatusinhead = jsonData['po_status'];
-
+ 
           print('poStatusinhead: $poStatusinhead');
         });
       } else {
@@ -520,6 +524,8 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -528,7 +534,6 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
       body: OrientationBuilder(
         builder: (context, orientation) {
           final isPortrait = orientation == Orientation.portrait;
-
           return isLoading
               ? const Center(child: CircularProgressIndicator())
               : errorMessage.isNotEmpty
@@ -536,41 +541,12 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
                   : Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
-                        children: [
+                        children: [                
                           if (isPortrait)
-                            //             Row(
-                            // children: [
-                            //   // ElevatedButton(
-                            //   //   style: ElevatedButton.styleFrom(
-                            //   //     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                            //   //     shape: RoundedRectangleBorder(
-                            //   //       borderRadius: BorderRadius.circular(12.0),
-                            //   //     ),
-                            //   //     minimumSize: const Size(10, 20),
-                            //   //     padding: const EdgeInsets.symmetric(
-                            //   //         horizontal: 10, vertical: 5),
-                            //   //   ),
-                            //   //   onPressed: () {
-                            //   //     Navigator.pop(context);
-                            //   //   },
-                            //   //   child: const Text(
-                            //   //     'ย้อนกลับ',
-                            //   //     style: TextStyle(
-                            //   //       color: Colors.white,
-                            //   //       fontWeight: FontWeight.bold,
-                            //   //     ),
-                            //   //   ),
-                            //   // ),
-                            // ]
-                            // ),
-                            const SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Expanded(
                             child: data.isEmpty
-                                ? const Center(
-                                    child: Text(
-                                    'No Data Available',
-                                    style: TextStyle(color: Colors.white),
-                                  ))
+                                ? const Center(child: Text('No Data Available',style: TextStyle(color: Colors.white),))
                                 : ListView.builder(
                                     controller: _scrollController,
                                     itemCount: (_displayLimit < data.length)
@@ -600,5 +576,5 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
       ),
       bottomNavigationBar: BottomBar(),
     );
-  }
+  } 
 }

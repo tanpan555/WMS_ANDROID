@@ -85,7 +85,7 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
     String checkPage = '$pageName ${widget.p_attr1}';
     switch (checkPage) {
       case 'SSINDT01_MAIN Raw Material':
-      case 'SSINDT01_MAIN Finishing':
+      case 'SSINDT04_MAIN Finishing':
         return SSFGDT01_WARE(
             p_attr1: widget.p_attr1, p_ou_code: widget.p_ou_code);
       case 'SSFGDT04_MAIN Raw Material':

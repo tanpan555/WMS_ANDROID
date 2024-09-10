@@ -129,8 +129,8 @@ class _SSFGDT01_WAREState extends State<SSFGDT01_WARE> {
                       //   break;
                       // Add more cases as needed
                       default:
-                        imagePath = 'assets/images/warehouse2.png';
-                        cardColor = Colors.red;
+                        imagePath = 'assets/images/warehouse_blue.png';
+                        cardColor = Colors.white;
                     }
 
                     return GestureDetector(

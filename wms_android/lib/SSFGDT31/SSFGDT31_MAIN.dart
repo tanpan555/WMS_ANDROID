@@ -92,7 +92,9 @@ class _SSFGDT31_MAINState extends State<SSFGDT31_MAIN> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              SSFGDT31_SCREEN2()),
+                                              SSFGDT31_SCREEN2(
+                                                pWareCode: item['ware_code']
+                                              )),
                                     );
                                   },
                                   child: Column(

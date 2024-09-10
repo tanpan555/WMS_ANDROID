@@ -1808,7 +1808,7 @@ class _LotDialogState extends State<LotDialog> {
               children: <Widget>[
                 SizedBox(height: 16.0),
                 Row(
-                  children: <Widget>[
+                  children: [
                     Expanded(
                       flex: 1,
                       child: TextFormField(
