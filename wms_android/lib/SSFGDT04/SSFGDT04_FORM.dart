@@ -10,13 +10,15 @@ import 'SSFGDT04_GRID.dart';
 // import 'package:dropdown_search/dropdown_search.dart';
 
 class SSFGDT04_FORM extends StatefulWidget {
-  final String pWareCode;
+  final String pWareCode; // ware code ที่มาจากเลือ lov
+  // final String pAttr1;
   final String po_doc_no;
   final String? po_doc_type;
 
   SSFGDT04_FORM({
     Key? key,
     required this.pWareCode,
+    // required this.pAttr1,
     required this.po_doc_no,
     required this.po_doc_type,
   }) : super(key: key);
@@ -109,7 +111,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
   Future<void> fetchDocTypeItems() async {
     final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/TYPE/${gb.ATTR1}'));
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_TYPE/${gb.ATTR1}'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -127,7 +129,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
   Future<void> fetchSaffCodeItems() async {
     final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/SSFGDT04_STAFF_CODE/${gb.P_ERP_OU_CODE}'));
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_STAFF_CODE/${gb.P_ERP_OU_CODE}'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -192,7 +194,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
   Future<void> save_INHeadNonePO_WMS(String? po_doc_no) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/validateSave_INHeadNonePO_WMS/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${gb.APP_USER}';
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_validateSave_INHeadNonePO_WMS/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${gb.APP_USER}';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -294,7 +296,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   //   }
   // }
 
-  Future<void> update(String? po_doc_type, String? po_doc_no) async {
+  Future<void> update(
+    String? po_doc_type, 
+    String? po_doc_no,) async {
     print('Hiiiiiiiii');
     print(
         'update called with po_doc_type: $po_doc_type, po_doc_no: $po_doc_no');
@@ -306,7 +310,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
         },
         body: jsonEncode({
           'P_WARE_CODE': gb.P_WARE_CODE,
-          'P_OU_CODE': gb.P_OU_CODE,
+          'P_OU_CODE': gb.P_ERP_OU_CODE,
           // 'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
           'P_REF_RECEIVE': _refNoController.text,
           'P_ORDER_NO': _oderNoController.text,
@@ -325,18 +329,24 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
         //     })}'
         );
 
+    print('Navigating to SSFGDT04_GRID with:');
+    print('po_doc_no: ${widget.po_doc_no}');
+    print('po_doc_type: ${widget.po_doc_type}');
+    print('pWareCode: ${widget.pWareCode}');
+    print('p_ref_no: ${_refNoController.text}');
+    print('mo_do_no: ${_moDoNoController.text}');
+
     if (response.statusCode == 200) {
-      print('Receive quantity updated successfully');
-      fetchFromItems();
+      print('Update successful');
     } else {
-      print('Failed to update receive quantity: ${response.statusCode}');
+      print('Failed to update: ${response.statusCode}');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO'),
+      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: fromItems.isEmpty
           ? Center(child: CircularProgressIndicator())
@@ -480,10 +490,11 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             print('Hiiiiiiiiiiiiiiiiiiiiiiiiiii');
                             // เรียกใช้งานฟังก์ชันเพื่ออัปเดตข้อมูล Form ก่อน
                             await update(widget.po_doc_type, widget.po_doc_no);
+                            await save_INHeadNonePO_WMS(selectedValue ?? '');
 
                             // ตรวจสอบเงื่อนไขก่อนบันทึกข้อมูล
                             if (poStatus == '0') {
-                              await save_INHeadNonePO_WMS(selectedValue ?? '');
+                              
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

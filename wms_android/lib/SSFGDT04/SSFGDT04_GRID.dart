@@ -4,6 +4,7 @@ import '../bottombar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import 'SSFGDT04_SCREEN_5.dart';
 
 class SSFGDT04_GRID extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจาก lov
@@ -11,6 +12,7 @@ class SSFGDT04_GRID extends StatefulWidget {
   final String po_doc_type;
   final String p_ref_no;
   final String mo_do_no;
+
   SSFGDT04_GRID({
     Key? key,
     required this.pWareCode,
@@ -28,6 +30,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   List<Map<String, dynamic>> gridItems = [];
   late TextEditingController _docNoController;
   List<dynamic> data = [];
+  List<String> deletedItemCodes = [];
   String? poStatus;
   String? poMessage;
 
@@ -35,62 +38,106 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   void initState() {
     super.initState();
     fetchGridItems();
-    // Initialize the controller and set the initial value to po_doc_no
     _docNoController = TextEditingController(text: widget.po_doc_no);
-    
   }
 
-  Future<void> fetchGridItems() async {
-    final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/WMS_IN_TRAN_DETAIL/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}/${gb.P_OU_CODE}'));
+  Future<void> _showEditDialog(
+      BuildContext context, Map<String, dynamic> item) async {
+    // Check if 'pack_qty' exists, if not, assign an empty string
+    final TextEditingController _quantityController = TextEditingController(
+      text: item['pack_qty'] != null ? item['pack_qty'].toString() : '',
+    );
 
-    if (response.statusCode == 200) {
-      final responseBody = utf8.decode(response.bodyBytes);
-      final data = jsonDecode(responseBody);
-      setState(() {
-        gridItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-        // if (docTypeItems.isNotEmpty) {
-        //   selectedDocType = docTypeItems[0]['doc_desc']; // Default selection
-        // }
-      });
-    } else {
-      throw Exception('Failed to load DOC_TYPE items');
-    }
+    final _formKey = GlobalKey<FormState>();
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // User must tap button to dismiss dialog
+      builder: (BuildContext context) {
+        return AlertDialog(
+          // title: Text('Edit Quantity'),
+          content: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: ListBody(
+                children: <Widget>[
+                  // Text('จำนวนรับ'),
+                  SizedBox(height: 8), // Add some spacing
+                  TextFormField(
+                    controller: _quantityController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'จำนวนรับ',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a quantity';
+                      }
+                      if (int.tryParse(value) == null) {
+                        return 'Please enter a valid number';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Save'),
+              onPressed: () async {
+                if (_formKey.currentState?.validate() ?? false) {
+                  final newQuantity = _quantityController.text;
+
+                  // Update the item in the gridItems list
+
+                  // Call the API to update the data on the server
+                  await fetchUpdate(newQuantity, item['seq']);
+                  setState(() {
+                    fetchGridItems();
+                  });
+
+                  // Close the popup
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
-  // Future<void> fetchGetPo() async {
-  //   try {
-  //     final response = await http.get(Uri.parse(
-  //         'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_GET_PO/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${widget.p_ref_no}/${widget.mo_do_no}/${widget.po_doc_type}/${widget.po_doc_no}/${gb.P_WARE_CODE}/${gb.APP_USER}'));
-
-  //     if (response.statusCode == 200) {
-  //       final responseBody = utf8.decode(response.bodyBytes);
-  //       final responseData = jsonDecode(responseBody);
-  //       print('Fetched data: $responseData');
-
-  //       setState(() {
-  //         data = List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-  //       });
-  //       print('dataMenu : $data');
-  //     } else {
-  //       throw Exception('Failed to load fetchData');
-  //     }
-  //   } catch (e) {
-  //     setState(() {});
-  //     print('ERROR IN Fetch Data : $e');
-  //   }
-  // }
-
-  Future<void> fetchGetPo() async {
-    final url = 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_GET_PO/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${widget.p_ref_no}/${widget.mo_do_no}/${widget.po_doc_type}/${widget.po_doc_no}/${gb.P_WARE_CODE}/${gb.APP_USER}';
+  Future<void> fetchUpdate(String? po_pack_qty, int po_seq) async {
+    final url =
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_update_wms_itd';
 
     final headers = {
       'Content-Type': 'application/json',
     };
 
     final body = jsonEncode({
-      'V_DOC_NO': widget.po_doc_no,
-      'V_DOC_TYPE': widget.po_doc_type,
+      'PACK_QTY': po_pack_qty,
+      'SEQ': po_seq.toString(),
+      'DOC_NO': widget.po_doc_no,
+      'DOC_TYPE': widget.po_doc_type,
+      'OU_CODE': gb.P_ERP_OU_CODE,
+      // 'V_DOC_NO': widget.po_doc_no,
+      // 'V_DOC_TYPE': widget.po_doc_type,
+      // 'V_REF_NO': widget.p_ref_no,
+      // 'V_MO_DO_NO': widget.mo_do_no,
+      // 'V_WAREHOUSE': gb.P_WARE_CODE,
+      // 'APP_USER': gb.APP_USER,
+      // 'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
+      // 'P_OU_CODE': gb.P_OU_CODE,
     });
     print('Request body: $body');
 
@@ -117,11 +164,115 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     }
   }
 
+  Future<void> fetchGridItems() async {
+    final response = await http.get(Uri.parse(
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_WMS_IN_TRAN_DETAIL/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}/${gb.P_OU_CODE}'));
+    if (response.statusCode == 200) {
+      final responseBody = utf8.decode(response.bodyBytes);
+      final data = jsonDecode(responseBody);
+      setState(() {
+        // Update gridItems with new data
+        gridItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+
+        // Filter out deleted items
+        gridItems = gridItems
+            .where((item) => !deletedItemCodes.contains(item['item_code']))
+            .toList();
+      });
+    } else {
+      throw Exception('Failed to load DOC_TYPE items');
+    }
+  }
+
+  Future<void> fetchGetPo() async {
+    final url = 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_GET_PO';
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'V_DOC_NO': widget.po_doc_no,
+      'V_DOC_TYPE': widget.po_doc_type,
+      'V_REF_NO': widget.p_ref_no,
+      'V_MO_DO_NO': widget.mo_do_no,
+      'V_WAREHOUSE': gb.P_WARE_CODE,
+      'APP_USER': gb.APP_USER,
+      'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
+      'P_OU_CODE': gb.P_OU_CODE,
+    });
+    print('Request body: $body');
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        setState(() {
+          poStatus = responseData['po_status'];
+          poMessage = responseData['po_message'];
+          fetchGridItems();
+        });
+        print('Success: $responseData');
+      } else {
+        print('Failed to post data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> delete(String? po_doc_no, String? po_doc_tpye, int po_seq,
+      String? po_item_code) async {
+    print(po_doc_no);
+    print(po_doc_tpye);
+    print(po_seq);
+    print(po_item_code);
+    final url = Uri.parse(
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_delete_DTL_WMS');
+    final response = await http.delete(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'P_DOC_NO': po_doc_no,
+        'P_DOC_TYPE': po_doc_tpye,
+        'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
+        'APP_USER': gb.APP_USER,
+        'P_SEQ': po_seq,
+        'P_ITEM_CODE': po_item_code,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final responseBody = jsonDecode(response.body);
+      final poStatus = responseBody['po_status'];
+      final poMessage = responseBody['po_message'];
+      print('Status: $poStatus');
+      print('Message: $poMessage');
+      if (poStatus == 'success') {
+        // Only update UI if deletion was successful
+        setState(() {
+          // Remove the item from the list
+          gridItems.removeWhere((item) =>
+              item['item_code'] == po_item_code && item['po_seq'] == po_seq);
+          deletedItemCodes.add(po_item_code!);
+        });
+      }
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
   @override
   void dispose() {
     _docNoController.dispose();
     super.dispose();
-    
   }
 
   @override
@@ -138,10 +289,10 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
-                  onPressed: fetchGetPo,
-                  // onPressed: () async {
-                  //   await fetchGetPo();
-                  // },
+                  // onPressed: fetchGetPo,
+                  onPressed: () async {
+                    await fetchGetPo();
+                  },
                   child: Image.asset(
                     'assets/images/business.png', // เปลี่ยนเป็นเส้นทางของรูปภาพของคุณ
                     width: 30, // ปรับขนาดตามที่ต้องการ
@@ -157,7 +308,20 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () async {
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SSFGDT04_Screen_5(
+                          po_doc_no: widget.po_doc_no, // ส่งค่า po_doc_no
+                          // po_doc_type: widget.po_doc_type ??
+                          //     '', // ส่งค่า po_doc_type
+                          // pWareCode: widget.pWareCode,
+                          //                 // p_ref_no: _refNoController.text ?? '',
+                          //                 // mo_do_no: _moDoNoController.text ?? '',
+                        ),
+                      ),
+                    );
                     // await fetchData();
                     // เพิ่มโค้ดสำหรับการทำงานของปุ่มถัดไปที่นี่
                   },
@@ -275,11 +439,25 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                   width: 30,
                                   height: 30,
                                 ),
-                                onPressed: () {
-                                  // Add delete functionality
-                                  print('Delete item $index');
+                                onPressed: () async {
+                                  // Extract item details
+                                  final po_item_code = item['item_code'];
+                                  final po_seq = item[
+                                      'seq']; // Ensure that `po_seq` exists in your item map
+
+                                  // Call delete function
+                                  await delete(widget.po_doc_no,
+                                      widget.po_doc_type, po_seq, po_item_code);
+
+                                  // Remove item from the list and update the UI
+                                  setState(() {
+                                    gridItems.removeWhere((item) =>
+                                        item['item_code'] == po_item_code &&
+                                        item['seq'] == po_seq);
+                                  });
                                 },
                               ),
+
                               // Edit button as image
                               IconButton(
                                 icon: Image.asset(
@@ -288,8 +466,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                   height: 30,
                                 ),
                                 onPressed: () {
-                                  // Add edit functionality
-                                  print('Edit item $index');
+                                  _showEditDialog(context, item);
                                 },
                               ),
                             ],
