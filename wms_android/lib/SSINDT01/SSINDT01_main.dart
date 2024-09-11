@@ -83,9 +83,10 @@ void initState() {
   fixedValue = valueMapping[widget.selectedValue];
   if (selectedApCode == 'ทั้งหมด') {
     selectedApCode = 'null';
+    fetchWareCodes();
   }
-  
-  fetchWareCodes();
+
+  // fetchWareCodes();
 
   print('Document Number (with default if null): $documentNumber');
   
@@ -104,7 +105,7 @@ Future<void> fetchWareCodes([String? url]) async {
   });
 
   final String requestUrl = url ??
-      'http://172.16.0.82:8888/apex/wms/c/Card_list_01/$selectedApCode/$ATTR/${widget.documentNumber}/C';
+      'http://172.16.0.82:8888/apex/wms/c/Card_list_01/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue';
 
   try {
     final response = await http.get(Uri.parse(requestUrl));
