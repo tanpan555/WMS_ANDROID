@@ -69,7 +69,8 @@ void initState() {
   
   // Use a variable to hold the documentNumber with default value
   String documentNumber = widget.documentNumber;
-  
+
+
   // Debug statements
   print('Card Global Ware Code: ${gb.P_WARE_CODE}');
   log('Card Global Ware Code: ${gb.P_WARE_CODE}');
@@ -79,25 +80,31 @@ void initState() {
   print(fixedValue);
   print(widget.apCode);
   print('Original widget.documentNumber: ${widget.documentNumber}');
-  
+  fixedValue = valueMapping[widget.selectedValue];
   if (selectedApCode == 'ทั้งหมด') {
     selectedApCode = 'null';
   }
   
+  fetchWareCodes();
+
   print('Document Number (with default if null): $documentNumber');
   
-  fetchWareCodes();
+  
 }
-
+final Map<String, String> valueMapping = {
+  'รายการรอรับดำเนินการ': 'A',
+  'รายการใบสั่งซื้อ': 'B',
+  'ทั้งหมด': 'C',
+};
 
 
 Future<void> fetchWareCodes([String? url]) async {
   setState(() {
-    isLoading = true; // Show loading indicator while fetching data
+    isLoading = true;
   });
 
   final String requestUrl = url ??
-      'http://172.16.0.82:8888/apex/wms/c/Card_list_01/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue';
+      'http://172.16.0.82:8888/apex/wms/c/Card_list_01/$selectedApCode/$ATTR/${widget.documentNumber}/C';
 
   try {
     final response = await http.get(Uri.parse(requestUrl));
@@ -117,6 +124,7 @@ Future<void> fetchWareCodes([String? url]) async {
         nextLink = getLink(links, 'next');
         prevLink = getLink(links, 'prev');
         isLoading = false;
+        print('http://172.16.0.82:8888/apex/wms/c/Card_list_01/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue');
       });
     } else {
       // Handle HTTP error responses
