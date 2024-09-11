@@ -207,7 +207,7 @@ switch (item['qc_yn']) {
 Widget build(BuildContext context) {
   return Scaffold(
     backgroundColor: const Color(0xFF17153B),
-    appBar: const CustomAppBar(title: 'Move Locator'),
+    appBar: const CustomAppBar(title: 'รับคืนจากการเบิกผลิต'),
     body: OrientationBuilder(
       builder: (context, orientation) {
         final isPortrait = orientation == Orientation.portrait;

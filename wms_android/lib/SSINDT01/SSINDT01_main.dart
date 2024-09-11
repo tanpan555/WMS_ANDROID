@@ -494,7 +494,7 @@ Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
 Widget build(BuildContext context) {
   return Scaffold(
     backgroundColor: const Color(0xFF17153B),
-    appBar: const CustomAppBar(title: 'Move Locator'),
+    appBar: const CustomAppBar(title: 'รับจากการสั่งซื้อ'),
     body: OrientationBuilder(
       builder: (context, orientation) {
         final isPortrait = orientation == Orientation.portrait;
