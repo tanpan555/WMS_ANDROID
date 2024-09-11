@@ -47,7 +47,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
 
   Future<void> fetchStatusItems() async {
     final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/TYPE/${gb.ATTR1}'));
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/SSFGDT04_TYPE/${gb.ATTR1}'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
