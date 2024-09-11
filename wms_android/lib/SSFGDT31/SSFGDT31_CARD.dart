@@ -184,7 +184,7 @@ switch (item['qc_yn']) {
                   ),
                 ),
               ),
-              const SizedBox(height: 5.0),
+              // const SizedBox(height: 1.0),
               SizedBox(
                 width: 100,
                 height: 40,

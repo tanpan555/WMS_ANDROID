@@ -68,7 +68,9 @@ class _SSFGDT31_SCREEN2State extends State<SSFGDT31_SCREEN2> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => SSFGDT31_ADD_DOC()),
+                        builder: (context) => SSFGDT31_ADD_DOC(
+                          pWareCode : widget.pWareCode
+                        )),
                   );
                 },
               ),
