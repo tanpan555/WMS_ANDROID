@@ -33,19 +33,25 @@ class Ssfgdt09lBarcode extends StatefulWidget {
 
 class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
   String barCode = '';
-  String locator = '';
+  String locatorForm = '';
   String itemCode = '';
   String lotNo = '';
   String quantity = '';
+  String locatorTo = '';
   String lotQty = '';
   String lotUnit = '';
 
+  String statusFetchDataBarcode = '';
+  String messageFetchDataBarcode = '';
+  String valIDFetchDataBarcode = '';
+
   FocusNode _barcodeFocusNode = FocusNode();
   TextEditingController barcodeController = TextEditingController();
-  TextEditingController locatorController = TextEditingController();
+  TextEditingController locatorFormController = TextEditingController();
   TextEditingController itemCodeController = TextEditingController();
   TextEditingController lotNoController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
+  TextEditingController locatorToController = TextEditingController();
   TextEditingController lotQtyController = TextEditingController();
   TextEditingController lotUnitController = TextEditingController();
 
@@ -53,7 +59,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
   void dispose() {
     _barcodeFocusNode.dispose();
     barcodeController.dispose();
-    locatorController.dispose();
+    locatorFormController.dispose();
     itemCodeController.dispose();
     lotNoController.dispose();
     quantityController.dispose();
@@ -84,9 +90,13 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             List<String> parts = barCode.split(' ');
             lotNo = parts.sublist(1).join(' ');
             lotNoController.text = lotNo; // อัปเดตค่าของ lotNoController
+
+            // lotNo.isNotEmpty ? fetchData() : setState(() {});
           } else {
             lotNo = barCode;
             lotNoController.text = lotNo; // อัปเดตค่าของ lotNoController
+
+            //  lotNo.isNotEmpty ? fetchData() : setState(() {});
           }
         });
       }
@@ -96,8 +106,89 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
     lotNoController.addListener(() {
       setState(() {
         lotNo = lotNoController.text; // ใช้ค่าสุดท้ายจาก lotNoController
+
+        //  lotNo.isNotEmpty ? fetchData() : setState(() {});
       });
     });
+  }
+
+  Future<void> fetchData() async {
+    print('lotNo : $lotNo type : ${lotNo.runtimeType}');
+    final url =
+        'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_SubmitData';
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'p_erp_ou_code': widget.pErpOuCode,
+      'p_doc_no': widget.pDocNo,
+      'p_schid': widget.pMoDoNO,
+      'p_lot_no': lotNo,
+      'p_app_user': globals.APP_USER,
+    });
+    print('Request body: $body');
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataBarcode = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print('dataBarcode : $dataBarcode type : ${dataBarcode.runtimeType}');
+        setState(() {
+          statusFetchDataBarcode = dataBarcode['po_status'];
+          messageFetchDataBarcode = dataBarcode['po_message'];
+          valIDFetchDataBarcode = dataBarcode['po_valid'];
+
+          if (statusFetchDataBarcode == '0') {
+            itemCode = dataBarcode['po_item_code'];
+            lotNo = dataBarcode['po_lot_number'];
+            quantity = dataBarcode['po_quantity'];
+            locatorTo = dataBarcode['po_curr_loc'];
+            lotQty = dataBarcode['po_bal_lot']; // ====== รวมรายการจ่าย
+            lotUnit = dataBarcode['po_bal_qty']; //--- รวมจำนวนจ่าย
+
+            itemCodeController.text = itemCode;
+            lotNoController.text = lotNo;
+            quantityController.text = quantity;
+            locatorToController.text = locatorTo;
+            lotQtyController.text = lotQty;
+            lotUnitController.text = lotUnit;
+          }
+          if (statusFetchDataBarcode == '1' || valIDFetchDataBarcode == 'N') {
+            messageFetchDataBarcode = dataBarcode['po_item_code'];
+            lotNo = dataBarcode['po_lot_number'];
+            quantity = dataBarcode['po_quantity'];
+            locatorTo = dataBarcode['po_curr_loc'];
+            lotQty = dataBarcode['po_bal_lot']; // ====== รวมรายการจ่าย
+            lotUnit = dataBarcode['po_bal_qty']; //--- รวมจำนวนจ่าย
+
+            itemCodeController.text = itemCode;
+            lotNoController.text = lotNo;
+            quantityController.text = quantity;
+            locatorToController.text = locatorTo;
+            lotQtyController.text = lotQty;
+            lotUnitController.text = lotUnit;
+
+            // showDialogconfirm();
+          }
+          if (statusFetchDataBarcode == '1' || valIDFetchDataBarcode != 'N') {
+            showDialogAlertMessage(context, messageFetchDataBarcode);
+          }
+        });
+      } else {
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
   @override
@@ -215,7 +306,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             const SizedBox(height: 20),
             // --------------------------------------------------------------------------------------------------
             TextFormField(
-              controller: locatorController,
+              controller: locatorFormController,
               readOnly: true,
               decoration: const InputDecoration(
                 border: InputBorder.none,
@@ -255,6 +346,9 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   color: Colors.black87,
                 ),
               ),
+              onTap: () {
+                lotNo.isNotEmpty ? fetchData() : setState(() {});
+              },
             ),
             const SizedBox(height: 20),
             // --------------------------------------------------------------------------------------------------
@@ -279,7 +373,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             const SizedBox(height: 20),
             // --------------------------------------------------------------------------------------------------
             TextFormField(
-              controller: lotQtyController,
+              controller: locatorToController,
               readOnly: true,
               decoration: const InputDecoration(
                 border: InputBorder.none,
@@ -294,7 +388,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             const SizedBox(height: 20),
             // --------------------------------------------------------------------------------------------------
             TextFormField(
-              controller: itemCodeController,
+              controller: lotQtyController,
               readOnly: true,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
@@ -314,7 +408,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             const SizedBox(height: 20),
             // --------------------------------------------------------------------------------------------------
             TextFormField(
-              controller: itemCodeController,
+              controller: lotUnitController,
               readOnly: true,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
@@ -335,6 +429,170 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             // --------------------------------------------------------------------------------------------------
           ]))),
       bottomNavigationBar: BottomBar(),
+    );
+  }
+
+  void showDialogAlertMessage(
+    BuildContext context,
+    String messageDelete,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Row(
+            children: [
+              Icon(
+                Icons.notification_important,
+                color: Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'แจ้งแตือน',
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    messageDelete,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          barCode = '';
+                          locatorForm = '';
+                          itemCode = '';
+                          lotNo = '';
+                          quantity = '';
+                          locatorTo = '';
+                          lotQty = '';
+                          lotUnit = '';
+
+                          statusFetchDataBarcode = '';
+                          messageFetchDataBarcode = '';
+                          valIDFetchDataBarcode = '';
+
+                          barcodeController.clear();
+                          locatorFormController.clear();
+                          itemCodeController.clear();
+                          lotNoController.clear();
+                          quantityController.clear();
+                          locatorToController.clear();
+                          lotQtyController.clear();
+                          lotUnitController.clear();
+
+                          FocusScope.of(context)
+                              .requestFocus(_barcodeFocusNode);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text('ย้อนกลับ'),
+                      ),
+                    ],
+                  )
+                ])),
+          ),
+        );
+      },
+    );
+  }
+
+  void showDialogcomfirmMessage(
+    BuildContext context,
+    String messageDelete,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Row(
+            children: [
+              // Icon(
+              //   Icons.notification_important,
+              //   color: Colors.red,
+              // ),
+              // SizedBox(width: 10),
+              Text(
+                'แจ้งแตือน',
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(children: [
+                  const SizedBox(height: 10),
+                  const Text(
+                    'รายการไม่ตรงกับระบบการจอง ต้องการยืนยัน ?',
+                    // style:  TextStyle(color: Colors.red),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          barCode = '';
+                          locatorForm = '';
+                          itemCode = '';
+                          lotNo = '';
+                          quantity = '';
+                          locatorTo = '';
+                          lotQty = '';
+                          lotUnit = '';
+
+                          statusFetchDataBarcode = '';
+                          messageFetchDataBarcode = '';
+                          valIDFetchDataBarcode = '';
+
+                          barcodeController.clear();
+                          locatorFormController.clear();
+                          itemCodeController.clear();
+                          lotNoController.clear();
+                          quantityController.clear();
+                          locatorToController.clear();
+                          lotQtyController.clear();
+                          lotUnitController.clear();
+
+                          FocusScope.of(context)
+                              .requestFocus(_barcodeFocusNode);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text('ย้อนกลับ'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text('ยืนยัน'),
+                      ),
+                    ],
+                  )
+                ])),
+          ),
+        );
+      },
     );
   }
 }
