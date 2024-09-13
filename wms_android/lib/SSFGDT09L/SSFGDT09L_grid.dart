@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
+import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'SSFGDT09L_barcode.dart';
 
 class Ssfgdt09lGrid extends StatefulWidget {
@@ -39,113 +40,6 @@ class Ssfgdt09lGrid extends StatefulWidget {
 class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   //
   List<dynamic> dataCard = [];
-  List<Map<String, dynamic>> dataCardForTest = [
-    {
-      'rowid': '1',
-      'bin_del': 'test bin_del 1',
-      'item_code': 'test item_code 1',
-      'nb_item_name': 'test nb_item_name 1',
-      'pack_code': 'test pack_code 1',
-      'nb_pack_name': 'test nb_pack_name 1',
-      'location_code': 'test location_code 1',
-      'pack_qty': 'test pack_qty 1',
-      'pre_qty': 'test pre_qty 1',
-      'grade': 'test grade 1',
-      'lots_no': 'test lots_no 1',
-      'product_date': 'test product_date 1',
-      'nb_diff_qty': 'test nb_diff_qty',
-      'lot': 'test lot 1',
-      'pd_location': 'test pd_location 1',
-      'reason_mismatch': 'test reason_mismatch 1',
-      'seq': 'test seq 1',
-      'attribute3': 'test attribute3 1',
-      'attribute4': 'test attribute4 1',
-    },
-    {
-      'rowid': '2',
-      'bin_del': 'test bin_del 2',
-      'item_code': 'test item_code 2',
-      'nb_item_name': 'test nb_item_name 2',
-      'pack_code': 'test pack_code 2',
-      'nb_pack_name': 'test nb_pack_name 2',
-      'location_code': 'test location_code 2',
-      'pack_qty': 'test pack_qty 2',
-      'pre_qty': 'test pre_qty 2',
-      'grade': 'test grade 2',
-      'lots_no': 'test lots_no 2',
-      'product_date': 'test product_date 2',
-      'nb_diff_qty': 'test nb_diff_qty',
-      'lot': 'test lot 2',
-      'pd_location': 'test pd_location 2',
-      'reason_mismatch': 'test reason_mismatch 2',
-      'seq': 'test seq 2',
-      'attribute3': 'test attribute3 2',
-      'attribute4': 'test attribute4 2',
-    },
-    {
-      'rowid': '3',
-      'bin_del': 'test bin_del 3',
-      'item_code': 'test item_code 3',
-      'nb_item_name': 'test nb_item_name 3',
-      'pack_code': 'test pack_code 3',
-      'nb_pack_name': 'test nb_pack_name 3',
-      'location_code': 'test location_code 3',
-      'pack_qty': 'test pack_qty 3',
-      'pre_qty': 'test pre_qty 3',
-      'grade': 'test grade 3',
-      'lots_no': 'test lots_no 3',
-      'product_date': 'test product_date 3',
-      'nb_diff_qty': 'test nb_diff_qty',
-      'lot': 'test lot 3',
-      'pd_location': 'test pd_location 3',
-      'reason_mismatch': 'test reason_mismatch 3',
-      'seq': 'test seq 3',
-      'attribute3': 'test attribute3 3',
-      'attribute4': 'test attribute4 3',
-    },
-    {
-      'rowid': '4',
-      'bin_del': 'test bin_del 4',
-      'item_code': 'test item_code 4',
-      'nb_item_name': 'test nb_item_name 4',
-      'pack_code': 'test pack_code 4',
-      'nb_pack_name': 'test nb_pack_name 4',
-      'location_code': 'test location_code 4',
-      'pack_qty': 'test pack_qty 4',
-      'pre_qty': 'test pre_qty 4',
-      'grade': 'test grade 4',
-      'lots_no': 'test lots_no 4',
-      'product_date': 'test product_date 4',
-      'nb_diff_qty': 'test nb_diff_qty',
-      'lot': 'test lot 4',
-      'pd_location': 'test pd_location 4',
-      'reason_mismatch': 'test reason_mismatch 4',
-      'seq': 'test seq 4',
-      'attribute3': 'test attribute3 4',
-      'attribute4': 'test attribute4 4',
-    },
-    {
-      'rowid': '5',
-      'bin_del': 'test bin_del 5',
-      'item_code': 'test item_code 5',
-      'nb_item_name': 'test nb_item_name 5',
-      'pack_code': 'test pack_code 5',
-      'nb_pack_name': 'test nb_pack_name 5',
-      'location_code': 'test location_code 5',
-      'pack_qty': 'test pack_qty 5',
-      'pre_qty': 'test pre_qty 5',
-      'grade': 'test grade 5',
-      'lots_no': 'test lots_no 5',
-      'product_date': 'test product_date 5',
-      'nb_diff_qty': 'test nb_diff_qty',
-      'lot': 'test lot 5',
-      'pd_location': 'test pd_location 5',
-      'reason_mismatch': 'test reason_mismatch 5',
-      'seq': 'test seq 5',
-      'attribute3': 'test attribute3 5',
-      'attribute4': 'test attribute4 5',
-    },
-  ];
 
   String deleteStatus = '';
   String deleteMessage = '';
@@ -229,37 +123,54 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   }
 
   Future<void> deleteCard(String pSeq, String pItemCode) async {
+    final url =
+        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_deleteCardGrid';
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'pErpOuCode': globals.P_ERP_OU_CODE,
+      'pDocType': widget.docType,
+      'pDocNo': widget.docNo,
+      'pSeq': pSeq,
+      'pItemCode': pItemCode,
+      'pAppUser': globals.APP_USER,
+    });
+    print('Request body: $body');
+
     try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_deleteCardGrid/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}/$pSeq/$pItemCode/${widget.pAppUser}'));
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: headers,
+        body: body,
+      );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data =
-            jsonDecode(utf8.decode(response.bodyBytes));
-        final List<dynamic> items = data['items'];
-        print(items);
-        if (items.isNotEmpty) {
-          final Map<String, dynamic> item = items[0];
-          //
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataDelete = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print('dataDelete : $dataDelete type : ${dataDelete.runtimeType}');
+        setState(() {
+          deleteStatus = dataDelete['po_status'];
+          deleteMessage = dataDelete['po_message'];
 
-          //
-          print('Fetched data: $jsonDecode');
-
-          setState(() {
-            deleteStatus = item['po_status'] ?? '';
-            deleteMessage = item['po_message'] ?? '';
-
-            showDialogMessageDelete(context, deleteStatus, deleteMessage);
-          });
-        } else {
-          print('No items found.');
-        }
+          if (deleteStatus == '1') {
+            showDialogMessageDelete(context, deleteMessage);
+          }
+          if (deleteStatus == '0') {
+            setState(() async {
+              Navigator.of(context).pop();
+              await fetchData();
+            });
+          }
+        });
       } else {
-        print(
-            'selectCust   Failed to load data. Status code: ${response.statusCode}');
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print('ลบข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
-      print('2');
       print('Error: $e');
     }
   }
@@ -379,18 +290,23 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    _navigateToPage(
-                        context,
-                        Ssfgdt09lBarcode(
-                          pWareCode: widget.pWareCode,
-                          pErpOuCode: widget.pErpOuCode,
-                          pOuCode: widget.pOuCode,
-                          pAttr1: widget.pAttr1,
-                          pAppUser: widget.pAppUser,
-                          pDocNo: widget.docNo,
-                          pDocType: widget.docType,
-                          pMoDoNO: widget.moDoNo,
-                        ));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Ssfgdt09lBarcode(
+                                pWareCode: widget.pWareCode,
+                                pErpOuCode: widget.pErpOuCode,
+                                pOuCode: widget.pOuCode,
+                                pAttr1: widget.pAttr1,
+                                pAppUser: widget.pAppUser,
+                                pDocNo: widget.docNo,
+                                pDocType: widget.docType,
+                                pMoDoNO: widget.moDoNo,
+                              )),
+                    ).then((value) {
+                      // เมื่อกลับมาหน้าเดิม เรียก fetchData
+                      fetchData();
+                    });
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
@@ -662,7 +578,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                       onTap: () {
                                         showDialogComfirmDelete(
                                             context,
-                                            item['seq'] ?? '',
+                                            item['seq'].toString(),
                                             item['item_code'] ?? '');
                                       },
                                       child: Container(
@@ -889,7 +805,6 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
 
   void showDialogMessageDelete(
     BuildContext context,
-    String status,
     String messageDelete,
   ) {
     showDialog(
@@ -924,31 +839,17 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (status == '1') ...[
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.grey),
-                          ),
-                          child: const Text('ย้อนกลับ'),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
                         ),
-                      ],
-                      if (status != '1') ...[
-                        ElevatedButton(
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-                            await fetchData();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.grey),
-                          ),
-                          child: const Text('ยืนยัน'),
-                        ),
-                      ]
+                        child: const Text('ย้อนกลับ'),
+                      ),
                     ],
                   )
                 ],

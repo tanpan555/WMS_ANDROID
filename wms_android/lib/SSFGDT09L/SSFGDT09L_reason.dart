@@ -160,23 +160,23 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
 
   Future<void> submitAddLine() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_SubmitData';
+        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_AddLine';
 
     final headers = {
       'Content-Type': 'application/json',
     };
 
     final body = jsonEncode({
-      'pErpOuCode': widget.pErpOuCode,
-      'pDocNo': widget.pDocNo,
-      'pBarcode': widget.pBarcode,
-      'pItemCode': widget.pItemCode,
-      'pLotNo': widget.pLotNo,
-      'pQty': widget.pQty,
-      'pReason': reasonLovR,
-      'pRemark': remark,
-      'pPdLocation': reasonRpLocR,
-      'pReplaceLot': reasonRpLotR,
+      'pErpOuCode': widget.pErpOuCode.isNotEmpty ? widget.pErpOuCode : 'null',
+      'pDocNo': widget.pDocNo.isNotEmpty ? widget.pDocNo : 'null',
+      'pBarcode': widget.pBarcode.isNotEmpty ? widget.pBarcode : 'null',
+      'pItemCode': widget.pItemCode.isNotEmpty ? widget.pItemCode : 'null',
+      'pLotNo': widget.pLotNo.isNotEmpty ? widget.pLotNo : 'null',
+      'pQty': widget.pQty.isNotEmpty ? widget.pQty : 'null',
+      'pReason': reasonLovR.isNotEmpty ? reasonLovR : 'null',
+      'pRemark': remark.isNotEmpty ? remark : 'null',
+      'pPdLocation': reasonRpLocR.isNotEmpty ? reasonRpLocR : 'null',
+      'pReplaceLot': reasonRpLotR.isNotEmpty ? reasonRpLotR : 'null',
     });
     print('Request body: $body');
     try {
@@ -198,7 +198,9 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
           if (statusSubmit == '1') {
             showDialogAlert(context, messageSubmit);
           }
-          if (statusSubmit == '0') {}
+          if (statusSubmit == '0') {
+            Navigator.of(context).pop();
+          }
         });
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200

@@ -238,7 +238,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                 pErpOuCode: widget.pErpOuCode,
                 pOuCode: widget.pOuCode,
                 pAppUser: globals.APP_USER,
-                moDoNo: '23030004',
+                moDoNo: '230303001',
                 // test
                 statusCase: 'test3',
               ));
@@ -255,7 +255,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                 pErpOuCode: widget.pErpOuCode,
                 pOuCode: widget.pOuCode,
                 pAppUser: globals.APP_USER,
-                moDoNo: '23030004',
+                moDoNo: '230303001',
                 // test
                 statusCase: 'test4',
               ));
