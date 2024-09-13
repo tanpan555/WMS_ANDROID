@@ -1136,13 +1136,17 @@ Widget _buildInfoRow2(Map<String, String> info) {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
-                  child: Text(
-                    entry.key,
-                    style: TextStyle(
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                      fontSize: 12,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      entry.key,
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 12,
+                      ),
+                      softWrap: false,
+                      textAlign: TextAlign.right,
                     ),
-                    softWrap: false,
                   ),
                 ),
                 SizedBox(width: 8),
@@ -1165,6 +1169,7 @@ Widget _buildInfoRow2(Map<String, String> info) {
     ),
   );
 }
+
 
 
   Widget _buildDialogButton({
@@ -1808,46 +1813,55 @@ class _LotDialogState extends State<LotDialog> {
               children: <Widget>[
                 SizedBox(height: 16.0),
                 Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: TextFormField(
-                        initialValue: lotSeq ?? '',
-                        decoration: InputDecoration(
-                          labelText: 'Seq',
-                          labelStyle: TextStyle(color: Colors.black),
-                          filled: true,
-                          fillColor: Colors.grey[300],
-                          border: InputBorder.none,
-                        ),
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        readOnly: true,
-                      ),
-                    ),
-                    SizedBox(width: 8.0),
-                    Expanded(
-                      flex: 2,
-                      child: TextFormField(
-                        initialValue: item['lot_product_no'] ?? '',
-                        decoration: InputDecoration(
-                          labelText: 'Lot No',
-                          labelStyle: TextStyle(color: Colors.black),
-                          filled: true,
-                          fillColor: Colors.grey[300],
-                          border: InputBorder.none,
-                        ),
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        readOnly: true,
-                      ),
-                    ),
-                  ],
-                ),
+  children: [
+    Expanded(
+      flex: 1,
+      child: TextFormField(
+        initialValue: lotSeq ?? '',
+        decoration: InputDecoration(
+           label: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Seq',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+          labelStyle: TextStyle(color: Colors.black),
+          filled: true,
+          fillColor: Colors.grey[300],
+          border: InputBorder.none,
+
+        ),
+        style: TextStyle(
+          fontSize: 18.0,
+          fontWeight: FontWeight.bold,
+        ),
+        readOnly: true,
+        textAlign: TextAlign.left, //<<<<<<<<<<,
+      ),
+    ),
+    SizedBox(width: 8.0),
+    Expanded(
+      flex: 2,
+      child: TextFormField(
+        initialValue: item['lot_product_no'] ?? '',
+        decoration: InputDecoration(
+          labelText: 'Lot No',
+          labelStyle: TextStyle(color: Colors.black),
+          filled: true,
+          fillColor: Colors.grey[300],
+          border: InputBorder.none,
+        ),
+        style: TextStyle(
+          fontSize: 18.0,
+          fontWeight: FontWeight.bold,
+        ),
+        readOnly: true,
+      ),
+    ),
+  ],
+),
+
                 SizedBox(height: 12.0),
                 _buildTextField(
                   controller: lotQtyController,

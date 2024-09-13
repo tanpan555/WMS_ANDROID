@@ -274,9 +274,11 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     );
 
     print('Cancel form with data: ${jsonEncode({
-          'v_rec': widget.poReceiveNo,
-          'v_cancel': selectedcCode,
-          'APP_USER': gb.APP_USER,
+        'v_rec': widget.poReceiveNo,
+        'v_cancel': selectedcCode,
+        'APP_USER': gb.APP_USER,
+        'p_ou': gb.P_OU_CODE,
+        'p_erp_ou': gb.P_ERP_OU_CODE,
         })}');
 
     if (response.statusCode == 200) {
@@ -391,12 +393,12 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                                 actions: <Widget>[
                                   TextButton(
                                     child: Text('ตกลง'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
+                                    onPressed: ()  {
+                                      // Navigator.of(context).pop();
 
                                       cancel_from(selectedcCode!).then((_) {
                                         Navigator.of(context).pop(
-                                          MaterialPageRoute(
+                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 SSINDT01_MAIN(
                                             pWareCode: widget.pWareCode,
@@ -408,6 +410,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                                             ),
                                           ),
                                         );
+                                         Navigator.of(context).pop();
                                       }).catchError((error) {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
