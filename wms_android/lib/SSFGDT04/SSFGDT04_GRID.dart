@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGDT04_SCREEN_5.dart';
+import 'package:intl/intl.dart';
+// import 'test.dart';
 
 class SSFGDT04_GRID extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจาก lov
@@ -44,8 +46,13 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   Future<void> _showEditDialog(
       BuildContext context, Map<String, dynamic> item) async {
     // Check if 'pack_qty' exists, if not, assign an empty string
-    final TextEditingController _quantityController = TextEditingController(
-      text: item['pack_qty'] != null ? item['pack_qty'].toString() : '',
+    // final TextEditingController _quantityController = TextEditingController(
+    //   text: item['pack_qty'] != null ? item['pack_qty'].toString() : '',
+    // );
+    final _quantityController = TextEditingController(
+      text: item['pack_qty'] != null
+          ? NumberFormat('#,###').format(item['pack_qty'])
+          : '',
     );
 
     final _formKey = GlobalKey<FormState>();
@@ -126,7 +133,9 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                 ),
                 onPressed: () async {
                   if (_formKey.currentState?.validate() ?? false) {
-                    final newQuantity = _quantityController.text;
+                    final newQuantity = NumberFormat('#,###')
+                        .parse(_quantityController.text)
+                        .toString();
 
                     // Update the item in the gridItems list
                     await fetchUpdate(newQuantity, item['seq']);
@@ -447,155 +456,218 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                     fontSize: 20),
               ),
             ),
-            SizedBox(height: 10), // Spacing between text and grid
+            SizedBox(height: 10),
+            // Spacing between text and grid
             Expanded(
-  child: GridView.builder(
-    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 1, // Number of columns in the grid
-      crossAxisSpacing: 8.0, // Horizontal spacing between items
-      mainAxisSpacing: 8.0, // Vertical spacing between items
-      childAspectRatio: 1.3, // Adjust aspect ratio to control card height
-    ),
-    itemCount: gridItems.length, // Number of items in the grid
-    itemBuilder: (context, index) {
-      final item = gridItems[index];
-      return Card(
-        color: Colors.lightBlue[100],
-        elevation: 4,
-        child: Padding(
-          padding: const EdgeInsets.all(20), // Add padding inside the card
-          child: Column(
-            mainAxisSize: MainAxisSize.min, // Let the column adjust based on content size
-            mainAxisAlignment: MainAxisAlignment.spaceBetween, // Space out the widgets vertically
-            children: [
-              // Centered Title
-              Center(
-                child: Text(
-                  item['item_code'] ?? '',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
-                  textAlign: TextAlign.center, // Ensure text is centered
-                ),
-              ),
-              SizedBox(height: 8),
-              // Sub-information with Left-Right Layout
-              Column(
-                children: [
-                  // Row for "จำนวนรับ" and value
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround, // Divide row into left and right
-                    children: [
-                      Text(
-                        'จำนวนรับ:',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
+              child: ListView.builder(
+                itemCount: gridItems.length, // Number of items in the grid
+                itemBuilder: (context, index) {
+                  final item = gridItems[index];
+                  return Card(
+                    color: Colors.lightBlue[100],
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(
+                          20), // Add padding inside the card
+                      child: Column(
+                        mainAxisSize: MainAxisSize
+                            .min, // Let the column adjust based on content size
+                        mainAxisAlignment: MainAxisAlignment
+                            .spaceBetween, // Space out the widgets vertically
+                        children: [
+                          // Centered Title
+                          Center(
+                            child: Text(
+                              item['item_code'] ?? '',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                              textAlign:
+                                  TextAlign.center, // Ensure text is centered
+                            ),
+                          ),
+                          const Divider(
+                            color: Colors.black26, // สีเส้น Divider เบาลง
+                            thickness: 1,
+                          ),
+                          SizedBox(height: 8),
+                          // Sub-information with Left-Right Layout
+                          Column(
+                            children: [
+                              // Row for "จำนวนรับ" and value
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      'จำนวนรับ:',
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      color: Colors.white,
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 2,
+                                        horizontal: 8,
+                                      ),
+                                      child: Text(
+                                        // Format the number if it's not null, else display an empty string
+                                        item['pack_qty'] != null
+                                            ? NumberFormat('#,###')
+                                                .format(item['pack_qty'])
+                                            : '',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                  height: 8), // ระยะห่างระหว่างข้อมูล
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .start, // จัดให้อยู่ทางซ้ายในแนวนอน
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      'จำนวน Pallet:',
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      color: Colors
+                                          .white, // กำหนดสีพื้นหลังที่ต้องการ
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 2,
+                                        horizontal: 8,
+                                      ), // เพิ่ม padding รอบๆข้อความ
+                                      child: Text(
+                                        item['count_qty'] ?? '',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .start, // จัดให้อยู่ทางซ้ายในแนวนอน
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      'จำนวนรวม:',
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      color: Colors
+                                          .white, // กำหนดสีพื้นหลังที่ต้องการ
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 2,
+                                        horizontal: 8,
+                                      ), // เพิ่ม padding รอบๆข้อความ
+                                      child: Text(
+                                        item['count_qty_in'] ?? '',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 8),
+                          // Row with delete and edit buttons
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment
+                                .spaceBetween, // Align buttons to left and right
+                            children: [
+                              // Delete button as image
+                              IconButton(
+                                icon: Image.asset(
+                                  'assets/images/bin.png', // Your delete image path
+                                  width: 30,
+                                  height: 30,
+                                ),
+                                onPressed: () async {
+                                  // Extract item details
+                                  final po_item_code = item['item_code'];
+                                  final po_seq = item[
+                                      'seq']; // Ensure that `po_seq` exists in your item map
+
+                                  // Call delete function
+                                  await delete(widget.po_doc_no,
+                                      widget.po_doc_type, po_seq, po_item_code);
+
+                                  // Remove item from the list and update the UI
+                                  setState(() {
+                                    gridItems.removeWhere((item) =>
+                                        item['item_code'] == po_item_code &&
+                                        item['seq'] == po_seq);
+                                  });
+                                },
+                              ),
+                              // Edit button as image
+                              IconButton(
+                                icon: Image.asset(
+                                  'assets/images/edit (1).png', // Your edit image path
+                                  width: 30,
+                                  height: 30,
+                                ),
+                                onPressed: () {
+                                  _showEditDialog(context, item);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      Text(
-                        '${item['pack_qty'] ?? ''}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10), // Spacing between rows
-                  // Row for "จำนวน Pallet" and value
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround, // Divide row into left and right
-                    children: [
-                      Text(
-                        'จำนวน Pallet:',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                      Text(
-                        '${item['count_qty'] ?? ''}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10), // Spacing between rows
-                  // Row for "จำนวนรวม" and value
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround, // Divide row into left and right
-                    children: [
-                      Text(
-                        'จำนวนรวม:',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                      Text(
-                        '${item['count_qty_in'] ?? ''}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              // SizedBox(height: 8),
-              // Row with delete and edit buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align buttons to left and right
-                children: [
-                  // Delete button as image
-                  IconButton(
-                    icon: Image.asset(
-                      'assets/images/bin.png', // Your delete image path
-                      width: 30,
-                      height: 30,
                     ),
-                    onPressed: () async {
-                      // Extract item details
-                      final po_item_code = item['item_code'];
-                      final po_seq = item['seq']; // Ensure that `po_seq` exists in your item map
-
-                      // Call delete function
-                      await delete(widget.po_doc_no, widget.po_doc_type, po_seq, po_item_code);
-
-                      // Remove item from the list and update the UI
-                      setState(() {
-                        gridItems.removeWhere((item) =>
-                            item['item_code'] == po_item_code &&
-                            item['seq'] == po_seq);
-                      });
-                    },
-                  ),
-                  // Edit button as image
-                  IconButton(
-                    icon: Image.asset(
-                      'assets/images/edit (1).png', // Your edit image path
-                      width: 30,
-                      height: 30,
-                    ),
-                    onPressed: () {
-                      _showEditDialog(context, item);
-                    },
-                  ),
-                ],
+                  );
+                },
               ),
-            ],
-          ),
-        ),
-      );
-    },
-  ),
-)
-
+            )
           ],
         ),
       ),

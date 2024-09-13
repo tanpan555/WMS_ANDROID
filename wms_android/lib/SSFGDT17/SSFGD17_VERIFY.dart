@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_CREATE.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_SEARCH.dart';
 import 'package:wms_android/custom_appbar.dart';
-import 'package:wms_android/custom_drawer.dart';
+// import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/main.dart';
 

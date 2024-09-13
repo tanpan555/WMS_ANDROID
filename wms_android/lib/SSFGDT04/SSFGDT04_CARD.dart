@@ -11,6 +11,7 @@ class SSFGDT04_CARD extends StatefulWidget {
   final String date;
   final String status;
   final String pWareCode;
+  // final String pOuCode;
   final String pErpOuCode;
 
   SSFGDT04_CARD({
@@ -19,6 +20,7 @@ class SSFGDT04_CARD extends StatefulWidget {
     required this.date,
     required this.status,
     required this.pWareCode,
+    // required this.pOuCode,
     required this.pErpOuCode,
   }) : super(key: key);
 
@@ -95,7 +97,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     print('po_status $pReceiveNo Type: ${pReceiveNo.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT04/check_RCVdirect_validate/${widget.pWareCode}/${widget.pErpOuCode}/$pReceiveNo'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_check_RCVdirect_validate/${widget.pWareCode}/${widget.pErpOuCode}/$pReceiveNo'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> dataStatusCard =
@@ -151,7 +153,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     print('po_doc_type $po_doc_type Type: ${po_doc_type.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT04/get_INHead_WMS/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}/$po_doc_type/$po_doc_no/${gb.APP_USER}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_get_INHead_WMS/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}/$po_doc_type/$po_doc_no/${gb.APP_USER}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> dataGetInHead =
@@ -310,7 +312,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
               ),
-              color: Color.fromARGB(255, 110, 217, 220),
+              color: Colors.lightBlue[100],
               child: InkWell(
                 onTap: () {
                   checkStatusCard(item['po_no'] ?? '', item['p_doc_no'] ?? '',
@@ -336,11 +338,15 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                               item['ap_name'] ?? 'No Name',
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                                  fontSize: 20,
                                   color: Color.fromARGB(255, 0, 0, 0)),
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const Divider(
+                      color: Colors.black26, // สีเส้น Divider เบาลง
+                      thickness: 1,
+                    ),
+                          // SizedBox(height: 8),
                           Center(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment

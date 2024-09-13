@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 // import 'test.dart';
+// import '../bottombar.dart';
 
 class SSFGDT04_Screen_5 extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจาก lov
@@ -28,7 +29,7 @@ class SSFGDT04_Screen_5 extends StatefulWidget {
 class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
   List<Map<String, dynamic>> gridItems = [];
   late TextEditingController _docNoController;
-  List<String> _deletedItems = [];
+  // List<String> _deletedItems = [];
 
   @override
   void initState() {
@@ -52,21 +53,6 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
       throw Exception('Failed to load DOC_TYPE items');
     }
   }
-
-  // Future<void> fetchIntefaceNonePO() async {
-  //   final response = await http.get(Uri.parse(
-  //       'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_5_Inteface_NonePO_WMS2ERP/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${gb.APP_USER}'));
-  //   if (response.statusCode == 200) {
-  //     final responseBody = utf8.decode(response.bodyBytes);
-  //     final data = jsonDecode(responseBody);
-  //     setState(() {
-  //       // Update gridItems with new data
-  //       gridItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-  //     });
-  //   } else {
-  //     throw Exception('Failed to load DOC_TYPE items');
-  //   }
-  // }
 
   String? poStatus;
   String? poMessage;
@@ -109,21 +95,23 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
       appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20), // เพิ่ม padding รอบๆ
         child: Column(
+          mainAxisAlignment:
+              MainAxisAlignment.start, // จัดให้อยู่เริ่มต้นแนวตั้ง
           children: [
+            // ElevatedButton ที่จะอยู่ด้านบน
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
-                  onPressed: () async{
-                        await chk_IntefaceNonePO();
+                  onPressed: () async {
+                    await chk_IntefaceNonePO();
                     if (poStatus == '0') {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            // title: Text('การบันทึก และส่งข้อมูลเข้า ERP สมบูรณ์'),
                             content: Text('${poErpDocNo ?? ''}'),
                             actions: <Widget>[
                               TextButton(
@@ -140,54 +128,31 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
                           );
                         },
                       );
-                    }else if (poStatus == '1') {
-                        // Show a different popup for status 1
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              // title: Text('แจ้งเตือน'),
-                              content: Text(poMessage ?? ''),
-                              actions: [
-                                TextButton(
-                                  child: Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(); // Close the dialog
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    },
-                  // onPressed: () async {
-                    // await fetchIntefaceNonePO();
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => NewCardScreen(
-                    //         //       po_doc_no:
-                    //         //                     widget.po_doc_no, // ส่งค่า po_doc_no
-                    //         //                 po_doc_type: widget.po_doc_type ??
-                    //         //                     '', // ส่งค่า po_doc_type
-                    //         //                 pWareCode: widget.pWareCode,
-                    //         //                 // p_ref_no: _refNoController.text ?? '',
-                    //         //                 // mo_do_no: _moDoNoController.text ?? '',
-                    //         ),
-                    //   ),
-                    // );
-                    // await fetchData();
-                    // เพิ่มโค้ดสำหรับการทำงานของปุ่มถัดไปที่นี่
-                  // },
+                    } else if (poStatus == '1') {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: Text(poMessage ?? ''),
+                            actions: [
+                              TextButton(
+                                child: Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
                   child: Text(
                     'CONFIRM',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
-                      // letterSpacing: 1.2,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -201,37 +166,34 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     minimumSize: const Size(60, 40),
-                    // padding: const EdgeInsets.all(0),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.white, // Background color
-                borderRadius:
-                    BorderRadius.circular(8), // Rounded corners (optional)
-              ),
-              child: Text(
-                '${widget.po_doc_no}',
-                style: TextStyle(
+            const SizedBox(height: 8), // เพิ่มระยะห่างระหว่างปุ่มและ Container
+            Center(
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white, // สีพื้นหลังของ Container
+                  borderRadius:
+                      BorderRadius.circular(8), // มุมโค้งของ Container
+                ),
+                child: Text(
+                  '${widget.po_doc_no}', // ข้อความที่จะแสดง
+                  style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
-                    fontSize: 20),
+                    fontSize: 20,
+                  ),
+                ),
               ),
             ),
-            SizedBox(height: 10), // Spacing between text and grid
+            const SizedBox(
+                height: 10), // เพิ่มระยะห่างระหว่าง Container และ Card
             Expanded(
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1, // Number of columns in the grid
-                  crossAxisSpacing: 8.0, // Horizontal spacing between items
-                  mainAxisSpacing: 8.0, // Vertical spacing between items
-                  childAspectRatio:
-                      1.7, // Adjust aspect ratio to control card height
-                ),
+              child: ListView.builder(
                 itemCount: gridItems.length, // Number of items in the grid
                 itemBuilder: (context, index) {
                   final item = gridItems[index];
@@ -246,8 +208,6 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
                             .min, // Let the column adjust based on content size
                         mainAxisAlignment: MainAxisAlignment
                             .spaceBetween, // Space out the widgets vertically
-                        crossAxisAlignment: CrossAxisAlignment
-                            .start, // Align children to the left except title
                         children: [
                           // Centered Title
                           Center(
@@ -255,50 +215,143 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
                               item['item_code'] ?? '',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 24,
+                                fontSize: 20,
                               ),
                               textAlign:
                                   TextAlign.center, // Ensure text is centered
                             ),
                           ),
-                          // Sub-information
-                          // SizedBox(height: 8),
+                          const Divider(
+                      color: Colors.black26, // สีเส้น Divider เบาลง
+                      thickness: 1,
+                    ),
+                          SizedBox(height: 8),
+                          // Sub-information with Left-Right Layout
                           Column(
-                            crossAxisAlignment: CrossAxisAlignment
-                                .end, // Align sub-information to the left
                             children: [
-                              Text(
-                                'จำนวนรับ: ${item['pack_qty'] ?? ''}',
+                              // Row for "จำนวนรับ" and value
+                              Row(
+                          mainAxisAlignment: MainAxisAlignment
+                              .start, // จัดให้อยู่ทางซ้ายในแนวนอน
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'จำนวนรับ:',
+                                textAlign: TextAlign.right,
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                color:
+                                    Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 2,
+                                  horizontal: 8,
+                                ), // เพิ่ม padding รอบๆข้อความ
+                                child: Text(
+                                  (item['pack_qty'] ?? '').toString(),
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
-                              SizedBox(height: 5),
-                              Text(
-                                'จำนวน Pallet: ${item['count_qty'] ?? ''}',
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8), // ระยะห่างระหว่างข้อมูล
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment
+                              .start, // จัดให้อยู่ทางซ้ายในแนวนอน
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'จำนวน Pallet:',
+                                textAlign: TextAlign.right,
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                color:
+                                    Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 2,
+                                  horizontal: 8,
+                                ), // เพิ่ม padding รอบๆข้อความ
+                                child: Text(
+                                  item['count_qty'] ?? '',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
-                              SizedBox(height: 5),
-                              Text(
-                                'จำนวนรวม: ${item['count_qty_in'] ?? ''}',
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment
+                              .start, // จัดให้อยู่ทางซ้ายในแนวนอน
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'จำนวนรวม:',
+                                textAlign: TextAlign.right,
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                color:
+                                    Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 2,
+                                  horizontal: 8,
+                                ), // เพิ่ม padding รอบๆข้อความ
+                                child: Text(
+                                  item['count_qty_in'] ?? '',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
+                            ),
+                          ],
+                        ),
                             ],
                           ),
+                          SizedBox(height: 8),
                         ],
                       ),
                     ),
                   );
                 },
               ),
-            ),
+            )
           ],
         ),
       ),
