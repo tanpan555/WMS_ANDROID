@@ -7,6 +7,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:intl/intl.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGDT04_GRID.dart';
+import 'SSFGDT04_MENU.dart';
 // import 'package:dropdown_search/dropdown_search.dart';
 
 class SSFGDT04_FORM extends StatefulWidget {
@@ -40,10 +41,14 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   String? selectedSaffCode;
   String? selectedRefReceive;
   String? selectedRefNo;
-  String? selectedCancel;
+  String? selectedCancelCode;
   String? selectedValue;
   String? p_ref_no;
   String? mo_do_no;
+  String? poStatus;
+  String? poMessage;
+  String? po_doc_no;
+  // String? p_cancel_code;
 
   TextEditingController _docNoController = TextEditingController();
   TextEditingController _docDateController = TextEditingController();
@@ -80,7 +85,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     print(
         'po_doc_type : ${widget.po_doc_type} Type : ${widget.po_doc_type.runtimeType}');
     final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/form/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}'));
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_form/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}'));
     print(response.statusCode);
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -144,7 +149,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
   Future<void> fetchRefReceiveItems() async {
     final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/SSFGDT04_SCREEN2_REFRECEIVE/${gb.ATTR1}/${widget.pWareCode}'));
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_REFRECEIVE/${gb.ATTR1}/${widget.pWareCode}'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -159,7 +164,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
   Future<void> fetchRefNoItems() async {
     final response = await http.get(
-        Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT04/SSFGDT04_REF_NO'));
+        Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_REF_NO'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -174,7 +179,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
   Future<void> fetchCancelItems() async {
     final response = await http.get(
-        Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT04/SSFGDT04_CANCEL'));
+        Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_CANCEL'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -186,11 +191,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
       throw Exception('Failed to load CANCEL items');
     }
   }
-
-  String? poStatus;
-  String? poMessage;
-  String? po_doc_no;
-  // String? po_doc_type;
 
   Future<void> save_INHeadNonePO_WMS(String? po_doc_no) async {
     final url =
@@ -246,60 +246,11 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     }
   }
 
-  // Future<void> wms_ith(String? po_doc_no, String? po_doc_type) async {
-  //   // ใช้ตัวแปรที่มีอยู่โดยตรง
-  //   final url =
-  //       // 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_wms_ith/${gb.P_WARE_CODE}/${_refNoController.text}/${po_doc_type}/${_oderNoController.text}/${_moDoNoController.text}/${_staffCodeController.text}/${_noteController.text}/${gb.APP_USER}/${po_doc_no}/${gb.P_OU_CODE}/${gb.ATTR1}';
-
-  //       'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_wms_ith';
-
-  //   const headers = {
-  //     'Content-Type': 'application/json',
-  //   };
-
-  //   final body = jsonEncode({
-  //     'P_WARE_CODE': gb.P_WARE_CODE,
-  //     'P_OU_CODE': gb.P_OU_CODE,
-  //     // 'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
-  //     'P_REF_RECEIVE': _refNoController.text,
-  //     'P_ORDER_NO': _oderNoController.text,
-  //     'P_MO_DO_NO': _moDoNoController.text,
-  //     'P_STAFF_CODE': _staffCodeController.text,
-  //     'P_NOTE': _noteController.text,
-  //     'APP_USER': gb.APP_USER,
-  //     'P_DOC_NO': po_doc_no,
-  //     'P_ATTR1': gb.ATTR1,
-  //     'P_DOC_TYPE': po_doc_type,
-  //   });
-
-  // print('headers : $headers Type : ${headers.runtimeType}');
-  //   print('body : $body Type : ${body.runtimeType}');
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse(url),
-  //       headers: headers,
-  //       body: body,
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final Map<String, dynamic> responseData = jsonDecode(response.body);
-  //       setState(() {
-  //         po_doc_no = responseData['po_doc_no'];
-  //         po_doc_type = responseData['po_doc_type'];
-  //         // อัปเดตค่าตามต้องการ
-  //       });
-  //     } else {
-  //       print('Failed to post data. Status code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error: $e');
-  //   }
-  // }
-
   Future<void> update(
-    String? po_doc_type, 
-    String? po_doc_no,) async {
-    print('Hiiiiiiiii');
+    String? po_doc_type,
+    String? po_doc_no,
+  ) async {
+    // print('Hiiiiiiiii');
     print(
         'update called with po_doc_type: $po_doc_type, po_doc_no: $po_doc_no');
     final url =
@@ -335,6 +286,39 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     print('pWareCode: ${widget.pWareCode}');
     print('p_ref_no: ${_refNoController.text}');
     print('mo_do_no: ${_moDoNoController.text}');
+
+    if (response.statusCode == 200) {
+      print('Update successful');
+    } else {
+      print('Failed to update: ${response.statusCode}');
+    }
+  }
+
+  Future<void> cancel_INHeadNonePO_WMS(
+    String selectedCancelCode,
+  ) async {
+    // print('Hiiiiiiiii');
+    // print(
+    //     'update called with po_doc_type: $po_doc_type, po_doc_no: $po_doc_no, p_cancel_code: $p_cancel_code');
+    final url = Uri.parse(
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_cancel_INHeadNonePO_WMS');
+    final response = await http.put(url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'P_OU_CODE': gb.P_OU_CODE,
+          'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
+          'p_doc_type': widget.po_doc_type,
+          'p_doc_no': widget.po_doc_no,
+          'p_cancel_code': selectedCancelCode,
+          'APP_USER': gb.APP_USER,
+        }));
+
+    print('Navigating to SSFGDT04_GRID with:');
+    print('po_doc_no: ${widget.po_doc_no}');
+    print('po_doc_type: ${widget.po_doc_type}');
+    print('pWareCode: $selectedCancelCode');
 
     if (response.statusCode == 200) {
       print('Update successful');
@@ -396,7 +380,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                               child: Text(
                                                 '${item['cancel_code'] ?? 'N/A'} ${item['cancel_desc'] ?? 'N/A'}',
                                                 style: const TextStyle(
-                                                  fontSize: 14,
+                                                  fontSize: 12,
                                                   fontWeight: FontWeight.normal,
                                                   color: Colors.black,
                                                 ),
@@ -406,18 +390,17 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
                                           onChanged: (String? value) {
                                             setState(() {
-                                              selectedCancel = value;
+                                              selectedCancelCode = value;
                                             });
                                           },
                                           onSaved: (value) {
-                                            selectedCancel = value;
+                                            selectedCancelCode = value;
                                           },
                                           value:
-                                              selectedCancel, // Set the default selected value
-                                          buttonStyleData:
-                                              const ButtonStyleData(
-                                            padding: EdgeInsets.only(right: 8),
-                                          ),
+                                              selectedCancelCode, // Set the default selected value
+                                          buttonStyleData: const ButtonStyleData(
+                                              // padding: EdgeInsets.only(right: 8),
+                                              ),
                                           iconStyleData: const IconStyleData(
                                             icon: Icon(
                                               Icons.arrow_drop_down,
@@ -449,16 +432,95 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                         // ปิด popup
                                         Navigator.of(context).pop();
                                       },
-                                      child: const Text('ไม่'),
+                                      child: const Text('Cancel'),
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        // ทำงานเมื่อกดปุ่มยืนยันการยกเลิก
-                                        Navigator.of(context)
-                                            .pop(); // ปิด popup
-                                        // เพิ่มโค้ดการยกเลิกการดำเนินการที่นี่
+                                        if (selectedCancelCode != null) {
+                                          Navigator.of(context).pop();
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text('คำเตือน'),
+                                                content: Text(
+                                                    'ยกเลิกรายการเสร็จสมบูรณ์...'),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: Text('ตกลง'),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+
+                                                      cancel_INHeadNonePO_WMS(
+                                                              selectedCancelCode!)
+                                                          .then((_) {
+                                                        // Navigator.of(context)
+                                                        //     .pop(
+                                                        //   MaterialPageRoute(
+                                                        //     builder: (context) =>
+                                                        //         SSFGDT04_MENU(
+                                                        //       pWareCode: gb
+                                                        //           .P_WARE_CODE,
+                                                        //       pErpOuCode: gb
+                                                        //           .P_ERP_OU_CODE,
+                                                        //     ),
+                                                        //   ),
+                                                        Navigator
+                                                            .pushAndRemoveUntil(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                SSFGDT04_MENU(
+                                                              pWareCode: gb
+                                                                  .P_WARE_CODE,
+                                                              pErpOuCode: gb
+                                                                  .P_ERP_OU_CODE,
+                                                            ),
+                                                          ),
+                                                          (route) =>
+                                                              false, // ปิดเส้นทางทั้งหมดก่อนหน้านี้
+                                                        );
+                                                        // );
+                                                      }).catchError((error) {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                                'An error occurred: $error'),
+                                                          ),
+                                                        );
+                                                      });
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        } else {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text('คำเตือน'),
+                                                content:
+                                                    Text('โปรดเลือกเหตุยกเลิก'),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: Text('ตกลง'),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        }
                                       },
-                                      child: const Text('ใช่'),
+                                      child: const Text('OK'),
                                     ),
                                   ],
                                 );
@@ -479,7 +541,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             minimumSize: const Size(70, 40),
-                            padding: const EdgeInsets.all(0),
+                            padding: const EdgeInsets.all(10),
                           ),
                         ),
 
@@ -487,14 +549,13 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                         // ปุ่ม ถัดไป //
                         ElevatedButton(
                           onPressed: () async {
-                            print('Hiiiiiiiiiiiiiiiiiiiiiiiiiii');
+                            // print('Hiiiiiiiiiiiiiiiiiiiiiiiiiii');
                             // เรียกใช้งานฟังก์ชันเพื่ออัปเดตข้อมูล Form ก่อน
                             await update(widget.po_doc_type, widget.po_doc_no);
                             await save_INHeadNonePO_WMS(selectedValue ?? '');
 
                             // ตรวจสอบเงื่อนไขก่อนบันทึกข้อมูล
                             if (poStatus == '0') {
-                              
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -504,8 +565,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                     po_doc_type: widget.po_doc_type ??
                                         '', // ส่งค่า po_doc_type
                                     pWareCode: widget.pWareCode,
-                                    p_ref_no: _refNoController.text ?? '',
-                                    mo_do_no: _moDoNoController.text ?? '',
+                                    p_ref_no: _refNoController.text,
+                                    mo_do_no: _moDoNoController.text,
                                   ),
                                 ),
                               );
@@ -526,8 +587,14 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                     actions: [
                                       TextButton(
                                         child: Text('OK'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
+                                        onPressed: () async {
+                                          // await cancel_INHeadNonePO_WMS(
+                                          //     widget.po_doc_type,
+                                          //     widget.po_doc_no,
+                                          //     p_cancel_code);
+                                          // await save_INHeadNonePO_WMS(
+                                          //     selectedValue ?? '');
+                                          // Navigator.of(context).pop();
                                         },
                                       ),
                                     ],

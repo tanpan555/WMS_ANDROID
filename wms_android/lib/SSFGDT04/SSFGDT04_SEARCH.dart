@@ -9,6 +9,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 class SSFGDT04_SEARCH extends StatefulWidget {
   final String pWareCode;
   final String pErpOuCode;
+
   SSFGDT04_SEARCH({
     Key? key,
     required this.pWareCode,
@@ -54,11 +55,9 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
 
     if (pickedDate != null) {
       // Format the date as dd-MM-yyyy for internal use
-      String formattedDateForSearch =
-          DateFormat('dd-MM-yyyy').format(pickedDate);
+      String formattedDateForSearch = DateFormat('dd-MM-yyyy').format(pickedDate);
       // Format the date as dd/MM/yyyy for display
-      String formattedDateForDisplay =
-          DateFormat('dd/MM/yyyy').format(pickedDate);
+      String formattedDateForDisplay = DateFormat('dd/MM/yyyy').format(pickedDate);
 
       setState(() {
         _dateController.text = formattedDateForDisplay;
@@ -107,8 +106,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
               ),
               onChanged: (value) {
                 setState(() {
-                  selectedItem = value ??
-                      dropdownItems.first; // Ensure selectedItem is valid
+                  selectedItem = value ?? dropdownItems.first; // Ensure selectedItem is valid
                   switch (selectedItem) {
                     case 'ทั้งหมด':
                       status = '0';
@@ -170,8 +168,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                 filled: true,
                 fillColor: Colors.white,
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.calendar_today,
-                      color: Color.fromARGB(255, 64, 64, 64)),
+                  icon: Icon(Icons.calendar_today, color: Color.fromARGB(255, 64, 64, 64)),
                   onPressed: () => _selectDate(context),
                 ),
               ),
@@ -186,8 +183,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     _dateController.clear();
                     setState(() {
                       selectedDate = 'null'; // Set selectedDate to null
-                      selectedItem =
-                          dropdownItems.first; // Reset to a valid value
+                      selectedItem = dropdownItems.first; // Reset to a valid value
                       status = '0'; // Reset status to default
                     });
                     // ScaffoldMessenger.of(context).showSnackBar(
@@ -197,14 +193,14 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     //   ),
                     // );
                   },
-                  child: Image.asset('assets/images/eraser_red.png',
-                      width: 50, height: 25),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red[300],
-                    padding: EdgeInsets.all(10),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
+                      child: Image.asset('assets/images/eraser_red.png',
+                          width: 50, height: 25),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red[300],
+                        padding: EdgeInsets.all(10),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
                 ),
                 const SizedBox(width: 20),
                 ElevatedButton(
@@ -214,8 +210,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                             context,
                             SSFGDT04_CARD(
                               soNo: pSoNo,
-                              date:
-                                  selectedDate, // Use current date if no date is selected
+                              date: selectedDate, // Use current date if no date is selected
                               status: status,
                               pWareCode: widget.pWareCode,
                               pErpOuCode: widget.pErpOuCode,
@@ -224,13 +219,13 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                         }
                       : null,
                   child: Image.asset('assets/images/search_color.png',
-                      width: 50, height: 25),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[300],
-                    padding: EdgeInsets.all(10),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
+                          width: 50, height: 25),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[300],
+                        padding: EdgeInsets.all(10),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
                 ),
               ],
             ),

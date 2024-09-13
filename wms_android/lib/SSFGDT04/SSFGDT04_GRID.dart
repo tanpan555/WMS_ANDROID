@@ -52,63 +52,93 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
 
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // User must tap button to dismiss dialog
+      barrierDismissible:
+          true, // Can be dismissed by tapping outside the dialog
       builder: (BuildContext context) {
         return AlertDialog(
-          // title: Text('Edit Quantity'),
-          content: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: ListBody(
-                children: <Widget>[
-                  // Text('จำนวนรับ'),
-                  SizedBox(height: 8), // Add some spacing
-                  TextFormField(
-                    controller: _quantityController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'จำนวนรับ',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a quantity';
-                      }
-                      if (int.tryParse(value) == null) {
-                        return 'Please enter a valid number';
-                      }
-                      return null;
-                    },
-                  ),
-                ],
+          // Add a stack to allow placing the close button in the top right corner
+          content: Stack(
+            clipBehavior: Clip.none, // Allow overflow
+            children: [
+              Positioned(
+                right: -10,
+                top: -10,
+                child: IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                ),
               ),
-            ),
+              // Adding padding around the form to adjust the spacing
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 40.0), // Adjust top padding to control space
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: ListBody(
+                      children: <Widget>[
+                        SizedBox(height: 8),
+                        TextFormField(
+                          controller: _quantityController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'จำนวนรับ',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a quantity';
+                            }
+                            if (int.tryParse(value) == null) {
+                              return 'Please enter a valid number';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Save'),
-              onPressed: () async {
-                if (_formKey.currentState?.validate() ?? false) {
-                  final newQuantity = _quantityController.text;
+            Center(
+              child: ElevatedButton(
+                child: Image.asset(
+                  'assets/images/check-mark.png',
+                  width: 30,
+                  height: 30,
+                ),
+                style: ElevatedButton.styleFrom(
+                  side: BorderSide(
+                    color: Colors.green, // Add a border color
+                    width: 1.5, // Border width
+                  ),
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  minimumSize: const Size(60, 40),
+                  padding: const EdgeInsets.all(0),
+                ),
+                onPressed: () async {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    final newQuantity = _quantityController.text;
 
-                  // Update the item in the gridItems list
+                    // Update the item in the gridItems list
+                    await fetchUpdate(newQuantity, item['seq']);
+                    setState(() {
+                      fetchGridItems();
+                    });
 
-                  // Call the API to update the data on the server
-                  await fetchUpdate(newQuantity, item['seq']);
-                  setState(() {
-                    fetchGridItems();
-                  });
-
-                  // Close the popup
-                  Navigator.of(context).pop();
-                }
-              },
+                    // Close the popup
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
             ),
           ],
         );
@@ -130,14 +160,6 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
       'DOC_NO': widget.po_doc_no,
       'DOC_TYPE': widget.po_doc_type,
       'OU_CODE': gb.P_ERP_OU_CODE,
-      // 'V_DOC_NO': widget.po_doc_no,
-      // 'V_DOC_TYPE': widget.po_doc_type,
-      // 'V_REF_NO': widget.p_ref_no,
-      // 'V_MO_DO_NO': widget.mo_do_no,
-      // 'V_WAREHOUSE': gb.P_WARE_CODE,
-      // 'APP_USER': gb.APP_USER,
-      // 'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
-      // 'P_OU_CODE': gb.P_OU_CODE,
     });
     print('Request body: $body');
 
@@ -289,14 +311,82 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
-                  // onPressed: fetchGetPo,
                   onPressed: () async {
-                    await fetchGetPo();
+                    if (gridItems.length != 0) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            // title: Center(child: Text('คำเตือน')),
+                            content: Text(
+                                'ระบบมีการบันทึกรายการทิ้งไว้ หากดึง ใบผลิต จะเคลียร์รายการทั้งหมดทิ้ง, ต้องการดึงใบผลิตใหม่หรือไม่'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: Text('OK'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  await fetchGetPo();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      await fetchGetPo();
+                      if (poStatus == '0') {
+                        // Show a warning for duplicate data
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              // title: Text('Duplicate Data'),
+                              content: Text(poMessage ?? ''),
+                              actions: [
+                                TextButton(
+                                  child: Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else if (poStatus == '1') {
+                        // Show a different popup for status 1
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              // title: Text('Status Alert'),
+                              content: Text(poMessage ?? ''),
+                              actions: [
+                                TextButton(
+                                  child: Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    }
                   },
                   child: Image.asset(
-                    'assets/images/business.png', // เปลี่ยนเป็นเส้นทางของรูปภาพของคุณ
-                    width: 30, // ปรับขนาดตามที่ต้องการ
-                    height: 30, // ปรับขนาดตามที่ต้องการ
+                    'assets/images/business.png', // Path to your image
+                    width: 30, // Adjust width
+                    height: 30, // Adjust height
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 255, 255, 255),
@@ -314,9 +404,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                       MaterialPageRoute(
                         builder: (context) => SSFGDT04_Screen_5(
                           po_doc_no: widget.po_doc_no, // ส่งค่า po_doc_no
-                          // po_doc_type: widget.po_doc_type ??
-                          //     '', // ส่งค่า po_doc_type
-                          // pWareCode: widget.pWareCode,
+                          po_doc_type: widget.po_doc_type, // ส่งค่า po_doc_type
+                          pWareCode: widget.pWareCode,
                           //                 // p_ref_no: _refNoController.text ?? '',
                           //                 // mo_do_no: _moDoNoController.text ?? '',
                         ),
@@ -360,124 +449,153 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
             ),
             SizedBox(height: 10), // Spacing between text and grid
             Expanded(
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1, // Number of columns in the grid
-                  crossAxisSpacing: 8.0, // Horizontal spacing between items
-                  mainAxisSpacing: 8.0, // Vertical spacing between items
-                  childAspectRatio:
-                      1.3, // Adjust aspect ratio to control card height
+  child: GridView.builder(
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 1, // Number of columns in the grid
+      crossAxisSpacing: 8.0, // Horizontal spacing between items
+      mainAxisSpacing: 8.0, // Vertical spacing between items
+      childAspectRatio: 1.3, // Adjust aspect ratio to control card height
+    ),
+    itemCount: gridItems.length, // Number of items in the grid
+    itemBuilder: (context, index) {
+      final item = gridItems[index];
+      return Card(
+        color: Colors.lightBlue[100],
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(20), // Add padding inside the card
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // Let the column adjust based on content size
+            mainAxisAlignment: MainAxisAlignment.spaceBetween, // Space out the widgets vertically
+            children: [
+              // Centered Title
+              Center(
+                child: Text(
+                  item['item_code'] ?? '',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                  textAlign: TextAlign.center, // Ensure text is centered
                 ),
-                itemCount: gridItems.length, // Number of items in the grid
-                itemBuilder: (context, index) {
-                  final item = gridItems[index];
-                  return Card(
-                    color: Colors.lightBlue[100],
-                    elevation: 4,
-                    child: Padding(
-                      padding: const EdgeInsets.all(
-                          20), // Add padding inside the card
-                      child: Column(
-                        mainAxisSize: MainAxisSize
-                            .min, // Let the column adjust based on content size
-                        mainAxisAlignment: MainAxisAlignment
-                            .spaceBetween, // Space out the widgets vertically
-                        crossAxisAlignment: CrossAxisAlignment
-                            .start, // Align children to the left except title
-                        children: [
-                          // Centered Title
-                          Center(
-                            child: Text(
-                              item['item_code'] ?? '',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24,
-                              ),
-                              textAlign:
-                                  TextAlign.center, // Ensure text is centered
-                            ),
-                          ),
-                          // Sub-information
-                          // SizedBox(height: 8),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment
-                                .start, // Align sub-information to the left
-                            children: [
-                              Text(
-                                'จำนวนรับ: ${item['pack_qty'] ?? ''}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              Text(
-                                'จำนวน Pallet: ${item['count_qty'] ?? ''}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              Text(
-                                'จำนวนรวม: ${item['count_qty_in'] ?? ''}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                          // SizedBox(height: 8),
-                          // Row with delete and edit buttons
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .spaceBetween, // Align buttons to left and right
-                            children: [
-                              // Delete button as image
-                              IconButton(
-                                icon: Image.asset(
-                                  'assets/images/bin.png', // Your delete image path
-                                  width: 30,
-                                  height: 30,
-                                ),
-                                onPressed: () async {
-                                  // Extract item details
-                                  final po_item_code = item['item_code'];
-                                  final po_seq = item[
-                                      'seq']; // Ensure that `po_seq` exists in your item map
-
-                                  // Call delete function
-                                  await delete(widget.po_doc_no,
-                                      widget.po_doc_type, po_seq, po_item_code);
-
-                                  // Remove item from the list and update the UI
-                                  setState(() {
-                                    gridItems.removeWhere((item) =>
-                                        item['item_code'] == po_item_code &&
-                                        item['seq'] == po_seq);
-                                  });
-                                },
-                              ),
-
-                              // Edit button as image
-                              IconButton(
-                                icon: Image.asset(
-                                  'assets/images/edit (1).png', // Your edit image path
-                                  width: 30,
-                                  height: 30,
-                                ),
-                                onPressed: () {
-                                  _showEditDialog(context, item);
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
               ),
-            ),
+              SizedBox(height: 8),
+              // Sub-information with Left-Right Layout
+              Column(
+                children: [
+                  // Row for "จำนวนรับ" and value
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround, // Divide row into left and right
+                    children: [
+                      Text(
+                        'จำนวนรับ:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      Text(
+                        '${item['pack_qty'] ?? ''}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10), // Spacing between rows
+                  // Row for "จำนวน Pallet" and value
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround, // Divide row into left and right
+                    children: [
+                      Text(
+                        'จำนวน Pallet:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      Text(
+                        '${item['count_qty'] ?? ''}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10), // Spacing between rows
+                  // Row for "จำนวนรวม" and value
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround, // Divide row into left and right
+                    children: [
+                      Text(
+                        'จำนวนรวม:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      Text(
+                        '${item['count_qty_in'] ?? ''}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              // SizedBox(height: 8),
+              // Row with delete and edit buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align buttons to left and right
+                children: [
+                  // Delete button as image
+                  IconButton(
+                    icon: Image.asset(
+                      'assets/images/bin.png', // Your delete image path
+                      width: 30,
+                      height: 30,
+                    ),
+                    onPressed: () async {
+                      // Extract item details
+                      final po_item_code = item['item_code'];
+                      final po_seq = item['seq']; // Ensure that `po_seq` exists in your item map
+
+                      // Call delete function
+                      await delete(widget.po_doc_no, widget.po_doc_type, po_seq, po_item_code);
+
+                      // Remove item from the list and update the UI
+                      setState(() {
+                        gridItems.removeWhere((item) =>
+                            item['item_code'] == po_item_code &&
+                            item['seq'] == po_seq);
+                      });
+                    },
+                  ),
+                  // Edit button as image
+                  IconButton(
+                    icon: Image.asset(
+                      'assets/images/edit (1).png', // Your edit image path
+                      width: 30,
+                      height: 30,
+                    ),
+                    onPressed: () {
+                      _showEditDialog(context, item);
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  ),
+)
+
           ],
         ),
       ),

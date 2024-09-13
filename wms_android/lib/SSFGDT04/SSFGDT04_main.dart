@@ -3,12 +3,13 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../custom_appbar.dart';
 import '../bottombar.dart';
-import 'SSFGDT04_SCREEN2.dart';
+import 'SSFGDT04_MENU.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 
 class SSFGDT04_MAIN extends StatefulWidget {
   final String p_attr1;
   final String p_ou_code;
+
   const SSFGDT04_MAIN({
     Key? key,
     required this.p_attr1,
@@ -27,13 +28,13 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
     super.initState();
     fetchData();
     print(widget.p_attr1);
-    print(widget.p_ou_code);
+    print(gb.P_ERP_OU_CODE);
   }
 
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_ware_code/${widget.p_ou_code}/${gb.ATTR1}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_ware_code/${gb.P_ERP_OU_CODE}/${gb.ATTR1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -119,9 +120,9 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SSFGDT04_SCREEN2(
+                            builder: (context) => SSFGDT04_MENU(
                               pWareCode: gb.P_WARE_CODE,
-                              pErpOuCode: widget.p_ou_code,
+                              pErpOuCode: gb.P_ERP_OU_CODE,
                               // p_attr1: widget.p_attr1,
                             ),
                           ),
