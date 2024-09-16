@@ -9,6 +9,7 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'SSFGDT09L_barcode.dart';
 import 'SSFGDT09L_picking_slip.dart';
+import 'SSFGDT09L_verify.dart';
 
 class Ssfgdt09lGrid extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจากเลือ lov
@@ -44,6 +45,8 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
 
   String deleteStatus = '';
   String deleteMessage = '';
+  String deleteCardAllStatus = '';
+  String deleteCardAllMessage = '';
 
   @override
   void initState() {
@@ -176,6 +179,57 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
     }
   }
 
+  Future<void> deleteCardAll(String pSeq, String pItemCode) async {
+    final url =
+        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_DeleteCardAll';
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'pErpOuCode': globals.P_ERP_OU_CODE,
+      'pDocType': widget.docType,
+      'pDocNo': widget.docNo,
+      'pAppUser': globals.APP_USER,
+    });
+    print('Request body: $body');
+
+    try {
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataDelete = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print('dataDelete : $dataDelete type : ${dataDelete.runtimeType}');
+        setState(() {
+          deleteCardAllStatus = dataDelete['po_status'];
+          deleteCardAllMessage = dataDelete['po_message'];
+
+          if (deleteCardAllStatus == '1') {
+            showDialogMessageDelete(context, deleteCardAllMessage);
+          }
+          if (deleteCardAllStatus == '0') {
+            setState(() async {
+              Navigator.of(context).pop();
+              await fetchData();
+            });
+          }
+        });
+      } else {
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print('ลบข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -234,7 +288,22 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                       width: 20.0,
                       height: 20.0,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Ssfgdt09lVerify(
+                                  pErpOuCode: widget.pErpOuCode,
+                                  pOuCode: widget.pOuCode,
+                                  docNo: widget.docNo,
+                                  docType: widget.docType,
+                                  moDoNo: widget.moDoNo,
+                                )),
+                      ).then((value) {
+                        // เมื่อกลับมาหน้าเดิม เรียก fetchData
+                        fetchData();
+                      });
+                    },
                   ),
                 ),
               ],
@@ -341,7 +410,19 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                 ),
                 // --------------------------------------------------------------------
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    setState(() {
+                      String messageDelete =
+                          'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม่ ?';
+                      String dataTest = 'test';
+                      showDialogComfirmDelete(
+                        context,
+                        dataTest,
+                        dataTest,
+                        messageDelete,
+                      );
+                    });
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
                     shape: RoundedRectangleBorder(
@@ -590,10 +671,17 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        showDialogComfirmDelete(
+                                        setState(() {
+                                          String messageDelete =
+                                              'ต้องการลบรายการหรือไม่ ?';
+
+                                          showDialogComfirmDelete(
                                             context,
                                             item['seq'].toString(),
-                                            item['item_code'] ?? '');
+                                            item['item_code'] ?? '',
+                                            messageDelete,
+                                          );
+                                        });
                                       },
                                       child: Container(
                                         width: 30,
@@ -751,8 +839,8 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
     );
   }
 
-  void showDialogComfirmDelete(
-      BuildContext context, String pSeq, String pItemCode) {
+  void showDialogComfirmDelete(BuildContext context, String pSeq,
+      String pItemCode, String messageDelete) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -776,9 +864,9 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
               child: Column(
                 children: [
                   const SizedBox(height: 10),
-                  const Text(
-                    'ต้องการลบรายการหรือไม่ ?',
-                    style: TextStyle(color: Colors.red),
+                  Text(
+                    messageDelete,
+                    style: const TextStyle(color: Colors.red),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -797,8 +885,11 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          // Navigator.of(context).pop();
-                          deleteCard(pSeq, pItemCode);
+                          if (messageDelete == 'ต้องการลบรายการหรือไม่ ?') {
+                            deleteCard(pSeq, pItemCode);
+                          }
+                          if (messageDelete ==
+                              'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม่ ?') {}
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,

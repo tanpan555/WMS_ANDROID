@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 
@@ -106,24 +107,11 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                              'Item :${item['material_code'] ?? ''}'),
+                                              'Item : ${item['material_code'] ?? ''}'),
                                         ),
                                         Expanded(
                                           child: Text(
-                                              'Lot :${item['lot_no'] ?? ''}'),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 4.0),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                              'Comb :${item['comb'] ?? ''}'),
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                              'ความต้องการใช้ :${item['usage_qty'] ?? ''}'),
+                                              'Lot : ${item['lot_no'] ?? ''}'),
                                         ),
                                       ],
                                     ),
@@ -132,11 +120,24 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                              'Warehouse :${item['ware_code'] ?? ''}'),
+                                              'Comb : ${item['comb'] ?? ''}'),
                                         ),
                                         Expanded(
                                           child: Text(
-                                              'Locator :${item['location_code'] ?? ''}'),
+                                              'ความต้องการใช้ : ${NumberFormat('#,###,###,###,###,###').format(item['usage_qty'] ?? '')}'),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 4.0),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                              'Warehouse : ${item['ware_code'] ?? ''}'),
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                              'Locator : ${item['location_code'] ?? ''}'),
                                         ),
                                       ],
                                     ),
