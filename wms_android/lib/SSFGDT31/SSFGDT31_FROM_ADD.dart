@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:wms_android/SSFGDT31/SSFGDT31_CARD.dart';
-// import 'package:wms_android/SSFGDT31/SSFGDT31_GRID.dart';
+import 'package:wms_android/SSFGDT31/SSFGDT31_GRID.dart';
 import 'package:wms_android/SSFGDT31/SSFGDT31_SEARCH_DOC.dart';
 import 'dart:convert';
 import '../custom_appbar.dart';
@@ -420,8 +420,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                     TextButton(
                                       child: Text('ตกลง'),
                                       onPressed: () {
-                                        Navigator.of(context).pop();
-                                        Navigator.of(context).pop();
+                                  
 
                                         cancel_from(selectedcCode!).then((_) {
                                           Navigator.of(context).pop(
@@ -432,6 +431,9 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                               ),
                                             ),
                                           );
+
+                                           Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
                                         }).catchError((error) {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
@@ -597,32 +599,32 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                     ),
                     onPressed: () async {
                       
-                      // await updateForm();
+                      await updateForm();
 
-                      // await fetchPoStatus();
-                      // if (poStatus == '0') {
-                      //   await Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) => SSFGDT31_GRID(
-                      //         po_doc_no: widget.po_doc_no, 
-                      //         po_doc_type: widget.po_doc_type, 
-                      //         pWareCode: widget.pWareCode,
-                      //         v_ref_doc_no: v_ref_doc_no ?? '',
-                      //         v_ref_type: v_ref_type ?? '',
-                      //       ),
-                      //     ),
-                      //   );
-                      //   print('pass');
-                      // }
+                      await fetchPoStatus();
+                      if (poStatus == '0') {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SSFGDT31_GRID(
+                              po_doc_no: widget.po_doc_no, 
+                              po_doc_type: widget.po_doc_type, 
+                              pWareCode: widget.pWareCode,
+                              v_ref_doc_no: v_ref_doc_no ?? '',
+                              v_ref_type: v_ref_type ?? '',
+                            ),
+                          ),
+                        );
+                        print('pass');
+                      }
 
-                      // print(widget.po_doc_no);
-                      // print(widget.po_doc_type);
-                      // print(selectedMoDoNo);
-                      // print(NOTE.text);
+                      print(widget.po_doc_no);
+                      print(widget.po_doc_type);
+                      print(selectedMoDoNo);
+                      print(NOTE.text);
 
-                      // // Log the button press
-                      // print('Right button pressed');
+                      // Log the button press
+                      print('Right button pressed');
                     },
                   ),
                 ),
