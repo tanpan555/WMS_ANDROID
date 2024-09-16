@@ -1124,53 +1124,51 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     );
   }
 
-Widget _buildInfoRow2(Map<String, String> info) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4.0),
-    child: Row(
-      children: info.entries.map((entry) {
-        return Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Align(
-                    alignment: Alignment.centerRight,
+  Widget _buildInfoRow2(Map<String, String> info) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: info.entries.map((entry) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        entry.key,
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 12,
+                        ),
+                        softWrap: false,
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Flexible(
                     child: Text(
-                      entry.key,
+                      entry.value,
                       style: TextStyle(
                         color: const Color.fromARGB(255, 0, 0, 0),
                         fontSize: 12,
                       ),
-                      softWrap: false,
                       textAlign: TextAlign.right,
+                      softWrap: false,
                     ),
                   ),
-                ),
-                SizedBox(width: 8),
-                Flexible(
-                  child: Text(
-                    entry.value,
-                    style: TextStyle(
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                      fontSize: 12,
-                    ),
-                    textAlign: TextAlign.right,
-                    softWrap: false,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      }).toList(),
-    ),
-  );
-}
-
-
+          );
+        }).toList(),
+      ),
+    );
+  }
 
   Widget _buildDialogButton({
     required String label,
@@ -1222,338 +1220,351 @@ Widget _buildInfoRow2(Map<String, String> info) {
   }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: Color(0xFF17153B),
-    appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
-    body: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            child: Row(
-              children: [
-                const SizedBox(width: 8.0),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: IconButton(
-                    iconSize: 20.0,
-                    icon: Image.asset(
-                      'assets/images/business.png',
-                      width: 25.0,
-                      height: 25.0,
-                    ),
-                    onPressed: () async {
-                      if(dataList.length != 0){
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Center(child: Text('คำเตือน')),
-        content: Text('ระบบมีการบันทึกรายการทิ้งไว้ หากดึง PO จะเคลียร์รายการทั้งหมดทิ้ง, ต้องการดึง PO ใหม่หรือไม่'),
-        actions: <Widget>[
-          TextButton(
-            child: Text('cancel'),
-            onPressed: () {
-              Navigator.of(context).pop(); 
-            },
-          ),
-
-           TextButton(
-            child: Text('OK'),
-            onPressed: () async {
-              Navigator.of(context).pop();
-              await sendPostRequestlineWMS();
-                      await sendGetRequestlineWMS();
-            },
-          ),
-        ],
-      );
-    },
-  );
-
-
-                      }
-                else{
-                   await sendPostRequestlineWMS();
-                      await sendGetRequestlineWMS();
-                }
-                     
-                    },
-                  ),
-                ),
-                const SizedBox(width: 8.0),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: IconButton(
-                    iconSize: 20.0,
-                    icon: Image.asset(
-                      'assets/images/printer.png',
-                      width: 25.0,
-                      height: 25.0,
-                    ),
-                    onPressed: () async {
-                      _launchUrl();
-                    },
-                  ),
-                ),
-                const SizedBox(width: 8.0),
-                const Spacer(),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: IconButton(
-                    iconSize: 20.0,
-                    icon: Image.asset(
-                      'assets/images/right.png',
-                      width: 20.0,
-                      height: 20.0,
-                    ),
-                    onPressed: () async {
-                      await chk_grid();
-                      if (poStatusGrid == '0') {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => Ssindt01Verify(
-                              poReceiveNo: widget.poReceiveNo,
-                              poPONO: widget.poPONO,
-                              pWareCode: widget.pWareCode,
-                              pWareName: widget.pWareName,
-                              p_ou_code: widget.p_ou_code,
-                            ),
-                          ),
-                        );
-                      } else if (poStatusGrid == '1') {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Center(child: Text('คำเตือน')),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      '${poMessageGrid ?? 'No message available'}'),
-                                ],
-                              ),
-                              actions: [
-                                TextButton(
-                                  child: Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8.0),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            margin: const EdgeInsets.only(bottom: 8.0),
-            color: const Color.fromARGB(255, 255, 242, 204),
-            child: Center(
-              child: Text(
-                '${widget.poPONO}',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                ),
-              ),
-            ),
-          ),
-          dataList.isEmpty
-              ? Center(
-                  child: Text(
-                  'No data available',
-                  style: TextStyle(color: Colors.white),
-                ))
-              : Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      await sendGetRequestlineWMS();
-                    },
-                    child: ListView.builder(
-                      itemCount: dataList.length,
-                      itemBuilder: (context, index) {
-                        final data = dataList[index];
-                        final rowColor =
-                            index.isEven ? Colors.white : Colors.grey[100];
-
-                        return InkWell(
-                          child: Card(
-  elevation: 8,
-  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 1),
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(15),
-  ),
-  color: Color.fromRGBO(204, 235, 252, 1.0),
-  child: Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(15),
-    ),
-    padding: const EdgeInsets.all(16.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Center(
-          child: Text(
-            '${data['item']?.toString() ?? ''}',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-              color: const Color.fromARGB(255, 0, 0, 0),
-            ),
-          ),
-        ),
-        SizedBox(height: 12),
-        Divider(color: const Color.fromARGB(255, 0, 0, 0)),
-        _buildInfoRow2({
-          'จำนวนรับ:': data['receive_qty']?.toString() ?? '-',
-          'ค้างรับ:': data['pending_qty']?.toString() ?? '-',
-        }),
-        _buildInfoRow2({
-          'จำนวนรวม:': data['lot_total_nb']?.toString() ?? '-',
-          'UOM:': data['UOM']?.toString() ?? '-',
-        }),
-        Text(
-          '  Locator : ${data['locator_det']?.toString() ?? '-'}',
-          style: TextStyle(fontSize: 12),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xFF17153B),
+      appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
           children: [
-            IconButton(
-              iconSize: 20.0,
-              icon: Image.asset('assets/images/bin.png', width: 45.0, height: 45.0),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Center(child: Text('คำเตือน')),
-                      content: Text('ยืนยันที่จะลบหรือไม่'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('ยกเลิก'),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            await deleteReceiveQty(
-                              data['receive_no'],
-                              data['rec_seq'].toString(),
-                            );
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('ตกลง'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
-            FutureBuilder<String?>(
-              future: fetchvResultStatus(data['item']?.toString() ?? ''),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error');
-                } else if (snapshot.data == '1') {
-                  return ElevatedButton(
-                    onPressed: () async {
-                      final result = await Navigator.push<Map<String, String>>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LotDialog(
-                            item: data['item']?.toString() ?? '',
-                            itemDesc: data['item_desc']?.toString() ?? '',
-                            ouCode: data['ou_code']?.toString() ?? '',
-                            recSeq: data['rec_seq']?.toString() ?? '',
-                            poReceiveNo: widget.poReceiveNo,
-                            poPONO: widget.poPONO ?? '',
-                          ),
-                          fullscreenDialog: true,
-                        ),
-                      );
-                      if (result == null) {
-                        Timer(Duration(seconds: 1), () {
-                          sendGetRequestlineWMS();
-                        });
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.purple,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+            Container(
+              width: double.infinity,
+              child: Row(
+                children: [
+                  const SizedBox(width: 8.0),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: IconButton(
+                      iconSize: 20.0,
+                      icon: Image.asset(
+                        'assets/images/business.png',
+                        width: 25.0,
+                        height: 25.0,
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                    ),
-                    child: Text(
-                      'LOT',
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
-                  );
-                } else {
-                  return IconButton(
-                    iconSize: 20.0,
-                    icon: Image.asset(
-                      'assets/images/edit.png',
-                      width: 45.0,
-                      height: 45.0,
-                    ),
-                    onPressed: () async {
-                      _showDetailsDialog(data);
-                    },
-                  );
-                }
-              },
-            ),
-          ],
-        ),
-      ],
-    ),
-  ),
-),
-                          // onTap: () {
-                          //   _showDetailsDialog(data);
-                          // },
-                        );
+                      onPressed: () async {
+                        if (dataList.length != 0) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Center(child: Text('คำเตือน')),
+                                content: Text(
+                                    'ระบบมีการบันทึกรายการทิ้งไว้ หากดึง PO จะเคลียร์รายการทั้งหมดทิ้ง, ต้องการดึง PO ใหม่หรือไม่'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text('OK'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      await sendPostRequestlineWMS();
+                                      await sendGetRequestlineWMS();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          await sendPostRequestlineWMS();
+                          await sendGetRequestlineWMS();
+                        }
                       },
                     ),
                   ),
+                  const SizedBox(width: 8.0),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: IconButton(
+                      iconSize: 20.0,
+                      icon: Image.asset(
+                        'assets/images/printer.png',
+                        width: 25.0,
+                        height: 25.0,
+                      ),
+                      onPressed: () async {
+                        _launchUrl();
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 8.0),
+                  const Spacer(),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: IconButton(
+                      iconSize: 20.0,
+                      icon: Image.asset(
+                        'assets/images/right.png',
+                        width: 20.0,
+                        height: 20.0,
+                      ),
+                      onPressed: () async {
+                        await chk_grid();
+                        if (poStatusGrid == '0') {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => Ssindt01Verify(
+                                poReceiveNo: widget.poReceiveNo,
+                                poPONO: widget.poPONO,
+                                pWareCode: widget.pWareCode,
+                                pWareName: widget.pWareName,
+                                p_ou_code: widget.p_ou_code,
+                              ),
+                            ),
+                          );
+                        } else if (poStatusGrid == '1') {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Center(child: Text('คำเตือน')),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        '${poMessageGrid ?? 'No message available'}'),
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    child: Text('OK'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8.0),
+         
+            
+            // dataList.isEmpty
+            //     ? Center(
+            //         child: Text(
+            //         'No data available',
+            //         style: TextStyle(color: Colors.white),
+            //       ))
+            //     : 
+              Expanded(
+  child: RefreshIndicator(
+    onRefresh: () async {
+      await sendGetRequestlineWMS();
+    },
+    child: ListView(
+      children: [
+         Container(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              margin: const EdgeInsets.only(bottom: 8.0),
+              color: const Color.fromARGB(255, 255, 242, 204),
+              child: Center(
+                child: Text(
+                  '${widget.poPONO}',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
                 ),
-        ],
-      ),
+              ),
+            ),
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          margin: const EdgeInsets.only(bottom: 8.0),
+          color: const Color.fromARGB(255, 244, 244, 244),
+          child: Center(
+            child: Text(
+              '${widget.poReceiveNo}',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
+            ),
+          ),
+        ),
+        
+        ...dataList.map((data) {
+          final rowColor = dataList.indexOf(data).isEven ? Colors.white : Colors.grey[100];
+
+          return InkWell(
+            child: Card(
+              elevation: 8,
+              margin: EdgeInsets.symmetric(vertical: 8, horizontal: 1),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              color: Color.fromRGBO(204, 235, 252, 1.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Text(
+                        '${data['item']?.toString() ?? ''}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    Divider(color: const Color.fromARGB(255, 0, 0, 0)),
+                    _buildInfoRow2({
+                      'จำนวนรับ:': data['receive_qty']?.toString() ?? '-',
+                      'ค้างรับ:': data['pending_qty']?.toString() ?? '-',
+                    }),
+                    _buildInfoRow2({
+                      'จำนวนรวม:': data['lot_total_nb']?.toString() ?? '-',
+                      'UOM:': data['UOM']?.toString() ?? '-',
+                    }),
+                    Text(
+                      '  Locator : ${data['locator_det']?.toString() ?? '-'}',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          iconSize: 20.0,
+                          icon: Image.asset(
+                            'assets/images/bin.png',
+                            width: 45.0,
+                            height: 45.0,
+                          ),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Center(child: Text('คำเตือน')),
+                                  content: Text('ยืนยันที่จะลบหรือไม่'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('ยกเลิก'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        await deleteReceiveQty(
+                                          data['receive_no'],
+                                          data['rec_seq'].toString(),
+                                        );
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('ตกลง'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        FutureBuilder<String?>(
+                          future: fetchvResultStatus(data['item']?.toString() ?? ''),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error');
+                            } else if (snapshot.data == '1') {
+                              return ElevatedButton(
+                                onPressed: () async {
+                                  final result = await Navigator.push<Map<String, String>>(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LotDialog(
+                                        item: data['item']?.toString() ?? '',
+                                        itemDesc: data['item_desc']?.toString() ?? '',
+                                        ouCode: data['ou_code']?.toString() ?? '',
+                                        recSeq: data['rec_seq']?.toString() ?? '',
+                                        poReceiveNo: widget.poReceiveNo,
+                                        poPONO: widget.poPONO ?? '',
+                                      ),
+                                      fullscreenDialog: true,
+                                    ),
+                                  );
+                                  if (result == null) {
+                                    Timer(Duration(seconds: 1), () {
+                                      sendGetRequestlineWMS();
+                                    });
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.purple,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                ),
+                                child: Text(
+                                  'LOT',
+                                  style: TextStyle(fontSize: 16, color: Colors.white),
+                                ),
+                              );
+                            } else {
+                              return IconButton(
+                                iconSize: 20.0,
+                                icon: Image.asset(
+                                  'assets/images/edit.png',
+                                  width: 45.0,
+                                  height: 45.0,
+                                ),
+                                onPressed: () async {
+                                  _showDetailsDialog(data);
+                                },
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ],
     ),
-  );
-}
+  ),
+)
 
-
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1793,157 +1804,153 @@ class _LotDialogState extends State<LotDialog> {
     );
 
     showGeneralDialog(
-  context: context,
-  barrierDismissible: false,
-  barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-  barrierColor: Colors.black54,
-  transitionDuration: const Duration(milliseconds: 200),
-  pageBuilder: (BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
-    return Center(
-      child: Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        child: Container(
-          padding: EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                SizedBox(height: 16.0),
-                Row(
-  children: [
-    Expanded(
-      flex: 1,
-      child: TextFormField(
-        initialValue: lotSeq ?? '',
-        decoration: InputDecoration(
-           label: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Seq',
-              style: TextStyle(color: Colors.black),
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 200),
+      pageBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
+        return Center(
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
             ),
-          ),
-          labelStyle: TextStyle(color: Colors.black),
-          filled: true,
-          fillColor: Colors.grey[300],
-          border: InputBorder.none,
-
-        ),
-        style: TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-        ),
-        readOnly: true,
-        textAlign: TextAlign.left, //<<<<<<<<<<,
-      ),
-    ),
-    SizedBox(width: 8.0),
-    Expanded(
-      flex: 2,
-      child: TextFormField(
-        initialValue: item['lot_product_no'] ?? '',
-        decoration: InputDecoration(
-          labelText: 'Lot No',
-          labelStyle: TextStyle(color: Colors.black),
-          filled: true,
-          fillColor: Colors.grey[300],
-          border: InputBorder.none,
-        ),
-        style: TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-        ),
-        readOnly: true,
-      ),
-    ),
-  ],
-),
-
-                SizedBox(height: 12.0),
-                _buildTextField(
-                  controller: lotQtyController,
-                  labelText: 'LOT Qty',
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    item['lot_qty'] = value;
-                  },
-                ),
-                _buildTextField(
-                  controller: lotSupplierController,
-                  labelText: 'Lot ผู้ผลิต',
-                  onChanged: (value) {
-                    item['lot_supplier'] = value;
-                  },
-                ),
-                _buildDateField(
-                  controller: mfgDateController,
-                  labelText: 'mfg Date',
-                  context: context,
-                  onChanged: (value) {
-                    item['mfg_date'] = value;
-                  },
-                ),
-                SizedBox(height: 16.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: IconButton(
-                        iconSize: 20.0,
-                        icon: Image.asset(
-                          'assets/images/check-mark.png',
-                          width: 45.0,
-                          height: 45.0,
+            child: Container(
+              padding: EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    SizedBox(height: 16.0),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: TextFormField(
+                            initialValue: lotSeq ?? '',
+                            decoration: InputDecoration(
+                              label: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Seq',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              labelStyle: TextStyle(color: Colors.black),
+                              filled: true,
+                              fillColor: Colors.grey[300],
+                              border: InputBorder.none,
+                            ),
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            readOnly: true,
+                            textAlign: TextAlign.left, //<<<<<<<<<<,
+                          ),
                         ),
-                        onPressed: () async {
-                          await updateLot(
-                            lotQtyController.text,
-                            lotSupplierController.text,
-                            mfgDateController.text,
-                            ou_code,
-                            recNo,
-                            recSeq,
-                            lotSeq,
-                          );
-                          sendGetRequestlineWMS();
-                          Navigator.of(context).pop();
-                          if (refreshCallback != null) {
-                            await refreshCallback();
-                          }
-                        },
-                      ),
+                        SizedBox(width: 8.0),
+                        Expanded(
+                          flex: 2,
+                          child: TextFormField(
+                            initialValue: item['lot_product_no'] ?? '',
+                            decoration: InputDecoration(
+                              labelText: 'Lot No',
+                              labelStyle: TextStyle(color: Colors.black),
+                              filled: true,
+                              fillColor: Colors.grey[300],
+                              border: InputBorder.none,
+                            ),
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            readOnly: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.0),
+                    _buildTextField(
+                      controller: lotQtyController,
+                      labelText: 'LOT Qty',
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        item['lot_qty'] = value;
+                      },
+                    ),
+                    _buildTextField(
+                      controller: lotSupplierController,
+                      labelText: 'Lot ผู้ผลิต',
+                      onChanged: (value) {
+                        item['lot_supplier'] = value;
+                      },
+                    ),
+                    _buildDateField(
+                      controller: mfgDateController,
+                      labelText: 'mfg Date',
+                      context: context,
+                      onChanged: (value) {
+                        item['mfg_date'] = value;
+                      },
+                    ),
+                    SizedBox(height: 16.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: IconButton(
+                            iconSize: 20.0,
+                            icon: Image.asset(
+                              'assets/images/check-mark.png',
+                              width: 45.0,
+                              height: 45.0,
+                            ),
+                            onPressed: () async {
+                              await updateLot(
+                                lotQtyController.text,
+                                lotSupplierController.text,
+                                mfgDateController.text,
+                                ou_code,
+                                recNo,
+                                recSeq,
+                                lotSeq,
+                              );
+                              sendGetRequestlineWMS();
+                              Navigator.of(context).pop();
+                              if (refreshCallback != null) {
+                                await refreshCallback();
+                              }
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
+      transitionBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation, Widget child) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0.0, 1.0),
+            end: Offset.zero,
+          ).animate(animation),
+          child: FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        );
+      },
     );
-  },
-  transitionBuilder: (BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
-    return SlideTransition(
-      position: Tween<Offset>(
-        begin: const Offset(0.0, 1.0),
-        end: Offset.zero,
-      ).animate(animation),
-      child: FadeTransition(
-        opacity: animation,
-        child: child,
-      ),
-    );
-  },
-);
-
-
   }
 
   Widget _buildTextField({
@@ -2245,22 +2252,22 @@ class _LotDialogState extends State<LotDialog> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                  child: Text('OK'),
-                  onPressed: () async {
-                    await fetchPoStatus(widget.recSeq);
-                    if (poreject == '1') {
-                      showCustomDialog(context, widget.poReceiveNo,
-                          widget.recSeq, widget.ouCode);
-                    } else {
-                      Navigator.pop(context, {
-                        'status': 'pass',
-                        'poReceiveNo': widget.poReceiveNo,
-                        'recSeq': widget.recSeq,
-                        'ouCode': widget.ouCode,
-                      });
-                    }
-                  },
-                ),
+                    child: Text('OK'),
+                    onPressed: () async {
+                      await fetchPoStatus(widget.recSeq);
+                      if (poreject == '1') {
+                        showCustomDialog(context, widget.poReceiveNo,
+                            widget.recSeq, widget.ouCode);
+                      } else {
+                        Navigator.pop(context, {
+                          'status': 'pass',
+                          'poReceiveNo': widget.poReceiveNo,
+                          'recSeq': widget.recSeq,
+                          'ouCode': widget.ouCode,
+                        });
+                      }
+                    },
+                  ),
                 ],
               ),
               TextField(
@@ -2435,7 +2442,8 @@ class _LotDialogState extends State<LotDialog> {
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
-                                                  title: Center(child: Text('คำเตือน')),
+                                                  title: Center(
+                                                      child: Text('คำเตือน')),
                                                   content: Text(
                                                       'ยืนยันที่จะลบหรือไม่'),
                                                   actions: <Widget>[
