@@ -8,6 +8,7 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'SSFGDT09L_barcode.dart';
+import 'SSFGDT09L_picking_slip.dart';
 
 class Ssfgdt09lGrid extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจากเลือ lov
@@ -188,7 +189,20 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Ssfgdt09lPickingSlip(
+                                pErpOuCode: widget.pErpOuCode,
+                                pOuCode: widget.pOuCode,
+                                pMoDoNO: widget.moDoNo,
+                              )),
+                    ).then((value) {
+                      // เมื่อกลับมาหน้าเดิม เรียก fetchData
+                      fetchData();
+                    });
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
                     shape: RoundedRectangleBorder(

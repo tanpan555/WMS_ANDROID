@@ -51,7 +51,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   String returnStatusLovDocType = '';
   // -----------------------------
   String? selectLovMoDoNo;
-  int returnStatusLovMoDoNo = 0;
+  String returnStatusLovMoDoNo = '';
   // -----------------------------
   String? selectLovRefNo;
   String returnStatusLovRefNo = '';
@@ -145,6 +145,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         if (items.isNotEmpty) {
           final Map<String, dynamic> item = items[0];
           print('Fetched data: $jsonDecode');
+          print('data $data');
 
           setState(() {
             ouCode = item['ou_code'] ?? '';
@@ -165,7 +166,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
             returnStatusLovRefNo = item['ref_no'] ?? '';
             // -----------------------------
             selectLovMoDoNo = item['mo_do_no'] ?? '';
-            returnStatusLovMoDoNo = item['mo_do_no'] ?? '';
+            returnStatusLovMoDoNo = item['mo_do_no'].toString();
             // -----------------------------
             ouCodeController.text = ouCode;
             docNoController.text = docNo;
@@ -290,7 +291,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     }
   }
 
-  Future<void> selectCust(int pMoDoNo) async {
+  Future<void> selectCust(String pMoDoNo) async {
     print('pMoDoNo in selectCust   : $pMoDoNo type : ${pMoDoNo.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
@@ -442,7 +443,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                   pErpOuCode: widget.pErpOuCode,
                   pOuCode: widget.pOuCode,
                   pAppUser: globals.APP_USER,
-                  moDoNo: '23030004',
+                  moDoNo: returnStatusLovMoDoNo,
                   // test
                   statusCase: 'test1',
                 ));
@@ -738,7 +739,8 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
                           // Update variables based on selected item
                           if (selectedItem.isNotEmpty) {
-                            returnStatusLovMoDoNo = selectedItem['schid'] ?? '';
+                            returnStatusLovMoDoNo =
+                                selectedItem['schid'].toString();
                             selectLovMoDoNo = selectedItem['schid'].toString();
                             selectCust(returnStatusLovMoDoNo);
                             //////-----------------------------------------------
