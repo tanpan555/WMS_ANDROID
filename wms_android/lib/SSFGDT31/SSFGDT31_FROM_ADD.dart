@@ -612,6 +612,8 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                               pWareCode: widget.pWareCode,
                               v_ref_doc_no: v_ref_doc_no ?? '',
                               v_ref_type: v_ref_type ?? '',
+                              SCHID: selectedMoDoNo ?? '',
+                              DOC_DATE: DOC_DATE.text ?? '',
                             ),
                           ),
                         );
@@ -708,66 +710,75 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
   }
 
   Widget _buildDropdownSearch() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: DropdownSearch<String>(
-        popupProps: PopupProps.menu(
-          showSearchBox: true,
-          showSelectedItems: true,
-          itemBuilder: (context, item, isSelected) {
-            final itemData = moDoNoItems.firstWhere(
-              (element) => '${element['schid']}' == item,
-              orElse: () => {'schid': '', 'cust_name': ''},
-            );
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: DropdownSearch<String>(
+      popupProps: PopupProps.menu(
+        showSearchBox: true,
+        showSelectedItems: true,
+        itemBuilder: (context, item, isSelected) {
+          final itemData = moDoNoItems.firstWhere(
+            (element) => '${element['schid']}' == item,
+            orElse: () => {'schid': '', 'cust_name': ''},
+          );
 
-            return ListTile(
-              title: Text(item),
-              subtitle: Text(itemData['cust_name'] ?? ''),
-              selected: isSelected,
-            );
-          },
-          constraints: BoxConstraints(
-            maxHeight: 200,
-          ),
-        ),
-        items: [
-          '-- No Value Set --',
-          ...moDoNoItems.map((item) => '${item['schid']}'.toString()).toList()
-        ],
-        dropdownDecoratorProps: DropDownDecoratorProps(
-          dropdownSearchDecoration: InputDecoration(
-            border: InputBorder.none,
-            filled: true,
-            fillColor: Colors.white,
-            labelText: "เลขที่คำสั่งผลิต",
-            hintText: "Select Item",
-            hintStyle: TextStyle(fontSize: 12.0),
-          ),
-        ),
-        onChanged: (String? value) async {
-          setState(() {
-            selectedMoDoNo = value;
-          });
-
-          if (value == '-- No Value Set --') {
-            setState(() {
-              csValue = null;
-              CUST.text = 'null';
-            });
-          } else {
-            await fetchCustCode();
-
-            setState(() {
-              CUST.text = csValue ?? 'null';
-            });
-          }
-
-          print(selectedMoDoNo);
+          return ListTile(
+            title: Text(item),
+            subtitle: Text(itemData['cust_name'] ?? ''),
+            selected: isSelected,
+          );
         },
-        selectedItem: selectedMoDoNo ?? '-- No Value Set --',
+        constraints: BoxConstraints(
+          maxHeight: 200,
+        ),
       ),
-    );
-  }
+      items: [
+        '-- No Value Set --',
+        ...moDoNoItems.map((item) => '${item['schid']}'.toString()).toList()
+      ],
+      dropdownDecoratorProps: DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+          border: InputBorder.none,
+          filled: true,
+          fillColor: Colors.white,
+          labelText: "เลขที่คำสั่งผลิต",
+          hintText: "Select Item",
+          hintStyle: TextStyle(fontSize: 12.0),
+        ),
+      ),
+      onChanged: (String? value) async {
+        setState(() {
+          selectedMoDoNo = value;
+        });
+
+        if (value == '-- No Value Set --') {
+          setState(() {
+            csValue = null;
+            CUST.text = 'null';
+          });
+        } else {
+          await fetchCustCode();
+
+          final selectedItem = moDoNoItems.firstWhere(
+            (element) => '${element['schid']}' == value,
+            orElse: () => {'schid': '', 'cust_name': ''},
+          );
+
+          print('Selected SCHID: ${selectedItem['schid']}');
+          print('Selected Cust Name: ${selectedItem['cust_name']}');
+
+          setState(() {
+            CUST.text = csValue ?? 'null';
+          });
+        }
+
+        print(selectedMoDoNo);
+      },
+      selectedItem: selectedMoDoNo ?? '-- No Value Set --',
+    ),
+  );
+}
+
 
   Widget _buildDropdownForRefNo() {
     return Padding(
