@@ -187,14 +187,14 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
         print('po_message : $poMessage');
 
         // ตรวจสอบสถานะ po_status เพื่อแสดง popup หรือเคลียร์ข้อมูลตามที่คุณต้องการ
-        if (poStatus == 0) {
-          // แสดง popup แจ้งเตือนและเคลียร์ค่าที่หน้าจอ
+        if (poStatus == '0') {
+          //   // แสดง popup แจ้งเตือนและเคลียร์ค่าที่หน้าจอ
           showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
                 // title: Text('Success'),
-                content: Text('$poMessage'),
+                content: Text('Update Locator Complete. $poMessage'),
                 actions: [
                   TextButton(
                     child: Text('OK'),
@@ -207,7 +207,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
               );
             },
           );
-        } else if (poStatus == 1) {
+        } else if (poStatus == '1') {
           // แสดง popup แจ้งเตือนกรณีไม่ผ่าน
           showDialog(
             context: context,
@@ -226,6 +226,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
               );
             },
           );
+          print('555555');
         }
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
@@ -410,244 +411,219 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
           // const SizedBox(height: 5),
           Padding(
-  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-  child: GestureDetector(
-    onTap: () {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: StatefulBuilder(
-              builder: (context, setState) {
-                return Container(
-                  padding: const EdgeInsets.all(16),
-                  height: 300, // Adjust the height as needed
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Locator',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.close),
-                            onPressed: () {
-                              Navigator.of(context).pop(); // Close popup
-                            },
-                          ),
-                        ],
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      const SizedBox(height: 10),
-                      // Search Field
-                      TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText: 'ค้นหา...',
-                          border: OutlineInputBorder(),
-                        ),
-                        onChanged: (query) {
-                          setState(() {});
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: locatorBarcodeItems
-                                  .where((item) {
-                                    final lcbarcodeString =
-                                        item['lcbarcode'].toString();
-                                    final locationCode =
-                                        item['location_code'].toString();
-                                    final locationName =
-                                        item['location_name'].toString();
-                                    final searchQuery =
-                                        _searchController.text.trim();
-                                    final searchQueryInt =
-                                        int.tryParse(searchQuery);
-                                    final lcbarcodeInt =
-                                        int.tryParse(lcbarcodeString);
-
-                                    return (searchQueryInt != null &&
-                                            lcbarcodeInt != null &&
-                                            lcbarcodeInt == searchQueryInt) ||
-                                        lcbarcodeString
-                                            .contains(searchQuery) ||
-                                        locationCode.contains(searchQuery) ||
-                                        locationName.contains(searchQuery);
-                                  })
-                                  .toList()
-                                  .length +
-                              1, // +1 for the "-- No Value Set --" option
-                          itemBuilder: (context, index) {
-                            if (index == 0) {
-                              // Add the special case for "-- No Value Set --"
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  '-- No Value Set --',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    selectedLocator = null; // Set to null
-                                    _locatorBarcodeController.clear();
-                                  });
-                                  Navigator.of(context).pop();
-                                },
-                              );
-                            }
-
-                            // Filter and display other locator items
-                            final filteredItems =
-                                locatorBarcodeItems.where((item) {
-                              final lcbarcodeString =
-                                  item['lcbarcode'].toString();
-                              final locationCode =
-                                  item['location_code'].toString();
-                              final locationName =
-                                  item['location_name'].toString();
-                              final searchQuery =
-                                  _searchController.text.trim();
-                              final searchQueryInt =
-                                  int.tryParse(searchQuery);
-                              final lcbarcodeInt =
-                                  int.tryParse(lcbarcodeString);
-
-                              return (searchQueryInt != null &&
-                                      lcbarcodeInt != null &&
-                                      lcbarcodeInt == searchQueryInt) ||
-                                  lcbarcodeString.contains(searchQuery) ||
-                                  locationCode.contains(searchQuery) ||
-                                  locationName.contains(searchQuery);
-                            }).toList();
-
-                            final item = filteredItems[index - 1]; // Adjust index due to added option
-                            final lcbarcode = item['lcbarcode'].toString();
-                            final locationCode = item['location_code'].toString();
-                            final locationName = item['location_name'].toString();
-
-                            return ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              title: RichText(
-                                text: TextSpan(
+                      child: StatefulBuilder(
+                        builder: (context, setState) {
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            height: 300, // Adjust the height as needed
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    TextSpan(
-                                      text: '$lcbarcode\n',
+                                    Text(
+                                      'Locator',
                                       style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    TextSpan(
-                                      text: '$locationCode $locationName',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal,
-                                        color: Colors.black,
-                                      ),
+                                    IconButton(
+                                      icon: Icon(Icons.close),
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pop(); // Close popup
+                                      },
                                     ),
                                   ],
                                 ),
-                              ),
-                              onTap: () {
-                                setState(() {
-                                  selectedLocator = lcbarcode;
-                                  _locatorBarcodeController.text = lcbarcode;
-                                  fetchlocatorItems();
-                                  // Call the API after setting the selected locator
-                                });
-                                Navigator.of(context).pop();
-                                scan_INmove_Location(lcbarcode);
+                                const SizedBox(height: 10),
+                                // Search Field
+                                TextField(
+                                  controller: _searchController,
+                                  decoration: InputDecoration(
+                                    hintText: 'ค้นหา...',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  onChanged: (query) {
+                                    setState(() {});
+                                  },
+                                ),
+                                const SizedBox(height: 10),
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemCount: locatorBarcodeItems
+                                            .where((item) {
+                                              final lcbarcodeString =
+                                                  item['lcbarcode'].toString();
+                                              final locationCode =
+                                                  item['location_code']
+                                                      .toString();
+                                              final locationName =
+                                                  item['location_name']
+                                                      .toString();
+                                              final searchQuery =
+                                                  _searchController.text.trim();
+                                              final searchQueryInt =
+                                                  int.tryParse(searchQuery);
+                                              final lcbarcodeInt =
+                                                  int.tryParse(lcbarcodeString);
 
-                                if (poStatus == '0') {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        content: Text('$poMessage'),
-                                        actions: [
-                                          TextButton(
-                                            child: Text('OK'),
-                                            onPressed: () {
-                                              // Clear screen or do other actions
-                                              clearScreen();
-                                              Navigator.of(context).pop();
-                                            },
+                                              return (searchQueryInt != null &&
+                                                      lcbarcodeInt != null &&
+                                                      lcbarcodeInt ==
+                                                          searchQueryInt) ||
+                                                  lcbarcodeString
+                                                      .contains(searchQuery) ||
+                                                  locationCode
+                                                      .contains(searchQuery) ||
+                                                  locationName
+                                                      .contains(searchQuery);
+                                            })
+                                            .toList()
+                                            .length +
+                                        1, // +1 for the "-- No Value Set --" option
+                                    itemBuilder: (context, index) {
+                                      if (index == 0) {
+                                        // Add the special case for "-- No Value Set --"
+                                        return ListTile(
+                                          contentPadding: EdgeInsets.zero,
+                                          title: Text(
+                                            '-- No Value Set --',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
                                           ),
-                                        ],
+                                          onTap: () {
+                                            setState(() {
+                                              selectedLocator !=
+                                                  null; // Set to null
+                                              _locatorBarcodeController.clear();
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                        );
+                                      }
+
+                                      // Filter and display other locator items
+                                      final filteredItems =
+                                          locatorBarcodeItems.where((item) {
+                                        final lcbarcodeString =
+                                            item['lcbarcode'].toString();
+                                        final locationCode =
+                                            item['location_code'].toString();
+                                        final locationName =
+                                            item['location_name'].toString();
+                                        final searchQuery =
+                                            _searchController.text.trim();
+                                        final searchQueryInt =
+                                            int.tryParse(searchQuery);
+                                        final lcbarcodeInt =
+                                            int.tryParse(lcbarcodeString);
+
+                                        return (searchQueryInt != null &&
+                                                lcbarcodeInt != null &&
+                                                lcbarcodeInt ==
+                                                    searchQueryInt) ||
+                                            lcbarcodeString
+                                                .contains(searchQuery) ||
+                                            locationCode
+                                                .contains(searchQuery) ||
+                                            locationName.contains(searchQuery);
+                                      }).toList();
+
+                                      final item = filteredItems[index -
+                                          1]; // Adjust index due to added option
+                                      final lcbarcode =
+                                          item['lcbarcode'].toString();
+                                      final locationCode =
+                                          item['location_code'].toString();
+                                      final locationName =
+                                          item['location_name'].toString();
+
+                                      return ListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        title: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: '$lcbarcode\n',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text:
+                                                    '$locationCode $locationName',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            selectedLocator = lcbarcode;
+                                            _locatorBarcodeController.text =
+                                                lcbarcode;
+                                            fetchlocatorItems();
+                                            // Call the API after setting the selected locator
+                                          });
+                                          Navigator.of(context).pop();
+                                          scan_INmove_Location(lcbarcode);
+                                        },
                                       );
                                     },
-                                  );
-                                }
-
-                                // Show the popup every time if poStatus == '1'
-                                if (poStatus == '1') {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text('แจ้งเตือน'),
-                                        content: Text('$poMessage'),
-                                        actions: [
-                                          TextButton(
-                                            child: Text('OK'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }
-                              },
-                            );
-                          },
-                        ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 );
               },
+              child: AbsorbPointer(
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Locator',
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelStyle: TextStyle(color: Colors.black),
+                    border: InputBorder.none,
+                    suffixIcon: Icon(
+                      Icons.list,
+                      color: Colors.black,
+                    ),
+                  ),
+                  controller: _locatorBarcodeController.text.isNotEmpty
+                      ? _locatorBarcodeController
+                      : TextEditingController(
+                          text: selectedLocator ?? '-- No Value Set --'),
+                ),
+              ),
             ),
-          );
-        },
-      );
-    },
-    child: AbsorbPointer(
-      child: TextField(
-        decoration: InputDecoration(
-          labelText: 'Locator',
-          filled: true,
-          fillColor: Colors.white,
-          labelStyle: TextStyle(color: Colors.black),
-          border: InputBorder.none,
-          suffixIcon: Icon(
-            Icons.list,
-            color: Colors.black,
           ),
-        ),
-        controller: _locatorBarcodeController.text.isNotEmpty
-            ? _locatorBarcodeController
-            : TextEditingController(
-                text: pBarcode != null ? '-- No Value Set --' : ''),
-      ),
-    ),
-  ),
-),
-
 
           // const SizedBox(height: 5),
           // Additional text fields
@@ -683,11 +659,13 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                         labelStyle: TextStyle(color: Colors.black),
                         border: InputBorder.none,
                       ),
-                      controller: TextEditingController(
-                        text: _quantityController.text.isNotEmpty
-                            ? _quantityController.text
-                            : 'NaN',
-                      ),
+                      controller: 
+                      _quantityController,
+                      // TextEditingController(
+                      //   text: _quantityController.text.isNotEmpty
+                      //       ? _quantityController.text
+                      //       : 'NaN',
+                      // ),
                     ),
             ),
 

@@ -100,7 +100,7 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            content: Text('${poErpDocNo ?? ''}'),
+                            content: Text('${widget.po_doc_no}'),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {
