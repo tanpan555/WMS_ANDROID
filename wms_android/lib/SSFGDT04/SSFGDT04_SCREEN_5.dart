@@ -4,24 +4,22 @@ import '../bottombar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
-// import 'test.dart';
-// import '../bottombar.dart';
+import 'package:intl/intl.dart';
 
 class SSFGDT04_Screen_5 extends StatefulWidget {
-  final String pWareCode; // ware code ที่มาจาก lov
+  final String pWareCode;
   final String po_doc_no;
   final String po_doc_type;
-  // // final String p_ref_no;
-  // // final String mo_do_no;
+  final String setqc;
 
   SSFGDT04_Screen_5({
     Key? key,
     required this.pWareCode,
     required this.po_doc_no,
     required this.po_doc_type,
-    //   // required this.p_ref_no,
-    //   // required this.mo_do_no,
+    required this.setqc,
   }) : super(key: key);
+
   @override
   _SSFGDT04Screen5State createState() => _SSFGDT04Screen5State();
 }
@@ -29,13 +27,11 @@ class SSFGDT04_Screen_5 extends StatefulWidget {
 class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
   List<Map<String, dynamic>> gridItems = [];
   late TextEditingController _docNoController;
-  // List<String> _deletedItems = [];
 
   @override
   void initState() {
     super.initState();
     fetchGridItems();
-    // fetchIntefaceNonePO();
     _docNoController = TextEditingController(text: widget.po_doc_no);
   }
 
@@ -46,7 +42,6 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
       setState(() {
-        // Update gridItems with new data
         gridItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
       });
     } else {
@@ -62,7 +57,6 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_5_Inteface_NonePO_WMS2ERP/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${gb.APP_USER}'));
-      print(widget.po_doc_no);
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final data = json.decode(responseBody);
@@ -70,10 +64,6 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
           poStatus = data['po_status'];
           poMessage = data['po_message'];
           poErpDocNo = data['po_erp_doc_no'];
-          print(response.statusCode);
-          print(data);
-          print(poStatus);
-          print(poMessage);
         });
       } else {
         throw Exception('Failed to load data');
@@ -95,12 +85,10 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
       appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
-        padding: const EdgeInsets.all(20), // เพิ่ม padding รอบๆ
+        padding: const EdgeInsets.all(20),
         child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.start, // จัดให้อยู่เริ่มต้นแนวตั้ง
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // ElevatedButton ที่จะอยู่ด้านบน
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -116,11 +104,8 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
+                                  Navigator.of(context)
+                                      .popUntil((route) => route.isFirst);
                                 },
                                 child: Text('OK'),
                               ),
@@ -157,8 +142,8 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
                   ),
                   style: ElevatedButton.styleFrom(
                     side: BorderSide(
-                      color: Colors.green, // Add a border color
-                      width: 2, // Border width
+                      color: Colors.green,
+                      width: 2,
                     ),
                     backgroundColor: Colors.green[100],
                     padding: EdgeInsets.all(10),
@@ -170,192 +155,212 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
                 ),
               ],
             ),
-            const SizedBox(height: 8), // เพิ่มระยะห่างระหว่างปุ่มและ Container
-            Center(
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white, // สีพื้นหลังของ Container
-                  borderRadius:
-                      BorderRadius.circular(8), // มุมโค้งของ Container
-                ),
-                child: Text(
-                  '${widget.po_doc_no}', // ข้อความที่จะแสดง
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: SingleChildScrollView(
+                child: _buildCards(),
               ),
             ),
-            const SizedBox(
-                height: 10), // เพิ่มระยะห่างระหว่าง Container และ Card
-            Expanded(
-              child: ListView.builder(
-                itemCount: gridItems.length, // Number of items in the grid
-                itemBuilder: (context, index) {
-                  final item = gridItems[index];
-                  return Card(
-                    color: Colors.lightBlue[100],
-                    elevation: 4,
-                    child: Padding(
-                      padding: const EdgeInsets.all(
-                          20), // Add padding inside the card
-                      child: Column(
-                        mainAxisSize: MainAxisSize
-                            .min, // Let the column adjust based on content size
-                        mainAxisAlignment: MainAxisAlignment
-                            .spaceBetween, // Space out the widgets vertically
-                        children: [
-                          // Centered Title
-                          Center(
-                            child: Text(
-                              item['item_code'] ?? '',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
-                              textAlign:
-                                  TextAlign.center, // Ensure text is centered
-                            ),
-                          ),
-                          const Divider(
-                      color: Colors.black26, // สีเส้น Divider เบาลง
-                      thickness: 1,
-                    ),
-                          SizedBox(height: 8),
-                          // Sub-information with Left-Right Layout
-                          Column(
-                            children: [
-                              // Row for "จำนวนรับ" and value
-                              Row(
-                          mainAxisAlignment: MainAxisAlignment
-                              .start, // จัดให้อยู่ทางซ้ายในแนวนอน
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                'จำนวนรับ:',
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                color:
-                                    Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 2,
-                                  horizontal: 8,
-                                ), // เพิ่ม padding รอบๆข้อความ
-                                child: Text(
-                                  (item['pack_qty'] ?? '').toString(),
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8), // ระยะห่างระหว่างข้อมูล
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment
-                              .start, // จัดให้อยู่ทางซ้ายในแนวนอน
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                'จำนวน Pallet:',
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                color:
-                                    Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 2,
-                                  horizontal: 8,
-                                ), // เพิ่ม padding รอบๆข้อความ
-                                child: Text(
-                                  item['count_qty'] ?? '',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment
-                              .start, // จัดให้อยู่ทางซ้ายในแนวนอน
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                'จำนวนรวม:',
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                color:
-                                    Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 2,
-                                  horizontal: 8,
-                                ), // เพิ่ม padding รอบๆข้อความ
-                                child: Text(
-                                  item['count_qty_in'] ?? '',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                            ],
-                          ),
-                          SizedBox(height: 8),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            )
           ],
         ),
       ),
       bottomNavigationBar: BottomBar(),
+    );
+  }
+
+  Widget _buildCards() {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              '${widget.po_doc_no}',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
+          // Text with background color
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 80),
+            decoration: BoxDecoration(
+              color: Colors.lightBlue[100], // Background color for the text
+              borderRadius:
+                  BorderRadius.circular(8), // Rounded corners (optional)
+            ),
+            child: Text(
+              '${widget.setqc}', // Text ที่ต้องการแสดง
+              style: TextStyle(
+                color: Colors.black, // Text color
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          ListView.builder(
+            shrinkWrap: true, // ให้ ListView มีขนาดตามข้อมูล
+            physics: NeverScrollableScrollPhysics(), // ปิดการเลื่อน
+            itemCount: gridItems.length,
+            itemBuilder: (context, index) {
+              final item = gridItems[index];
+              return Card(
+                color: Colors.lightBlue[100],
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Center(
+                        child: Text(
+                          item['item_code'] ?? '',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const Divider(color: Colors.black26, thickness: 1),
+                      SizedBox(height: 8),
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  'จำนวนรับ:',
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 2,
+                                    horizontal: 8,
+                                  ),
+                                  child: Text(
+                                            // Format the number if it's not null, else display an empty string
+                                            item['pack_qty'] != null
+                                                ? NumberFormat('#,###')
+                                                    .format(item['pack_qty'])
+                                                : '',
+                                            textAlign: TextAlign.end,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment
+                                .start, // จัดให้อยู่ทางซ้ายในแนวนอน
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  'จำนวน Pallet:',
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  color:
+                                      Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 2,
+                                    horizontal: 8,
+                                  ), // เพิ่ม padding รอบๆข้อความ
+                                  child: Text(
+                                    item['count_qty'] ?? '',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment
+                                .start, // จัดให้อยู่ทางซ้ายในแนวนอน
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  'จำนวนรวม:',
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  color:
+                                      Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 2,
+                                    horizontal: 8,
+                                  ), // เพิ่ม padding รอบๆข้อความ
+                                  child: Text(
+                                    item['count_qty_in'] ?? '',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

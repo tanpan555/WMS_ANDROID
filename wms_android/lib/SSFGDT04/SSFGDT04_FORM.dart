@@ -1226,7 +1226,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                     ),
                   ),
 
-                  // เลขที่คำสั่งผลผลิต* //
+                  // ผู้รับมอบสินค้า //
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: GestureDetector(
@@ -1408,22 +1408,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                       ),
                     ),
                   ),
-
-                  // // ลูกค้า //
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 8),
-                  //   child: TextField(
-                  //     decoration: InputDecoration(
-                  //       labelText: 'ผู้รับมอบสินค้า*',
-                  //       filled: true,
-                  //       fillColor: Colors.white,
-                  //       labelStyle: TextStyle(color: Colors.black),
-                  //       border: InputBorder.none,
-                  //     ),
-                  //     controller: _custController,
-                  //   ),
-                  // ),
-
                   // หมายเหตุ //
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
