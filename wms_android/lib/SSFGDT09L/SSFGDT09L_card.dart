@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 import 'SSFGDT09L_form.dart';
 import 'SSFGDT09L_grid.dart';
 
@@ -16,6 +18,7 @@ class Ssfgdt09lCard extends StatefulWidget {
   final String pStatusDESC; // สถานะที่เลือก
   final String pSoNo; // เลขที่ใบตรวจนับ
   final String pDocDate; // date format dd-MM-yyyy
+  final String pWareCode;
 
   Ssfgdt09lCard({
     Key? key,
@@ -27,6 +30,7 @@ class Ssfgdt09lCard extends StatefulWidget {
     required this.pStatusDESC,
     required this.pSoNo,
     required this.pDocDate,
+    required this.pWareCode,
   }) : super(key: key);
   @override
   _Ssfgdt09lCardState createState() => _Ssfgdt09lCardState();
@@ -37,9 +41,59 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   String statusCard = '';
   String messageCard = '';
   String goToStep = '';
-  String sessionID = globals.APP_SESSION;
   String pDocNoGetInHead = '';
   String pDocTypeGetInHead = '';
+
+  String broeserLanguage = globals.BROWSER_LANGUAGE;
+  String sessionID = globals.APP_SESSION;
+
+  // PDF
+  String? V_DS_PDF;
+  String? LIN_ID;
+  String? OU_CODE;
+  String? PROGRAM_NAME;
+  String? CURRENT_DATE;
+  String? USER_ID;
+  String? PROGRAM_ID;
+  String? P_WARE;
+  String? P_SESSION;
+
+  String? S_DOC_TYPE;
+  String? S_DOC_DATE;
+  String? S_DOC_NO;
+  String? E_DOC_TYPE;
+  String? E_DOC_DATE;
+  String? E_DOC_NO;
+  String? FLAG;
+
+  String? LH_PAGE;
+  String? LH_DATE;
+  String? LH_AR_NAME;
+  String? LH_LOGISTIC_COMP;
+  String? LH_DOC_TYPE;
+  String? LH_WARE;
+  String? LH_CAR_ID;
+  String? LH_DOC_NO;
+  String? LH_DOC_DATE;
+  String? LH_INVOICE_NO;
+
+  String? LB_SEQ;
+  String? LB_ITEM_CODE;
+  String? LB_ITEM_NAME;
+  String? LB_LOCATION;
+  String? LB_UMS;
+  String? LB_LOTS_PRODUCT;
+  String? LB_MO_NO;
+  String? LB_TRAN_QTY;
+  String? LB_ATTRIBUTE1;
+  String? LT_NOTE;
+  String? LT_TOTAL_QTY;
+  String? LT_ISSUE;
+  String? LT_APPROVE;
+  String? LT_OUT;
+  String? LT_RECEIVE;
+  String? LT_BILL;
+  String? LT_CHECK;
 
   @override
   void initState() {
@@ -265,6 +319,139 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     }
   }
 
+  Future<void> getPDF(String docNo, String docType, String docDate) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/:$broeserLanguage/${widget.pErpOuCode}/${widget.pAppUser}/${widget.pWareCode}/$sessionID/:$docType/:$docDate/:$docNo/${widget.pFlag}'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> items = data['items'];
+        print(items);
+        if (items.isNotEmpty) {
+          final Map<String, dynamic> item = items[0];
+          print('Fetched data: $jsonDecode');
+          print('data $data');
+
+          setState(() {
+            V_DS_PDF = item['V_DS_PDF'];
+            LIN_ID = item['LIN_ID'];
+            OU_CODE = item['OU_CODE'];
+            PROGRAM_NAME = item['PROGRAM_NAME'];
+            CURRENT_DATE = item['CURRENT_DATE'];
+            USER_ID = item['USER_ID'];
+            PROGRAM_ID = item['PROGRAM_ID'];
+            P_WARE = item['P_WARE'];
+            P_SESSION = item['P_SESSION'];
+
+            S_DOC_TYPE = item['S_DOC_TYPE'];
+            S_DOC_DATE = item['S_DOC_DATE'];
+            S_DOC_NO = item['S_DOC_NO'];
+            E_DOC_TYPE = item['E_DOC_TYPE'];
+            E_DOC_DATE = item['E_DOC_DATE'];
+            E_DOC_NO = item['E_DOC_NO'];
+            FLAG = item['FLAG'];
+
+            LH_PAGE = item['LH_PAGE'];
+            LH_DATE = item['LH_DATE'];
+            LH_AR_NAME = item['LH_AR_NAME'];
+            LH_LOGISTIC_COMP = item['LH_LOGISTIC_COMP'];
+            LH_DOC_TYPE = item['LH_DOC_TYPE'];
+            LH_WARE = item['LH_WARE'];
+            LH_CAR_ID = item['LH_CAR_ID'];
+            LH_DOC_NO = item['LH_DOC_NO'];
+            LH_DOC_DATE = item['LH_DOC_DATE'];
+            LH_INVOICE_NO = item['LH_INVOICE_NO'];
+
+            LB_SEQ = item['LB_SEQ'];
+            LB_ITEM_CODE = item['LB_ITEM_CODE'];
+            LB_ITEM_NAME = item['LB_ITEM_NAME'];
+            LB_LOCATION = item['LB_LOCATION'];
+            LB_UMS = item['LB_UMS'];
+            LB_LOTS_PRODUCT = item['LB_LOTS_PRODUCT'];
+            LB_MO_NO = item['LB_MO_NO'];
+            LB_TRAN_QTY = item['LB_TRAN_QTY'];
+            LB_ATTRIBUTE1 = item['LB_ATTRIBUTE1'];
+            LT_NOTE = item['LT_NOTE'];
+            LT_TOTAL_QTY = item['LT_TOTAL_QTY'];
+            LT_ISSUE = item['LT_ISSUE'];
+            LT_APPROVE = item['LT_APPROVE'];
+            LT_OUT = item['LT_OUT'];
+            LT_RECEIVE = item['LT_RECEIVE'];
+            LT_BILL = item['LT_BILL'];
+            LT_CHECK = item['LT_CHECK'];
+
+            _launchUrl(docNo);
+          });
+        } else {
+          print('No items found.');
+        }
+      } else {
+        print(
+            'fetchData     Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('1');
+      print('Error: $e');
+    }
+  }
+
+  Future<void> _launchUrl(String pDocNo) async {
+    final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
+        '&_repName=/WMS/SSFGOD02A5'
+        '&_repFormat=pdf'
+        '&_dataSource=wms'
+        '&_outFilename=$pDocNo.pdf'
+        '&_repLocale=en_US'
+        '&V_DS_PDF=$V_DS_PDF'
+        '&LIN_ID=$LIN_ID'
+        '&OU_CODE=$OU_CODE'
+        '&PROGRAM_NAME=$PROGRAM_NAME'
+        '&CURRENT_DATE=$CURRENT_DATE'
+        '&USER_ID=$USER_ID'
+        '&PROGRAM_ID=$PROGRAM_ID'
+        '&P_WARE=$P_WARE'
+        '&P_SESSION=$P_SESSION'
+        '&S_DOC_TYPE=$S_DOC_TYPE'
+        '&S_DOC_DATE=$S_DOC_DATE'
+        '&E_DOC_TYPE=$E_DOC_TYPE'
+        '&E_DOC_DATE=$E_DOC_DATE'
+        '&E_DOC_NO=$E_DOC_NO'
+        '&FLAG=$FLAG'
+        '&LH_PAGE=$LH_PAGE'
+        '&LH_DATE=$LH_DATE'
+        '&LH_AR_NAME=$LH_AR_NAME'
+        '&LH_LOGISTIC_COMP=$LH_LOGISTIC_COMP'
+        '&LH_DOC_TYPE=$LH_DOC_TYPE'
+        '&LH_WARE=$LH_WARE'
+        '&LH_CAR_ID=$LH_CAR_ID'
+        '&LH_DOC_NO=$LH_DOC_NO'
+        '&LH_DOC_DATE=$LH_DOC_DATE'
+        '&LH_INVOICE_NO=$LH_INVOICE_NO'
+        '&LB_SEQ=$LB_SEQ'
+        '&LB_ITEM_CODE=$LB_ITEM_CODE'
+        '&LB_ITEM_NAME=$LB_ITEM_NAME'
+        '&LB_LOCATION=$LB_LOCATION'
+        '&LB_UMS=$LB_UMS'
+        '&LB_LOTS_PRODUCT=$LB_LOTS_PRODUCT'
+        '&LB_MO_NO=$LB_MO_NO'
+        '&LB_TRAN_QTY=$LB_TRAN_QTY'
+        '&LB_ATTRIBUTE1=$LB_ATTRIBUTE1'
+        '&LT_NOTE=$LT_NOTE'
+        '&LT_TOTAL_QTY=$LT_TOTAL_QTY'
+        '&LT_ISSUE=$LT_ISSUE'
+        '&LT_APPROVE=$LT_APPROVE'
+        '&LT_OUT=$LT_OUT'
+        '&LT_RECEIVE=$LT_RECEIVE'
+        '&LT_BILL=$LT_BILL'
+        '&LT_CHECK=$LT_CHECK');
+    print(uri);
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch $uri');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -342,7 +529,22 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    setState(() {
+                                      DateTime parsedDate =
+                                          DateFormat('dd/MM/yyyy')
+                                              .parse(item['po_date']);
+                                      String formattedDate =
+                                          DateFormat('dd-MM-yyyy')
+                                              .format(parsedDate);
+
+                                      getPDF(
+                                        item['p_doc_no'],
+                                        item['p_doc_type'],
+                                        formattedDate,
+                                      );
+                                    });
+                                  },
                                   child: Container(
                                     width: 100,
                                     height: 40,

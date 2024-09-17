@@ -255,6 +255,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                                   context,
                                   Ssfgdt09lCard(
                                       pErpOuCode: widget.pErpOuCode,
+                                      pWareCode: widget.pWareCode,
                                       pOuCode: widget.pOuCode,
                                       pAttr1: widget.pAttr1,
                                       pAppUser: appUser,
@@ -270,6 +271,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                                     context,
                                     Ssfgdt09lCard(
                                         pErpOuCode: widget.pErpOuCode,
+                                        pWareCode: widget.pWareCode,
                                         pOuCode: widget.pOuCode,
                                         pAttr1: widget.pAttr1,
                                         pAppUser: appUser,
