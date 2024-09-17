@@ -158,7 +158,7 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
               border: InputBorder.none,
               filled: true,
               fillColor: Colors.white,
-              labelText: 'Replace LOT',
+              labelText: 'ประเภทเอกสาร',
               labelStyle: TextStyle(
                 color: Colors.black87,
               ),

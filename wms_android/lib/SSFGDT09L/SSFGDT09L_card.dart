@@ -282,9 +282,9 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                   String iconImageYorN;
 
                   switch (item['card_status_desc']) {
-                    case 'ปกติ':
-                      cardColor = Color.fromRGBO(146, 208, 80, 1.0);
-                      statusText = 'ปกติ';
+                    case 'ระหว่างบันทึก':
+                      cardColor = Color.fromRGBO(246, 250, 112, 1.0);
+                      statusText = 'ระหว่างบันทึก';
                       break;
                     case 'ยืนยันการจ่าย' || 'ยืนยันการรับ':
                       cardColor = Color.fromRGBO(146, 208, 80, 1.0);
@@ -294,14 +294,10 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                       cardColor = Color.fromRGBO(208, 206, 206, 1.0);
                       statusText = 'ยกเลิก';
                       break;
-                    case 'ระหว่างบันทึก':
-                      cardColor = Color.fromRGBO(255, 255, 255, 1.0);
-                      statusText = 'ระหว่างบันทึก';
-                      break;
-                    case 'อ้างอิงแล้ว':
-                      cardColor = Color.fromRGBO(255, 255, 255, 1.0);
-                      statusText = 'อ้างอิงแล้ว';
-                      break;
+                    // case 'อ้างอิงแล้ว':
+                    //   cardColor = Color.fromRGBO(255, 255, 255, 1.0);
+                    //   statusText = 'อ้างอิงแล้ว';
+                    //   break;
                     default:
                       cardColor = Color.fromRGBO(255, 255, 255, 1.0);
                       statusText = 'Unknown';

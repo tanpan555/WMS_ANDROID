@@ -7,6 +7,7 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'SSFGDT09L_grid.dart';
+import 'SSFGDT09L_main.dart';
 
 //////////////////////////
 ///
@@ -82,6 +83,9 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   String statusSubmit = '';
   String messageSubmit = '';
 
+  String deleteStatus = '';
+  String deleteMessage = '';
+
   TextEditingController custNameController = TextEditingController();
   TextEditingController ouCodeController = TextEditingController();
   TextEditingController docNoController = TextEditingController();
@@ -103,6 +107,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     fetchData();
     lovDocType();
     lovMoDoNo();
+    lovRefNo();
     lovCancel();
   }
 
@@ -270,7 +275,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   Future<void> lovCancel() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_Cancel'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovCancel'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -463,6 +468,64 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     }
   }
 
+  Future<void> deleteForm(String cancelCode) async {
+    final url =
+        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_deleteCardGrid';
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'p_ou_code': globals.P_OU_CODE,
+      'pErpOuCode': globals.P_ERP_OU_CODE,
+      'pDocType': widget.pDocType,
+      'pDocNo': widget.pDocNo,
+      'p_cancel_code': cancelCode,
+      'pAppUser': globals.APP_USER,
+    });
+    print('Request body: $body');
+
+    try {
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataDelete = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print('dataDelete : $dataDelete type : ${dataDelete.runtimeType}');
+        setState(() {
+          deleteStatus = dataDelete['po_status'];
+          deleteMessage = dataDelete['po_message'];
+
+          if (deleteStatus == '1') {
+            showDialogErrorCHK(deleteMessage);
+          }
+          if (deleteStatus == '0') {
+            setState(() async {
+              _navigateToPage(
+                  context,
+                  SSFGDT09L_MAIN(
+                    pOuCode: globals.P_OU_CODE,
+                    pErpOuCode: globals.P_ERP_OU_CODE,
+                    pAttr1: globals.ATTR1,
+                  ));
+            });
+          }
+        });
+      } else {
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print('ลบข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -529,11 +592,18 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                       height: 20.0,
                     ),
                     onPressed: () {
-                      chkCust(
-                        shidForChk.isNotEmpty ? shidForChk : 'null',
-                        returnStatusLovRefNo.isNotEmpty ? soNoForChk : 'null',
-                        testChk = 1,
-                      );
+                      if (docNo.isNotEmpty &&
+                          returnStatusLovDocType.isNotEmpty &&
+                          crDate.isNotEmpty &&
+                          returnStatusLovMoDoNo.isNotEmpty) {
+                        chkCust(
+                          shidForChk.isNotEmpty ? shidForChk : 'null',
+                          returnStatusLovRefNo.isNotEmpty ? soNoForChk : 'null',
+                          testChk = 1,
+                        );
+                      } else {
+                        showDialogErrorCHK('กรุณากรอกข้อมูลให้ครบ');
+                      }
                     },
                   ),
                 ),
@@ -555,7 +625,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         border: InputBorder.none,
                         filled: true,
                         fillColor: Colors.grey[300],
-                        labelText: 'เลขที่ใบเบิก WMS',
+                        labelText: 'เลขที่ใบเบิก WMS *',
                         labelStyle: const TextStyle(
                           color: Colors.black87,
                         ),
@@ -586,7 +656,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                           border: InputBorder.none,
                           filled: true,
                           fillColor: Colors.white,
-                          labelText: 'ประเภทการจ่าย',
+                          labelText: 'ประเภทการจ่าย *',
                           labelStyle: const TextStyle(
                             color: Colors.black87,
                           ),
@@ -628,7 +698,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         border: InputBorder.none,
                         filled: true,
                         fillColor: Colors.white,
-                        labelText: 'วันที่บันทึก',
+                        labelText: 'วันที่บันทึก *',
                         labelStyle: const TextStyle(
                           color: Colors.black87,
                         ),
@@ -721,7 +791,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                           border: InputBorder.none,
                           filled: true,
                           fillColor: Colors.white,
-                          labelText: 'เลขที่คำสั่งผลผลิต',
+                          labelText: 'เลขที่คำสั่งผลผลิต *',
                           labelStyle: const TextStyle(
                             color: Colors.black87,
                           ),
@@ -933,7 +1003,13 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                           ),
                         ),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              if (returnStatusLovCancel.isNotEmpty) {
+                                deleteForm(returnStatusLovCancel);
+                              }
+                            });
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
                                 const Color.fromARGB(255, 103, 58, 183),
