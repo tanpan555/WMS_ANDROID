@@ -530,13 +530,12 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                           child: const Text(
                             'ยกเลิก',
                             style: TextStyle(
-                              color: Color.fromARGB(255, 255, 255, 255),
+                              color: Color.fromARGB(255, 0, 0, 0),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(
-                                255, 255, 68, 68), // สีปุ่มยกเลิก
+                            backgroundColor: Color.fromARGB(255, 255, 255, 255), // สีปุ่มยกเลิก
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
