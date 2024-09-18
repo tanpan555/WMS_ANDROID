@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_CREATE.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_SEARCH.dart';
 import 'package:wms_android/custom_appbar.dart';
-// import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/main.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:wms_android/styles.dart';
 
 class SSFGD17_VERIFY extends StatefulWidget {
   final String po_doc_no;
@@ -419,7 +419,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
                           child: Text(
                             '${widget.po_doc_no}',
                             style: const TextStyle(
-                              fontSize: 20,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Color.fromARGB(255, 0, 0, 0),
                             ),
@@ -459,17 +459,10 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
                           );
                         }
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 212, 245, 212),
-                        padding: EdgeInsets.symmetric(vertical: 12.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                      ),
+                      style: AppStyles.ConfirmbuttonStyle(),
                       child: Text(
                         'Confirm',
-                        style: TextStyle(color: Colors.black, fontSize: 16),
+                        style: AppStyles.ConfirmbuttonTextStyle(),
                       ),
                     ),
                   ],

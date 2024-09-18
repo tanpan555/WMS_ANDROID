@@ -7,6 +7,7 @@ import 'package:wms_android/custom_appbar.dart';
 
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import 'package:wms_android/styles.dart';
 import 'dart:developer';
 import 'SSINDT01_main.dart';
 
@@ -53,6 +54,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
   void initState() {
     super.initState();
     sendGetRequestlineWMS();
+    
     // chk_sub();
     // fetchPDFData();
 
@@ -83,7 +85,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
         '&LH_AP_NAME=$LH_AP_NAME'
         '&LH_CUR_CODE=$LH_CUR_CODE'
         '&LH_RATE=$LH_RATE'
-        '&P_RECEIVE_NO=$erp_doc_no' //<<<<<<<<<<<<<<<<<< เปลี่ยนตรงนี้เป็น $erp_doc_no <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        '&P_RECEIVE_NO=$erp_doc_no'
         '&P_ERP_OU_CODE=$P_ERP_OU_CODE'
         '&P_OU_CODE=$P_OU_CODE'
         '&P_LIN_ID=$P_LIN_ID'
@@ -358,16 +360,10 @@ Widget build(BuildContext context) {
                     );
                   }
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 212, 245, 212),
-                  padding: EdgeInsets.symmetric(vertical: 15.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                ),
+                style: AppStyles.ConfirmbuttonStyle(),
                 child: Text(
                   'Confirm',
-                  style: TextStyle(color: Colors.black, fontSize: 16),
+                  style: AppStyles.CancelbuttonTextStyle()
                 ),
               ),
             ],

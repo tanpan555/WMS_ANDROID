@@ -10,6 +10,7 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/main.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:http/http.dart' as http;
+import 'package:wms_android/styles.dart';
 
 class SSFGDT17_FORM extends StatefulWidget {
   final String po_doc_no;
@@ -395,61 +396,44 @@ String? pomsg;
             children: [
               const SizedBox(width: 8.0),
               ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: const Size(70, 40),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                    ),
+                    style: AppStyles.cancelButtonStyle(),
                     onPressed: () {
                       showCancelDialog();
                     },
-                    child: const Text(
+                    child: Text(
                       'ยกเลิก',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: AppStyles.CancelbuttonTextStyle(),
                     ),
                   ),
               const Spacer(),
-              Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: IconButton(
-                    iconSize: 20.0,
-                    icon: Image.asset(
-                      'assets/images/right.png',
-                      width: 20.0,
-                      height: 20.0,
-                    ),
-                    onPressed: () async {
-                    await chk_validateSave();
-                  if (poStatus == '0') {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => SSFGDT17_BARCODE(
-                            po_doc_no: widget.po_doc_no ?? '',
-                            po_doc_type: widget.po_doc_type,
-                            LocCode: widget.LocCode,
-                            selectedwhCode: widget.selectedwhCode,
-                            selectedLocCode: widget.selectedLocCode,
-                            whOUTCode: widget.whOUTCode,
-                            LocOUTCode: widget.LocOUTCode,
-                            pWareCode: widget.pWareCode,
-                            pWareName: widget.pWareName,
-                                ),
-                      ),
-                    );
-                  }
-                    },
-                  ),
-                ),
+              ElevatedButton(
+  style: AppStyles.NextButtonStyle(),
+  onPressed: () async {
+    await chk_validateSave();
+    if (poStatus == '0') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => SSFGDT17_BARCODE(
+            po_doc_no: widget.po_doc_no ?? '',
+            po_doc_type: widget.po_doc_type,
+            LocCode: widget.LocCode,
+            selectedwhCode: widget.selectedwhCode,
+            selectedLocCode: widget.selectedLocCode,
+            whOUTCode: widget.whOUTCode,
+            LocOUTCode: widget.LocOUTCode,
+            pWareCode: widget.pWareCode,
+            pWareName: widget.pWareName,
+          ),
+        ),
+      );
+    }
+  },
+  child: Image.asset(
+    'assets/images/right.png',
+    width: 20.0,
+    height: 20.0,
+  ),
+),
                 const SizedBox(width: 8.0),
             ],
           ),

@@ -13,6 +13,7 @@ import 'package:wms_android/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import 'package:wms_android/styles.dart';
 
 class SSFGDT31_GRID extends StatefulWidget {
   final String po_doc_no;
@@ -321,66 +322,56 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                 ),
               ),
             Spacer(),
-              Container(
-                width: 40.0,
-                height: 40.0,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: IconButton(
-                  iconSize: 20.0,
-                  icon: Image.asset(
-                    'assets/images/right.png',
-                    width: 20.0,
-                    height: 20.0,
-                  ),
-                  onPressed: () async {
-                    await get_grid_data();
-                    if (vChkCol == '1') {
-                      print(
-                          'Confirmationจำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!');
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('คำเตือน'),
-                            content: const Text(
-                                'Confirmation จำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () async {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('ตกลง'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    } else {
-                      await validateSave_NonePOLine_WMS();
-                      print('==================');
-                      print('po_status: $po_status');
-                      Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SSFGDT31_VERIFY(
-                        po_doc_no: widget.po_doc_no,
-                        po_doc_type: widget.po_doc_type,
-                        pWareCode: widget.pWareCode,
-                        v_ref_doc_no: widget.v_ref_doc_no,
-                        v_ref_type: widget.v_ref_type,
-                        SCHID: widget.SCHID,
-                        DOC_DATE: widget.DOC_DATE,
-                      ),
-                    ),
-                  );
-                    }
-
-                    print('Right button pressed');
-                  },
-                ),
+              ElevatedButton(
+  style: AppStyles.NextButtonStyle(),
+  onPressed: () async {
+    await get_grid_data();
+    if (vChkCol == '1') {
+      print('Confirmationจำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('คำเตือน'),
+            content: const Text('Confirmation จำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('ตกลง'),
               ),
+            ],
+          );
+        },
+      );
+    } else {
+      await validateSave_NonePOLine_WMS();
+      print('==================');
+      print('po_status: $po_status');
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => SSFGDT31_VERIFY(
+            po_doc_no: widget.po_doc_no,
+            po_doc_type: widget.po_doc_type,
+            pWareCode: widget.pWareCode,
+            v_ref_doc_no: widget.v_ref_doc_no,
+            v_ref_type: widget.v_ref_type,
+            SCHID: widget.SCHID,
+            DOC_DATE: widget.DOC_DATE,
+          ),
+        ),
+      );
+    }
+
+    print('Right button pressed');
+  },
+  child: Image.asset(
+    'assets/images/right.png',
+    width: 20.0,
+    height: 20.0,
+  ),
+),
               const SizedBox(width: 8,),
             ],
           ),
