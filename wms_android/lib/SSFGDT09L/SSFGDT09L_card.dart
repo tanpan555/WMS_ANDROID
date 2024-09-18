@@ -273,10 +273,10 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
               Ssfgdt09lForm(
                   pWareCode: widget.pErpOuCode,
                   pAttr1: widget.pAttr1,
-                  pDocNo: 'RMO1-WMS-24090028',
-                  pDocType: 'RMO1',
-                  // pDocNo: pDocNoGetInHead,
-                  // pDocType: pDocTypeGetInHead,
+                  // pDocNo: 'RMO1-WMS-24090028',
+                  // pDocType: 'RMO1',
+                  pDocNo: pDocNoGetInHead,
+                  pDocType: pDocTypeGetInHead,
                   pOuCode: widget.pOuCode,
                   pErpOuCode: widget.pErpOuCode));
         case '3':
@@ -285,10 +285,10 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
               Ssfgdt09lGrid(
                 pWareCode: widget.pErpOuCode,
                 pAttr1: widget.pAttr1,
-                docNo: 'RMO1-WMS-24090028',
-                docType: 'RMO1',
-                // docNo: pDocNoGetInHead,
-                // docType: pDocTypeGetInHead,
+                // docNo: 'RMO1-WMS-24090028',
+                // docType: 'RMO1',
+                docNo: pDocNoGetInHead,
+                docType: pDocTypeGetInHead,
                 pErpOuCode: widget.pErpOuCode,
                 pOuCode: widget.pOuCode,
                 pAppUser: globals.APP_USER,
@@ -302,10 +302,10 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
               Ssfgdt09lGrid(
                 pWareCode: widget.pErpOuCode,
                 pAttr1: widget.pAttr1,
-                docNo: 'RMO1-WMS-24090028',
-                docType: 'RMO1',
-                // docNo: pDocNoGetInHead,
-                // docType: pDocTypeGetInHead,
+                // docNo: 'RMO1-WMS-24090028',
+                // docType: 'RMO1',
+                docNo: pDocNoGetInHead,
+                docType: pDocTypeGetInHead,
                 pErpOuCode: widget.pErpOuCode,
                 pOuCode: widget.pOuCode,
                 pAppUser: globals.APP_USER,
@@ -389,7 +389,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
         }
       } else {
         print(
-            'fetchData     Failed to load data. Status code: ${response.statusCode}');
+            'fetchData 555555555    Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('1');

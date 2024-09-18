@@ -9,19 +9,6 @@ import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'SSFGDT09L_grid.dart';
 import 'SSFGDT09L_main.dart';
 
-//////////////////////////
-///
-///
-///                         เหลือทำปุ่มต่างๆ
-///
-///
-///
-///
-///
-///
-///
-///
-///////////////////////////
 class Ssfgdt09lForm extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจากเลือ lov
   final String pAttr1;
@@ -337,12 +324,14 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   Future<void> chkCust(String custCode, String arCode, int testChk) async {
     // cutuCode ---------------- mo do no
     // acCode ---------------------- ref no
-    print('custCode  chkCust  : $custCode');
-    print('arCode  chkCust  : $arCode');
+    print('custCode  in chkCust  : $custCode');
+    print('arCode  in chkCust  : $arCode');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_ChkCust/$arCode/$custCode'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_ChkCust/$arCode/${custCode ?? 'null'}'));
 
+      print(
+          'URL: http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_ChkCust/$arCode/${custCode ?? 'null'}');
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
         final Map<String, dynamic> dataMessage = jsonDecode(utf8
@@ -356,7 +345,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
             showDialogErrorCHK(pMessageErr);
           }
           if (testChk == 1) {
-            submitData();
+            saveDataFoem();
           }
         });
       } else {
@@ -403,6 +392,43 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     }
   }
 
+  Future<void> saveDataFoem() async {
+    final url =
+        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SaveDataForm';
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'p_ou_code': widget.pErpOuCode, // 000
+      'p_doc_no': widget.pDocNo,
+      'p_doc_type': widget.pDocType,
+      'p_ref_no': returnStatusLovRefNo,
+      'p_mo_do_no': returnStatusLovMoDoNo,
+      'p_note': note,
+      'p_app_user': globals.APP_USER,
+    });
+    print('Request body: $body');
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+      } else {
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print(
+            'โพสต์ข้อมูลล้มเหลว(save data form). รหัสสถานะ: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error in SaveDataForm: $e');
+    }
+  }
+
   Future<void> submitData() async {
     final url =
         'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_UpdateForm';
@@ -412,10 +438,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     };
 
     final body = jsonEncode({
-      'pOuCode': widget.pOuCode,
-      'pErpOuCode': widget.pErpOuCode,
-      'pDocNo': docNo,
-      'pAppUser': globals.APP_USER,
+      'p_erp_ou_code': widget.pOuCode,
+      'p_doc_type': widget.pErpOuCode,
+      'p_doc_no': docNo,
+      'p_app_user': globals.APP_USER,
     });
     print('Request body: $body');
     try {
@@ -438,20 +464,25 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
             showDialogErrorCHK(messageSubmit);
           }
           if (statusSubmit == '0') {
-            _navigateToPage(
-                context,
-                Ssfgdt09lGrid(
-                  pWareCode: widget.pWareCode,
-                  pAttr1: widget.pAttr1,
-                  docNo: widget.pDocNo,
-                  docType: widget.pDocType,
-                  pErpOuCode: widget.pErpOuCode,
-                  pOuCode: widget.pOuCode,
-                  pAppUser: globals.APP_USER,
-                  moDoNo: returnStatusLovMoDoNo,
-                  // test
-                  statusCase: 'test1',
-                ));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Ssfgdt09lGrid(
+                        pWareCode: widget.pWareCode,
+                        pAttr1: widget.pAttr1,
+                        docNo: widget.pDocNo,
+                        docType: widget.pDocType,
+                        pErpOuCode: widget.pErpOuCode,
+                        pOuCode: widget.pOuCode,
+                        pAppUser: globals.APP_USER,
+                        moDoNo: returnStatusLovMoDoNo,
+                        // test
+                        statusCase: 'test1',
+                      )),
+            ).then((value) async {
+              Navigator.of(context).pop();
+              await fetchData();
+            });
           }
 
           print(
@@ -464,7 +495,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
+      print('Error in submit Data: $e');
     }
   }
 
@@ -593,11 +624,23 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                     ),
                     onPressed: () {
                       if (docNo.isNotEmpty &&
+                          docNo != '' &&
+                          docNo != null &&
+                          docNo != 'null' &&
                           returnStatusLovDocType.isNotEmpty &&
+                          returnStatusLovDocType != '' &&
+                          returnStatusLovDocType != null &&
+                          returnStatusLovDocType != 'null' &&
                           crDate.isNotEmpty &&
-                          returnStatusLovMoDoNo.isNotEmpty) {
+                          crDate != '' &&
+                          crDate != null &&
+                          crDate != 'null' &&
+                          returnStatusLovMoDoNo.isNotEmpty &&
+                          returnStatusLovMoDoNo != '' &&
+                          returnStatusLovMoDoNo != null &&
+                          returnStatusLovMoDoNo != 'null') {
                         chkCust(
-                          shidForChk.isNotEmpty ? shidForChk : 'null',
+                          shidForChk,
                           returnStatusLovRefNo.isNotEmpty ? soNoForChk : 'null',
                           testChk = 1,
                         );
@@ -648,9 +691,13 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         ),
                       ),
                       items: dataLovDocType
-                          .map<String>((item) =>
-                              '${item['doc_type']} ${item['doc_desc']}')
+                          // -----------------------------  แสดง 1 อย่าง
+                          .map<String>((item) => '${item['doc_desc']}')
                           .toList(),
+                      // -----------------------------  แสดง 2 อย่าง
+                      // .map<String>((item) =>
+                      //     '${item['doc_type']} ${item['doc_desc']}')
+                      // .toList(),
                       dropdownDecoratorProps: DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
                           border: InputBorder.none,
@@ -668,11 +715,16 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
                           // Find the selected item
                           var selectedItem = dataLovDocType.firstWhere(
-                            (item) =>
-                                '${item['doc_type']} ${item['doc_desc']}' ==
-                                value,
+                            (item) => '${item['doc_desc']}' == value,
                             orElse: () => <String, dynamic>{}, // แก้ไข orElse
                           );
+
+                          // var selectedItem = dataLovDocType.firstWhere(
+                          //   (item) =>
+                          //       '${item['doc_type']} ${item['doc_desc']}' ==
+                          //       value,
+                          //   orElse: () => <String, dynamic>{}, // แก้ไข orElse
+                          // );
                           // Update variables based on selected item
                           if (selectedItem.isNotEmpty) {
                             returnStatusLovDocType =
@@ -817,10 +869,8 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             shidForChk = selectedItem['schid'].toString();
                             print(selectedItem['schid'].toString());
                             chkCust(
-                              shidForChk.isNotEmpty ? shidForChk : 'null',
-                              returnStatusLovRefNo.isNotEmpty
-                                  ? soNoForChk
-                                  : 'null',
+                              shidForChk,
+                              soNoForChk.isNotEmpty ? soNoForChk : 'null',
                               testChk = 0,
                             );
                           }

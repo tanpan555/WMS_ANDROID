@@ -29,6 +29,9 @@ class SSFGDT04_SCANBARCODE extends StatefulWidget {
 }
 
 class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
+  final FocusNode barcodeFocusNode = FocusNode();
+  // bool _isPointerAbsorbed = false;
+
   String currentSessionID = '';
   String? selectedLocator;
   List<Map<String, dynamic>> locatorBarcodeItems =
@@ -36,7 +39,6 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
   List<Map<String, dynamic>> barCodeItems = [];
   TextEditingController _searchController = TextEditingController();
   TextEditingController _locatorBarcodeController = TextEditingController();
-
   TextEditingController _barCodeCotroller = TextEditingController();
   TextEditingController _lotNumberController = TextEditingController();
   TextEditingController _quantityController = TextEditingController();
@@ -46,12 +48,6 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   // เพิ่ม Controller สำหรับการค้นหา
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   fetchlocatorItems();
-  // }
   @override
   void initState() {
     super.initState();
@@ -65,8 +61,6 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
       _locatorBarcodeController.text = '';
     }
     fetchlocatorItems();
-
-    // print(widget.selectedwhCode);
   }
 
   Future<void> fetchlocatorItems() async {
@@ -237,7 +231,9 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
   }
 
   void clearScreen() {
+    setState(() { // ถ้าจำเป็นต้องรีเซ็ต selectedLocator ด้วย
     _locatorBarcodeController.clear();
+      selectedLocator = null;
     _searchController.clear();
     _barCodeCotroller.clear();
     _lotNumberController.clear();
@@ -245,11 +241,10 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
     _currLotController.clear();
     _balLotController.clear();
     _balQtyController.clear();
+    });
+    FocusScope.of(context).requestFocus(barcodeFocusNode);
     // เคลียร์ค่าที่จำเป็นในหน้าจออื่นๆ
   }
-
-  // http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_4_scan_INmove_location
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -367,6 +362,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 border: InputBorder.none,
               ),
               controller: _barCodeCotroller,
+              focusNode: barcodeFocusNode,
               onSubmitted: (value) async {
                 setState(() {
                   pBarcode = value; // Assign the entered barcode to pBarcode
@@ -619,14 +615,14 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                   controller: _locatorBarcodeController.text.isNotEmpty
                       ? _locatorBarcodeController
                       : TextEditingController(
-                          text: selectedLocator ?? '-- No Value Set --'),
+                          text: selectedLocator != null
+                              ? selectedLocator
+                              : '-- No Value Set --'),
                 ),
               ),
             ),
           ),
-
-          // const SizedBox(height: 5),
-          // Additional text fields
+          
           // Lot Number //
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
@@ -659,8 +655,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                         labelStyle: TextStyle(color: Colors.black),
                         border: InputBorder.none,
                       ),
-                      controller: 
-                      _quantityController,
+                      controller: _quantityController,
                       // TextEditingController(
                       //   text: _quantityController.text.isNotEmpty
                       //       ? _quantityController.text
