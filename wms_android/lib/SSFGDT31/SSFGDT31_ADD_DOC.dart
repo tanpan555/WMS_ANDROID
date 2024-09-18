@@ -41,22 +41,27 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
   String? po_message;
 
   Future<void> fetchStatusItems() async {
-    final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT31/DOC_TYPE/${gb.ATTR1}'));
+  final response = await http.get(Uri.parse(
+      'http://172.16.0.82:8888/apex/wms/SSFGDT31/DOC_TYPE/${gb.ATTR1}'));
 
-    if (response.statusCode == 200) {
-      final responseBody = utf8.decode(response.bodyBytes);
-      final data = jsonDecode(responseBody);
-      print('Fetched data: $data');
+  if (response.statusCode == 200) {
+    final responseBody = utf8.decode(response.bodyBytes);
+    final data = jsonDecode(responseBody);
+    print('Fetched data: $data');
 
-      setState(() {
-        statusItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-        print('dataMenu: $statusItems');
-      });
-    } else {
-      throw Exception('Failed to load status items');
-    }
+    setState(() {
+      statusItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+      if (statusItems.isNotEmpty) {
+        selectedValue = statusItems[0]['doc_type'];
+      }
+      print('dataMenu: $statusItems');
+      print('Initial selectedValue: $selectedValue');
+    });
+  } else {
+    throw Exception('Failed to load status items');
   }
+}
+
 
   Future<void> create_NewINXfer_WMS() async {
     final url = 'http://172.16.0.82:8888/apex/wms/SSFGDT31/Creacte_NewINHead';
@@ -131,6 +136,7 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
       color: Colors.black,
     ),
   ),
+  value: selectedValue, // Set the initial selected value
   items: statusItems
       .map((item) => DropdownMenuItem<String>(
             value: item['doc_type'],
@@ -169,9 +175,6 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
     fontSize: 16,
     color: Colors.black,
   ),
-  // buttonStyleData: const ButtonStyleData(
-  //   padding: EdgeInsets.only(right: 8),
-  // ),
   iconStyleData: const IconStyleData(
     icon: Icon(
       Icons.arrow_drop_down,
@@ -190,6 +193,7 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
     padding: EdgeInsets.symmetric(horizontal: 16),
   ),
 ),
+
 
                 const SizedBox(height: 20),
                 Row(
