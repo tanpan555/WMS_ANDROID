@@ -237,10 +237,10 @@ String? LT_CHECK;
 String? reportname = 'SSFGDT31_REPORT';
   Future<void> _launchUrl() async {
   final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
-      '&_repName=/$reportname'
+      '&_repName=/WMS/$reportname'
       '&_repFormat=pdf'
       '&_dataSource=wms'
-      '&_outFilename=${widget.po_doc_no}'
+      '&_outFilename=${p_doc_type}-${widget.po_doc_no}'
       '&_repLocale=en_US'
       '&V_DS_PDF=$V_DS_PDF'
       '&LIN_ID=$LIN_ID'
@@ -251,8 +251,8 @@ String? reportname = 'SSFGDT31_REPORT';
       '&PROGRAM_ID=$PROGRAM_ID'
       '&P_WARE=$P_WARE'
       '&P_SESSION=$P_SESSION'
-      '&P_DOC_TYPE=$p_doc_type'
-      '&P_ERP_DOC_NO=$erp_doc_no'
+      '&P_DOC_TYPE=RMI09'
+      '&P_ERP_DOC_NO=61010011'
 
       '&S_DOC_TYPE=$S_DOC_TYPE'
       '&S_DOC_DATE=$S_DOC_DATE'
@@ -315,7 +315,7 @@ String? reportname = 'SSFGDT31_REPORT';
               ElevatedButton(
                 onPressed: () async {
                   await Inteface_receive_WMS2ERP();
-                  if(po_status == '1'){
+                  if(po_status == '0'){
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -349,7 +349,7 @@ String? reportname = 'SSFGDT31_REPORT';
                                 },
                                 child: const Text('ยกเลิก'),
                               ),
-                              Spacer(),
+                            
                               TextButton(
                                 onPressed: () async {
                                   Navigator.of(context).pop();

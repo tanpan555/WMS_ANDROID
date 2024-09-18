@@ -70,7 +70,7 @@ class _SSFGDT31_PICKINGSLIPState extends State<SSFGDT31_PICKINGSLIP> {
 
   Future<void> _launchUrl() async {
     final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
-        '&_repName=/$reportname'
+        '&_repName=/WMS/$reportname'
         '&_repFormat=pdf'
         '&_dataSource=wms'
         '&_outFilename=${widget.po_doc_no}'

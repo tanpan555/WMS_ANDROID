@@ -204,7 +204,7 @@ String? LT_CHECK;
   String? reportname = 'SSFGDT31_REPORT';
   Future<void> _launchUrl(String doc_type,String print_doc_no) async {
   final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
-      '&_repName=/$reportname'
+      '&_repName=/WMS/$reportname'
       '&_repFormat=pdf'
       '&_dataSource=wms'
       '&_outFilename=${doc_type}-${print_doc_no}'
