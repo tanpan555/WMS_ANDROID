@@ -407,30 +407,8 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
               Row(
                 children: [
                   const SizedBox(width: 8,),
-                  ElevatedButton(
-                onPressed: () async {
-                  await deleteAll();
-                  print('-Clear All');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  minimumSize: const Size(10, 20),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                ),
-                child: const Text(
-                  '-Clear All',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-                  Spacer(),
-                  ElevatedButton(
+                  
+               ElevatedButton(
                 onPressed: () async {
                   final result = await Navigator.of(context).push(
                     MaterialPageRoute(
@@ -459,6 +437,29 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                 ),
                 child: const Text(
                   '+Create',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+                  Spacer(),
+                 ElevatedButton(
+                onPressed: () async {
+                  await deleteAll();
+                  print('-Clear All');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  minimumSize: const Size(10, 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                ),
+                child: const Text(
+                  '-Clear All',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

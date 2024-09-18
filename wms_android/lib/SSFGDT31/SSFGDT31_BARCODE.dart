@@ -536,46 +536,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Spacer(),
-                ElevatedButton(
-  style: AppStyles.CheckButtonStyle(),
-  onPressed: () async {
-    print('Confirm button pressed');
-    await sendPostRequest();
-    if (poStatus == '0') {
-      Navigator.of(context).pop(true);
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('คำเตือน'),
-            content: Text(poMessage ?? 'No message provided'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  },
-  child: Image.asset(
-    'assets/images/check-mark.png',
-    width: 20.0,
-    height: 20.0,
-  ),
-)
-
-              ],
-            ),
+        
             Container(
               padding: const EdgeInsets.all(10.0),
               decoration: BoxDecoration(
@@ -644,8 +605,30 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                                   child: Text('ยกเลิก'),
                                 ),
                                 TextButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     Navigator.of(context).pop();
+                                      await sendPostRequest();
+    if (poStatus == '0') {
+      Navigator.of(context).pop(true);
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('คำเตือน'),
+            content: Text(poMessage ?? 'No message provided'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
                                   },
                                   child: Text('ยืนยัน'),
                                 ),

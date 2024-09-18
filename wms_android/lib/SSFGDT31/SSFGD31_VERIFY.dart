@@ -240,7 +240,7 @@ String? reportname = 'SSFGDT31_REPORT';
       '&_repName=/$reportname'
       '&_repFormat=pdf'
       '&_dataSource=wms'
-
+      '&_outFilename=${widget.po_doc_no}'
       '&_repLocale=en_US'
       '&V_DS_PDF=$V_DS_PDF'
       '&LIN_ID=$LIN_ID'

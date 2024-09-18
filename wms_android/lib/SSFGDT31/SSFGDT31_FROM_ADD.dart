@@ -717,7 +717,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         ),
       ),
       items: [
-        '',
+        // '',
         ...moDoNoItems.map((item) => '${item['schid']}'.toString()).toList()
       ],
       dropdownDecoratorProps: DropDownDecoratorProps(
@@ -773,7 +773,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
           showSelectedItems: true,
         ),
         items: [
-          '',
+          // '',
           ...REF_NOItems.map((item) => item['doc_no'].toString()).toList(),
         ],
         dropdownDecoratorProps: DropDownDecoratorProps(
@@ -815,7 +815,7 @@ Widget _buildDropdownForDocType() {
         },
       ),
       items: [
-        '',
+        // '',
         ...statusItems.map((item) => item['doc_desc'].toString()).toList(),
       ],
       dropdownDecoratorProps: DropDownDecoratorProps(
