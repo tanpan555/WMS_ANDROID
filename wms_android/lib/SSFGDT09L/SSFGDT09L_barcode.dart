@@ -7,6 +7,7 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'SSFGDT09L_reason.dart';
+import 'SSFGDT09L_grid.dart';
 
 class Ssfgdt09lBarcode extends StatefulWidget {
   final String pWareCode;
@@ -173,6 +174,10 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
           valIDFetchDataBarcode = dataBarcode['po_valid'];
           print(
               'statusFetchDataBarcode : $statusFetchDataBarcode Type : ${statusFetchDataBarcode.runtimeType}');
+          print(
+              'messageFetchDataBarcode : $messageFetchDataBarcode Type : ${messageFetchDataBarcode.runtimeType}');
+          print(
+              'valIDFetchDataBarcode : $valIDFetchDataBarcode Type : ${valIDFetchDataBarcode.runtimeType}');
           if (statusFetchDataBarcode == '0') {
             itemCode = dataBarcode['po_item_code'];
             lotNo = dataBarcode['po_lot_number'];
@@ -214,7 +219,10 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             // showDialogcomfirmMessage(context);
           }
           if (statusFetchDataBarcode == '1' && valIDFetchDataBarcode != 'N') {
-            showDialogAlertMessage(context, messageFetchDataBarcode);
+            if (messageFetchDataBarcode !=
+                'ข้อมูลไม่ถูกต้อง รายการจ่ายซ้ำ !!!') {
+              showDialogAlertMessage(context, messageFetchDataBarcode);
+            }
           }
         });
       } else {
@@ -443,43 +451,45 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
               child: Column(children: [
-            // Row(
-            //   children: [
-            //     ElevatedButton(
-            //       onPressed: () {
-            //         setState(() {
-            //           print('//-------------------------//');
-            //           print('barCode : $barCode Type : ${barCode.runtimeType}');
-            //           print(
-            //               'barcodeController : $barcodeController Type : ${barcodeController.runtimeType}');
-            //           print('//-------------------------//');
-
-            //           print('lotNo : $lotNo Type : ${lotNo.runtimeType}');
-            //           print(
-            //               'lotNoController : $lotNoController Type : ${lotNoController.runtimeType}');
-            //           print('//-------------------------//');
-            //         });
-            //       },
-            //       style: ElevatedButton.styleFrom(
-            //         backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-            //         shape: RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.circular(12.0),
-            //         ),
-            //         minimumSize: const Size(10, 20),
-            //         padding:
-            //             const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            //       ),
-            //       child: const Text(
-            //         'Check DATA',
-            //         style: TextStyle(
-            //           color: Colors.white,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // const SizedBox(height: 20),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _navigateToPage(
+                        context,
+                        Ssfgdt09lGrid(
+                          pWareCode: widget.pWareCode,
+                          pAttr1: widget.pAttr1,
+                          docNo: widget.pDocNo,
+                          docType: widget.pDocType,
+                          pErpOuCode: widget.pErpOuCode,
+                          pOuCode: widget.pOuCode,
+                          pAppUser: globals.APP_USER,
+                          moDoNo: widget.pMoDoNO,
+                          // test
+                          statusCase: 'test1',
+                        ));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    minimumSize: const Size(10, 20),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  ),
+                  child: const Text(
+                    'Check DATA',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
             Row(
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

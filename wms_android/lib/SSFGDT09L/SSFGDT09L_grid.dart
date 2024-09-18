@@ -52,8 +52,6 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   void initState() {
     super.initState();
     fetchData();
-    print('docNo : ${widget.docNo} Type : ${widget.docNo.runtimeType}');
-    print('docType : ${widget.docType} Type : ${widget.docType.runtimeType}');
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -66,7 +64,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pWareCode}/${widget.docType}/${widget.docNo}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -122,7 +120,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
         print('Failed to post data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('มันจั๊กอะไรกะตรงนี้เนี่ยยยยยยยยยย Error: $e');
+      print(' Error: $e');
     }
   }
 
@@ -179,7 +177,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
     }
   }
 
-  Future<void> deleteCardAll(String pSeq, String pItemCode) async {
+  Future<void> deleteCardAll() async {
     final url =
         'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_DeleteCardAll';
 
@@ -215,9 +213,10 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
             showDialogMessageDelete(context, deleteCardAllMessage);
           }
           if (deleteCardAllStatus == '0') {
-            setState(() async {
+            setState(() {
+              print('delete allllllllllllllllllllllll');
               Navigator.of(context).pop();
-              await fetchData();
+              fetchData();
             });
           }
         });
@@ -226,7 +225,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
         print('ลบข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
+      print('Error Delete ALl: $e');
     }
   }
 
@@ -244,6 +243,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
               children: [
                 ElevatedButton(
                   onPressed: () {
+                    // การเรียกใช้งาน
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -252,9 +252,9 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                 pOuCode: widget.pOuCode,
                                 pMoDoNO: widget.moDoNo,
                               )),
-                    ).then((value) {
+                    ).then((value) async {
                       // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                      fetchData();
+                      await fetchData();
                     });
                   },
                   style: ElevatedButton.styleFrom(
@@ -299,9 +299,11 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                   docType: widget.docType,
                                   moDoNo: widget.moDoNo,
                                 )),
-                      ).then((value) {
+                      ).then((value) async {
                         // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                        fetchData();
+                        await fetchData();
+                        await fetchData();
+                        print('11111111111111111111111111');
                       });
                     },
                   ),
@@ -372,8 +374,8 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
+                  onPressed: () async {
+                    await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => Ssfgdt09lBarcode(
@@ -386,9 +388,9 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                 pDocType: widget.docType,
                                 pMoDoNO: widget.moDoNo,
                               )),
-                    ).then((value) {
+                    ).then((value) async {
                       // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                      fetchData();
+                      await fetchData();
                     });
                   },
                   style: ElevatedButton.styleFrom(
@@ -886,10 +888,14 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                       ElevatedButton(
                         onPressed: () {
                           if (messageDelete == 'ต้องการลบรายการหรือไม่ ?') {
+                            print('case Delete One');
                             deleteCard(pSeq, pItemCode);
                           }
                           if (messageDelete ==
-                              'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม่ ?') {}
+                              'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม่ ?') {
+                            print('case Delete All');
+                            deleteCardAll();
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,

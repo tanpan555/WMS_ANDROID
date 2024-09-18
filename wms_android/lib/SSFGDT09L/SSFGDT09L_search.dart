@@ -217,8 +217,8 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                         setState(() {
                           pSoNo = '';
                           selectedDate = '';
-                          selectedItem = 'ระหว่างบันทึก';
-                          statusDESC = 'ระหว่างบันทึก';
+                          selectedItem = 'ทั้งหมด';
+                          statusDESC = 'ทั้งหมด';
                           dateController.clear();
                           pSoNoController.clear();
                         });
