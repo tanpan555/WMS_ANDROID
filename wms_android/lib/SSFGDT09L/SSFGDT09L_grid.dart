@@ -186,10 +186,10 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
     };
 
     final body = jsonEncode({
-      'pErpOuCode': globals.P_ERP_OU_CODE,
-      'pDocType': widget.docType,
-      'pDocNo': widget.docNo,
-      'pAppUser': globals.APP_USER,
+      'p_erp_ou_code': globals.P_ERP_OU_CODE,
+      'p_doc_type': widget.docType,
+      'p_doc_no': widget.docNo,
+      'p_app_user': globals.APP_USER,
     });
     print('Request body: $body');
 

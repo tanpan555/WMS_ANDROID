@@ -46,6 +46,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
 
   String broeserLanguage = globals.BROWSER_LANGUAGE;
   String sessionID = globals.APP_SESSION;
+  String pDsPdf = globals.P_DS_PDF;
 
   // PDF
   String? V_DS_PDF;
@@ -322,8 +323,10 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   Future<void> getPDF(String docNo, String docType, String docDate) async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/:$broeserLanguage/${widget.pErpOuCode}/${widget.pAppUser}/${widget.pWareCode}/$sessionID/:$docType/:$docDate/:$docNo/${widget.pFlag}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${widget.pErpOuCode}/${widget.pAppUser}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${widget.pFlag}/$pDsPdf'));
 
+      print(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${widget.pErpOuCode}/${widget.pAppUser}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${widget.pFlag}/$pDsPdf');
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
             jsonDecode(utf8.decode(response.bodyBytes));
@@ -401,7 +404,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
         '&_repName=/WMS/SSFGOD02A5'
         '&_repFormat=pdf'
-        '&_dataSource=wms'
+        '&_dataSource=$pDsPdf'
         '&_outFilename=$pDocNo.pdf'
         '&_repLocale=en_US'
         '&V_DS_PDF=$V_DS_PDF'

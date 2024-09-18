@@ -6,6 +6,7 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
+import 'package:wms_android/styles.dart';
 import 'SSFGDT09L_grid.dart';
 import 'SSFGDT09L_main.dart';
 
@@ -418,7 +419,13 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final Map<String, dynamic> dataSaveForm = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print(
+            'dataSaveForm : $dataSaveForm type : ${dataSaveForm.runtimeType}');
+        setState(() {
+          submitData();
+        });
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print(
@@ -438,10 +445,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     };
 
     final body = jsonEncode({
-      'p_erp_ou_code': widget.pOuCode,
-      'p_doc_type': widget.pErpOuCode,
-      'p_doc_no': docNo,
-      'p_app_user': globals.APP_USER,
+      'pOuCode': widget.pOuCode,
+      'pErpOuCode': widget.pErpOuCode,
+      'pDocNo': docNo,
+      'pAppUser': globals.APP_USER,
     });
     print('Request body: $body');
     try {
@@ -480,7 +487,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         statusCase: 'test1',
                       )),
             ).then((value) async {
-              Navigator.of(context).pop();
+              // Navigator.of(context).pop();
               await fetchData();
             });
           }
@@ -591,22 +598,9 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                   onPressed: () {
                     showDialogLovCancel();
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    minimumSize: const Size(10, 20),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  ),
-                  child: const Text(
-                    'ยกเลิก',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  style: AppStyles.cancelButtonStyle(),
+                  child:
+                      Text('ยกเลิก', style: AppStyles.CancelbuttonTextStyle()),
                 ),
 
                 // const Spacer(),
