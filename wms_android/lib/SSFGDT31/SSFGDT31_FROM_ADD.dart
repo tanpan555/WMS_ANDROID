@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:wms_android/SSFGDT31/SSFGDT31_CARD.dart';
 import 'package:wms_android/SSFGDT31/SSFGDT31_GRID.dart';
 import 'package:wms_android/SSFGDT31/SSFGDT31_SEARCH_DOC.dart';
+import 'package:wms_android/styles.dart';
 import 'dart:convert';
 import '../custom_appbar.dart';
 import '../bottombar.dart';
@@ -565,72 +566,54 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
               children: [
                 const SizedBox(width: 4.0),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    minimumSize: const Size(70, 40),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  ),
+                  style: AppStyles.cancelButtonStyle(),
                   onPressed: () {
                     showCancelDialog();
                   },
-                  child: const Text(
+                  child: Text(
                     'ยกเลิก',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: AppStyles.CancelbuttonTextStyle(),
                   ),
                 ),
                 const Spacer(),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: IconButton(
-                    iconSize: 20.0,
-                    icon: Image.asset(
-                      'assets/images/right.png',
-                      width: 20.0,
-                      height: 20.0,
-                    ),
-                    onPressed: () async {
-                      
-                      await updateForm();
+                ElevatedButton(
+  style: AppStyles.NextButtonStyle(),
+  onPressed: () async {
+    await updateForm();
+    await fetchPoStatus();
+    if (poStatus == '0') {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SSFGDT31_GRID(
+            po_doc_no: widget.po_doc_no, 
+            po_doc_type: widget.po_doc_type, 
+            pWareCode: widget.pWareCode,
+            v_ref_doc_no: v_ref_doc_no ?? '',
+            v_ref_type: v_ref_type ?? '',
+            SCHID: selectedMoDoNo ?? '',
+            DOC_DATE: DOC_DATE.text ?? '',
+          ),
+        ),
+      );
+      print('pass');
+    }
 
-                      await fetchPoStatus();
-                      if (poStatus == '0') {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SSFGDT31_GRID(
-                              po_doc_no: widget.po_doc_no, 
-                              po_doc_type: widget.po_doc_type, 
-                              pWareCode: widget.pWareCode,
-                              v_ref_doc_no: v_ref_doc_no ?? '',
-                              v_ref_type: v_ref_type ?? '',
-                              SCHID: selectedMoDoNo ?? '',
-                              DOC_DATE: DOC_DATE.text ?? '',
-                            ),
-                          ),
-                        );
-                        print('pass');
-                      }
+    print(widget.po_doc_no);
+    print(widget.po_doc_type);
+    print(selectedMoDoNo);
+    print(NOTE.text);
 
-                      print(widget.po_doc_no);
-                      print(widget.po_doc_type);
-                      print(selectedMoDoNo);
-                      print(NOTE.text);
+    // Log the button press
+    print('Right button pressed');
+  },
+  child: Image.asset(
+    'assets/images/right.png',
+    width: 20.0,
+    height: 20.0,
+  ),
+),
 
-                      // Log the button press
-                      print('Right button pressed');
-                    },
-                  ),
-                ),
                 const SizedBox(width: 4.0),
               ],
             ),

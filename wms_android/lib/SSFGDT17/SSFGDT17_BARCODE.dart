@@ -9,6 +9,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:http/http.dart' as http;
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:wms_android/styles.dart';
 
 class SSFGDT17_BARCODE extends StatefulWidget {
   final String po_doc_no;
@@ -309,36 +310,30 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
           Row(
             children: [
                   const Spacer(),
-                  Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: IconButton(
-                    iconSize: 20.0,
-                    icon: Image.asset(
-                      'assets/images/right.png',
-                      width: 20.0,
-                      height: 20.0,
-                    ),
-                    onPressed: () async {
-                        await chk_validateSave();
-                  if (poStatus == '0') {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => SSFGD17_VERIFY(
-                            po_doc_no: widget.po_doc_no,
-                            po_doc_type: widget.po_doc_type,
-                            selectedwhCode: widget.selectedwhCode,
-                            pWareCode: widget.pWareCode,
-                            pWareName: widget.pWareName,
-                            ),
-                      ),
-                    );
-                  }
-                    },
-                  ),
-                ),
+                  ElevatedButton(
+  style: AppStyles.NextButtonStyle(),
+  onPressed: () async {
+    await chk_validateSave();
+    if (poStatus == '0') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => SSFGD17_VERIFY(
+            po_doc_no: widget.po_doc_no,
+            po_doc_type: widget.po_doc_type,
+            selectedwhCode: widget.selectedwhCode,
+            pWareCode: widget.pWareCode,
+            pWareName: widget.pWareName,
+          ),
+        ),
+      );
+    }
+  },
+  child: Image.asset(
+    'assets/images/right.png',
+    width: 20.0,
+    height: 20.0,
+  ),
+),
                 const SizedBox(width: 8.0),
                 
             ],

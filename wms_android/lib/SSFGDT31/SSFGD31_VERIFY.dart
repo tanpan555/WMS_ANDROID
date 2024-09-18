@@ -8,6 +8,7 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wms_android/styles.dart';
 
 class SSFGDT31_VERIFY extends StatefulWidget {
   final String po_doc_no;
@@ -362,16 +363,10 @@ String? reportname = 'SSFGDT31_REPORT';
                       );
                   }
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 212, 245, 212),
-                  padding: EdgeInsets.symmetric(vertical: 15.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                ),
+                style:AppStyles.ConfirmbuttonStyle(),
                 child: Text(
                   'Confirm',
-                  style: TextStyle(color: Colors.black, fontSize: 16),
+                  style: AppStyles.ConfirmbuttonTextStyle(),
                 ),
               ),
             ],

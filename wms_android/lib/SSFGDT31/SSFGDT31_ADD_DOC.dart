@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:http/http.dart' as http;
+import 'package:wms_android/styles.dart';
 import 'dart:convert';
 import '../custom_appbar.dart';
 import '../bottombar.dart';
@@ -218,20 +219,9 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
                       },
                       child: Text(
                         'CONFIRM',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          letterSpacing: 1.2,
-                        ),
+                        style: AppStyles.ConfirmbuttonTextStyle(),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green[500],
-                        padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
+                      style: AppStyles.ConfirmbuttonStyle(),
                     ),
                   ],
                 ),

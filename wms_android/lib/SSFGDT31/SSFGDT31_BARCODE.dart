@@ -10,6 +10,7 @@ import 'package:wms_android/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import 'package:wms_android/styles.dart';
 
 class SSFGDT31_BARCODE extends StatefulWidget {
   final String po_doc_no;
@@ -539,47 +540,40 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Spacer(),
-                Container(
-                  width: 40.0,
-                  height: 40.0,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: IconButton(
-                    iconSize: 20.0,
-                    icon: Image.asset(
-                      'assets/images/check-mark.png',
-                      width: 20.0,
-                      height: 20.0,
-                    ),
-                    onPressed: () async {
-                      print('Confirm button pressed');
-                      await sendPostRequest();
-                      if (poStatus == '0') {
-                        Navigator.of(context).pop(true);
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('คำเตือน'),
-                              content: Text(poMessage ?? 'No message provided'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('OK'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    },
-                  ),
-                ),
+                ElevatedButton(
+  style: AppStyles.CheckButtonStyle(),
+  onPressed: () async {
+    print('Confirm button pressed');
+    await sendPostRequest();
+    if (poStatus == '0') {
+      Navigator.of(context).pop(true);
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('คำเตือน'),
+            content: Text(poMessage ?? 'No message provided'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  },
+  child: Image.asset(
+    'assets/images/check-mark.png',
+    width: 20.0,
+    height: 20.0,
+  ),
+)
+
               ],
             ),
             Container(
