@@ -628,11 +628,11 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                   const SizedBox(width: 5),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 255, 43, 43),
+                      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0),
                       ),
-                      minimumSize: const Size(10, 20),
+                      minimumSize: const Size(70, 40),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 5),
                     ),
@@ -642,7 +642,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                     child: const Text(
                       'ยกเลิก',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

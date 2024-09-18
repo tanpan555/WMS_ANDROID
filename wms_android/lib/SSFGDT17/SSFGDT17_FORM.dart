@@ -393,35 +393,14 @@ String? pomsg;
           const SizedBox(height: 8.0),
           Row(
             children: [
-              // ElevatedButton(
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(12.0),
-              //     ),
-              //     minimumSize: const Size(10, 20),
-              //     padding:
-              //         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              //   ),
-              //   onPressed: () {
-              //     Navigator.pop(context);
-              //   },
-              //   child: const Text(
-              //     'ย้อนกลับ',
-              //     style: TextStyle(
-              //       color: Colors.white,
-              //       fontWeight: FontWeight.bold,
-              //     ),
-              //   ),
-              // ),
               const SizedBox(width: 8.0),
               ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 255, 43, 43),
+                      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0),
                       ),
-                      minimumSize: const Size(10, 20),
+                      minimumSize: const Size(70, 40),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 5),
                     ),
@@ -431,7 +410,7 @@ String? pomsg;
                     child: const Text(
                       'ยกเลิก',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

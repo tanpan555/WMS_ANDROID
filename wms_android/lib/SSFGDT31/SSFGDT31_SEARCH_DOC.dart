@@ -38,6 +38,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
   void initState() {
     super.initState();
     print(widget.pWareCode);
+    selectedValue = 'ระหว่างบันทึก';
     _dateController.text = _selectedDate == null
         ? ''
         : DateFormat('dd/MM/yyyy').format(_selectedDate!);
@@ -72,6 +73,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                     labelText: 'ประเภทรายการ',
                     labelStyle: TextStyle(fontSize: 16, color: Colors.black),
                   ),
+                  value: selectedValue,
                   items: statusItems
                       .map((item) => DropdownMenuItem<String>(
                             value: item,
@@ -99,7 +101,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         color: Colors.white),
-                    maxHeight: 150,
+                    maxHeight: 350,
                   ),
                   menuItemStyleData: const MenuItemStyleData(
                       padding: EdgeInsets.symmetric(horizontal: 16)),
@@ -151,7 +153,12 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        // Handle reset action (optional)
+                        setState(() {
+                          _selectedDate = null;
+                          _dateController.clear();
+                          searchController.clear();
+                          selectedValue = 'ทั้งหมด';
+                        });
                       },
                       child: Image.asset('assets/images/eraser_red.png',
                           width: 50, height: 25),
@@ -165,7 +172,6 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                     const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () {
-                        // If searchController is empty, use 'null' for documentNumber
                         final documentNumber = searchController.text.isEmpty
                             ? 'null'
                             : searchController.text;

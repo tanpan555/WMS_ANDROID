@@ -285,64 +285,9 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ElevatedButton(
-                onPressed: () async {
-                  final result = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SSFGDT31_BARCODE(
-                        po_doc_no: widget.po_doc_no,
-                        po_doc_type: widget.po_doc_type,
-                        pWareCode: widget.pWareCode,
-                        v_ref_doc_no: widget.v_ref_doc_no,
-                        v_ref_type: widget.v_ref_type,
-                      ),
-                    ),
-                  );
-                  if (result == true) {
-                    await get_grid_data();
-                  }
-                  print('+Create');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  minimumSize: const Size(10, 20),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                ),
-                child: const Text(
-                  '+Create',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  await deleteAll();
-                  print('-Clear All');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  minimumSize: const Size(10, 20),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                ),
-                child: const Text(
-                  '-Clear All',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              ElevatedButton(
+              const SizedBox(width: 8,),
+            
+               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -375,6 +320,7 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                   ),
                 ),
               ),
+            Spacer(),
               Container(
                 width: 40.0,
                 height: 40.0,
@@ -435,6 +381,7 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                   },
                 ),
               ),
+              const SizedBox(width: 8,),
             ],
           ),
           Expanded(
@@ -465,59 +412,84 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                           ),
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Item Desc: $selectedItemDescName',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
+                
+              Row(
+                children: [
+                  const SizedBox(width: 8,),
+                  ElevatedButton(
+                onPressed: () async {
+                  await deleteAll();
+                  print('-Clear All');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  minimumSize: const Size(10, 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                ),
+                child: const Text(
+                  '-Clear All',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+                  Spacer(),
+                  ElevatedButton(
+                onPressed: () async {
+                  final result = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SSFGDT31_BARCODE(
+                        po_doc_no: widget.po_doc_no,
+                        po_doc_type: widget.po_doc_type,
+                        pWareCode: widget.pWareCode,
+                        v_ref_doc_no: widget.v_ref_doc_no,
+                        v_ref_type: widget.v_ref_type,
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Pack Desc: $selectedPackDescName',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
+                    ),
+                  );
+                  if (result == true) {
+                    await get_grid_data();
+                  }
+                  print('+Create');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  minimumSize: const Size(10, 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                ),
+                child: const Text(
+                  '+Create',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+                  
+              const SizedBox(width: 8,),
+                ],
+              ),
+             
                     ],
                   );
                 } else {
                   final item = items[index - 1];
                   return InkWell(
-                    onTap: () {
-                      setState(() {
-                        selectedItemDescName = item['nb_item_name'] ?? '';
-                        selectedPackDescName = item['nb_pack_name'] ?? '';
-                      });
-                    },
+                    // onTap: () {
+                    //   setState(() {
+                    //     selectedItemDescName = item['nb_item_name'] ?? '';
+                    //     selectedPackDescName = item['nb_pack_name'] ?? '';
+                    //   });
+                    // },
                     child: Card(
                       margin: const EdgeInsets.all(10),
                       color: const Color.fromRGBO(204, 235, 252, 1.0),
@@ -531,16 +503,18 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                                   fontWeight: FontWeight.bold,
                                 )),
                             Text(
-                                'Pack Qty: ${item['pack_qty'] != null ? numberFormat.format(item['pack_qty']) : ''}'),
-                            Text('Item Code: ${item['item_code'] ?? ''}'),
-                            Text('Old Pack Qty: ${item['old_pack_qty'] ?? ''}'),
-                            Text('Pack Code: ${item['pack_code'] ?? ''}'),
+                                'จำนวนรับ: ${item['pack_qty'] != null ? numberFormat.format(item['pack_qty']) : ''}'),
+                            Text('Item: ${item['item_code'] ?? ''}'),
+                            Text('จำนวนจ่าย: ${item['old_pack_qty'] ?? ''}'),
+                            Text('Pack: ${item['pack_code'] ?? ''}'),
                             Text(
-                                'Location Code: ${item['location_code'] ?? ''}'),
+                                'Locator: ${item['location_code'] ?? ''}'),
                             Text('PD Location: ${item['attribute1'] ?? ''}'),
                             Text('Reason: ${item['attribute2'] ?? ''}'),
                             Text('ใช้แทนจุด: ${item['attribute3'] ?? ''}'),
                             Text('Replace Lot: ${item['attribute4'] ?? ''}'),
+                            Text('Item Desc: ${item['nb_item_name'] ?? ''}'),
+                            Text('Pack Desc: ${item['nb_pack_name'] ?? ''}'),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [

@@ -528,6 +528,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
   @override
   void initState() {
     super.initState();
+    print(widget.po_doc_type);
     selectedValue = widget.po_doc_type;
     fetchStatusItems();
     fetchFormData();
@@ -565,11 +566,11 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                 const SizedBox(width: 4.0),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 255, 43, 43),
+                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.0),
                     ),
-                    minimumSize: const Size(10, 20),
+                    minimumSize: const Size(70, 40),
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   ),
@@ -579,7 +580,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                   child: const Text(
                     'ยกเลิก',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -733,7 +734,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         ),
       ),
       items: [
-        '-- No Value Set --',
+        '',
         ...moDoNoItems.map((item) => '${item['schid']}'.toString()).toList()
       ],
       dropdownDecoratorProps: DropDownDecoratorProps(
@@ -751,7 +752,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
           selectedMoDoNo = value;
         });
 
-        if (value == '-- No Value Set --') {
+        if (value == '') {
           setState(() {
             csValue = null;
             CUST.text = 'null';
@@ -774,7 +775,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
 
         print(selectedMoDoNo);
       },
-      selectedItem: selectedMoDoNo ?? '-- No Value Set --',
+      selectedItem: selectedMoDoNo ?? '',
     ),
   );
 }
@@ -789,7 +790,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
           showSelectedItems: true,
         ),
         items: [
-          '-- No Value Set --', // Default option for no value
+          '',
           ...REF_NOItems.map((item) => item['doc_no'].toString()).toList(),
         ],
         dropdownDecoratorProps: DropDownDecoratorProps(
@@ -802,7 +803,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         ),
         onChanged: (String? value) {
           setState(() {
-            if (value == '-- No Value Set --') {
+            if (value == '') {
               doc_no = null;
               REF_NO.text = 'null';
             } else {
@@ -811,58 +812,61 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
             }
           });
         },
-        selectedItem: doc_no ?? '-- No Value Set --',
+        selectedItem: doc_no ?? '',
       ),
     );
   }
 
-  Widget _buildDropdownForDocType() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: DropdownSearch<String>(
-        popupProps: PopupProps.menu(
-          showSearchBox: true,
-          showSelectedItems: true,
-          itemBuilder: (context, item, isSelected) {
-            final itemData = statusItems.firstWhere(
-              (element) => '${element['doc_type']}' == item,
+Widget _buildDropdownForDocType() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: DropdownSearch<String>(
+      popupProps: PopupProps.menu(
+        showSearchBox: true,
+        showSelectedItems: true,
+        itemBuilder: (context, item, isSelected) {
+          return ListTile(
+            title: Text(item),
+            selected: isSelected,
+          );
+        },
+      ),
+      items: [
+        '',
+        ...statusItems.map((item) => item['doc_desc'].toString()).toList(),
+      ],
+      dropdownDecoratorProps: DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+          border: InputBorder.none,
+          labelText: "ประเภทการจ่าย",
+          filled: true,
+          fillColor: Colors.white,
+        ),
+      ),
+      onChanged: (String? value) {
+        setState(() {
+          if (value == '') {
+            selectedValue = null;
+            DOC_TYPE.text = '';
+          } else {
+            final selectedItem = statusItems.firstWhere(
+              (element) => element['doc_desc'] == value,
               orElse: () => {'doc_type': '', 'doc_desc': ''},
             );
-
-            return ListTile(
-              title: Text(item),
-              subtitle: Text(itemData['doc_desc'] ?? ''),
-              selected: isSelected,
-            );
-          },
-        ),
-        items: [
-          '-- No Value Set --',
-          ...statusItems.map((item) => item['doc_type'].toString()).toList(),
-        ],
-        dropdownDecoratorProps: DropDownDecoratorProps(
-          dropdownSearchDecoration: InputDecoration(
-            border: InputBorder.none,
-            labelText: "ประเภทการจ่าย",
-            filled: true,
-            fillColor: Colors.white,
-          ),
-        ),
-        onChanged: (String? value) {
-          setState(() {
-            if (value == '-- No Value Set --') {
-              selectedValue = null;
-              DOC_TYPE.text = '';
-            } else {
-              selectedValue = value;
-              DOC_TYPE.text = value ?? '';
-            }
-          });
-        },
-        selectedItem: selectedValue ?? '-- No Value Set --',
-      ),
-    );
-  }
+            selectedValue = selectedItem['doc_type'];
+            DOC_TYPE.text = value ?? '';
+          }
+        });
+      },
+      selectedItem: statusItems
+          .firstWhere(
+            (element) => element['doc_type'] == selectedValue,
+            orElse: () => {'doc_type': '', 'doc_desc': ''},
+          )['doc_desc']
+          .toString(),
+    ),
+  );
+}
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';

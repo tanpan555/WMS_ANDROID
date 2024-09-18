@@ -136,21 +136,11 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
             child: Row(
               children: [
                 Expanded(
-                  flex: 1,
-                  child: Text(
-                    item['doc_type'] ?? '',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                Expanded(
                   flex: 3,
                   child: Text(
                     item['doc_desc'] ?? '',
                     style: const TextStyle(
-                      fontSize: 11,
+                      fontSize: 14,
                       color: Colors.black,
                     ),
                   ),
@@ -214,7 +204,7 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
                             MaterialPageRoute(
                                 builder: (context) => SSFGDT31_FROM(
                                       po_doc_no: po_doc_no ?? '',
-                                      po_doc_type: po_doc_type ?? '',
+                                      po_doc_type: selectedValue ?? '',
                                       pWareCode: widget.pWareCode,
                                     )),
                           );
