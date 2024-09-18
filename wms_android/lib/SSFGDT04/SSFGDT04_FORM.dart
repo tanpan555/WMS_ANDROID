@@ -630,7 +630,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                       decoration: InputDecoration(
                         labelText: 'เลขที่เอกสาร WMS*',
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Colors.grey[300],
                         labelStyle: TextStyle(color: Colors.black),
                         border: InputBorder.none,
                       ),
@@ -731,20 +731,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                     ),
                   ),
 
-                  // อ้างอิงใบนำส่งเลขที่ //
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 8),
-                  //   child: TextField(
-                  //     decoration: InputDecoration(
-                  //       labelText: 'อ้างอิงใบนำส่งเลขที่',
-                  //       filled: true,
-                  //       fillColor: Colors.white,
-                  //       labelStyle: TextStyle(color: Colors.black),
-                  //       border: InputBorder.none,
-                  //     ),
-                  //     controller: _refNoController,
-                  //   ),
-                  // ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: GestureDetector(
@@ -1426,10 +1412,11 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: TextField(
+                      readOnly: true,
                       decoration: InputDecoration(
                         labelText: 'เลขที่เอกสาร ERP',
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Colors.grey[300],
                         labelStyle: TextStyle(color: Colors.black),
                         border: InputBorder.none,
                       ),

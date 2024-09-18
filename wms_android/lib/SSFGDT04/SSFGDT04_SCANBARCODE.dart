@@ -48,6 +48,12 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   // เพิ่ม Controller สำหรับการค้นหา
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   fetchlocatorItems();
+  // }
   @override
   void initState() {
     super.initState();
@@ -220,7 +226,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
               );
             },
           );
-          print('555555');
+          // print('555555');
         }
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
@@ -245,6 +251,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
     FocusScope.of(context).requestFocus(barcodeFocusNode);
     // เคลียร์ค่าที่จำเป็นในหน้าจออื่นๆ
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -618,6 +625,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                           text: selectedLocator != null
                               ? selectedLocator
                               : '-- No Value Set --'),
+                              textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -636,6 +644,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 border: InputBorder.none,
               ),
               controller: _lotNumberController,
+              textAlign: TextAlign.center,
             ),
           ),
 
@@ -661,6 +670,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                       //       ? _quantityController.text
                       //       : 'NaN',
                       // ),
+                      textAlign: TextAlign.center,
                     ),
             ),
 
@@ -677,6 +687,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 border: InputBorder.none,
               ),
               controller: _currLotController,
+              textAlign: TextAlign.center,
             ),
           ),
 
@@ -693,6 +704,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 border: InputBorder.none,
               ),
               controller: _balLotController,
+              textAlign: TextAlign.center,
             ),
           ),
 
@@ -709,6 +721,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 border: InputBorder.none,
               ),
               controller: _balQtyController,
+              textAlign: TextAlign.center,
             ),
           ),
         ],

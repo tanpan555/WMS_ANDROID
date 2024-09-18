@@ -287,8 +287,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
       final responseBody = jsonDecode(response.body);
       final poStatus = responseBody['po_status'];
       final poMessage = responseBody['po_message'];
-      print('Status: $poStatus');
-      print('Message: $poMessage');
+      print('po_status: $poStatus');
+      print('po_message: $poMessage');
       if (poStatus == 'success') {
         // Only update UI if deletion was successful
         setState(() {
@@ -469,14 +469,14 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                 child: _buildCards(),
               ),
             ),
-            ],
+          ],
         ),
       ),
       bottomNavigationBar: BottomBar(),
     );
   }
 
-Widget _buildCards() {
+  Widget _buildCards() {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -567,18 +567,18 @@ Widget _buildCards() {
                                     horizontal: 8,
                                   ),
                                   child: Text(
-                                            // Format the number if it's not null, else display an empty string
-                                            item['pack_qty'] != null
-                                                ? NumberFormat('#,###')
-                                                    .format(item['pack_qty'])
-                                                : '',
-                                            textAlign: TextAlign.end,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                            ),
-                                          ),
+                                    // Format the number if it's not null, else display an empty string
+                                    item['pack_qty'] != null
+                                        ? NumberFormat('#,###')
+                                            .format(item['pack_qty'])
+                                        : '',
+                                    textAlign: TextAlign.end,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
@@ -662,52 +662,86 @@ Widget _buildCards() {
                         ],
                       ),
                       SizedBox(height: 8),
-                              // Row with delete and edit buttons
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween, // Align buttons to left and right
-                                children: [
-                                  // Delete button as image
-                                  IconButton(
-                                    icon: Image.asset(
-                                      'assets/images/bin.png', // Your delete image path
-                                      width: 30,
-                                      height: 30,
-                                    ),
-                                    onPressed: () async {
-                                      // Extract item details
-                                      final po_item_code = item['item_code'];
-                                      final po_seq = item[
-                                          'seq']; // Ensure that `po_seq` exists in your item map
+                      // Row with delete and edit buttons
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment
+                            .spaceBetween, // Align buttons to left and right
+                        children: [
+                          // Delete button as image
+                          IconButton(
+                            icon: Image.asset(
+                              'assets/images/bin.png', // Your delete image path
+                              width: 30,
+                              height: 30,
+                            ),
+                            onPressed: () async {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    // title: Text('ยืนยันการลบรายการ'),
+                                    content: Text('ต้องการลบรายการหรือไม่?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text('ยกเลิก'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(false);
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text('ลบ'),
+                                        onPressed: () async {
+                                          final po_item_code =
+                                              item['item_code'];
+                                          final po_seq = item['seq'];
+                                          await delete(
+                                              widget.po_doc_no,
+                                              widget.po_doc_type,
+                                              po_seq,
+                                              po_item_code);
+                                          setState(() {
+                                            gridItems.removeWhere((item) =>
+                                                item['item_code'] ==
+                                                    po_item_code &&
+                                                item['seq'] == po_seq);
+                                          });
+                                          Navigator.of(context).pop(true);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              // Extract item details
+                              // final po_item_code = item['item_code'];
+                              // final po_seq = item[
+                              //     'seq']; // Ensure that `po_seq` exists in your item map
 
-                                      // Call delete function
-                                      await delete(
-                                          widget.po_doc_no,
-                                          widget.po_doc_type,
-                                          po_seq,
-                                          po_item_code);
+                              // // Call delete function
+                              // await delete(widget.po_doc_no, widget.po_doc_type,
+                              //     po_seq, po_item_code);
 
-                                      // Remove item from the list and update the UI
-                                      setState(() {
-                                        gridItems.removeWhere((item) =>
-                                            item['item_code'] == po_item_code &&
-                                            item['seq'] == po_seq);
-                                      });
-                                    },
-                                  ),
-                                  // Edit button as image
-                                  IconButton(
-                                    icon: Image.asset(
-                                      'assets/images/edit (1).png', // Your edit image path
-                                      width: 30,
-                                      height: 30,
-                                    ),
-                                    onPressed: () {
-                                      _showEditDialog(context, item);
-                                    },
-                                  ),
-                                ],
-                              ),
+                              // // Remove item from the list and update the UI
+                              // setState(() {
+                              //   gridItems.removeWhere((item) =>
+                              //       item['item_code'] == po_item_code &&
+                              //       item['seq'] == po_seq);
+                              // });
+                            },
+                          ),
+                          // Edit button as image
+                          IconButton(
+                            icon: Image.asset(
+                              'assets/images/edit.png', // Your edit image path //assets/images/edit.png
+                              width: 30,
+                              height: 30,
+                            ),
+                            onPressed: () {
+                              _showEditDialog(context, item);
+                            },
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
