@@ -66,7 +66,6 @@ void initState() {
   _selectedValue = 'ทั้งหมด';
   selectedwhCode = widget.pWareCode;
   selectedApCode = widget.apCode;
-  
   // Use a variable to hold the documentNumber with default value
   String documentNumber = widget.documentNumber;
 
@@ -81,7 +80,7 @@ void initState() {
   print(widget.apCode);
   print('Original widget.documentNumber: ${widget.documentNumber}');
   fixedValue = valueMapping[widget.selectedValue];
-  if (selectedApCode == 'ทั้งหมด') {
+  if (widget.apCode.isEmpty || selectedApCode == 'ทั้งหมด'){
     selectedApCode = 'null';
     fetchWareCodes();
   }

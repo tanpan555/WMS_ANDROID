@@ -40,6 +40,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
   String? selectedApCode;
   String errorMessage = '';
   String? _selectedValue = 'ทั้งหมด';
+  
 
   final TextEditingController _documentNumberController =
       TextEditingController();
@@ -50,6 +51,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
     currentSessionID = SessionManager().sessionID;
     _selectedValue = 'ทั้งหมด';
     fetchApCodes();
+    selectedApCode = ''; 
     // print('$selectedApCode' ?? 'test');
 
     print('Search Global Ware Code: ${gb.P_WARE_CODE}');
@@ -67,7 +69,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
         setState(() {
           apCodes = jsonData['items'] ?? [];
           apCodes.insert(0, {'ap_code': 'ทั้งหมด', 'ap_name': 'ทั้งหมด'});
-          selectedApCode = 'ทั้งหมด';
+          selectedApCode = '';
         });
       } else {
         throw Exception('Failed to load AP codes');
@@ -84,7 +86,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
   void _resetForm() {
     setState(() {
       _selectedValue = 'ทั้งหมด';
-      selectedApCode = 'ทั้งหมด';
+      selectedApCode = '';
 
       _documentNumberController.clear();
       errorMessage = '';
@@ -183,7 +185,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      selectedApCode = value;
+                      selectedApCode = value ?? 'ทั้งหมด';
                     });
                   },
                   selectedItem: selectedApCode,
@@ -218,32 +220,32 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                     const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () {
-                        final documentNumber =
-                            _documentNumberController.text.isNotEmpty
-                                ? _documentNumberController.text
-                                : 'null';
+    final documentNumber = _documentNumberController.text.isNotEmpty
+        ? _documentNumberController.text
+        : 'null';
 
-                        final apCode = selectedApCode ?? 'ทั้งหมด';
+    // final apCode = 
+    selectedApCode ?? 'ทั้งหมด';
+    print('selectedApCode $selectedApCode');
+    print(_selectedValue);
+    // print('apCode $apCode');
+    print(documentNumber);
+    // log(apCode);
 
-                        print(_selectedValue);
-                        print(apCode);
-                        print(documentNumber);
-                        log(apCode);
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SSINDT01_MAIN(
-                              pWareCode: widget.pWareCode,
-                              pWareName: widget.pWareName,
-                              p_ou_code: widget.p_ou_code,
-                              selectedValue: _selectedValue ?? 'ทั้งหมด',
-                              apCode: apCode,
-                              documentNumber: documentNumber,
-                            ),
-                          ),
-                        );
-                      },
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SSINDT01_MAIN(
+          pWareCode: widget.pWareCode,
+          pWareName: widget.pWareName,
+          p_ou_code: widget.p_ou_code,
+          selectedValue: _selectedValue ?? 'ทั้งหมด',
+          apCode: selectedApCode ?? 'ทั้งหมด',
+          documentNumber: documentNumber,
+        ),
+      ),
+    );
+  },
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
                             const Color.fromARGB(255, 255, 255, 255),

@@ -734,7 +734,7 @@ Widget _buildFormFields() {
         TextFormField(
           controller: receiveDateController,
           decoration: InputDecoration(
-            labelText: 'วันที่เลือก',
+            labelText: 'วันที่ตรวจรับ',
             filled: true,
             fillColor: Colors.white,
             border: InputBorder.none,
@@ -859,7 +859,7 @@ Widget _buildFormFields() {
               fillColor: Colors.white,
               border: InputBorder.none,
               labelStyle: TextStyle(color: Colors.black),
-              labelText: 'PO Remark'),
+              labelText: 'หมายเหตุ'),
         ),
         const SizedBox(height: 16.0),
         Row(
@@ -930,7 +930,7 @@ Widget _buildFormFields() {
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.grey[300],
-            labelText: 'ประเภทการรับ',
+            labelText: 'รับเข้าคลัง',
             labelStyle: const TextStyle(
               color: Colors.black87,
             ),
