@@ -27,8 +27,8 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
   String? pWareCodeCreateNewINXferWMS;
 String? pDocTypeCreateNewINXferWMS;
 
-  String? selectedValue;
-  // String? selectedDocType;
+  // String? selectedValue;
+  String? selectedDocType;
 
   final _formKey = GlobalKey<FormState>();
   // 'V_CR_WHCODE': selectedValue,
@@ -57,12 +57,18 @@ String? pDocTypeCreateNewINXferWMS;
 
       setState(() {
         statusItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+
+        // ตั้งค่า selectedDocType ให้เป็นค่าแรกของ statusItems
+        if (statusItems.isNotEmpty) {
+          selectedDocType = statusItems[0]['doc_type'];
+        }
         print('dataMenu: $statusItems');
       });
     } else {
       throw Exception('Failed to load status items');
     }
   }
+
 
   // String? poStatus;
   // String? poMessage;
@@ -174,17 +180,16 @@ String? pDocTypeCreateNewINXferWMS;
                     if (value == null) {
                       return 'Please select a status.';
                     }
-                    return null;
                   },
                   onChanged: (value) {
                     setState(() {
-                      selectedValue = value.toString();
+                      selectedDocType = value.toString();
                     });
                   },
                   onSaved: (value) {
-                    selectedValue = value.toString();
+                    selectedDocType = value.toString();
                   },
-                  // value: selectedDocType,
+                  value: selectedDocType,
                   buttonStyleData: const ButtonStyleData(
                     padding: EdgeInsets.only(right: 8),
                   ),
@@ -213,7 +218,7 @@ String? pDocTypeCreateNewINXferWMS;
                     ElevatedButton(
                           onPressed: () async {
                             // เรียกใช้ฟังก์ชันเพื่อสร้างเอกสารใหม่
-                            await create_NewINXfer_WMS(selectedValue ?? '');
+                            await create_NewINXfer_WMS(selectedDocType ?? '');
 
                             // ตรวจสอบว่า form ได้รับการตรวจสอบแล้วหรือไม่
                             if (_formKey.currentState!.validate()) {
@@ -221,7 +226,7 @@ String? pDocTypeCreateNewINXferWMS;
 
                               // ตรวจสอบว่า poStatus เป็น 0 เพื่อไปยังหน้าฟอร์ม
                               if (poStatus == '0') {
-                                await create_NewINXfer_WMS(selectedValue);
+                                await create_NewINXfer_WMS(selectedDocType);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

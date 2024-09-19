@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:wms_android/main.dart';
+import '../styles.dart';
 
 class SSFGDT04_SCANBARCODE extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจาก lov
@@ -237,16 +238,17 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
   }
 
   void clearScreen() {
-    setState(() { // ถ้าจำเป็นต้องรีเซ็ต selectedLocator ด้วย
-    _locatorBarcodeController.clear();
+    setState(() {
+      // ถ้าจำเป็นต้องรีเซ็ต selectedLocator ด้วย
+      _locatorBarcodeController.clear();
       selectedLocator = null;
-    _searchController.clear();
-    _barCodeCotroller.clear();
-    _lotNumberController.clear();
-    _quantityController.clear();
-    _currLotController.clear();
-    _balLotController.clear();
-    _balQtyController.clear();
+      _searchController.clear();
+      _barCodeCotroller.clear();
+      _lotNumberController.clear();
+      _quantityController.clear();
+      _currLotController.clear();
+      _balLotController.clear();
+      _balQtyController.clear();
     });
     FocusScope.of(context).requestFocus(barcodeFocusNode);
     // เคลียร์ค่าที่จำเป็นในหน้าจออื่นๆ
@@ -290,14 +292,15 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                       width: 20, // ปรับขนาดตามที่ต้องการ
                       height: 20, // ปรับขนาดตามที่ต้องการ
                     ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      minimumSize: const Size(60, 40),
-                      padding: const EdgeInsets.all(0),
-                    ),
+                    style: AppStyles.NextButtonStyle(),
+                    // style: ElevatedButton.styleFrom(
+                    //   backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                    //   shape: RoundedRectangleBorder(
+                    //     borderRadius: BorderRadius.circular(10),
+                    //   ),
+                    //   minimumSize: const Size(60, 40),
+                    //   padding: const EdgeInsets.all(0),
+                    // ),
                   ),
                 ],
               ),
@@ -625,12 +628,12 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                           text: selectedLocator != null
                               ? selectedLocator
                               : '-- No Value Set --'),
-                              textAlign: TextAlign.center,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
           ),
-          
+
           // Lot Number //
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),

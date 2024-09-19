@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGDT04_GRID.dart';
 import 'SSFGDT04_MENU.dart';
+import '../styles.dart';
 // import 'package:dropdown_search/dropdown_search.dart';
 
 class SSFGDT04_FORM extends StatefulWidget {
@@ -66,7 +67,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
       TextEditingController(); // เพิ่ม Controller สำหรับการค้นหา
 
   // เพิ่ม DateFormat สำหรับฟอร์แมทวันที่
-  final DateFormat _dateTimeFormatter = DateFormat('dd/MM/yyyy');
+  final DateFormat _dateTimeFormatter = DateFormat('dd/MM/yyyy HH:mm:ss');
 
   @override
   void initState() {
@@ -534,14 +535,15 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 255, 255, 255), // สีปุ่มยกเลิก
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            minimumSize: const Size(70, 40),
-                            padding: const EdgeInsets.all(10),
-                          ),
+                          style: AppStyles.cancelButtonStyle(),
+                          // style: ElevatedButton.styleFrom(
+                          //   backgroundColor: Color.fromARGB(255, 255, 255, 255), // สีปุ่มยกเลิก
+                          //   shape: RoundedRectangleBorder(
+                          //     borderRadius: BorderRadius.circular(10),
+                          //   ),
+                          //   minimumSize: const Size(70, 40),
+                          //   padding: const EdgeInsets.all(10),
+                          // ),
                         ),
 
                         // const SizedBox(width: 10), // ระยะห่างระหว่างปุ่ม
@@ -608,15 +610,16 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             width: 20, // ปรับขนาดตามที่ต้องการ
                             height: 20, // ปรับขนาดตามที่ต้องการ
                           ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 255, 255, 255),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            minimumSize: const Size(60, 40),
-                            padding: const EdgeInsets.all(0),
-                          ),
+                          // style: ElevatedButton.styleFrom(
+                          //   backgroundColor:
+                          //       const Color.fromARGB(255, 255, 255, 255),
+                          //   shape: RoundedRectangleBorder(
+                          //     borderRadius: BorderRadius.circular(10),
+                          //   ),
+                          //   minimumSize: const Size(60, 40),
+                          //   padding: const EdgeInsets.all(0),
+                          // ),
+                          style: AppStyles.NextButtonStyle(),
                         ),
                       ],
                     ),
@@ -699,37 +702,47 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
                   // วันที่บันทึก //
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: TextField(
-                      controller: _docDateController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        labelText: 'วันที่บันทึก',
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelStyle: TextStyle(color: Colors.black),
-                        border: InputBorder.none,
-                        suffixIcon: Icon(Icons.calendar_today),
-                      ),
-                      onTap: () async {
-                        // เลือกวันที่
-                        DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2101),
-                        );
+  padding: const EdgeInsets.symmetric(vertical: 8),
+  child: TextField(
+    controller: _docDateController,
+    readOnly: true,
+    decoration: InputDecoration(
+      labelText: 'วันที่บันทึก',
+      filled: true,
+      fillColor: Colors.white,
+      labelStyle: TextStyle(color: Colors.black),
+      border: InputBorder.none,
+      suffixIcon: Icon(Icons.calendar_today),
+    ),
+    onTap: () async {
+      // เลือกวันที่
+      DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2101),
+      );
 
-                        if (pickedDate != null) {
-                          // Format pickedDate as dd/MM/yyyy
-                          setState(() {
-                            _docDateController.text =
-                                _dateTimeFormatter.format(pickedDate);
-                          });
-                        }
-                      },
-                    ),
-                  ),
+      if (pickedDate != null) {
+        // เพิ่มเวลาให้เป็นปัจจุบัน
+        DateTime currentTime = DateTime.now();
+        DateTime fullDateTime = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          currentTime.hour,
+          currentTime.minute,
+          currentTime.second,
+        );
+
+        // Format fullDateTime as dd/MM/yyyy HH:mm
+        setState(() {
+          _docDateController.text = _dateTimeFormatter.format(fullDateTime);
+        });
+      }
+    },
+  ),
+),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),

@@ -22,8 +22,8 @@ class SSFGDT04_SEARCH extends StatefulWidget {
 
 class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   String pSoNo = 'null';
-  String selectedItem = 'ทั้งหมด'; // Ensure this value exists in dropdownItems
-  String status = '0'; // Default status
+  String selectedItem = 'ระหว่างบันทึก'; // Ensure this value exists in dropdownItems
+  String status = '1'; // Default status
   String selectedDate = 'null'; // Allow null for the date
   TextEditingController _dateController = TextEditingController();
   final TextEditingController _controller = TextEditingController();
