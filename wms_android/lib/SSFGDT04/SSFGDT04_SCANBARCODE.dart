@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import '../custom_appbar.dart';
 import '../bottombar.dart';
-import 'SSFGDT04_SCREEN_5.dart';
+import 'SSFGDT04_VERIFY.dart';
 // import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:http/http.dart' as http;
@@ -273,7 +273,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SSFGDT04_Screen_5(
+                          builder: (context) => SSFGDT04_VERIFY(
                             po_doc_no: widget.po_doc_no, // ส่งค่า po_doc_no
                             po_doc_type:
                                 widget.po_doc_type, // ส่งค่า po_doc_type
