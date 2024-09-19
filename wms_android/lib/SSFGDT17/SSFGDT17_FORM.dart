@@ -419,8 +419,34 @@ String? pomsg;
               ElevatedButton(
   style: AppStyles.NextButtonStyle(),
   onPressed: () async {
-    await chk_validateSave();
-    if (poStatus == '0') {
+    if(CR_DATE.text.isEmpty){
+      showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('คำเตือน'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('ต้องระบุข้อมูลที่จำเป็น * ให้ครบถ้วน !!!'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+    }
+    else{
+      await chk_validateSave();
+       if (poStatus == '0') {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => SSFGDT17_BARCODE(
@@ -437,6 +463,8 @@ String? pomsg;
         ),
       );
     }
+    }
+  
   },
   child: Image.asset(
     'assets/images/right.png',

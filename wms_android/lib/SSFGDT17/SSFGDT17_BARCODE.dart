@@ -197,80 +197,110 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   }
 
   void _showLocatorDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('เปลี่ยน Locator'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                DropdownSearch<Map<String, dynamic>>(
-                  items: locCode
-                      .map((item) => item as Map<String, dynamic>)
-                      .toList(),
-                  selectedItem: locCode.isNotEmpty ? locCode.first : null,
-                  itemAsString: (item) => item['r'] ?? '',
-                  onChanged: (value) {
-                    setState(() {
-                      selectedLocCode = value?['r'];
-                    });
-                  },
-                  dropdownBuilder: (context, item) {
-                    if (item == null) {
-                      return Text('เลือก Location ต้นทาง');
-                    }
-                    return ListTile(
-                      title: Text(item['r'] ?? ''),
-                      subtitle: Text(item['location_name'] ?? ''),
-                    );
-                  },
-                  dropdownDecoratorProps: DropDownDecoratorProps(
-                    dropdownSearchDecoration: InputDecoration(
-                      labelText: "เลือก Location ต้นทาง",
-                      border: OutlineInputBorder(),
-                      labelStyle: TextStyle(color: Colors.black, fontSize: 16),
-                      hintStyle: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  popupProps: PopupProps.menu(
-                    showSearchBox: true,
-                    searchFieldProps: TextFieldProps(
-                      decoration: InputDecoration(
-                        hintText: "ค้นหาตำแหน่ง",
-                        hintStyle: TextStyle(color: Colors.black),
-                      ),
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    constraints: BoxConstraints(
-                      maxHeight: 250,
-                    ),
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('เปลี่ยน Locator'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              DropdownSearch<Map<String, dynamic>>(
+                items: locCode.map((item) => item as Map<String, dynamic>).toList(),
+                selectedItem: locCode.isNotEmpty ? locCode.first : null,
+                itemAsString: (item) => item['r'] ?? '',
+                onChanged: (value) {
+                  setState(() {
+                    selectedLocCode = value?['r'];
+                  });
+                },
+                dropdownBuilder: (context, item) {
+                  if (item == null) {
+                    return Text('เลือก Location ต้นทาง');
+                  }
+                  return ListTile(
+                    title: Text(item['r'] ?? ''),
+                    subtitle: Text(item['location_name'] ?? ''),
+                  );
+                },
+                dropdownDecoratorProps: DropDownDecoratorProps(
+                  dropdownSearchDecoration: InputDecoration(
+                    labelText: "เลือก Location ต้นทาง",
+                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(color: Colors.black, fontSize: 16),
+                    hintStyle: TextStyle(color: Colors.black),
                   ),
                 ),
-              ],
-            ),
+                popupProps: PopupProps.menu(
+                  showSearchBox: true,
+                  searchFieldProps: TextFieldProps(
+                    decoration: InputDecoration(
+                      hintText: "ค้นหาตำแหน่ง",
+                      hintStyle: TextStyle(color: Colors.black),
+                    ),
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  constraints: BoxConstraints(
+                    maxHeight: 250,
+                  ),
+                ),
+              ),
+            ],
           ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                setState(() {
-                  LOCATOR_FROM.text = selectedLocCode ?? '';
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              // First, close the current dialog
+              Navigator.of(context).pop();
+
+              // Then show the confirmation dialog
+              showDialog<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('คำเตือน'),
+                    content: SingleChildScrollView(
+                      child: ListBody(
+                        children: <Widget>[
+                          Text('ต้องการเปลี่ยนแปลง Locator ต้นทาง หรือไม่ !!!'),
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text('Cancel'),
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the confirmation dialog
+                        },
+                      ),
+                      TextButton(
+                        child: Text('OK'),
+                        onPressed: () {
+                          setState(() {
+                            LOCATOR_FROM.text = selectedLocCode ?? '';
+                          });
+                          Navigator.of(context).pop(); // Close the confirmation dialog
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 
   String? poStatus;
   String? poMessage;
