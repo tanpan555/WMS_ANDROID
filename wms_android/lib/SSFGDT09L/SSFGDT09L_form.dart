@@ -479,6 +479,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         pAttr1: widget.pAttr1,
                         docNo: widget.pDocNo,
                         docType: widget.pDocType,
+                        docDate: docDate,
                         pErpOuCode: widget.pErpOuCode,
                         pOuCode: widget.pOuCode,
                         pAppUser: globals.APP_USER,
@@ -639,7 +640,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                           testChk = 1,
                         );
                       } else {
-                        showDialogErrorCHK('กรุณากรอกข้อมูลให้ครบ');
+                        showDialogErrorCHK('ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
                       }
                     },
                   ),

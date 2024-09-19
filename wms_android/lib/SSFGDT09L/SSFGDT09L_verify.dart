@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -14,8 +15,9 @@ class Ssfgdt09lVerify extends StatefulWidget {
   final String pOuCode;
   final String docNo;
   final String docType;
+  final String docDate;
   final String moDoNo;
-  // final String pWareCode;
+  final String pWareCode;
   // final String pAttr1;
   // // final String refNo;
   // final String pAppUser;
@@ -26,8 +28,9 @@ class Ssfgdt09lVerify extends StatefulWidget {
     required this.pOuCode,
     required this.docNo,
     required this.docType,
+    required this.docDate,
     required this.moDoNo,
-    // required this.pWareCode,
+    required this.pWareCode,
     // required this.pAttr1,
     // // required this.refNo,
     // required this.pAppUser,
@@ -40,8 +43,62 @@ class Ssfgdt09lVerify extends StatefulWidget {
 class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
   List<dynamic> dataCard = [];
 
-  String statusSubmit = '';
-  String messageSubmit = '';
+  String poTypeComplete = '';
+  String poErpDocNo = '';
+  String poStatusSubmit = '';
+  String poMessageSubmit = '';
+  String flag = '1';
+
+// ---------------------------- P ---------------------------- \\
+  String? V_DS_PDF;
+  String? LIN_ID;
+  String? OU_CODE;
+  String? PROGRAM_NAME;
+  String? CURRENT_DATE;
+  String? USER_ID;
+  String? PROGRAM_ID;
+  String? P_WARE;
+  String? P_SESSION;
+  String? P_DOC_TYPE;
+  String? P_ERP_DOC_NO;
+// ---------------------------- S ---------------------------- \\
+  String? S_DOC_TYPE;
+  String? S_DOC_DATE;
+  String? S_DOC_NO;
+  String? E_DOC_TYPE;
+  String? E_DOC_DATE;
+  String? E_DOC_NO;
+  String? FLAG;
+// ---------------------------- LH ---------------------------- \\
+  String? LH_PAGE;
+  String? LH_DATE;
+  String? LH_AR_NAME;
+  String? LH_LOGISTIC_COMP;
+  String? LH_DOC_TYPE;
+  String? LH_WARE;
+  String? LH_CAR_ID;
+  String? LH_DOC_NO;
+  String? LH_DOC_DATE;
+  String? LH_INVOICE_NO;
+// ---------------------------- LB ---------------------------- \\
+  String? LB_SEQ;
+  String? LB_ITEM_CODE;
+  String? LB_ITEM_NAME;
+  String? LB_LOCATION;
+  String? LB_UMS;
+  String? LB_LOTS_PRODUCT;
+  String? LB_MO_NO;
+  String? LB_TRAN_Qty;
+  String? LB_ATTRIBUTE1;
+// ---------------------------- LT ---------------------------- \\
+  String? LT_NOTE;
+  String? LT_TOTAL_QTY;
+  String? LT_ISSUE;
+  String? LT_APPROVE;
+  String? LT_OUT;
+  String? LT_RECEIVE;
+  String? LT_BILL;
+  String? LT_CHECK;
 
   @override
   void initState() {
@@ -105,29 +162,26 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
         final Map<String, dynamic> data =
             jsonDecode(utf8.decode(response.bodyBytes));
         print('data : $data type : ${data.runtimeType}');
-        setState(() {
-          statusSubmit = data['po_status'];
-          messageSubmit = data['po_message'];
-          print(
-              'statusSubmit : $statusSubmit Type : ${statusSubmit.runtimeType}');
-          print(
-              'messageSubmit : $messageSubmit Type : ${messageSubmit.runtimeType}');
 
-          if (statusSubmit == '1') {
-            showDialogAlert(context, messageSubmit);
+        setState(() {
+          poTypeComplete = data['po_type_complete'];
+          poErpDocNo = data['po_erp_doc_no'];
+          poStatusSubmit = data['po_status'];
+          poMessageSubmit = data['po_message'];
+
+          print(
+              'poTypeComplete : $poTypeComplete Type : ${poTypeComplete.runtimeType}');
+          print('poErpDocNo : $poErpDocNo Type : ${poErpDocNo.runtimeType}');
+          print(
+              'poStatusSubmit : $poStatusSubmit Type : ${poStatusSubmit.runtimeType}');
+          print(
+              'poMessageSubmit : $poMessageSubmit Type : ${poMessageSubmit.runtimeType}');
+
+          if (poStatusSubmit == '1') {
+            showDialogAlert(context, poMessageSubmit);
           }
-          if (statusSubmit == '0') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SSFGDT09L_MAIN(
-                        pAttr1: globals.ATTR1,
-                        pErpOuCode: widget.pErpOuCode,
-                        pOuCode: widget.pOuCode,
-                      )),
-            ).then((value) {
-              fetchData();
-            });
+          if (poStatusSubmit == '0') {
+            showDialogPoDocNo(context, poTypeComplete, poErpDocNo);
           }
         });
       } else {
@@ -137,6 +191,176 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
     } catch (e) {
       print('Error: $e');
     }
+  }
+
+  Future<void> getPDF(String poErpDocNo, String poTypeComplete) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_GET_PDF/${widget.docType}/${widget.docDate}/$poErpDocNo/$flag/${widget.pWareCode}/${globals.APP_SESSION}/${globals.APP_USER}/${globals.P_DS_PDF}'));
+
+      print('Response body: ${response.body}'); // แสดงข้อมูลที่ได้รับจาก API
+
+      if (response.statusCode == 200) {
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataPDF = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
+        setState(() {
+          V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
+          LIN_ID = dataPDF['LIN_ID'] ?? '';
+          OU_CODE = dataPDF['OU_CODE'] ?? '';
+          PROGRAM_NAME = dataPDF['PROGRAM_NAME'] ?? '';
+          CURRENT_DATE = dataPDF['CURRENT_DATE'] ?? '';
+          USER_ID = dataPDF['USER_ID'] ?? '';
+          PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
+          P_WARE = dataPDF['P_WARE'] ?? '';
+          P_SESSION = dataPDF['P_SESSION'] ?? '';
+
+          S_DOC_TYPE = dataPDF['S_DOC_TYPE'] ?? '';
+          S_DOC_DATE = dataPDF['S_DOC_DATE'] ?? '';
+          S_DOC_NO = dataPDF['S_DOC_NO'] ?? '';
+          E_DOC_TYPE = dataPDF['E_DOC_TYPE'] ?? '';
+          E_DOC_DATE = dataPDF['E_DOC_DATE'] ?? '';
+          E_DOC_NO = dataPDF['E_DOC_NO'] ?? '';
+          FLAG = dataPDF['FLAG'] ?? '';
+
+          LH_PAGE = dataPDF['LH_PAGE'] ?? '';
+          LH_DATE = dataPDF['LH_DATE'] ?? '';
+          LH_AR_NAME = dataPDF['LH_AR_NAME'] ?? '';
+          LH_LOGISTIC_COMP = dataPDF['LH_LOGISTIC_COMP'] ?? '';
+          LH_DOC_TYPE = dataPDF['LH_DOC_TYPE'] ?? '';
+          LH_WARE = dataPDF['LH_WARE'] ?? '';
+          LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
+          LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
+          LH_INVOICE_NO = dataPDF['LH_INVOICE_NO'] ?? '';
+
+          LB_SEQ = dataPDF['LB_SEQ'] ?? '';
+          LB_ITEM_CODE = dataPDF['LB_ITEM_CODE'] ?? '';
+          LB_ITEM_NAME = dataPDF['LB_ITEM_NAME'] ?? '';
+          LB_LOCATION = dataPDF['LB_LOCATION'] ?? '';
+          LB_UMS = dataPDF['LB_UMS'] ?? '';
+          LB_MO_NO = dataPDF['LB_MO_NO'] ?? '';
+          LB_TRAN_Qty = dataPDF['LB_TRAN_Qty'] ?? '';
+          // LB_ATTRIBUTE1 = dataPDF['LB_ATTRIBUTE1'] ?? '';
+
+          LT_NOTE = dataPDF['LT_NOTE'] ?? '';
+          LT_TOTAL_QTY = dataPDF['LT_TOTAL_QTY'] ?? '';
+          LT_ISSUE = dataPDF['LT_ISSUE'] ?? '';
+          LT_APPROVE = dataPDF['LT_APPROVE'] ?? '';
+          LT_OUT = dataPDF['LT_OUT'] ?? '';
+          LT_RECEIVE = dataPDF['LT_RECEIVE'] ?? '';
+          LT_BILL = dataPDF['LT_BILL'] ?? '';
+          LT_CHECK = dataPDF['LT_CHECK'] ?? '';
+
+          _launchUrl(poErpDocNo);
+        });
+      } else {
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error in submit Data: $e');
+    }
+  }
+
+  Future<void> _launchUrl(String pDocNo) async {
+    final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
+        '&_repName=/WMS/SSFGOD02A5'
+        '&_repFormat=pdf'
+        '&_dataSource=${globals.P_DS_PDF}'
+        '&_outFilename=$pDocNo.pdf'
+        '&_repLocale=en_US'
+        '&LIN_ID=$LIN_ID'
+        '&OU_CODE=$OU_CODE'
+        '&PROGRAM_NAME=$PROGRAM_NAME'
+        '&CURRENT_DATE=$CURRENT_DATE'
+        '&USER_ID=$USER_ID'
+        '&PROGRAM_ID=$PROGRAM_ID'
+        '&P_WARE=$P_WARE'
+        '&P_SESSION=$P_SESSION'
+        '&S_DOC_TYPE=$S_DOC_TYPE'
+        '&S_DOC_DATE=$S_DOC_DATE'
+        '&S_DOC_NO=$S_DOC_NO'
+        '&E_DOC_TYPE=$E_DOC_TYPE'
+        '&E_DOC_DATE=$E_DOC_DATE'
+        '&FLAG=$FLAG'
+        '&LH_PAGE=$LH_PAGE'
+        '&LH_DATE=$LH_DATE'
+        '&LH_AR_NAME=$LH_AR_NAME'
+        '&LH_LOGISTIC_COMP=$LH_LOGISTIC_COMP'
+        '&LH_DOC_TYPE=$LH_DOC_TYPE'
+        '&LH_WARE=$LH_WARE'
+        '&LH_CAR_ID=$LH_CAR_ID'
+        '&LH_DOC_NO=$LH_DOC_NO'
+        '&LH_DOC_DATE=$LH_DOC_DATE'
+        '&LH_INVOICE_NO=$LH_INVOICE_NO'
+        '&LB_SEQ=$LB_SEQ'
+        '&LB_ITEM_CODE=$LB_ITEM_CODE'
+        '&LB_ITEM_NAME=$LB_ITEM_NAME'
+        '&LB_LOCATION=$LB_LOCATION'
+        '&LB_UMS=$LB_UMS'
+        '&LB_LOTS_PRODUCT=$LB_LOTS_PRODUCT'
+        '&LB_MO_NO=$LB_MO_NO'
+        '&LB_TRAN_Qty=$LB_TRAN_Qty'
+        // '&LB_ATTRIBUTE1=$LB_ATTRIBUTE1'
+        '&LT_NOTE=$LT_NOTE'
+        '&LT_TOTAL_QTY=$LT_TOTAL_QTY'
+        '&LT_ISSUE=$LT_ISSUE'
+        '&LT_APPROVE=$LT_APPROVE'
+        '&LT_OUT=$LT_OUT'
+        '&LT_RECEIVE=$LT_RECEIVE'
+        '&LT_BILL=$LT_BILL');
+
+    print(uri);
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch $uri');
+    }
+    print('http://172.16.0.82:8888/jri/report?'
+        '&_repName=/WMS/SSFGOD02A5'
+        '&_repFormat=pdf'
+        '&_dataSource=${globals.P_DS_PDF}'
+        '&_outFilename=$pDocNo.pdf'
+        '&_repLocale=en_US'
+        '&LIN_ID=$LIN_ID'
+        '&OU_CODE=$OU_CODE'
+        '&PROGRAM_NAME=$PROGRAM_NAME'
+        '&CURRENT_DATE=$CURRENT_DATE'
+        '&USER_ID=$USER_ID'
+        '&PROGRAM_ID=$PROGRAM_ID'
+        '&P_WARE=$P_WARE'
+        '&P_SESSION=$P_SESSION'
+        '&S_DOC_TYPE=$S_DOC_TYPE'
+        '&S_DOC_DATE=$S_DOC_DATE'
+        '&S_DOC_NO=$S_DOC_NO'
+        '&E_DOC_TYPE=$E_DOC_TYPE'
+        '&E_DOC_DATE=$E_DOC_DATE'
+        '&FLAG=$FLAG'
+        '&LH_PAGE=$LH_PAGE'
+        '&LH_DATE=$LH_DATE'
+        '&LH_AR_NAME=$LH_AR_NAME'
+        '&LH_LOGISTIC_COMP=$LH_LOGISTIC_COMP'
+        '&LH_DOC_TYPE=$LH_DOC_TYPE'
+        '&LH_WARE=$LH_WARE'
+        '&LH_CAR_ID=$LH_CAR_ID'
+        '&LH_DOC_NO=$LH_DOC_NO'
+        '&LH_DOC_DATE=$LH_DOC_DATE'
+        '&LH_INVOICE_NO=$LH_INVOICE_NO'
+        '&LB_SEQ=$LB_SEQ'
+        '&LB_ITEM_CODE=$LB_ITEM_CODE'
+        '&LB_ITEM_NAME=$LB_ITEM_NAME'
+        '&LB_LOCATION=$LB_LOCATION'
+        '&LB_UMS=$LB_UMS'
+        '&LB_LOTS_PRODUCT=$LB_LOTS_PRODUCT'
+        '&LB_MO_NO=$LB_MO_NO'
+        '&LB_TRAN_Qty=$LB_TRAN_Qty'
+        // '&LB_ATTRIBUTE1=$LB_ATTRIBUTE1'
+        '&LT_NOTE=$LT_NOTE'
+        '&LT_TOTAL_QTY=$LT_TOTAL_QTY'
+        '&LT_ISSUE=$LT_ISSUE'
+        '&LT_APPROVE=$LT_APPROVE'
+        '&LT_OUT=$LT_OUT'
+        '&LT_RECEIVE=$LT_RECEIVE'
+        '&LT_BILL=$LT_BILL');
   }
 
   @override
@@ -333,53 +557,6 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                                 ],
                               ),
                               SizedBox(height: 4.0),
-
-                              SizedBox(height: 20.0),
-                              // Row(
-                              //   mainAxisAlignment:
-                              //       MainAxisAlignment.spaceBetween,
-                              //   children: [
-                              //     InkWell(
-                              //       onTap: () {
-                              //         // showDialogComfirmDelete(
-                              //         //     context,
-                              //         //     item['seq'].toString(),
-                              //         //     item['item_code'] ?? '');
-                              //       },
-                              //       child: Container(
-                              //         width: 30,
-                              //         height: 30,
-                              //         // color: cardColor, // เปลี่ยนสีพื้นหลังที่นี่
-                              //         child: Image.asset(
-                              //           'assets/images/bin.png',
-                              //           fit: BoxFit.contain,
-                              //         ),
-                              //       ),
-                              //     ),
-                              //     // InkWell(
-                              //     //   onTap: () {
-                              //     //     showDetailsDialog(
-                              //     //       context,
-                              //     //       item['pack_qty'],
-                              //     //       item['nb_item_name'] ?? '',
-                              //     //       item['nb_pack_name'] ?? '',
-                              //     //       item['item_code'] ?? '',
-                              //     //       item['pack_code'] ?? '',
-                              //     //       item['rowid'] ?? '',
-                              //     //     );
-                              //     //   },
-                              //     //   child: Container(
-                              //     //     width: 30,
-                              //     //     height: 30,
-                              //     //     // color: cardColor, // เปลี่ยนสีพื้นหลังที่นี่
-                              //     //     child: Image.asset(
-                              //     //       'assets/images/edit (1).png',
-                              //     //       fit: BoxFit.contain,
-                              //     //     ),
-                              //     //   ),
-                              //     // ),
-                              //   ],
-                              // ),
                             ],
                           ),
                         ),
@@ -450,69 +627,137 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
     );
   }
 
-  // void showDialogComfirmDelete(
-  //     BuildContext context, String pSeq, String pItemCode) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Row(
-  //           children: [
-  //             Icon(
-  //               Icons.notification_important,
-  //               color: Colors.red,
-  //             ),
-  //             SizedBox(width: 10),
-  //             Text(
-  //               'แจ้งแตือน',
-  //               style: TextStyle(color: Colors.black),
-  //             ),
-  //           ],
-  //         ),
-  //         content: SingleChildScrollView(
-  //           child: Padding(
-  //             padding: const EdgeInsets.all(16.0),
-  //             child: Column(
-  //               children: [
-  //                 const SizedBox(height: 10),
-  //                 const Text(
-  //                   'ต้องการลบรายการหรือไม่ ?',
-  //                   style: TextStyle(color: Colors.red),
-  //                 ),
-  //                 const SizedBox(height: 10),
-  //                 Row(
-  //                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                   children: [
-  //                     ElevatedButton(
-  //                       onPressed: () {
-  //                         Navigator.of(context).pop();
-  //                       },
-  //                       style: ElevatedButton.styleFrom(
-  //                         backgroundColor: Colors.white,
-  //                         side: const BorderSide(color: Colors.grey),
-  //                       ),
-  //                       child: const Text('ย้อนกลับ'),
-  //                     ),
-  //                     ElevatedButton(
-  //                       onPressed: () {
-  //                         // Navigator.of(context).pop();
-  //                         deleteCard(pSeq, pItemCode);
-  //                       },
-  //                       style: ElevatedButton.styleFrom(
-  //                         backgroundColor: Colors.white,
-  //                         side: const BorderSide(color: Colors.grey),
-  //                       ),
-  //                       child: const Text('ยืนยัน'),
-  //                     ),
-  //                   ],
-  //                 )
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  void showDialogPoDocNo(
+    BuildContext context,
+    String poTypeComplete,
+    String poErpDocNo,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Row(
+            children: [
+              // Icon(
+              //   Icons.notification_important,
+              //   color: Colors.red,
+              // ),
+              SizedBox(width: 10),
+              Text(
+                'แจ้งแตือน',
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    poErpDocNo,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          // Navigator.of(context).pop();
+                          setState(() {
+                            String messageText = 'ต้องการพิมพ์เอกสารหรือไม่ ?';
+                            showDialogCheckPrint(context, poTypeComplete,
+                                poErpDocNo, messageText);
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text('ยืนยัน'),
+                      ),
+                    ],
+                  )
+                ])),
+          ),
+        );
+      },
+    );
+  }
+
+  void showDialogCheckPrint(BuildContext context, String poTypeComplete,
+      String poErpDocNo, String messageText) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Row(
+            children: [
+              // Icon(
+              //   Icons.notification_important,
+              //   color: Colors.red,
+              // ),
+              SizedBox(width: 10),
+              Text(
+                'แจ้งแตือน',
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    messageText,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          // Navigator.of(context).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SSFGDT09L_MAIN(
+                                      pAttr1: globals.ATTR1,
+                                      pErpOuCode: widget.pErpOuCode,
+                                      pOuCode: widget.pOuCode,
+                                    )),
+                          ).then((value) {
+                            fetchData();
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text('ย้อนกลับ'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Navigator.of(context).pop();
+                          getPDF(poErpDocNo, poTypeComplete);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text('ยืนยัน'),
+                      ),
+                    ],
+                  )
+                ])),
+          ),
+        );
+      },
+    );
+  }
 }

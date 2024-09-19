@@ -7,6 +7,7 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 // import 'SSFGDT04_SCREEN_5.dart';
 import 'package:intl/intl.dart';
 import 'SSFGDT04_SCANBARCODE.dart';
+import '../styles.dart';
 
 class SSFGDT04_GRID extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจาก lov
@@ -452,14 +453,15 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                     width: 20, // ปรับขนาดตามที่ต้องการ
                     height: 20, // ปรับขนาดตามที่ต้องการ
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    minimumSize: const Size(60, 40),
-                    padding: const EdgeInsets.all(0),
-                  ),
+                  style: AppStyles.NextButtonStyle(),
+                  // style: ElevatedButton.styleFrom(
+                  //   backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(10),
+                  //   ),
+                  //   minimumSize: const Size(60, 40),
+                  //   padding: const EdgeInsets.all(0),
+                  // ),
                 ),
               ],
             ),

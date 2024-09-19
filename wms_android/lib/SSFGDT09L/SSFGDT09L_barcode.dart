@@ -17,6 +17,7 @@ class Ssfgdt09lBarcode extends StatefulWidget {
   final String pAppUser;
   final String pDocNo;
   final String pDocType;
+  final String pDocDate;
   final String pMoDoNO;
   Ssfgdt09lBarcode({
     required this.pWareCode,
@@ -26,6 +27,7 @@ class Ssfgdt09lBarcode extends StatefulWidget {
     required this.pAppUser,
     required this.pDocNo,
     required this.pDocType,
+    required this.pDocDate,
     required this.pMoDoNO,
     Key? key,
   }) : super(key: key);
@@ -462,6 +464,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                           pAttr1: widget.pAttr1,
                           docNo: widget.pDocNo,
                           docType: widget.pDocType,
+                          docDate: widget.pDocDate,
                           pErpOuCode: widget.pErpOuCode,
                           pOuCode: widget.pOuCode,
                           pAppUser: globals.APP_USER,

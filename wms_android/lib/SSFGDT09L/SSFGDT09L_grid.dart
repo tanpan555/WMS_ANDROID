@@ -16,6 +16,7 @@ class Ssfgdt09lGrid extends StatefulWidget {
   final String pAttr1;
   final String docNo;
   final String docType;
+  final String docDate;
   final String moDoNo;
   // final String refNo;
   final String pErpOuCode;
@@ -28,6 +29,7 @@ class Ssfgdt09lGrid extends StatefulWidget {
     required this.pAttr1,
     required this.docNo,
     required this.docType,
+    required this.docDate,
     required this.moDoNo,
     // required this.refNo,
     required this.pErpOuCode,
@@ -297,7 +299,9 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                   pOuCode: widget.pOuCode,
                                   docNo: widget.docNo,
                                   docType: widget.docType,
+                                  docDate: widget.docDate,
                                   moDoNo: widget.moDoNo,
+                                  pWareCode: widget.pWareCode,
                                 )),
                       ).then((value) async {
                         // เมื่อกลับมาหน้าเดิม เรียก fetchData
@@ -386,6 +390,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                 pAppUser: widget.pAppUser,
                                 pDocNo: widget.docNo,
                                 pDocType: widget.docType,
+                                pDocDate: widget.docDate,
                                 pMoDoNO: widget.moDoNo,
                               )),
                     ).then((value) async {

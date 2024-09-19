@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:intl/intl.dart';
+import '../styles.dart';
 
 class SSFGDT04_Screen_5 extends StatefulWidget {
   final String pWareCode;
@@ -133,25 +134,26 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
                     }
                   },
                   child: Text(
-                    'CONFIRM',
+                    'Confirm',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    side: BorderSide(
-                      color: Colors.green,
-                      width: 2,
-                    ),
-                    backgroundColor: Colors.green[100],
-                    padding: EdgeInsets.all(10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    minimumSize: const Size(60, 40),
-                  ),
+                  style: AppStyles.ConfirmbuttonStyle(),
+                  // style: ElevatedButton.styleFrom(
+                  //   side: BorderSide(
+                  //     color: Colors.green,
+                  //     width: 2,
+                  //   ),
+                  //   backgroundColor: Colors.green[100],
+                  //   padding: EdgeInsets.all(10),
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(10),
+                  //   ),
+                  //   minimumSize: const Size(60, 40),
+                  // ),
                 ),
               ],
             ),
@@ -259,18 +261,18 @@ class _SSFGDT04Screen5State extends State<SSFGDT04_Screen_5> {
                                     horizontal: 8,
                                   ),
                                   child: Text(
-                                            // Format the number if it's not null, else display an empty string
-                                            item['pack_qty'] != null
-                                                ? NumberFormat('#,###')
-                                                    .format(item['pack_qty'])
-                                                : '',
-                                            textAlign: TextAlign.end,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                            ),
-                                          ),
+                                    // Format the number if it's not null, else display an empty string
+                                    item['pack_qty'] != null
+                                        ? NumberFormat('#,###')
+                                            .format(item['pack_qty'])
+                                        : '',
+                                    textAlign: TextAlign.end,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
