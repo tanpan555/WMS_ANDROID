@@ -22,19 +22,16 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
   final _dateController = TextEditingController();
   DateTime? _selectedDate;
   String? selectedValue;
-  final List<String> statusItems = ['ทั้งหมด', 'ปกติ', 'ยกเลิก','รับโอนแล้ว'];
+  final List<String> statusItems = ['ทั้งหมด', 'ปกติ','รับโอนแล้ว','ยกเลิก'];
   String? docData;
   String? docData1;
 
 @override
 void initState() {
   super.initState();
-  selectedValue = 'ทั้งหมด';
+  selectedValue = 'ปกติ';
   fetchDocType();
 }
-
-
-
 
 
   final TextEditingController _documentNumberController = TextEditingController();
@@ -116,7 +113,7 @@ void initState() {
                   controller: _documentNumberController,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    labelText: 'เลขที่เอกสาร',
+                    labelText: 'เลขที่ใบโอน',
                     labelStyle: TextStyle(color: Colors.black),
                     filled: true,
                     fillColor: Colors.white,
@@ -129,7 +126,7 @@ void initState() {
                   controller: _dateController,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    labelText: 'วันที่รับคืน',
+                    labelText: 'วันที่โอน',
                     labelStyle: TextStyle(color: Colors.black),
                     filled: true,
                     fillColor: Colors.white,

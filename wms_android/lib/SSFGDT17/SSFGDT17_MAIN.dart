@@ -45,16 +45,21 @@ String? docNumberFilter;
   final TextEditingController _docNumberController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
 String? DateSend;
+
   @override
 void initState() {
   super.initState();
-  
+
+
+
   currentSessionID = SessionManager().sessionID;
 selectedwhCode = widget.pWareCode;
 print(selectedwhCode);
   // _dateController.text = selectedDate != null ? DateFormat('dd/MM/yyyy').format(selectedDate!) : '';
    _dateController.text = widget.dateController;
   _selectedStatusValue = widget.selectedValue;
+  // fixedValue = widget.selectedValue;
+  print('fixedValue: $fixedValue');
   docNumberFilter = widget.documentNumber;
   print('=====================');
   print(widget.docData1);
@@ -117,7 +122,7 @@ void _loadNextPage() {
 
 
 String? _selectedStatusValue = 'ทั้งหมด';
-  String? fixedValue = '0';
+  String? fixedValue;
 
   void _handleSelected(String? value) {
     setState(() {
@@ -129,8 +134,8 @@ String? _selectedStatusValue = 'ทั้งหมด';
   final Map<String, String> valueMapping = {
     'ทั้งหมด': '0',
     'ปกติ': '1',
-    'ยกเลิก': '2',
-    'รับโอนแล้ว': '3',
+    'รับโอนแล้ว': '2',
+    'ยกเลิก': '3',
   };
 
   List<dynamic> data = [];
@@ -138,11 +143,13 @@ String? _selectedStatusValue = 'ทั้งหมด';
   String errorMessage = '';
 
  Future<void> data_card_list([String? url]) async {
+  final String statusValue = valueMapping[_selectedStatusValue] ?? '0';
     try {
-      final uri = url ?? 'http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$fixedValue/000/${widget.docData1}/$DateSend/${widget.documentNumber}';
+      final uri = url ?? 'http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$statusValue/000/${widget.docData1}/$DateSend/${widget.documentNumber}';
       final response = await http.get(Uri.parse(uri));
 
       if (response.statusCode == 200) {
+        print(uri);
         final responseBody = utf8.decode(response.bodyBytes);
         final parsedResponse = json.decode(responseBody);
 
@@ -179,22 +186,23 @@ String? doc_out;
 
  Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
   Map<String, Color> statusColors = {
-    'ยกเลิก': Colors.orange,
-    'รับโอน': Colors.blue,
-    'ปกติ': Colors.green,
+    'ยกเลิก': Colors.grey,
+    'รับโอน': Colors.green,
+    'ปกติ': Colors.yellow,
   };
 
   Color statusColor = statusColors[item['status_desc']] ?? Colors.grey;
 
   TextStyle statusStyle = TextStyle(
-    color: statusColor,
-    fontWeight: FontWeight.bold,
+    color: Colors.black,
+    // fontWeight: FontWeight.bold,
   );
 
   BoxDecoration statusDecoration = BoxDecoration(
-    border: Border.all(color: statusColor, width: 2.0),
-    borderRadius: BorderRadius.circular(4.0),
-  );
+  border: Border.all(color: statusColor, width: 2.0),
+  color: statusColor,
+  borderRadius: BorderRadius.circular(4.0),
+);
 
   return Padding(
   padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
@@ -341,16 +349,6 @@ String? doc_out;
 );
 }
 
-
-  int _displayLimit = 15;
-  final ScrollController _scrollController = ScrollController();
-
-  void _loadMoreItems() {
-    setState(() {
-      _displayLimit += 15;
-    });
-  }
-
 String? poStatus;
   String? poMessage;
   String? goToStep;
@@ -436,11 +434,11 @@ Widget build(BuildContext context) {
                               )
                             : ListView(
                                 children: [
-                                  // Build the list items
+                               
                                   ...data.map((item) => buildListTile(context, item)).toList(),
-                                  // Add spacing if needed
+             
                                   const SizedBox(height: 10),
-                                  // Previous and Next buttons
+                      
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [

@@ -22,8 +22,8 @@ class SSFGDT17_FORM extends StatefulWidget {
   final String? whOUTCode;
   final String? LocOUTCode;
 
-  final String? pWareName;
-  final String? pWareCode;
+    final String? pWareName;
+      final String? pWareCode;
 
   SSFGDT17_FORM(
       {required this.po_doc_no,
@@ -32,9 +32,7 @@ class SSFGDT17_FORM extends StatefulWidget {
       this.selectedwhCode,
       this.selectedLocCode,
       this.whOUTCode,
-      this.LocOUTCode,
-      this.pWareName,
-      required this.pWareCode});
+      this.LocOUTCode, this.pWareName, required this.pWareCode});
 
   @override
   _SSFGDT17_FORMState createState() => _SSFGDT17_FORMState();
@@ -65,9 +63,11 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     super.initState();
     currentSessionID = SessionManager().sessionID;
     selectedDate = DateTime.now();
-    CR_DATE.text = _formatDate(selectedDate);
+    
+    // CR_DATE.text = _formatDate(selectedDate);
+    CR_DATE.text = ''; 
     cancelCode();
-
+    
     print('ERP_OU_CODE: $ERP_OU_CODE');
     print('P_OU_CODE: $P_OU_CODE');
     print('APP_USER: $APP_USER');
@@ -93,17 +93,19 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     super.dispose();
   }
 
+
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate,
+      initialDate: selectedDate ?? DateTime.now(), // Fallback to current date if selectedDate is null
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        CR_DATE.text = _formatDate(selectedDate);
+        CR_DATE.text = _formatDate(selectedDate); // Update CR_DATE with the selected date
       });
     }
   }
@@ -145,11 +147,19 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     }
   }
 
-  String _formatDate(DateTime date) {
+  // String _formatDate(DateTime date) {
+  //   return "${date.day}/${date.month}/${date.year}";
+  // }
+
+
+String _formatDate(DateTime? date) {
+    if (date == null) {
+      return ''; // Return blank if date is null
+    }
     return "${date.day}/${date.month}/${date.year}";
   }
 
-  List<Map<String, dynamic>> cCode = [];
+   List<Map<String, dynamic>> cCode = [];
   String? selectedcCode;
   bool isLoading = true;
   String errorMessage = '';
@@ -180,170 +190,168 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     }
   }
 
-  void showCancelDialog() {
-    String? selectedcCode;
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Container(
-            width: 600.0,
-            height: 250.0,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Cancel',
-                    style:
-                        TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-                  ),
+   void showCancelDialog() {
+  String? selectedcCode;
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: Container(
+          width: 600.0,
+          height: 250.0,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: DropdownButtonFormField<String>(
-                    value: selectedcCode,
-                    isExpanded: true,
-                    items: cCode.map((item) {
-                      return DropdownMenuItem<String>(
-                        value: item['r'],
-                        child: Container(
-                          width: 250.0,
-                          child: Row(
-                            children: [
-                              Text(
-                                item['r'] ?? 'No code',
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: DropdownButtonFormField<String>(
+                  value: selectedcCode,
+                  isExpanded: true,
+                  items: cCode.map((item) {
+                    return DropdownMenuItem<String>(
+                      value: item['r'],
+                      child: Container(
+                        width: 250.0,
+                        child: Row(
+                          children: [
+                            Text(
+                              item['r'] ?? 'No code',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Flexible(
+                              child: Text(
+                                item['cancel_desc'] ?? '',
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                  fontSize: 14,
                                 ),
                               ),
-                              SizedBox(width: 8),
-                              Flexible(
-                                child: Text(
-                                  item['cancel_desc'] ?? '',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedcCode = newValue;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Cancel Code',
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-                      border: OutlineInputBorder(),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectedcCode = newValue;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Cancel Code',
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      child: Text('Cancel'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
                     ),
-                  ),
-                ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        child: Text('Cancel'),
-                        onPressed: () {
+                    TextButton(
+                      child: Text('OK'),
+                      onPressed: () {
+                        if (selectedcCode != null) {
                           Navigator.of(context).pop();
-                        },
-                      ),
-                      TextButton(
-                        child: Text('OK'),
-                        onPressed: () {
-                          if (selectedcCode != null) {
-                            Navigator.of(context).pop();
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('คำเตือน'),
-                                  content: Text('ยกเลิกรายการเสร็จสมบูรณ์...'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text('ตกลง'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('คำเตือน'),
+                                content: Text('ยกเลิกรายการเสร็จสมบูรณ์...'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('ตกลง'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
 
-                                        cancel_from(selectedcCode!).then((_) {
-                                          Navigator.of(context).pop(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SSFGDT17_MENU(
-                                                pWareCode:
-                                                    widget.pWareCode ?? '',
-                                                pWareName:
-                                                    widget.pWareName ?? '',
+                                      cancel_from(selectedcCode!).then((_) {
+                                        Navigator.of(context).pop(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SSFGDT17_MENU(
+                                                pWareCode: widget.pWareCode ?? '', 
+                                                pWareName: widget.pWareName ?? '', 
                                                 p_ou_code: gb.P_ERP_OU_CODE,
-                                              ),
+                                      
                                             ),
-                                          );
-                                        }).catchError((error) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                  'An error occurred: $error'),
-                                            ),
-                                          );
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('คำเตือน'),
-                                  content: Text('โปรดเลือกเหตุยกเลิก'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text('ตกลง'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                        },
-                      ),
-                    ],
-                  ),
+                                          ),
+                                        );
+                                      }).catchError((error) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                'An error occurred: $error'),
+                                          ),
+                                        );
+                                      });
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('คำเตือน'),
+                                content: Text('โปรดเลือกเหตุยกเลิก'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('ตกลง'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
 
-  String? pomsg;
+String? pomsg;
   Future<void> cancel_from(String selectedcCode) async {
-    final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/cancel_INHeadXfer_WMS');
+    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/cancel_INHeadXfer_WMS');
     final response = await http.put(
       url,
       headers: {
@@ -353,11 +361,14 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
         'p_doc_type': widget.po_doc_type,
         'p_doc_dec': widget.po_doc_no,
         'p_cancel': selectedcCode,
+
         'APP_USER': gb.APP_USER,
         'P_OU_CODE': gb.P_OU_CODE,
         'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
       }),
     );
+
+
 
     if (response.statusCode == 200) {
       try {
@@ -373,6 +384,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
         print(gb.APP_USER);
         print(gb.P_OU_CODE);
         print(gb.P_ERP_OU_CODE);
+
       } catch (e) {
         print('Error parsing response: $e');
       }
@@ -381,13 +393,12 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: const CustomAppBar(
-        title: 'Move Locator',
-      ),
+      appBar: const CustomAppBar(title: 'Move Locator',),
       body: Column(
         children: [
           const SizedBox(height: 8.0),
@@ -395,45 +406,45 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
             children: [
               const SizedBox(width: 8.0),
               ElevatedButton(
-                style: AppStyles.cancelButtonStyle(),
-                onPressed: () {
-                  showCancelDialog();
-                },
-                child: Text(
-                  'ยกเลิก',
-                  style: AppStyles.CancelbuttonTextStyle(),
-                ),
-              ),
+                    style: AppStyles.cancelButtonStyle(),
+                    onPressed: () {
+                      showCancelDialog();
+                    },
+                    child: Text(
+                      'ยกเลิก',
+                      style: AppStyles.CancelbuttonTextStyle(),
+                    ),
+                  ),
               const Spacer(),
               ElevatedButton(
-                style: AppStyles.NextButtonStyle(),
-                onPressed: () async {
-                  await chk_validateSave();
-                  if (poStatus == '0') {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => SSFGDT17_BARCODE(
-                          po_doc_no: widget.po_doc_no ?? '',
-                          po_doc_type: widget.po_doc_type,
-                          LocCode: widget.LocCode,
-                          selectedwhCode: widget.selectedwhCode,
-                          selectedLocCode: widget.selectedLocCode,
-                          whOUTCode: widget.whOUTCode,
-                          LocOUTCode: widget.LocOUTCode,
-                          pWareCode: widget.pWareCode,
-                          pWareName: widget.pWareName,
-                        ),
-                      ),
-                    );
-                  }
-                },
-                child: Image.asset(
-                  'assets/images/right.png',
-                  width: 20.0,
-                  height: 20.0,
-                ),
-              ),
-              const SizedBox(width: 8.0),
+  style: AppStyles.NextButtonStyle(),
+  onPressed: () async {
+    await chk_validateSave();
+    if (poStatus == '0') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => SSFGDT17_BARCODE(
+            po_doc_no: widget.po_doc_no ?? '',
+            po_doc_type: widget.po_doc_type,
+            LocCode: widget.LocCode,
+            selectedwhCode: widget.selectedwhCode,
+            selectedLocCode: widget.selectedLocCode,
+            whOUTCode: widget.whOUTCode,
+            LocOUTCode: widget.LocOUTCode,
+            pWareCode: widget.pWareCode,
+            pWareName: widget.pWareName,
+          ),
+        ),
+      );
+    }
+  },
+  child: Image.asset(
+    'assets/images/right.png',
+    width: 20.0,
+    height: 20.0,
+  ),
+),
+                const SizedBox(width: 8.0),
             ],
           ),
           Expanded(
@@ -483,6 +494,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     );
   }
 
+
   Widget _buildDateTextField(TextEditingController controller, String label) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -492,13 +504,12 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
         readOnly: true,
         onTap: () => _selectDate(context),
         decoration: InputDecoration(
-          labelText: label,
-          labelStyle: TextStyle(color: Colors.black),
-          filled: true,
-          fillColor: Colors.white,
-          border: InputBorder.none,
-          suffixIcon: Icon(Icons.calendar_today_outlined, color: Colors.black),
-        ),
+            labelText: label,
+            labelStyle: TextStyle(color: Colors.black),
+            filled: true,
+            fillColor: Colors.white,
+            border: InputBorder.none,
+            suffixIcon: Icon(Icons.calendar_today_outlined, color: Colors.black),),
       ),
     );
   }

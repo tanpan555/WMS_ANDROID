@@ -378,7 +378,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
                   // ),
                   _buildTextField(LOCATOR_FROM, 'Locator ต้นทาง',
                       readOnly: true),
-                  _buildTextField(ITEM_CODE, 'Item Code', readOnly: false),
+                  _buildTextField(ITEM_CODE, 'Item Code', readOnly: true),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 103, 58, 183),
@@ -400,8 +400,8 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
                   _buildTextField(QUANTITY, 'Quantity'),
                   _buildTextField(LOCATOR_TO, 'Locator ปลายทาง',
                       readOnly: true),
-                  _buildTextField(BAL_LOT, 'รวมรายการโอน', readOnly: false),
-                  _buildTextField(BAL_QTY, 'รวมจำนวนโอน', readOnly: false),
+                  _buildYellowTextField(BAL_LOT, 'รวมรายการโอน', readOnly: true),
+                  _buildYellowTextField(BAL_QTY, 'รวมจำนวนโอน', readOnly: true),
                 ],
               ),
             ),
@@ -409,6 +409,25 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
         ],
       ),
       bottomNavigationBar: BottomBar(),
+    );
+  }
+
+    Widget _buildYellowTextField(TextEditingController controller, String label,
+      {bool readOnly = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        controller: controller,
+        style: TextStyle(color: Colors.black),
+        readOnly: readOnly,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.black),
+          filled: true,
+          fillColor: readOnly ? const Color.fromARGB(255, 251,251,123) : Colors.white,
+          border: InputBorder.none,
+        ),
+      ),
     );
   }
 
