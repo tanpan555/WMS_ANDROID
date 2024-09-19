@@ -253,6 +253,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                 pErpOuCode: widget.pErpOuCode,
                                 pOuCode: widget.pOuCode,
                                 pMoDoNO: widget.moDoNo,
+                                pDocNo: widget.docNo,
                               )),
                     ).then((value) async {
                       // เมื่อกลับมาหน้าเดิม เรียก fetchData

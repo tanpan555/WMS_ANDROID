@@ -1020,65 +1020,43 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                       },
                       selectedItem: selectLovCancel,
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 10),
                     //////////////////////////////////////////////////
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 103, 58, 183),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            minimumSize: const Size(10, 20),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                          ),
-                          child: const Text(
-                            'ย้อนกลับ',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              if (returnStatusLovCancel.isNotEmpty) {
-                                deleteForm(returnStatusLovCancel);
-                              }
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 103, 58, 183),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            minimumSize: const Size(10, 20),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                          ),
-                          child: const Text(
-                            'ยืนยัน',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
                   ],
                 ),
               ),
             ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ย้อนกลับ'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        if (returnStatusLovCancel.isNotEmpty) {
+                          deleteForm(returnStatusLovCancel);
+                        }
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ยืนยัน'),
+                  ),
+                ],
+              )
+            ],
             // ),
           );
         });
