@@ -43,6 +43,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   String goToStep = '';
   String pDocNoGetInHead = '';
   String pDocTypeGetInHead = '';
+  String formattedDateDocDate = '';
 
   String broeserLanguage = globals.BROWSER_LANGUAGE;
   String sessionID = globals.APP_SESSION;
@@ -290,6 +291,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                 // docType: 'RMO1',
                 docNo: pDocNoGetInHead,
                 docType: pDocTypeGetInHead,
+                docDate: formattedDateDocDate,
                 pErpOuCode: widget.pErpOuCode,
                 pOuCode: widget.pOuCode,
                 pAppUser: globals.APP_USER,
@@ -307,6 +309,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                 // docType: 'RMO1',
                 docNo: pDocNoGetInHead,
                 docType: pDocTypeGetInHead,
+                docDate: formattedDateDocDate,
                 pErpOuCode: widget.pErpOuCode,
                 pOuCode: widget.pOuCode,
                 pAppUser: globals.APP_USER,
@@ -590,13 +593,13 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                   Color cardColor;
                   String statusText;
                   String iconImageYorN;
-
+                  print(item['card_status_desc']);
                   switch (item['card_status_desc']) {
                     case 'ระหว่างบันทึก':
                       cardColor = Color.fromRGBO(246, 250, 112, 1.0);
                       statusText = 'ระหว่างบันทึก';
                       break;
-                    case 'ยืนยันการจ่าย' || 'ยืนยันการรับ':
+                    case 'ยืนยันการรับ':
                       cardColor = Color.fromRGBO(146, 208, 80, 1.0);
                       statusText = 'ยืนยันการรับ';
                       break;
@@ -604,10 +607,18 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                       cardColor = Color.fromRGBO(208, 206, 206, 1.0);
                       statusText = 'ยกเลิก';
                       break;
-                    // case 'อ้างอิงแล้ว':
-                    //   cardColor = Color.fromRGBO(255, 255, 255, 1.0);
-                    //   statusText = 'อ้างอิงแล้ว';
-                    //   break;
+                    case 'ยืนยันการจ่าย':
+                      cardColor = Color.fromRGBO(255, 255, 255, 1.0);
+                      statusText = 'ยืนยันการจ่าย';
+                      break;
+                    case 'ปกติ':
+                      cardColor = Color.fromRGBO(255, 255, 255, 1.0);
+                      statusText = 'ยืนยันการจ่าย';
+                      break;
+                    case 'อ้างอิงแล้ว':
+                      cardColor = Color.fromRGBO(255, 255, 255, 1.0);
+                      statusText = 'อ้างอิงแล้ว';
+                      break;
                     default:
                       cardColor = Color.fromRGBO(255, 255, 255, 1.0);
                       statusText = 'Unknown';
@@ -661,6 +672,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                           DateFormat('dd-MM-yyyy')
                                               .format(parsedDate);
 
+                                      formattedDateDocDate = formattedDate;
                                       getPDF(
                                         item['p_doc_no'],
                                         item['p_doc_type'],
