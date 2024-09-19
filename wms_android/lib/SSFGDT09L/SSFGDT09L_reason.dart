@@ -456,7 +456,7 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
               ),
               SizedBox(width: 10),
               Text(
-                'แจ้งแตือน',
+                'แจ้งเตือน',
                 style: TextStyle(color: Colors.black),
               ),
             ],

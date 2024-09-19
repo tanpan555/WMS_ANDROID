@@ -453,46 +453,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
               child: Column(children: [
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    _navigateToPage(
-                        context,
-                        Ssfgdt09lGrid(
-                          pWareCode: widget.pWareCode,
-                          pAttr1: widget.pAttr1,
-                          docNo: widget.pDocNo,
-                          docType: widget.pDocType,
-                          docDate: widget.pDocDate,
-                          pErpOuCode: widget.pErpOuCode,
-                          pOuCode: widget.pOuCode,
-                          pAppUser: globals.APP_USER,
-                          moDoNo: widget.pMoDoNO,
-                          // test
-                          statusCase: 'test1',
-                        ));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    minimumSize: const Size(10, 20),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  ),
-                  child: const Text(
-                    'Check DATA',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
+            // const SizedBox(height: 20),
             Row(
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -731,7 +692,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
               ),
               SizedBox(width: 10),
               Text(
-                'แจ้งแตือน',
+                'แจ้งเตือน',
                 style: TextStyle(color: Colors.black),
               ),
             ],
@@ -810,7 +771,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
               ),
               SizedBox(width: 10),
               Text(
-                'แจ้งแตือน',
+                'แจ้งเตือน',
                 style: TextStyle(color: Colors.black),
               ),
             ],
@@ -869,7 +830,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   // ),
                   // SizedBox(width: 10),
                   Text(
-                    'แจ้งแตือน',
+                    'แจ้งเตือน',
                     style: TextStyle(color: Colors.black),
                   ),
                 ],
@@ -887,91 +848,96 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                     ])),
               ),
               actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Navigator.of(context).pop();
-                    chkShowDialogcomfirmMessage = false;
-                    Navigator.of(context).pop();
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        // Navigator.of(context).pop();
+                        chkShowDialogcomfirmMessage = false;
+                        Navigator.of(context).pop();
 
-                    barCode = '';
-                    locatorForm = '';
-                    itemCode = '';
-                    lotNo = '';
-                    quantity = '';
-                    locatorTo = '';
-                    lotQty = '';
-                    lotUnit = '';
+                        barCode = '';
+                        locatorForm = '';
+                        itemCode = '';
+                        lotNo = '';
+                        quantity = '';
+                        locatorTo = '';
+                        lotQty = '';
+                        lotUnit = '';
 
-                    statusFetchDataBarcode = '';
-                    messageFetchDataBarcode = '';
-                    valIDFetchDataBarcode = '';
+                        statusFetchDataBarcode = '';
+                        messageFetchDataBarcode = '';
+                        valIDFetchDataBarcode = '';
 
-                    barcodeController.clear();
-                    locatorFormController.clear();
-                    itemCodeController.clear();
-                    lotNoController.clear();
-                    quantityController.clear();
-                    locatorToController.clear();
-                    lotQtyController.clear();
-                    lotUnitController.clear();
+                        barcodeController.clear();
+                        locatorFormController.clear();
+                        itemCodeController.clear();
+                        lotNoController.clear();
+                        quantityController.clear();
+                        locatorToController.clear();
+                        lotQtyController.clear();
+                        lotUnitController.clear();
 
-                    _barcodeFocusNode.requestFocus();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.grey),
-                  ),
-                  child: const Text('ย้อนกลับ'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Ssfgdt09lReason(
-                                pOuCode: widget.pOuCode,
-                                pErpOuCode: widget.pErpOuCode,
-                                pDocNo: widget.pDocNo,
-                                pMoDoNO: widget.pMoDoNO,
-                                pItemCode: itemCode,
-                                pQty: quantity,
-                                pBarcode: barCode,
-                                pLotNo: lotNo,
-                              )),
-                    ).then((value) {
-                      // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                      Navigator.of(context).pop();
-                      chkShowDialogcomfirmMessage = false;
-                      barCode = '';
-                      locatorForm = '';
-                      itemCode = '';
-                      lotNo = '';
-                      quantity = '';
-                      locatorTo = '';
-                      lotQty = '';
-                      lotUnit = '';
+                        _barcodeFocusNode.requestFocus();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.grey),
+                      ),
+                      child: const Text('ย้อนกลับ'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Ssfgdt09lReason(
+                                    pOuCode: widget.pOuCode,
+                                    pErpOuCode: widget.pErpOuCode,
+                                    pDocNo: widget.pDocNo,
+                                    pMoDoNO: widget.pMoDoNO,
+                                    pItemCode: itemCode,
+                                    pQty: quantity,
+                                    pBarcode: barCode,
+                                    pLotNo: lotNo,
+                                  )),
+                        ).then((value) {
+                          // เมื่อกลับมาหน้าเดิม เรียก fetchData
+                          Navigator.of(context).pop();
+                          chkShowDialogcomfirmMessage = false;
+                          barCode = '';
+                          locatorForm = '';
+                          itemCode = '';
+                          lotNo = '';
+                          quantity = '';
+                          locatorTo = '';
+                          lotQty = '';
+                          lotUnit = '';
 
-                      statusFetchDataBarcode = '';
-                      messageFetchDataBarcode = '';
-                      valIDFetchDataBarcode = '';
+                          statusFetchDataBarcode = '';
+                          messageFetchDataBarcode = '';
+                          valIDFetchDataBarcode = '';
 
-                      barcodeController.clear();
-                      locatorFormController.clear();
-                      itemCodeController.clear();
-                      lotNoController.clear();
-                      quantityController.clear();
-                      locatorToController.clear();
-                      lotQtyController.clear();
-                      lotUnitController.clear();
+                          barcodeController.clear();
+                          locatorFormController.clear();
+                          itemCodeController.clear();
+                          lotNoController.clear();
+                          quantityController.clear();
+                          locatorToController.clear();
+                          lotQtyController.clear();
+                          lotUnitController.clear();
 
-                      _barcodeFocusNode.requestFocus();
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.grey),
-                  ),
-                  child: const Text('ยืนยัน'),
+                          _barcodeFocusNode.requestFocus();
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.grey),
+                      ),
+                      child: const Text('ยืนยัน'),
+                    ),
+                  ],
                 ),
               ]);
         },
@@ -987,58 +953,58 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Row(
-            children: [
-              // Icon(
-              //   Icons.notification_important,
-              //   color: Colors.red,
-              // ),
-              // SizedBox(width: 10),
-              Text(
-                'แจ้งแตือน',
-                style: TextStyle(color: Colors.black),
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    textMessage,
-                    // style:  TextStyle(color: Colors.red),
+            title: const Row(
+              children: [
+                // Icon(
+                //   Icons.notification_important,
+                //   color: Colors.red,
+                // ),
+                // SizedBox(width: 10),
+                Text(
+                  'แจ้งเตือน',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(children: [
+                    const SizedBox(height: 10),
+                    Text(
+                      textMessage,
+                      // style:  TextStyle(color: Colors.red),
+                    ),
+                    const SizedBox(height: 10),
+                  ])),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ย้อนกลับ'),
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ย้อนกลับ'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          submitAddLine();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ยืนยัน'),
-                      ),
-                    ],
-                  )
-                ])),
-          ),
-        );
+                  ElevatedButton(
+                    onPressed: () {
+                      submitAddLine();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ยืนยัน'),
+                  ),
+                ],
+              )
+            ]);
       },
     );
   }
@@ -1051,75 +1017,75 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Row(
-            children: [
-              // Icon(
-              //   Icons.notification_important,
-              //   color: Colors.red,
-              // ),
-              // SizedBox(width: 10),
-              Text(
-                'Locator',
-                style: TextStyle(color: Colors.black),
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: locatorFormChkController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: 'Current Locator',
-                      labelStyle: const TextStyle(
-                        color: Colors.black87,
+            title: const Row(
+              children: [
+                // Icon(
+                //   Icons.notification_important,
+                //   color: Colors.red,
+                // ),
+                // SizedBox(width: 10),
+                Text(
+                  'Locator',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(children: [
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: locatorFormChkController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'Current Locator',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                        ),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          locatorFormChk = value;
+                        });
+                      },
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        locatorFormChk = value;
-                      });
+                    const SizedBox(height: 10),
+                  ])),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ย้อนกลับ'),
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ย้อนกลับ'),
-                      ),
-                      //---------------------------------------------------
-                      ElevatedButton(
-                        onPressed: () {
-                          String textForm = 'F';
-                          if (locatorFormChk != '') {
-                            chkLocatorForm(locatorFormChk, textForm);
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ยืนยัน'),
-                      ),
-                    ],
-                  )
-                ])),
-          ),
-        );
+                  //---------------------------------------------------
+                  ElevatedButton(
+                    onPressed: () {
+                      String textForm = 'F';
+                      if (locatorFormChk != '') {
+                        chkLocatorForm(locatorFormChk, textForm);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ยืนยัน'),
+                  ),
+                ],
+              )
+            ]);
       },
     );
   }
@@ -1132,75 +1098,76 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Row(
-            children: [
-              // Icon(
-              //   Icons.notification_important,
-              //   color: Colors.red,
-              // ),
-              // SizedBox(width: 10),
-              Text(
-                'Locator',
-                style: TextStyle(color: Colors.black),
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: locatorToChkController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: 'Locator ปลายทาง',
-                      labelStyle: const TextStyle(
-                        color: Colors.black87,
+            title: const Row(
+              children: [
+                // Icon(
+                //   Icons.notification_important,
+                //   color: Colors.red,
+                // ),
+                // SizedBox(width: 10),
+                Text(
+                  'Locator',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(children: [
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: locatorToChkController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'Locator ปลายทาง',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
+                        ),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          locatorToChk = value;
+                        });
+                      },
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        locatorToChk = value;
-                      });
+                    const SizedBox(height: 10),
+                  ])),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ย้อนกลับ'),
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ย้อนกลับ'),
-                      ),
-                      //---------------------------------------------------
-                      ElevatedButton(
-                        onPressed: () {
-                          String textForm = 'T';
-                          if (locatorToChk != '') {
-                            chkLocatorForm(locatorToChk, textForm);
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ยืนยัน'),
-                      ),
-                    ],
-                  )
-                ])),
-          ),
-        );
+                  //---------------------------------------------------
+                  ElevatedButton(
+                    onPressed: () {
+                      String textForm = 'T';
+                      if (locatorToChk != '') {
+                        chkLocatorForm(locatorToChk, textForm);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ยืนยัน'),
+                  ),
+                ],
+              )
+            ]);
       },
     );
   }

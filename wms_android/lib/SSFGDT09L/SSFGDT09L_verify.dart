@@ -589,7 +589,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
               ),
               SizedBox(width: 10),
               Text(
-                'แจ้งแตือน',
+                'แจ้งเตือน',
                 style: TextStyle(color: Colors.black),
               ),
             ],
@@ -644,7 +644,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
               // ),
               SizedBox(width: 10),
               Text(
-                'แจ้งแตือน',
+                'แจ้งเตือน',
                 style: TextStyle(color: Colors.black),
               ),
             ],
@@ -701,7 +701,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
               // ),
               SizedBox(width: 10),
               Text(
-                'แจ้งแตือน',
+                'แจ้งเตือน',
                 style: TextStyle(color: Colors.black),
               ),
             ],
