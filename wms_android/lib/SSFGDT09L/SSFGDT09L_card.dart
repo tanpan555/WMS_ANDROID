@@ -320,83 +320,154 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     }
   }
 
+  // Future<void> getPDF(String docNo, String docType, String docDate) async {
+  //   try {
+  //     final response = await http.get(Uri.parse(
+  //         'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${widget.pErpOuCode}/${widget.pAppUser}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${widget.pFlag}/$pDsPdf'));
+
+  //     print(
+  //         'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${widget.pErpOuCode}/${widget.pAppUser}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${widget.pFlag}/$pDsPdf');
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> data =
+  //           jsonDecode(utf8.decode(response.bodyBytes));
+  //       final List<dynamic> items = data['items'];
+  //       print(items);
+  //       if (items.isNotEmpty) {
+  //         final Map<String, dynamic> item = items[0];
+  //         print('Fetched data: $jsonDecode');
+  //         print('data $data');
+
+  //         setState(() {
+  // V_DS_PDF = item['V_DS_PDF'] ?? '';
+  // LIN_ID = item['LIN_ID'] ?? '';
+  // OU_CODE = item['OU_CODE'] ?? '';
+  // PROGRAM_NAME = item['PROGRAM_NAME'] ?? '';
+  // CURRENT_DATE = item['CURRENT_DATE'] ?? '';
+  // USER_ID = item['USER_ID'] ?? '';
+  // PROGRAM_ID = item['PROGRAM_ID'] ?? '';
+  // P_WARE = item['P_WARE'] ?? '';
+  // P_SESSION = item['P_SESSION'] ?? '';
+
+  // S_DOC_TYPE = item['S_DOC_TYPE'] ?? '';
+  // S_DOC_DATE = item['S_DOC_DATE'] ?? '';
+  // S_DOC_NO = item['S_DOC_NO'] ?? '';
+  // E_DOC_TYPE = item['E_DOC_TYPE'] ?? '';
+  // E_DOC_DATE = item['E_DOC_DATE'] ?? '';
+  // E_DOC_NO = item['E_DOC_NO'] ?? '';
+  // FLAG = item['FLAG'] ?? '';
+
+  // LH_PAGE = item['LH_PAGE'] ?? '';
+  // LH_DATE = item['LH_DATE'] ?? '';
+  // LH_AR_NAME = item['LH_AR_NAME'] ?? '';
+  // LH_LOGISTIC_COMP = item['LH_LOGISTIC_COMP'] ?? '';
+  // LH_DOC_TYPE = item['LH_DOC_TYPE'] ?? '';
+  // LH_WARE = item['LH_WARE'] ?? '';
+  // LH_CAR_ID = item['LH_CAR_ID'] ?? '';
+  // LH_DOC_NO = item['LH_DOC_NO'] ?? '';
+  // LH_DOC_DATE = item['LH_DOC_DATE'] ?? '';
+  // LH_INVOICE_NO = item['LH_INVOICE_NO'] ?? '';
+
+  // LB_SEQ = item['LB_SEQ'] ?? '';
+  // LB_ITEM_CODE = item['LB_ITEM_CODE'] ?? '';
+  // LB_ITEM_NAME = item['LB_ITEM_NAME'] ?? '';
+  // LB_LOCATION = item['LB_LOCATION'] ?? '';
+  // LB_UMS = item['LB_UMS'] ?? '';
+  // // LB_LOTS_PRODUCT = item['LB_LOTS_PRODUCT'] ?? '';
+  // // LB_MO_NO = item['LB_MO_NO'] ?? '';          ////-------////
+  // LB_TRAN_QTY = item['LB_TRAN_QTY'] ?? '';
+  // // LB_ATTRIBUTE1 = item['LB_ATTRIBUTE1'] ?? '';
+  // LT_NOTE = item['LT_NOTE'] ?? '';
+  // LT_TOTAL_QTY = item['LT_TOTAL_QTY'] ?? '';
+  // LT_ISSUE = item['LT_ISSUE'] ?? '';
+  // LT_APPROVE = item['LT_APPROVE'] ?? '';
+  // LT_OUT = item['LT_OUT'] ?? '';
+  // LT_RECEIVE = item['LT_RECEIVE'] ?? '';
+  // LT_BILL = item['LT_BILL'] ?? '';
+  // LT_CHECK = item['LT_CHECK'] ?? '';
+
+  //           _launchUrl(docNo);
+  //         });
+  //       } else {
+  //         print('No items found.');
+  //       }
+  //     } else {
+  //       print(
+  //           'fetchData 555555555    Failed to load data. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('1');
+  //     print('Error Get PDF: $e');
+  //   }
+  // }
+
   Future<void> getPDF(String docNo, String docType, String docDate) async {
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${widget.pErpOuCode}/${widget.pAppUser}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${widget.pFlag}/$pDsPdf'));
 
-      print(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${widget.pErpOuCode}/${widget.pAppUser}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${widget.pFlag}/$pDsPdf');
+      print('Response body: ${response.body}'); // แสดงข้อมูลที่ได้รับจาก API
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data =
-            jsonDecode(utf8.decode(response.bodyBytes));
-        final List<dynamic> items = data['items'];
-        print(items);
-        if (items.isNotEmpty) {
-          final Map<String, dynamic> item = items[0];
-          print('Fetched data: $jsonDecode');
-          print('data $data');
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataPDF = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
+        setState(() {
+          V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
+          LIN_ID = dataPDF['LIN_ID'] ?? '';
+          OU_CODE = dataPDF['OU_CODE'] ?? '';
+          PROGRAM_NAME = dataPDF['PROGRAM_NAME'] ?? '';
+          CURRENT_DATE = dataPDF['CURRENT_DATE'] ?? '';
+          USER_ID = dataPDF['USER_ID'] ?? '';
+          PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
+          P_WARE = dataPDF['P_WARE'] ?? '';
+          P_SESSION = dataPDF['P_SESSION'] ?? '';
 
-          setState(() {
-            V_DS_PDF = item['V_DS_PDF'];
-            LIN_ID = item['LIN_ID'];
-            OU_CODE = item['OU_CODE'];
-            PROGRAM_NAME = item['PROGRAM_NAME'];
-            CURRENT_DATE = item['CURRENT_DATE'];
-            USER_ID = item['USER_ID'];
-            PROGRAM_ID = item['PROGRAM_ID'];
-            P_WARE = item['P_WARE'];
-            P_SESSION = item['P_SESSION'];
+          S_DOC_TYPE = dataPDF['S_DOC_TYPE'] ?? '';
+          S_DOC_DATE = dataPDF['S_DOC_DATE'] ?? '';
+          S_DOC_NO = dataPDF['S_DOC_NO'] ?? '';
+          E_DOC_TYPE = dataPDF['E_DOC_TYPE'] ?? '';
+          E_DOC_DATE = dataPDF['E_DOC_DATE'] ?? '';
+          E_DOC_NO = dataPDF['E_DOC_NO'] ?? '';
+          FLAG = dataPDF['FLAG'] ?? '';
 
-            S_DOC_TYPE = item['S_DOC_TYPE'];
-            S_DOC_DATE = item['S_DOC_DATE'];
-            S_DOC_NO = item['S_DOC_NO'];
-            E_DOC_TYPE = item['E_DOC_TYPE'];
-            E_DOC_DATE = item['E_DOC_DATE'];
-            E_DOC_NO = item['E_DOC_NO'];
-            FLAG = item['FLAG'];
+          LH_PAGE = dataPDF['LH_PAGE'] ?? '';
+          LH_DATE = dataPDF['LH_DATE'] ?? '';
+          LH_AR_NAME = dataPDF['LH_AR_NAME'] ?? '';
+          LH_LOGISTIC_COMP = dataPDF['LH_LOGISTIC_COMP'] ?? '';
+          LH_DOC_TYPE = dataPDF['LH_DOC_TYPE'] ?? '';
+          LH_WARE = dataPDF['LH_WARE'] ?? '';
+          LH_CAR_ID = dataPDF['LH_CAR_ID'] ?? '';
+          LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
+          LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
+          LH_INVOICE_NO = dataPDF['LH_INVOICE_NO'] ?? '';
 
-            LH_PAGE = item['LH_PAGE'];
-            LH_DATE = item['LH_DATE'];
-            LH_AR_NAME = item['LH_AR_NAME'];
-            LH_LOGISTIC_COMP = item['LH_LOGISTIC_COMP'];
-            LH_DOC_TYPE = item['LH_DOC_TYPE'];
-            LH_WARE = item['LH_WARE'];
-            LH_CAR_ID = item['LH_CAR_ID'];
-            LH_DOC_NO = item['LH_DOC_NO'];
-            LH_DOC_DATE = item['LH_DOC_DATE'];
-            LH_INVOICE_NO = item['LH_INVOICE_NO'];
+          LB_SEQ = dataPDF['LB_SEQ'] ?? '';
+          LB_ITEM_CODE = dataPDF['LB_ITEM_CODE'] ?? '';
+          LB_ITEM_NAME = dataPDF['LB_ITEM_NAME'] ?? '';
+          LB_LOCATION = dataPDF['LB_LOCATION'] ?? '';
+          LB_UMS = dataPDF['LB_UMS'] ?? '';
+          // LB_LOTS_PRODUCT = item['LB_LOTS_PRODUCT'] ?? '';
+          // LB_MO_NO = item['LB_MO_NO'] ?? '';          ////-------////
+          LB_TRAN_QTY = dataPDF['LB_TRAN_QTY'] ?? '';
+          // LB_ATTRIBUTE1 = item['LB_ATTRIBUTE1'] ?? '';
+          LT_NOTE = dataPDF['LT_NOTE'] ?? '';
+          LT_TOTAL_QTY = dataPDF['LT_TOTAL_QTY'] ?? '';
+          LT_ISSUE = dataPDF['LT_ISSUE'] ?? '';
+          LT_APPROVE = dataPDF['LT_APPROVE'] ?? '';
+          LT_OUT = dataPDF['LT_OUT'] ?? '';
+          LT_RECEIVE = dataPDF['LT_RECEIVE'] ?? '';
+          LT_BILL = dataPDF['LT_BILL'] ?? '';
+          LT_CHECK = dataPDF['LT_CHECK'] ?? '';
 
-            LB_SEQ = item['LB_SEQ'];
-            LB_ITEM_CODE = item['LB_ITEM_CODE'];
-            LB_ITEM_NAME = item['LB_ITEM_NAME'];
-            LB_LOCATION = item['LB_LOCATION'];
-            LB_UMS = item['LB_UMS'];
-            LB_LOTS_PRODUCT = item['LB_LOTS_PRODUCT'];
-            LB_MO_NO = item['LB_MO_NO'];
-            LB_TRAN_QTY = item['LB_TRAN_QTY'];
-            LB_ATTRIBUTE1 = item['LB_ATTRIBUTE1'];
-            LT_NOTE = item['LT_NOTE'];
-            LT_TOTAL_QTY = item['LT_TOTAL_QTY'];
-            LT_ISSUE = item['LT_ISSUE'];
-            LT_APPROVE = item['LT_APPROVE'];
-            LT_OUT = item['LT_OUT'];
-            LT_RECEIVE = item['LT_RECEIVE'];
-            LT_BILL = item['LT_BILL'];
-            LT_CHECK = item['LT_CHECK'];
-
-            _launchUrl(docNo);
-          });
-        } else {
-          print('No items found.');
-        }
+          _launchUrl(docNo);
+        });
       } else {
-        print(
-            'fetchData 555555555    Failed to load data. Status code: ${response.statusCode}');
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
-      print('1');
-      print('Error: $e');
+      print('Error in submit Data: $e');
     }
   }
 
@@ -449,10 +520,59 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
         '&LT_RECEIVE=$LT_RECEIVE'
         '&LT_BILL=$LT_BILL'
         '&LT_CHECK=$LT_CHECK');
+
     print(uri);
     if (!await launchUrl(uri)) {
       throw Exception('Could not launch $uri');
     }
+    print('http://172.16.0.82:8888/jri/report?'
+        '&_repName=/WMS/SSFGOD02A5'
+        '&_repFormat=pdf'
+        '&_dataSource=$pDsPdf'
+        '&_outFilename=$pDocNo.pdf'
+        '&_repLocale=en_US'
+        '&V_DS_PDF=$V_DS_PDF'
+        '&LIN_ID=$LIN_ID'
+        '&OU_CODE=$OU_CODE'
+        '&PROGRAM_NAME=$PROGRAM_NAME'
+        '&CURRENT_DATE=$CURRENT_DATE'
+        '&USER_ID=$USER_ID'
+        '&PROGRAM_ID=$PROGRAM_ID'
+        '&P_WARE=$P_WARE'
+        '&P_SESSION=$P_SESSION'
+        '&S_DOC_TYPE=$S_DOC_TYPE'
+        '&S_DOC_DATE=$S_DOC_DATE'
+        '&E_DOC_TYPE=$E_DOC_TYPE'
+        '&E_DOC_DATE=$E_DOC_DATE'
+        '&E_DOC_NO=$E_DOC_NO'
+        '&FLAG=$FLAG'
+        '&LH_PAGE=$LH_PAGE'
+        '&LH_DATE=$LH_DATE'
+        '&LH_AR_NAME=$LH_AR_NAME'
+        '&LH_LOGISTIC_COMP=$LH_LOGISTIC_COMP'
+        '&LH_DOC_TYPE=$LH_DOC_TYPE'
+        '&LH_WARE=$LH_WARE'
+        '&LH_CAR_ID=$LH_CAR_ID'
+        '&LH_DOC_NO=$LH_DOC_NO'
+        '&LH_DOC_DATE=$LH_DOC_DATE'
+        '&LH_INVOICE_NO=$LH_INVOICE_NO'
+        '&LB_SEQ=$LB_SEQ'
+        '&LB_ITEM_CODE=$LB_ITEM_CODE'
+        '&LB_ITEM_NAME=$LB_ITEM_NAME'
+        '&LB_LOCATION=$LB_LOCATION'
+        '&LB_UMS=$LB_UMS'
+        '&LB_LOTS_PRODUCT=$LB_LOTS_PRODUCT'
+        '&LB_MO_NO=$LB_MO_NO'
+        '&LB_TRAN_QTY=$LB_TRAN_QTY'
+        '&LB_ATTRIBUTE1=$LB_ATTRIBUTE1'
+        '&LT_NOTE=$LT_NOTE'
+        '&LT_TOTAL_QTY=$LT_TOTAL_QTY'
+        '&LT_ISSUE=$LT_ISSUE'
+        '&LT_APPROVE=$LT_APPROVE'
+        '&LT_OUT=$LT_OUT'
+        '&LT_RECEIVE=$LT_RECEIVE'
+        '&LT_BILL=$LT_BILL'
+        '&LT_CHECK=$LT_CHECK');
   }
 
   @override

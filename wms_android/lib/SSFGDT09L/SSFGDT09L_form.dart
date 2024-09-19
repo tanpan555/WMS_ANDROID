@@ -639,7 +639,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                           testChk = 1,
                         );
                       } else {
-                        showDialogErrorCHK('กรุณากรอกข้อมูลให้ครบ');
+                        showDialogErrorCHK('ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
                       }
                     },
                   ),
