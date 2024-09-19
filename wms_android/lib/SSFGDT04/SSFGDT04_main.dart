@@ -60,7 +60,7 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
       backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
             Container(
@@ -130,13 +130,13 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
                       },
                       child: Card(
                         elevation: 4.0,
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
+                        // margin: const EdgeInsets.symmetric(vertical: 4),
                         color: cardColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(15.0),
+                          padding: const EdgeInsets.all(10),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -144,13 +144,13 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
                                 imagePath,
                                 width: 70,
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 5),
                               Text(
                                 item['ware_code'] ?? 'null',
                                 style: const TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 18,
                                   color: Colors.black,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],

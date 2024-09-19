@@ -5,6 +5,7 @@ import 'package:wms_android/custom_appbar.dart';
 import 'SSFGDT04_CARD.dart';
 import 'dart:ui';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:wms_android/Global_Parameter.dart' as gb;
 
 class SSFGDT04_SEARCH extends StatefulWidget {
   final String pWareCode;
@@ -21,10 +22,12 @@ class SSFGDT04_SEARCH extends StatefulWidget {
 }
 
 class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
+  int pFlag = 1;
   String pSoNo = 'null';
   String selectedItem = 'ระหว่างบันทึก'; // Ensure this value exists in dropdownItems
   String status = '1'; // Default status
   String selectedDate = 'null'; // Allow null for the date
+  String appUser = gb.APP_USER;
   TextEditingController _dateController = TextEditingController();
   final TextEditingController _controller = TextEditingController();
   final String sDateFormat = "dd-MM-yyyy";
@@ -187,12 +190,14 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                           _navigateToPage(
                             context,
                             SSFGDT04_CARD(
+                              pFlag: pFlag,
                               soNo: pSoNo,
                               date:
                                   selectedDate, // Use current date if no date is selected
                               status: status,
                               pWareCode: widget.pWareCode,
                               pErpOuCode: widget.pErpOuCode,
+                              pAppUser: appUser,
                             ),
                           );
                         }

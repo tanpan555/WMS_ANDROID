@@ -17,3 +17,5 @@ String P_WARE_CODE = '';
 
 String APP_SESSION = '';
 int sessionid = 0;
+
+String FLAG = '1';

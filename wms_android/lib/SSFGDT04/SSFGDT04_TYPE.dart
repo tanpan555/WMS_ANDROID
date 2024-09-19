@@ -31,14 +31,6 @@ String? pDocTypeCreateNewINXferWMS;
   String? selectedDocType;
 
   final _formKey = GlobalKey<FormState>();
-  // 'V_CR_WHCODE': selectedValue,
-  //     'p_doc_type': LocCode,
-  //     'P_WARE_CODE': whOUTCode,
-  //     'P_OU_CODE': LocOUTCode,
-  //     'P_ERP_OU_CODE': currentSessionID,
-  //     'APP_SESSION': docData,
-  //     'p_ware_code': warecode,
-  //     'APP_USER': appuser,
 
   @override
   void initState() {

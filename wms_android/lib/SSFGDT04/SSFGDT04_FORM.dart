@@ -702,47 +702,48 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
                   // วันที่บันทึก //
                   Padding(
-  padding: const EdgeInsets.symmetric(vertical: 8),
-  child: TextField(
-    controller: _docDateController,
-    readOnly: true,
-    decoration: InputDecoration(
-      labelText: 'วันที่บันทึก',
-      filled: true,
-      fillColor: Colors.white,
-      labelStyle: TextStyle(color: Colors.black),
-      border: InputBorder.none,
-      suffixIcon: Icon(Icons.calendar_today),
-    ),
-    onTap: () async {
-      // เลือกวันที่
-      DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2101),
-      );
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: TextField(
+                      controller: _docDateController,
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        labelText: 'วันที่บันทึก',
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none,
+                        suffixIcon: Icon(Icons.calendar_today),
+                      ),
+                      onTap: () async {
+                        // เลือกวันที่
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101),
+                        );
 
-      if (pickedDate != null) {
-        // เพิ่มเวลาให้เป็นปัจจุบัน
-        DateTime currentTime = DateTime.now();
-        DateTime fullDateTime = DateTime(
-          pickedDate.year,
-          pickedDate.month,
-          pickedDate.day,
-          currentTime.hour,
-          currentTime.minute,
-          currentTime.second,
-        );
+                        if (pickedDate != null) {
+                          // เพิ่มเวลาให้เป็นปัจจุบัน
+                          DateTime currentTime = DateTime.now();
+                          DateTime fullDateTime = DateTime(
+                            pickedDate.year,
+                            pickedDate.month,
+                            pickedDate.day,
+                            currentTime.hour,
+                            currentTime.minute,
+                            currentTime.second,
+                          );
 
-        // Format fullDateTime as dd/MM/yyyy HH:mm
-        setState(() {
-          _docDateController.text = _dateTimeFormatter.format(fullDateTime);
-        });
-      }
-    },
-  ),
-),
+                          // Format fullDateTime as dd/MM/yyyy HH:mm
+                          setState(() {
+                            _docDateController.text =
+                                _dateTimeFormatter.format(fullDateTime);
+                          });
+                        }
+                      },
+                    ),
+                  ),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
