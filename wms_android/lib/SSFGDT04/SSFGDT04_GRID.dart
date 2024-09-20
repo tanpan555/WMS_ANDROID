@@ -49,10 +49,6 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
 
   Future<void> _showEditDialog(
       BuildContext context, Map<String, dynamic> item) async {
-    // Check if 'pack_qty' exists, if not, assign an empty string
-    // final TextEditingController _quantityController = TextEditingController(
-    //   text: item['pack_qty'] != null ? item['pack_qty'].toString() : '',
-    // );
     final _quantityController = TextEditingController(
       text: item['pack_qty'] != null
           ? NumberFormat('#,###').format(item['pack_qty'])
@@ -440,13 +436,9 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                           po_doc_type: widget.po_doc_type, // ส่งค่า po_doc_type
                           pWareCode: widget.pWareCode,
                           setqc: setqc ?? '',
-                          //                 // p_ref_no: _refNoController.text ?? '',
-                          //                 // mo_do_no: _moDoNoController.text ?? '',
                         ),
                       ),
                     );
-                    // await fetchData();
-                    // เพิ่มโค้ดสำหรับการทำงานของปุ่มถัดไปที่นี่
                   },
                   child: Image.asset(
                     'assets/images/right.png', // เปลี่ยนเป็นเส้นทางของรูปภาพของคุณ
@@ -454,14 +446,6 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                     height: 20, // ปรับขนาดตามที่ต้องการ
                   ),
                   style: AppStyles.NextButtonStyle(),
-                  // style: ElevatedButton.styleFrom(
-                  //   backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                  //   shape: RoundedRectangleBorder(
-                  //     borderRadius: BorderRadius.circular(10),
-                  //   ),
-                  //   minimumSize: const Size(60, 40),
-                  //   padding: const EdgeInsets.all(0),
-                  // ),
                 ),
               ],
             ),
@@ -485,6 +469,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
         children: [
           SizedBox(height: 10),
           Container(
+            width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -497,26 +482,34 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
           SizedBox(height: 10),
-          // Text with background color
+// Text with background color
           Container(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 80),
+            width: double.infinity, // ทำให้กว้างเต็มที่
+            padding:
+                EdgeInsets.symmetric(vertical: 8), // ปรับ padding ซ้ายขวาเป็น 0
             decoration: BoxDecoration(
               color: Colors.lightBlue[100], // Background color for the text
               borderRadius:
                   BorderRadius.circular(8), // Rounded corners (optional)
             ),
-            child: Text(
-              setqc ?? '', // Text ที่ต้องการแสดง
-              style: TextStyle(
-                color: Colors.black, // Text color
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30), // Padding ซ้ายขวา
+              child: Text(
+                setqc ?? '', // Text ที่ต้องการแสดง
+                style: TextStyle(
+                  color: Colors.black, // Text color
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
           ),
+
           const SizedBox(height: 10),
           ListView.builder(
             shrinkWrap: true, // ให้ ListView มีขนาดตามข้อมูล
