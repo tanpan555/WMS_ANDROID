@@ -485,7 +485,7 @@ String? pomsg;
                       readOnly: true),
                   _buildTextField(po_doc_typeText, 'ประเภทเอกสาร',
                       readOnly: true),
-                  _buildDateTextField(CR_DATE, 'วันที่บันทึก'),
+                  _buildTextimportantField(CR_DATE, 'วันที่บันทึก'),
                   _buildTextField(REF_NO, 'เลขที่เอกสารอ้างอิง'),
                   _buildTextField(MO_DO_NO, 'เลขที่คำสั่งผลผลิต'),
                   _buildTextField(NB_WARE_CODE, 'คลังต้นทาง', readOnly: true),
@@ -521,6 +521,39 @@ String? pomsg;
       ),
     );
   }
+
+  Widget _buildTextimportantField(TextEditingController controller, String label,
+    {bool readOnly = false}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: TextField(
+      controller: controller,
+      style: TextStyle(color: Colors.black),
+      readOnly: readOnly,
+      decoration: InputDecoration(
+        labelText: null, // Set to null to customize with RichText
+        labelStyle: TextStyle(color: Colors.black),
+        filled: true,
+        fillColor: readOnly ? Colors.grey[300] : Colors.white,
+        border: InputBorder.none,
+        // Using label as a RichText
+        label: RichText(
+          text: TextSpan(
+            text: label, // Main label text
+            style: TextStyle(color: Colors.black), // Default label color
+            children: [
+              TextSpan(
+                text: '*', // Asterisk
+                style: TextStyle(color: Colors.red), // Red asterisk
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
 
 
   Widget _buildDateTextField(TextEditingController controller, String label) {
