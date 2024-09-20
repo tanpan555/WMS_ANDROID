@@ -666,5 +666,56 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
         );
       },
     );
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return AlertDialog(
+    //       title: Row(
+    //         children: [
+    //           // Icon(
+    //           //   Icons.notification_important,
+    //           //   color: Colors.red,
+    //           // ),
+    //           // SizedBox(width: 10),
+    //           // Text(
+    //           //   'Error',
+    //           //   style: TextStyle(color: Colors.red),
+    //           // ),
+    //         ],
+    //       ),
+    //       content: SingleChildScrollView(
+    //         child: Padding(
+    //           padding: const EdgeInsets.all(16.0),
+    //           child: Column(
+    //             children: [
+    //               const SizedBox(height: 10),
+    //               Text(
+    //                 messageCard,
+    //                 style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+    //               ),
+    //               const SizedBox(height: 10),
+    //               Row(
+    //                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //                 mainAxisAlignment: MainAxisAlignment.end,
+    //                 children: [
+    //                   ElevatedButton(
+    //                     onPressed: () {
+    //                       Navigator.of(context).pop();
+    //                     },
+    //                     // style: ElevatedButton.styleFrom(
+    //                     //   backgroundColor: Colors.white,
+    //                     //   side: BorderSide(color: Colors.grey),
+    //                     // ),
+    //                     child: const Text('OK'),
+    //                   ),
+    //                 ],
+    //               )
+    //             ],
+    //           ),
+    //         ),
+    //       ),
+    //     );
+    //   },
+    // );
   }
 }

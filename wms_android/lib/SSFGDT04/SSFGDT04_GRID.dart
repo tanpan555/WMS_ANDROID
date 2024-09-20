@@ -336,7 +336,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
       appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             // Row with two buttons
@@ -465,7 +465,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                 ),
               ],
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 16),
             Expanded(
               child: SingleChildScrollView(
                 child: _buildCards(),

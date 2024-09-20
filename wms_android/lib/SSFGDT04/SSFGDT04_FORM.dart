@@ -336,7 +336,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
       body: fromItems.isEmpty
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -624,7 +624,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                       ],
                     ),
                   ),
-
+                  const SizedBox(height: 16),
                   // เลขที่ใบเบิก WMS* //
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
@@ -643,7 +643,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
                   //ประเภทการจ่าย*//
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.symmetric(vertical: 0),
                     child: DropdownButtonFormField2<String>(
                       isExpanded: true,
                       decoration: InputDecoration(
@@ -746,7 +746,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.symmetric(vertical: 0),
                     child: GestureDetector(
                       onTap: () {
                         showDialog(
@@ -1212,10 +1212,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
                   // เลขที่คำสั่งผลผลิต* //
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.symmetric(vertical: 0),
                     child: TextField(
                       decoration: InputDecoration(
-                        labelText: 'เลขที่คำสั่งผลผลิต*',
+                        labelText: 'เลขที่คำสั่งผลผลิต',
                         filled: true,
                         fillColor: Colors.white,
                         labelStyle: TextStyle(color: Colors.black),
@@ -1409,7 +1409,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                   ),
                   // หมายเหตุ //
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.symmetric(vertical: 0),
                     child: TextField(
                       decoration: InputDecoration(
                         labelText: 'หมายเหตุ',

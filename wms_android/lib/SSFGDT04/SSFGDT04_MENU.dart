@@ -30,7 +30,7 @@ class SSFGDT04_MENU extends StatelessWidget {
       appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: Color.fromARGB(255, 17, 0, 56),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
