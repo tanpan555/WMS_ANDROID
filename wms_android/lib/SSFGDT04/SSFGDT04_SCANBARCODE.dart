@@ -618,8 +618,8 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                     labelStyle: TextStyle(color: Colors.black),
                     border: InputBorder.none,
                     suffixIcon: Icon(
-                      Icons.list,
-                      color: Colors.black,
+                      Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
                     ),
                   ),
                   controller: _locatorBarcodeController.text.isNotEmpty
