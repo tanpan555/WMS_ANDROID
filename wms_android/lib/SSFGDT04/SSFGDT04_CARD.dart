@@ -35,6 +35,7 @@ class SSFGDT04_CARD extends StatefulWidget {
 }
 
 class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
+  bool isLoading = true;
   List<dynamic> dataCard = [];
   List<dynamic> displayedData = [];
   String data_null = 'null';
@@ -114,6 +115,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   }
 
   Future<void> fetchData() async {
+    await Future.delayed(Duration(seconds: 2));
     final String endpoint = widget.soNo.isNotEmpty
         ? 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}'
         : 'http://172.16.0.82:8888/apex/wms/SSFGDT12/selectCard/${gb.P_ERP_OU_CODE}/$data_null/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}';
@@ -129,8 +131,10 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
         print('Fetched data: $responseData');
 
         setState(() {
+          // isLoading = false;
           dataCard =
               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+              isLoading = false;
           filterData();
         });
         print('dataCard: $dataCard');
@@ -457,198 +461,160 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      // backgroundColor: Color.fromARGB(255, 165, 216, 103),
       appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO'),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        // child: Column(
-        //   children: [
-        //     Expanded(
-        child: ListView.builder(
-          itemCount: dataCard.length,
-          itemBuilder: (context, index) {
-            final item = dataCard[index];
+        padding: const EdgeInsets.all(16),
+        child: isLoading
+            ? Center(child: CircularProgressIndicator()) // Show loading indicator
+            : ListView.builder(
+                itemCount: dataCard.length,
+                itemBuilder: (context, index) {
+                  final item = dataCard[index];
 
-            return Card(
-              elevation: 8.0,
-              margin: const EdgeInsets.symmetric(vertical: 8.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              color: Colors.lightBlue[100],
-              child: InkWell(
-                onTap: () {
-                  checkStatusCard(item['po_no'] ?? '', item['p_doc_no'] ?? '',
-                      item['p_doc_type'] ?? '');
+                  return Card(
+                    elevation: 8.0,
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    color: Colors.lightBlue[100],
+                    child: InkWell(
+                      onTap: () {
+                        checkStatusCard(item['po_no'] ?? '', item['p_doc_no'] ?? '', item['p_doc_type'] ?? '');
 
-                  print(
-                      'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
-                  print(
-                      'p_doc_no in Card : ${item['p_doc_no']} Type : ${item['p_doc_no'].runtimeType}');
-                  print(
-                      'p_doc_type in Card : ${item['p_doc_type']} Type : ${item['p_doc_type'].runtimeType}');
-                },
-                borderRadius: BorderRadius.circular(15.0),
-                child: Stack(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        print('po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
+                        print('p_doc_no in Card : ${item['p_doc_no']} Type : ${item['p_doc_no'].runtimeType}');
+                        print('p_doc_type in Card : ${item['p_doc_type']} Type : ${item['p_doc_type'].runtimeType}');
+                      },
+                      borderRadius: BorderRadius.circular(15.0),
+                      child: Stack(
                         children: [
-                          Center(
-                            child: Text(
-                              item['ap_name'] ?? 'No Name',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Color.fromARGB(255, 0, 0, 0)),
-                            ),
-                          ),
-                          const Divider(
-                            color: Colors.black26, // สีเส้น Divider เบาลง
-                            thickness: 1,
-                          ),
-                          // SizedBox(height: 8),
-                          Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment
-                                  .center, // Centers the items in the row
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12.0, vertical: 6.0),
-                                  decoration: BoxDecoration(
-                                    color: (() {
-                                      switch (item['card_status_desc']) {
-                                        case 'ระหว่างบันทึก':
-                                          return Color.fromRGBO(
-                                              246, 250, 112, 1);
-                                        case 'ยืนยันการรับ':
-                                          return Color.fromRGBO(
-                                              146, 208, 80, 1);
-                                        case 'ยกเลิก':
-                                          return Color.fromRGBO(
-                                              208, 206, 206, 1);
-                                        case 'ทั้งหมด':
-                                        default:
-                                          return Color.fromARGB(
-                                              255, 255, 255, 255);
-                                      }
-                                    })(),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
+                                Center(
                                   child: Text(
-                                    item['card_status_desc'],
+                                    item['ap_name'] ?? 'No Name',
                                     style: const TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: Color.fromARGB(255, 0, 0, 0)),
                                   ),
                                 ),
-                                const SizedBox(width: 8),
-                                Center(
-                                  child: (() {
-                                    if (item['card_qc'] ==
-                                        '#APP_IMAGES#rt_machine_on.png') {
-                                      return Image.asset(
-                                        'assets/images/rt_machine_on.png',
-                                        width: 50,
-                                        height: 50,
-                                      );
-                                    } else if (item['card_qc'] ==
-                                        '#APP_IMAGES#rt_machine_off.png') {
-                                      return Image.asset(
-                                        'assets/images/rt_machine_off.png',
-                                        width: 50,
-                                        height: 50,
-                                      );
-                                    } else if (item['card_qc'] == '') {
-                                      return SizedBox
-                                          .shrink(); // No widget displayed
-                                    } else {
-                                      return Text(
-                                          ''); // Empty text widget for other cases
-                                    }
-                                  })(),
+                                const Divider(
+                                  color: Colors.black26,
+                                  thickness: 1,
                                 ),
-
-                                const SizedBox(
-                                    width:
-                                        8), // Adds space between the Container and the TextButton
                                 Center(
-                                  child: item['status'] != null
-                                      ? Container(
-                                          decoration: BoxDecoration(
-                                            color: Color.fromARGB(
-                                                72, 145, 144, 144),
-                                            borderRadius: BorderRadius.circular(
-                                                5), // Optional: Add rounded corners
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                                        decoration: BoxDecoration(
+                                          color: (() {
+                                            switch (item['card_status_desc']) {
+                                              case 'ระหว่างบันทึก':
+                                                return Color.fromRGBO(246, 250, 112, 1);
+                                              case 'ยืนยันการรับ':
+                                                return Color.fromRGBO(146, 208, 80, 1);
+                                              case 'ยกเลิก':
+                                                return Color.fromRGBO(208, 206, 206, 1);
+                                              case 'ทั้งหมด':
+                                              default:
+                                                return Color.fromARGB(255, 255, 255, 255);
+                                            }
+                                          })(),
+                                          borderRadius: BorderRadius.circular(5),
+                                        ),
+                                        child: Text(
+                                          item['card_status_desc'],
+                                          style: const TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                          child: TextButton(
-                                            onPressed: () {
-                                              getPDF(
-                                                item['doc_no'],
-                                                item['doc_type'],
-                                              );
-                                              // });
-                                              // Handle button press
-                                              // Add your navigation or functionality here
-                                            },
-                                            child: item['status'] == 'พิมพ์'
-                                                ? Image.asset(
-                                                    'assets/images/printer.png', // Replace with your image path
-                                                    width:
-                                                        30, // Adjust the size as needed
-                                                    height: 30,
-                                                  )
-                                                : Text(
-                                                    item['status']!,
-                                                    style: const TextStyle(
-                                                      fontSize: 15,
-                                                      color: Color.fromARGB(
-                                                          137, 0, 0, 0),
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                          ),
-                                        )
-                                      : SizedBox.shrink(),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Center(
+                                        child: (() {
+                                          if (item['card_qc'] == '#APP_IMAGES#rt_machine_on.png') {
+                                            return Image.asset(
+                                              'assets/images/rt_machine_on.png',
+                                              width: 50,
+                                              height: 50,
+                                            );
+                                          } else if (item['card_qc'] == '#APP_IMAGES#rt_machine_off.png') {
+                                            return Image.asset(
+                                              'assets/images/rt_machine_off.png',
+                                              width: 50,
+                                              height: 50,
+                                            );
+                                          } else if (item['card_qc'] == '') {
+                                            return SizedBox.shrink();
+                                          } else {
+                                            return Text('');
+                                          }
+                                        })(),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Center(
+                                        child: item['status'] != null
+                                            ? Container(
+                                                decoration: BoxDecoration(
+                                                  color: Color.fromARGB(72, 145, 144, 144),
+                                                  borderRadius: BorderRadius.circular(5),
+                                                ),
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    getPDF(item['doc_no'], item['doc_type']);
+                                                  },
+                                                  child: item['status'] == 'พิมพ์'
+                                                      ? Image.asset(
+                                                          'assets/images/printer.png',
+                                                          width: 30,
+                                                          height: 30,
+                                                        )
+                                                      : Text(
+                                                          item['status']!,
+                                                          style: const TextStyle(
+                                                            fontSize: 15,
+                                                            color: Color.fromARGB(137, 0, 0, 0),
+                                                            fontWeight: FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                ),
+                                              )
+                                            : SizedBox.shrink(),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Center(
+                                  child: Text(
+                                    '${item['po_date']} ${item['po_no']} ${item['item_stype_desc'] ?? ''}',
+                                    style: const TextStyle(fontSize: 12, color: Colors.black54),
+                                  ),
                                 ),
                               ],
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Center(
-                            child: Text(
-                              '${item['po_date']} ${item['po_no']} ${item['item_stype_desc'] ?? ''}', //\n ${item['status']?? ''}
-                              style: const TextStyle(
-                                  fontSize: 12, color: Colors.black54),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       ),
-      //     ],
-      //   ),
-      // ),
       bottomNavigationBar: BottomBar(),
     );
   }
 
-  void showMessageStatusCard(
-    BuildContext context,
-    String messageCard,
-  ) {
+  void showMessageStatusCard(BuildContext context, String messageCard) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -666,56 +632,5 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
         );
       },
     );
-    // showDialog(
-    //   context: context,
-    //   builder: (BuildContext context) {
-    //     return AlertDialog(
-    //       title: Row(
-    //         children: [
-    //           // Icon(
-    //           //   Icons.notification_important,
-    //           //   color: Colors.red,
-    //           // ),
-    //           // SizedBox(width: 10),
-    //           // Text(
-    //           //   'Error',
-    //           //   style: TextStyle(color: Colors.red),
-    //           // ),
-    //         ],
-    //       ),
-    //       content: SingleChildScrollView(
-    //         child: Padding(
-    //           padding: const EdgeInsets.all(16.0),
-    //           child: Column(
-    //             children: [
-    //               const SizedBox(height: 10),
-    //               Text(
-    //                 messageCard,
-    //                 style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
-    //               ),
-    //               const SizedBox(height: 10),
-    //               Row(
-    //                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                 mainAxisAlignment: MainAxisAlignment.end,
-    //                 children: [
-    //                   ElevatedButton(
-    //                     onPressed: () {
-    //                       Navigator.of(context).pop();
-    //                     },
-    //                     // style: ElevatedButton.styleFrom(
-    //                     //   backgroundColor: Colors.white,
-    //                     //   side: BorderSide(color: Colors.grey),
-    //                     // ),
-    //                     child: const Text('OK'),
-    //                   ),
-    //                 ],
-    //               )
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     );
-    //   },
-    // );
   }
 }

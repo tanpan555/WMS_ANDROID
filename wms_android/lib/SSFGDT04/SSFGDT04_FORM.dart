@@ -50,6 +50,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   String? poMessage;
   String? po_doc_no;
   // String? p_cancel_code;
+  String selectedDate = 'null';
 
   TextEditingController _docNoController = TextEditingController();
   TextEditingController _docDateController = TextEditingController();
@@ -149,17 +150,27 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   }
 
   Future<void> fetchRefReceiveItems() async {
-    final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_REFRECEIVE/${gb.ATTR1}/${widget.pWareCode}'));
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_REFRECEIVE/${gb.ATTR1}/${widget.pWareCode}'));
 
-    if (response.statusCode == 200) {
-      final responseBody = utf8.decode(response.bodyBytes);
-      final data = jsonDecode(responseBody);
-      setState(() {
-        refReceiveItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-      });
-    } else {
-      throw Exception('Failed to load REFRECEIVE items');
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final data = jsonDecode(responseBody);
+
+        if (mounted) {
+          // ตรวจสอบว่า widget ยังคงอยู่ใน tree
+          setState(() {
+            refReceiveItems =
+                List<Map<String, dynamic>>.from(data['items'] ?? []);
+          });
+        }
+      } else {
+        throw Exception('Failed to load REFRECEIVE items');
+      }
+    } catch (e) {
+      // จัดการกับข้อผิดพลาด
+      print('Error fetching REFRECEIVE items: $e');
     }
   }
 
@@ -325,6 +336,34 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
       print('Update successful');
     } else {
       print('Failed to update: ${response.statusCode}');
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+    );
+
+    if (pickedDate != null) {
+      // Format the date as dd-MM-yyyy for internal use
+      String formattedDateForSearch =
+          DateFormat('dd-MM-yyyy').format(pickedDate);
+      // Format the date as dd/MM/yyyy for display
+      String formattedDateForDisplay =
+          DateFormat('dd/MM/yyyy').format(pickedDate);
+
+      setState(() {
+        _docDateController.text = formattedDateForDisplay;
+        selectedDate = formattedDateForSearch;
+      });
+      // setState(() {
+      //                           _docDateController.text =
+      //                               _dateTimeFormatter.format(fullDateTime);
+      //                         });
     }
   }
 
@@ -705,43 +744,20 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: TextField(
                       controller: _docDateController,
-                      readOnly: true,
                       decoration: InputDecoration(
                         labelText: 'วันที่บันทึก',
                         filled: true,
                         fillColor: Colors.white,
                         labelStyle: TextStyle(color: Colors.black),
                         border: InputBorder.none,
-                        suffixIcon: Icon(Icons.calendar_today),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.calendar_today),
+                          onPressed: () => _selectDate(
+                          context),
+                        ),
                       ),
-                      onTap: () async {
-                        // เลือกวันที่
-                        DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2101),
-                        );
-
-                        if (pickedDate != null) {
-                          // เพิ่มเวลาให้เป็นปัจจุบัน
-                          DateTime currentTime = DateTime.now();
-                          DateTime fullDateTime = DateTime(
-                            pickedDate.year,
-                            pickedDate.month,
-                            pickedDate.day,
-                            // currentTime.hour,
-                            // currentTime.minute,
-                            // currentTime.second,
-                          );
-
-                          // Format fullDateTime as dd/MM/yyyy HH:mm
-                          setState(() {
-                            _docDateController.text =
-                                _dateTimeFormatter.format(fullDateTime);
-                          });
-                        }
-                      },
+                      // ให้ user กรอกวันที่
+                      keyboardType: TextInputType.datetime,
                     ),
                   ),
 
@@ -939,7 +955,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             border: InputBorder.none,
                             suffixIcon: Icon(
                               Icons.arrow_drop_down,
-                              color: Color.fromARGB(255, 113, 113, 113),
+                          color: Color.fromARGB(255, 113, 113, 113),
                             ),
                           ),
                           controller:
@@ -1200,7 +1216,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             border: InputBorder.none,
                             suffixIcon: Icon(
                               Icons.arrow_drop_down,
-                              color: Color.fromARGB(255, 113, 113, 113),
+                          color: Color.fromARGB(255, 113, 113, 113),
                             ),
                           ),
                           controller:
@@ -1257,7 +1273,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             IconButton(
-                                              icon: Icon(Icons.close,color: Color.fromARGB(255, 113, 113, 113),),
+                                              icon: Icon(Icons.close),
                                               onPressed: () {
                                                 Navigator.of(context)
                                                     .pop(); // Close popup
@@ -1397,7 +1413,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             border: InputBorder.none,
                             suffixIcon: Icon(
                               Icons.arrow_drop_down,
-                              color: Color.fromARGB(255, 113, 113, 113),
+                          color: Color.fromARGB(255, 113, 113, 113),
                             ),
                           ),
                           controller: _staffCodeController.text.isNotEmpty
