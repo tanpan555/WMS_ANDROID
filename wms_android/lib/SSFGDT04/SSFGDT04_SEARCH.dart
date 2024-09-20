@@ -22,6 +22,7 @@ class SSFGDT04_SEARCH extends StatefulWidget {
 }
 
 class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   int pFlag = 1;
   String pSoNo = 'null';
   String selectedItem = 'ระหว่างบันทึก'; // Ensure this value exists in dropdownItems
@@ -83,10 +84,16 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
-      body: Padding(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(10), 
+      child: Form(
+      key: _formKey,
+      child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            const SizedBox(height: 16),
             DropdownButtonFormField2<String>(
               value: selectedItem,
               items: dropdownItems
@@ -216,6 +223,8 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
             ),
           ],
         ),
+      ),
+      ),
       ),
       bottomNavigationBar: BottomBar(),
     );

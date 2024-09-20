@@ -292,7 +292,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
       appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -409,7 +409,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             Expanded(
               child: SingleChildScrollView(
                 child: _buildCards(),

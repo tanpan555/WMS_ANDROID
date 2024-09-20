@@ -31,6 +31,14 @@ String? pDocTypeCreateNewINXferWMS;
   String? selectedDocType;
 
   final _formKey = GlobalKey<FormState>();
+  // 'V_CR_WHCODE': selectedValue,
+  //     'p_doc_type': LocCode,
+  //     'P_WARE_CODE': whOUTCode,
+  //     'P_OU_CODE': LocOUTCode,
+  //     'P_ERP_OU_CODE': currentSessionID,
+  //     'APP_SESSION': docData,
+  //     'p_ware_code': warecode,
+  //     'APP_USER': appuser,
 
   @override
   void initState() {
@@ -140,7 +148,7 @@ String? pDocTypeCreateNewINXferWMS;
         child: Form(
           key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
