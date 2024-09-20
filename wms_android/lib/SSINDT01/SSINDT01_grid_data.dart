@@ -1602,7 +1602,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                               }
                                             },
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.purple,
+                                              backgroundColor: const Color.fromARGB(255, 45,68,116),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(15),
@@ -1647,6 +1647,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }
@@ -2198,17 +2199,20 @@ Widget _buildInfoRow3(Map<String, String> info) {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
         controller: controller,
-        readOnly: true,
+         readOnly: false,
+                  onChanged: (value) {
+   controller.text = value;
+  },
         decoration: InputDecoration(
           labelText: labelText,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(1.0),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-          suffixIcon: Icon(Icons.calendar_today, color: Colors.black),
-        ),
-        onTap: () async {
-          FocusScope.of(context).requestFocus(FocusNode());
+          suffixIcon: IconButton(
+      icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
+      onPressed: () async {
+           FocusScope.of(context).requestFocus(FocusNode());
           DateTime initialDate = DateTime.now();
           if (controller.text.isNotEmpty) {
             try {
@@ -2219,6 +2223,7 @@ Widget _buildInfoRow3(Map<String, String> info) {
           }
           final DateTime? picked = await showDatePicker(
             context: context,
+            
             initialDate: initialDate,
             firstDate: DateTime(2000),
             lastDate: DateTime(2101),
@@ -2230,7 +2235,9 @@ Widget _buildInfoRow3(Map<String, String> info) {
               onChanged(displayFormat.format(picked));
             }
           }
-        },
+      }),
+        ),
+        
       ),
     );
   }
@@ -2806,6 +2813,7 @@ Widget _buildInfoRow3(Map<String, String> info) {
           ),
         ),
       ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }

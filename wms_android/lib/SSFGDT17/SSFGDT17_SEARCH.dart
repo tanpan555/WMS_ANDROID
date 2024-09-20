@@ -122,31 +122,41 @@ void initState() {
                 ),
                 const SizedBox(height: 16),
                 TextField(
-                  readOnly: true,
-                  controller: _dateController,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    labelText: 'วันที่โอน',
-                    labelStyle: TextStyle(color: Colors.black),
-                    filled: true,
-                    fillColor: Colors.white,
-                    suffixIcon: Icon(Icons.calendar_today_outlined, color: Colors.black),
-                  ),
-                  onTap: () async {
-                    DateTime? selectedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
-                    if (selectedDate != null && selectedDate != _selectedDate) {
-                      setState(() {
-                        _selectedDate = selectedDate;
-                        _dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate);
-                      });
-                    }
-                  },
-                ),
+  readOnly: false,
+  controller: _dateController,
+    onChanged: (value) {
+   _dateController.text = value;
+  },
+  decoration: InputDecoration(
+    border: InputBorder.none,
+    labelText: 'วันที่โอน',
+    labelStyle: TextStyle(color: Colors.black),
+    filled: true,
+    fillColor: Colors.white,
+    suffixIcon: IconButton(
+      icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
+      onPressed: () async {
+        DateTime? selectedDate = await showDatePicker(
+          initialEntryMode: DatePickerEntryMode.calendarOnly,
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2101),
+        );
+        if (selectedDate != null && selectedDate != _selectedDate) {
+          setState(() {
+            _selectedDate = selectedDate;
+            _dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate);
+          });
+        }
+      },
+    ),
+  ),
+  onTap: () async {
+    
+  },
+),
+
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

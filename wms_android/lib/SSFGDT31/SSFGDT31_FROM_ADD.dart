@@ -666,17 +666,21 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
       child: TextField(
         controller: controller,
         style: TextStyle(color: Colors.black),
-        readOnly: true,
+        readOnly: false,
+                  onChanged: (value) {
+   controller.text = value;
+  },
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(color: Colors.black),
           filled: true,
           fillColor: Colors.white,
           border: InputBorder.none,
-          suffixIcon: Icon(Icons.calendar_today, color: Colors.black),
-        ),
-        onTap: () async {
-          final DateTime? pickedDate = await showDatePicker(
+          suffixIcon: IconButton(
+      icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
+      onPressed: () async {
+  final DateTime? pickedDate = await showDatePicker(
+    initialEntryMode: DatePickerEntryMode.calendarOnly,
             context: context,
             initialDate: selectedDate,
             firstDate: DateTime(1900),
@@ -689,7 +693,9 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
               controller.text = _formatDate(pickedDate);
             });
           }
-        },
+      }),
+        ),
+       
       ),
     );
   }

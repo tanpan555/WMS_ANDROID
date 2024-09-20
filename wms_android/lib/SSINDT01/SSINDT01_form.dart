@@ -754,8 +754,10 @@ Widget _buildFormFields() {
           style: TextStyle(
             color: Colors.black,
           ),
-          readOnly: true,
-          onTap: () => _selectReceiveDate(context),
+            readOnly: false,
+  onChanged: (value) {
+   receiveDateController.text = value;
+  },
         ),
         const SizedBox(height: 8.0),
         Row(
@@ -823,33 +825,35 @@ Widget _buildFormFields() {
         ),
         const SizedBox(height: 8.0),
         TextFormField(
-                controller: invoiceDateController,
-                decoration: InputDecoration(
-                  labelText: 'วันที่ใบแจ้งหนี้',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: InputBorder.none,
-                  labelStyle: TextStyle(
-                    color: Colors.black,
-                  ),
-                  hintStyle: TextStyle(
-                    color: Colors.white70,
-                    
-                  ),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.calendar_today, color: Colors.black),
-                    onPressed: () {
-                      _selectInvoiceDate(context);
-                    },
-                  ),
-                ),
-                style: TextStyle(
-                  color: Colors.black,
-                  // fontSize: 11
-                ),
-                readOnly: true,
-                onTap: () => _selectInvoiceDate(context),
-              ),
+  controller: invoiceDateController,
+  decoration: InputDecoration(
+    labelText: 'วันที่ใบแจ้งหนี้',
+    filled: true,
+    fillColor: Colors.white,
+    border: InputBorder.none,
+    labelStyle: TextStyle(
+      color: Colors.black,
+    ),
+    hintStyle: TextStyle(
+      color: Colors.white70,
+    ),
+    suffixIcon: IconButton(
+      icon: const Icon(Icons.calendar_today, color: Colors.black),
+      onPressed: () {
+        _selectInvoiceDate(context);
+      },
+    ),
+  ),
+  style: TextStyle(
+    color: Colors.black,
+    // fontSize: 11
+  ),
+  readOnly: false,
+  onChanged: (value) {
+   invoiceDateController.text = value;
+  },
+),
+
         
         const SizedBox(height: 8.0),
         TextFormField(

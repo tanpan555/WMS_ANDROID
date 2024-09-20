@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:wms_android/SSFGDT04/SSFGDT04_main.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_BARCODE.dart';
@@ -67,6 +68,8 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     // CR_DATE.text = _formatDate(selectedDate);
     CR_DATE.text = ''; 
     cancelCode();
+    fetchREF_NOLIST();
+    fetchStaffLIST();
     
     print('ERP_OU_CODE: $ERP_OU_CODE');
     print('P_OU_CODE: $P_OU_CODE');
@@ -97,6 +100,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
       context: context,
       initialDate: selectedDate ?? DateTime.now(), // Fallback to current date if selectedDate is null
       firstDate: DateTime(2000),
@@ -487,10 +491,10 @@ String? pomsg;
                       readOnly: true),
                   _buildDateTextField(CR_DATE, 'วันที่บันทึก'),
                   _buildTextField(REF_NO, 'เลขที่เอกสารอ้างอิง'),
-                  _buildTextField(MO_DO_NO, 'เลขที่คำสั่งผลผลิต'),
+                  _buildDropRefdownSearch(),
                   _buildTextField(NB_WARE_CODE, 'คลังต้นทาง', readOnly: true),
                   _buildTextField(NB_TO_WH, 'คลังปลายทาง', readOnly: true),
-                  _buildTextField(STAFF_CODE, 'ผู้บันทึก'),
+                  _buildDropStaffdownSearch(),
                   _buildTextField(PO_REMARK, 'หมายเหตุ'),
                   _buildTextField(REF_ERP, 'เลขที่เอกสาร ERP', readOnly: true),
                 ],
@@ -502,6 +506,206 @@ String? pomsg;
       bottomNavigationBar: BottomBar(),
     );
   }
+
+  List<Map<String, dynamic>> REF_NOItems = [];
+  String? selectedREF_NO;
+  Future<void> fetchREF_NOLIST() async {
+    final url =
+        Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_REF_NO');
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> items = data['items'] ?? [];
+        print(items);
+
+        if (items.isNotEmpty) {
+          setState(() {
+            REF_NOItems = List<Map<String, dynamic>>.from(items);
+            if (REF_NOItems.isNotEmpty) {
+              selectedREF_NO = REF_NOItems[0]['so_no'];
+            }
+          });
+        } else {
+          print('No items found.');
+        }
+      } else {
+        print('Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+List<Map<String, dynamic>> StaffItems = [];
+  String? selectedStaff;
+  Future<void> fetchStaffLIST() async {
+  final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_STAFF_CODE/${gb.P_ERP_OU_CODE}');
+  try {
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+      final List<dynamic> items = data['items'] ?? [];
+      print(items);
+
+      if (items.isNotEmpty) {
+        setState(() {
+          StaffItems = List<Map<String, dynamic>>.from(items);
+          if (StaffItems.isNotEmpty) {
+            selectedStaff = StaffItems[0]['r'];
+          }
+        });
+      } else {
+        print('No items found.');
+      }
+    } else {
+      print('Failed to load data. Status code: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
+}
+
+    Widget _buildDropStaffdownSearch() {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: DropdownSearch<String>(
+      popupProps: PopupProps.menu(
+        showSearchBox: true,
+        showSelectedItems: true,
+        itemBuilder: (context, item, isSelected) {
+          // Find the item data based on the selected item
+          final itemData = StaffItems.firstWhere(
+            (element) => '${element['r']}' == item,
+            orElse: () => {'r': '', 'emp_name': ''},
+          );
+
+          return ListTile(
+            title: Text(item),
+            subtitle: Text(itemData['emp_name'] ?? ''),
+            selected: isSelected,
+          );
+        },
+        constraints: BoxConstraints(
+          maxHeight: 200,
+        ),
+      ),
+      items: StaffItems.map((item) => '${item['r']}'.toString()).toList(),
+      dropdownDecoratorProps: DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+          border: InputBorder.none,
+          filled: true,
+          fillColor: Colors.white,
+          labelText: "ผู้บันทึก",
+          hintText: "Select Item",
+          hintStyle: TextStyle(fontSize: 12.0),
+        ),
+      ),
+      onChanged: (String? value) {
+        setState(() {
+          selectedREF_NO = value;
+        });
+
+        if (value == '') {
+          setState(() {
+            // Handle empty selection if needed
+            STAFF_CODE.text = 'null';
+          });
+        } else {
+         
+
+          final selectedItem = REF_NOItems.firstWhere(
+            (element) => '${element['so_no']}' == value,
+            orElse: () => {'so_no': '', 'emp_name': ''},
+          );
+
+          print('Selected SO_NO: ${selectedItem['so_no']}');
+          print('Selected emp_name: ${selectedItem['emp_name']}');
+
+          setState(() {
+            STAFF_CODE.text = value ?? 'null';
+          });
+        }
+
+        print(selectedREF_NO);
+      },
+      selectedItem: selectedREF_NO ?? '',
+    ),
+  );
+}
+
+
+  Widget _buildDropRefdownSearch() {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: DropdownSearch<String>(
+      popupProps: PopupProps.menu(
+        showSearchBox: true,
+        showSelectedItems: true,
+        itemBuilder: (context, item, isSelected) {
+          // Find the item data based on the selected item
+          final itemData = REF_NOItems.firstWhere(
+            (element) => '${element['so_no']}' == item,
+            orElse: () => {'so_no': '', 'ar_name': ''},
+          );
+
+          return ListTile(
+            title: Text(item),
+            subtitle: Text(itemData['ar_name'] ?? ''),
+            selected: isSelected,
+          );
+        },
+        constraints: BoxConstraints(
+          maxHeight: 200,
+        ),
+      ),
+      items: REF_NOItems.map((item) => '${item['so_no']}'.toString()).toList(),
+      dropdownDecoratorProps: DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+          border: InputBorder.none,
+          filled: true,
+          fillColor: Colors.white,
+          labelText: "เลขที่คำสั่งผลผลิต",
+          hintText: "Select Item",
+          hintStyle: TextStyle(fontSize: 12.0),
+        ),
+      ),
+      onChanged: (String? value) {
+        setState(() {
+          selectedREF_NO = value;
+        });
+
+        if (value == '') {
+          setState(() {
+            // Handle empty selection if needed
+            MO_DO_NO.text = 'null';
+          });
+        } else {
+         
+
+          final selectedItem = REF_NOItems.firstWhere(
+            (element) => '${element['so_no']}' == value,
+            orElse: () => {'so_no': '', 'cust_name': ''},
+          );
+
+          print('Selected SO_NO: ${selectedItem['so_no']}');
+          print('Selected ar_name: ${selectedItem['ar_name']}');
+
+          setState(() {
+            MO_DO_NO.text = value ?? 'null';
+          });
+        }
+
+        print(selectedREF_NO);
+      },
+      selectedItem: selectedREF_NO ?? '',
+    ),
+  );
+}
+
 
   Widget _buildTextField(TextEditingController controller, String label,
       {bool readOnly = false}) {
@@ -562,8 +766,11 @@ String? pomsg;
     child: TextField(
       controller: controller,
       style: TextStyle(color: Colors.black),
-      readOnly: true,
-      onTap: () => _selectDate(context),
+      readOnly: false,
+      // onTap: () => _selectDate(context),
+      onChanged: (value) {
+   controller.text = value;
+  },
       decoration: InputDecoration(
         labelText: null,
         label: RichText(
@@ -581,7 +788,13 @@ String? pomsg;
         filled: true,
         fillColor: Colors.white,
         border: InputBorder.none,
-        suffixIcon: Icon(Icons.calendar_today_outlined, color: Colors.black),
+        suffixIcon: IconButton(
+      icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
+      onPressed: () async {
+        _selectDate(context);
+      }
+      ),
+        
       ),
     ),
   );

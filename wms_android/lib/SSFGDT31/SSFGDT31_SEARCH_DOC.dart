@@ -120,7 +120,10 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                 ),
                 const SizedBox(height: 16),
                 TextField(
-                  readOnly: true,
+                  readOnly: false,
+                  onChanged: (value) {
+   _dateController.text = value;
+  },
                   controller: _dateController,
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -128,12 +131,12 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                     labelStyle: TextStyle(color: Colors.black),
                     filled: true,
                     fillColor: Colors.white,
-                    suffixIcon: Icon(Icons.calendar_today_outlined,
-                        color: Colors.black),
-                  ),
-                  onTap: () async {
-                    DateTime? selectedDate = await showDatePicker(
+                    suffixIcon:IconButton(
+      icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
+      onPressed: () async {
+          DateTime? selectedDate = await showDatePicker(
                       context: context,
+                      initialEntryMode: DatePickerEntryMode.calendarOnly,
                       initialDate: DateTime.now(),
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2101),
@@ -145,7 +148,9 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                             DateFormat('dd/MM/yyyy').format(selectedDate);
                       });
                     }
-                  },
+      }),
+                  ),
+               
                 ),
                 const SizedBox(height: 20),
                 Row(
