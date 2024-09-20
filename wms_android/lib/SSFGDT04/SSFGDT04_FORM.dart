@@ -67,7 +67,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
       TextEditingController(); // เพิ่ม Controller สำหรับการค้นหา
 
   // เพิ่ม DateFormat สำหรับฟอร์แมทวันที่
-  final DateFormat _dateTimeFormatter = DateFormat('dd/MM/yyyy HH:mm:ss');
+  final DateFormat _dateTimeFormatter = DateFormat('dd/MM/yyyy');
 
   @override
   void initState() {
@@ -730,9 +730,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             pickedDate.year,
                             pickedDate.month,
                             pickedDate.day,
-                            currentTime.hour,
-                            currentTime.minute,
-                            currentTime.second,
+                            // currentTime.hour,
+                            // currentTime.minute,
+                            // currentTime.second,
                           );
 
                           // Format fullDateTime as dd/MM/yyyy HH:mm
