@@ -485,7 +485,7 @@ String? pomsg;
                       readOnly: true),
                   _buildTextField(po_doc_typeText, 'ประเภทเอกสาร',
                       readOnly: true),
-                  _buildTextimportantField(CR_DATE, 'วันที่บันทึก'),
+                  _buildDateTextField(CR_DATE, 'วันที่บันทึก'),
                   _buildTextField(REF_NO, 'เลขที่เอกสารอ้างอิง'),
                   _buildTextField(MO_DO_NO, 'เลขที่คำสั่งผลผลิต'),
                   _buildTextField(NB_WARE_CODE, 'คลังต้นทาง', readOnly: true),
@@ -506,7 +506,7 @@ String? pomsg;
   Widget _buildTextField(TextEditingController controller, String label,
       {bool readOnly = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
         controller: controller,
         style: TextStyle(color: Colors.black),
@@ -525,7 +525,7 @@ String? pomsg;
   Widget _buildTextimportantField(TextEditingController controller, String label,
     {bool readOnly = false}) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    padding: const EdgeInsets.only(bottom: 8.0),
     child: TextField(
       controller: controller,
       style: TextStyle(color: Colors.black),
@@ -556,22 +556,35 @@ String? pomsg;
 
 
 
-  Widget _buildDateTextField(TextEditingController controller, String label) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
-        controller: controller,
-        style: TextStyle(color: Colors.black),
-        readOnly: true,
-        onTap: () => _selectDate(context),
-        decoration: InputDecoration(
-            labelText: label,
-            labelStyle: TextStyle(color: Colors.black),
-            filled: true,
-            fillColor: Colors.white,
-            border: InputBorder.none,
-            suffixIcon: Icon(Icons.calendar_today_outlined, color: Colors.black),),
+ Widget _buildDateTextField(TextEditingController controller, String label) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: TextField(
+      controller: controller,
+      style: TextStyle(color: Colors.black),
+      readOnly: true,
+      onTap: () => _selectDate(context),
+      decoration: InputDecoration(
+        labelText: null,
+        label: RichText(
+          text: TextSpan(
+            text: label,
+            style: TextStyle(color: Colors.black),
+            children: [
+              TextSpan(
+                text: ' *',
+                style: TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+        ),
+        filled: true,
+        fillColor: Colors.white,
+        border: InputBorder.none,
+        suffixIcon: Icon(Icons.calendar_today_outlined, color: Colors.black),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }

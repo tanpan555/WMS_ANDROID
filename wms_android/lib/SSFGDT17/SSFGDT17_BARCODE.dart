@@ -445,7 +445,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
     Widget _buildYellowTextField(TextEditingController controller, String label,
       {bool readOnly = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+     padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
         controller: controller,
         style: TextStyle(color: Colors.black),
@@ -464,7 +464,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   Widget _buildTextField(TextEditingController controller, String label,
       {bool readOnly = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
         controller: controller,
         style: const TextStyle(color: Colors.black),

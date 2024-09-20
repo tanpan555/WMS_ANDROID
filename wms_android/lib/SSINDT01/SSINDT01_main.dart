@@ -84,6 +84,10 @@ void initState() {
     selectedApCode = 'null';
     fetchWareCodes();
   }
+  else{
+    selectedApCode = widget.apCode;
+    fetchWareCodes();
+  }
 
   // fetchWareCodes();
 

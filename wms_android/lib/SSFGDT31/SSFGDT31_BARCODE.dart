@@ -536,7 +536,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-        
+            SizedBox(height: 4,),
             Container(
               padding: const EdgeInsets.all(10.0),
               decoration: BoxDecoration(
@@ -607,28 +607,29 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                                 TextButton(
                                   onPressed: () async {
                                     Navigator.of(context).pop();
-                                      await sendPostRequest();
-    if (poStatus == '0') {
-      Navigator.of(context).pop(true);
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('คำเตือน'),
-            content: Text(poMessage ?? 'No message provided'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
+                                    await sendPostRequest();
+                                    if (poStatus == '0') {
+                                      Navigator.of(context).pop(true);
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('คำเตือน'),
+                                            content: Text(poMessage ??
+                                                'No message provided'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('OK'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
                                   },
                                   child: Text('ยืนยัน'),
                                 ),
@@ -661,7 +662,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
   Widget _buildBarcodeTextField(TextEditingController controller, String label,
       {bool readOnly = false, void Function(String)? onSubmitted}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
         controller: controller,
         style: TextStyle(color: Colors.black),
@@ -681,7 +682,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
   Widget _buildQuantityTextField(TextEditingController controller, String label,
       {bool readOnly = false, void Function(String)? onSubmitted}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
         controller: controller,
         style: TextStyle(color: Colors.black),
@@ -701,7 +702,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
   Widget _buildTextField(TextEditingController controller, String label,
       {bool readOnly = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
         controller: controller,
         style: TextStyle(color: Colors.black),

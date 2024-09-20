@@ -308,13 +308,12 @@ Widget build(BuildContext context) {
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 0, 0, 0),
                       ),
-                      overflow: TextOverflow.ellipsis, // Handles overflow
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
               ),
-              // Spacer(), // Pushes the button to the right
-              const SizedBox(width: 8,),
+              const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () async {
                   await chk_sub();
@@ -329,7 +328,7 @@ Widget build(BuildContext context) {
                             TextButton(
                               child: Text('OK'),
                               onPressed: () {
-                                Navigator.of(context).pop(); // Close the dialog
+                                Navigator.of(context).pop();
                               },
                             ),
                           ],
@@ -363,7 +362,7 @@ Widget build(BuildContext context) {
                 style: AppStyles.ConfirmbuttonStyle(),
                 child: Text(
                   'Confirm',
-                  style: AppStyles.CancelbuttonTextStyle()
+                  style: AppStyles.CancelbuttonTextStyle(),
                 ),
               ),
             ],
@@ -386,7 +385,7 @@ Widget build(BuildContext context) {
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 0, 0, 0),
                       ),
-                      overflow: TextOverflow.ellipsis, // Handles overflow
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
@@ -406,6 +405,14 @@ Widget build(BuildContext context) {
                   padding: EdgeInsets.all(8.0),
                   child: Column(
                     children: dataList.map((data) {
+                      Map<String, String> info1 = {
+                        'จำนวนรับ': data['receive_qty']?.toString() ?? '-',
+                        'ค้างรับ': data['pending_qty']?.toString() ?? '-',
+                      };
+                      Map<String, String> info2 = {
+                        'Locator': data['locator_det']?.toString() ?? '-',
+                        'Lot No': data['lot_product_no']?.toString() ?? '-',
+                      };
                       return Card(
                         margin: EdgeInsets.symmetric(vertical: 8.0),
                         elevation: 6.0,
@@ -428,62 +435,9 @@ Widget build(BuildContext context) {
                                   ),
                                 ),
                               ),
-                              Divider(
-                                  color: const Color.fromARGB(255, 0, 0, 0)),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        'จำนวนรับ: ${data['receive_qty']?.toString() ?? '-'}',
-                                        style: TextStyle(fontSize: 14),
-                                        softWrap: false,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    SizedBox(width: 8.0),
-                                    Expanded(
-                                      child: Text(
-                                        'ค้างรับ: ${data['pending_qty']?.toString() ?? '-'}',
-                                        style: TextStyle(fontSize: 14),
-                                        softWrap: false,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        'Locator: ${data['locator_det']?.toString() ?? '-'}',
-                                        style: TextStyle(fontSize: 14),
-                                        softWrap: false,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    SizedBox(width: 4.0),
-                                    Expanded(
-                                      child: Text(
-                                        'Lot No: ${data['lot_product_no']?.toString() ?? '-'}',
-                                        style: TextStyle(fontSize: 14),
-                                        softWrap: false,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              Divider(color: const Color.fromARGB(255, 0, 0, 0)),
+                              _buildInfoRow2(info1),
+                              _buildInfoRow2(info2),
                             ],
                           ),
                         ),
@@ -495,6 +449,69 @@ Widget build(BuildContext context) {
       ],
     ),
     bottomNavigationBar: BottomBar(),
+  );
+}
+
+Widget _buildInfoRow2(Map<String, String> info) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0),
+    child: Row(
+      children: info.entries.map((entry) {
+        return Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 3.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      height: 30,
+                      alignment: Alignment.center,
+                      child: Text(
+                        entry.key,
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 12,
+                        ),
+                        softWrap: false,
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Flexible(
+                  child: Container(
+                    height: 30,
+                    alignment: Alignment.center,
+                    child: TextField(
+                      controller: TextEditingController(text: entry.value),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromARGB(255, 254, 247, 230),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 14,
+                          horizontal: 0,
+                        ),
+                      ),
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.right,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    ),
   );
 }
 

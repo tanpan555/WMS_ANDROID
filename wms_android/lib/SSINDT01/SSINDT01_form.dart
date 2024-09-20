@@ -652,7 +652,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                   )
                 ],
               ),
-              const SizedBox(height: 16.0),
+              const SizedBox(height: 20.0),
               Expanded(
                 child: SingleChildScrollView(
                   child: _buildFormFields(),
@@ -669,11 +669,11 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
 Widget _buildFormFields() {
   return Container(
-    padding: const EdgeInsets.all(16.0),
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.black38),
-      borderRadius: BorderRadius.circular(5.0),
-    ),
+    // padding: const EdgeInsets.all(16.0),
+    // decoration: BoxDecoration(
+    //   border: Border.all(color: Colors.black38),
+    //   borderRadius: BorderRadius.circular(5.0),
+    // ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -693,7 +693,7 @@ Widget _buildFormFields() {
           ),
           readOnly: true,
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 8.0),
         Container(
           decoration: BoxDecoration(
             color: Color.fromRGBO(23, 21, 59, 1),
@@ -730,7 +730,7 @@ Widget _buildFormFields() {
             dropdownColor: Color.fromRGBO(255, 255, 255, 1),
           ),
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 8.0),
         TextFormField(
           controller: receiveDateController,
           decoration: InputDecoration(
@@ -757,7 +757,7 @@ Widget _buildFormFields() {
           readOnly: true,
           onTap: () => _selectReceiveDate(context),
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 8.0),
         Row(
           children: [
             Expanded(
@@ -821,7 +821,7 @@ Widget _buildFormFields() {
             // ),
           ],
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 8.0),
         TextFormField(
                 controller: invoiceDateController,
                 decoration: InputDecoration(
@@ -851,7 +851,7 @@ Widget _buildFormFields() {
                 onTap: () => _selectInvoiceDate(context),
               ),
         
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 8.0),
         TextFormField(
           controller: poRemarkController,
           decoration: InputDecoration(
@@ -861,7 +861,7 @@ Widget _buildFormFields() {
               labelStyle: TextStyle(color: Colors.black),
               labelText: 'หมายเหตุ'),
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 8.0),
         Row(
           children: [
             Expanded(
@@ -903,7 +903,7 @@ Widget _buildFormFields() {
             ),
           ],
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 8.0),
         TextFormField(
           style: const TextStyle(
             color: Colors.black87,
@@ -938,7 +938,7 @@ Widget _buildFormFields() {
           ),
           readOnly: true,
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 8.0),
         TextFormField(
           style: const TextStyle(
             color: Colors.black87,
@@ -955,7 +955,7 @@ Widget _buildFormFields() {
           ),
           readOnly: true,
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 8.0),
         TextFormField(
           style: const TextStyle(
             color: Colors.black87,

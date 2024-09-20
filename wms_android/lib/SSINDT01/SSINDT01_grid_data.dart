@@ -392,27 +392,18 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               borderRadius: BorderRadius.circular(16.0),
             ),
             title: Container(
-              padding: EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    const Color.fromARGB(255, 255, 255, 255),
-                    const Color.fromARGB(255, 255, 255, 255)
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
-              ),
-              child: Text(
-                data['item'],
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+  padding: EdgeInsets.all(16.0),
+  color: Colors.grey[300], // Add your desired background color here
+  child: Text(
+    data['item'],
+    style: TextStyle(
+      color: Colors.black,
+      fontSize: 20.0,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+),
+
             contentPadding:
                 EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
             content: SizedBox(
@@ -448,25 +439,20 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        // color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: IconButton(
-                        iconSize: 20.0,
-                        icon: Image.asset(
-                          'assets/images/check-mark.png',
-                          width: 25.0,
-                          height: 25.0,
-                        ),
-                        onPressed: () {
-                          final updatedQty = receiveQtyController.text;
-                          updateReceiveQty(data['rowid'], updatedQty);
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ),
+                    ElevatedButton(
+  style: AppStyles.ConfirmChecRecievekButtonStyle(),
+  onPressed: () {
+    final updatedQty = receiveQtyController.text;
+    updateReceiveQty(data['rowid'], updatedQty);
+    Navigator.of(context).pop(); // Close the dialog
+  },
+  child: Image.asset(
+    'assets/images/check-mark.png',
+    width: 25.0,
+    height: 25.0,
+  ),
+)
+
                   ],
                 ),
               ),
@@ -1126,19 +1112,23 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   }
 
   Widget _buildInfoRow2(Map<String, String> info) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: info.entries.map((entry) {
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 3.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Align(
-                      alignment: Alignment.centerRight,
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0),
+    child: Row(
+      children: info.entries.map((entry) {
+        return Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 3.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      height: 30,
+                      alignment: Alignment.center,
                       child: Text(
                         entry.key,
                         style: TextStyle(
@@ -1150,26 +1140,102 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 8),
-                  Flexible(
-                    child: Text(
-                      entry.value,
+                ),
+                SizedBox(width: 8),
+                Flexible(
+                  child: Container(
+                    height: 30,
+                    alignment: Alignment.center,
+                    child: TextField(
+                      controller: TextEditingController(text: entry.value),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromARGB(255, 254, 247, 230),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 14,
+                          horizontal: 0,
+                        ),
+                      ),
                       style: TextStyle(
                         color: const Color.fromARGB(255, 0, 0, 0),
                         fontSize: 12,
                       ),
                       textAlign: TextAlign.right,
-                      softWrap: false,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
-        }).toList(),
-      ),
-    );
-  }
+          ),
+        );
+      }).toList(),
+    ),
+  );
+}
+Widget _buildInfoRow3(Map<String, String> info) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0),
+    child: Row(
+      children: info.entries.map((entry) {
+        return Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 3.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Key
+                Container(
+                  height: 30,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    entry.key,
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 0, 0, 0),
+                      fontSize: 12,
+                    ),
+                    softWrap: false,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                SizedBox(width: 18),
+
+                Container(
+                  constraints: BoxConstraints(
+                    minWidth: 80,
+                    maxWidth: 150,
+                  ),
+                  height: 30,
+                  child: TextField(
+                    controller: TextEditingController(text: entry.value),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: const Color.fromARGB(255, 254, 247, 230), 
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 14,
+                        horizontal: 10.0,
+                      ),
+                    ),
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 0, 0, 0),
+                      fontSize: 12,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    ),
+  );
+}
+
+
+
 
   Widget _buildDialogButton({
     required String label,
@@ -1370,8 +1436,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                 child: ListView(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      margin: const EdgeInsets.only(bottom: 8.0),
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      margin: const EdgeInsets.only(bottom: 10.0),
                       color: const Color.fromARGB(255, 255, 242, 204),
                       child: Center(
                         child: Text(
@@ -1385,8 +1451,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      margin: const EdgeInsets.only(bottom: 8.0),
+                         padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      margin: const EdgeInsets.only(bottom: 10.0),
                       color: const Color.fromARGB(255, 244, 244, 244),
                       child: Center(
                         child: Text(
@@ -1445,10 +1511,10 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                       data['lot_total_nb']?.toString() ?? '-',
                                   'UOM:': data['UOM']?.toString() ?? '-',
                                 }),
-                                Text(
-                                  '  Locator : ${data['locator_det']?.toString() ?? '-'}',
-                                  style: TextStyle(fontSize: 12),
-                                ),
+                                _buildInfoRow3({
+                                  'Locator:':data['locator_det']?.toString() ?? '-',
+                                }),
+                        
                                 const SizedBox(height: 8),
                                 Row(
                                   mainAxisAlignment:

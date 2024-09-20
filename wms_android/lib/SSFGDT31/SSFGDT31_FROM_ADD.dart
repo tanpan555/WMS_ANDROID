@@ -613,12 +613,13 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     height: 20.0,
   ),
 ),
-
                 const SizedBox(width: 4.0),
+               
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+             const SizedBox(height: 20.0),
+            Container(
+              // padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
                   _buildTextField(DOC_NO, 'เลขที่เอกสาร WMS*', readOnly: true),
@@ -643,7 +644,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
   Widget _buildTextField(TextEditingController controller, String label,
       {bool readOnly = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
         controller: controller,
         style: TextStyle(color: Colors.black),
@@ -661,7 +662,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
 
   Widget _buildDateTextField(TextEditingController controller, String label) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
         controller: controller,
         style: TextStyle(color: Colors.black),
@@ -695,7 +696,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
 
   Widget _buildDropdownSearch() {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    padding: const EdgeInsets.only(bottom: 8.0),
     child: DropdownSearch<String>(
       popupProps: PopupProps.menu(
         showSearchBox: true,
@@ -766,7 +767,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
 
   Widget _buildDropdownForRefNo() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: DropdownSearch<String>(
         popupProps: PopupProps.menu(
           showSearchBox: true,
@@ -802,7 +803,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
 
 Widget _buildDropdownForDocType() {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    padding: const EdgeInsets.only(bottom: 8.0),
     child: DropdownSearch<String>(
       popupProps: PopupProps.menu(
         showSearchBox: true,
