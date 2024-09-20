@@ -461,7 +461,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO'),
+      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: isLoading
