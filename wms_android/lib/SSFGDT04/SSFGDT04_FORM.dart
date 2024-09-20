@@ -678,7 +678,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                       },
                       value: selectedDocType, // Set the default selected value
                       buttonStyleData: const ButtonStyleData(
-                        padding: EdgeInsets.only(right: 8),
+                        padding: EdgeInsets.only(right: 0),
                       ),
                       iconStyleData: const IconStyleData(
                         icon: Icon(
@@ -938,8 +938,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             labelStyle: TextStyle(color: Colors.black),
                             border: InputBorder.none,
                             suffixIcon: Icon(
-                              Icons.list,
-                              color: Colors.black,
+                              Icons.arrow_drop_down,
+                              color: Color.fromARGB(255, 113, 113, 113),
                             ),
                           ),
                           controller:
@@ -1199,8 +1199,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             labelStyle: TextStyle(color: Colors.black),
                             border: InputBorder.none,
                             suffixIcon: Icon(
-                              Icons.list,
-                              color: Colors.black,
+                              Icons.arrow_drop_down,
+                              color: Color.fromARGB(255, 113, 113, 113),
                             ),
                           ),
                           controller:
@@ -1257,7 +1257,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             IconButton(
-                                              icon: Icon(Icons.close),
+                                              icon: Icon(Icons.close,color: Color.fromARGB(255, 113, 113, 113),),
                                               onPressed: () {
                                                 Navigator.of(context)
                                                     .pop(); // Close popup
@@ -1396,8 +1396,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             labelStyle: TextStyle(color: Colors.black),
                             border: InputBorder.none,
                             suffixIcon: Icon(
-                              Icons.list,
-                              color: Colors.black,
+                              Icons.arrow_drop_down,
+                              color: Color.fromARGB(255, 113, 113, 113),
                             ),
                           ),
                           controller: _staffCodeController.text.isNotEmpty
