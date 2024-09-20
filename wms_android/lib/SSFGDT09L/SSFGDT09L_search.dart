@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:intl/intl.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -111,7 +112,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
               // ),
               // const SizedBox(height: 20),
               //////////////////////////////////////////////////////////////
-              DropdownButtonFormField<String>(
+              DropdownButtonFormField2<String>(
                 value: selectedItem,
                 items: dropdownItems
                     .map((item) => DropdownMenuItem<String>(
@@ -209,8 +210,8 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                       iconSize: 20.0,
                       icon: Image.asset(
                         'assets/images/eraser_red.png',
-                        width: 20.0,
-                        height: 20.0,
+                        width: 50.0,
+                        height: 25.0,
                       ),
                       onPressed: () {
                         setState(() {
@@ -235,8 +236,8 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                       iconSize: 20.0,
                       icon: Image.asset(
                         'assets/images/search_color.png',
-                        width: 20.0,
-                        height: 20.0,
+                        width: 50.0,
+                        height: 25.0,
                       ),
                       onPressed: selectedItem.isNotEmpty
                           ? () {

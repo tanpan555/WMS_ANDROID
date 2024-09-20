@@ -5,6 +5,8 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:intl/intl.dart';
+import 'package:wms_android/styles.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'SSFGDT12_main.dart';
 import 'SSFGDT12_barcode.dart';
 
@@ -35,7 +37,8 @@ class Ssfgdt12Grid extends StatefulWidget {
     required this.pWareCode,
     required this.docDate,
     required this.countStaff,
-    required this.p_attr1, this.statuForCHK,
+    required this.p_attr1,
+    this.statuForCHK,
   }) : super(key: key);
   @override
   _Ssfgdt12GridState createState() => _Ssfgdt12GridState();
@@ -60,6 +63,8 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   String messageCancel = '';
   String vRetCancel = '';
   String vChkStatusCancel = '';
+
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -103,6 +108,16 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
           dataCard =
               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
         });
+        // setState(() {
+        //   isLoading = true; // เริ่มต้นโหลดข้อมูล
+        // });
+
+        // // ทำกระบวนการโหลดข้อมูล
+        // await Future.delayed(Duration(seconds: 1)); // จำลองการโหลดข้อมูล
+
+        // setState(() {
+        //   isLoading = false; // โหลดเสร็จแล้ว
+        // });
         print('dataCard : $dataCard');
       } else {
         throw Exception('Failed to load fetchData');
@@ -308,22 +323,9 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       widget.docNo,
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    minimumSize: const Size(10, 20),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  ),
-                  child: const Text(
-                    'ยกเลิก',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  style: AppStyles.cancelButtonStyle(),
+                  child:
+                      Text('ยกเลิก', style: AppStyles.CancelbuttonTextStyle()),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -344,40 +346,20 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                         //
                         );
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    minimumSize: const Size(10, 20),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  ),
-                  child: const Text(
-                    'บันทึกสินค้าเพิ่มเติม',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  style: AppStyles.cancelButtonStyle(),
+                  child: Text('บันทึกสินค้าเพิ่มเติม',
+                      style: AppStyles.CancelbuttonTextStyle()),
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    await  checkData();
+                    await checkData();
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 212, 245, 212),
-                    padding: EdgeInsets.symmetric(vertical: 12.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                  ),
+                  style: AppStyles.ConfirmbuttonStyle(),
                   child: Text(
                     'Confirm',
-                    style: TextStyle(color: Colors.black, fontSize: 16),
+                    style: AppStyles.ConfirmbuttonTextStyle(),
                   ),
                 ),
-              
               ],
             ),
             const SizedBox(height: 10),
@@ -405,129 +387,132 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: ListView(
-                children: dataCard.map((item) {
-                  return Card(
-                    elevation: 8.0,
-                    margin: EdgeInsets.symmetric(vertical: 8.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(15.0), // กำหนดมุมโค้งของ Card
-                    ),
-                    color: Color.fromRGBO(204, 235, 252, 1.0),
-                    child: InkWell(
-                      onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => Ssfgdt12Form(
-                        //       docNo: item['doc_no'],
-                        //       pOuCode: widget.p_ou_code,
-                        //       browser_language: widget.browser_language,
-                        //       wareCode: item['ware_code'] ?? 'ware_code',
-                        //       // wareCode: item['ware_code'] == null
-                        //       // ? 'ware_code  !!!'
-                        //       // : item['ware_code'],
-                        //     ),
-                        //   ),
-                        // );
-                      },
-                      borderRadius: BorderRadius.circular(
-                          15.0), // กำหนดมุมโค้งให้ InkWell เช่นกัน
-                      child: Stack(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(
-                                16.0), // เพิ่ม padding เพื่อให้ content ไม่ชิดขอบ
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+              child: isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : ListView(
+                      children: dataCard.map((item) {
+                        return Card(
+                          elevation: 8.0,
+                          margin: EdgeInsets.symmetric(vertical: 8.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                15.0), // กำหนดมุมโค้งของ Card
+                          ),
+                          color: Color.fromRGBO(204, 235, 252, 1.0),
+                          child: InkWell(
+                            onTap: () {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => Ssfgdt12Form(
+                              //       docNo: item['doc_no'],
+                              //       pOuCode: widget.p_ou_code,
+                              //       browser_language: widget.browser_language,
+                              //       wareCode: item['ware_code'] ?? 'ware_code',
+                              //       // wareCode: item['ware_code'] == null
+                              //       // ? 'ware_code  !!!'
+                              //       // : item['ware_code'],
+                              //     ),
+                              //   ),
+                              // );
+                            },
+                            borderRadius: BorderRadius.circular(
+                                15.0), // กำหนดมุมโค้งให้ InkWell เช่นกัน
+                            child: Stack(
                               children: [
-                                Text(
-                                  'รหัสสินค้า : ${item['item_code']}',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0),
-                                ),
-                                SizedBox(
-                                  child: Text(
-                                    '${item['get_item_name']}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14.0),
+                                Padding(
+                                  padding: const EdgeInsets.all(
+                                      16.0), // เพิ่ม padding เพื่อให้ content ไม่ชิดขอบ
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'รหัสสินค้า : ${item['item_code']}',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0),
+                                      ),
+                                      SizedBox(
+                                        child: Text(
+                                          '${item['get_item_name']}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14.0),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        child: Text(
+                                          'จำนวนคงเหลือในระบบ : ${NumberFormat('#,###,###,###,###,###').format(item['sys_qty'])}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14.0,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        child: Text(
+                                          'ผลต่างการตรวจนับ : ${NumberFormat('#,###,###,###,###,###').format(item['diff_qty'])}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14.0,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        child: Text(
+                                          'คลังสินค้า : ${item['ware_code']}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14.0),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        child: Text(
+                                          'ตำแหน่งจัดเก็บ : ${item['location_code']}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14.0),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                SizedBox(
-                                  child: Text(
-                                    'จำนวนคงเหลือในระบบ : ${NumberFormat('#,###,###,###,###,###').format(item['sys_qty'])}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14.0,
+                                Positioned(
+                                  bottom: 8.0,
+                                  right: 8.0,
+                                  child: GestureDetector(
+                                    onTap: () {},
+                                    child: IconButton(
+                                      iconSize: 20.0,
+                                      icon: Image.asset(
+                                        'assets/images/edit.png',
+                                        width: 20.0,
+                                        height: 20.0,
+                                      ),
+                                      onPressed: () {
+                                        showDetailsDialog(
+                                          context,
+                                          item['sys_qty'],
+                                          item['diff_qty'],
+                                          item['rowid'],
+                                          item['count_qty'],
+                                          item['remark'] ?? '',
+                                          widget.docNo,
+                                          widget.pErpOuCode,
+                                          item['seq'],
+                                          item['item_code'],
+                                        );
+                                      },
                                     ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  child: Text(
-                                    'ผลต่างการตรวจนับ : ${NumberFormat('#,###,###,###,###,###').format(item['diff_qty'])}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14.0,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  child: Text(
-                                    'คลังสินค้า : ${item['ware_code']}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14.0),
-                                  ),
-                                ),
-                                SizedBox(
-                                  child: Text(
-                                    'ตำแหน่งจัดเก็บ : ${item['location_code']}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14.0),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          Positioned(
-                            bottom: 8.0,
-                            right: 8.0,
-                            child: GestureDetector(
-                              onTap: () {},
-                              child: IconButton(
-                                iconSize: 20.0,
-                                icon: Image.asset(
-                                  'assets/images/edit.png',
-                                  width: 20.0,
-                                  height: 20.0,
-                                ),
-                                onPressed: () {
-                                  showDetailsDialog(
-                                    context,
-                                    item['sys_qty'],
-                                    item['diff_qty'],
-                                    item['rowid'],
-                                    item['count_qty'],
-                                    item['remark'] ?? '',
-                                    widget.docNo,
-                                    widget.pErpOuCode,
-                                    item['seq'],
-                                    item['item_code'],
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                        );
+                      }).toList(),
                     ),
-                  );
-                }).toList(),
-              ),
             ),
           ],
         ),
@@ -552,12 +537,16 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         NumberFormat('#,###,###,###,###,###').format(sys_qty);
     String formattedDiffQty =
         NumberFormat('#,###,###,###,###,###').format(diff_qty);
+    String formattedCountQty =
+        NumberFormat('#,###,###,###,###,###').format(count_qty);
     TextEditingController sysQtyController =
         TextEditingController(text: formattedSysQty);
     TextEditingController diffQtyController =
         TextEditingController(text: formattedDiffQty);
     TextEditingController countQtyController =
-        TextEditingController(text: count_qty.toString());
+        TextEditingController(text: formattedCountQty.toString());
+    // TextEditingController countQtyController =
+    //     TextEditingController(text: count_qty.toString());
     TextEditingController remarkController =
         TextEditingController(text: remark.toString());
 
@@ -637,33 +626,51 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
               ),
             ),
           ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Save'),
-              onPressed: () async {
-                int updatedCountQty =
-                    int.tryParse(countQtyController.text) ?? count_qty;
-                String updatedRemark = remarkController.text.isNotEmpty
-                    ? remarkController.text
-                    : remark;
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    side: const BorderSide(color: Colors.grey),
+                  ),
+                  child: Text(
+                    'ย้อนกลับ',
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    int updatedCountQty = int.tryParse(
+                            countQtyController.text.replaceAll(',', '')) ??
+                        count_qty;
+                    String updatedRemark = remarkController.text.isNotEmpty
+                        ? remarkController.text
+                        : remark;
 
-                Navigator.of(context).pop();
-                await updateDataGridDetail(
-                  updatedCountQty,
-                  updatedRemark,
-                  ou_code,
-                  doc_no,
-                  seq,
-                );
-                await fetchData();
-                setState(() {});
-              },
-            ),
-            TextButton(
-              child: Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop(); // ปิด Dialog เมื่อกดปุ่มนี้
-              },
+                    Navigator.of(context).pop();
+                    await updateDataGridDetail(
+                      updatedCountQty,
+                      updatedRemark,
+                      ou_code,
+                      doc_no,
+                      seq,
+                    );
+                    await fetchData();
+                    setState(() {});
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    side: const BorderSide(color: Colors.grey),
+                  ),
+                  child: Text(
+                    'บันทึก',
+                  ),
+                ),
+              ],
             ),
           ],
         );
@@ -676,206 +683,177 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              title: Row(
-                children: [
-                  Icon(
-                    Icons.notification_important, // ใช้ไอคอนแจ้งเตือน
-                    color: Colors.red, // สีของไอคอน
-                  ),
-                  SizedBox(width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
-                  Text('แจ้งเตือน'), // ข้อความแจ้งเตือน
-                ],
-              ),
-              content: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Text('ต้องการยืนยันตรวจนับ หรือไม่ !!!'),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 103, 58, 183),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              minimumSize: const Size(10, 20),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                            ),
-                            child: const Text(
-                              'ย้อนกลับ',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              submitData(conditionNull);
-                              // Navigator.of(context).pop();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 103, 58, 183),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              minimumSize: const Size(10, 20),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                            ),
-                            child: const Text(
-                              'ยืนยัน',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+            title: Row(
+              children: [
+                Icon(
+                  Icons.notification_important, // ใช้ไอคอนแจ้งเตือน
+                  color: Colors.red, // สีของไอคอน
                 ),
-              ));
+                SizedBox(width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
+                Text('แจ้งเตือน'), // ข้อความแจ้งเตือน
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text('ต้องการยืนยันตรวจนับ หรือไม่ !!!'),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: Text(
+                      'ย้อนกลับ',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      submitData(conditionNull);
+                      // Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: Text(
+                      'ยืนยัน',
+                    ),
+                  ),
+                ],
+              )
+            ],
+          );
         });
   }
 
- void showDialogCONFIRMCOUNT() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Row(
-          children: [
-            Icon(
-              Icons.notification_important,
-              color: Colors.red,
-            ),
-            SizedBox(width: 8),
-            Text('แจ้งเตือน'),
-          ],
-        ),
-        content: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('ตรวจพบสินค้าที่ไม่ระบุจำนวนนับ',style: TextStyle(fontSize: 12),),
-                const SizedBox(height: 8),
-                DropdownButtonFormField<String>(
-                  value: selectedStatusSubmit,
-                  isExpanded: true, // Ensures the dropdown takes full width
-                  style: TextStyle(
-                    overflow: TextOverflow.ellipsis,
-                    color: Colors.black87,
+  void showDialogCONFIRMCOUNT() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(
+                Icons.notification_important,
+                color: Colors.red,
+              ),
+              SizedBox(width: 8),
+              Text('แจ้งเตือน'),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'ตรวจพบสินค้าที่ไม่ระบุจำนวนนับ',
+                    style: TextStyle(fontSize: 12),
                   ),
-                  items: dropdownStatusSubmit
-                      .map((item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(
-                              item,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ))
-                      .toList(),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    filled: true,
-                    fillColor: Colors.grey[300],
-                    labelText: 'สถานะ',
-                    labelStyle: const TextStyle(
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField2<String>(
+                    value: selectedStatusSubmit,
+                    isExpanded: true, // Ensures the dropdown takes full width
+                    style: TextStyle(
                       overflow: TextOverflow.ellipsis,
                       color: Colors.black87,
                     ),
+                    items: dropdownStatusSubmit
+                        .map((item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ))
+                        .toList(),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.grey[300],
+                      labelText: 'สถานะ',
+                      labelStyle: const TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedStatusSubmit = value ?? '';
+                        switch (selectedStatusSubmit) {
+                          case 'ให้จำนวนนับเป็นศูนย์':
+                            statusCondition = '1';
+                            break;
+                          case 'ให้จำนวนนับเท่ากับในระบบ':
+                            statusCondition = '2';
+                            break;
+                          default:
+                            statusCondition = 'Unknown';
+                        }
+                      });
+                    },
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedStatusSubmit = value ?? '';
-                      switch (selectedStatusSubmit) {
-                        case 'ให้จำนวนนับเป็นศูนย์':
-                          statusCondition = '1';
-                          break;
-                        case 'ให้จำนวนนับเท่ากับในระบบ':
-                          statusCondition = '2';
-                          break;
-                        default:
-                          statusCondition = 'Unknown';
-                      }
-                    });
+                  const SizedBox(height: 8),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    side: const BorderSide(color: Colors.grey),
+                  ),
+                  child: Text(
+                    'ย้อนกลับ',
+                  ),
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 103, 58, 183),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        minimumSize: const Size(10, 20),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                      ),
-                      child: const Text(
-                        'ย้อนกลับ',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8), // Add some spacing between buttons
-                    ElevatedButton(
-                      onPressed: () {
-                        submitData(statusCondition);
-                        // Navigator.of(context).pop();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 103, 58, 183),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        minimumSize: const Size(10, 20),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                      ),
-                      child: const Text(
-                        'ยืนยัน',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
+                SizedBox(width: 8), // Add some spacing between buttons
+                ElevatedButton(
+                  onPressed: () {
+                    submitData(statusCondition);
+                    // Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    side: const BorderSide(color: Colors.grey),
+                  ),
+                  child: const Text(
+                    'ยืนยัน',
+                  ),
                 ),
               ],
             ),
-          ),
-        ),
-      );
-    },
-  );
-}
-
+          ],
+        );
+      },
+    );
+  }
 
   void checkStatusSubmit(
     BuildContext context,
@@ -931,44 +909,46 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     style: TextStyle(color: textColor),
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (statusSubmit == '1')
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: BorderSide(color: Colors.grey),
-                          ),
-                          child: const Text('ย้อนกลับ'),
-                        ),
-                      if (statusSubmit == '0')
-                        ElevatedButton(
-                          onPressed: () {
-                            _navigateToPage(
-                                context,
-                                SSFGDT12_MAIN(
-                                  p_attr1: widget.p_attr1,
-                                  pErpOuCode: widget.pErpOuCode,
-                                )
-                                //
-                                );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: BorderSide(color: Colors.grey),
-                          ),
-                          child: const Text('ตกลง'),
-                        ),
-                    ],
-                  )
                 ],
               ),
             ),
           ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (statusSubmit == '1')
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ย้อนกลับ'),
+                  ),
+                if (statusSubmit == '0')
+                  ElevatedButton(
+                    onPressed: () {
+                      _navigateToPage(
+                          context,
+                          SSFGDT12_MAIN(
+                            p_attr1: widget.p_attr1,
+                            pErpOuCode: widget.pErpOuCode,
+                          )
+                          //
+                          );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ยืนยัน'),
+                  ),
+              ],
+            )
+          ],
         );
       },
     );
@@ -979,73 +959,56 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              title: Row(
-                children: [
-                  Icon(
-                    Icons.notification_important,
-                    color: Colors.red,
-                  ),
-                  SizedBox(width: 8),
-                  Text('แจ้งเตือน'),
-                ],
-              ),
-              content: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Text('ต้องการยกเลิกยืนยันตรวจนับ หรือไม่ !!!'),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 103, 58, 183),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              minimumSize: const Size(10, 20),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                            ),
-                            child: const Text(
-                              'ย้อนกลับ',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 103, 58, 183),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              minimumSize: const Size(10, 20),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                            ),
-                            child: const Text(
-                              'ยืนยัน',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+            title: Row(
+              children: [
+                Icon(
+                  Icons.notification_important,
+                  color: Colors.red,
                 ),
-              ));
+                SizedBox(width: 8),
+                Text('แจ้งเตือน'),
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text('ต้องการยกเลิกยืนยันตรวจนับ หรือไม่ !!!'),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text(
+                      'ย้อนกลับ',
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text(
+                      'ยืนยัน',
+                    ),
+                  ),
+                ],
+              )
+            ],
+          );
         });
   }
 
@@ -1059,60 +1022,53 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              title: Row(
-                children: [
-                  // Icon(
-                  //   Icons.notification_important,
-                  //   color: Colors.red,
-                  // ),
-                  SizedBox(width: 8),
-                  Text('แจ้งเตือน'),
-                ],
-              ),
-              content: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Text('$messageCancel'),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              _navigateToPage(
-                                  context,
-                                  SSFGDT12_MAIN(
-                                    p_attr1: widget.p_attr1,
-                                    pErpOuCode: widget.pErpOuCode,
-                                  )
-                                  //
-                                  );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 103, 58, 183),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              minimumSize: const Size(10, 20),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                            ),
-                            child: const Text(
-                              'ยืนยัน',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+            title: Row(
+              children: [
+                // Icon(
+                //   Icons.notification_important,
+                //   color: Colors.red,
+                // ),
+                SizedBox(width: 8),
+                Text('แจ้งเตือน'),
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text('$messageCancel'),
+                  ],
                 ),
-              ));
+              ),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      _navigateToPage(
+                          context,
+                          SSFGDT12_MAIN(
+                            p_attr1: widget.p_attr1,
+                            pErpOuCode: widget.pErpOuCode,
+                          )
+                          //
+                          );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text(
+                      'ยืนยัน',
+                    ),
+                  ),
+                ],
+              )
+            ],
+          );
         });
   }
 }
