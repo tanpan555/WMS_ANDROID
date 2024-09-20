@@ -2155,7 +2155,7 @@ Widget _buildInfoRow3(Map<String, String> info) {
                 ),
                 SizedBox(width: 4),
                 Flexible(
-                  flex: 2,
+                  flex: 3,
                   child: Container(
                     height: 30,
                     alignment: Alignment.center,
@@ -2163,18 +2163,18 @@ Widget _buildInfoRow3(Map<String, String> info) {
                       controller: TextEditingController(text: entry.value),
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor:  Colors.grey[300],
+                        fillColor:  const Color.fromARGB(255, 254, 247, 230),
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.symmetric(
                           vertical: 14,
-                          horizontal: 0,
+                          horizontal: 8,
                         ),
                       ),
                       style: TextStyle(
                         color: const Color.fromARGB(255, 0, 0, 0),
                         fontSize: 12,
                       ),
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.left,
                       readOnly: true,
                     ),
                   ),
@@ -2622,7 +2622,8 @@ Widget _buildInfoRow3(Map<String, String> info) {
                                   _buildInfoRow3({
                                     'Seq:':
                                         item['lot_seq_nb']?.toString() ?? '',
-                                
+                                         }),
+                                _buildInfoRow3({
                                     'Lot No:':
                                         item['lot_product_no']?.toString() ??
                                             '',
@@ -2632,11 +2633,11 @@ Widget _buildInfoRow3(Map<String, String> info) {
                                         ? numberFormat.format(item['lot_qty'])
                                         : '',
                                         }),
-                                         _buildInfoRow2({
+                                         _buildInfoRow3({
                                     'Lot ผู้ผลิต:':
                                         item['lot_supplier']?.toString() ?? '',
                                           }),
-                                        _buildInfoRow2({
+                                        _buildInfoRow3({
                                     'MFG Date:':
                                         item['mfg_date']?.toString() ?? '',
                                   }),
