@@ -392,18 +392,17 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               borderRadius: BorderRadius.circular(16.0),
             ),
             title: Container(
-  padding: EdgeInsets.all(16.0),
-  color: Colors.grey[300], // Add your desired background color here
-  child: Text(
-    data['item'],
-    style: TextStyle(
-      color: Colors.black,
-      fontSize: 20.0,
-      fontWeight: FontWeight.bold,
-    ),
-  ),
-),
-
+              padding: EdgeInsets.all(16.0),
+              color: Colors.grey[300], // Add your desired background color here
+              child: Text(
+                data['item'],
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             contentPadding:
                 EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
             content: SizedBox(
@@ -440,19 +439,18 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
-  style: AppStyles.ConfirmChecRecievekButtonStyle(),
-  onPressed: () {
-    final updatedQty = receiveQtyController.text;
-    updateReceiveQty(data['rowid'], updatedQty);
-    Navigator.of(context).pop(); // Close the dialog
-  },
-  child: Image.asset(
-    'assets/images/check-mark.png',
-    width: 25.0,
-    height: 25.0,
-  ),
-)
-
+                      style: AppStyles.ConfirmChecRecievekButtonStyle(),
+                      onPressed: () {
+                        final updatedQty = receiveQtyController.text;
+                        updateReceiveQty(data['rowid'], updatedQty);
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                      child: Image.asset(
+                        'assets/images/check-mark.png',
+                        width: 25.0,
+                        height: 25.0,
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -1112,40 +1110,103 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   }
 
   Widget _buildInfoRow2(Map<String, String> info) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4.0),
-    child: Row(
-      children: info.entries.map((entry) {
-        return Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: Align(
-                    alignment: Alignment.centerRight,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: info.entries.map((entry) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        height: 30,
+                        alignment: Alignment.center,
+                        child: Text(
+                          entry.key,
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 12,
+                          ),
+                          softWrap: false,
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Flexible(
                     child: Container(
                       height: 30,
                       alignment: Alignment.center,
-                      child: Text(
-                        entry.key,
+                      child: TextField(
+                        controller: TextEditingController(text: entry.value),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: const Color.fromARGB(255, 254, 247, 230),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                            horizontal: 0,
+                          ),
+                        ),
                         style: TextStyle(
                           color: const Color.fromARGB(255, 0, 0, 0),
                           fontSize: 12,
                         ),
-                        softWrap: false,
                         textAlign: TextAlign.right,
+                        readOnly: true,
                       ),
                     ),
                   ),
-                ),
-                SizedBox(width: 8),
-                Flexible(
-                  child: Container(
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow3(Map<String, String> info) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: info.entries.map((entry) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Key
+                  Container(
                     height: 30,
-                    alignment: Alignment.center,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      entry.key,
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 12,
+                      ),
+                      softWrap: false,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  SizedBox(width: 18),
+
+                  Container(
+                    constraints: BoxConstraints(
+                      minWidth: 80,
+                      maxWidth: 150,
+                    ),
+                    height: 30,
                     child: TextField(
                       controller: TextEditingController(text: entry.value),
                       decoration: InputDecoration(
@@ -1154,88 +1215,25 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.symmetric(
                           vertical: 14,
-                          horizontal: 0,
+                          horizontal: 10.0,
                         ),
                       ),
                       style: TextStyle(
                         color: const Color.fromARGB(255, 0, 0, 0),
                         fontSize: 12,
                       ),
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.left,
+                      readOnly: true,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      }).toList(),
-    ),
-  );
-}
-Widget _buildInfoRow3(Map<String, String> info) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4.0),
-    child: Row(
-      children: info.entries.map((entry) {
-        return Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Key
-                Container(
-                  height: 30,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    entry.key,
-                    style: TextStyle(
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                      fontSize: 12,
-                    ),
-                    softWrap: false,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-                SizedBox(width: 18),
-
-                Container(
-                  constraints: BoxConstraints(
-                    minWidth: 80,
-                    maxWidth: 150,
-                  ),
-                  height: 30,
-                  child: TextField(
-                    controller: TextEditingController(text: entry.value),
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: const Color.fromARGB(255, 254, 247, 230), 
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 14,
-                        horizontal: 10.0,
-                      ),
-                    ),
-                    style: TextStyle(
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                      fontSize: 12,
-                    ),
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }).toList(),
-    ),
-  );
-}
-
-
-
+          );
+        }).toList(),
+      ),
+    );
+  }
 
   Widget _buildDialogButton({
     required String label,
@@ -1451,7 +1449,7 @@ Widget _buildInfoRow3(Map<String, String> info) {
                       ),
                     ),
                     Container(
-                         padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
                       margin: const EdgeInsets.only(bottom: 10.0),
                       color: const Color.fromARGB(255, 244, 244, 244),
                       child: Center(
@@ -1512,9 +1510,9 @@ Widget _buildInfoRow3(Map<String, String> info) {
                                   'UOM:': data['UOM']?.toString() ?? '-',
                                 }),
                                 _buildInfoRow3({
-                                  'Locator:':data['locator_det']?.toString() ?? '-',
+                                  'Locator:':
+                                      data['locator_det']?.toString() ?? '-',
                                 }),
-                        
                                 const SizedBox(height: 8),
                                 Row(
                                   mainAxisAlignment:
@@ -1985,33 +1983,28 @@ class _LotDialogState extends State<LotDialog> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: IconButton(
-                            iconSize: 20.0,
-                            icon: Image.asset(
-                              'assets/images/check-mark.png',
-                              width: 45.0,
-                              height: 45.0,
-                            ),
-                            onPressed: () async {
-                              await updateLot(
-                                lotQtyController.text,
-                                lotSupplierController.text,
-                                mfgDateController.text,
-                                ou_code,
-                                recNo,
-                                recSeq,
-                                lotSeq,
-                              );
-                              sendGetRequestlineWMS();
-                              Navigator.of(context).pop();
-                              if (refreshCallback != null) {
-                                await refreshCallback();
-                              }
-                            },
+                        ElevatedButton(
+                          style: AppStyles.ConfirmChecRecievekButtonStyle(),
+                          onPressed: () async {
+                            await updateLot(
+                              lotQtyController.text,
+                              lotSupplierController.text,
+                              mfgDateController.text,
+                              ou_code,
+                              recNo,
+                              recSeq,
+                              lotSeq,
+                            );
+                            sendGetRequestlineWMS();
+                            Navigator.of(context).pop();
+                            if (refreshCallback != null) {
+                              await refreshCallback();
+                            }
+                          },
+                          child: Image.asset(
+                            'assets/images/check-mark.png',
+                            width: 45.0,
+                            height: 45.0,
                           ),
                         ),
                       ],
@@ -2061,6 +2054,139 @@ class _LotDialogState extends State<LotDialog> {
       ),
     );
   }
+
+  Widget _buildInfoRow2(Map<String, String> info) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0),
+    child: Row(
+      children: info.entries.map((entry) {
+        return Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 3.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      height: 30,
+                      alignment: Alignment.center,
+                      child: Text(
+                        entry.key,
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 12,
+                        ),
+                        softWrap: false,
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 4),
+                Flexible(
+                  flex: 3,
+                  child: Container(
+                    height: 30,
+                    alignment: Alignment.center,
+                    child: TextField(
+                      controller: TextEditingController(text: entry.value),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromARGB(255, 254, 247, 230),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 14,
+                          horizontal: 0,
+                        ),
+                      ),
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.right,
+                      readOnly: true,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    ),
+  );
+}
+
+Widget _buildInfoRow3(Map<String, String> info) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0),
+    child: Row(
+      children: info.entries.map((entry) {
+        return Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 3.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      height: 30,
+                      alignment: Alignment.center,
+                      child: Text(
+                        entry.key,
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 12,
+                        ),
+                        softWrap: false,
+                        textAlign: TextAlign.right,
+                        
+                      ),
+                      
+                    ),
+                  ),
+                ),
+                SizedBox(width: 4),
+                Flexible(
+                  flex: 2,
+                  child: Container(
+                    height: 30,
+                    alignment: Alignment.center,
+                    child: TextField(
+                      controller: TextEditingController(text: entry.value),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor:  Colors.grey[300],
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 14,
+                          horizontal: 0,
+                        ),
+                      ),
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.right,
+                      readOnly: true,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    ),
+  );
+}
+
 
   Widget _buildDateField({
     required TextEditingController controller,
@@ -2486,33 +2612,33 @@ class _LotDialogState extends State<LotDialog> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                      'Seq: ${item['lot_seq_nb']?.toString() ?? ''}'),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    'Lot No: ${item['lot_product_no']?.toString() ?? ''}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
-                                  ),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    'Lot QTY: ${item['lot_qty'] != null ? numberFormat.format(item['lot_qty']) : ''}',
-                                  ),
-                                  SizedBox(height: 8),
-                                  Text(
-                                      'Lot ผู้ผลิต: ${item['lot_supplier']?.toString() ?? ''}'),
-                                  SizedBox(height: 8),
-                                  Text(
-                                      'MFG Date: ${item['mfg_date']?.toString() ?? ''}'),
-                                  SizedBox(height: 8),
+                                  _buildInfoRow3({
+                                    'Seq:':
+                                        item['lot_seq_nb']?.toString() ?? '',
+                                
+                                    'Lot No:':
+                                        item['lot_product_no']?.toString() ??
+                                            '',
+                                             }),
+                                             _buildInfoRow2({
+                                    'Lot QTY:': item['lot_qty'] != null
+                                        ? numberFormat.format(item['lot_qty'])
+                                        : '',
+                                        }),
+                                         _buildInfoRow2({
+                                    'Lot ผู้ผลิต:':
+                                        item['lot_supplier']?.toString() ?? '',
+                                          }),
+                                        _buildInfoRow2({
+                                    'MFG Date:':
+                                        item['mfg_date']?.toString() ?? '',
+                                  }),
                                   SizedBox(height: 16),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
-                                          // color: Colors.white,
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                         ),
@@ -2569,7 +2695,6 @@ class _LotDialogState extends State<LotDialog> {
                                       Spacer(),
                                       Container(
                                         decoration: BoxDecoration(
-                                          // color: Colors.white,
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                         ),
@@ -2582,16 +2707,18 @@ class _LotDialogState extends State<LotDialog> {
                                           ),
                                           onPressed: () {
                                             showDetailsLotDialog(
-                                                context,
-                                                item,
-                                                widget.recSeq,
-                                                widget.ouCode, () async {
-                                              await getLotList(
-                                                  widget.poReceiveNo,
-                                                  widget.recSeq,
-                                                  widget.ouCode);
-                                              setState(() {});
-                                            });
+                                              context,
+                                              item,
+                                              widget.recSeq,
+                                              widget.ouCode,
+                                              () async {
+                                                await getLotList(
+                                                    widget.poReceiveNo,
+                                                    widget.recSeq,
+                                                    widget.ouCode);
+                                                setState(() {});
+                                              },
+                                            );
                                           },
                                         ),
                                       ),

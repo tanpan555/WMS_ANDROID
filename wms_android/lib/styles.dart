@@ -59,4 +59,17 @@ class AppStyles {
       padding: const EdgeInsets.all(0),
     );
   }
+
+  static ButtonStyle ConfirmChecRecievekButtonStyle() {
+  return ElevatedButton.styleFrom(
+    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+      side: const BorderSide(color: Colors.green, width: 2), // Added green border
+    ),
+    minimumSize: const Size(60, 40),
+    padding: const EdgeInsets.all(0),
+  );
+}
+
 }

@@ -406,12 +406,12 @@ Widget build(BuildContext context) {
                   child: Column(
                     children: dataList.map((data) {
                       Map<String, String> info1 = {
-                        'จำนวนรับ': data['receive_qty']?.toString() ?? '-',
-                        'ค้างรับ': data['pending_qty']?.toString() ?? '-',
+                        'จำนวนรับ:': data['receive_qty']?.toString() ?? '-',
+                        'ค้างรับ:': data['pending_qty']?.toString() ?? '-',
                       };
                       Map<String, String> info2 = {
-                        'Locator': data['locator_det']?.toString() ?? '-',
-                        'Lot No': data['lot_product_no']?.toString() ?? '-',
+                        'Locator:': data['locator_det']?.toString() ?? '-',
+                        'Lot No:': data['lot_product_no']?.toString() ?? '-',
                       };
                       return Card(
                         margin: EdgeInsets.symmetric(vertical: 8.0),
@@ -482,8 +482,9 @@ Widget _buildInfoRow2(Map<String, String> info) {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                SizedBox(width: 1),
                 Flexible(
+                  flex: 1,
                   child: Container(
                     height: 30,
                     alignment: Alignment.center,
@@ -503,6 +504,7 @@ Widget _buildInfoRow2(Map<String, String> info) {
                         fontSize: 12,
                       ),
                       textAlign: TextAlign.right,
+                      readOnly: true,
                     ),
                   ),
                 ),
