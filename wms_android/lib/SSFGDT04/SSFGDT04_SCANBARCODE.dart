@@ -652,7 +652,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
           ),
 
           //Quantity//
-          if (pBarcode != null && pBarcode!.isNotEmpty)
+          // if (pBarcode != null && pBarcode!.isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: po_status == '1'
@@ -679,7 +679,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
           //Current Locator//
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
             child: TextField(
               readOnly: true,
               decoration: InputDecoration(
@@ -696,7 +696,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
           //จำนวนล็อต/รายการรอจัดเก็บ//
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
               readOnly: true,
               decoration: InputDecoration(
@@ -713,7 +713,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
           //จำนวน (หน่วยสต๊อก) รอจัดเก็บ//
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 10),
             child: TextField(
               readOnly: true,
               decoration: InputDecoration(
