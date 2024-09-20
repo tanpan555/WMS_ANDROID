@@ -4,6 +4,7 @@ import 'dart:convert';
 // import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
+import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -279,43 +280,37 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                 ),
                 // --------------------------------------------------------------------
                 // const Spacer(),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: IconButton(
-                    iconSize: 20.0,
-                    icon: Image.asset(
-                      'assets/images/right.png',
-                      width: 20.0,
-                      height: 20.0,
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Ssfgdt09lVerify(
-                                  pErpOuCode: widget.pErpOuCode,
-                                  pOuCode: widget.pOuCode,
-                                  docNo: widget.docNo,
-                                  docType: widget.docType,
-                                  docDate: widget.docDate,
-                                  moDoNo: widget.moDoNo,
-                                  pWareCode: widget.pWareCode,
-                                )),
-                      ).then((value) async {
-                        // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                        await fetchData();
-                        await fetchData();
-                        print('11111111111111111111111111');
-                      });
-                    },
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Ssfgdt09lVerify(
+                                pErpOuCode: widget.pErpOuCode,
+                                pOuCode: widget.pOuCode,
+                                docNo: widget.docNo,
+                                docType: widget.docType,
+                                docDate: widget.docDate,
+                                moDoNo: widget.moDoNo,
+                                pWareCode: widget.pWareCode,
+                              )),
+                    ).then((value) async {
+                      // เมื่อกลับมาหน้าเดิม เรียก fetchData
+                      await fetchData();
+                      await fetchData();
+                      print('11111111111111111111111111');
+                    });
+                  },
+                  style: AppStyles.NextButtonStyle(),
+                  child: Image.asset(
+                    'assets/images/right.png', // ใส่ภาพจากไฟล์ asset
+                    width: 25, // กำหนดขนาดภาพ
+                    height: 25,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             // --------------------------------------------------------------------
             Expanded(
               child: ListView(children: [
@@ -713,24 +708,55 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
             ),
           ),
           actions: <Widget>[
-            TextButton(
-              child: const Text('ย้อนกลับ'),
-              onPressed: () {
-                Navigator.of(context).pop(); // ปิด Dialog เมื่อกดปุ่มนี้
-              },
-            ),
-            TextButton(
-              child: const Text('ยืนยัน'),
-              onPressed: () async {
-                int updatedPackQty =
-                    int.tryParse(packQtyController.text) ?? packQty;
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // ปิด Dialog เมื่อกดปุ่มนี้
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ย้อนกลับ')),
+                ElevatedButton(
+                  onPressed: () async {
+                    int updatedPackQty =
+                        int.tryParse(packQtyController.text) ?? packQty;
 
-                Navigator.of(context).pop();
-                await updatePackQty(updatedPackQty, itemCode, packCode, rowID);
-                await fetchData();
-                setState(() {});
-              },
-            ),
+                    Navigator.of(context).pop();
+                    await updatePackQty(
+                        updatedPackQty, itemCode, packCode, rowID);
+                    await fetchData();
+                    setState(() {});
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    side: const BorderSide(color: Colors.grey),
+                  ),
+                  child: const Text('ยืนยัน'),
+                ),
+              ],
+            )
+            // TextButton(
+            //   child: const Text('ย้อนกลับ'),
+            //   onPressed: () {
+            //     Navigator.of(context).pop(); // ปิด Dialog เมื่อกดปุ่มนี้
+            //   },
+            // ),
+            // TextButton(
+            //   child: const Text('ยืนยัน'),
+            //   onPressed: () async {
+            //     int updatedPackQty =
+            //         int.tryParse(packQtyController.text) ?? packQty;
+
+            //     Navigator.of(context).pop();
+            //     await updatePackQty(updatedPackQty, itemCode, packCode, rowID);
+            //     await fetchData();
+            //     setState(() {});
+            //   },
+            // ),
           ],
         );
       },

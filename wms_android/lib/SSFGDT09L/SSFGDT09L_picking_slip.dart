@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -164,7 +165,7 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
       backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'Picking Silp'),
       body: Padding(
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(16.0),
           child: Column(children: [
             Row(
               children: [
@@ -172,25 +173,16 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
                   onPressed: () {
                     getPDF();
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    minimumSize: const Size(10, 20),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  ),
-                  child: const Text(
-                    'พิมพ์',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  style: AppStyles.NextButtonStyle(),
+                  child: Image.asset(
+                    'assets/images/printer.png', // ใส่ภาพจากไฟล์ asset
+                    width: 25, // กำหนดขนาดภาพ
+                    height: 25,
                   ),
                 ),
               ],
             ),
+            const SizedBox(height: 20),
             Expanded(
               child: ListView(
                 children: dataCard.map((item) {

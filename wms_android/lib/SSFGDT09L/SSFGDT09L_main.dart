@@ -73,15 +73,14 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
       backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(title: 'เบิกจ่าย'),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               margin: const EdgeInsets.only(
                   bottom: 8.0), // Add some space below the container
-              color: Colors
-                  .greenAccent, // Customize the background color of the container
+              color: Colors.grey[300],
               child: Center(
                 child: Text(
                   'เลือกคลังปฏิบัติงาน',

@@ -92,7 +92,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
       backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'เบิกจ่าย'),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -156,7 +156,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                   });
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////
               TextFormField(
                 controller: pSoNoController,
@@ -176,7 +176,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                 },
               ),
               //////////////////////////////////////////////////////////////
-              const SizedBox(height: 20),
+              const SizedBox(height: 8),
               TextFormField(
                 controller: dateController,
                 readOnly: true,
@@ -197,13 +197,12 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
               ),
               const SizedBox(height: 20),
               //////////////////////////////////////////////////////////////
-              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Colors.grey[300],
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: IconButton(

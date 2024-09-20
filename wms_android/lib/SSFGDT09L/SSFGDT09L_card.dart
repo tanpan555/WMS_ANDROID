@@ -584,7 +584,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
       backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'เบิกจ่าย'),
       body: Padding(
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
             Expanded(

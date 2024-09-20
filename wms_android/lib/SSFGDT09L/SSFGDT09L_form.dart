@@ -599,50 +599,44 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                   onPressed: () {
                     showDialogLovCancel();
                   },
-                  style: AppStyles.cancelButtonStyle(),
+                  style: AppStyles.NextButtonStyle(),
                   child:
                       Text('ยกเลิก', style: AppStyles.CancelbuttonTextStyle()),
                 ),
 
                 // const Spacer(),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: IconButton(
-                    iconSize: 20.0,
-                    icon: Image.asset(
-                      'assets/images/right.png',
-                      width: 20.0,
-                      height: 20.0,
-                    ),
-                    onPressed: () {
-                      if (docNo.isNotEmpty &&
-                          docNo != '' &&
-                          docNo != null &&
-                          docNo != 'null' &&
-                          returnStatusLovDocType.isNotEmpty &&
-                          returnStatusLovDocType != '' &&
-                          returnStatusLovDocType != null &&
-                          returnStatusLovDocType != 'null' &&
-                          crDate.isNotEmpty &&
-                          crDate != '' &&
-                          crDate != null &&
-                          crDate != 'null' &&
-                          returnStatusLovMoDoNo.isNotEmpty &&
-                          returnStatusLovMoDoNo != '' &&
-                          returnStatusLovMoDoNo != null &&
-                          returnStatusLovMoDoNo != 'null') {
-                        chkCust(
-                          shidForChk,
-                          returnStatusLovRefNo.isNotEmpty ? soNoForChk : 'null',
-                          testChk = 1,
-                        );
-                      } else {
-                        showDialogErrorCHK('ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
-                      }
-                    },
+                ElevatedButton(
+                  onPressed: () {
+                    if (docNo.isNotEmpty &&
+                        docNo != '' &&
+                        docNo != null &&
+                        docNo != 'null' &&
+                        returnStatusLovDocType.isNotEmpty &&
+                        returnStatusLovDocType != '' &&
+                        returnStatusLovDocType != null &&
+                        returnStatusLovDocType != 'null' &&
+                        crDate.isNotEmpty &&
+                        crDate != '' &&
+                        crDate != null &&
+                        crDate != 'null' &&
+                        returnStatusLovMoDoNo.isNotEmpty &&
+                        returnStatusLovMoDoNo != '' &&
+                        returnStatusLovMoDoNo != null &&
+                        returnStatusLovMoDoNo != 'null') {
+                      chkCust(
+                        shidForChk,
+                        returnStatusLovRefNo.isNotEmpty ? soNoForChk : 'null',
+                        testChk = 1,
+                      );
+                    } else {
+                      showDialogErrorCHK('ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
+                    }
+                  },
+                  style: AppStyles.NextButtonStyle(),
+                  child: Image.asset(
+                    'assets/images/right.png', // ใส่ภาพจากไฟล์ asset
+                    width: 25, // กำหนดขนาดภาพ
+                    height: 25,
                   ),
                 ),
               ],
@@ -669,7 +663,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 8),
                     // -----------------------------
                     DropdownSearch<String>(
                       popupProps: PopupProps.menu(
@@ -735,7 +729,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                       selectedItem: selectLovDocType,
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 8),
                     // -----------------------------
                     TextFormField(
                       controller: crDateController,
@@ -755,7 +749,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 8),
                     // -----------------------------
                     DropdownSearch<String>(
                       popupProps: PopupProps.menu(
@@ -813,7 +807,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                     ),
 
                     ///
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 8),
                     // ----------------------------------------------------------------------------------------------------------------------------------
                     DropdownSearch<String>(
                       popupProps: PopupProps.menu(
@@ -877,7 +871,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                       },
                       selectedItem: selectLovMoDoNo,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 8),
                     // -----------------------------
                     TextFormField(
                       controller: custNameController,
@@ -895,7 +889,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 8),
                     // -----------------------------
                     TextFormField(
                       controller: noteController,
@@ -917,7 +911,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         }),
                       },
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 8),
                     // -----------------------------
                     TextFormField(
                       controller: erpDocNoController,
@@ -932,7 +926,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 8),
                   ],
                 ),
               ),
@@ -1089,59 +1083,29 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                     const SizedBox(height: 8),
                     /////////////////////////////////////////////////
 
-                    const SizedBox(height: 8),
+                    // const SizedBox(height: 8),
                     //////////////////////////////////////////////////
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 103, 58, 183),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            minimumSize: const Size(10, 20),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                          ),
-                          child: const Text(
-                            'ย้อนกลับ',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        // ElevatedButton(
-                        //   onPressed: () {},
-                        //   style: ElevatedButton.styleFrom(
-                        //     backgroundColor:
-                        //         const Color.fromARGB(255, 103, 58, 183),
-                        //     shape: RoundedRectangleBorder(
-                        //       borderRadius: BorderRadius.circular(12.0),
-                        //     ),
-                        //     minimumSize: const Size(10, 20),
-                        //     padding: const EdgeInsets.symmetric(
-                        //         horizontal: 10, vertical: 5),
-                        //   ),
-                        //   child: const Text(
-                        //     'ยืนยัน',
-                        //     style: TextStyle(
-                        //       color: Colors.white,
-                        //       fontWeight: FontWeight.bold,
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
-                    )
                   ],
                 ),
               ),
             ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ย้อนกลับ'),
+                  ),
+                ],
+              )
+            ],
             // ),
           );
         });

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
+import 'package:wms_android/styles.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
@@ -374,27 +375,20 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: IconButton(
-                  iconSize: 20.0,
-                  icon: Image.asset(
-                    'assets/images/right.png',
-                    width: 20.0,
-                    height: 20.0,
-                  ),
-                  onPressed: () {
-                    // submitData();                  // รอ check จาก rujxyho ก่อน **************************************************
-                  },
+              ElevatedButton(
+                onPressed: () {
+                  // submitData();                  // รอ check จาก rujxyho ก่อน **************************************************
+                },
+                style: AppStyles.ConfirmbuttonStyle(),
+                child: Text(
+                  'CONFIRM',
+                  style: AppStyles.ConfirmbuttonTextStyle(),
                 ),
               ),
               // --------------------------------------------------------------------
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 20),
           Row(
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

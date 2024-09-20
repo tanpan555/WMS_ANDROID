@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
+import 'package:wms_android/styles.dart';
 import 'SSFGDT09L_form.dart';
 
 class Ssfgdt09lSelectDocType extends StatefulWidget {
@@ -102,9 +103,8 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
       );
 
       if (response.statusCode == 200) {
-        // ถอดรหัสข้อมูล JSON จาก response
-        final Map<String, dynamic> data = jsonDecode(utf8
-            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        final Map<String, dynamic> data =
+            jsonDecode(utf8.decode(response.bodyBytes));
         print('data : $data type : ${data.runtimeType}');
         setState(() {
           statusChkCreate = data['po_status'];
@@ -154,53 +154,41 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
         padding: const EdgeInsets.all(16.0),
         child: Column(children: [
           DropdownButtonFormField<Map<String, dynamic>>(
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              filled: true,
-              fillColor: Colors.white,
-              labelText: 'ประเภทเอกสาร',
-              labelStyle: TextStyle(
-                color: Colors.black87,
-              ),
-            ),
-
-            value: selectedDocTypeItem, // ค่าที่เลือกไว้ก่อนหน้า (ถ้ามี)
-            items: dataLovDocType.map((item) {
-              return DropdownMenuItem<Map<String, dynamic>>(
-                value: item,
-                child: Container(
-                  // width: 300, // กำหนดความกว้างของรายการ
-                  child: Text(
-                    item['d'] ?? '',
-                    // maxLines: 3, // กำหนดจำนวนบรรทัดสูงสุด
-                    overflow: TextOverflow
-                        .ellipsis, // เพิ่มข้อความ '...' ถ้าข้อมูลเกิน
-                    // style: TextStyle(
-                    //   fontSize: 12,
-                    // ),
-                  ),
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                filled: true,
+                fillColor: Colors.white,
+                labelText: 'ประเภทเอกสาร',
+                labelStyle: TextStyle(
+                  color: Colors.black87,
                 ),
-              );
-            }).toList(),
-            onChanged: (value) {
-              setState(() {
-                selectedDocTypeItem = value;
-                // เก็บค่า name และ codeName
-                docTypeLovD = value?['d'] ?? '';
-                docTypeLovR = value?['r'] ?? '';
+              ),
+              value: selectedDocTypeItem,
+              items: dataLovDocType.map((item) {
+                return DropdownMenuItem<Map<String, dynamic>>(
+                  value: item,
+                  child: Container(
+                    child: Text(
+                      item['d'] ?? '',
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  selectedDocTypeItem = value;
+                  // เก็บค่า name และ codeName
+                  docTypeLovD = value?['d'] ?? '';
+                  docTypeLovR = value?['r'] ?? '';
 
-                // แสดงค่าที่ถูกเลือก
-                print('d: $docTypeLovD, r: $docTypeLovR');
-              });
-            },
-            dropdownColor: Colors.white, // กำหนดสีพื้นหลังของ dropdown
-            style: const TextStyle(
-                color:
-                    Colors.black), // กำหนดสีตัวอักษรเมื่อแสดงรายการที่ถูกเลือก
-          ),
-          const SizedBox(
-            height: 20,
-          ),
+                  // แสดงค่าที่ถูกเลือก
+                  print('d: $docTypeLovD, r: $docTypeLovR');
+                });
+              },
+              dropdownColor: Colors.white,
+              style: const TextStyle(color: Colors.black)),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -208,22 +196,9 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
                 onPressed: () {
                   chkCreateCard();
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  minimumSize: const Size(10, 20),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                ),
-                child: const Text(
-                  'ยืนยัน',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                style: AppStyles.ConfirmbuttonStyle(),
+                child:
+                    Text('ยืนยัน', style: AppStyles.ConfirmbuttonTextStyle()),
               ),
             ],
           ),

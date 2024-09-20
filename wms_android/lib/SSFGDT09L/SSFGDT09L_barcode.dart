@@ -7,7 +7,6 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'SSFGDT09L_reason.dart';
-import 'SSFGDT09L_grid.dart';
 
 class Ssfgdt09lBarcode extends StatefulWidget {
   final String pWareCode;
@@ -540,7 +539,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
             TextFormField(
               controller: locatorFormController,
@@ -556,7 +555,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
             TextFormField(
               controller: itemCodeController,
@@ -571,7 +570,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
             TextFormField(
               controller: lotNoController,
@@ -588,7 +587,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
             TextFormField(
                 controller: quantityController,
@@ -612,7 +611,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                     },
                   );
                 }),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
             TextFormField(
               controller: locatorToController,
@@ -628,7 +627,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
             TextFormField(
               controller: lotQtyController,
@@ -648,7 +647,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
             TextFormField(
               controller: lotUnitController,
@@ -668,7 +667,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
           ]))),
       bottomNavigationBar: BottomBar(),

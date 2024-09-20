@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 // import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
+import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -246,21 +247,10 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
                   onPressed: () {
                     submitAddLine();
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    minimumSize: const Size(10, 20),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  ),
-                  child: const Text(
-                    'ยืนยัน',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  style: AppStyles.ConfirmbuttonStyle(),
+                  child: Text(
+                    'บันทึก',
+                    style: AppStyles.ConfirmbuttonTextStyle(),
                   ),
                 ),
               ],
@@ -313,7 +303,7 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
                   color: Colors
                       .black), // กำหนดสีตัวอักษรเมื่อแสดงรายการที่ถูกเลือก
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
             DropdownButtonFormField<String>(
               value: reasonRpLocD,
@@ -364,7 +354,7 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
                 });
               },
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
             DropdownButtonFormField<Map<String, dynamic>>(
               decoration: const InputDecoration(
@@ -411,7 +401,7 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
                   color: Colors
                       .black), // กำหนดสีตัวอักษรเมื่อแสดงรายการที่ถูกเลือก
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
             TextFormField(
                 controller: remarkController,
@@ -433,7 +423,7 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
                     },
                   );
                 }),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
           ]))),
       bottomNavigationBar: BottomBar(),
