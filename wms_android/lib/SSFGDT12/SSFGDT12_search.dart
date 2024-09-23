@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // import 'dart:convert';
 import 'dart:ui';
 import 'package:intl/intl.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -86,22 +87,6 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // TextFormField(
-            //   initialValue: '${widget.pWareCode} ${widget.pWareName}',
-            //   readOnly: true,
-            //   // onTap: () => _selectDate(context),
-            //   decoration: InputDecoration(
-            //     border: InputBorder.none,
-            //     filled: true,
-            //     fillColor: Colors.grey[300],
-            //     labelText: 'ware house',
-            //     labelStyle: const TextStyle(
-            //       color: Colors.black87,
-            //     ),
-            //   ),
-            // ),
-            // const SizedBox(height: 10),
-            //////////////////////////////////////////////////////////////////////////////////////
             TextFormField(
               controller: _controller,
               decoration: InputDecoration(
@@ -119,12 +104,10 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 });
               },
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             //////////////////////////////////////////////////////////////////////////////////////
             TextFormField(
               controller: _dateController,
-              readOnly: true,
-              onTap: () => _selectDate(context),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 filled: true,
@@ -133,15 +116,20 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 labelStyle: const TextStyle(
                   color: Colors.black87,
                 ),
-                suffixIcon: Icon(
-                  Icons.calendar_today,
-                  color: Colors.black87,
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
+                  onPressed: () async {
+                    // กดไอคอนเพื่อเปิด date picker
+                    _selectDate(context);
+                  },
                 ),
               ),
+              onChanged: (value) {
+                selectedDate = value;
+              },
             ),
-            const SizedBox(height: 20),
-            //////////////////////////////////////////////////////////////////////////////////////
-            DropdownButtonFormField<String>(
+            const SizedBox(height: 8),
+            DropdownButtonFormField2<String>(
               value: selectedItem,
               items: dropdownItems
                   .map((item) => DropdownMenuItem<String>(
@@ -193,15 +181,15 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.grey[300],
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: IconButton(
                     iconSize: 20.0,
                     icon: Image.asset(
                       'assets/images/eraser_red.png',
-                      width: 20.0,
-                      height: 20.0,
+                      width: 50.0,
+                      height: 25.0,
                     ),
                     onPressed: () {
                       _controller.clear();
@@ -226,8 +214,8 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                     iconSize: 20.0,
                     icon: Image.asset(
                       'assets/images/search_color.png',
-                      width: 20.0,
-                      height: 20.0,
+                      width: 50.0,
+                      height: 25.0,
                     ),
                     onPressed: () {
                       _navigateToPage(

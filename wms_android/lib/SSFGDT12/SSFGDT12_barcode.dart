@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 class Ssfgdt12Barcode extends StatefulWidget {
   // final String pOuCode;
@@ -224,7 +226,6 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 10),
               Container(
                 padding: const EdgeInsets.all(12.0),
                 decoration: BoxDecoration(
@@ -246,7 +247,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
               Container(
                 padding: const EdgeInsets.all(12.0),
@@ -269,9 +270,9 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
-              DropdownButtonFormField<String>(
+              DropdownButtonFormField2<String>(
                 value: dataLocator.isNotEmpty ? dataLocator : null,
                 items: dataLocatorList
                     .map((item) => DropdownMenuItem<String>(
@@ -294,7 +295,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   });
                 },
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
               Row(
                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -321,7 +322,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
               TextFormField(
                 controller: wareCodeBarcodeController,
@@ -336,7 +337,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
               TextFormField(
                 controller: itemCodeBarcodeController,
@@ -351,7 +352,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
               TextFormField(
                 controller: lotNumberBarcodeController,
@@ -370,7 +371,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   });
                 },
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
               TextFormField(
                 controller: countQuantityBarcodeController,
@@ -389,7 +390,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   });
                 },
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
               TextFormField(
                 controller: locatorCodeBarcodeController,
@@ -404,9 +405,9 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
-              DropdownButtonFormField<String>(
+              DropdownButtonFormField2<String>(
                 value: dataGridStatus.isNotEmpty ? dataGridStatus : null,
                 items: dataGradeStatuslist
                     .map((item) => DropdownMenuItem<String>(
@@ -442,7 +443,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   });
                 },
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -469,21 +470,10 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                         dataGradeStatuslist.clear();
                       });
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: const Size(10, 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                    ),
-                    child: const Text(
+                    style: AppStyles.cancelButtonStyle(),
+                    child: Text(
                       'ยกเลิก',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: AppStyles.CancelbuttonTextStyle(),
                     ),
                   ),
                   ElevatedButton(
@@ -510,21 +500,10 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                             'statusGridBarcode : $statusGridBarcode Type : ${statusGridBarcode.runtimeType}');
                       });
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: const Size(10, 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                    ),
-                    child: const Text(
-                      'ยืนยัน',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    style: AppStyles.ConfirmbuttonStyle(),
+                    child: Text(
+                      'บันทึก',
+                      style: AppStyles.ConfirmbuttonTextStyle(),
                     ),
                   ),
                 ],

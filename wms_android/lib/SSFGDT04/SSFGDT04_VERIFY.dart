@@ -429,6 +429,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
         children: [
           SizedBox(height: 10),
           Container(
+            width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -441,11 +442,13 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
           SizedBox(height: 10),
           // Text with background color
           Container(
+            width: double.infinity,
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 80),
             decoration: BoxDecoration(
               color: Colors.lightBlue[100], // Background color for the text
@@ -459,6 +462,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
           const SizedBox(height: 10),

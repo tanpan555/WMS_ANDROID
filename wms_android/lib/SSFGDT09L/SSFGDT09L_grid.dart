@@ -261,21 +261,10 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                       await fetchData();
                     });
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    minimumSize: const Size(10, 20),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  ),
-                  child: const Text(
+                  style: AppStyles.cancelButtonStyle(),
+                  child: Text(
                     'Picking Slip',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: AppStyles.CancelbuttonTextStyle(),
                   ),
                 ),
                 // --------------------------------------------------------------------
@@ -395,22 +384,10 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                           await fetchData();
                         });
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 103, 58, 183),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        minimumSize: const Size(10, 20),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                      ),
-                      child: const Text(
+                      style: AppStyles.cancelButtonStyle(),
+                      child: Text(
                         '+Create',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: AppStyles.CancelbuttonTextStyle(),
                       ),
                     ),
                     // --------------------------------------------------------------------
@@ -428,22 +405,10 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                           );
                         });
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 103, 58, 183),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        minimumSize: const Size(10, 20),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                      ),
-                      child: const Text(
+                      style: AppStyles.cancelButtonStyle(),
+                      child: Text(
                         '+Clear All',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: AppStyles.CancelbuttonTextStyle(),
                       ),
                     ),
                     // --------------------------------------------------------------------

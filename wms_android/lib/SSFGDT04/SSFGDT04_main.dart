@@ -109,7 +109,7 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
                         cardColor = const Color.fromARGB(255, 255, 255, 255);
                         break;
                       default:
-                        imagePath = 'assets/images/warehouse2.png';
+                        imagePath = 'assets/images/warehouse_blue.png';
                         cardColor = const Color.fromARGB(255, 255, 255, 255);
                     }
 

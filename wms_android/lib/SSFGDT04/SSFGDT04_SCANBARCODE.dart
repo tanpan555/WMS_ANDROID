@@ -320,11 +320,13 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
   Widget _buildFormFields() {
     return Container(
+      // padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(height: 10),
           Container(
+            width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
             decoration: BoxDecoration(
               color: Colors.white, // Background color
@@ -343,6 +345,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
           SizedBox(height: 10),
           // Text with background color
           Container(
+            width: double.infinity,
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 80),
             decoration: BoxDecoration(
               color: Colors.lightBlue[100], // Background color for the text
@@ -356,13 +359,14 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
           const SizedBox(height: 5),
 
           // Barcode //
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextField(
               decoration: InputDecoration(
                 labelText: 'Barcode',
@@ -417,7 +421,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
           // const SizedBox(height: 5),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(horizontal: 0),
             child: GestureDetector(
               onTap: () {
                 showDialog(
@@ -636,7 +640,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
           // Lot Number //
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextField(
               readOnly: true,
               decoration: InputDecoration(
@@ -654,7 +658,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
           //Quantity//
           // if (pBarcode != null && pBarcode!.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
               child: po_status == '1'
                   ? SizedBox
                       .shrink() // Do not display anything if po_status is '1'
@@ -679,7 +683,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
           //Current Locator//
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextField(
               readOnly: true,
               decoration: InputDecoration(
@@ -696,7 +700,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
           //จำนวนล็อต/รายการรอจัดเก็บ//
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 0),
             child: TextField(
               readOnly: true,
               decoration: InputDecoration(
@@ -713,7 +717,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
           //จำนวน (หน่วยสต๊อก) รอจัดเก็บ//
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextField(
               readOnly: true,
               decoration: InputDecoration(

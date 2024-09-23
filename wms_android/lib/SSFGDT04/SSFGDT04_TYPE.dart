@@ -7,6 +7,7 @@ import '../bottombar.dart';
 // import 'SSFGDT04_FORM.dart'; // เพิ่มการนำเข้าไฟล์ FROM.dart
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGDT04_FORM.dart';
+import '../styles.dart';
 
 class SSFGDT04_TYPE extends StatefulWidget {
   final String pWareCode;
@@ -141,7 +142,7 @@ String? pDocTypeCreateNewINXferWMS;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO'),
+      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),
@@ -280,17 +281,18 @@ String? pDocTypeCreateNewINXferWMS;
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: Colors.black,
                               letterSpacing: 1.2,
                             ),
                           ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green[500],
-                            padding: EdgeInsets.all(10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
+                          style: AppStyles.ConfirmbuttonStyle(),
+                          // style: ElevatedButton.styleFrom(
+                          //   backgroundColor: Colors.green[500],
+                          //   padding: EdgeInsets.all(10),
+                          //   shape: RoundedRectangleBorder(
+                          //     borderRadius: BorderRadius.circular(10),
+                          //   ),
+                          // ),
                         ),
 
                   ],
