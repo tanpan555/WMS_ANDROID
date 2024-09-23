@@ -71,10 +71,8 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
           children: [
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              margin: const EdgeInsets.only(
-                  bottom: 8.0), // Add some space below the container
-              color: Colors
-                  .greenAccent, // Customize the background color of the container
+              margin: const EdgeInsets.only(bottom: 8.0),
+              color: Colors.grey[300],
               child: Center(
                 child: Text(
                   'เลือกคลังปฏิบัติงาน',
@@ -85,25 +83,21 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
                   ),
                 ),
               ),
-            ), // Spacing above the grid
-            // const SizedBox(height: 20), // Spacing above the grid
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: GridView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Number of columns
-                    crossAxisSpacing: 5, // Horizontal spacing between cards
-                    mainAxisSpacing: 5, // Vertical spacing between cards
-                    childAspectRatio: 1.0, // Aspect ratio for each card
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 5,
+                    childAspectRatio: 1.0,
                   ),
                   itemCount: data.length,
                   itemBuilder: (context, index) {
                     final item = data[index];
-
-                    // Check card_value and set icon and color accordingly
-                    // IconData iconData;
                     Color cardColor;
                     String imagePath;
 
