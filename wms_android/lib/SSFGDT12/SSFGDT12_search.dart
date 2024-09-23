@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // import 'dart:convert';
 import 'dart:ui';
 import 'package:intl/intl.dart';
+import 'package:wms_android/styles.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
@@ -179,62 +180,106 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: IconButton(
-                    iconSize: 20.0,
-                    icon: Image.asset(
-                      'assets/images/eraser_red.png',
-                      width: 50.0,
-                      height: 25.0,
-                    ),
-                    onPressed: () {
-                      _controller.clear();
-                      _dateController.clear();
-                      setState(() {
-                        pDocNo = '';
-                        selectedDate = '';
-                        selectedItem = 'รอตรวจนับ';
-                        status = 'N';
-                      });
-                    },
+                // Container(
+                //   decoration: BoxDecoration(
+                //     color: Colors.grey[300],
+                //     borderRadius: BorderRadius.circular(8.0),
+                //   ),
+                //   child: IconButton(
+                //     iconSize: 20.0,
+                //     icon: Image.asset(
+                //       'assets/images/eraser_red.png',
+                //       width: 50.0,
+                //       height: 25.0,
+                //     ),
+                //     onPressed: () {
+                //       _controller.clear();
+                //       _dateController.clear();
+                //       setState(() {
+                //         pDocNo = '';
+                //         selectedDate = '';
+                //         selectedItem = 'รอตรวจนับ';
+                //         status = 'N';
+                //       });
+                //     },
+                //   ),
+                // ),
+                ElevatedButton(
+                  onPressed: () {
+                    _controller.clear();
+                    _dateController.clear();
+                    setState(() {
+                      pDocNo = '';
+                      selectedDate = '';
+                      selectedItem = 'รอตรวจนับ';
+                      status = 'N';
+                    });
+                  },
+                  style: AppStyles.EraserButtonStyle(),
+                  child: Image.asset(
+                    'assets/images/eraser_red.png', // ใส่ภาพจากไฟล์ asset
+                    width: 50, // กำหนดขนาดภาพ
+                    height: 25,
                   ),
                 ),
                 const SizedBox(width: 20),
+                const SizedBox(width: 20),
                 //////////////////////////////////////////////////////
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: IconButton(
-                    iconSize: 20.0,
-                    icon: Image.asset(
-                      'assets/images/search_color.png',
-                      width: 50.0,
-                      height: 25.0,
-                    ),
-                    onPressed: () {
-                      _navigateToPage(
-                          context,
-                          Ssfgdt12Card(
-                            docNo: pDocNo,
-                            date: selectedDate,
-                            status: status,
-                            pWareCode: widget.pWareCode,
-                            p_flag: p_flag,
-                            browser_language: globals.BROWSER_LANGUAGE,
-                            pErpOuCode: widget.pErpOuCode,
-                            p_attr1: widget.p_attr1,
-                          )
-                          //
-                          );
-                    },
+                /// //////////////////////////////////////////////////////
+                ElevatedButton(
+                  onPressed: () {
+                    _navigateToPage(
+                        context,
+                        Ssfgdt12Card(
+                          docNo: pDocNo,
+                          date: selectedDate,
+                          status: status,
+                          pWareCode: widget.pWareCode,
+                          p_flag: p_flag,
+                          browser_language: globals.BROWSER_LANGUAGE,
+                          pErpOuCode: widget.pErpOuCode,
+                          p_attr1: widget.p_attr1,
+                        )
+                        //
+                        );
+                  },
+                  style: AppStyles.SearchButtonStyle(),
+                  child: Image.asset(
+                    'assets/images/search_color.png', // ใส่ภาพจากไฟล์ asset
+                    width: 50, // กำหนดขนาดภาพ
+                    height: 25,
                   ),
                 ),
+                // Container(
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     borderRadius: BorderRadius.circular(8.0),
+                //   ),
+                //   child: IconButton(
+                //     iconSize: 20.0,
+                //     icon: Image.asset(
+                //       'assets/images/search_color.png',
+                //       width: 50.0,
+                //       height: 25.0,
+                //     ),
+                //     onPressed: () {
+                //       _navigateToPage(
+                //           context,
+                //           Ssfgdt12Card(
+                //             docNo: pDocNo,
+                //             date: selectedDate,
+                //             status: status,
+                //             pWareCode: widget.pWareCode,
+                //             p_flag: p_flag,
+                //             browser_language: globals.BROWSER_LANGUAGE,
+                //             pErpOuCode: widget.pErpOuCode,
+                //             p_attr1: widget.p_attr1,
+                //           )
+                //           //
+                //           );
+                //     },
+                //   ),
+                // ),
               ],
             ),
           ],

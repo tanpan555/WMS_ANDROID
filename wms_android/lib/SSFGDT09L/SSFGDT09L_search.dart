@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:intl/intl.dart';
+import 'package:wms_android/styles.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
@@ -201,57 +202,80 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: IconButton(
-                      iconSize: 20.0,
-                      icon: Image.asset(
-                        'assets/images/eraser_red.png',
-                        width: 50.0,
-                        height: 25.0,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          pSoNo = '';
-                          selectedDate = '';
-                          selectedItem = 'ทั้งหมด';
-                          statusDESC = 'ทั้งหมด';
-                          dateController.clear();
-                          pSoNoController.clear();
-                        });
-                      },
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.grey[300],
+                  //     borderRadius: BorderRadius.circular(8.0),
+                  //   ),
+                  //   child: IconButton(
+                  //     iconSize: 20.0,
+                  //     icon: Image.asset(
+                  //       'assets/images/eraser_red.png',
+                  //       width: 50.0,
+                  //       height: 25.0,
+                  //     ),
+                  //     onPressed: () {
+                  //       setState(() {
+                  //         pSoNo = '';
+                  //         selectedDate = '';
+                  //         selectedItem = 'ทั้งหมด';
+                  //         statusDESC = 'ทั้งหมด';
+                  //         dateController.clear();
+                  //         pSoNoController.clear();
+                  //       });
+                  //     },
+                  //   ),
+                  // ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        pSoNo = '';
+                        selectedDate = '';
+                        selectedItem = 'ทั้งหมด';
+                        statusDESC = 'ทั้งหมด';
+                        dateController.clear();
+                        pSoNoController.clear();
+                      });
+                    },
+                    style: AppStyles.EraserButtonStyle(),
+                    child: Image.asset(
+                      'assets/images/eraser_red.png', // ใส่ภาพจากไฟล์ asset
+                      width: 50, // กำหนดขนาดภาพ
+                      height: 25,
                     ),
                   ),
                   const SizedBox(width: 20),
                   //////////////////////////////////////////////////////
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: IconButton(
-                      iconSize: 20.0,
-                      icon: Image.asset(
-                        'assets/images/search_color.png',
-                        width: 50.0,
-                        height: 25.0,
-                      ),
-                      onPressed: selectedItem.isNotEmpty
-                          ? () {
-                              if (selectedDate != '') {
-                                DateTime parsedDate = DateFormat('dd/MM/yyyy')
-                                    .parse(selectedDate);
-                                String formattedDate =
-                                    DateFormat('dd-MM-yyyy').format(parsedDate);
+                  ElevatedButton(
+                    onPressed: selectedItem.isNotEmpty
+                        ? () {
+                            if (selectedDate != '') {
+                              DateTime parsedDate =
+                                  DateFormat('dd/MM/yyyy').parse(selectedDate);
+                              String formattedDate =
+                                  DateFormat('dd-MM-yyyy').format(parsedDate);
 
-                                setState(() {
-                                  selectedDate = formattedDate;
-                                });
+                              setState(() {
+                                selectedDate = formattedDate;
+                              });
 
-                                _navigateToPage(
+                              _navigateToPage(
+                                context,
+                                Ssfgdt09lCard(
+                                    pErpOuCode: widget.pErpOuCode,
+                                    pWareCode: widget.pWareCode,
+                                    pOuCode: widget.pOuCode,
+                                    pAttr1: widget.pAttr1,
+                                    pAppUser: appUser,
+                                    pFlag: pFlag,
+                                    pStatusDESC: statusDESC,
+                                    pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                                    pDocDate: formattedDate == ''
+                                        ? 'null'
+                                        : formattedDate),
+                              );
+                            } else {
+                              _navigateToPage(
                                   context,
                                   Ssfgdt09lCard(
                                       pErpOuCode: widget.pErpOuCode,
@@ -262,28 +286,71 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                                       pFlag: pFlag,
                                       pStatusDESC: statusDESC,
                                       pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                                      pDocDate: formattedDate == ''
-                                          ? 'null'
-                                          : formattedDate),
-                                );
-                              } else {
-                                _navigateToPage(
-                                    context,
-                                    Ssfgdt09lCard(
-                                        pErpOuCode: widget.pErpOuCode,
-                                        pWareCode: widget.pWareCode,
-                                        pOuCode: widget.pOuCode,
-                                        pAttr1: widget.pAttr1,
-                                        pAppUser: appUser,
-                                        pFlag: pFlag,
-                                        pStatusDESC: statusDESC,
-                                        pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                                        pDocDate: 'null'));
-                              }
+                                      pDocDate: 'null'));
                             }
-                          : null,
+                          }
+                        : null,
+                    style: AppStyles.SearchButtonStyle(),
+                    child: Image.asset(
+                      'assets/images/search_color.png', // ใส่ภาพจากไฟล์ asset
+                      width: 50, // กำหนดขนาดภาพ
+                      height: 25,
                     ),
                   ),
+                  // Container(
+                  //   // decoration: AppStyles.SearchButtonStyle(),
+                  //   child: IconButton(
+                  //     iconSize: 20.0,
+                  //     icon: Image.asset(
+                  //       'assets/images/search_color.png',
+                  //       width: 50.0,
+                  //       height: 25.0,
+                  //     ),
+                  //     onPressed: selectedItem.isNotEmpty
+                  //         ? () {
+                  //             if (selectedDate != '') {
+                  //               DateTime parsedDate = DateFormat('dd/MM/yyyy')
+                  //                   .parse(selectedDate);
+                  //               String formattedDate =
+                  //                   DateFormat('dd-MM-yyyy').format(parsedDate);
+
+                  //               setState(() {
+                  //                 selectedDate = formattedDate;
+                  //               });
+
+                  //               _navigateToPage(
+                  //                 context,
+                  //                 Ssfgdt09lCard(
+                  //                     pErpOuCode: widget.pErpOuCode,
+                  //                     pWareCode: widget.pWareCode,
+                  //                     pOuCode: widget.pOuCode,
+                  //                     pAttr1: widget.pAttr1,
+                  //                     pAppUser: appUser,
+                  //                     pFlag: pFlag,
+                  //                     pStatusDESC: statusDESC,
+                  //                     pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                  //                     pDocDate: formattedDate == ''
+                  //                         ? 'null'
+                  //                         : formattedDate),
+                  //               );
+                  //             } else {
+                  //               _navigateToPage(
+                  //                   context,
+                  //                   Ssfgdt09lCard(
+                  //                       pErpOuCode: widget.pErpOuCode,
+                  //                       pWareCode: widget.pWareCode,
+                  //                       pOuCode: widget.pOuCode,
+                  //                       pAttr1: widget.pAttr1,
+                  //                       pAppUser: appUser,
+                  //                       pFlag: pFlag,
+                  //                       pStatusDESC: statusDESC,
+                  //                       pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                  //                       pDocDate: 'null'));
+                  //             }
+                  //           }
+                  //         : null,
+                  //   ),
+                  // ),
                 ],
               ),
             ],
