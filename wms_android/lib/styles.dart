@@ -65,11 +65,33 @@ class AppStyles {
     backgroundColor: const Color.fromARGB(255, 255, 255, 255),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10),
-      side: const BorderSide(color: Colors.green, width: 2), // Added green border
+      side: const BorderSide(color: Colors.green, width: 2),
     ),
     minimumSize: const Size(60, 40),
     padding: const EdgeInsets.all(0),
   );
 }
+
+static ButtonStyle EraserButtonStyle() {
+    return ElevatedButton.styleFrom(
+      backgroundColor: Colors.grey[300],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      minimumSize: const Size(100, 30),
+      padding: const EdgeInsets.all(0),
+    );
+  }
+
+  static ButtonStyle SearchButtonStyle() {
+    return ElevatedButton.styleFrom(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      minimumSize: const Size(100, 30),
+      padding: const EdgeInsets.all(0),
+    );
+  }
 
 }

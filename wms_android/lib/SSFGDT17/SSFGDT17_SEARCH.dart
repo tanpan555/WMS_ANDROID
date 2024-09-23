@@ -9,6 +9,7 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/main.dart';
 import 'package:http/http.dart' as http;
+import 'package:wms_android/styles.dart';
 
 class SSFGDT17_SEARCH extends StatefulWidget {
   final String pWareCode;
@@ -178,7 +179,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                   ),
                   onTap: () async {},
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -186,12 +187,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                       onPressed: _resetForm,
                       child: Image.asset('assets/images/eraser_red.png',
                           width: 50, height: 25),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[300],
-                        padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
+                      style: AppStyles.EraserButtonStyle(),
                     ),
                     const SizedBox(width: 20),
                     ElevatedButton(
@@ -226,13 +222,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                       },
                       child: Image.asset('assets/images/search_color.png',
                           width: 50, height: 25),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 255, 255, 255),
-                        padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
+                      style: AppStyles.SearchButtonStyle(),
                     ),
                   ],
                 ),

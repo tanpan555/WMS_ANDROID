@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:wms_android/styles.dart';
 import '../custom_appbar.dart';
 import '../bottombar.dart';
 import 'SSFGDT31_CARD.dart'; // นำเข้าไฟล์ที่สร้างหน้า SSFGDT31_CARD
@@ -122,8 +123,8 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                 TextField(
                   readOnly: false,
                   onChanged: (value) {
-   _dateController.text = value;
-  },
+                    _dateController.text = value;
+                  },
                   controller: _dateController,
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -131,28 +132,29 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                     labelStyle: TextStyle(color: Colors.black),
                     filled: true,
                     fillColor: Colors.white,
-                    suffixIcon:IconButton(
-      icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
-      onPressed: () async {
-          DateTime? selectedDate = await showDatePicker(
-                      context: context,
-                      initialEntryMode: DatePickerEntryMode.calendarOnly,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
-                    if (selectedDate != null && selectedDate != _selectedDate) {
-                      setState(() {
-                        _selectedDate = selectedDate;
-                        _dateController.text =
-                            DateFormat('dd/MM/yyyy').format(selectedDate);
-                      });
-                    }
-      }),
+                    suffixIcon: IconButton(
+                        icon: Icon(Icons.calendar_today_outlined,
+                            color: Colors.black),
+                        onPressed: () async {
+                          DateTime? selectedDate = await showDatePicker(
+                            context: context,
+                            initialEntryMode: DatePickerEntryMode.calendarOnly,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2101),
+                          );
+                          if (selectedDate != null &&
+                              selectedDate != _selectedDate) {
+                            setState(() {
+                              _selectedDate = selectedDate;
+                              _dateController.text =
+                                  DateFormat('dd/MM/yyyy').format(selectedDate);
+                            });
+                          }
+                        }),
                   ),
-               
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -167,12 +169,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                       },
                       child: Image.asset('assets/images/eraser_red.png',
                           width: 50, height: 25),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[300],
-                        padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
+                      style: AppStyles.EraserButtonStyle(),
                     ),
                     const SizedBox(width: 20),
                     ElevatedButton(
@@ -203,12 +200,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                       },
                       child: Image.asset('assets/images/search_color.png',
                           width: 50, height: 25),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
+                      style: AppStyles.SearchButtonStyle(),
                     ),
                   ],
                 ),

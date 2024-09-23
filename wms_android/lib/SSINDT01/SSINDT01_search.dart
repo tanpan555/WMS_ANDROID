@@ -9,6 +9,7 @@ import 'package:wms_android/main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import 'package:wms_android/styles.dart';
 
 class SSINDT01_SEARCH extends StatefulWidget {
   final String pWareCode;
@@ -40,7 +41,6 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
   String? selectedApCode;
   String errorMessage = '';
   String? _selectedValue = 'ทั้งหมด';
-  
 
   final TextEditingController _documentNumberController =
       TextEditingController();
@@ -51,7 +51,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
     currentSessionID = SessionManager().sessionID;
     _selectedValue = 'ทั้งหมด';
     fetchApCodes();
-    selectedApCode = ''; 
+    selectedApCode = 'ทั้งหมด';
     // print('$selectedApCode' ?? 'test');
 
     print('Search Global Ware Code: ${gb.P_WARE_CODE}');
@@ -69,7 +69,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
         setState(() {
           apCodes = jsonData['items'] ?? [];
           apCodes.insert(0, {'ap_code': 'ทั้งหมด', 'ap_name': 'ทั้งหมด'});
-          selectedApCode = '';
+          selectedApCode = 'ทั้งหมด';
         });
       } else {
         throw Exception('Failed to load AP codes');
@@ -126,7 +126,6 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                     'ทั้งหมด',
                     'รายการรอรับดำเนินการ',
                     'รายการใบสั่งซื้อ',
-
                   ],
                   dropdownDecoratorProps: DropDownDecoratorProps(
                     dropdownSearchDecoration: InputDecoration(
@@ -202,7 +201,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                   ),
                   style: const TextStyle(color: Colors.black),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -210,50 +209,39 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                       onPressed: _resetForm,
                       child: Image.asset('assets/images/eraser_red.png',
                           width: 50, height: 25),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[300],
-                        padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
+                      style: AppStyles.EraserButtonStyle()
                     ),
                     const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () {
-    final documentNumber = _documentNumberController.text.isNotEmpty
-        ? _documentNumberController.text
-        : 'null';
+                        final documentNumber =
+                            _documentNumberController.text.isNotEmpty
+                                ? _documentNumberController.text
+                                : 'null';
 
-    // final apCode = 
-    selectedApCode ?? 'ทั้งหมด';
-    print('selectedApCode $selectedApCode');
-    print(_selectedValue);
-    // print('apCode $apCode');
-    print(documentNumber);
-    // log(apCode);
+                        // final apCode =
+                        selectedApCode ?? 'ทั้งหมด';
+                        print('selectedApCode $selectedApCode');
+                        print(_selectedValue);
+                        // print('apCode $apCode');
+                        print(documentNumber);
+                        // log(apCode);
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SSINDT01_MAIN(
-          pWareCode: widget.pWareCode,
-          pWareName: widget.pWareName,
-          p_ou_code: widget.p_ou_code,
-          selectedValue: _selectedValue ?? 'ทั้งหมด',
-          apCode: selectedApCode ?? 'ทั้งหมด',
-          documentNumber: documentNumber,
-        ),
-      ),
-    );
-  },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 255, 255, 255),
-                        padding: const EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SSINDT01_MAIN(
+                              pWareCode: widget.pWareCode,
+                              pWareName: widget.pWareName,
+                              p_ou_code: widget.p_ou_code,
+                              selectedValue: _selectedValue ?? 'ทั้งหมด',
+                              apCode: selectedApCode ?? 'ทั้งหมด',
+                              documentNumber: documentNumber,
+                            ),
+                          ),
+                        );
+                      },
+                      style: AppStyles.SearchButtonStyle(),
                       child: Image.asset('assets/images/search_color.png',
                           width: 50, height: 25),
                     ),
