@@ -59,7 +59,7 @@ class _SSFGDT31_MAINState extends State<SSFGDT31_MAIN> {
                     margin: const EdgeInsets.only(
                         bottom: 8.0), // Add some space below the container
                     color: Colors
-                        .greenAccent, // Customize the background color of the container
+                        .grey[300], // Customize the background color of the container
                     child: Center(
                       child: Text(
                         'เลือกคลังปฏิบัติงาน',

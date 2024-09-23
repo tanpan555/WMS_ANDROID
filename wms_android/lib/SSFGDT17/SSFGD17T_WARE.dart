@@ -70,7 +70,7 @@ class _SSFGDT17_WAREState extends State<SSFGDT17_WARE> {
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     margin: const EdgeInsets.only(bottom: 8.0),
-                    color: Colors.greenAccent,
+                    color: Colors.grey[300],
                     child: Center(
                       child: Text(
                         'เลือกคลังปฏิบัติงาน',
