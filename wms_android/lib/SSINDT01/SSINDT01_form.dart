@@ -195,7 +195,9 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             receiveNoController.text = receiveNo;
             erpReceiveNoController.text = erpReceiveNo;
             pkWareCodeController.text = pkWareCode;
-            crDateController.text = crDate.isNotEmpty ? crDate : '';
+            crDateController.text = crDate.isNotEmpty
+                ? displayFormat.format(apiFormat.parse(crDate))
+                : '';
             poTypeCodeController.text = poTypeCode;
 
             wareCodeController.text = wareCode;
