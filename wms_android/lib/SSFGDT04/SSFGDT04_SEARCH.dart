@@ -6,6 +6,7 @@ import 'SSFGDT04_CARD.dart';
 import 'dart:ui';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import '../style.dart';
 
 class SSFGDT04_SEARCH extends StatefulWidget {
   final String pWareCode;
@@ -193,12 +194,13 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                       },
                       child: Image.asset('assets/images/eraser_red.png',
                           width: 50, height: 25),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[300],
-                        padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
+                          style: AppStyles.EraserButtonStyle(),
+                      // style: ElevatedButton.styleFrom(
+                      //   backgroundColor: Colors.grey[300],
+                      //   padding: EdgeInsets.all(10),
+                      //   shape: RoundedRectangleBorder(
+                      //       borderRadius: BorderRadius.circular(10)),
+                      // ),
                     ),
                     const SizedBox(width: 20),
                     ElevatedButton(
@@ -221,14 +223,15 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                           : null,
                       child: Image.asset('assets/images/search_color.png',
                           width: 50, height: 25),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 255, 255, 255),
-                        padding: const EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
+                          style: AppStyles.SearchButtonStyle(),
+                      // style: ElevatedButton.styleFrom(
+                      //   backgroundColor:
+                      //       const Color.fromARGB(255, 255, 255, 255),
+                      //   padding: const EdgeInsets.all(10),
+                      //   shape: RoundedRectangleBorder(
+                      //     borderRadius: BorderRadius.circular(10),
+                      //   ),
+                      // ),
                     ),
                   ],
                 ),
