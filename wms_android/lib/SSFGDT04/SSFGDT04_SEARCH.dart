@@ -6,7 +6,7 @@ import 'SSFGDT04_CARD.dart';
 import 'dart:ui';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
-import '../style.dart';
+import '../styles.dart';
 
 class SSFGDT04_SEARCH extends StatefulWidget {
   final String pWareCode;
