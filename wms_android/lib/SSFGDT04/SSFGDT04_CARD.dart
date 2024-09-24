@@ -494,22 +494,24 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Center(
-                                  child: Text(
+                                // Center(
+                                  // child: 
+                                  Text(
                                     item['ap_name'] ?? 'No Name',
                                     style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 17,
                                         color: Color.fromARGB(255, 0, 0, 0)),
                                   ),
-                                ),
+                                // ),
                                 const Divider(
                                   color: Colors.black26,
                                   thickness: 1,
                                 ),
-                                Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                // Center(
+                                  // child: 
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
@@ -592,14 +594,15 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                                       ),
                                     ],
                                   ),
-                                ),
+                                // ),
                                 SizedBox(height: 8),
-                                Center(
-                                  child: Text(
+                                // Center(
+                                  // child: 
+                                  Text(
                                     '${item['po_date']} ${item['po_no']} ${item['item_stype_desc'] ?? ''}',
                                     style: const TextStyle(fontSize: 12, color: Colors.black54),
                                   ),
-                                ),
+                                // ),
                               ],
                             ),
                           ),
