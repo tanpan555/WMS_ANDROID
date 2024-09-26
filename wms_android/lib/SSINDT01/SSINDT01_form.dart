@@ -461,6 +461,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   );
 }
 
+final String updDateForm = DateFormat('MM/dd/yyyy').format(DateTime.now());
 
   Future<void> updateForm_REMARK(
       String receiveNo,
@@ -483,6 +484,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
         'INVOICE_DATE': invoiceDate,
         'INVOICE_NO': invoiceNo,
         'PO_TYPE_CODE': poTypeCode,
+        'UPD_BY': gb.APP_USER,
+        'UPD_DATE': updDateForm,
       }),
     );
 
@@ -493,6 +496,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           'INVOICE_DATE': invoiceDate,
           'INVOICE_NO': invoiceNo,
           'PO_TYPE_CODE': poTypeCode,
+          'UPD_BY': gb.APP_USER,
+          'UPD_DATE': updDateForm,
         })}');
 
     if (response.statusCode == 200) {
