@@ -46,6 +46,7 @@ class _SSFGDT31_VERIFYState extends State<SSFGDT31_VERIFY> {
   List<dynamic> items = [];
   String selectedItemDescName = '';
   String selectedPackDescName = '';
+  String selectedInvoiceNo = '';
 
   final NumberFormat numberFormat = NumberFormat("#,##0");
 
@@ -445,9 +446,43 @@ String? reportname = 'SSFGDT31_REPORT';
                         child: TextField(
                           controller: TextEditingController(
                               text: widget
-                                  .SCHID),
+                                  .DOC_DATE),
                           decoration: InputDecoration(
-                            labelText: 'เลขที่คำสั่งผลิต',
+                            labelText: 'วันที่บันทึก',
+                            labelStyle: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                            border:
+                                InputBorder.none,
+                            contentPadding:
+                                EdgeInsets.zero,
+                          ),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                          readOnly: true,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(6.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: TextField(
+                          controller: TextEditingController(
+                              text: selectedInvoiceNo
+                                  ),
+                          decoration: InputDecoration(
+                            labelText: 'เลขที่เอกสารอ้างอิง',
                             labelStyle: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -479,27 +514,28 @@ String? reportname = 'SSFGDT31_REPORT';
                         child: TextField(
                           controller: TextEditingController(
                               text: widget
-                                  .DOC_DATE),
+                                  .SCHID),
                           decoration: InputDecoration(
-                            labelText: 'วันที่บันทึก',
+                            labelText: 'เลขที่คำสั่งผลิต',
                             labelStyle: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
                             ),
                             border:
-                                InputBorder.none,
+                                InputBorder.none, 
                             contentPadding:
                                 EdgeInsets.zero,
                           ),
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
-                            fontSize: 14,
+                            fontSize: 12,
                           ),
                           readOnly: true,
                         ),
-                      )
+                      ),
+                    
                     ],
                   );
                 } else {
@@ -509,6 +545,7 @@ String? reportname = 'SSFGDT31_REPORT';
                       setState(() {
                         selectedItemDescName = item['nb_item_name'] ?? '';
                         selectedPackDescName = item['nb_pack_name'] ?? '';
+                        selectedInvoiceNo = item['nb_pack_name'] ?? '';
                       });
                     },
                     child: Card(
