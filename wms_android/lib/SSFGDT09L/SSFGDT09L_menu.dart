@@ -119,7 +119,8 @@ class _Ssfgdt09lMenuState extends State<Ssfgdt09lMenu> {
                       imagePath,
                       width: 40,
                     ),
-                    title: Text('${item['card_name']}'),
+                    title: Text('${item['card_name']}',
+                        style: const TextStyle(fontSize: 18)),
                     // trailing: Icon(iconData),
                     onTap: () {
                       setState(() {
