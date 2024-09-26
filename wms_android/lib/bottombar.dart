@@ -80,7 +80,11 @@ class _BottomBarState extends State<BottomBar> {
                         controller: controller,
                         children: [
                           ListTile(
-                            leading: Icon(Icons.logout_outlined),
+                            leading: Image.asset(
+                              'assets/images/exit.png', // Path to your image asset
+                              width: 25, // Set the width of the image
+                              height: 25, // Set the height of the image
+                            ),
                             title: Text('Sign Out'),
                             onTap: () {
                               Navigator.of(context).pop();
@@ -92,7 +96,11 @@ class _BottomBarState extends State<BottomBar> {
                             },
                           ),
                           ListTile(
-                            leading: Icon(Icons.password_outlined),
+                            leading: Image.asset(
+                              'assets/images/reset-password.png', // Path to your image asset
+                              width: 25, // Set the width of the image
+                              height: 25, // Set the height of the image
+                            ),
                             title: Text('Change Password'),
                             onTap: () {
                               print('Change Password');
