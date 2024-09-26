@@ -74,10 +74,12 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
 
     if (pickedDate != null) {
       String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
-      setState(() {
-        dateController.text = formattedDate;
-        selectedDate = dateController.text;
-      });
+      if (mounted) {
+        setState(() {
+          dateController.text = formattedDate;
+          selectedDate = dateController.text;
+        });
+      }
     }
   }
 

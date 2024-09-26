@@ -59,17 +59,20 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $jsonDecode');
-
-        setState(() {
-          dataCard =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
+        if (mounted) {
+          setState(() {
+            dataCard =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('dataCard : $dataCard');
       } else {
         throw Exception('Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('ERROR IN Fetch Data : $e');
     }
   }
@@ -86,24 +89,26 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
         final Map<String, dynamic> dataPDF = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
-        setState(() {
-          P_LIN_ID = dataPDF['P_LIN_ID'] ?? '';
-          V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
-          P_MO_DO_NO = dataPDF['P_MO_DO_NO'] ?? '';
-          P_OU_CODE = dataPDF['P_OU_CODE'] ?? '';
-          P_ERP_OU_CODE = dataPDF['P_ERP_OU_CODE'] ?? '';
+        if (mounted) {
+          setState(() {
+            P_LIN_ID = dataPDF['P_LIN_ID'] ?? '';
+            V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
+            P_MO_DO_NO = dataPDF['P_MO_DO_NO'] ?? '';
+            P_OU_CODE = dataPDF['P_OU_CODE'] ?? '';
+            P_ERP_OU_CODE = dataPDF['P_ERP_OU_CODE'] ?? '';
 
-          LH_PICKING_SLIP = dataPDF['LH_PICKING_SLIP'] ?? '';
-          LH_MO_DO_NO = dataPDF['LH_MO_DO_NO'] ?? '';
-          LB_MATERIAL_CODE = dataPDF['LB_MATERIAL_CODE'] ?? '';
-          LB_LOT = dataPDF['LB_LOT'] ?? '';
-          LB_COMB = dataPDF['LB_COMB'] ?? '';
-          LB_USAGE_QTY = dataPDF['LB_USAGE_QTY'] ?? '';
-          LB_WARE_CODE = dataPDF['LB_WARE_CODE'] ?? '';
-          LB_LOCATION_CODE = dataPDF['LB_LOCATION_CODE'] ?? '';
+            LH_PICKING_SLIP = dataPDF['LH_PICKING_SLIP'] ?? '';
+            LH_MO_DO_NO = dataPDF['LH_MO_DO_NO'] ?? '';
+            LB_MATERIAL_CODE = dataPDF['LB_MATERIAL_CODE'] ?? '';
+            LB_LOT = dataPDF['LB_LOT'] ?? '';
+            LB_COMB = dataPDF['LB_COMB'] ?? '';
+            LB_USAGE_QTY = dataPDF['LB_USAGE_QTY'] ?? '';
+            LB_WARE_CODE = dataPDF['LB_WARE_CODE'] ?? '';
+            LB_LOCATION_CODE = dataPDF['LB_LOCATION_CODE'] ?? '';
 
-          _launchUrl();
-        });
+            _launchUrl();
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');

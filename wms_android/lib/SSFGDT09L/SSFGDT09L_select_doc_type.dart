@@ -59,21 +59,24 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $jsonDecode');
+        if (mounted) {
+          setState(() {
+            dataLovDocType =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-        setState(() {
-          dataLovDocType =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-
-          selectedDocTypeItem = dataLovDocType[0];
-          docTypeLovD = selectedDocTypeItem?['d'] ?? '';
-          docTypeLovR = selectedDocTypeItem?['r'] ?? '';
-        });
+            selectedDocTypeItem = dataLovDocType[0];
+            docTypeLovD = selectedDocTypeItem?['d'] ?? '';
+            docTypeLovR = selectedDocTypeItem?['r'] ?? '';
+          });
+        }
         print('dataLovDocType : $dataLovDocType');
       } else {
         throw Exception('dataLovDocType Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('dataLovDocType ERROR IN Fetch Data : $e');
     }
   }
@@ -106,37 +109,39 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
         final Map<String, dynamic> data =
             jsonDecode(utf8.decode(response.bodyBytes));
         print('data : $data type : ${data.runtimeType}');
-        setState(() {
-          statusChkCreate = data['po_status'];
-          messageChkCreate = data['po_message'];
-          print(
-              'statusChkCreate : $statusChkCreate Type : ${statusChkCreate.runtimeType}');
-          print(
-              'messageChkCreate : $messageChkCreate Type : ${messageChkCreate.runtimeType}');
+        if (mounted) {
+          setState(() {
+            statusChkCreate = data['po_status'];
+            messageChkCreate = data['po_message'];
+            print(
+                'statusChkCreate : $statusChkCreate Type : ${statusChkCreate.runtimeType}');
+            print(
+                'messageChkCreate : $messageChkCreate Type : ${messageChkCreate.runtimeType}');
 
-          if (statusChkCreate == '1') {
-            showDialogAlert(context, messageChkCreate);
-          }
-          if (statusChkCreate == '0') {
-            poDocNo = data['po_doc_no'];
-            poDocType = data['po_doc_type'];
+            if (statusChkCreate == '1') {
+              showDialogAlert(context, messageChkCreate);
+            }
+            if (statusChkCreate == '0') {
+              poDocNo = data['po_doc_no'];
+              poDocType = data['po_doc_type'];
 
-            print('poDocNo : $poDocNo Type : ${poDocNo.runtimeType}');
+              print('poDocNo : $poDocNo Type : ${poDocNo.runtimeType}');
 
-            print('poDocType : $poDocType Type : ${poDocType.runtimeType}');
+              print('poDocType : $poDocType Type : ${poDocType.runtimeType}');
 
-            _navigateToPage(
-                context,
-                Ssfgdt09lForm(
-                  pWareCode: widget.pWareCode,
-                  pAttr1: widget.pAttr1,
-                  pDocNo: poDocNo,
-                  pDocType: poDocType,
-                  pOuCode: widget.pOuCode,
-                  pErpOuCode: widget.pErpOuCode,
-                ));
-          }
-        });
+              _navigateToPage(
+                  context,
+                  Ssfgdt09lForm(
+                    pWareCode: widget.pWareCode,
+                    pAttr1: widget.pAttr1,
+                    pDocNo: poDocNo,
+                    pDocType: poDocType,
+                    pOuCode: widget.pOuCode,
+                    pErpOuCode: widget.pErpOuCode,
+                  ));
+            }
+          });
+        }
       } else {
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
       }

@@ -123,17 +123,20 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $responseData');
-
-        setState(() {
-          dataCard =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
+        if (mounted) {
+          setState(() {
+            dataCard =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('dataCard : $dataCard');
       } else {
         throw Exception('Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('ERROR IN Fetch Data : $e');
     }
   }
@@ -164,27 +167,29 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
             jsonDecode(utf8.decode(response.bodyBytes));
         print('data : $data type : ${data.runtimeType}');
 
-        setState(() {
-          poTypeComplete = data['po_type_complete'];
-          poErpDocNo = data['po_erp_doc_no'];
-          poStatusSubmit = data['po_status'];
-          poMessageSubmit = data['po_message'];
+        if (mounted) {
+          setState(() {
+            poTypeComplete = data['po_type_complete'];
+            poErpDocNo = data['po_erp_doc_no'];
+            poStatusSubmit = data['po_status'];
+            poMessageSubmit = data['po_message'];
 
-          print(
-              'poTypeComplete : $poTypeComplete Type : ${poTypeComplete.runtimeType}');
-          print('poErpDocNo : $poErpDocNo Type : ${poErpDocNo.runtimeType}');
-          print(
-              'poStatusSubmit : $poStatusSubmit Type : ${poStatusSubmit.runtimeType}');
-          print(
-              'poMessageSubmit : $poMessageSubmit Type : ${poMessageSubmit.runtimeType}');
+            print(
+                'poTypeComplete : $poTypeComplete Type : ${poTypeComplete.runtimeType}');
+            print('poErpDocNo : $poErpDocNo Type : ${poErpDocNo.runtimeType}');
+            print(
+                'poStatusSubmit : $poStatusSubmit Type : ${poStatusSubmit.runtimeType}');
+            print(
+                'poMessageSubmit : $poMessageSubmit Type : ${poMessageSubmit.runtimeType}');
 
-          if (poStatusSubmit == '1') {
-            showDialogAlert(context, poMessageSubmit);
-          }
-          if (poStatusSubmit == '0') {
-            showDialogPoDocNo(context, poTypeComplete, poErpDocNo);
-          }
-        });
+            if (poStatusSubmit == '1') {
+              showDialogAlert(context, poMessageSubmit);
+            }
+            if (poStatusSubmit == '0') {
+              showDialogPoDocNo(context, poTypeComplete, poErpDocNo);
+            }
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
@@ -206,55 +211,57 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
         final Map<String, dynamic> dataPDF = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
-        setState(() {
-          V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
-          LIN_ID = dataPDF['LIN_ID'] ?? '';
-          OU_CODE = dataPDF['OU_CODE'] ?? '';
-          PROGRAM_NAME = dataPDF['PROGRAM_NAME'] ?? '';
-          CURRENT_DATE = dataPDF['CURRENT_DATE'] ?? '';
-          USER_ID = dataPDF['USER_ID'] ?? '';
-          PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
-          P_WARE = dataPDF['P_WARE'] ?? '';
-          P_SESSION = dataPDF['P_SESSION'] ?? '';
+        if (mounted) {
+          setState(() {
+            V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
+            LIN_ID = dataPDF['LIN_ID'] ?? '';
+            OU_CODE = dataPDF['OU_CODE'] ?? '';
+            PROGRAM_NAME = dataPDF['PROGRAM_NAME'] ?? '';
+            CURRENT_DATE = dataPDF['CURRENT_DATE'] ?? '';
+            USER_ID = dataPDF['USER_ID'] ?? '';
+            PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
+            P_WARE = dataPDF['P_WARE'] ?? '';
+            P_SESSION = dataPDF['P_SESSION'] ?? '';
 
-          S_DOC_TYPE = dataPDF['S_DOC_TYPE'] ?? '';
-          S_DOC_DATE = dataPDF['S_DOC_DATE'] ?? '';
-          S_DOC_NO = dataPDF['S_DOC_NO'] ?? '';
-          E_DOC_TYPE = dataPDF['E_DOC_TYPE'] ?? '';
-          E_DOC_DATE = dataPDF['E_DOC_DATE'] ?? '';
-          E_DOC_NO = dataPDF['E_DOC_NO'] ?? '';
-          FLAG = dataPDF['FLAG'] ?? '';
+            S_DOC_TYPE = dataPDF['S_DOC_TYPE'] ?? '';
+            S_DOC_DATE = dataPDF['S_DOC_DATE'] ?? '';
+            S_DOC_NO = dataPDF['S_DOC_NO'] ?? '';
+            E_DOC_TYPE = dataPDF['E_DOC_TYPE'] ?? '';
+            E_DOC_DATE = dataPDF['E_DOC_DATE'] ?? '';
+            E_DOC_NO = dataPDF['E_DOC_NO'] ?? '';
+            FLAG = dataPDF['FLAG'] ?? '';
 
-          LH_PAGE = dataPDF['LH_PAGE'] ?? '';
-          LH_DATE = dataPDF['LH_DATE'] ?? '';
-          LH_AR_NAME = dataPDF['LH_AR_NAME'] ?? '';
-          LH_LOGISTIC_COMP = dataPDF['LH_LOGISTIC_COMP'] ?? '';
-          LH_DOC_TYPE = dataPDF['LH_DOC_TYPE'] ?? '';
-          LH_WARE = dataPDF['LH_WARE'] ?? '';
-          LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
-          LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
-          LH_INVOICE_NO = dataPDF['LH_INVOICE_NO'] ?? '';
+            LH_PAGE = dataPDF['LH_PAGE'] ?? '';
+            LH_DATE = dataPDF['LH_DATE'] ?? '';
+            LH_AR_NAME = dataPDF['LH_AR_NAME'] ?? '';
+            LH_LOGISTIC_COMP = dataPDF['LH_LOGISTIC_COMP'] ?? '';
+            LH_DOC_TYPE = dataPDF['LH_DOC_TYPE'] ?? '';
+            LH_WARE = dataPDF['LH_WARE'] ?? '';
+            LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
+            LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
+            LH_INVOICE_NO = dataPDF['LH_INVOICE_NO'] ?? '';
 
-          LB_SEQ = dataPDF['LB_SEQ'] ?? '';
-          LB_ITEM_CODE = dataPDF['LB_ITEM_CODE'] ?? '';
-          LB_ITEM_NAME = dataPDF['LB_ITEM_NAME'] ?? '';
-          LB_LOCATION = dataPDF['LB_LOCATION'] ?? '';
-          LB_UMS = dataPDF['LB_UMS'] ?? '';
-          LB_MO_NO = dataPDF['LB_MO_NO'] ?? '';
-          LB_TRAN_Qty = dataPDF['LB_TRAN_Qty'] ?? '';
-          // LB_ATTRIBUTE1 = dataPDF['LB_ATTRIBUTE1'] ?? '';
+            LB_SEQ = dataPDF['LB_SEQ'] ?? '';
+            LB_ITEM_CODE = dataPDF['LB_ITEM_CODE'] ?? '';
+            LB_ITEM_NAME = dataPDF['LB_ITEM_NAME'] ?? '';
+            LB_LOCATION = dataPDF['LB_LOCATION'] ?? '';
+            LB_UMS = dataPDF['LB_UMS'] ?? '';
+            LB_MO_NO = dataPDF['LB_MO_NO'] ?? '';
+            LB_TRAN_Qty = dataPDF['LB_TRAN_Qty'] ?? '';
+            // LB_ATTRIBUTE1 = dataPDF['LB_ATTRIBUTE1'] ?? '';
 
-          LT_NOTE = dataPDF['LT_NOTE'] ?? '';
-          LT_TOTAL_QTY = dataPDF['LT_TOTAL_QTY'] ?? '';
-          LT_ISSUE = dataPDF['LT_ISSUE'] ?? '';
-          LT_APPROVE = dataPDF['LT_APPROVE'] ?? '';
-          LT_OUT = dataPDF['LT_OUT'] ?? '';
-          LT_RECEIVE = dataPDF['LT_RECEIVE'] ?? '';
-          LT_BILL = dataPDF['LT_BILL'] ?? '';
-          LT_CHECK = dataPDF['LT_CHECK'] ?? '';
+            LT_NOTE = dataPDF['LT_NOTE'] ?? '';
+            LT_TOTAL_QTY = dataPDF['LT_TOTAL_QTY'] ?? '';
+            LT_ISSUE = dataPDF['LT_ISSUE'] ?? '';
+            LT_APPROVE = dataPDF['LT_APPROVE'] ?? '';
+            LT_OUT = dataPDF['LT_OUT'] ?? '';
+            LT_RECEIVE = dataPDF['LT_RECEIVE'] ?? '';
+            LT_BILL = dataPDF['LT_BILL'] ?? '';
+            LT_CHECK = dataPDF['LT_CHECK'] ?? '';
 
-          _launchUrl(poErpDocNo);
-        });
+            _launchUrl(poErpDocNo);
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');

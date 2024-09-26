@@ -112,39 +112,40 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
 
           //
           print('Fetched data: $jsonDecode');
+          if (mounted) {
+            setState(() {
+              staffCode = item['staff_code'] ?? '';
+              docDate = item['doc_date'] ?? '';
+              nbStaffName = item['nb_staff_name'] ?? '';
+              nbStaffCountName = item['nb_staff_count_name'] ?? '';
+              countStaff = item['count_staff'] ?? '';
+              nbCountStaff = item['nb_count_staff'] ?? '';
+              updBy = item['upd_by'] ?? '';
+              updDate = item['upd_date'] ?? '';
+              remark = item['remark'] ?? '';
+              status = item['status'] ?? '';
+              updBy1 = item['upd_by1'] ?? '';
+              nbCountDate = item['nb_count_date'] ?? '';
+              docNo = widget.docNo;
+              statuForCHK = item['statusforchk'];
 
-          setState(() {
-            staffCode = item['staff_code'] ?? '';
-            docDate = item['doc_date'] ?? '';
-            nbStaffName = item['nb_staff_name'] ?? '';
-            nbStaffCountName = item['nb_staff_count_name'] ?? '';
-            countStaff = item['count_staff'] ?? '';
-            nbCountStaff = item['nb_count_staff'] ?? '';
-            updBy = item['upd_by'] ?? '';
-            updDate = item['upd_date'] ?? '';
-            remark = item['remark'] ?? '';
-            status = item['status'] ?? '';
-            updBy1 = item['upd_by1'] ?? '';
-            nbCountDate = item['nb_count_date'] ?? '';
-            docNo = widget.docNo;
-            statuForCHK = item['statusforchk'];
+              staffCodeController.text = staffCode;
+              docDateController.text = docDate;
+              nbStaffNameController.text = nbStaffName;
+              nbStaffCountNameController.text = nbStaffCountName;
+              countStaffController.text = countStaff;
+              nbCountStaffController.text = nbCountStaff;
+              updByController.text = updBy;
+              updDateController.text = updDate;
+              remarkController.text = remark;
+              statusController.text = status;
+              updBy1Controller.text = updBy1;
+              nbCountDateController.text = nbCountDate;
+              docNoController.text = docNo;
 
-            staffCodeController.text = staffCode;
-            docDateController.text = docDate;
-            nbStaffNameController.text = nbStaffName;
-            nbStaffCountNameController.text = nbStaffCountName;
-            countStaffController.text = countStaff;
-            nbCountStaffController.text = nbCountStaff;
-            updByController.text = updBy;
-            updDateController.text = updDate;
-            remarkController.text = remark;
-            statusController.text = status;
-            updBy1Controller.text = updBy1;
-            nbCountDateController.text = nbCountDate;
-            docNoController.text = docNo;
-
-            print('statuForCHK : $statuForCHK');
-          });
+              print('statuForCHK : $statuForCHK');
+            });
+          }
         } else {
           print('No items found.');
         }
@@ -172,12 +173,13 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
 
           //
           print('Fetched data: $jsonDecode');
+          if (mounted) {
+            setState(() {
+              nbStaffCountName = item['nb_staff_count_name'] ?? '';
 
-          setState(() {
-            nbStaffCountName = item['nb_staff_count_name'] ?? '';
-
-            nbStaffCountNameController.text = nbStaffCountName;
-          });
+              nbStaffCountNameController.text = nbStaffCountName;
+            });
+          }
         } else {
           print('No items found.');
         }
@@ -204,10 +206,12 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
     if (pickedDate != null) {
       // Format the date as dd/MM/yyyy
       String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
-      setState(() {
-        nbCountDateController.text = formattedDate;
-        nbCountDate = nbCountDateController.text;
-      });
+      if (mounted) {
+        setState(() {
+          nbCountDateController.text = formattedDate;
+          nbCountDate = nbCountDateController.text;
+        });
+      }
     }
   }
 

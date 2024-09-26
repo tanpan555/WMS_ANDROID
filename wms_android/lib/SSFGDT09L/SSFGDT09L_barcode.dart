@@ -107,36 +107,42 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
 
     _barcodeFocusNode.addListener(() {
       if (!_barcodeFocusNode.hasFocus) {
+        if (mounted) {
+          setState(() {
+            if (barCode.contains(' ')) {
+              List<String> parts = barCode.split(' ');
+              lotNo = parts.sublist(1).join(' ');
+              lotNoController.text = lotNo;
+            } else {
+              lotNo = barCode;
+              lotNoController.text = lotNo;
+            }
+          });
+        }
+      }
+    });
+
+    lotNoController.addListener(() {
+      if (mounted) {
         setState(() {
-          if (barCode.contains(' ')) {
-            List<String> parts = barCode.split(' ');
-            lotNo = parts.sublist(1).join(' ');
-            lotNoController.text = lotNo;
-          } else {
-            lotNo = barCode;
-            lotNoController.text = lotNo;
+          if (barCode != '' && lotNo != '') {
+            fetchData();
           }
         });
       }
     });
 
-    lotNoController.addListener(() {
-      setState(() {
-        if (barCode != '' && lotNo != '') {
-          fetchData();
-        }
-      });
-    });
-
     quantityController.addListener(() {
-      setState(() {
-        if (barCode != '' &&
-            lotNo != '' &&
-            quantity != '' &&
-            statusFetchDataBarcode == '0') {
-          chkQuantity();
-        }
-      });
+      if (mounted) {
+        setState(() {
+          if (barCode != '' &&
+              lotNo != '' &&
+              quantity != '' &&
+              statusFetchDataBarcode == '0') {
+            chkQuantity();
+          }
+        });
+      }
     });
   }
 
@@ -169,63 +175,65 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
         final Map<String, dynamic> dataBarcode = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataBarcode : $dataBarcode type : ${dataBarcode.runtimeType}');
-        setState(() {
-          statusFetchDataBarcode = dataBarcode['po_status'];
-          messageFetchDataBarcode = dataBarcode['po_message'];
-          valIDFetchDataBarcode = dataBarcode['po_valid'];
-          print(
-              'statusFetchDataBarcode : $statusFetchDataBarcode Type : ${statusFetchDataBarcode.runtimeType}');
-          print(
-              'messageFetchDataBarcode : $messageFetchDataBarcode Type : ${messageFetchDataBarcode.runtimeType}');
-          print(
-              'valIDFetchDataBarcode : $valIDFetchDataBarcode Type : ${valIDFetchDataBarcode.runtimeType}');
-          if (statusFetchDataBarcode == '0') {
-            itemCode = dataBarcode['po_item_code'];
-            lotNo = dataBarcode['po_lot_number'];
-            quantity = dataBarcode['po_quantity'];
-            locatorTo = dataBarcode['po_curr_loc'];
-            lotQty = dataBarcode['po_bal_lot']; // ====== รวมรายการจ่าย
-            lotUnit = dataBarcode['po_bal_qty']; //--- รวมจำนวนจ่าย
+        if (mounted) {
+          setState(() {
+            statusFetchDataBarcode = dataBarcode['po_status'];
+            messageFetchDataBarcode = dataBarcode['po_message'];
+            valIDFetchDataBarcode = dataBarcode['po_valid'];
+            print(
+                'statusFetchDataBarcode : $statusFetchDataBarcode Type : ${statusFetchDataBarcode.runtimeType}');
+            print(
+                'messageFetchDataBarcode : $messageFetchDataBarcode Type : ${messageFetchDataBarcode.runtimeType}');
+            print(
+                'valIDFetchDataBarcode : $valIDFetchDataBarcode Type : ${valIDFetchDataBarcode.runtimeType}');
+            if (statusFetchDataBarcode == '0') {
+              itemCode = dataBarcode['po_item_code'];
+              lotNo = dataBarcode['po_lot_number'];
+              quantity = dataBarcode['po_quantity'];
+              locatorTo = dataBarcode['po_curr_loc'];
+              lotQty = dataBarcode['po_bal_lot']; // ====== รวมรายการจ่าย
+              lotUnit = dataBarcode['po_bal_qty']; //--- รวมจำนวนจ่าย
 
-            itemCodeController.text = itemCode;
-            lotNoController.text = lotNo;
-            quantityController.text = quantity;
-            locatorToController.text = locatorTo;
-            lotQtyController.text = lotQty;
-            lotUnitController.text = lotUnit;
-          }
-          if (statusFetchDataBarcode == '1' && valIDFetchDataBarcode == 'N') {
-            changeData(
-              dataBarcode['po_item_code'] ?? '',
-              dataBarcode['po_lot_number'] ?? '',
-              dataBarcode['po_quantity'] ?? '',
-              dataBarcode['po_curr_loc'] ?? '',
-              dataBarcode['po_bal_lot'] ?? '',
-              dataBarcode['po_bal_qty'] ?? '',
-            );
-            // itemCode = dataBarcode['po_item_code'];
-            // lotNo = dataBarcode['po_lot_number'];
-            // quantity = dataBarcode['po_quantity'];
-            // locatorTo = dataBarcode['po_curr_loc'];
-            // lotQty = dataBarcode['po_bal_lot']; // ====== รวมรายการจ่าย
-            // lotUnit = dataBarcode['po_bal_qty']; //--- รวมจำนวนจ่าย
-
-            // itemCodeController.text = itemCode;
-            // lotNoController.text = lotNo;
-            // quantityController.text = quantity;
-            // locatorToController.text = locatorTo;
-            // lotQtyController.text = lotQty;
-            // lotUnitController.text = lotUnit;
-
-            // showDialogcomfirmMessage(context);
-          }
-          if (statusFetchDataBarcode == '1' && valIDFetchDataBarcode != 'N') {
-            if (messageFetchDataBarcode !=
-                'ข้อมูลไม่ถูกต้อง รายการจ่ายซ้ำ !!!') {
-              showDialogAlertMessage(context, messageFetchDataBarcode);
+              itemCodeController.text = itemCode;
+              lotNoController.text = lotNo;
+              quantityController.text = quantity;
+              locatorToController.text = locatorTo;
+              lotQtyController.text = lotQty;
+              lotUnitController.text = lotUnit;
             }
-          }
-        });
+            if (statusFetchDataBarcode == '1' && valIDFetchDataBarcode == 'N') {
+              changeData(
+                dataBarcode['po_item_code'] ?? '',
+                dataBarcode['po_lot_number'] ?? '',
+                dataBarcode['po_quantity'] ?? '',
+                dataBarcode['po_curr_loc'] ?? '',
+                dataBarcode['po_bal_lot'] ?? '',
+                dataBarcode['po_bal_qty'] ?? '',
+              );
+              // itemCode = dataBarcode['po_item_code'];
+              // lotNo = dataBarcode['po_lot_number'];
+              // quantity = dataBarcode['po_quantity'];
+              // locatorTo = dataBarcode['po_curr_loc'];
+              // lotQty = dataBarcode['po_bal_lot']; // ====== รวมรายการจ่าย
+              // lotUnit = dataBarcode['po_bal_qty']; //--- รวมจำนวนจ่าย
+
+              // itemCodeController.text = itemCode;
+              // lotNoController.text = lotNo;
+              // quantityController.text = quantity;
+              // locatorToController.text = locatorTo;
+              // lotQtyController.text = lotQty;
+              // lotUnitController.text = lotUnit;
+
+              // showDialogcomfirmMessage(context);
+            }
+            if (statusFetchDataBarcode == '1' && valIDFetchDataBarcode != 'N') {
+              if (messageFetchDataBarcode !=
+                  'ข้อมูลไม่ถูกต้อง รายการจ่ายซ้ำ !!!') {
+                showDialogAlertMessage(context, messageFetchDataBarcode);
+              }
+            }
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
@@ -243,25 +251,27 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
     String poBalLot,
     String poBalQty,
   ) {
-    setState(() {
-      itemCode = poItemCode;
-      lotNo = poLotNumber;
-      quantity = poQuantity;
-      locatorTo = poCurrLoc;
-      lotQty = poBalLot; // ====== รวมรายการจ่าย
-      lotUnit = poBalQty; //--- รวมจำนวนจ่าย
+    if (mounted) {
+      setState(() {
+        itemCode = poItemCode;
+        lotNo = poLotNumber;
+        quantity = poQuantity;
+        locatorTo = poCurrLoc;
+        lotQty = poBalLot; // ====== รวมรายการจ่าย
+        lotUnit = poBalQty; //--- รวมจำนวนจ่าย
 
-      itemCodeController.text = itemCode;
-      lotNoController.text = lotNo;
-      quantityController.text = quantity;
-      locatorToController.text = locatorTo;
-      lotQtyController.text = lotQty;
-      lotUnitController.text = lotUnit;
+        itemCodeController.text = itemCode;
+        lotNoController.text = lotNo;
+        quantityController.text = quantity;
+        locatorToController.text = locatorTo;
+        lotQtyController.text = lotQty;
+        lotUnitController.text = lotUnit;
 
-      if (chkShowDialogcomfirmMessage == false) {
-        showDialogcomfirmMessage();
-      }
-    });
+        if (chkShowDialogcomfirmMessage == false) {
+          showDialogcomfirmMessage();
+        }
+      });
+    }
   }
 
   Future<void> chkQuantity() async {
@@ -302,19 +312,21 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print(
             'dataChkQuantity : $dataChkQuantity type : ${dataChkQuantity.runtimeType}');
-        setState(() {
-          statusChkQuantity = dataChkQuantity['po_status'];
-          messageChkQuantity = dataChkQuantity['po_message'];
-          print('messageChkQuantity : $messageChkQuantity');
-          if (statusChkQuantity == '0') {
-            String textMessage =
-                'ต้องการยืนยันการสร้างรายการเบิกจ่าย หรือไม่ ?';
-            showDialogcomfirmAddLine(context, textMessage);
-          }
-          if (statusChkQuantity == '1') {
-            showDialogAlert(context, messageChkQuantity);
-          }
-        });
+        if (mounted) {
+          setState(() {
+            statusChkQuantity = dataChkQuantity['po_status'];
+            messageChkQuantity = dataChkQuantity['po_message'];
+            print('messageChkQuantity : $messageChkQuantity');
+            if (statusChkQuantity == '0') {
+              String textMessage =
+                  'ต้องการยืนยันการสร้างรายการเบิกจ่าย หรือไม่ ?';
+              showDialogcomfirmAddLine(context, textMessage);
+            }
+            if (statusChkQuantity == '1') {
+              showDialogAlert(context, messageChkQuantity);
+            }
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
@@ -335,26 +347,28 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print(
             'dataChkLocatorForm : $dataChkLocatorForm type : ${dataChkLocatorForm.runtimeType}');
-        setState(() {
-          poRet = dataChkLocatorForm['po_ret'];
-          statusChkLocatorForm = dataChkLocatorForm['po_status'];
-          messageChkLocatorForm = dataChkLocatorForm['po_message'];
+        if (mounted) {
+          setState(() {
+            poRet = dataChkLocatorForm['po_ret'];
+            statusChkLocatorForm = dataChkLocatorForm['po_status'];
+            messageChkLocatorForm = dataChkLocatorForm['po_message'];
 
-          if (statusChkLocatorForm == '0') {
-            if (textForm == 'F') {
-              locatorForm = poRet;
-              locatorFormController.text = poRet;
+            if (statusChkLocatorForm == '0') {
+              if (textForm == 'F') {
+                locatorForm = poRet;
+                locatorFormController.text = poRet;
+              }
+              if (textForm == 'T') {
+                locatorTo = poRet;
+                locatorToController.text = poRet;
+              }
+              Navigator.of(context).pop();
             }
-            if (textForm == 'T') {
-              locatorTo = poRet;
-              locatorToController.text = poRet;
+            if (statusChkLocatorForm == '1') {
+              showDialogAlert(context, messageChkLocatorForm);
             }
-            Navigator.of(context).pop();
-          }
-          if (statusChkLocatorForm == '1') {
-            showDialogAlert(context, messageChkLocatorForm);
-          }
-        });
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
@@ -397,43 +411,47 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
         final Map<String, dynamic> dataSubmit = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataSubmit : $dataSubmit type : ${dataSubmit.runtimeType}');
-        setState(() {
-          statusSubmitAddline = dataSubmit['po_status'];
-          messageSubmitAddline = dataSubmit['po_message'];
+        if (mounted) {
+          setState(() {
+            statusSubmitAddline = dataSubmit['po_status'];
+            messageSubmitAddline = dataSubmit['po_message'];
 
-          if (statusSubmitAddline == '0') {
-            setState(() {
-              Navigator.of(context).pop();
+            if (statusSubmitAddline == '0') {
+              if (mounted) {
+                setState(() {
+                  Navigator.of(context).pop();
 
-              barCode = '';
-              locatorForm = '';
-              itemCode = '';
-              lotNo = '';
-              quantity = '';
-              locatorTo = '';
-              lotQty = '';
-              lotUnit = '';
+                  barCode = '';
+                  locatorForm = '';
+                  itemCode = '';
+                  lotNo = '';
+                  quantity = '';
+                  locatorTo = '';
+                  lotQty = '';
+                  lotUnit = '';
 
-              statusFetchDataBarcode = '';
-              messageFetchDataBarcode = '';
-              valIDFetchDataBarcode = '';
+                  statusFetchDataBarcode = '';
+                  messageFetchDataBarcode = '';
+                  valIDFetchDataBarcode = '';
 
-              barcodeController.clear();
-              locatorFormController.clear();
-              itemCodeController.clear();
-              lotNoController.clear();
-              quantityController.clear();
-              locatorToController.clear();
-              lotQtyController.clear();
-              lotUnitController.clear();
+                  barcodeController.clear();
+                  locatorFormController.clear();
+                  itemCodeController.clear();
+                  lotNoController.clear();
+                  quantityController.clear();
+                  locatorToController.clear();
+                  lotQtyController.clear();
+                  lotUnitController.clear();
 
-              FocusScope.of(context).requestFocus(_barcodeFocusNode);
-            });
-          }
-          if (statusSubmitAddline == '1') {
-            showDialogAlert(context, messageSubmitAddline);
-          }
-        });
+                  FocusScope.of(context).requestFocus(_barcodeFocusNode);
+                });
+              }
+            }
+            if (statusSubmitAddline == '1') {
+              showDialogAlert(context, messageSubmitAddline);
+            }
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');

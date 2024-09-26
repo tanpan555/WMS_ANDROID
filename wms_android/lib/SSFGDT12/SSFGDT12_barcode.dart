@@ -134,17 +134,20 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $responseData');
-
-        setState(() {
-          dataLocatorList =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
+        if (mounted) {
+          setState(() {
+            dataLocatorList =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('dataLocatorList : $dataLocatorList');
       } else {
         throw Exception('fetchDataLocator Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('ERROR IN Fetch Data : $e');
     }
   }
@@ -158,18 +161,21 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $responseData');
-
-        setState(() {
-          dataGradeStatuslist =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
+        if (mounted) {
+          setState(() {
+            dataGradeStatuslist =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('dataGradeStatuslist : $dataGradeStatuslist');
       } else {
         throw Exception(
             'fetchDatadataGradeStatuslist Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('ERROR IN Fetch Data : $e');
     }
   }
@@ -192,18 +198,19 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
         if (items.isNotEmpty) {
           final Map<String, dynamic> item = items[0];
           print('Fetched dataBarcodeList: $jsonDecode');
+          if (mounted) {
+            setState(() {
+              seqNumberBarcodeInt = item['p_count_seq'] ?? '';
+              seqNumberBarcodeString = item['p_count_seq'].toString();
+              wareCodeBarcode = widget.pWareCode;
+              itemCodeBarcode = item['p_item_code'] ?? '';
+              locatorCodeBarcode = item['p_curr_loc'] ?? '';
 
-          setState(() {
-            seqNumberBarcodeInt = item['p_count_seq'] ?? '';
-            seqNumberBarcodeString = item['p_count_seq'].toString();
-            wareCodeBarcode = widget.pWareCode;
-            itemCodeBarcode = item['p_item_code'] ?? '';
-            locatorCodeBarcode = item['p_curr_loc'] ?? '';
-
-            wareCodeBarcodeController.text = wareCodeBarcode;
-            itemCodeBarcodeController.text = itemCodeBarcode;
-            locatorCodeBarcodeController.text = locatorCodeBarcode;
-          });
+              wareCodeBarcodeController.text = wareCodeBarcode;
+              itemCodeBarcodeController.text = itemCodeBarcode;
+              locatorCodeBarcodeController.text = locatorCodeBarcode;
+            });
+          }
         } else {
           print('No items found.');
         }

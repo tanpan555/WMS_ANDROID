@@ -130,17 +130,20 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $jsonDecode');
-
-        setState(() {
-          dataCard =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
+        if (mounted) {
+          setState(() {
+            dataCard =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('dataCard : $dataCard');
       } else {
         throw Exception('Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('ERROR IN Fetch Data : $e');
     }
   }
@@ -161,26 +164,27 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
 
         //
         print('Fetched data: $jsonDecode');
+        if (mounted) {
+          setState(() {
+            // statusCard = dataStatusCard['po_status'] ?? '';
+            // messageCard = dataStatusCard['po_message'] ?? '';
+            // goToStep = dataStatusCard['po_goto_step'] ?? '';
+            checkGoTostep(
+              dataStatusCard['po_status'] ?? '',
+              dataStatusCard['po_message'] ?? '',
+              dataStatusCard['po_goto_step'] ?? '',
+              pDocNo,
+              pDocType,
+            );
 
-        setState(() {
-          // statusCard = dataStatusCard['po_status'] ?? '';
-          // messageCard = dataStatusCard['po_message'] ?? '';
-          // goToStep = dataStatusCard['po_goto_step'] ?? '';
-          checkGoTostep(
-            dataStatusCard['po_status'] ?? '',
-            dataStatusCard['po_message'] ?? '',
-            dataStatusCard['po_goto_step'] ?? '',
-            pDocNo,
-            pDocType,
-          );
-
-          print(
-              'po_status : ${dataStatusCard['po_status']} Type: ${dataStatusCard['po_status'.runtimeType]}');
-          print(
-              'po_message : ${dataStatusCard['po_message']} Type: ${dataStatusCard['po_message'.runtimeType]}');
-          print(
-              'po_goto_step : ${dataStatusCard['po_goto_step']} Type: ${dataStatusCard['po_goto_step'.runtimeType]}');
-        });
+            print(
+                'po_status : ${dataStatusCard['po_status']} Type: ${dataStatusCard['po_status'.runtimeType]}');
+            print(
+                'po_message : ${dataStatusCard['po_message']} Type: ${dataStatusCard['po_message'.runtimeType]}');
+            print(
+                'po_goto_step : ${dataStatusCard['po_goto_step']} Type: ${dataStatusCard['po_goto_step'.runtimeType]}');
+          });
+        }
         // } else {
         //   print('No items found.');
         // }
@@ -189,7 +193,9 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
             'checkStatusCard Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('checkStatusCard ERROR IN Fetch Data : $e');
     }
   }
@@ -228,27 +234,28 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
 
         //
         print('Fetched data: $jsonDecode');
+        if (mounted) {
+          setState(() {
+            pDocNoGetInHead = dataGetInHead['po_doc_no'] ?? '';
+            pDocTypeGetInHead = dataGetInHead['po_doc_type'] ?? '';
+            getInheadStpe(
+              dataGetInHead['po_doc_no'] ?? '',
+              dataGetInHead['po_doc_type'] ?? '',
+              dataGetInHead['po_status'],
+              dataGetInHead['po_message'],
+              goToStep,
+            );
 
-        setState(() {
-          pDocNoGetInHead = dataGetInHead['po_doc_no'] ?? '';
-          pDocTypeGetInHead = dataGetInHead['po_doc_type'] ?? '';
-          getInheadStpe(
-            dataGetInHead['po_doc_no'] ?? '',
-            dataGetInHead['po_doc_type'] ?? '',
-            dataGetInHead['po_status'],
-            dataGetInHead['po_message'],
-            goToStep,
-          );
-
-          print(
-              'po_doc_type : ${dataGetInHead['po_doc_type']} Type: ${dataGetInHead['po_doc_type'.runtimeType]}');
-          print(
-              'po_doc_no : ${dataGetInHead['po_doc_no']} Type: ${dataGetInHead['po_doc_no'.runtimeType]}');
-          print(
-              'po_status : ${dataGetInHead['po_status']} Type: ${dataGetInHead['po_status'.runtimeType]}');
-          print(
-              'po_message : ${dataGetInHead['po_message']} Type: ${dataGetInHead['po_message'.runtimeType]}');
-        });
+            print(
+                'po_doc_type : ${dataGetInHead['po_doc_type']} Type: ${dataGetInHead['po_doc_type'.runtimeType]}');
+            print(
+                'po_doc_no : ${dataGetInHead['po_doc_no']} Type: ${dataGetInHead['po_doc_no'.runtimeType]}');
+            print(
+                'po_status : ${dataGetInHead['po_status']} Type: ${dataGetInHead['po_status'.runtimeType]}');
+            print(
+                'po_message : ${dataGetInHead['po_message']} Type: ${dataGetInHead['po_message'.runtimeType]}');
+          });
+        }
         // } else {
         //   print('No items found.');
         // }
@@ -257,7 +264,9 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
             'getInhead Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('getInhead ERROR IN Fetch Data : $e');
     }
   }
@@ -415,56 +424,58 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
         final Map<String, dynamic> dataPDF = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
-        setState(() {
-          V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
-          LIN_ID = dataPDF['LIN_ID'] ?? '';
-          OU_CODE = dataPDF['OU_CODE'] ?? '';
-          PROGRAM_NAME = dataPDF['PROGRAM_NAME'] ?? '';
-          CURRENT_DATE = dataPDF['CURRENT_DATE'] ?? '';
-          USER_ID = dataPDF['USER_ID'] ?? '';
-          PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
-          P_WARE = dataPDF['P_WARE'] ?? '';
-          P_SESSION = dataPDF['P_SESSION'] ?? '';
+        if (mounted) {
+          setState(() {
+            V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
+            LIN_ID = dataPDF['LIN_ID'] ?? '';
+            OU_CODE = dataPDF['OU_CODE'] ?? '';
+            PROGRAM_NAME = dataPDF['PROGRAM_NAME'] ?? '';
+            CURRENT_DATE = dataPDF['CURRENT_DATE'] ?? '';
+            USER_ID = dataPDF['USER_ID'] ?? '';
+            PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
+            P_WARE = dataPDF['P_WARE'] ?? '';
+            P_SESSION = dataPDF['P_SESSION'] ?? '';
 
-          S_DOC_TYPE = dataPDF['S_DOC_TYPE'] ?? '';
-          S_DOC_DATE = dataPDF['S_DOC_DATE'] ?? '';
-          S_DOC_NO = dataPDF['S_DOC_NO'] ?? '';
-          E_DOC_TYPE = dataPDF['E_DOC_TYPE'] ?? '';
-          E_DOC_DATE = dataPDF['E_DOC_DATE'] ?? '';
-          E_DOC_NO = dataPDF['E_DOC_NO'] ?? '';
-          FLAG = dataPDF['FLAG'] ?? '';
+            S_DOC_TYPE = dataPDF['S_DOC_TYPE'] ?? '';
+            S_DOC_DATE = dataPDF['S_DOC_DATE'] ?? '';
+            S_DOC_NO = dataPDF['S_DOC_NO'] ?? '';
+            E_DOC_TYPE = dataPDF['E_DOC_TYPE'] ?? '';
+            E_DOC_DATE = dataPDF['E_DOC_DATE'] ?? '';
+            E_DOC_NO = dataPDF['E_DOC_NO'] ?? '';
+            FLAG = dataPDF['FLAG'] ?? '';
 
-          LH_PAGE = dataPDF['LH_PAGE'] ?? '';
-          LH_DATE = dataPDF['LH_DATE'] ?? '';
-          LH_AR_NAME = dataPDF['LH_AR_NAME'] ?? '';
-          LH_LOGISTIC_COMP = dataPDF['LH_LOGISTIC_COMP'] ?? '';
-          LH_DOC_TYPE = dataPDF['LH_DOC_TYPE'] ?? '';
-          LH_WARE = dataPDF['LH_WARE'] ?? '';
-          LH_CAR_ID = dataPDF['LH_CAR_ID'] ?? '';
-          LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
-          LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
-          LH_INVOICE_NO = dataPDF['LH_INVOICE_NO'] ?? '';
+            LH_PAGE = dataPDF['LH_PAGE'] ?? '';
+            LH_DATE = dataPDF['LH_DATE'] ?? '';
+            LH_AR_NAME = dataPDF['LH_AR_NAME'] ?? '';
+            LH_LOGISTIC_COMP = dataPDF['LH_LOGISTIC_COMP'] ?? '';
+            LH_DOC_TYPE = dataPDF['LH_DOC_TYPE'] ?? '';
+            LH_WARE = dataPDF['LH_WARE'] ?? '';
+            LH_CAR_ID = dataPDF['LH_CAR_ID'] ?? '';
+            LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
+            LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
+            LH_INVOICE_NO = dataPDF['LH_INVOICE_NO'] ?? '';
 
-          LB_SEQ = dataPDF['LB_SEQ'] ?? '';
-          LB_ITEM_CODE = dataPDF['LB_ITEM_CODE'] ?? '';
-          LB_ITEM_NAME = dataPDF['LB_ITEM_NAME'] ?? '';
-          LB_LOCATION = dataPDF['LB_LOCATION'] ?? '';
-          LB_UMS = dataPDF['LB_UMS'] ?? '';
-          // LB_LOTS_PRODUCT = item['LB_LOTS_PRODUCT'] ?? '';
-          // LB_MO_NO = item['LB_MO_NO'] ?? '';          ////-------////
-          LB_TRAN_QTY = dataPDF['LB_TRAN_QTY'] ?? '';
-          // LB_ATTRIBUTE1 = item['LB_ATTRIBUTE1'] ?? '';
-          LT_NOTE = dataPDF['LT_NOTE'] ?? '';
-          LT_TOTAL_QTY = dataPDF['LT_TOTAL_QTY'] ?? '';
-          LT_ISSUE = dataPDF['LT_ISSUE'] ?? '';
-          LT_APPROVE = dataPDF['LT_APPROVE'] ?? '';
-          LT_OUT = dataPDF['LT_OUT'] ?? '';
-          LT_RECEIVE = dataPDF['LT_RECEIVE'] ?? '';
-          LT_BILL = dataPDF['LT_BILL'] ?? '';
-          LT_CHECK = dataPDF['LT_CHECK'] ?? '';
+            LB_SEQ = dataPDF['LB_SEQ'] ?? '';
+            LB_ITEM_CODE = dataPDF['LB_ITEM_CODE'] ?? '';
+            LB_ITEM_NAME = dataPDF['LB_ITEM_NAME'] ?? '';
+            LB_LOCATION = dataPDF['LB_LOCATION'] ?? '';
+            LB_UMS = dataPDF['LB_UMS'] ?? '';
+            // LB_LOTS_PRODUCT = item['LB_LOTS_PRODUCT'] ?? '';
+            // LB_MO_NO = item['LB_MO_NO'] ?? '';          ////-------////
+            LB_TRAN_QTY = dataPDF['LB_TRAN_QTY'] ?? '';
+            // LB_ATTRIBUTE1 = item['LB_ATTRIBUTE1'] ?? '';
+            LT_NOTE = dataPDF['LT_NOTE'] ?? '';
+            LT_TOTAL_QTY = dataPDF['LT_TOTAL_QTY'] ?? '';
+            LT_ISSUE = dataPDF['LT_ISSUE'] ?? '';
+            LT_APPROVE = dataPDF['LT_APPROVE'] ?? '';
+            LT_OUT = dataPDF['LT_OUT'] ?? '';
+            LT_RECEIVE = dataPDF['LT_RECEIVE'] ?? '';
+            LT_BILL = dataPDF['LT_BILL'] ?? '';
+            LT_CHECK = dataPDF['LT_CHECK'] ?? '';
 
-          _launchUrl(docNo);
-        });
+            _launchUrl(docNo);
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');

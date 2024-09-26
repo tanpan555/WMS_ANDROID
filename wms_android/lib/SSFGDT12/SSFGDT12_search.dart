@@ -65,10 +65,12 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
     if (pickedDate != null) {
       // Format the date as dd/MM/yyyy
       String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
-      setState(() {
-        _dateController.text = formattedDate;
-        selectedDate = _dateController.text;
-      });
+      if (mounted) {
+        setState(() {
+          _dateController.text = formattedDate;
+          selectedDate = _dateController.text;
+        });
+      }
     }
   }
 

@@ -139,42 +139,43 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
           final Map<String, dynamic> item = items[0];
           print('Fetched data: $jsonDecode');
           print('data $data');
-
-          setState(() {
-            ouCode = item['ou_code'] ?? '';
-            docNo = item['doc_no'] ?? '';
-            crDate = item['cr_date'] ?? '';
-            staffCode = item['staff_code"'] ?? '';
-            note = item['note'] ?? '';
-            erpDocNo = item['erp_doc_no'] ?? '';
-            updBy = item['upd_by'] ?? '';
-            updDate = item['upd_date'] ?? '';
-            updProgID = item['upd_prog_id'] ?? '';
-            docDate = item['doc_date'] ?? '';
-            // -----------------------------
-            selectLovDocType = item['doc_type_d'] ?? '';
-            returnStatusLovDocType = item['doc_type_r'] ?? '';
-            // -----------------------------
-            selectLovRefNo = item['ref_no'] ?? '';
-            returnStatusLovRefNo = item['ref_no'] ?? '';
-            // -----------------------------
-            selectLovMoDoNo = item['mo_do_no'] ?? '';
-            returnStatusLovMoDoNo = item['mo_do_no'].toString();
-            // -----------------------------
-            ouCodeController.text = ouCode;
-            docNoController.text = docNo;
-            docTypeController.text = docNo;
-            crDateController.text = crDate;
-            refNoController.text = refNo;
-            moDoNoController.text = refNo;
-            staffCodeController.text = staffCode;
-            noteController.text = note;
-            erpDocNoController.text = erpDocNo;
-            updByController.text = updBy;
-            updDateController.text = updDate;
-            updProgIDController.text = updProgID;
-            docDateController.text = docDate;
-          });
+          if (mounted) {
+            setState(() {
+              ouCode = item['ou_code'] ?? '';
+              docNo = item['doc_no'] ?? '';
+              crDate = item['cr_date'] ?? '';
+              staffCode = item['staff_code"'] ?? '';
+              note = item['note'] ?? '';
+              erpDocNo = item['erp_doc_no'] ?? '';
+              updBy = item['upd_by'] ?? '';
+              updDate = item['upd_date'] ?? '';
+              updProgID = item['upd_prog_id'] ?? '';
+              docDate = item['doc_date'] ?? '';
+              // -----------------------------
+              selectLovDocType = item['doc_type_d'] ?? '';
+              returnStatusLovDocType = item['doc_type_r'] ?? '';
+              // -----------------------------
+              selectLovRefNo = item['ref_no'] ?? '';
+              returnStatusLovRefNo = item['ref_no'] ?? '';
+              // -----------------------------
+              selectLovMoDoNo = item['mo_do_no'] ?? '';
+              returnStatusLovMoDoNo = item['mo_do_no'].toString();
+              // -----------------------------
+              ouCodeController.text = ouCode;
+              docNoController.text = docNo;
+              docTypeController.text = docNo;
+              crDateController.text = crDate;
+              refNoController.text = refNo;
+              moDoNoController.text = refNo;
+              staffCodeController.text = staffCode;
+              noteController.text = note;
+              erpDocNoController.text = erpDocNo;
+              updByController.text = updBy;
+              updDateController.text = updDate;
+              updProgIDController.text = updProgID;
+              docDateController.text = docDate;
+            });
+          }
         } else {
           print('No items found.');
         }
@@ -197,17 +198,20 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $jsonDecode');
-
-        setState(() {
-          dataLovDocType =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
+        if (mounted) {
+          setState(() {
+            dataLovDocType =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('dataLovDocType : $dataLovDocType');
       } else {
         throw Exception('dataLovDocType Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('dataLovDocType ERROR IN Fetch Data : $e');
     }
   }
@@ -221,17 +225,20 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $jsonDecode');
-
-        setState(() {
-          dataLovMoDoNo =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
+        if (mounted) {
+          setState(() {
+            dataLovMoDoNo =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('dataLovMoDoNo : $dataLovMoDoNo');
       } else {
         throw Exception('dataLovMoDoNo Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('dataLovMoDoNo ERROR IN Fetch Data : $e');
     }
   }
@@ -245,17 +252,20 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $jsonDecode');
-
-        setState(() {
-          dataLovRefNo =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
+        if (mounted) {
+          setState(() {
+            dataLovRefNo =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('dataLovRefNo : $dataLovRefNo');
       } else {
         throw Exception('dataLovRefNo Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('dataLovRefNo ERROR IN Fetch Data : $e');
     }
   }
@@ -269,17 +279,20 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $jsonDecode');
-
-        setState(() {
-          dataLovCancel =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
+        if (mounted) {
+          setState(() {
+            dataLovCancel =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('dataLovCancel : $dataLovCancel');
       } else {
         throw Exception('dataLovCancel Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('dataLovCancel ERROR IN Fetch Data : $e');
     }
   }
@@ -301,12 +314,13 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
           //
           print('Fetched data: $jsonDecode');
+          if (mounted) {
+            setState(() {
+              custName = item['cust'] ?? '';
 
-          setState(() {
-            custName = item['cust'] ?? '';
-
-            custNameController.text = custName;
-          });
+              custNameController.text = custName;
+            });
+          }
         } else {
           print('No items found.');
         }
@@ -338,17 +352,19 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         final Map<String, dynamic> dataMessage = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataMessage : $dataMessage type : ${dataMessage.runtimeType}');
-        setState(() {
-          pMessageErr = dataMessage['p_message_err'];
-          print(
-              'pMessageErr :: $pMessageErr  type :: ${pMessageErr.runtimeType}');
-          if (pMessageErr.isNotEmpty) {
-            showDialogErrorCHK(pMessageErr);
-          }
-          if (testChk == 1) {
-            saveDataFoem();
-          }
-        });
+        if (mounted) {
+          setState(() {
+            pMessageErr = dataMessage['p_message_err'];
+            print(
+                'pMessageErr :: $pMessageErr  type :: ${pMessageErr.runtimeType}');
+            if (pMessageErr.isNotEmpty) {
+              showDialogErrorCHK(pMessageErr);
+            }
+            if (testChk == 1) {
+              saveDataFoem();
+            }
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('รหัสสถานะ: ${response.statusCode}');
@@ -374,12 +390,13 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
           //
           print('Fetched data: $jsonDecode');
+          if (mounted) {
+            setState(() {
+              custName = item['ar_code_name'] ?? '';
 
-          setState(() {
-            custName = item['ar_code_name'] ?? '';
-
-            custNameController.text = custName;
-          });
+              custNameController.text = custName;
+            });
+          }
         } else {
           print('No items found.');
         }
@@ -424,9 +441,11 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print(
             'dataSaveForm : $dataSaveForm type : ${dataSaveForm.runtimeType}');
-        setState(() {
-          submitData();
-        });
+        if (mounted) {
+          setState(() {
+            submitData();
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print(
@@ -464,41 +483,43 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         final Map<String, dynamic> dataSubmit = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataSubmit : $dataSubmit type : ${dataSubmit.runtimeType}');
-        setState(() {
-          statusSubmit = dataSubmit['po_status'];
-          messageSubmit = dataSubmit['po_message'];
+        if (mounted) {
+          setState(() {
+            statusSubmit = dataSubmit['po_status'];
+            messageSubmit = dataSubmit['po_message'];
 
-          if (statusSubmit == '1') {
-            showDialogErrorCHK(messageSubmit);
-          }
-          if (statusSubmit == '0') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => Ssfgdt09lGrid(
-                        pWareCode: widget.pWareCode,
-                        pAttr1: widget.pAttr1,
-                        docNo: widget.pDocNo,
-                        docType: widget.pDocType,
-                        docDate: docDate,
-                        pErpOuCode: widget.pErpOuCode,
-                        pOuCode: widget.pOuCode,
-                        pAppUser: globals.APP_USER,
-                        moDoNo: returnStatusLovMoDoNo,
-                        // test
-                        statusCase: 'test1',
-                      )),
-            ).then((value) async {
-              // Navigator.of(context).pop();
-              await fetchData();
-            });
-          }
+            if (statusSubmit == '1') {
+              showDialogErrorCHK(messageSubmit);
+            }
+            if (statusSubmit == '0') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Ssfgdt09lGrid(
+                          pWareCode: widget.pWareCode,
+                          pAttr1: widget.pAttr1,
+                          docNo: widget.pDocNo,
+                          docType: widget.pDocType,
+                          docDate: docDate,
+                          pErpOuCode: widget.pErpOuCode,
+                          pOuCode: widget.pOuCode,
+                          pAppUser: globals.APP_USER,
+                          moDoNo: returnStatusLovMoDoNo,
+                          // test
+                          statusCase: 'test1',
+                        )),
+              ).then((value) async {
+                // Navigator.of(context).pop();
+                await fetchData();
+              });
+            }
 
-          print(
-              'statusSubmit in Function submitData : $statusSubmit type : ${statusSubmit.runtimeType}');
-          print(
-              'messageSubmit in Function submitData : $messageSubmit type : ${messageSubmit.runtimeType}');
-        });
+            print(
+                'statusSubmit in Function submitData : $statusSubmit type : ${statusSubmit.runtimeType}');
+            print(
+                'messageSubmit in Function submitData : $messageSubmit type : ${messageSubmit.runtimeType}');
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
@@ -538,25 +559,29 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         final Map<String, dynamic> dataDelete = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataDelete : $dataDelete type : ${dataDelete.runtimeType}');
-        setState(() {
-          deleteStatus = dataDelete['po_status'];
-          deleteMessage = dataDelete['po_message'];
+        if (mounted) {
+          setState(() {
+            deleteStatus = dataDelete['po_status'];
+            deleteMessage = dataDelete['po_message'];
 
-          if (deleteStatus == '1') {
-            showDialogErrorCHK(deleteMessage);
-          }
-          if (deleteStatus == '0') {
-            setState(() async {
-              _navigateToPage(
-                  context,
-                  SSFGDT09L_MAIN(
-                    pOuCode: globals.P_OU_CODE,
-                    pErpOuCode: globals.P_ERP_OU_CODE,
-                    pAttr1: globals.ATTR1,
-                  ));
-            });
-          }
-        });
+            if (deleteStatus == '1') {
+              showDialogErrorCHK(deleteMessage);
+            }
+            if (deleteStatus == '0') {
+              if (mounted) {
+                setState(() async {
+                  _navigateToPage(
+                      context,
+                      SSFGDT09L_MAIN(
+                        pOuCode: globals.P_OU_CODE,
+                        pErpOuCode: globals.P_ERP_OU_CODE,
+                        pAttr1: globals.ATTR1,
+                      ));
+                });
+              }
+            }
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('ลบข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
@@ -577,10 +602,12 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
     if (pickedDate != null) {
       String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
-      setState(() {
-        crDateController.text = formattedDate;
-        crDate = crDateController.text;
-      });
+      if (mounted) {
+        setState(() {
+          crDateController.text = formattedDate;
+          crDate = crDateController.text;
+        });
+      }
     }
   }
 

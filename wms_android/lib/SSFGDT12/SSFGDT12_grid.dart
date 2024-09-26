@@ -67,11 +67,6 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   bool isLoading = false;
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   void initState() {
     super.initState();
     fetchData();
@@ -103,27 +98,20 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $responseData');
-
-        setState(() {
-          dataCard =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
-        // setState(() {
-        //   isLoading = true; // เริ่มต้นโหลดข้อมูล
-        // });
-
-        // // ทำกระบวนการโหลดข้อมูล
-        // await Future.delayed(Duration(seconds: 1)); // จำลองการโหลดข้อมูล
-
-        // setState(() {
-        //   isLoading = false; // โหลดเสร็จแล้ว
-        // });
+        if (mounted) {
+          setState(() {
+            dataCard =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('dataCard : $dataCard');
       } else {
         throw Exception('Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('ERROR IN Fetch Data : $e');
     }
   }
@@ -144,14 +132,15 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
 
           //
           print('Fetched dataBarcodeList: $jsonDecode');
-
-          setState(() {
-            vCouQty = item['v_cou_qty'] ?? '';
-            vCouQty != null || vCouQty != ''
-                ? checkVCouQty(context, vCouQty)
-                : print('vCouQty == null ');
-            print('vCouQty : $vCouQty type : ${vCouQty.runtimeType}');
-          });
+          if (mounted) {
+            setState(() {
+              vCouQty = item['v_cou_qty'] ?? '';
+              vCouQty != null || vCouQty != ''
+                  ? checkVCouQty(context, vCouQty)
+                  : print('vCouQty == null ');
+              print('vCouQty : $vCouQty type : ${vCouQty.runtimeType}');
+            });
+          }
         } else {
           print('No items found.');
         }
@@ -206,15 +195,17 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         final Map<String, dynamic> dataSubmit = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataSubmit : $dataSubmit type : ${dataSubmit.runtimeType}');
-        setState(() {
-          statusSubmit = dataSubmit['po_status'];
-          messageSubmit = dataSubmit['po_message'];
-          checkStatusSubmit(
-            context,
-            statusSubmit,
-            messageSubmit,
-          );
-        });
+        if (mounted) {
+          setState(() {
+            statusSubmit = dataSubmit['po_status'];
+            messageSubmit = dataSubmit['po_message'];
+            checkStatusSubmit(
+              context,
+              statusSubmit,
+              messageSubmit,
+            );
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
@@ -251,9 +242,11 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
-          // fetchData();
-        });
+        if (mounted) {
+          setState(() {
+            // fetchData();
+          });
+        }
         print('Success: $responseData');
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
@@ -288,14 +281,16 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         final Map<String, dynamic> dataSubmit = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataSubmit : $dataSubmit type : ${dataSubmit.runtimeType}');
-        setState(() {
-          statusCancel = dataSubmit['po_status'];
-          messageCancel = dataSubmit['po_message'];
-          vRetCancel = dataSubmit['v_ret'];
-          vChkStatusCancel = dataSubmit['po_chk_status'];
-          showDialogCancelSucceed(
-              statusCancel, messageCancel, vRetCancel, vChkStatusCancel);
-        });
+        if (mounted) {
+          setState(() {
+            statusCancel = dataSubmit['po_status'];
+            messageCancel = dataSubmit['po_message'];
+            vRetCancel = dataSubmit['v_ret'];
+            vChkStatusCancel = dataSubmit['po_chk_status'];
+            showDialogCancelSucceed(
+                statusCancel, messageCancel, vRetCancel, vChkStatusCancel);
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');

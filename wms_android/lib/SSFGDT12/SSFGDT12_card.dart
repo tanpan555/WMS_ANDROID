@@ -72,12 +72,13 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $responseData');
-
-        setState(() {
-          dataCard =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          filterData();
-        });
+        if (mounted) {
+          setState(() {
+            dataCard =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+            filterData();
+          });
+        }
         print('dataCard: $dataCard');
       } else {
         print('Failed to load data. Status code: ${response.statusCode}');
@@ -85,26 +86,30 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
             'Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('ERROR IN Fetch Data: $e');
     }
   }
 
   void filterData() {
-    setState(() {
-      displayedData = dataCard.where((item) {
-        final doc_date = item['doc_date'] ?? '';
-        if (widget.date.isEmpty) {
-          final matchesSearchQuery = doc_date == doc_date;
-          return matchesSearchQuery;
-        } else {
-          final matchesSearchQuery = doc_date == widget.date;
-          return matchesSearchQuery;
-        }
-      }).toList();
-      print(
-          'displayedData : $displayedData Type : ${displayedData.runtimeType}');
-    });
+    if (mounted) {
+      setState(() {
+        displayedData = dataCard.where((item) {
+          final doc_date = item['doc_date'] ?? '';
+          if (widget.date.isEmpty) {
+            final matchesSearchQuery = doc_date == doc_date;
+            return matchesSearchQuery;
+          } else {
+            final matchesSearchQuery = doc_date == widget.date;
+            return matchesSearchQuery;
+          }
+        }).toList();
+        print(
+            'displayedData : $displayedData Type : ${displayedData.runtimeType}');
+      });
+    }
   }
 
   @override

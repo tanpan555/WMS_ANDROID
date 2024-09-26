@@ -46,16 +46,19 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $jsonDecode');
-
-        setState(() {
-          data = List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
+        if (mounted) {
+          setState(() {
+            data = List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('dataMenu : $data');
       } else {
         throw Exception('Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('ERROR IN Fetch Data : $e');
     }
   }

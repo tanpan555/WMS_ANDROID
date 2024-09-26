@@ -101,21 +101,24 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $jsonDecode');
+        if (mounted) {
+          setState(() {
+            dataLovReason =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-        setState(() {
-          dataLovReason =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-
-          selectedReasonItem = dataLovReason[0];
-          reasonLovD = selectedReasonItem?['d'] ?? '';
-          reasonLovR = selectedReasonItem?['r'] ?? '';
-        });
+            selectedReasonItem = dataLovReason[0];
+            reasonLovD = selectedReasonItem?['d'] ?? '';
+            reasonLovR = selectedReasonItem?['r'] ?? '';
+          });
+        }
         print('dataLovReason : $dataLovReason');
       } else {
         throw Exception('dataLovReason Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('dataLovReason ERROR IN Fetch Data : $e');
     }
   }
@@ -140,21 +143,24 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $jsonDecode');
-
-        setState(() {
-          dataLovReasonLot =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          selectedLotItem = dataLovReasonLot[0];
-          reasonRpLotD = selectedLotItem?['d'] ?? '';
-          reasonRpLotR = selectedLotItem?['r'] ?? '';
-        });
+        if (mounted) {
+          setState(() {
+            dataLovReasonLot =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+            selectedLotItem = dataLovReasonLot[0];
+            reasonRpLotD = selectedLotItem?['d'] ?? '';
+            reasonRpLotR = selectedLotItem?['r'] ?? '';
+          });
+        }
         print('dataLovReasonLot : $dataLovReasonLot');
       } else {
         throw Exception(
             'dataLovReasonLot Failed to load fetchData status : ${response.statusCode}');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('dataLovReasonLot ERROR IN Fetch Data : $e');
     }
   }
@@ -192,17 +198,19 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
         final Map<String, dynamic> dataSubmit = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataSubmit : $dataSubmit type : ${dataSubmit.runtimeType}');
-        setState(() {
-          statusSubmit = dataSubmit['po_status'];
-          messageSubmit = dataSubmit['po_message'];
+        if (mounted) {
+          setState(() {
+            statusSubmit = dataSubmit['po_status'];
+            messageSubmit = dataSubmit['po_message'];
 
-          if (statusSubmit == '1') {
-            showDialogAlert(context, messageSubmit);
-          }
-          if (statusSubmit == '0') {
-            Navigator.of(context).pop();
-          }
-        });
+            if (statusSubmit == '1') {
+              showDialogAlert(context, messageSubmit);
+            }
+            if (statusSubmit == '0') {
+              Navigator.of(context).pop();
+            }
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');

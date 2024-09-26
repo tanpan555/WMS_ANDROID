@@ -73,17 +73,20 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $responseData');
-
-        setState(() {
-          dataCard =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
+        if (mounted) {
+          setState(() {
+            dataCard =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('dataCard : $dataCard');
       } else {
         throw Exception('Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('ERROR IN Fetch Data : $e');
     }
   }
@@ -115,9 +118,11 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
-          // fetchData();
-        });
+        if (mounted) {
+          setState(() {
+            // fetchData();
+          });
+        }
         print('Success: $responseData');
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
@@ -157,20 +162,24 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
         final Map<String, dynamic> dataDelete = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataDelete : $dataDelete type : ${dataDelete.runtimeType}');
-        setState(() {
-          deleteStatus = dataDelete['po_status'];
-          deleteMessage = dataDelete['po_message'];
+        if (mounted) {
+          setState(() {
+            deleteStatus = dataDelete['po_status'];
+            deleteMessage = dataDelete['po_message'];
 
-          if (deleteStatus == '1') {
-            showDialogMessageDelete(context, deleteMessage);
-          }
-          if (deleteStatus == '0') {
-            setState(() async {
-              Navigator.of(context).pop();
-              await fetchData();
-            });
-          }
-        });
+            if (deleteStatus == '1') {
+              showDialogMessageDelete(context, deleteMessage);
+            }
+            if (deleteStatus == '0') {
+              if (mounted) {
+                setState(() async {
+                  Navigator.of(context).pop();
+                  await fetchData();
+                });
+              }
+            }
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('ลบข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
@@ -208,21 +217,25 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
         final Map<String, dynamic> dataDelete = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataDelete : $dataDelete type : ${dataDelete.runtimeType}');
-        setState(() {
-          deleteCardAllStatus = dataDelete['po_status'];
-          deleteCardAllMessage = dataDelete['po_message'];
+        if (mounted) {
+          setState(() {
+            deleteCardAllStatus = dataDelete['po_status'];
+            deleteCardAllMessage = dataDelete['po_message'];
 
-          if (deleteCardAllStatus == '1') {
-            showDialogMessageDelete(context, deleteCardAllMessage);
-          }
-          if (deleteCardAllStatus == '0') {
-            setState(() {
-              print('delete allllllllllllllllllllllll');
-              Navigator.of(context).pop();
-              fetchData();
-            });
-          }
-        });
+            if (deleteCardAllStatus == '1') {
+              showDialogMessageDelete(context, deleteCardAllMessage);
+            }
+            if (deleteCardAllStatus == '0') {
+              if (mounted) {
+                setState(() {
+                  print('delete allllllllllllllllllllllll');
+                  Navigator.of(context).pop();
+                  fetchData();
+                });
+              }
+            }
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('ลบข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
@@ -409,7 +422,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                       },
                       style: AppStyles.cancelButtonStyle(),
                       child: Text(
-                        '+Clear All',
+                        '-Clear All',
                         style: AppStyles.CancelbuttonTextStyle(),
                       ),
                     ),
