@@ -275,7 +275,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
           'P_WARE_CODE': gb.P_WARE_CODE,
           'P_OU_CODE': gb.P_ERP_OU_CODE,
           // 'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
-          'P_REF_RECEIVE': _refNoController.text,
+          'P_REF_RECEIVE': selectedRefReceive,
           'P_ORDER_NO': _oderNoController.text,
           'P_MO_DO_NO': _moDoNoController.text,
           'P_STAFF_CODE': _staffCodeController.text,
@@ -284,8 +284,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
           'P_DOC_NO': po_doc_no,
           'P_ATTR1': gb.ATTR1,
           'P_DOC_TYPE': po_doc_type,
-        })
 
+        })
+        // print('P_REF_RECEIVE$: ${_refNoController.text}');
         // print('Updating receive_qty with data: ${jsonEncode({
         //       'rowid': rowid,
         //       'receive_qty': receiveQty,
@@ -296,8 +297,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     print('po_doc_no: ${widget.po_doc_no}');
     print('po_doc_type: ${widget.po_doc_type}');
     print('pWareCode: ${widget.pWareCode}');
-    print('p_ref_no: ${_refNoController.text}');
+    print('ref_no: ${selectedRefReceive}');
     print('mo_do_no: ${_moDoNoController.text}');
+    // print('P_REF_RECEIVE: ${selectedRefReceive}');
 
     if (response.statusCode == 200) {
       print('Update successful');
@@ -627,7 +629,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                     actions: [
                                       TextButton(
                                         child: Text('OK'),
-                                        onPressed: () async {
+                                        onPressed: () {
+                                          // await update(widget.po_doc_type, widget.po_doc_no);
                                           // await cancel_INHeadNonePO_WMS(
                                           //     widget.po_doc_type,
                                           //     widget.po_doc_no,
