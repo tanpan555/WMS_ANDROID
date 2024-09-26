@@ -12,17 +12,29 @@ class _BottomBarState extends State<BottomBar> {
   String sessionID = '';
 
   void _onItemTapped(int index) {
-    setState(() {
-      sessionID = globals.APP_SESSION;
-      _selectedIndex = index;
-      print(
-          'sessionID in BottomBar : $sessionID Type : ${sessionID.runtimeType}');
-    });
+    if (mounted) {
+      setState(() {
+        sessionID = globals.APP_SESSION;
+        _selectedIndex = index;
+        print(
+            'sessionID in BottomBar : $sessionID Type : ${sessionID.runtimeType}');
+      });
+    }
 
     switch (index) {
       case 0:
         // Replace the entire navigation stack with the home page
-        Navigator.popUntil(context, (route) => route.isFirst);
+        Navigator.pushNamed(
+          context,
+          '/home',
+          arguments: sessionID,
+        );
+        // Navigator.pushReplacementNamed(
+        //   context,
+        //   '/home',
+        //   arguments: sessionID, // ส่ง sessionID เป็น arguments
+        // );
+        // Navigator.popUntil(context, (route) => route.isFirst);
         break;
       case 1:
         _showRightDrawer(context); // Show the drawer from the right
@@ -56,23 +68,19 @@ class _BottomBarState extends State<BottomBar> {
                     alignment: Alignment.centerRight,
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.6,
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        // borderRadius: BorderRadius.only(
-                        //   topRight: Radius.circular(20),
-                        //   bottomRight: Radius.circular(20),
-                        // ),
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(20),
+                          bottomRight: Radius.circular(20),
+                        ),
                       ),
                       child: ListView(
                         controller: controller,
                         children: [
                           ListTile(
-                            leading: Image.asset(
-                              'assets/images/exit.png', // Path to your image asset
-                              width: 25, // Set the width of the image
-                              height: 25, // Set the height of the image
-                            ),
+                            leading: Icon(Icons.logout_outlined),
                             title: Text('Sign Out'),
                             onTap: () {
                               Navigator.of(context).pop();
@@ -84,11 +92,7 @@ class _BottomBarState extends State<BottomBar> {
                             },
                           ),
                           ListTile(
-                            leading: Image.asset(
-                              'assets/images/reset-password.png', // Path to your image asset
-                              width: 25, // Set the width of the image
-                              height: 25, // Set the height of the image
-                            ),
+                            leading: Icon(Icons.password_outlined),
                             title: Text('Change Password'),
                             onTap: () {
                               print('Change Password');
