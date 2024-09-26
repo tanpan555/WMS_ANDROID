@@ -104,6 +104,8 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
                                 elevation: 4,
                                 child: InkWell(
                                   onTap: () {
+                                    // Navigate to SSFGDT04_SCREEN2
+                                    gb.P_WARE_CODE = item['ware_code'];
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

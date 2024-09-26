@@ -792,10 +792,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                             Text(
                                               'อ้างอิงใบนำส่งเลขที่',
                                               style: TextStyle(
-                                                  fontSize: 16,
+                                                  fontSize: 18,
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                            // const SizedBox(width: 1),
                                             IconButton(
                                               icon: Icon(Icons.close),
                                               onPressed: () {
