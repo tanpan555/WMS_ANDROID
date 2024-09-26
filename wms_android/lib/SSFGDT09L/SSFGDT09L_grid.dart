@@ -393,17 +393,19 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                     // --------------------------------------------------------------------
                     ElevatedButton(
                       onPressed: () {
-                        setState(() {
-                          String messageDelete =
-                              'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม่ ?';
-                          String dataTest = 'test';
-                          showDialogComfirmDelete(
-                            context,
-                            dataTest,
-                            dataTest,
-                            messageDelete,
-                          );
-                        });
+                        if (dataCard.isNotEmpty) {
+                          setState(() {
+                            String messageDelete =
+                                'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม่ ?';
+                            String dataTest = 'test';
+                            showDialogComfirmDelete(
+                              context,
+                              dataTest,
+                              dataTest,
+                              messageDelete,
+                            );
+                          });
+                        }
                       },
                       style: AppStyles.cancelButtonStyle(),
                       child: Text(
