@@ -284,7 +284,7 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
       body: Column(
         
         children: [
-          const SizedBox(height: 8,),
+          const SizedBox(height: 20,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             
