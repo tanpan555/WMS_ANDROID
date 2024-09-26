@@ -282,10 +282,14 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
       appBar: CustomAppBar(title: 'รับคืนจากการเบิกผลิต'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Column(
+        
         children: [
+          const SizedBox(height: 8,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            
             children: [
+              
               const SizedBox(width: 8,),
             
                ElevatedButton(
@@ -305,18 +309,17 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                   print('Picking Slip');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  minimumSize: const Size(10, 20),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                ),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      minimumSize: const Size(90, 40),
+      padding: const EdgeInsets.all(0),
+    ),
                 child: const Text(
                   'Picking Slip',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -375,6 +378,7 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
               const SizedBox(width: 8,),
             ],
           ),
+          const SizedBox(height: 8,),
           Expanded(
             child: ListView.builder(
               itemCount: items.length + 1,
@@ -403,7 +407,7 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                           ),
                         ),
                       ),
-                
+                const SizedBox(height: 8,),
               Row(
                 children: [
                   const SizedBox(width: 8,),
@@ -427,18 +431,17 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                   print('+Create');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  minimumSize: const Size(10, 20),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                ),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      minimumSize: const Size(60, 40),
+      padding: const EdgeInsets.all(0),
+    ),
                 child: const Text(
                   '+Create',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -450,18 +453,17 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                   print('-Clear All');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  minimumSize: const Size(10, 20),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                ),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      minimumSize: const Size(80, 40),
+      padding: const EdgeInsets.all(0),
+    ),
                 child: const Text(
                   '-Clear All',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
