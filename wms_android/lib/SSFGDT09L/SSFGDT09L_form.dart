@@ -761,8 +761,6 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                     // -----------------------------
                     TextFormField(
                       controller: crDateController,
-                      readOnly: true,
-                      onTap: () => _selectDate(context),
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         filled: true,
@@ -771,11 +769,18 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         labelStyle: const TextStyle(
                           color: Colors.black87,
                         ),
-                        suffixIcon: Icon(
-                          Icons.calendar_today,
-                          color: Colors.black87,
+                        suffixIcon: IconButton(
+                          icon:
+                              Icon(Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
+                          onPressed: () async {
+                            // กดไอคอนเพื่อเปิด date picker
+                            _selectDate(context);
+                          },
                         ),
                       ),
+                      onChanged: (value) {
+                        crDate = value;
+                      },
                     ),
                     const SizedBox(height: 8),
                     // -----------------------------

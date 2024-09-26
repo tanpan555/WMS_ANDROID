@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 // import 'dart:ui';
 import 'package:intl/intl.dart';
+import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'SSFGDT12_grid.dart';
@@ -225,40 +226,34 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
         child: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const Spacer(),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: IconButton(
-                    iconSize: 20.0,
-                    icon: Image.asset(
-                      'assets/images/right.png',
-                      width: 20.0,
-                      height: 20.0,
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Ssfgdt12Grid(
-                            nbCountStaff: nbCountStaff,
-                            nbCountDate: nbCountDate,
-                            docNo: docNo,
-                            status: status,
-                            wareCode: widget.wareCode,
-                            pErpOuCode: widget.pErpOuCode,
-                            pWareCode: widget.pWareCode,
-                            docDate: docDate,
-                            countStaff: countStaff,
-                            p_attr1: widget.p_attr1,
-                            statuForCHK: statuForCHK,
-                          ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Ssfgdt12Grid(
+                          nbCountStaff: nbCountStaff,
+                          nbCountDate: nbCountDate,
+                          docNo: docNo,
+                          status: status,
+                          wareCode: widget.wareCode,
+                          pErpOuCode: widget.pErpOuCode,
+                          pWareCode: widget.pWareCode,
+                          docDate: docDate,
+                          countStaff: countStaff,
+                          p_attr1: widget.p_attr1,
+                          statuForCHK: statuForCHK,
                         ),
-                      );
-                    },
+                      ),
+                    );
+                  },
+                  style: AppStyles.NextButtonStyle(),
+                  child: Image.asset(
+                    'assets/images/right.png', // ใส่ภาพจากไฟล์ asset
+                    width: 25, // กำหนดขนาดภาพ
+                    height: 25,
                   ),
                 ),
               ],
