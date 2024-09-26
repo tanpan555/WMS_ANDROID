@@ -116,26 +116,31 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
   String? po_message; // po_message
 
   Future<void> fetchBarcodeData() async {
-    final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_4_scan_validate_NonePObar/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/$pBarcode'));
+    final url =
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_4_scan_validate_NonePObar/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/$pBarcode';
+    try {
+      final response = await http.get(Uri.parse(url));
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> barCodeItems =
-          jsonDecode(utf8.decode(response.bodyBytes));
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> barCodeItems =
+            jsonDecode(utf8.decode(response.bodyBytes));
 
-      print('API Response: $barCodeItems');
+        print('API Response: $barCodeItems');
 
-      setState(() {
-        po_status = barCodeItems['po_status'] ?? '';
-        po_message = barCodeItems['po_message'] ?? '';
-        _lotNumberController.text = barCodeItems['po_lot_number'] ?? '';
-        _quantityController.text = barCodeItems['po_quantity'] ?? '';
-        _currLotController.text = barCodeItems['po_curr_loc'] ?? '';
-        _balLotController.text = barCodeItems['po_bal_lot'] ?? '';
-        _balQtyController.text = barCodeItems['po_bal_qty'] ?? '';
-      });
-    } else {
-      throw Exception('Failed to load data from API');
+        setState(() {
+          po_status = barCodeItems['po_status'] ?? '';
+          po_message = barCodeItems['po_message'] ?? '';
+          _lotNumberController.text = barCodeItems['po_lot_number'] ?? '';
+          _quantityController.text = barCodeItems['po_quantity'] ?? '';
+          _currLotController.text = barCodeItems['po_curr_loc'] ?? '';
+          _balLotController.text = barCodeItems['po_bal_lot'] ?? '';
+          _balQtyController.text = barCodeItems['po_bal_qty'] ?? '';
+        });
+      } else {
+        throw Exception('${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
@@ -623,7 +628,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                     border: InputBorder.none,
                     suffixIcon: Icon(
                       Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
+                      color: Color.fromARGB(255, 113, 113, 113),
                     ),
                   ),
                   controller: _locatorBarcodeController.text.isNotEmpty
@@ -657,29 +662,29 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
           //Quantity//
           // if (pBarcode != null && pBarcode!.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: po_status == '1'
-                  ? SizedBox
-                      .shrink() // Do not display anything if po_status is '1'
-                  : TextField(
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        labelText: 'Quantity',
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelStyle: TextStyle(color: Colors.black),
-                        border: InputBorder.none,
-                      ),
-                      controller: _quantityController,
-                      // TextEditingController(
-                      //   text: _quantityController.text.isNotEmpty
-                      //       ? _quantityController.text
-                      //       : 'NaN',
-                      // ),
-                      textAlign: TextAlign.center,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: po_status == '1'
+                ? SizedBox
+                    .shrink() // Do not display anything if po_status is '1'
+                : TextField(
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      labelText: 'Quantity',
+                      filled: true,
+                      fillColor: Colors.grey[300],
+                      labelStyle: TextStyle(color: Colors.black),
+                      border: InputBorder.none,
                     ),
-            ),
+                    controller: _quantityController,
+                    // TextEditingController(
+                    //   text: _quantityController.text.isNotEmpty
+                    //       ? _quantityController.text
+                    //       : 'NaN',
+                    // ),
+                    textAlign: TextAlign.center,
+                  ),
+          ),
 
           //Current Locator//
           Padding(
