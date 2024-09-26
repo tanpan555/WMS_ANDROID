@@ -438,7 +438,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                       ),
                                       SizedBox(
                                         child: Text(
-                                          'จำนวนคงเหลือในระบบ : ${NumberFormat('#,###,###,###,###,###').format(item['sys_qty'])}',
+                                          'จำนวนคงเหลือในระบบ : ${NumberFormat('#,###,###,###,###,###.##').format(item['sys_qty'])}',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14.0,
@@ -447,7 +447,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                       ),
                                       SizedBox(
                                         child: Text(
-                                          'ผลต่างการตรวจนับ : ${NumberFormat('#,###,###,###,###,###').format(item['diff_qty'])}',
+                                          'ผลต่างการตรวจนับ : ${NumberFormat('#,###,###,###,###,###.###').format(item['diff_qty'])}',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14.0,
@@ -488,10 +488,11 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                       onPressed: () {
                                         showDetailsDialog(
                                           context,
-                                          item['sys_qty'],
-                                          item['diff_qty'],
+                                          item['sys_qty'].toDouble(),
+                                          item['diff_qty'].toDouble(),
+                                          // double.parse(item['diff_qty']),
                                           item['rowid'],
-                                          item['count_qty'],
+                                          item['count_qty'] ?? 0,
                                           item['remark'] ?? '',
                                           widget.docNo,
                                           widget.pErpOuCode,
@@ -518,8 +519,8 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
 
   void showDetailsDialog(
     BuildContext context,
-    int sys_qty,
-    int diff_qty,
+    double sys_qty,
+    double diff_qty,
     String row_ID,
     int count_qty,
     String remark,
@@ -529,9 +530,9 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     String item_code,
   ) {
     String formattedSysQty =
-        NumberFormat('#,###,###,###,###,###').format(sys_qty);
+        NumberFormat('#,###,###,###,###,###.##').format(sys_qty);
     String formattedDiffQty =
-        NumberFormat('#,###,###,###,###,###').format(diff_qty);
+        NumberFormat('#,###,###,###,###,###.##').format(diff_qty);
     String formattedCountQty =
         NumberFormat('#,###,###,###,###,###').format(count_qty);
     TextEditingController sysQtyController =

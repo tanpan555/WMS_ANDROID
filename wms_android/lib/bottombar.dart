@@ -23,12 +23,18 @@ class _BottomBarState extends State<BottomBar> {
 
     switch (index) {
       case 0:
-        // Replace the entire navigation stack with the home page
-        Navigator.pushNamed(
+        Navigator.pushNamedAndRemoveUntil(
           context,
           '/home',
-          arguments: sessionID,
+          (Route<dynamic> route) => false, // ลบ stack ทั้งหมด
+          arguments: sessionID, // ส่ง arguments
         );
+
+        // Navigator.pushNamed(
+        //   context,
+        //   '/home',
+        //   arguments: sessionID,
+        // );
         // Navigator.pushReplacementNamed(
         //   context,
         //   '/home',
@@ -80,11 +86,7 @@ class _BottomBarState extends State<BottomBar> {
                         controller: controller,
                         children: [
                           ListTile(
-                            leading: Image.asset(
-                              'assets/images/exit.png', // Path to your image asset
-                              width: 25, // Set the width of the image
-                              height: 25, // Set the height of the image
-                            ),
+                            leading: Icon(Icons.logout_outlined),
                             title: Text('Sign Out'),
                             onTap: () {
                               Navigator.of(context).pop();
@@ -96,11 +98,7 @@ class _BottomBarState extends State<BottomBar> {
                             },
                           ),
                           ListTile(
-                            leading: Image.asset(
-                              'assets/images/reset-password.png', // Path to your image asset
-                              width: 25, // Set the width of the image
-                              height: 25, // Set the height of the image
-                            ),
+                            leading: Icon(Icons.password_outlined),
                             title: Text('Change Password'),
                             onTap: () {
                               print('Change Password');
