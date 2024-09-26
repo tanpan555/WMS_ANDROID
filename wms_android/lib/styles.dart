@@ -78,7 +78,7 @@ static ButtonStyle EraserButtonStyle() {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      minimumSize: const Size(100, 30),
+      minimumSize: const Size(100, 40),
       padding: const EdgeInsets.all(0),
     );
   }
@@ -89,7 +89,7 @@ static ButtonStyle EraserButtonStyle() {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      minimumSize: const Size(100, 30),
+      minimumSize: const Size(100, 40),
       padding: const EdgeInsets.all(0),
     );
   }
