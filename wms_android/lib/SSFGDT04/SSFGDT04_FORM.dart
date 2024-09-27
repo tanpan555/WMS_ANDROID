@@ -9,6 +9,7 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGDT04_GRID.dart';
 import 'SSFGDT04_MENU.dart';
 import '../styles.dart';
+// import 'package:wms_android/custom_drawer.dart';
 // import 'package:dropdown_search/dropdown_search.dart';
 
 class SSFGDT04_FORM extends StatefulWidget {
@@ -49,6 +50,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   String? poStatus;
   String? poMessage;
   String? po_doc_no;
+  String? _dateError;
   // String? p_cancel_code;
   String selectedDate = 'null';
 
@@ -69,6 +71,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
   // เพิ่ม DateFormat สำหรับฟอร์แมทวันที่
   final DateFormat _dateTimeFormatter = DateFormat('dd/MM/yyyy');
+  // Regular expression to validate dd/MM/yyyy format
+  final dateRegExp =
+      RegExp(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$");
 
   @override
   void initState() {
@@ -284,7 +289,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
           'P_DOC_NO': po_doc_no,
           'P_ATTR1': gb.ATTR1,
           'P_DOC_TYPE': po_doc_type,
-
         })
         // print('P_REF_RECEIVE$: ${_refNoController.text}');
         // print('Updating receive_qty with data: ${jsonEncode({
@@ -362,10 +366,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
         _docDateController.text = formattedDateForDisplay;
         selectedDate = formattedDateForSearch;
       });
-      // setState(() {
-      //                           _docDateController.text =
-      //                               _dateTimeFormatter.format(fullDateTime);
-      //                         });
     }
   }
 
@@ -374,6 +374,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     return Scaffold(
       appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+      // endDrawer:CustomDrawer(),
       body: fromItems.isEmpty
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -577,13 +578,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             ),
                           ),
                           style: AppStyles.cancelButtonStyle(),
-                          // style: ElevatedButton.styleFrom(
-                          //   backgroundColor: Color.fromARGB(255, 255, 255, 255), // สีปุ่มยกเลิก
-                          //   shape: RoundedRectangleBorder(
-                          //     borderRadius: BorderRadius.circular(10),
-                          //   ),
-                          //   minimumSize: const Size(70, 40),
-                          //   padding: const EdgeInsets.all(10),
                           // ),
                         ),
 
@@ -591,21 +585,43 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                         // ปุ่ม ถัดไป //
                         ElevatedButton(
                           onPressed: () async {
-                            // print('Hiiiiiiiiiiiiiiiiiiiiiiiiiii');
-                            // เรียกใช้งานฟังก์ชันเพื่ออัปเดตข้อมูล Form ก่อน
+                            // Check if the date field is filled and valid
+                            if (_docDateController.text.isEmpty) {
+                              setState(() {
+                                _dateError =
+                                    'กรุณาระบุข้อมูลวันที่บันทึก.'; // Set error message for empty input
+                              });
+                              return; // Stop further execution if the date is empty
+                            }
+
+                            // Check if the date format is valid
+                            if (!dateRegExp.hasMatch(_docDateController.text)) {
+                              setState(() {
+                                _dateError =
+                                    'กรุณากรอกวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY.'; // Set error message for invalid format
+                              });
+                              return; // Stop further execution if the date format is invalid
+                            } else {
+                              setState(() {
+                                _dateError =
+                                    null; // Clear the error message if the date is valid
+                              });
+                            }
+
+                            // Call functions to update and save data
                             await update(widget.po_doc_type, widget.po_doc_no);
                             await save_INHeadNonePO_WMS(selectedValue ?? '');
 
-                            // ตรวจสอบเงื่อนไขก่อนบันทึกข้อมูล
+                            // Check poStatus and navigate or show warning
                             if (poStatus == '0') {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => SSFGDT04_GRID(
                                     po_doc_no:
-                                        widget.po_doc_no, // ส่งค่า po_doc_no
+                                        widget.po_doc_no, // pass po_doc_no
                                     po_doc_type: widget.po_doc_type ??
-                                        '', // ส่งค่า po_doc_type
+                                        '', // pass po_doc_type
                                     pWareCode: widget.pWareCode,
                                     p_ref_no: _refNoController.text,
                                     mo_do_no: _moDoNoController.text,
@@ -617,27 +633,13 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text('คำเตือน'),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text('${poMessage}'),
-                                      ],
-                                    ),
+                                    title: Text('Warning'),
+                                    content: Text('$poMessage'),
                                     actions: [
                                       TextButton(
                                         child: Text('OK'),
                                         onPressed: () {
-                                          // await update(widget.po_doc_type, widget.po_doc_no);
-                                          // await cancel_INHeadNonePO_WMS(
-                                          //     widget.po_doc_type,
-                                          //     widget.po_doc_no,
-                                          //     p_cancel_code);
-                                          // await save_INHeadNonePO_WMS(
-                                          //     selectedValue ?? '');
-                                          // Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
                                         },
                                       ),
                                     ],
@@ -645,22 +647,12 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 },
                               );
                             }
-                            // เพิ่มโค้ดสำหรับการทำงานของปุ่มถัดไปที่นี่
                           },
                           child: Image.asset(
-                            'assets/images/right.png', // เปลี่ยนเป็นเส้นทางของรูปภาพของคุณ
-                            width: 20, // ปรับขนาดตามที่ต้องการ
-                            height: 20, // ปรับขนาดตามที่ต้องการ
+                            'assets/images/right.png', // change to the path of your image
+                            width: 20, // adjust size as needed
+                            height: 20, // adjust size as needed
                           ),
-                          // style: ElevatedButton.styleFrom(
-                          //   backgroundColor:
-                          //       const Color.fromARGB(255, 255, 255, 255),
-                          //   shape: RoundedRectangleBorder(
-                          //     borderRadius: BorderRadius.circular(10),
-                          //   ),
-                          //   minimumSize: const Size(60, 40),
-                          //   padding: const EdgeInsets.all(0),
-                          // ),
                           style: AppStyles.NextButtonStyle(),
                         ),
                       ],
@@ -745,22 +737,35 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                   // วันที่บันทึก //
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: TextField(
-                      controller: _docDateController,
-                      decoration: InputDecoration(
-                        labelText: 'วันที่บันทึก',
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelStyle: TextStyle(color: Colors.black),
-                        border: InputBorder.none,
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.calendar_today),
-                          onPressed: () => _selectDate(
-                          context),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFormField(
+                          controller: _docDateController,
+                          decoration: InputDecoration(
+                            labelText: 'วันที่บันทึก',
+                            filled: true,
+                            fillColor: Colors.white,
+                            labelStyle: TextStyle(color: Colors.black),
+                            border: InputBorder.none,
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.calendar_today),
+                              onPressed: () => _selectDate(context),
+                            ),
+                          ),
+                          keyboardType: TextInputType.datetime,
                         ),
-                      ),
-                      // ให้ user กรอกวันที่
-                      keyboardType: TextInputType.datetime,
+                        if (_dateError !=
+                            null) // Only display if there's an error
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Text(
+                              _dateError!,
+                              style: TextStyle(
+                                  color: Colors.red), // Style the error message
+                            ),
+                          ),
+                      ],
                     ),
                   ),
 
@@ -958,7 +963,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             border: InputBorder.none,
                             suffixIcon: Icon(
                               Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
+                              color: Color.fromARGB(255, 113, 113, 113),
                             ),
                           ),
                           controller:
@@ -1219,7 +1224,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             border: InputBorder.none,
                             suffixIcon: Icon(
                               Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
+                              color: Color.fromARGB(255, 113, 113, 113),
                             ),
                           ),
                           controller:
@@ -1416,7 +1421,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             border: InputBorder.none,
                             suffixIcon: Icon(
                               Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
+                              color: Color.fromARGB(255, 113, 113, 113),
                             ),
                           ),
                           controller: _staffCodeController.text.isNotEmpty
