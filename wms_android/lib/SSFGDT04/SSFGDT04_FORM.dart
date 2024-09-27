@@ -9,7 +9,7 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGDT04_GRID.dart';
 import 'SSFGDT04_MENU.dart';
 import '../styles.dart';
-// import 'package:wms_android/custom_drawer.dart';
+import 'package:wms_android/custom_drawer.dart';
 // import 'package:dropdown_search/dropdown_search.dart';
 
 class SSFGDT04_FORM extends StatefulWidget {
@@ -374,7 +374,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     return Scaffold(
       appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-      // endDrawer:CustomDrawer(),
+      endDrawer: CustomDrawer(),
       body: fromItems.isEmpty
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -614,6 +614,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
                             // Check poStatus and navigate or show warning
                             if (poStatus == '0') {
+                              // Navigate to the next screen
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -627,7 +628,19 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                     mo_do_no: _moDoNoController.text,
                                   ),
                                 ),
-                              );
+                              ).then((_) {
+                                // Clear the screen or reset values after returning
+                                _refNoController.clear();
+                                _moDoNoController.clear();
+                                _noteController.clear();
+                                _erpDocNoController.clear();
+                                setState(() {
+                                  selectedRefReceive =
+                                      null;
+                                      selectedRefNo = null; // Clear selectedRefReceive
+                                });
+                                // Any additional reset logic can go here
+                              });
                             } else if (poStatus == '1') {
                               showDialog(
                                 context: context,
