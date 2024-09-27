@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:wms_android/styles.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -183,8 +184,13 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
               const SizedBox(height: 8),
               TextFormField(
                 controller: dateController,
-                readOnly: true,
-                onTap: () => _selectDate(context),
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
+                  LengthLimitingTextInputFormatter(
+                      8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
+                  DateInputFormatter(), // กำหนดรูปแบบ __/__/____
+                ],
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   filled: true,
@@ -193,13 +199,38 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                   labelStyle: const TextStyle(
                     color: Colors.black87,
                   ),
-                  suffixIcon: Icon(
-                    Icons.calendar_today,
-                    color: Colors.black87,
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
+                    onPressed: () async {
+                      // กดไอคอนเพื่อเปิด date picker
+                      _selectDate(context);
+                    },
                   ),
                 ),
+                onChanged: (value) {
+                  selectedDate = value;
+                  print('selectedDate : $selectedDate');
+                },
               ),
-              const SizedBox(height: 20),
+              // TextFormField(
+              //   controller: dateController,
+              //   readOnly: true,
+              //   onTap: () => _selectDate(context),
+              //   decoration: InputDecoration(
+              //     border: InputBorder.none,
+              //     filled: true,
+              //     fillColor: Colors.white,
+              //     labelText: 'วันที่เบิกจ่าย',
+              //     labelStyle: const TextStyle(
+              //       color: Colors.black87,
+              //     ),
+              //     suffixIcon: Icon(
+              //       Icons.calendar_today,
+              //       color: Colors.black87,
+              //     ),
+              //   ),
+              // ),
+              // const SizedBox(height: 20),
               //////////////////////////////////////////////////////////////
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -261,34 +292,85 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                                 selectedDate = formattedDate;
                               });
 
-                              _navigateToPage(
+                              Navigator.push(
                                 context,
-                                Ssfgdt09lCard(
-                                    pErpOuCode: widget.pErpOuCode,
-                                    pWareCode: widget.pWareCode,
-                                    pOuCode: widget.pOuCode,
-                                    pAttr1: widget.pAttr1,
-                                    pAppUser: appUser,
-                                    pFlag: pFlag,
-                                    pStatusDESC: statusDESC,
-                                    pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                                    pDocDate: formattedDate == ''
-                                        ? 'null'
-                                        : formattedDate),
-                              );
+                                MaterialPageRoute(
+                                    builder: (context) => Ssfgdt09lCard(
+                                        pErpOuCode: widget.pErpOuCode,
+                                        pWareCode: widget.pWareCode,
+                                        pOuCode: widget.pOuCode,
+                                        pAttr1: widget.pAttr1,
+                                        pAppUser: appUser,
+                                        pFlag: pFlag,
+                                        pStatusDESC: statusDESC,
+                                        pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                                        pDocDate: formattedDate == ''
+                                            ? 'null'
+                                            : formattedDate)),
+                              ).then((value) async {
+                                // เมื่อกลับมาหน้าเดิม เรียก fetchData
+                                setState(() {
+                                  pSoNo = '';
+                                  selectedDate = '';
+                                  selectedItem = 'ระหว่างบันทึก';
+                                  statusDESC = 'ระหว่างบันทึก';
+                                  dateController.clear();
+                                  pSoNoController.clear();
+                                });
+                              });
+
+                              // _navigateToPage(
+                              //   context,
+                              //   Ssfgdt09lCard(
+                              //       pErpOuCode: widget.pErpOuCode,
+                              //       pWareCode: widget.pWareCode,
+                              //       pOuCode: widget.pOuCode,
+                              //       pAttr1: widget.pAttr1,
+                              //       pAppUser: appUser,
+                              //       pFlag: pFlag,
+                              //       pStatusDESC: statusDESC,
+                              //       pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                              //       pDocDate: formattedDate == ''
+                              //           ? 'null'
+                              //           : formattedDate),
+                              // );
                             } else {
-                              _navigateToPage(
-                                  context,
-                                  Ssfgdt09lCard(
-                                      pErpOuCode: widget.pErpOuCode,
-                                      pWareCode: widget.pWareCode,
-                                      pOuCode: widget.pOuCode,
-                                      pAttr1: widget.pAttr1,
-                                      pAppUser: appUser,
-                                      pFlag: pFlag,
-                                      pStatusDESC: statusDESC,
-                                      pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                                      pDocDate: 'null'));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Ssfgdt09lCard(
+                                        pErpOuCode: widget.pErpOuCode,
+                                        pWareCode: widget.pWareCode,
+                                        pOuCode: widget.pOuCode,
+                                        pAttr1: widget.pAttr1,
+                                        pAppUser: appUser,
+                                        pFlag: pFlag,
+                                        pStatusDESC: statusDESC,
+                                        pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                                        pDocDate: 'null')),
+                              ).then((value) async {
+                                // เมื่อกลับมาหน้าเดิม เรียก fetchData
+                                setState(() {
+                                  pSoNo = '';
+                                  selectedDate = '';
+                                  selectedItem = 'ระหว่างบันทึก';
+                                  statusDESC = 'ระหว่างบันทึก';
+                                  dateController.clear();
+                                  pSoNoController.clear();
+                                });
+                              });
+                              // _navigateToPage(
+                              //     context,
+                              //     Ssfgdt09lCard(
+                              //         pErpOuCode: widget.pErpOuCode,
+                              //         pWareCode: widget.pWareCode,
+                              //         pOuCode: widget.pOuCode,
+                              //         pAttr1: widget.pAttr1,
+                              //         pAppUser: appUser,
+                              //         pFlag: pFlag,
+                              //         pStatusDESC: statusDESC,
+                              //         pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                              //         pDocDate: 'null'));
                             }
                           }
                         : null,
@@ -360,6 +442,38 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
         ),
       ),
       bottomNavigationBar: BottomBar(),
+    );
+  }
+}
+
+class DateInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text;
+
+    // กรองเฉพาะตัวเลข
+    text = text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // จัดรูปแบบเป็น DD/MM/YYYY
+    if (text.length > 2 && text.length <= 4) {
+      text = text.substring(0, 2) + '/' + text.substring(2);
+    } else if (text.length > 4 && text.length <= 8) {
+      text = text.substring(0, 2) +
+          '/' +
+          text.substring(2, 4) +
+          '/' +
+          text.substring(4);
+    }
+
+    // จำกัดความยาวไม่เกิน 10 ตัว (รวม /)
+    if (text.length > 10) {
+      text = text.substring(0, 10);
+    }
+
+    return TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
     );
   }
 }

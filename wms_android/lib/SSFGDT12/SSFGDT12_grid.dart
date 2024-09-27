@@ -256,16 +256,16 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     }
   }
 
-  Future<void> cancelComfirm(String condition) async {
+  Future<void> cancelGrid(String pDocNO) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_SubmitData';
+        'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_CancelGrid';
 
     final headers = {
       'Content-Type': 'application/json',
     };
 
     final body = jsonEncode({
-      'p_doc_no': widget.docNo,
+      'p_doc_no': pDocNO,
       'p_erp_ou_code': widget.pErpOuCode,
     });
     print('Request body: $body');
@@ -289,11 +289,12 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
             vChkStatusCancel = dataSubmit['po_chk_status'];
             showDialogCancelSucceed(
                 statusCancel, messageCancel, vRetCancel, vChkStatusCancel);
+            // fetchData();
           });
         }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
-        print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+        print('ลบข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
       print('Error: $e');
@@ -992,7 +993,9 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      cancelGrid(pDocNO);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
@@ -1044,14 +1047,17 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      _navigateToPage(
-                          context,
-                          SSFGDT12_MAIN(
-                            p_attr1: widget.p_attr1,
-                            pErpOuCode: widget.pErpOuCode,
-                          )
-                          //
-                          );
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      fetchData();
+                      // _navigateToPage(
+                      //     context,
+                      //     SSFGDT12_MAIN(
+                      //       p_attr1: widget.p_attr1,
+                      //       pErpOuCode: widget.pErpOuCode,
+                      //     )
+                      //     //
+                      //     );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,

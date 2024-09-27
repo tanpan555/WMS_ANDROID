@@ -640,7 +640,8 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                     controller: packQtyController,
                     // readOnly: true,
                     decoration: const InputDecoration(
-                      border: InputBorder.none,
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black)),
                       filled: true,
                       fillColor: Colors.white,
                       labelText: 'จำนวนที่จ่าย',

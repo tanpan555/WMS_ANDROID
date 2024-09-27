@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 // import 'dart:ui';
 import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
@@ -48,6 +49,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   String nbCountDate = '';
   String docNo = '';
   String statuForCHK = '';
+  bool chkDate = false;
 
   final FocusNode _focusNode = FocusNode();
   final TextEditingController staffCodeController = TextEditingController();
@@ -230,24 +232,38 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Ssfgdt12Grid(
-                          nbCountStaff: nbCountStaff,
-                          nbCountDate: nbCountDate,
-                          docNo: docNo,
-                          status: status,
-                          wareCode: widget.wareCode,
-                          pErpOuCode: widget.pErpOuCode,
-                          pWareCode: widget.pWareCode,
-                          docDate: docDate,
-                          countStaff: countStaff,
-                          p_attr1: widget.p_attr1,
-                          statuForCHK: statuForCHK,
-                        ),
-                      ),
-                    );
+                    // if (nbCountDate.isNotEmpty) {
+                    setState(() {
+                      RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                      // String messageAlertValueDate =
+                      //     'กรุณากรองวันที่ให้ถูกต้อง';
+                      if (!dateRegExp.hasMatch(nbCountDate)) {
+                        setState(() {
+                          chkDate = true;
+                        });
+                        // showDialogAlert(context, messageAlertValueDate);
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Ssfgdt12Grid(
+                              nbCountStaff: nbCountStaff,
+                              nbCountDate: nbCountDate,
+                              docNo: docNo,
+                              status: status,
+                              wareCode: widget.wareCode,
+                              pErpOuCode: widget.pErpOuCode,
+                              pWareCode: widget.pWareCode,
+                              docDate: docDate,
+                              countStaff: countStaff,
+                              p_attr1: widget.p_attr1,
+                              statuForCHK: statuForCHK,
+                            ),
+                          ),
+                        );
+                      }
+                    });
+                    // }
                   },
                   style: AppStyles.NextButtonStyle(),
                   child: Image.asset(
@@ -301,6 +317,14 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                     //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
                       controller: nbCountDateController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter
+                            .digitsOnly, // ยอมรับเฉพาะตัวเลข
+                        LengthLimitingTextInputFormatter(
+                            8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
+                        DateInputFormatter(), // กำหนดรูปแบบ __/__/____
+                      ],
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         filled: true,
@@ -320,8 +344,37 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                       ),
                       onChanged: (value) {
                         nbCountDate = value;
+                        print('nbCountDate : $nbCountDate');
+
+                        setState(() {
+                          RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                          // String messageAlertValueDate =
+                          //     'กรุณากรองวันที่ให้ถูกต้อง';
+                          if (!dateRegExp.hasMatch(nbCountDate)) {
+                            // setState(() {
+                            //   chkDate == true;
+                            // });
+                            // showDialogAlert(context, messageAlertValueDate);
+                          } else {
+                            setState(() {
+                              chkDate = false;
+                            });
+                          }
+                        });
                       },
                     ),
+                    chkDate == true
+                        ? const Padding(
+                            padding: EdgeInsets.only(top: 4.0),
+                            child: Text(
+                              'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                              ),
+                            ))
+                        : SizedBox.shrink(),
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
@@ -458,6 +511,92 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
         ),
       ),
       bottomNavigationBar: BottomBar(),
+    );
+  }
+
+  void showDialogAlert(
+    BuildContext context,
+    String messageAlert,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Row(
+            children: [
+              Icon(
+                Icons.notification_important,
+                color: Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'แจ้งเตือน',
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    messageAlert,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text('ย้อนกลับ'),
+                      ),
+                    ],
+                  )
+                ])),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class DateInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text;
+
+    // กรองเฉพาะตัวเลข
+    text = text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // จัดรูปแบบเป็น DD/MM/YYYY
+    if (text.length > 2 && text.length <= 4) {
+      text = text.substring(0, 2) + '/' + text.substring(2);
+    } else if (text.length > 4 && text.length <= 8) {
+      text = text.substring(0, 2) +
+          '/' +
+          text.substring(2, 4) +
+          '/' +
+          text.substring(4);
+    }
+
+    // จำกัดความยาวไม่เกิน 10 ตัว (รวม /)
+    if (text.length > 10) {
+      text = text.substring(0, 10);
+    }
+
+    return TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
     );
   }
 }

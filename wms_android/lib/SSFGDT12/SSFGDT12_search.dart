@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // import 'dart:convert';
 import 'dart:ui';
 import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
 import 'package:wms_android/styles.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:wms_android/bottombar.dart';
@@ -111,6 +112,13 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
             //////////////////////////////////////////////////////////////////////////////////////
             TextFormField(
               controller: _dateController,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
+                LengthLimitingTextInputFormatter(
+                    8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
+                DateInputFormatter(), // กำหนดรูปแบบ __/__/____
+              ],
               decoration: InputDecoration(
                 border: InputBorder.none,
                 filled: true,
@@ -129,6 +137,7 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
               ),
               onChanged: (value) {
                 selectedDate = value;
+                print('selectedDate : $selectedDate');
               },
             ),
             const SizedBox(height: 8),
@@ -182,30 +191,6 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Container(
-                //   decoration: BoxDecoration(
-                //     color: Colors.grey[300],
-                //     borderRadius: BorderRadius.circular(8.0),
-                //   ),
-                //   child: IconButton(
-                //     iconSize: 20.0,
-                //     icon: Image.asset(
-                //       'assets/images/eraser_red.png',
-                //       width: 50.0,
-                //       height: 25.0,
-                //     ),
-                //     onPressed: () {
-                //       _controller.clear();
-                //       _dateController.clear();
-                //       setState(() {
-                //         pDocNo = '';
-                //         selectedDate = '';
-                //         selectedItem = 'รอตรวจนับ';
-                //         status = 'N';
-                //       });
-                //     },
-                //   ),
-                // ),
                 ElevatedButton(
                   onPressed: () {
                     _controller.clear();
@@ -230,20 +215,44 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 /// //////////////////////////////////////////////////////
                 ElevatedButton(
                   onPressed: () {
-                    _navigateToPage(
-                        context,
-                        Ssfgdt12Card(
-                          docNo: pDocNo,
-                          date: selectedDate,
-                          status: status,
-                          pWareCode: widget.pWareCode,
-                          p_flag: p_flag,
-                          browser_language: globals.BROWSER_LANGUAGE,
-                          pErpOuCode: widget.pErpOuCode,
-                          p_attr1: widget.p_attr1,
-                        )
-                        //
-                        );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Ssfgdt12Card(
+                                docNo: pDocNo,
+                                date: selectedDate,
+                                status: status,
+                                pWareCode: widget.pWareCode,
+                                p_flag: p_flag,
+                                browser_language: globals.BROWSER_LANGUAGE,
+                                pErpOuCode: widget.pErpOuCode,
+                                p_attr1: widget.p_attr1,
+                              )),
+                    ).then((value) async {
+                      // เมื่อกลับมาหน้าเดิม เรียก fetchData
+                      setState(() {
+                        pDocNo = '';
+                        selectedDate = '';
+                        selectedItem = 'รอตรวจนับ';
+                        status = 'N';
+                        _controller.clear();
+                        _dateController.clear();
+                      });
+                    });
+                    // _navigateToPage(
+                    //     context,
+                    //     Ssfgdt12Card(
+                    //       docNo: pDocNo,
+                    //       date: selectedDate,
+                    //       status: status,
+                    //       pWareCode: widget.pWareCode,
+                    //       p_flag: p_flag,
+                    //       browser_language: globals.BROWSER_LANGUAGE,
+                    //       pErpOuCode: widget.pErpOuCode,
+                    //       p_attr1: widget.p_attr1,
+                    //     )
+                    //     //
+                    //     );
                   },
                   style: AppStyles.SearchButtonStyle(),
                   child: Image.asset(
@@ -288,6 +297,38 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
         ),
       ),
       bottomNavigationBar: BottomBar(),
+    );
+  }
+}
+
+class DateInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text;
+
+    // กรองเฉพาะตัวเลข
+    text = text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // จัดรูปแบบเป็น DD/MM/YYYY
+    if (text.length > 2 && text.length <= 4) {
+      text = text.substring(0, 2) + '/' + text.substring(2);
+    } else if (text.length > 4 && text.length <= 8) {
+      text = text.substring(0, 2) +
+          '/' +
+          text.substring(2, 4) +
+          '/' +
+          text.substring(4);
+    }
+
+    // จำกัดความยาวไม่เกิน 10 ตัว (รวม /)
+    if (text.length > 10) {
+      text = text.substring(0, 10);
+    }
+
+    return TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
     );
   }
 }

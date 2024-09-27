@@ -9,6 +9,7 @@ import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:wms_android/styles.dart';
 import 'SSFGDT09L_grid.dart';
 import 'SSFGDT09L_main.dart';
+import 'package:flutter/services.dart';
 
 class Ssfgdt09lForm extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจากเลือ lov
@@ -73,6 +74,8 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
   String deleteStatus = '';
   String deleteMessage = '';
+
+  bool chkDate = false;
 
   TextEditingController custNameController = TextEditingController();
   TextEditingController ouCodeController = TextEditingController();
@@ -635,30 +638,44 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                 // const Spacer(),
                 ElevatedButton(
                   onPressed: () {
-                    if (docNo.isNotEmpty &&
-                        docNo != '' &&
-                        docNo != null &&
-                        docNo != 'null' &&
-                        returnStatusLovDocType.isNotEmpty &&
-                        returnStatusLovDocType != '' &&
-                        returnStatusLovDocType != null &&
-                        returnStatusLovDocType != 'null' &&
-                        crDate.isNotEmpty &&
-                        crDate != '' &&
-                        crDate != null &&
-                        crDate != 'null' &&
-                        returnStatusLovMoDoNo.isNotEmpty &&
-                        returnStatusLovMoDoNo != '' &&
-                        returnStatusLovMoDoNo != null &&
-                        returnStatusLovMoDoNo != 'null') {
-                      chkCust(
-                        shidForChk,
-                        returnStatusLovRefNo.isNotEmpty ? soNoForChk : 'null',
-                        testChk = 1,
-                      );
-                    } else {
-                      showDialogErrorCHK('ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
-                    }
+                    setState(() {
+                      RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                      // String messageAlertValueDate =
+                      //     'กรุณากรองวันที่ให้ถูกต้อง';
+                      if (!dateRegExp.hasMatch(crDate)) {
+                        setState(() {
+                          chkDate = true;
+                        });
+                      } else {
+                        if (docNo.isNotEmpty &&
+                            docNo != '' &&
+                            docNo != null &&
+                            docNo != 'null' &&
+                            returnStatusLovDocType.isNotEmpty &&
+                            returnStatusLovDocType != '' &&
+                            returnStatusLovDocType != null &&
+                            returnStatusLovDocType != 'null' &&
+                            crDate.isNotEmpty &&
+                            crDate != '' &&
+                            crDate != null &&
+                            crDate != 'null' &&
+                            returnStatusLovMoDoNo.isNotEmpty &&
+                            returnStatusLovMoDoNo != '' &&
+                            returnStatusLovMoDoNo != null &&
+                            returnStatusLovMoDoNo != 'null') {
+                          chkCust(
+                            shidForChk,
+                            returnStatusLovRefNo.isNotEmpty
+                                ? soNoForChk
+                                : 'null',
+                            testChk = 1,
+                          );
+                        } else {
+                          showDialogErrorCHK(
+                              'ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
+                        }
+                      }
+                    });
                   },
                   style: AppStyles.NextButtonStyle(),
                   child: Image.asset(
@@ -761,6 +778,14 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                     // -----------------------------
                     TextFormField(
                       controller: crDateController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter
+                            .digitsOnly, // ยอมรับเฉพาะตัวเลข
+                        LengthLimitingTextInputFormatter(
+                            8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
+                        DateInputFormatter(), // กำหนดรูปแบบ __/__/____
+                      ],
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         filled: true,
@@ -780,8 +805,37 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                       ),
                       onChanged: (value) {
                         crDate = value;
+                        print('crDate : $crDate');
+
+                        setState(() {
+                          RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                          // String messageAlertValueDate =
+                          //     'กรุณากรองวันที่ให้ถูกต้อง';
+                          if (!dateRegExp.hasMatch(crDate)) {
+                            // setState(() {
+                            //   chkDate == true;
+                            // });
+                            // showDialogAlert(context, messageAlertValueDate);
+                          } else {
+                            setState(() {
+                              chkDate = false;
+                            });
+                          }
+                        });
                       },
                     ),
+                    chkDate == true
+                        ? const Padding(
+                            padding: EdgeInsets.only(top: 4.0),
+                            child: Text(
+                              'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                              ),
+                            ))
+                        : SizedBox.shrink(),
                     const SizedBox(height: 8),
                     // -----------------------------
                     DropdownSearch<String>(
@@ -1142,5 +1196,37 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
             // ),
           );
         });
+  }
+}
+
+class DateInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text;
+
+    // กรองเฉพาะตัวเลข
+    text = text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // จัดรูปแบบเป็น DD/MM/YYYY
+    if (text.length > 2 && text.length <= 4) {
+      text = text.substring(0, 2) + '/' + text.substring(2);
+    } else if (text.length > 4 && text.length <= 8) {
+      text = text.substring(0, 2) +
+          '/' +
+          text.substring(2, 4) +
+          '/' +
+          text.substring(4);
+    }
+
+    // จำกัดความยาวไม่เกิน 10 ตัว (รวม /)
+    if (text.length > 10) {
+      text = text.substring(0, 10);
+    }
+
+    return TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
   }
 }

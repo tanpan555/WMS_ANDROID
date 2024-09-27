@@ -337,6 +337,8 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
   }
 
   Future<void> chkLocatorForm(String textInput, String textForm) async {
+    print('textInput : $textInput');
+    print('textForm : $textForm');
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ChkLocatorForm/${widget.pErpOuCode}/${widget.pWareCode}/${widget.pDocNo}/$textInput'));
@@ -353,25 +355,45 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             statusChkLocatorForm = dataChkLocatorForm['po_status'];
             messageChkLocatorForm = dataChkLocatorForm['po_message'];
 
+            print('poRet : $poRet');
+            print('statusChkLocatorForm : $statusChkLocatorForm');
+            print('messageChkLocatorForm : $messageChkLocatorForm');
+
             if (statusChkLocatorForm == '0') {
               if (textForm == 'F') {
                 locatorForm = poRet;
                 locatorFormController.text = poRet;
+
+                if (locatorForm.isNotEmpty) {
+                  Navigator.of(context).pop();
+                  locatorFormChk = '';
+                  locatorFormChkController.clear();
+                }
               }
               if (textForm == 'T') {
                 locatorTo = poRet;
                 locatorToController.text = poRet;
+
+                if (locatorTo.isNotEmpty) {
+                  Navigator.of(context).pop();
+                  locatorToChk = '';
+                  locatorToChkController.clear();
+                }
               }
-              Navigator.of(context).pop();
+              // Navigator.of(context).pop();
             }
             if (statusChkLocatorForm == '1') {
               showDialogAlert(context, messageChkLocatorForm);
+              locatorFormChk = '';
+              locatorToChk = '';
+              locatorFormChkController.clear();
+              locatorToChkController.clear();
             }
           });
         }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
-        print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+        print('ดึงข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
       print('Error: $e');
@@ -1054,12 +1076,13 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                     const SizedBox(height: 10),
                     TextFormField(
                       controller: locatorFormChkController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
                         filled: true,
                         fillColor: Colors.white,
                         labelText: 'Current Locator',
-                        labelStyle: const TextStyle(
+                        labelStyle: TextStyle(
                           color: Colors.black87,
                         ),
                       ),
@@ -1079,6 +1102,8 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
+                      locatorFormChkController.clear();
+                      locatorFormChk = '';
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -1135,12 +1160,13 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                     const SizedBox(height: 10),
                     TextFormField(
                       controller: locatorToChkController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
                         filled: true,
                         fillColor: Colors.white,
                         labelText: 'Locator ปลายทาง',
-                        labelStyle: const TextStyle(
+                        labelStyle: TextStyle(
                           color: Colors.black87,
                         ),
                       ),
@@ -1161,6 +1187,8 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
+                      locatorToChkController.clear();
+                      locatorToChk = '';
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
