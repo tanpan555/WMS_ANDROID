@@ -8,6 +8,7 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:intl/intl.dart';
 import 'SSFGDT04_SCANBARCODE.dart';
 import '../styles.dart';
+// import 'package:wms_android/custom_drawer.dart';
 
 class SSFGDT04_GRID extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจาก lov
@@ -309,7 +310,9 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> setQC =
             jsonDecode(utf8.decode(response.bodyBytes));
-        setqc = setQC['v_qc_pass'];
+        setState(() {
+          setqc = setQC['v_qc_pass']; // อัปเดตค่าภายใน setState
+        });
         print('setQC : $setQC type : ${setQC.runtimeType}');
       } else {
         print('setQC Failed to load data. Status code: ${response.statusCode}');
@@ -331,6 +334,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     return Scaffold(
       appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+      // endDrawer: CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -499,7 +503,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 30), // Padding ซ้ายขวา
               child: Text(
-                setqc ?? '', // Text ที่ต้องการแสดง
+                setqc ?? '',
+                //'${widget.setqc}', // Text ที่ต้องการแสดง
                 style: TextStyle(
                   color: Colors.black, // Text color
                   fontWeight: FontWeight.bold,
