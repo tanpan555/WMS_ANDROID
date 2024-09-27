@@ -9,7 +9,7 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGDT04_GRID.dart';
 import 'SSFGDT04_MENU.dart';
 import '../styles.dart';
-import 'package:wms_android/custom_drawer.dart';
+// import 'package:wms_android/custom_drawer.dart';
 // import 'package:dropdown_search/dropdown_search.dart';
 
 class SSFGDT04_FORM extends StatefulWidget {
@@ -374,7 +374,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     return Scaffold(
       appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-      endDrawer: CustomDrawer(),
+      // endDrawer: CustomDrawer(),
       body: fromItems.isEmpty
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
