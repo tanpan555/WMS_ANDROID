@@ -59,12 +59,12 @@ class _BottomBarState extends State<BottomBar> {
           initialChildSize: 1.0,
           minChildSize: 0.41,
           maxChildSize: 1.0,
-          expand: false,
+          expand: true,
           builder: (_, controller) {
             return GestureDetector(
               onTap: () {
                 Navigator.of(context).pop();
-              },
+              }, //close Drawer when tap outside
               child: Stack(
                 children: [
                   Container(
@@ -73,21 +73,21 @@ class _BottomBarState extends State<BottomBar> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      padding: const EdgeInsets.all(16.0),
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      // padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(20),
-                          bottomRight: Radius.circular(20),
-                        ),
+                        color: Colors.grey[300], // Background color of the drawer
                       ),
                       child: ListView(
                         controller: controller,
                         children: [
                           ListTile(
-                            leading: Icon(Icons.logout_outlined),
-                            title: Text('Sign Out'),
+                            leading: Image.asset(
+                              'assets/images/exit.png', // Path to your image asset
+                              width: 25, // Set the width of the image
+                              height: 25, // Set the height of the image
+                            ),
+                            title: Text('Sign Out',style: TextStyle(fontSize: 16),),
                             onTap: () {
                               Navigator.of(context).pop();
                               Navigator.of(context).push(
@@ -97,13 +97,19 @@ class _BottomBarState extends State<BottomBar> {
                               );
                             },
                           ),
+                          const Divider(color: Colors.black26, thickness: 1),
                           ListTile(
-                            leading: Icon(Icons.password_outlined),
-                            title: Text('Change Password'),
+                            leading: Image.asset(
+                              'assets/images/reset-password.png', // Path to your image asset
+                              width: 25, // Set the width of the image
+                              height: 25, // Set the height of the image
+                            ),
+                            title: Text('Change Password',style: TextStyle(fontSize: 16),),
                             onTap: () {
                               print('Change Password');
                             },
                           ),
+                          const Divider(color: Colors.black26, thickness: 1),
                         ],
                       ),
                     ),

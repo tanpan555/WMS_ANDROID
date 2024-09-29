@@ -147,10 +147,10 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
                       },
                       child: Card(
                         elevation: 4.0,
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
+                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                         color: cardColor,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(15.0),
@@ -159,15 +159,16 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
                             children: [
                               Image.asset(
                                 imagePath,
-                                width: 70,
+                                width: 60,
+                                height: 60,
                               ),
                               const SizedBox(height: 10),
                               Text(
                                 item['ware_code'] ?? 'null!!!!!!',
                                 style: const TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 20,
                                   color: Colors.black,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],

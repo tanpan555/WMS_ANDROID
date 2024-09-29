@@ -397,6 +397,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: const Text('สาเหตุการยกเลิก'),
+                                  contentPadding: EdgeInsets.all(
+                                      20), // เพิ่ม padding รอบๆ content
                                   content: SizedBox(
                                     width: 300, // กำหนดความกว้างที่ต้องการ
                                     height: 150, // กำหนดความสูงที่ต้องการ
@@ -406,13 +408,20 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                         DropdownButtonFormField2<String>(
                                           isExpanded: true,
                                           decoration: InputDecoration(
-                                            border: InputBorder.none,
+                                            border: OutlineInputBorder(),
                                             filled: true,
                                             fillColor: Colors.white,
                                             labelText: 'สาเหตุการยกเลิก',
                                             labelStyle: const TextStyle(
                                               fontSize: 14,
                                               color: Colors.black,
+                                            ),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                              vertical:
+                                                  16.0, // เพิ่มความสูงแนวตั้ง
+                                              horizontal:
+                                                  12.0, // เพิ่มความกว้างแนวนอน
                                             ),
                                           ),
                                           items: cancelItems.map((item) {
@@ -422,6 +431,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                   '${item['cancel_code'] ?? 'N/A'} ${item['cancel_desc'] ?? 'N/A'}',
                                               child: Text(
                                                 '${item['cancel_code'] ?? 'N/A'} ${item['cancel_desc'] ?? 'N/A'}',
+                                                // maxLines:
+                                                //     2, // จำกัดให้แสดง 2 บรรทัด
+                                                // overflow: TextOverflow
+                                                //     .ellipsis, // ใช้ ... เมื่อข้อความยาวเกินไป
                                                 style: const TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.normal,
@@ -430,7 +443,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                               ),
                                             );
                                           }).toList(),
-
                                           onChanged: (String? value) {
                                             setState(() {
                                               selectedCancelCode = value;
@@ -441,9 +453,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                           },
                                           value:
                                               selectedCancelCode, // Set the default selected value
-                                          buttonStyleData: const ButtonStyleData(
-                                              // padding: EdgeInsets.only(right: 8),
-                                              ),
+                                          buttonStyleData:
+                                              const ButtonStyleData(),
                                           iconStyleData: const IconStyleData(
                                             icon: Icon(
                                               Icons.arrow_drop_down,
@@ -460,15 +471,23 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                             ),
                                             maxHeight: 150,
                                           ),
+                                          // menuItemStyleData:
+                                          //     const MenuItemStyleData(
+                                          //   padding: EdgeInsets.symmetric(
+                                          //       horizontal: 10, vertical: 5),
+                                          // ),
                                           menuItemStyleData:
                                               const MenuItemStyleData(
                                             padding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 5),
+                                                horizontal: 5),
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
+                                  // actionsPadding: EdgeInsets.symmetric(
+                                  //     horizontal:
+                                  //         10), // เพิ่ม padding รอบๆ actions
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
@@ -498,17 +517,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                       cancel_INHeadNonePO_WMS(
                                                               selectedCancelCode!)
                                                           .then((_) {
-                                                        // Navigator.of(context)
-                                                        //     .pop(
-                                                        //   MaterialPageRoute(
-                                                        //     builder: (context) =>
-                                                        //         SSFGDT04_MENU(
-                                                        //       pWareCode: gb
-                                                        //           .P_WARE_CODE,
-                                                        //       pErpOuCode: gb
-                                                        //           .P_ERP_OU_CODE,
-                                                        //     ),
-                                                        //   ),
                                                         Navigator
                                                             .pushAndRemoveUntil(
                                                           context,
@@ -524,7 +532,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                           (route) =>
                                                               false, // ปิดเส้นทางทั้งหมดก่อนหน้านี้
                                                         );
-                                                        // );
                                                       }).catchError((error) {
                                                         ScaffoldMessenger.of(
                                                                 context)
@@ -635,9 +642,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 _noteController.clear();
                                 _erpDocNoController.clear();
                                 setState(() {
-                                  selectedRefReceive =
-                                      null;
-                                      selectedRefNo = null; // Clear selectedRefReceive
+                                  selectedRefReceive = null;
+                                  selectedRefNo =
+                                      null; // Clear selectedRefReceive
                                 });
                                 // Any additional reset logic can go here
                               });

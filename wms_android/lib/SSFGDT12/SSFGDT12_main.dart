@@ -143,11 +143,11 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
                       },
                       child: Card(
                         elevation: 4.0,
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
+                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                         color: cardColor, // Set card color
                         shape: RoundedRectangleBorder(
                           borderRadius:
-                              BorderRadius.circular(5), // Adjust border radius
+                              BorderRadius.circular(10), // Adjust border radius
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(15.0), // Add padding
@@ -156,15 +156,16 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
                             children: [
                               Image.asset(
                                 imagePath, // ใช้ imagePath ที่กำหนดไว้ใน switch
-                                width: 70, // กำหนดขนาดของภาพ
+                                width: 60, // กำหนดขนาดของภาพ
+                                height: 60,
                               ),
                               const SizedBox(height: 10),
                               Text(
                                 item['ware_code'] ?? 'null!!!!!!',
                                 style: const TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 20,
                                   color: Colors.black,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                               // const SizedBox(height: 10),

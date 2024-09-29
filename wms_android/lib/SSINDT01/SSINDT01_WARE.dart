@@ -88,9 +88,9 @@ class _SSFGDT01_WAREState extends State<SSFGDT01_WARE> {
                         ? GridView.builder(
                             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
-                              childAspectRatio: 1 / 1,
-                              crossAxisSpacing: 8.0,
-                              mainAxisSpacing: 8.0,
+                              crossAxisSpacing: 5,
+                              mainAxisSpacing: 5,
+                              childAspectRatio: 1.0,
                             ),
                             itemCount: data.length,
                             itemBuilder: (context, index) {
@@ -126,8 +126,8 @@ class _SSFGDT01_WAREState extends State<SSFGDT01_WARE> {
                                       Text(
                                         item['ware_code'] ?? 'ware_code = null',
                                         style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ],
