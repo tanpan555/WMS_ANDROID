@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
-// import '../login.dart';
-// import '../custom_drawer.dart';
+import 'package:wms_android/login.dart';
 
 class BottomBar extends StatefulWidget {
   @override
@@ -9,115 +8,78 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<BottomBar> {
-  int _selectedIndex = 0; // Initial index for the bottom bar
+  int _selectedIndex = 0;
   String sessionID = '';
 
   void _onItemTapped(int index) {
     setState(() {
       sessionID = globals.APP_SESSION;
       _selectedIndex = index;
-      print(
-          'sessionID in BottomBar : $sessionID Type : ${sessionID.runtimeType}');
+      print('sessionID in BottomBar : $sessionID Type : ${sessionID.runtimeType}');
     });
 
     switch (index) {
       case 0:
-        // Replace the entire navigation stack with the home page
         Navigator.popUntil(context, (route) => route.isFirst);
         break;
       case 1:
-        _showRightDrawer(context); // Show the drawer from the right
+        _showRightDrawer(context);
         break;
     }
   }
 
   void _showRightDrawer(BuildContext context) {
-final scaffold = Scaffold.of(context);
-    scaffold.openEndDrawer();
-    // showModalBottomSheet(
-    //   context: context,
-    //   isScrollControlled: true,
-    //   backgroundColor: Colors.transparent,
-    //   enableDrag: true,
-    //   builder: (context) {
-    //     return DraggableScrollableSheet(
-    //       initialChildSize: 1.0,
-    //       minChildSize: 0.41,
-    //       maxChildSize: 1.0,
-    //       expand: true,
-    //       builder: (_, controller) {
-    //         return GestureDetector(
-    //           onTap: () {
-    //             Navigator.of(context).pop();
-    //           }, //close Drawer when tap outside
-    //           child: Stack(
-    //             children: [
-    //               Container(
-    //                 color: Colors.transparent,
-    //               ),
-    //               Align(
-    //                 alignment: Alignment.centerRight,
-    //                 child: Container(
-    //                   width: MediaQuery.of(context).size.width * 0.7,
-    //                   // padding: const EdgeInsets.all(8),
-    //                   decoration: BoxDecoration(
-    //                     color: Colors.grey[300], // Background color of the drawer
-    //                   ),
-    //                   child: ListView(
-    //                     controller: controller,
-    //                     children: [
-    //                       ListTile(
-    //                         leading: Image.asset(
-    //                           'assets/images/exit.png', // Path to your image asset
-    //                           width: 25, // Set the width of the image
-    //                           height: 25, // Set the height of the image
-    //                         ),
-    //                         title: Text('Sign Out',style: TextStyle(fontSize: 16),),
-    //                         onTap: () {
-    //                           Navigator.of(context).pop();
-    //                           Navigator.of(context).push(
-    //                             MaterialPageRoute(
-    //                               builder: (context) => LoginPage(),
-    //                             ),
-    //                           );
-    //                         },
-    //                       ),
-    //                       const Divider(color: Colors.black26, thickness: 1),
-    //                       ListTile(
-    //                         leading: Image.asset(
-    //                           'assets/images/reset-password.png', // Path to your image asset
-    //                           width: 25, // Set the width of the image
-    //                           height: 25, // Set the height of the image
-    //                         ),
-    //                         title: Text('Change Password',style: TextStyle(fontSize: 16),),
-    //                         onTap: () {
-    //                           print('Change Password');
-    //                         },
-    //                       ),
-    //                       const Divider(color: Colors.black26, thickness: 1),
-    //                     ],
-    //                   ),
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         );
-    //       },
-    //     );
-    //   },
-    // );
+    showSideSheet(
+      context: context,
+      body: Container(
+        width: MediaQuery.of(context).size.width * 0.7,
+        color: Colors.grey[300],
+        child: ListView(
+          children: [
+            ListTile(
+              leading: Image.asset(
+                'assets/images/exit.png',
+                width: 25,
+                height: 25,
+              ),
+              title: Text('Sign Out', style: TextStyle(fontSize: 16)),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ),
+                );
+              },
+            ),
+            const Divider(color: Colors.black26, thickness: 1),
+            ListTile(
+              leading: Image.asset(
+                'assets/images/reset-password.png',
+                width: 25,
+                height: 25,
+              ),
+              title: Text('Change Password', style: TextStyle(fontSize: 16)),
+              onTap: () {
+                print('Change Password');
+              },
+            ),
+            const Divider(color: Colors.black26, thickness: 1),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60, // Adjust the height of the background area here
+      height: 60,
       decoration: BoxDecoration(
-        color:
-            const Color.fromRGBO(255, 255, 255, 1), // Set the background color
+        color: const Color.fromRGBO(255, 255, 255, 1),
       ),
       child: BottomNavigationBar(
-        showSelectedLabels: false, // Hide selected labels
+        showSelectedLabels: false,
         showUnselectedLabels: false,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -132,11 +94,43 @@ final scaffold = Scaffold.of(context);
         currentIndex: _selectedIndex,
         selectedItemColor: Color.fromARGB(255, 17, 0, 56),
         onTap: _onItemTapped,
-        iconSize: 25, // Set the icon size here
+        iconSize: 25,
         type: BottomNavigationBarType.fixed,
-        backgroundColor:
-            Colors.white, // Set to transparent to use the container's color
+        backgroundColor: Colors.white,
       ),
     );
   }
+}
+
+// Custom SideSheet implementation
+void showSideSheet({
+  required BuildContext context,
+  required Widget body,
+}) {
+  showGeneralDialog(
+    context: context,
+    barrierDismissible: true,
+    barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+    barrierColor: Colors.black54,
+    transitionDuration: const Duration(milliseconds: 300),
+    pageBuilder: (BuildContext buildContext, Animation animation, Animation secondaryAnimation) {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: Material(
+          child: SafeArea(
+            child: body,
+          ),
+        ),
+      );
+    },
+    transitionBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+      return SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(1.0, 0.0),
+          end: Offset.zero,
+        ).animate(animation),
+        child: child,
+      );
+    },
+  );
 }
