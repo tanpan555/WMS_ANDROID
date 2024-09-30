@@ -11,6 +11,7 @@ import 'SSINDT01/SSINDT01_main.dart';
 import 'SSFGDT04/SSFGDT04_main.dart';
 import 'SSFGDT12/SSFGDT12_main.dart';
 import 'SSFGDT09L/SSFGDT09L_main.dart';
+import 'SSFGRP09/SSFGRP09_main.dart';
 import 'SSFGDT04/SSFGDT04_main.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_WARE.dart';
 import 'SSFGDT31/SSFGDT31_MAIN.dart';
@@ -108,6 +109,9 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
             p_attr1: widget.p_attr1, pErpOuCode: widget.p_ou_code);
       case 'SSFGDT31_MAIN Raw Material':
         return SSFGDT31_MAIN();
+      //---------------------------------- ตรวจนับประจำงวด----------------------------\\
+      case 'SSFGRP09_MAIN ':
+        return SSFGRP09_MAIN();
 
       default:
         return null;
@@ -256,7 +260,8 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
                         if (pageWidget != null) {
                           _navigateToPage(context, pageWidget);
                         } else {
-                          print('Page not found for name: $pageName ${widget.p_attr1}');
+                          print(
+                              'Page not found for name: $pageName ${widget.p_attr1}');
                         }
                       },
                     ),
