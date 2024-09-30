@@ -569,11 +569,11 @@ List<Map<String, dynamic>> StaffItems = [];
   }
 }
 
-    Widget _buildDropStaffdownSearch() {
+Widget _buildDropStaffdownSearch() {
   return Padding(
     padding: const EdgeInsets.only(bottom: 8.0),
     child: DropdownSearch<String>(
-      popupProps: PopupProps.menu(
+      popupProps: PopupProps.dialog(
         showSearchBox: true,
         showSelectedItems: true,
         itemBuilder: (context, item, isSelected) {
@@ -589,9 +589,6 @@ List<Map<String, dynamic>> StaffItems = [];
             selected: isSelected,
           );
         },
-        constraints: BoxConstraints(
-          maxHeight: 200,
-        ),
       ),
       items: StaffItems.map((item) => '${item['r']}'.toString()).toList(),
       dropdownDecoratorProps: DropDownDecoratorProps(
@@ -611,26 +608,18 @@ List<Map<String, dynamic>> StaffItems = [];
 
         if (value == '') {
           setState(() {
-            // Handle empty selection if needed
             STAFF_CODE.text = 'null';
           });
         } else {
-         
-
-          final selectedItem = REF_NOItems.firstWhere(
-            (element) => '${element['so_no']}' == value,
+          final selectedItem = StaffItems.firstWhere(
+            (element) => '${element['r']}' == value,
             orElse: () => {'so_no': '', 'emp_name': ''},
           );
-
-          print('Selected SO_NO: ${selectedItem['so_no']}');
-          print('Selected emp_name: ${selectedItem['emp_name']}');
 
           setState(() {
             STAFF_CODE.text = value ?? 'null';
           });
         }
-
-        print(selectedREF_NO);
       },
       selectedItem: selectedREF_NO ?? '',
     ),
@@ -638,11 +627,12 @@ List<Map<String, dynamic>> StaffItems = [];
 }
 
 
-  Widget _buildDropRefdownSearch() {
+
+Widget _buildDropRefdownSearch() {
   return Padding(
     padding: const EdgeInsets.only(bottom: 8.0),
     child: DropdownSearch<String>(
-      popupProps: PopupProps.menu(
+      popupProps: PopupProps.dialog(
         showSearchBox: true,
         showSelectedItems: true,
         itemBuilder: (context, item, isSelected) {
@@ -658,9 +648,6 @@ List<Map<String, dynamic>> StaffItems = [];
             selected: isSelected,
           );
         },
-        constraints: BoxConstraints(
-          maxHeight: 200,
-        ),
       ),
       items: REF_NOItems.map((item) => '${item['so_no']}'.toString()).toList(),
       dropdownDecoratorProps: DropDownDecoratorProps(
@@ -680,26 +667,18 @@ List<Map<String, dynamic>> StaffItems = [];
 
         if (value == '') {
           setState(() {
-            // Handle empty selection if needed
             MO_DO_NO.text = 'null';
           });
         } else {
-         
-
           final selectedItem = REF_NOItems.firstWhere(
             (element) => '${element['so_no']}' == value,
             orElse: () => {'so_no': '', 'cust_name': ''},
           );
 
-          print('Selected SO_NO: ${selectedItem['so_no']}');
-          print('Selected ar_name: ${selectedItem['ar_name']}');
-
           setState(() {
             MO_DO_NO.text = value ?? 'null';
           });
         }
-
-        print(selectedREF_NO);
       },
       selectedItem: selectedREF_NO ?? '',
     ),

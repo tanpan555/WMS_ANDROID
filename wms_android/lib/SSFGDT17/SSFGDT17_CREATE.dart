@@ -321,175 +321,189 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                   steps: [
                   
                     Step(
-                      title: Text(
-                        'เลือก Location ต้นทาง',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      content: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(height: 10),
-                          DropdownSearch<Map<String, dynamic>>(
-                            items: locCode
-                                .map((item) => item as Map<String, dynamic>)
-                                .toList(),
-                            selectedItem:
-                                locCode.isNotEmpty ? locCode.first : null,
-                            itemAsString: (item) => '${item['location_code']}' ?? '',
-                            onChanged: (value) {
-                              setState(() {
-                                selectedLocCode = value?['location_code'];
-                              });
-                            },
-                            dropdownBuilder: (context, item) {
-                              if (item == null) {
-                                return Text('เลือก Location ต้นทาง');
-                              }
-                              return ListTile(
-                                title: Text(item['location_code'] ?? ''),
-                                subtitle: Text(item['location_name'] ?? ''),
-                              );
-                            },
-                            dropdownDecoratorProps: DropDownDecoratorProps(
-                              dropdownSearchDecoration: InputDecoration(
-                                labelText: "เลือก Location ต้นทาง",
-                                border: OutlineInputBorder(),
-                                labelStyle: TextStyle(
-                                    color: Colors.black, fontSize: 16),
-                                hintStyle: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                            popupProps: PopupProps.menu(
-                              showSearchBox: true,
-                              searchFieldProps: TextFieldProps(
-                                decoration: InputDecoration(
-                                  hintText: "ค้นหาตำแหน่ง",
-                                  hintStyle: TextStyle(color: Colors.black),
-                                ),
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              constraints: BoxConstraints(
-                                maxHeight: 250,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+  title: Text(
+    'เลือก Location ต้นทาง',
+    style: TextStyle(color: Colors.black),
+  ),
+  content: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      SizedBox(height: 10),
+      DropdownSearch<Map<String, dynamic>>(
+        items: locCode
+            .map((item) => item as Map<String, dynamic>)
+            .toList(),
+        selectedItem: locCode.isNotEmpty ? locCode.first : null,
+        itemAsString: (item) => '${item['location_code']}' ?? '',
+        onChanged: (value) {
+          setState(() {
+            selectedLocCode = value?['location_code'];
+          });
+        },
+        dropdownBuilder: (context, item) {
+          if (item == null) {
+            return Text('เลือก Location ต้นทาง');
+          }
+          return ListTile(
+            title: Text(item['location_name'] ?? ''),
+          );
+        },
+        dropdownDecoratorProps: DropDownDecoratorProps(
+          dropdownSearchDecoration: InputDecoration(
+            labelText: "เลือก Location ต้นทาง",
+            border: OutlineInputBorder(),
+            labelStyle: TextStyle(
+                color: Colors.black, fontSize: 16),
+            hintStyle: TextStyle(color: Colors.black),
+          ),
+        ),
+        popupProps: PopupProps.dialog(
+          showSearchBox: true,
+          searchFieldProps: TextFieldProps(
+            decoration: InputDecoration(
+              hintText: "ค้นหาตำแหน่ง",
+              hintStyle: TextStyle(color: Colors.black),
+              border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0), // Rounded corners
+     
+    ),
+            ),
+            style: TextStyle(color: Colors.black),
+          ),
+          constraints: BoxConstraints(
+            maxHeight: 300,
+          ),
+        ),
+      ),
+    ],
+  ),
+),
+
                     Step(
-                      title: Text(
-                        'เลือกคลังปลายทาง',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      content: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(height: 10),
-                          DropdownSearch<Map<String, dynamic>>(
-                            items: whOUTCode
-                                .map((item) => item as Map<String, dynamic>)
-                                .toList(),
-                            selectedItem:
-                                whOUTCode.isNotEmpty ? whOUTCode.first : null,
-                            itemAsString: (item) => '${item['ware_code']} - ${item['ware_name']}' ?? '',
-                            onChanged: (value) {
-                              setState(() {
-                                selectedwhOUTCode = value?['ware_code'];
-                                fetchLocationOutCodes();
-                              });
-                            },
-                            dropdownBuilder: (context, item) {
-                              if (item == null) {
-                                return Text('เลือกคลังปลายทาง');
-                              }
-                              return ListTile(
-                                title: Text(item['ware_code'] ?? ''),
-                                subtitle: Text(item['ware_name'] ?? ''),
-                              );
-                            },
-                            dropdownDecoratorProps: DropDownDecoratorProps(
-                              dropdownSearchDecoration: InputDecoration(
-                                labelText: "เลือกคลังปลายทาง",
-                                border: OutlineInputBorder(),
-                                labelStyle: TextStyle(
-                                    color: Colors.black, fontSize: 16),
-                                hintStyle: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                            popupProps: PopupProps.menu(
-                              showSearchBox: true,
-                              searchFieldProps: TextFieldProps(
-                                decoration: InputDecoration(
-                                  hintText: "ค้นหาคลังออก",
-                                  hintStyle: TextStyle(color: Colors.black),
-                                ),
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              constraints: BoxConstraints(
-                                maxHeight: 250,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+  title: Text(
+    'เลือกคลังปลายทาง',
+    style: TextStyle(color: Colors.black),
+  ),
+  content: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      SizedBox(height: 10),
+      DropdownSearch<Map<String, dynamic>>(
+        items: whOUTCode
+            .map((item) => item as Map<String, dynamic>)
+            .toList(),
+        selectedItem:
+            whOUTCode.isNotEmpty ? whOUTCode.first : null,
+        itemAsString: (item) => '${item['ware_name']}' ?? '',
+        onChanged: (value) {
+          setState(() {
+            selectedwhOUTCode = value?['ware_code'];
+            fetchLocationOutCodes();
+          });
+        },
+        dropdownBuilder: (context, item) {
+          if (item == null) {
+            return Text('เลือกคลังปลายทาง');
+          }
+          return ListTile(
+            // title: Text(item['ware_code'] ?? ''),
+            subtitle: Text(item['ware_name'] ?? ''),
+          );
+        },
+        dropdownDecoratorProps: DropDownDecoratorProps(
+          dropdownSearchDecoration: InputDecoration(
+            labelText: "เลือกคลังปลายทาง",
+            border: OutlineInputBorder(),
+            labelStyle: TextStyle(
+                color: Colors.black, fontSize: 16),
+            hintStyle: TextStyle(color: Colors.black),
+          ),
+        ),
+        popupProps: PopupProps.dialog(
+          showSearchBox: true,
+          searchFieldProps: TextFieldProps(
+            decoration: InputDecoration(
+              hintText: "ค้นหาคลังออก",
+              hintStyle: TextStyle(color: Colors.black),
+               border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0), // Rounded corners
+     
+    ),
+            ),
+            
+            style: TextStyle(color: Colors.black),
+          ),
+          constraints: BoxConstraints(
+            maxHeight: 300,
+          ),
+        ),
+      ),
+    ],
+  ),
+),
+
                     Step(
-                      title: Text(
-                        'เลือก Location ปลายทาง',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      content: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(height: 10),
-                          DropdownSearch<Map<String, dynamic>>(
-                            items: locOUTCode
-                                .map((item) => item as Map<String, dynamic>)
-                                .toList(),
-                            selectedItem:
-                                locOUTCode.isNotEmpty ? locOUTCode.first : null,
-                            itemAsString: (item) => item['location_code'] ?? '',
-                            onChanged: (value) {
-                              setState(() {
-                                selectedLocOUTCode =
-                                    value?['location_code'] ?? '';
-                              });
-                            },
-                            dropdownBuilder: (context, item) {
-                              if (item == null) {
-                                return Text('เลือก Location ปลายทาง');
-                              }
-                              return ListTile(
-                                title: Text(item['location_code'] ?? ''),
-                                subtitle: Text(item['location_name'] ?? ''),
-                              );
-                            },
-                            dropdownDecoratorProps: DropDownDecoratorProps(
-                              dropdownSearchDecoration: InputDecoration(
-                                labelText: "เลือก Location ปลายทาง",
-                                border: OutlineInputBorder(),
-                                labelStyle: TextStyle(
-                                    color: Colors.black, fontSize: 16),
-                                hintStyle: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                            popupProps: PopupProps.menu(
-                              showSearchBox: true,
-                              searchFieldProps: TextFieldProps(
-                                decoration: InputDecoration(
-                                  hintText: "ค้นหาตำแหน่งออก",
-                                  hintStyle: TextStyle(color: Colors.black),
-                                ),
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              constraints: BoxConstraints(
-                                maxHeight: 250,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+  title: Text(
+    'เลือก Location ปลายทาง',
+    style: TextStyle(color: Colors.black),
+  ),
+  content: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      SizedBox(height: 10),
+      DropdownSearch<Map<String, dynamic>>(
+        items: locOUTCode
+            .map((item) => item as Map<String, dynamic>)
+            .toList(),
+        selectedItem: locOUTCode.isNotEmpty ? locOUTCode.first : null,
+        itemAsString: (item) => item['location_code'] ?? '',
+        onChanged: (value) {
+          setState(() {
+            selectedLocOUTCode = value?['location_code'] ?? '';
+          });
+        },
+        dropdownBuilder: (context, item) {
+          if (item == null) {
+            return Text('เลือก Location ปลายทาง');
+          }
+          return ListTile(
+            title: Text(item['location_code'] ?? ''),
+            subtitle: Text(item['location_name'] ?? ''),
+          );
+        },
+        dropdownDecoratorProps: DropDownDecoratorProps(
+          dropdownSearchDecoration: InputDecoration(
+            labelText: "เลือก Location ปลายทาง",
+            border: OutlineInputBorder(),
+            labelStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+            ),
+            hintStyle: TextStyle(color: Colors.black),
+          ),
+        ),
+        popupProps: PopupProps.dialog(
+          showSearchBox: true,
+          searchFieldProps: TextFieldProps(
+            decoration: InputDecoration(
+              hintText: "ค้นหาตำแหน่งออก",
+              hintStyle: TextStyle(color: Colors.black),
+              border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0),
+     
+    ),
+            ),
+            style: TextStyle(color: Colors.black),
+          ),
+          constraints: BoxConstraints(
+            maxHeight: 300,
+          ),
+        ),
+      ),
+    ],
+  ),
+),
+
                   ],
                   controlsBuilder:
                       (BuildContext context, ControlsDetails controls) {
@@ -527,4 +541,6 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
       bottomNavigationBar: BottomBar(),
     );
   }
+
+  
 }

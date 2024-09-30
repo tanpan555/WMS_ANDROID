@@ -700,13 +700,23 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     );
   }
 
-  Widget _buildDropdownSearch() {
+Widget _buildDropdownSearch() {
   return Padding(
     padding: const EdgeInsets.only(bottom: 8.0),
     child: DropdownSearch<String>(
-      popupProps: PopupProps.menu(
+      popupProps: PopupProps.dialog(
         showSearchBox: true,
         showSelectedItems: true,
+        searchFieldProps: TextFieldProps(
+          decoration: InputDecoration(
+            hintText: "ค้นหาเลขที่คำสั่งผลิต", // Hint text for the search field
+            hintStyle: TextStyle(fontSize: 12.0, color: Colors.grey), // Style for the hint text
+            border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0),
+     
+    ),
+          ),
+        ),
         itemBuilder: (context, item, isSelected) {
           final itemData = moDoNoItems.firstWhere(
             (element) => '${element['schid']}' == item,
@@ -720,7 +730,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
           );
         },
         constraints: BoxConstraints(
-          maxHeight: 200,
+          maxHeight: 250,
         ),
       ),
       items: [
@@ -771,49 +781,75 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
 }
 
 
-  Widget _buildDropdownForRefNo() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: DropdownSearch<String>(
-        popupProps: PopupProps.menu(
-          showSearchBox: true,
-          showSelectedItems: true,
-        ),
-        items: [
-          // '',
-          ...REF_NOItems.map((item) => item['doc_no'].toString()).toList(),
-        ],
-        dropdownDecoratorProps: DropDownDecoratorProps(
-          dropdownSearchDecoration: InputDecoration(
-            border: InputBorder.none,
-            labelText: "เลขที่เอกสารอ้างอิง",
-            filled: true,
-            fillColor: Colors.white,
+
+Widget _buildDropdownForRefNo() {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: DropdownSearch<String>(
+      popupProps: PopupProps.dialog(
+        showSearchBox: true,
+        showSelectedItems: true,
+        searchFieldProps: TextFieldProps(
+          decoration: InputDecoration(
+            hintText: "ค้นหาเลขที่เอกสารอ้างอิง",
+            hintStyle: TextStyle(color: Colors.grey),
+            border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0),
+     
+    ),
           ),
         ),
-        onChanged: (String? value) {
-          setState(() {
-            if (value == '') {
-              doc_no = null;
-              REF_NO.text = 'null';
-            } else {
-              doc_no = value;
-              REF_NO.text = value ?? 'null';
-            }
-          });
-        },
-        selectedItem: doc_no ?? '',
       ),
-    );
-  }
+      items: [
+        // '',
+        ...REF_NOItems.map((item) => item['doc_no'].toString()).toList(),
+      ],
+      dropdownDecoratorProps: DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+          border: InputBorder.none,
+          labelText: "เลขที่เอกสารอ้างอิง",
+          filled: true,
+          fillColor: Colors.white,
+          
+        ),
+      ),
+      onChanged: (String? value) {
+        setState(() {
+          if (value == '') {
+            doc_no = null;
+            REF_NO.text = 'null';
+          } else {
+            doc_no = value;
+            REF_NO.text = value ?? 'null';
+          }
+        });
+      },
+      selectedItem: doc_no ?? '',
+    ),
+  );
+}
+
+
 
 Widget _buildDropdownForDocType() {
   return Padding(
     padding: const EdgeInsets.only(bottom: 8.0),
     child: DropdownSearch<String>(
-      popupProps: PopupProps.menu(
+      popupProps: PopupProps.dialog(
         showSearchBox: true,
         showSelectedItems: true,
+        searchFieldProps: TextFieldProps(
+          decoration: InputDecoration(
+            hintText: "ค้นหาประเภทการจ่าย", // Hint text added here
+            hintStyle: TextStyle(color: Colors.grey),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+        ),
+        constraints: BoxConstraints(
+          maxHeight: 250, // Set the max height to 250
+        ),
         itemBuilder: (context, item, isSelected) {
           return ListTile(
             title: Text(item),
@@ -822,7 +858,6 @@ Widget _buildDropdownForDocType() {
         },
       ),
       items: [
-        // '',
         ...statusItems.map((item) => item['doc_desc'].toString()).toList(),
       ],
       dropdownDecoratorProps: DropDownDecoratorProps(
@@ -857,6 +892,9 @@ Widget _buildDropdownForDocType() {
     ),
   );
 }
+
+
+
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';

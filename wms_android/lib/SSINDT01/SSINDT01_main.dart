@@ -108,7 +108,7 @@ Future<void> fetchWareCodes([String? url]) async {
   });
 
   final String requestUrl = url ??
-      'http://172.16.0.82:8888/apex/wms/c/Card_list_01/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue';
+      'http://172.16.0.82:8888/apex/wms/SSINDT01/SSINDT01_Card_list/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue';
 
   try {
     final response = await http.get(Uri.parse(requestUrl));
@@ -128,7 +128,7 @@ Future<void> fetchWareCodes([String? url]) async {
         nextLink = getLink(links, 'next');
         prevLink = getLink(links, 'prev');
         isLoading = false;
-        print('http://172.16.0.82:8888/apex/wms/c/Card_list_01/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue');
+        print('http://172.16.0.82:8888/apex/wms/SSINDT01/SSINDT01_Card_list/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue');
       });
     } else {
       // Handle HTTP error responses

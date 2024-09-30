@@ -63,6 +63,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   final TextEditingController updDateController = TextEditingController();
   final TextEditingController crDateController = TextEditingController();
 
+  final TextEditingController _searchController = TextEditingController();
+
   final DateFormat displayFormat = DateFormat("dd/MM/yyyy");
   final DateFormat apiFormat = DateFormat("MM/dd/yyyy");
 
@@ -701,42 +703,127 @@ Widget _buildFormFields() {
           readOnly: true,
         ),
         const SizedBox(height: 8.0),
-        Container(
-          decoration: BoxDecoration(
-            color: Color.fromRGBO(23, 21, 59, 1),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: DropdownButtonFormField<String>(
-            decoration: const InputDecoration(
-              labelText: 'ประเภทการรับ',
-              filled: true,
-              fillColor: Colors.white,
-              border: InputBorder.none,
-              labelStyle: TextStyle(color: Colors.black),
+        Padding(
+  padding: const EdgeInsets.symmetric(vertical: 0),
+  child: GestureDetector(
+    onTap: () {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
             ),
-            value: selectedPoType,
-            items: poType.map<DropdownMenuItem<String>>((dynamic value) {
-              return DropdownMenuItem<String>(
-                value: value['po_type_code'],
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  child: Text(
-                    value['po_type_code'],
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: Colors.black),
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return Container(
+                  padding: const EdgeInsets.all(16),
+                  height: 300, // Adjust the height as needed
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'เลือกประเภทการรับ',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      // Optional: Search field for filtering items
+                      TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: 'ค้นหา',
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (query) {
+                          setState(() {});
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: poType
+                              .where((item) {
+                                final poTypeCode =
+                                    item['po_type_code'].toString();
+                                final searchQuery =
+                                    _searchController.text.trim();
+
+                                return poTypeCode
+                                    .contains(searchQuery); // Filtering
+                              })
+                              .toList()
+                              .length,
+                          itemBuilder: (context, index) {
+                            final filteredItems = poType.where((item) {
+                              final poTypeCode =
+                                  item['po_type_code'].toString();
+                              final searchQuery =
+                                  _searchController.text.trim();
+                              return poTypeCode.contains(searchQuery);
+                            }).toList();
+
+                            final item = filteredItems[index];
+                            final poTypeCode = item['po_type_code'].toString();
+
+                            return ListTile(
+                              title: Text(
+                                poTypeCode,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              onTap: () {
+                                Navigator.of(context).pop();
+                                setState(() {
+                                  selectedPoType = poTypeCode;
+                                  poTypeCodeController.text = poTypeCode;
+                                });
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                selectedPoType = newValue;
-                poTypeCodeController.text = newValue ?? '';
-              });
-            },
-            dropdownColor: Color.fromRGBO(255, 255, 255, 1),
+                );
+              },
+            ),
+          );
+        },
+      );
+    },
+    child: AbsorbPointer(
+      child: TextField(
+        decoration: InputDecoration(
+          labelText: 'ประเภทการรับ',
+          filled: true,
+          fillColor: Colors.white,
+          border: InputBorder.none,
+          labelStyle: TextStyle(color: Colors.black),
+          suffixIcon: Icon(
+            Icons.arrow_drop_down,
+            color: Color.fromARGB(255, 113, 113, 113),
           ),
         ),
+        controller: TextEditingController(text: selectedPoType),
+      ),
+    ),
+  ),
+),
+
         const SizedBox(height: 8.0),
         TextFormField(
           controller: receiveDateController,
