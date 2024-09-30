@@ -7,6 +7,7 @@ import 'dart:ui';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import '../styles.dart';
+import 'package:flutter/services.dart';
 
 class SSFGDT04_SEARCH extends StatefulWidget {
   final String pWareCode;
@@ -155,6 +156,13 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _dateController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
+                  LengthLimitingTextInputFormatter(
+                      8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
+                  DateInputFormatter(), // กำหนดรูปแบบ __/__/____
+                ],
                   onTap: () {
                     // อนุญาตให้ผู้ใช้กรอกวันที่เอง
                     _dateController.selection = TextSelection(
@@ -175,7 +183,12 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                           context), // คลิกที่ไอคอนเพื่อเปิด DatePicker
                     ),
                   ),
-                  keyboardType: TextInputType.datetime,
+                  onChanged: (value) {
+                    setState(() {
+                      _dateController.text = value;
+                      print('selectedDate : $selectedDate');
+                    });
+                  },
                 ),
                 const SizedBox(height: 10),
                 Row(
@@ -194,44 +207,45 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                       },
                       child: Image.asset('assets/images/eraser_red.png',
                           width: 50, height: 25),
-                          style: AppStyles.EraserButtonStyle(),
-                      // style: ElevatedButton.styleFrom(
-                      //   backgroundColor: Colors.grey[300],
-                      //   padding: EdgeInsets.all(10),
-                      //   shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(10)),
-                      // ),
+                      style: AppStyles.EraserButtonStyle(),
                     ),
                     const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: selectedItem.isNotEmpty
                           ? () {
-                              _navigateToPage(
-                                context,
-                                SSFGDT04_CARD(
-                                  pFlag: pFlag,
-                                  soNo: pSoNo,
-                                  date:
-                                      selectedDate, // Use current date if no date is selected
-                                  status: status,
-                                  pWareCode: widget.pWareCode,
-                                  pErpOuCode: widget.pErpOuCode,
-                                  pAppUser: appUser,
-                                ),
-                              );
+                              // ตรวจสอบว่ามีการกรอกวันที่หรือไม่
+                              if (_dateController.text.isNotEmpty) {
+                                // จัดรูปแบบวันที่ dd/MM/yyyy สำหรับการแสดงผล
+                                DateTime parsedDate = DateFormat('dd/MM/yyyy')
+                                    .parse(_dateController.text);
+
+                                // ส่งค่าเป็น dd-MM-yyyy
+                                String formattedDateForSearch =
+                                    DateFormat('dd-MM-yyyy').format(parsedDate);
+
+                                // ส่งค่าผ่าน _navigateToPage
+                                _navigateToPage(
+                                  context,
+                                  SSFGDT04_CARD(
+                                    pFlag: pFlag,
+                                    soNo: pSoNo,
+                                    date:
+                                        formattedDateForSearch, // ส่งรูปแบบ dd-MM-yyyy
+                                    status: status,
+                                    pWareCode: widget.pWareCode,
+                                    pErpOuCode: widget.pErpOuCode,
+                                    pAppUser: appUser,
+                                  ),
+                                );
+                              }
                             }
                           : null,
-                      child: Image.asset('assets/images/search_color.png',
-                          width: 50, height: 25),
-                          style: AppStyles.SearchButtonStyle(),
-                      // style: ElevatedButton.styleFrom(
-                      //   backgroundColor:
-                      //       const Color.fromARGB(255, 255, 255, 255),
-                      //   padding: const EdgeInsets.all(10),
-                      //   shape: RoundedRectangleBorder(
-                      //     borderRadius: BorderRadius.circular(10),
-                      //   ),
-                      // ),
+                      child: Image.asset(
+                        'assets/images/search_color.png',
+                        width: 50,
+                        height: 25,
+                      ),
+                      style: AppStyles.SearchButtonStyle(),
                     ),
                   ],
                 ),
@@ -241,6 +255,39 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
         ),
       ),
       bottomNavigationBar: BottomBar(),
+    );
+  }
+}
+
+
+class DateInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text;
+
+    // กรองเฉพาะตัวเลข
+    text = text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // จัดรูปแบบเป็น DD/MM/YYYY
+    if (text.length > 2 && text.length <= 4) {
+      text = text.substring(0, 2) + '/' + text.substring(2);
+    } else if (text.length > 4 && text.length <= 8) {
+      text = text.substring(0, 2) +
+          '/' +
+          text.substring(2, 4) +
+          '/' +
+          text.substring(4);
+    }
+
+    // จำกัดความยาวไม่เกิน 10 ตัว (รวม /)
+    if (text.length > 10) {
+      text = text.substring(0, 10);
+    }
+
+    return TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
     );
   }
 }

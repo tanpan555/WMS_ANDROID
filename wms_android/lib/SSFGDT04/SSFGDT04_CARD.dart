@@ -6,6 +6,7 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGDT04_FORM.dart';
 import 'package:url_launcher/url_launcher.dart';
+// import 'package:wms_android/custom_drawer.dart';
 // import 'package:intl/intl.dart';
 
 class SSFGDT04_CARD extends StatefulWidget {
@@ -115,15 +116,13 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   }
 
   Future<void> fetchData() async {
-    await Future.delayed(Duration(seconds: 2));
-    final String endpoint = widget.soNo.isNotEmpty
-        ? 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}'
-        : 'http://172.16.0.82:8888/apex/wms/SSFGDT12/selectCard/${gb.P_ERP_OU_CODE}/$data_null/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}';
+        // ? 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}'
+        // : 'http://172.16.0.82:8888/apex/wms/SSFGDT12/selectCard/${gb.P_ERP_OU_CODE}/$data_null/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}';
 
     // print('Fetching data from: $endpoint');
 
     try {
-      final response = await http.get(Uri.parse(endpoint));
+      final response = await http.get(Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -148,6 +147,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
       print('ERROR IN Fetch Data: $e');
     }
   }
+
 
   Future<void> checkStatusCard(
       String pReceiveNo, String po_doc_no, String po_doc_type) async {
@@ -462,6 +462,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      // endDrawer:CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: isLoading
