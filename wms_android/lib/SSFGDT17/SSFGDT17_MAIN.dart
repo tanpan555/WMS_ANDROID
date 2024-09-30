@@ -187,7 +187,7 @@ String? doc_out;
  Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
   Map<String, Color> statusColors = {
     'ยกเลิก': Colors.grey,
-    'รับโอน': Colors.green,
+    'รับโอนแล้ว': Colors.green,
     'ปกติ': Colors.yellow,
   };
 

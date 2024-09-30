@@ -24,7 +24,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
   final _dateController = TextEditingController();
   DateTime? _selectedDate;
   String? selectedValue;
-  final List<String> statusItems = ['ทั้งหมด', 'ปกติ', 'รับโอนแล้ว', 'ยกเลิก'];
+  final List<String> statusItems = ['ทั้งหมด', 'ปกติ',  'ยกเลิก','รับโอนแล้ว'];
   String? docData;
   String? docData1;
 
