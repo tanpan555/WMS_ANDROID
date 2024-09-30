@@ -51,6 +51,29 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
     }
   }
 
+  // Future<void> _selectDate(BuildContext context) async {
+  //   DateTime? pickedDate = await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime(2000),
+  //     lastDate: DateTime(2101),
+  //     initialEntryMode: DatePickerEntryMode.calendarOnly,
+  //   );
+
+  //   if (pickedDate != null) {
+  //     // Format the date as dd-MM-yyyy for internal use
+  //     String formattedDateForSearch =
+  //         DateFormat('dd-MM-yyyy').format(pickedDate);
+  //     // Format the date as dd/MM/yyyy for display
+  //     String formattedDateForDisplay =
+  //         DateFormat('dd/MM/yyyy').format(pickedDate);
+
+  //     setState(() {
+  //       _dateController.text = formattedDateForDisplay;
+  //       selectedDate = formattedDateForSearch;
+  //     });
+  //   }
+  // }
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -61,17 +84,13 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
     );
 
     if (pickedDate != null) {
-      // Format the date as dd-MM-yyyy for internal use
-      String formattedDateForSearch =
-          DateFormat('dd-MM-yyyy').format(pickedDate);
-      // Format the date as dd/MM/yyyy for display
-      String formattedDateForDisplay =
-          DateFormat('dd/MM/yyyy').format(pickedDate);
-
-      setState(() {
-        _dateController.text = formattedDateForDisplay;
-        selectedDate = formattedDateForSearch;
-      });
+      String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
+      if (mounted) {
+        setState(() {
+          _dateController.text = formattedDate;
+          selectedDate = _dateController.text;
+        });
+      }
     }
   }
 
@@ -158,11 +177,11 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   controller: _dateController,
                   keyboardType: TextInputType.number,
                   inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
-                  LengthLimitingTextInputFormatter(
-                      8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
-                  DateInputFormatter(), // กำหนดรูปแบบ __/__/____
-                ],
+                    FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
+                    LengthLimitingTextInputFormatter(
+                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
+                    DateInputFormatter(), // กำหนดรูปแบบ __/__/____
+                  ],
                   onTap: () {
                     // อนุญาตให้ผู้ใช้กรอกวันที่เอง
                     _dateController.selection = TextSelection(
@@ -210,33 +229,118 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                       style: AppStyles.EraserButtonStyle(),
                     ),
                     const SizedBox(width: 20),
+                    // ElevatedButton(
+                    //   onPressed: selectedItem.isNotEmpty
+                    //       ? () {
+                    //           // ตรวจสอบว่ามีการกรอกวันที่หรือไม่
+                    //           if (_dateController.text.isNotEmpty) {
+                    //             // จัดรูปแบบวันที่ dd/MM/yyyy สำหรับการแสดงผล
+                    //             DateTime parsedDate = DateFormat('dd/MM/yyyy')
+                    //                 .parse(_dateController.text);
+
+                    //             // ส่งค่าเป็น dd-MM-yyyy
+                    //             String formattedDateForSearch =
+                    //                 DateFormat('dd-MM-yyyy').format(parsedDate);
+
+                    //             // ส่งค่าผ่าน _navigateToPage
+                    //             _navigateToPage(
+                    //               context,
+                    //               SSFGDT04_CARD(
+                    //                 pFlag: pFlag,
+                    //                 soNo: pSoNo,
+                    //                 date:
+                    //                     formattedDateForSearch, // ส่งรูปแบบ dd-MM-yyyy
+                    //                 status: status,
+                    //                 pWareCode: widget.pWareCode,
+                    //                 pErpOuCode: widget.pErpOuCode,
+                    //                 pAppUser: appUser,
+                    //               ),
+                    //             );
+                    //           }
+                    //         }
+                    //       : null,
+                    //   child: Image.asset(
+                    //     'assets/images/search_color.png',
+                    //     width: 50,
+                    //     height: 25,
+                    //   ),
+                    //   style: AppStyles.SearchButtonStyle(),
+                    // ),
                     ElevatedButton(
                       onPressed: selectedItem.isNotEmpty
                           ? () {
-                              // ตรวจสอบว่ามีการกรอกวันที่หรือไม่
+                              // Check if the date is in the expected format
                               if (_dateController.text.isNotEmpty) {
-                                // จัดรูปแบบวันที่ dd/MM/yyyy สำหรับการแสดงผล
-                                DateTime parsedDate = DateFormat('dd/MM/yyyy')
-                                    .parse(_dateController.text);
+                                try {
+                                  // Parse the date from the controller's text
+                                  DateTime parsedDate = DateFormat('dd/MM/yyyy')
+                                      .parse(_dateController.text);
+                                  // Format the date as dd-MM-yyyy for sending
+                                  String formattedDateForSearch =
+                                      DateFormat('dd-MM-yyyy')
+                                          .format(parsedDate);
 
-                                // ส่งค่าเป็น dd-MM-yyyy
-                                String formattedDateForSearch =
-                                    DateFormat('dd-MM-yyyy').format(parsedDate);
-
-                                // ส่งค่าผ่าน _navigateToPage
-                                _navigateToPage(
+                                  // Navigate to the next page
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SSFGDT04_CARD(
+                                        pErpOuCode: widget.pErpOuCode,
+                                        pWareCode: widget.pWareCode,
+                                        pAppUser: appUser,
+                                        pFlag: pFlag,
+                                        soNo: pSoNo.isEmpty ? 'null' : pSoNo,
+                                        date: formattedDateForSearch,
+                                        status: status,
+                                      ),
+                                    ),
+                                  ).then((value) async {
+                                    // Reset values when coming back to this page
+                                    setState(() {
+                                      pSoNo = '';
+                                      selectedDate = 'null';
+                                      selectedItem = dropdownItems
+                                          .first; // Reset to a valid dropdown value
+                                      status = '0'; // Reset status to default
+                                      _dateController.clear();
+                                      _controller.clear();
+                                    });
+                                  });
+                                } catch (e) {
+                                  // Handle the parsing error, e.g., show a message to the user
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Invalid date format. Please use dd/MM/yyyy.')),
+                                  );
+                                }
+                              } else {
+                                // Navigate without a date
+                                Navigator.push(
                                   context,
-                                  SSFGDT04_CARD(
-                                    pFlag: pFlag,
-                                    soNo: pSoNo,
-                                    date:
-                                        formattedDateForSearch, // ส่งรูปแบบ dd-MM-yyyy
-                                    status: status,
-                                    pWareCode: widget.pWareCode,
-                                    pErpOuCode: widget.pErpOuCode,
-                                    pAppUser: appUser,
+                                  MaterialPageRoute(
+                                    builder: (context) => SSFGDT04_CARD(
+                                      pErpOuCode: widget.pErpOuCode,
+                                      pWareCode: widget.pWareCode,
+                                      pAppUser: appUser,
+                                      pFlag: pFlag,
+                                      soNo: pSoNo.isEmpty ? 'null' : pSoNo,
+                                      date: 'null',
+                                      status: status,
+                                    ),
                                   ),
-                                );
+                                ).then((value) async {
+                                  // Reset values when coming back to this page
+                                  setState(() {
+                                    pSoNo = '';
+                                    selectedDate = 'null';
+                                    selectedItem = dropdownItems
+                                        .first; // Reset to a valid dropdown value
+                                    status = '0'; // Reset status to default
+                                    _dateController.clear();
+                                    _controller.clear();
+                                  });
+                                });
                               }
                             }
                           : null,
@@ -258,7 +362,6 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
     );
   }
 }
-
 
 class DateInputFormatter extends TextInputFormatter {
   @override
