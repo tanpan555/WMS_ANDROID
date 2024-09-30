@@ -8,6 +8,7 @@ import 'test_menu_lv2.dart';
 import 'login.dart';
 import 'bottombar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
+import 'package:wms_android/custom_drawer.dart';
 
 void main() {
   runApp(const MyApp());
@@ -102,6 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(title: 'Home'),
+      endDrawer: CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(

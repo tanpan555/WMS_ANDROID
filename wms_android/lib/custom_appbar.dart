@@ -11,31 +11,31 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      centerTitle: false,
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-      iconTheme: const IconThemeData(
-        color: Colors.white,
-        size: 18, // Set the back icon color to white
-      ),
-    // final isHomePage = ModalRoute.of(context)?.settings.name == '/home';
     // return AppBar(
-    //   automaticallyImplyLeading: false,
     //   centerTitle: false,
-
     //   backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-    //   leading: isHomePage
-    //     // padding: const EdgeInsets.symmetric(horizontal: 0),
-    //       ? null//SizedBox()
-    //       : IconButton(
-    //     icon: Icon(
-    //       Icons.arrow_back_outlined,
-    //       color: Colors.white,
-    //     ),
-    //     onPressed: () {
-    //       Navigator.pop(context);
-    //     },
+    //   iconTheme: const IconThemeData(
+    //     color: Colors.white,
+    //     size: 18, // Set the back icon color to white
     //   ),
+    final isHomePage = ModalRoute.of(context)?.settings.name == '/home';
+    return AppBar(
+      automaticallyImplyLeading: false, //กำหนดการแสดงของ icon
+      centerTitle: false,
+
+      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+      leading: isHomePage
+        // padding: const EdgeInsets.symmetric(horizontal: 0),
+          ? null//SizedBox()
+          : IconButton(
+        icon: Icon(
+          Icons.arrow_back_outlined,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
       title: GestureDetector(
         onTap: () {
           // Navigate back to the main page
