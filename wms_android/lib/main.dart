@@ -124,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   itemBuilder: (context, index) {
                     final item = dataMenu[index];
 
-                    Color cardColor;
+                    Color? cardColor;
                     String imagePath;
                     String p_attr1;
                     String p_ou_code;
@@ -132,25 +132,25 @@ class _MyHomePageState extends State<MyHomePage> {
                     switch (item['card_value']) {
                       case 'WMS คลังวัตถุดิบ':
                         imagePath = 'assets/images/open-box2.png';
-                        cardColor = Colors.greenAccent;
+                        cardColor = Colors.green[200];
                         p_attr1 = globals.Raw_Material;
                         p_ou_code = globals.P_ERP_OU_CODE;
                         break;
                       case 'WMS คลังสำเร็จรูป':
                         imagePath = 'assets/images/box1.png';
-                        cardColor = Colors.blueAccent;
+                        cardColor = Colors.blue[200];
                         p_attr1 = globals.Finishing;
                         p_ou_code = globals.P_ERP_OU_CODE;
                         break;
                       case 'พิมพ์ Tag':
                         imagePath = 'assets/images/barcode-scanner.png';
-                        cardColor = Colors.pinkAccent;
+                        cardColor = Colors.pink[200];
                         p_attr1 = '';
                         p_ou_code = globals.P_ERP_OU_CODE;
                         break;
                       case 'ตรวจนับประจำงวด':
                         imagePath = 'assets/images/open-box2.png';
-                        cardColor = Colors.orangeAccent;
+                        cardColor = Colors.orange[200];
                         p_attr1 = '';
                         p_ou_code = globals.P_ERP_OU_CODE;
                         break;
