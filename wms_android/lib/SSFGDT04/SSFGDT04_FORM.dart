@@ -433,8 +433,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                 '${item['cancel_code'] ?? 'N/A'} ${item['cancel_desc'] ?? 'N/A'}',
                                                 // maxLines:
                                                 //     2, // จำกัดให้แสดง 2 บรรทัด
-                                                // overflow: TextOverflow
-                                                //     .ellipsis, // ใช้ ... เมื่อข้อความยาวเกินไป
+                                                overflow: TextOverflow
+                                                    .ellipsis, // ใช้ ... เมื่อข้อความยาวเกินไป
                                                 style: const TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.normal,
