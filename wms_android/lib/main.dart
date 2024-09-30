@@ -103,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(title: 'Home'),
-      endDrawer: CustomDrawer(),
+      // endDrawer: CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -183,7 +183,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                       child: Card(
                         elevation: 4.0,
-                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 5),
                         color: cardColor, // Set card color
                         shape: RoundedRectangleBorder(
                           borderRadius:
