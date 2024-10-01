@@ -10,10 +10,15 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+
 class SSFGDT17_CREATE extends StatefulWidget {
   final String pWareCode;
   final String? pWareName;
-  const SSFGDT17_CREATE({Key? key, required this.pWareCode, required this.pWareName,}) : super(key: key);
+  const SSFGDT17_CREATE({
+    Key? key,
+    required this.pWareCode,
+    required this.pWareName,
+  }) : super(key: key);
 
   @override
   _SSFGDT17_CREATEState createState() => _SSFGDT17_CREATEState();
@@ -38,7 +43,6 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     fetchwhOUTCodes();
     fetchDocType();
     fetchLocationCodes();
-   
   }
 
   Future<void> fetchwhCodes() async {
@@ -126,7 +130,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> fetchLocationOutCodes() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/LOACATION/$selectedwhCode'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/LOACATION/$selectedwhOUTCode'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -225,21 +229,21 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     }
   }
 
-  @override
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: const CustomAppBar(title: 'Move Locator',),
+      appBar: const CustomAppBar(
+        title: 'Move Locator',
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              margin: const EdgeInsets.only(
-                  bottom: 8.0), // Add some space below the container
-              color: const Color.fromARGB(255, 255, 242,
-                  204), // Customize the background color of the container
+              margin: const EdgeInsets.only(bottom: 8.0),
+              color: const Color.fromARGB(255, 255, 242, 204),
               child: Center(
                 child: Text(
                   'คลังสินค้า $selectedwhCode',
@@ -263,9 +267,6 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                   onStepTapped: (index) {
                     setState(() {
                       _currentStep = index;
-                      if (_currentStep == 1) {
-                        fetchwhOUTCodes();
-                      }
                     });
                   },
                   onStepContinue: () async {
@@ -278,9 +279,6 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                       final whOUTCode = selectedwhOUTCode ?? 'null';
                       final LocOUTCode = selectedLocOUTCode ?? 'null';
 
-                      print(
-                          'WH: $selectedwhCode \n Loc: $LocCode \n WhOUT: $whOUTCode \n LocOUT: $LocOUTCode');
-
                       await create_NewINXfer_WMS(
                         LocCode,
                         whOUTCode,
@@ -290,25 +288,19 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => SSFGDT17_FORM(
-                                po_doc_no: po_doc_no ?? '',
-                                po_doc_type: po_doc_type,
-                                LocCode: LocCode,
-                                selectedwhCode: selectedwhCode,
-                                selectedLocCode: selectedLocCode,
-                                whOUTCode: whOUTCode,
-                                LocOUTCode: LocOUTCode,
-                                pWareCode: widget.pWareCode,
-                                pWareName: widget.pWareName,),
+                              po_doc_no: po_doc_no ?? '',
+                              po_doc_type: po_doc_type,
+                              LocCode: LocCode,
+                              selectedwhCode: selectedwhCode,
+                              selectedLocCode: selectedLocCode,
+                              whOUTCode: whOUTCode,
+                              LocOUTCode: LocOUTCode,
+                              pWareCode: widget.pWareCode,
+                              pWareName: widget.pWareName,
+                            ),
                           ),
                         );
                       }
-
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(
-                      //     content: Text(
-                      //         'Doc_No $po_doc_no /n Doc_Type $po_doc_type '),
-                      //   ),
-                      // );
                     }
                   },
                   onStepCancel: () {
@@ -319,208 +311,68 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                     }
                   },
                   steps: [
-                  
                     Step(
-  title: Text(
-    'เลือก Location ต้นทาง',
-    style: TextStyle(color: Colors.black),
-  ),
-  content: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      SizedBox(height: 10),
-      DropdownSearch<Map<String, dynamic>>(
-        items: locCode
-            .map((item) => item as Map<String, dynamic>)
-            .toList(),
-        selectedItem: locCode.isNotEmpty ? locCode.first : null,
-        itemAsString: (item) => '${item['location_code']}' ?? '',
-        onChanged: (value) {
-          setState(() {
-            selectedLocCode = value?['location_code'];
-          });
-        },
-        dropdownBuilder: (context, item) {
-          if (item == null) {
-            return Text('เลือก Location ต้นทาง');
-          }
-          return ListTile(
-            title: Text(item['location_name'] ?? ''),
-          );
-        },
-        dropdownDecoratorProps: DropDownDecoratorProps(
-          dropdownSearchDecoration: InputDecoration(
-            labelText: "เลือก Location ต้นทาง",
-            border: OutlineInputBorder(),
-            labelStyle: TextStyle(
-                color: Colors.black, fontSize: 16),
-            hintStyle: TextStyle(color: Colors.black),
-          ),
-        ),
-        popupProps: PopupProps.dialog(
-          showSearchBox: true,
-          searchFieldProps: TextFieldProps(
-            decoration: InputDecoration(
-              hintText: "ค้นหาตำแหน่ง",
-              hintStyle: TextStyle(color: Colors.black),
-              border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0), // Rounded corners
-     
-    ),
-            ),
-            style: TextStyle(color: Colors.black),
-          ),
-          constraints: BoxConstraints(
-            maxHeight: 300,
-          ),
-        ),
-      ),
-    ],
-  ),
-),
-
+                      title: Text(
+                        'เลือก Location ต้นทาง',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      content: buildLocationDropdown(
+                        locCode,
+                        selectedLocCode,
+                        (value) {
+                          setState(() {
+                            selectedLocCode = value?['location_code'];
+                          });
+                        },
+                        'เลือก Location ต้นทาง',
+                      ),
+                    ),
                     Step(
-  title: Text(
-    'เลือกคลังปลายทาง',
-    style: TextStyle(color: Colors.black),
-  ),
-  content: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      SizedBox(height: 10),
-      DropdownSearch<Map<String, dynamic>>(
-        items: whOUTCode
-            .map((item) => item as Map<String, dynamic>)
-            .toList(),
-        selectedItem:
-            whOUTCode.isNotEmpty ? whOUTCode.first : null,
-        itemAsString: (item) => '${item['ware_name']}' ?? '',
-        onChanged: (value) {
-          setState(() {
-            selectedwhOUTCode = value?['ware_code'];
-            fetchLocationOutCodes();
-          });
-        },
-        dropdownBuilder: (context, item) {
-          if (item == null) {
-            return Text('เลือกคลังปลายทาง');
-          }
-          return ListTile(
-            // title: Text(item['ware_code'] ?? ''),
-            subtitle: Text(item['ware_name'] ?? ''),
-          );
-        },
-        dropdownDecoratorProps: DropDownDecoratorProps(
-          dropdownSearchDecoration: InputDecoration(
-            labelText: "เลือกคลังปลายทาง",
-            border: OutlineInputBorder(),
-            labelStyle: TextStyle(
-                color: Colors.black, fontSize: 16),
-            hintStyle: TextStyle(color: Colors.black),
-          ),
-        ),
-        popupProps: PopupProps.dialog(
-          showSearchBox: true,
-          searchFieldProps: TextFieldProps(
-            decoration: InputDecoration(
-              hintText: "ค้นหาคลังออก",
-              hintStyle: TextStyle(color: Colors.black),
-               border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0), // Rounded corners
-     
-    ),
-            ),
-            
-            style: TextStyle(color: Colors.black),
-          ),
-          constraints: BoxConstraints(
-            maxHeight: 300,
-          ),
-        ),
-      ),
-    ],
-  ),
-),
-
+                      title: Text(
+                        'เลือกคลังปลายทาง',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      content: buildWarehouseOutDropdown(
+                        whOUTCode,
+                        selectedwhOUTCode,
+                        (value) {
+                          setState(() {
+                            selectedwhOUTCode = value?['ware_code'];
+                            fetchLocationOutCodes();
+                          });
+                        },
+                        'เลือกคลังปลายทาง',
+                      ),
+                    ),
                     Step(
-  title: Text(
-    'เลือก Location ปลายทาง',
-    style: TextStyle(color: Colors.black),
-  ),
-  content: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      SizedBox(height: 10),
-      DropdownSearch<Map<String, dynamic>>(
-        items: locOUTCode
-            .map((item) => item as Map<String, dynamic>)
-            .toList(),
-        selectedItem: locOUTCode.isNotEmpty ? locOUTCode.first : null,
-        itemAsString: (item) => item['location_code'] ?? '',
-        onChanged: (value) {
-          setState(() {
-            selectedLocOUTCode = value?['location_code'] ?? '';
-          });
-        },
-        dropdownBuilder: (context, item) {
-          if (item == null) {
-            return Text('เลือก Location ปลายทาง');
-          }
-          return ListTile(
-            title: Text(item['location_code'] ?? ''),
-            subtitle: Text(item['location_name'] ?? ''),
-          );
-        },
-        dropdownDecoratorProps: DropDownDecoratorProps(
-          dropdownSearchDecoration: InputDecoration(
-            labelText: "เลือก Location ปลายทาง",
-            border: OutlineInputBorder(),
-            labelStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-            ),
-            hintStyle: TextStyle(color: Colors.black),
-          ),
-        ),
-        popupProps: PopupProps.dialog(
-          showSearchBox: true,
-          searchFieldProps: TextFieldProps(
-            decoration: InputDecoration(
-              hintText: "ค้นหาตำแหน่งออก",
-              hintStyle: TextStyle(color: Colors.black),
-              border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-     
-    ),
-            ),
-            style: TextStyle(color: Colors.black),
-          ),
-          constraints: BoxConstraints(
-            maxHeight: 300,
-          ),
-        ),
-      ),
-    ],
-  ),
-),
-
+                      title: Text(
+                        'เลือก Location ปลายทาง',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      content: buildLocationOutDropdown(
+                        locOUTCode,
+                        selectedLocOUTCode,
+                        (value) {
+                          setState(() {
+                            selectedLocOUTCode = value?['location_code'];
+                          });
+                        },
+                        'เลือก Location ปลายทาง',
+                      ),
+                    ),
                   ],
                   controlsBuilder:
                       (BuildContext context, ControlsDetails controls) {
-                    final VoidCallback? onStepContinue =
-                        controls.onStepContinue;
-                    final VoidCallback? onStepCancel = controls.onStepCancel;
-
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         TextButton(
-                          onPressed: onStepCancel,
-                          child: const Text('ยกเลิก'),
+                          onPressed: controls.onStepCancel,
+                          child: const Text('ย้อนกลับ'),
                         ),
                         SizedBox(width: 8.0),
                         ElevatedButton(
-                          onPressed: onStepContinue,
+                          onPressed: controls.onStepContinue,
                           child: Text(
                             _currentStep == 2 ? 'สร้าง' : 'ต่อไป',
                             style: TextStyle(color: Colors.white),
@@ -542,5 +394,160 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     );
   }
 
-  
+  Widget buildLocationDropdown(
+    List<dynamic> items,
+    String? selectedValue,
+    Function(Map<String, dynamic>?) onChanged,
+    String label,
+  ) {
+    return DropdownSearch<Map<String, dynamic>>(
+      items: items.map((item) => item as Map<String, dynamic>).toList(),
+      selectedItem: items.isNotEmpty
+          ? items.firstWhere(
+              (item) => item['location_code'] == selectedValue,
+              orElse: () => items.first,
+            )
+          : null,
+      itemAsString: (item) => '${item['location_code']}' ?? '',
+      onChanged: onChanged,
+      dropdownBuilder: (context, item) {
+        if (item == null) {
+          return Text(label);
+        }
+        return ListTile(
+          title: Text(item['location_name'] ?? ''),
+        );
+      },
+      dropdownDecoratorProps: DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+          labelStyle: TextStyle(color: Colors.black, fontSize: 16),
+          hintStyle: TextStyle(color: Colors.black),
+        ),
+      ),
+      popupProps: PopupProps.dialog(
+        showSearchBox: true,
+        searchFieldProps: TextFieldProps(
+          decoration: InputDecoration(
+            hintText: "ค้นหาตำแหน่ง",
+            hintStyle: TextStyle(color: Colors.black),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+          style: TextStyle(color: Colors.black),
+        ),
+        constraints: BoxConstraints(
+          maxHeight: 300,
+        ),
+      ),
+    );
+  }
+
+  Widget buildWarehouseOutDropdown(
+    List<dynamic> items,
+    String? selectedValue,
+    Function(Map<String, dynamic>?) onChanged,
+    String label,
+  ) {
+    return DropdownSearch<Map<String, dynamic>>(
+      items: items.map((item) => item as Map<String, dynamic>).toList(),
+      selectedItem: items.isNotEmpty
+          ? items.firstWhere(
+              (item) => item['ware_code'] == selectedValue,
+              orElse: () => items.first,
+            )
+          : null,
+      itemAsString: (item) => '${item['ware_name']}' ?? '',
+      onChanged: onChanged,
+      dropdownBuilder: (context, item) {
+        if (item == null) {
+          return Text(label);
+        }
+        return ListTile(
+          subtitle: Text(item['ware_name'] ?? ''),
+        );
+      },
+      dropdownDecoratorProps: DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+          labelStyle: TextStyle(color: Colors.black, fontSize: 16),
+          hintStyle: TextStyle(color: Colors.black),
+        ),
+      ),
+      popupProps: PopupProps.dialog(
+        showSearchBox: true,
+        searchFieldProps: TextFieldProps(
+          decoration: InputDecoration(
+            hintText: "ค้นหาคลังออก",
+            hintStyle: TextStyle(color: Colors.black),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+          style: TextStyle(color: Colors.black),
+        ),
+        constraints: BoxConstraints(
+          maxHeight: 300,
+        ),
+      ),
+    );
+  }
+
+  Widget buildLocationOutDropdown(
+    List<dynamic> items,
+    String? selectedValue,
+    Function(Map<String, dynamic>?) onChanged,
+    String label,
+  ) {
+    return DropdownSearch<Map<String, dynamic>>(
+      items: items.map((item) => item as Map<String, dynamic>).toList(),
+      selectedItem: items.isNotEmpty
+          ? items.firstWhere(
+              (item) => item['location_code'] == selectedValue,
+              orElse: () => items.first,
+            )
+          : null,
+      itemAsString: (item) => item['location_code'] ?? '',
+      onChanged: onChanged,
+      dropdownBuilder: (context, item) {
+        if (item == null) {
+          return Text(label);
+        }
+        return ListTile(
+          title: Text(item['location_code'] ?? ''),
+          subtitle: Text(item['location_name'] ?? ''),
+        );
+      },
+      dropdownDecoratorProps: DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+          labelStyle: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+          ),
+          hintStyle: TextStyle(color: Colors.black),
+        ),
+      ),
+      popupProps: PopupProps.dialog(
+        showSearchBox: true,
+        searchFieldProps: TextFieldProps(
+          decoration: InputDecoration(
+            hintText: "ค้นหาตำแหน่งออก",
+            hintStyle: TextStyle(color: Colors.black),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+          style: TextStyle(color: Colors.black),
+        ),
+        constraints: BoxConstraints(
+          maxHeight: 300,
+        ),
+      ),
+    );
+  }
 }

@@ -146,49 +146,58 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                 ),
                 SizedBox(height: 15),
                 DropdownSearch<String>(
-                  popupProps: PopupProps.menu(
-                    showSearchBox: true,
-                    showSelectedItems: true,
-                    itemBuilder: (context, item, isSelected) {
-                      // Find the corresponding item details from apCodes
-                      final apCodeItem = apCodes.firstWhere(
-                        (element) => element['ap_code'] == item,
-                        orElse: () => {'ap_name': 'No name'},
-                      );
-                      return ListTile(
-                        title: Text(
-                          item,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(
-                          apCodeItem['ap_name'] ?? 'No name',
-                          style: TextStyle(color: Colors.grey, fontSize: 8),
-                        ),
-                        selected: isSelected,
-                      );
-                    },
-                    constraints: BoxConstraints(
-                      maxHeight: 300,
-                    ),
-                  ),
-                  items:
-                      apCodes.map((item) => item['ap_code'] as String).toList(),
-                  dropdownDecoratorProps: DropDownDecoratorProps(
-                    dropdownSearchDecoration: InputDecoration(
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: "ผู้ขาย",
-                      hintText: "เลือกผู้ขาย",
-                    ),
-                  ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      selectedApCode = value ?? 'ทั้งหมด';
-                    });
-                  },
-                  selectedItem: selectedApCode,
-                ),
+  popupProps: PopupProps.menu(
+    showSearchBox: true,
+    showSelectedItems: true,
+    itemBuilder: (context, item, isSelected) {
+      // Find the corresponding item details from apCodes
+      final apCodeItem = apCodes.firstWhere(
+        (element) => element['ap_code'] == item,
+        orElse: () => {'ap_name': 'No name'},
+      );
+      return ListTile(
+        title: Text(
+          item,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          apCodeItem['ap_name'] ?? 'No name',
+          style: TextStyle(color: Colors.grey, fontSize: 8),
+        ),
+        selected: isSelected,
+      );
+    },
+    constraints: BoxConstraints(maxHeight: 300),
+  ),
+  items: apCodes.map((item) => item['ap_code'] as String).toList(),
+  dropdownDecoratorProps: DropDownDecoratorProps(
+    dropdownSearchDecoration: InputDecoration(
+      border: InputBorder.none,
+      filled: true,
+      fillColor: Colors.white,
+      labelText: "ผู้ขาย",
+      hintText: "เลือกผู้ขาย",
+    ),
+  ),
+  // Enable search for both 'ap_code' and 'ap_name'
+  filterFn: (item, filter) {
+    final apCodeItem = apCodes.firstWhere(
+      (element) => element['ap_code'] == item,
+      orElse: () => {'ap_name': ''},
+    );
+    final apCode = item.toLowerCase();
+    final apName = apCodeItem['ap_name']?.toLowerCase() ?? '';
+    final searchLower = filter.toLowerCase();
+    return apCode.contains(searchLower) || apName.contains(searchLower);
+  },
+  onChanged: (String? value) {
+    setState(() {
+      selectedApCode = value ?? 'ทั้งหมด';
+    });
+  },
+  selectedItem: selectedApCode,
+),
+
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _documentNumberController,
