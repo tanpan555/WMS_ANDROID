@@ -230,7 +230,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
               //     ),
               //   ),
               // ),
-              // const SizedBox(height: 20),
+              const SizedBox(height: 20),
               //////////////////////////////////////////////////////////////
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -64,7 +64,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   String vRetCancel = '';
   String vChkStatusCancel = '';
 
-  bool isLoading = false;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -90,6 +90,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   }
 
   Future<void> fetchData() async {
+    isLoading = true;
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectDataGridCard/${widget.pErpOuCode}/${widget.docNo}'));
@@ -102,6 +103,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
           setState(() {
             dataCard =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+            isLoading = false;
           });
         }
         print('dataCard : $dataCard');
@@ -574,7 +576,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.right,
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   TextFormField(
                     controller: diffQtyController,
                     readOnly: true,
@@ -590,35 +592,37 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.right,
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   TextFormField(
                     controller: countQtyController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black)),
                       filled: true,
                       fillColor: Colors.white,
                       labelText: 'จำนวนที่ตรวจได้',
-                      labelStyle: const TextStyle(
+                      labelStyle: TextStyle(
                         color: Colors.black87,
                       ),
                     ),
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.right,
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   TextFormField(
                     controller: remarkController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black)),
                       filled: true,
                       fillColor: Colors.white,
                       labelText: 'หมายเหตุสินค้า',
-                      labelStyle: const TextStyle(
+                      labelStyle: TextStyle(
                         color: Colors.black87,
                       ),
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                 ],
               ),
             ),
@@ -635,7 +639,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     backgroundColor: Colors.white,
                     side: const BorderSide(color: Colors.grey),
                   ),
-                  child: Text(
+                  child: const Text(
                     'ย้อนกลับ',
                   ),
                 ),
@@ -663,7 +667,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     backgroundColor: Colors.white,
                     side: const BorderSide(color: Colors.grey),
                   ),
-                  child: Text(
+                  child: const Text(
                     'บันทึก',
                   ),
                 ),
@@ -680,7 +684,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Row(
+            title: const Row(
               children: [
                 Icon(
                   Icons.notification_important, // ใช้ไอคอนแจ้งเตือน
@@ -690,9 +694,9 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                 Text('แจ้งเตือน'), // ข้อความแจ้งเตือน
               ],
             ),
-            content: SingleChildScrollView(
+            content: const SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0),
                 child: Column(
                   children: [
                     Text('ต้องการยืนยันตรวจนับ หรือไม่ !!!'),
@@ -712,7 +716,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: Text(
+                    child: const Text(
                       'ย้อนกลับ',
                       style: TextStyle(
                         color: Colors.white,
@@ -729,7 +733,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: Text(
+                    child: const Text(
                       'ยืนยัน',
                     ),
                   ),
@@ -745,7 +749,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Row(
+          title: const Row(
             children: [
               Icon(
                 Icons.notification_important,
@@ -761,7 +765,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
+                  const Text(
                     'ตรวจพบสินค้าที่ไม่ระบุจำนวนนับ',
                     style: TextStyle(fontSize: 12),
                   ),
@@ -769,7 +773,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                   DropdownButtonFormField2<String>(
                     value: selectedStatusSubmit,
                     isExpanded: true, // Ensures the dropdown takes full width
-                    style: TextStyle(
+                    style: const TextStyle(
                       overflow: TextOverflow.ellipsis,
                       color: Colors.black87,
                     ),
@@ -826,11 +830,11 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     backgroundColor: Colors.white,
                     side: const BorderSide(color: Colors.grey),
                   ),
-                  child: Text(
+                  child: const Text(
                     'ย้อนกลับ',
                   ),
                 ),
-                SizedBox(width: 8), // Add some spacing between buttons
+                const SizedBox(width: 8), // Add some spacing between buttons
                 ElevatedButton(
                   onPressed: () {
                     submitData(statusCondition);
@@ -888,7 +892,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                 iconData,
                 color: textColor,
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Text(
                 statusText,
                 style: TextStyle(color: textColor),
@@ -921,7 +925,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      side: BorderSide(color: Colors.grey),
+                      side: const BorderSide(color: Colors.grey),
                     ),
                     child: const Text('ย้อนกลับ'),
                   ),
@@ -939,7 +943,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      side: BorderSide(color: Colors.grey),
+                      side: const BorderSide(color: Colors.grey),
                     ),
                     child: const Text('ยืนยัน'),
                   ),
@@ -956,7 +960,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Row(
+            title: const Row(
               children: [
                 Icon(
                   Icons.notification_important,
@@ -966,9 +970,9 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                 Text('แจ้งเตือน'),
               ],
             ),
-            content: SingleChildScrollView(
+            content: const SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0),
                 child: Column(
                   children: [
                     Text('ต้องการยกเลิกยืนยันตรวจนับ หรือไม่ !!!'),
@@ -1021,7 +1025,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Row(
+            title: const Row(
               children: [
                 // Icon(
                 //   Icons.notification_important,
@@ -1036,7 +1040,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    Text('$messageCancel'),
+                    Text(messageCancel),
                   ],
                 ),
               ),

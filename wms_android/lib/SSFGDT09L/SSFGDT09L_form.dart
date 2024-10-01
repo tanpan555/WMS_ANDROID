@@ -93,6 +93,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   TextEditingController docDateController = TextEditingController();
 
   TextEditingController _searchController = TextEditingController();
+  TextEditingController cancelController = TextEditingController();
 
   @override
   void initState() {
@@ -733,6 +734,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         labelStyle: TextStyle(
                           color: Colors.black87,
                         ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
                       ),
                     ),
 
@@ -757,8 +762,8 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                           color: Colors.black87,
                         ),
                         suffixIcon: IconButton(
-                          icon:
-                              Icon(Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
+                          icon: const Icon(
+                              Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
                           onPressed: () async {
                             // กดไอคอนเพื่อเปิด date picker
                             _selectDate(context);
@@ -797,7 +802,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                 fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
                               ),
                             ))
-                        : SizedBox.shrink(),
+                        : const SizedBox.shrink(),
                     const SizedBox(height: 8),
                     // -----------------------------
                     // DropdownSearch<String>(
@@ -870,6 +875,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         labelText: 'เลขที่เอกสารอ้างอิง',
                         labelStyle: TextStyle(
                           color: Colors.black87,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
                         ),
                       ),
                     ),
@@ -952,6 +961,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         labelText: 'เลขที่คำสั่งผลผลิต *',
                         labelStyle: TextStyle(
                           color: Colors.black87,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
                         ),
                       ),
                     ),
@@ -1048,55 +1061,78 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                     // Text('ตรวจพบสินค้าที่ไม่ระบุจำนวนนับ'),
                     // const SizedBox(height: 8),
                     /////////////////////////////////////////////////
-                    DropdownSearch<String>(
-                      popupProps: PopupProps.menu(
-                        showSearchBox: true,
-                        showSelectedItems: true,
-                        itemBuilder: (context, item, isSelected) {
-                          return ListTile(
-                            title: Text(item),
-                            selected: isSelected,
-                          );
-                        },
-                        constraints: BoxConstraints(
-                          maxHeight: 250,
-                        ),
-                      ),
-                      items: dataLovCancel
-                          .map<String>((item) => '${item['d']}')
-                          .toList(),
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                          border: InputBorder.none,
-                          filled: true,
-                          fillColor: Colors.white,
-                          labelText: 'สาเหตุการยกเลิก',
-                          labelStyle: const TextStyle(
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectLovCancel = value;
+                    // DropdownSearch<String>(
+                    //   popupProps: PopupProps.menu(
+                    //     showSearchBox: true,
+                    //     showSelectedItems: true,
+                    //     itemBuilder: (context, item, isSelected) {
+                    //       return ListTile(
+                    //         title: Text(item),
+                    //         selected: isSelected,
+                    //       );
+                    //     },
+                    //     constraints: BoxConstraints(
+                    //       maxHeight: 250,
+                    //     ),
+                    //   ),
+                    //   items: dataLovCancel
+                    //       .map<String>((item) => '${item['d']}')
+                    //       .toList(),
+                    //   dropdownDecoratorProps: DropDownDecoratorProps(
+                    //     dropdownSearchDecoration: InputDecoration(
+                    //       border: InputBorder.none,
+                    //       filled: true,
+                    //       fillColor: Colors.white,
+                    //       labelText: 'สาเหตุการยกเลิก',
+                    //       labelStyle: const TextStyle(
+                    //         color: Colors.black87,
+                    //       ),
+                    //     ),
+                    //   ),
+                    //   onChanged: (String? value) {
+                    //     setState(() {
+                    //       selectLovCancel = value;
 
-                          // Find the selected item
-                          var selectedItem = dataLovCancel.firstWhere(
-                            (item) => '${item['d']}' == value,
-                            orElse: () => <String, dynamic>{}, // แก้ไข orElse
-                          );
-                          // Update variables based on selected item
-                          if (selectedItem.isNotEmpty) {
-                            returnStatusLovCancel = selectedItem['r'] ?? '';
-                          }
-                        });
-                        print(
-                            'dataLovCancel in body: $dataLovCancel type: ${dataLovCancel.runtimeType}');
-                        // print(selectedItem);
-                        print(
-                            'returnStatusLovCancel in body: $returnStatusLovCancel type: ${returnStatusLovCancel.runtimeType}');
-                      },
-                      selectedItem: selectLovCancel,
+                    //       // Find the selected item
+                    //       var selectedItem = dataLovCancel.firstWhere(
+                    //         (item) => '${item['d']}' == value,
+                    //         orElse: () => <String, dynamic>{}, // แก้ไข orElse
+                    //       );
+                    //       // Update variables based on selected item
+                    //       if (selectedItem.isNotEmpty) {
+                    //         returnStatusLovCancel = selectedItem['r'] ?? '';
+                    //       }
+                    //     });
+                    //     print(
+                    //         'dataLovCancel in body: $dataLovCancel type: ${dataLovCancel.runtimeType}');
+                    //     // print(selectedItem);
+                    //     print(
+                    //         'returnStatusLovCancel in body: $returnStatusLovCancel type: ${returnStatusLovCancel.runtimeType}');
+                    //   },
+                    //   selectedItem: selectLovCancel,
+                    // ),
+                    TextFormField(
+                      controller: cancelController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchCancel(),
+                      // onTap: () => showDialogDropdownSearchMoDoNo(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'เลขที่คำสั่งผลผลิต *',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////
@@ -1532,6 +1568,118 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                   // print(selectedItem);
                                   print(
                                       'returnStatusLovDocType in body: $returnStatusLovDocType type: ${returnStatusLovDocType.runtimeType}');
+                                  _searchController.clear();
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void showDialogDropdownSearchCancel() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'สาเหตุการยกเลิก',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _searchController.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // ช่องค้นหา
+                    TextField(
+                      controller: _searchController,
+                      decoration: const InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final filteredItems = dataLovCancel.where((item) {
+                            final docString = '${item['d']}'.toLowerCase();
+                            final searchQuery =
+                                _searchController.text.trim().toLowerCase();
+                            return docString.contains(searchQuery);
+                          }).toList();
+
+                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          if (filteredItems.isEmpty) {
+                            return const Center(
+                              child: Text('NO DATA FOUND'),
+                            );
+                          }
+
+                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final doc = '${item['d']}';
+                              final returnCode = '${item['r']}';
+
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  '${item['d']}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    selectLovCancel = doc;
+                                    cancelController.text = doc;
+                                    returnStatusLovCancel = returnCode;
+                                  });
+                                  print(
+                                      'dataLovCancel in body: $dataLovCancel type: ${dataLovCancel.runtimeType}');
+                                  // print(selectedItem);
+                                  print(
+                                      'returnStatusLovCancel in body: $returnStatusLovCancel type: ${returnStatusLovCancel.runtimeType}');
                                   _searchController.clear();
                                 },
                               );
