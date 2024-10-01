@@ -283,7 +283,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
           'P_REF_RECEIVE': selectedRefReceive,
           'P_ORDER_NO': _oderNoController.text,
           'P_MO_DO_NO': _moDoNoController.text,
-          'P_STAFF_CODE': _staffCodeController.text,
+          'P_STAFF_CODE': selectedSaffCode,
           'P_NOTE': _noteController.text,
           'APP_USER': gb.APP_USER,
           'P_DOC_NO': po_doc_no,
@@ -303,6 +303,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     print('pWareCode: ${widget.pWareCode}');
     print('ref_no: ${selectedRefReceive}');
     print('mo_do_no: ${_moDoNoController.text}');
+    print('staff_code: ${selectedSaffCode}');
     // print('P_REF_RECEIVE: ${selectedRefReceive}');
 
     if (response.statusCode == 200) {
@@ -436,7 +437,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                 overflow: TextOverflow
                                                     .ellipsis, // ใช้ ... เมื่อข้อความยาวเกินไป
                                                 style: const TextStyle(
-                                                  fontSize: 12,
+                                                  fontSize: 14,
                                                   fontWeight: FontWeight.normal,
                                                   color: Colors.black,
                                                 ),
@@ -639,12 +640,12 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 // Clear the screen or reset values after returning
                                 _refNoController.clear();
                                 _moDoNoController.clear();
-                                _noteController.clear();
+                                // _noteController.clear();
                                 _erpDocNoController.clear();
                                 setState(() {
-                                  selectedRefReceive = null;
-                                  selectedRefNo =
-                                      null; // Clear selectedRefReceive
+                                  // selectedRefReceive = null;
+                                  // selectedRefNo =
+                                  //     null; // Clear selectedRefReceive
                                 });
                                 // Any additional reset logic can go here
                               });
@@ -1412,7 +1413,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                 onTap: () {
                                                   Navigator.of(context).pop();
                                                   setState(() {
-                                                    selectedSaffCode = empName;
+                                                    selectedSaffCode = empId;
                                                     _staffCodeController.text =
                                                         empName;
                                                     fetchSaffCodeItems();

@@ -10,6 +10,8 @@ import 'dart:convert';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:wms_android/main.dart';
 import '../styles.dart';
+import 'package:intl/intl.dart';
+// import 'package:wms_android/custom_drawer.dart';
 
 class SSFGDT04_SCANBARCODE extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจาก lov
@@ -48,20 +50,14 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
   TextEditingController _balQtyController = TextEditingController();
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  final NumberFormat numberFormat = NumberFormat('#,###');
   // เพิ่ม Controller สำหรับการค้นหา
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   fetchlocatorItems();
-  // }
   @override
   void initState() {
     super.initState();
     currentSessionID = SessionManager().sessionID;
-    print('BARCODE  =============================');
     print('pWareCode: ${widget.pWareCode}');
-    // print('$pBarcode');
 
     print(_locatorBarcodeController.text);
     if (_locatorBarcodeController.text == 'null') {
@@ -131,10 +127,18 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
           po_status = barCodeItems['po_status'] ?? '';
           po_message = barCodeItems['po_message'] ?? '';
           _lotNumberController.text = barCodeItems['po_lot_number'] ?? '';
-          _quantityController.text = barCodeItems['po_quantity'] ?? '';
+          // _quantityController.text = barCodeItems['po_quantity'] ?? '';
+          // Format the quantity
+          double quantity =
+              double.tryParse(barCodeItems['po_quantity'] ?? '0') ?? 0;
+          _quantityController.text = numberFormat.format(quantity);
+
           _currLotController.text = barCodeItems['po_curr_loc'] ?? '';
           _balLotController.text = barCodeItems['po_bal_lot'] ?? '';
-          _balQtyController.text = barCodeItems['po_bal_qty'] ?? '';
+          // _balQtyController.text = barCodeItems['po_bal_qty'] ?? '';
+          double balQty =
+              double.tryParse(barCodeItems['po_bal_qty'] ?? '0') ?? 0;
+          _balQtyController.text = numberFormat.format(balQty);
         });
       } else {
         throw Exception('${response.statusCode}');
@@ -144,12 +148,9 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
     }
   }
 
-  // String? po_doc_no;
-  // String? p_barcode;
   String? p_dest_location;
   String? poStatus;
   String? poMessage;
-  // String? po_last_move;
 
   Future<void> scan_INmove_Location(String? lcbarcode) async {
     final url =
@@ -179,8 +180,6 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         setState(() {
-          // po_doc_no = responseData['${widget.po_doc_no}'];
-          // po_last_move = responseData['po_last_move'];
           p_dest_location = responseData['p_dest_location'];
           poStatus = responseData['po_status'];
           poMessage = responseData['po_message'];
@@ -194,7 +193,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
         // ตรวจสอบสถานะ po_status เพื่อแสดง popup หรือเคลียร์ข้อมูลตามที่คุณต้องการ
         if (poStatus == '0') {
-          //   // แสดง popup แจ้งเตือนและเคลียร์ค่าที่หน้าจอ
+          // แสดง popup แจ้งเตือนและเคลียร์ค่าที่หน้าจอ
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -232,7 +231,6 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
               );
             },
           );
-          // print('555555');
         }
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
@@ -244,6 +242,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
   void clearScreen() {
     setState(() {
+      barcodeFocusNode.dispose();
       // ถ้าจำเป็นต้องรีเซ็ต selectedLocator ด้วย
       _locatorBarcodeController.clear();
       selectedLocator = null;
@@ -264,6 +263,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
     return Scaffold(
       appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+      // endDrawer:CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -283,13 +283,11 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                             po_doc_type:
                                 widget.po_doc_type, // ส่งค่า po_doc_type
                             pWareCode: widget.pWareCode,
-                            setqc: widget.setqc,
-                            //                 // p_ref_no: _refNoController.text ?? '',
-                            //                 // mo_do_no: _moDoNoController.text ?? '',
+                            setqc: widget
+                                .setqc, // mo_do_no: _moDoNoController.text ?? '',
                           ),
                         ),
                       );
-                      // await fetchData();
                       // เพิ่มโค้ดสำหรับการทำงานของปุ่มถัดไปที่นี่
                     },
                     child: Image.asset(
@@ -298,14 +296,6 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                       height: 20, // ปรับขนาดตามที่ต้องการ
                     ),
                     style: AppStyles.NextButtonStyle(),
-                    // style: ElevatedButton.styleFrom(
-                    //   backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                    //   shape: RoundedRectangleBorder(
-                    //     borderRadius: BorderRadius.circular(10),
-                    //   ),
-                    //   minimumSize: const Size(60, 40),
-                    //   padding: const EdgeInsets.all(0),
-                    // ),
                   ),
                 ],
               ),
@@ -386,14 +376,8 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 setState(() {
                   pBarcode = value; // Assign the entered barcode to pBarcode
                 });
-
                 // Wait for the data fetching process to complete
                 await fetchBarcodeData();
-
-                // Check the status after fetching the barcode data
-                // if (po_status == '0') {
-                //   // Display data as usual
-                // } else
                 if (po_status == '1') {
                   // Show popup if status is not 0
                   showDialog(
@@ -664,26 +648,18 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
           // if (pBarcode != null && pBarcode!.isNotEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 0),
-            child: po_status == '1'
-                ? SizedBox
-                    .shrink() // Do not display anything if po_status is '1'
-                : TextField(
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      labelText: 'Quantity',
-                      filled: true,
-                      fillColor: Colors.grey[300],
-                      labelStyle: TextStyle(color: Colors.black),
-                      border: InputBorder.none,
-                    ),
-                    controller: _quantityController,
-                    // TextEditingController(
-                    //   text: _quantityController.text.isNotEmpty
-                    //       ? _quantityController.text
-                    //       : 'NaN',
-                    // ),
-                    textAlign: TextAlign.center,
-                  ),
+            child: TextField(
+              readOnly: true,
+              decoration: InputDecoration(
+                labelText: 'Quantity',
+                filled: true,
+                fillColor: Colors.grey[300],
+                labelStyle: TextStyle(color: Colors.black),
+                border: InputBorder.none,
+              ),
+              controller: _quantityController,
+              textAlign: TextAlign.center,
+            ),
           ),
 
           //Current Locator//

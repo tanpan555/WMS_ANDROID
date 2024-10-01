@@ -95,15 +95,15 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                             labelText: 'จำนวนรับ',
                             border: OutlineInputBorder(),
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a quantity';
-                            }
-                            if (int.tryParse(value) == null) {
-                              return 'Please enter a valid number';
-                            }
-                            return null;
-                          },
+                          // validator: (value) {
+                          //   if (value == null || value.isEmpty) {
+                          //     return 'Please enter a quantity';
+                          //   }
+                          //   if (int.tryParse(value) == null) {
+                          //     return 'Please enter a valid number';
+                          //   }
+                          //   return null;
+                          // },
                         ),
                       ],
                     ),
@@ -712,21 +712,6 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                   );
                                 },
                               );
-                              // Extract item details
-                              // final po_item_code = item['item_code'];
-                              // final po_seq = item[
-                              //     'seq']; // Ensure that `po_seq` exists in your item map
-
-                              // // Call delete function
-                              // await delete(widget.po_doc_no, widget.po_doc_type,
-                              //     po_seq, po_item_code);
-
-                              // // Remove item from the list and update the UI
-                              // setState(() {
-                              //   gridItems.removeWhere((item) =>
-                              //       item['item_code'] == po_item_code &&
-                              //       item['seq'] == po_seq);
-                              // });
                             },
                           ),
                           // Edit button as image

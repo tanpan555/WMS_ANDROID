@@ -152,12 +152,12 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
                   String combinedValue =
                       '${item['card_value']}_${widget.menu_id}';
                   IconData iconData;
-                  Color cardColor;
+                  Color? cardColor;
                   switch (combinedValue) {
                     ////      WMS คลังวัตถุดิบ
                     case 'รับจากการสั่งซื้อ_IW.10.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.greenAccent;
+                      cardColor = Colors.green[200];
                       break;
                     case 'รับตรง (ไม่อ้าง PO)_IW.10.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
@@ -165,77 +165,77 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
                       break;
                     case 'Move Locator_IW.10.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.greenAccent;
+                      cardColor = Colors.green[200];
                       break;
                     case 'Move Warehouse_IW.10.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.greenAccent;
+                      cardColor = Colors.green[200];
                       break;
                     case 'เบิกจ่าย_IW.10.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.greenAccent;
+                      cardColor = Colors.green[200];
                       break;
                     case 'ตรวจนับ_IW.10.00.00':
                       iconData = Icons.assignment_outlined;
-                      cardColor = Colors.greenAccent;
+                      cardColor = Colors.green[200];
                       break;
                     case 'รับคืนจากการเบิกเพื่อผลผลิต_IW.10.00.00':
                       iconData = Icons.shopping_bag_outlined;
-                      cardColor = Colors.greenAccent;
+                      cardColor = Colors.green[200];
                       break;
 
                     /////      WMS คลังสำเร็จรูป
                     case 'รับจากการผลิต_IW.20.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.blueAccent;
+                      cardColor = Colors.blue[200];
                       break;
                     case 'รับตรง (ไม่อ้าง PO)_IW.20.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.blueAccent;
+                      cardColor = Colors.blue[200];
                       break;
                     case 'Move Locator_IW.20.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.blueAccent;
+                      cardColor = Colors.blue[200];
                       break;
                     case 'Move Warehouse_IW.20.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.blueAccent;
+                      cardColor = Colors.blue[200];
                       break;
                     case 'เบิกจ่าย_IW.20.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.blueAccent;
+                      cardColor = Colors.blue[200];
                       break;
                     case 'ตรวจนับ_IW.20.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.blueAccent;
+                      cardColor = Colors.blue[200];
                       break;
 
                     /////   เพิ่ม Tag
                     case 'Gen FG-Tag_IW.30.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.pinkAccent;
+                      cardColor = Colors.pink[100];
                       break;
                     case 'Reprint Tag ม้วน_IW.30.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.pinkAccent;
+                      cardColor = Colors.pink[100];
                       break;
 
                     //// ตรวจนับประจำงวด
                     case 'ประมวลผลก่อนตรวจนับ_IW.40.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.greenAccent;
+                      cardColor = Colors.orange[200];
                       break;
                     case 'บันทึกตรวจนับ_IW.40.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.greenAccent;
+                      cardColor = Colors.orange[200];
                       break;
                     case 'รายงานเตรียมตรวจนับ_IW.40.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.greenAccent;
+                      cardColor = Colors.orange[200];
                       break;
                     case 'รายงานผลตรวจนับ_IW.40.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.greenAccent;
+                      cardColor = Colors.orange[200];
                       break;
                     default:
                       iconData = Icons.help; // Default icon
