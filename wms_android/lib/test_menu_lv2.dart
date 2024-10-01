@@ -161,7 +161,7 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
                       break;
                     case 'รับตรง (ไม่อ้าง PO)_IW.10.00.00':
                       iconData = Icons.arrow_circle_right_outlined;
-                      cardColor = Colors.greenAccent;
+                      cardColor = Colors.green[200];
                       break;
                     case 'Move Locator_IW.10.00.00':
                       iconData = Icons.arrow_circle_right_outlined;

@@ -144,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         break;
                       case 'พิมพ์ Tag':
                         imagePath = 'assets/images/barcode-scanner.png';
-                        cardColor = Colors.pink[200];
+                        cardColor = Colors.pink[100];
                         p_attr1 = '';
                         p_ou_code = globals.P_ERP_OU_CODE;
                         break;
