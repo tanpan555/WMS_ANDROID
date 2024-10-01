@@ -83,7 +83,7 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
 
   Future<void> chkCreateCard() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_CreateCard';
+        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_CreateNewINHead';
 
     final headers = {
       'Content-Type': 'application/json',

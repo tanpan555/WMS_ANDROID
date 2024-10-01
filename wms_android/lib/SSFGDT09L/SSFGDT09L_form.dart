@@ -52,7 +52,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   String custName = ''; // cust_code + cust_name
   String ouCode = '';
   String docNo = '';
-  // String docType = '';
+  String docType = '';
   String crDate = '';
   String refNo = '';
   String moDoNo = '';
@@ -92,6 +92,8 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   TextEditingController updProgIDController = TextEditingController();
   TextEditingController docDateController = TextEditingController();
 
+  TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -104,6 +106,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
   @override
   void dispose() {
+    _searchController.dispose();
     custNameController.dispose();
     ouCodeController.dispose();
     docNoController.dispose();
@@ -146,6 +149,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
             setState(() {
               ouCode = item['ou_code'] ?? '';
               docNo = item['doc_no'] ?? '';
+              // docType = item['doc_type'] ?? '';
               crDate = item['cr_date'] ?? '';
               staffCode = item['staff_code"'] ?? '';
               note = item['note'] ?? '';
@@ -166,7 +170,6 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
               // -----------------------------
               ouCodeController.text = ouCode;
               docNoController.text = docNo;
-              docTypeController.text = docNo;
               crDateController.text = crDate;
               refNoController.text = refNo;
               moDoNoController.text = refNo;
@@ -177,6 +180,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
               updDateController.text = updDate;
               updProgIDController.text = updProgID;
               docDateController.text = docDate;
+
+              docTypeController.text = selectLovDocType.toString();
+              moDoNoController.text = selectLovMoDoNo.toString();
+              refNoController.text = selectLovRefNo.toString();
             });
           }
         } else {
@@ -710,68 +717,23 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                     ),
                     const SizedBox(height: 8),
                     // -----------------------------
-                    DropdownSearch<String>(
-                      popupProps: PopupProps.menu(
-                        showSearchBox: true,
-                        showSelectedItems: true,
-                        itemBuilder: (context, item, isSelected) {
-                          return ListTile(
-                            title: Text(item),
-                            selected: isSelected,
-                          );
-                        },
-                        constraints: BoxConstraints(
-                          maxHeight: 250,
+
+                    TextFormField(
+                      controller: docTypeController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchDocType(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'ประเภทการจ่าย *',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
                         ),
                       ),
-                      items: dataLovDocType
-                          // -----------------------------  แสดง 1 อย่าง
-                          .map<String>((item) => '${item['doc_desc']}')
-                          .toList(),
-                      // -----------------------------  แสดง 2 อย่าง
-                      // .map<String>((item) =>
-                      //     '${item['doc_type']} ${item['doc_desc']}')
-                      // .toList(),
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                          border: InputBorder.none,
-                          filled: true,
-                          fillColor: Colors.white,
-                          labelText: 'ประเภทการจ่าย *',
-                          labelStyle: const TextStyle(
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectLovDocType = value;
-
-                          // Find the selected item
-                          var selectedItem = dataLovDocType.firstWhere(
-                            (item) => '${item['doc_desc']}' == value,
-                            orElse: () => <String, dynamic>{}, // แก้ไข orElse
-                          );
-
-                          // var selectedItem = dataLovDocType.firstWhere(
-                          //   (item) =>
-                          //       '${item['doc_type']} ${item['doc_desc']}' ==
-                          //       value,
-                          //   orElse: () => <String, dynamic>{}, // แก้ไข orElse
-                          // );
-                          // Update variables based on selected item
-                          if (selectedItem.isNotEmpty) {
-                            returnStatusLovDocType =
-                                selectedItem['doc_type'] ?? '';
-                          }
-                        });
-                        print(
-                            'dataLovDocType in body: $dataLovDocType type: ${dataLovDocType.runtimeType}');
-                        // print(selectedItem);
-                        print(
-                            'returnStatusLovDocType in body: $returnStatusLovDocType type: ${returnStatusLovDocType.runtimeType}');
-                      },
-                      selectedItem: selectLovDocType,
                     ),
 
                     const SizedBox(height: 8),
@@ -838,125 +800,160 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         : SizedBox.shrink(),
                     const SizedBox(height: 8),
                     // -----------------------------
-                    DropdownSearch<String>(
-                      popupProps: PopupProps.menu(
-                        showSearchBox: true,
-                        showSelectedItems: true,
-                        itemBuilder: (context, item, isSelected) {
-                          return ListTile(
-                            title: Text(item),
-                            selected: isSelected,
-                          );
-                        },
-                        constraints: BoxConstraints(
-                          maxHeight: 250,
-                        ),
-                      ),
-                      items: dataLovRefNo
-                          .map<String>((item) =>
-                              '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}')
-                          .toList(),
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                          border: InputBorder.none,
-                          filled: true,
-                          fillColor: Colors.white,
-                          labelText: 'เลขที่เอกสารอ้างอิง',
-                          labelStyle: const TextStyle(
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectLovRefNo = value;
+                    // DropdownSearch<String>(
+                    //   popupProps: PopupProps.menu(
+                    //     showSearchBox: true,
+                    //     showSelectedItems: true,
+                    //     itemBuilder: (context, item, isSelected) {
+                    //       return ListTile(
+                    //         title: Text(item),
+                    //         selected: isSelected,
+                    //       );
+                    //     },
+                    //     constraints: BoxConstraints(
+                    //       maxHeight: 250,
+                    //     ),
+                    //   ),
+                    //   items: dataLovRefNo
+                    //       .map<String>((item) =>
+                    //           '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}')
+                    //       .toList(),
+                    //   dropdownDecoratorProps: DropDownDecoratorProps(
+                    //     dropdownSearchDecoration: InputDecoration(
+                    //       border: InputBorder.none,
+                    //       filled: true,
+                    //       fillColor: Colors.white,
+                    //       labelText: 'เลขที่เอกสารอ้างอิง',
+                    //       labelStyle: const TextStyle(
+                    //         color: Colors.black87,
+                    //       ),
+                    //     ),
+                    //   ),
+                    //   onChanged: (String? value) {
+                    //     setState(() {
+                    //       selectLovRefNo = value;
 
-                          // Find the selected item
-                          var selectedItem = dataLovRefNo.firstWhere(
-                            (item) =>
-                                '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}' ==
-                                value,
-                            orElse: () => <String, dynamic>{}, // แก้ไข orElse
-                          );
-                          // Update variables based on selected item
-                          if (selectedItem.isNotEmpty) {
-                            returnStatusLovRefNo = selectedItem['so_no'] ?? '';
-                            soNoForChk = selectedItem['so_no'].toString();
-                          }
-                        });
-                        print(
-                            'dataLovRefNo in body: $dataLovRefNo type: ${dataLovRefNo.runtimeType}');
-                        // print(selectedItem);
-                        print(
-                            'returnStatusLovRefNo in body: $returnStatusLovRefNo type: ${returnStatusLovRefNo.runtimeType}');
-                      },
-                      selectedItem: selectLovRefNo,
-                    ),
+                    //       // Find the selected item
+                    //       var selectedItem = dataLovRefNo.firstWhere(
+                    //         (item) =>
+                    //             '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}' ==
+                    //             value,
+                    //         orElse: () => <String, dynamic>{}, // แก้ไข orElse
+                    //       );
+                    //       // Update variables based on selected item
+                    //       if (selectedItem.isNotEmpty) {
+                    //         returnStatusLovRefNo = selectedItem['so_no'] ?? '';
+                    //         soNoForChk = selectedItem['so_no'].toString();
+                    //       }
+                    //     });
+                    //     print(
+                    //         'dataLovRefNo in body: $dataLovRefNo type: ${dataLovRefNo.runtimeType}');
+                    //     // print(selectedItem);
+                    //     print(
+                    //         'returnStatusLovRefNo in body: $returnStatusLovRefNo type: ${returnStatusLovRefNo.runtimeType}');
+                    //   },
+                    //   selectedItem: selectLovRefNo,
+                    // ),
 
                     ///
+                    TextFormField(
+                      controller: refNoController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchRefNo(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'เลขที่เอกสารอ้างอิง',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     // ----------------------------------------------------------------------------------------------------------------------------------
-                    DropdownSearch<String>(
-                      popupProps: PopupProps.menu(
-                        showSearchBox: true,
-                        showSelectedItems: true,
-                        itemBuilder: (context, item, isSelected) {
-                          return ListTile(
-                            title: Text(item),
-                            selected: isSelected,
-                          );
-                        },
-                        constraints: BoxConstraints(
-                          maxHeight: 250,
-                        ),
-                      ),
-                      items: dataLovMoDoNo
-                          .map<String>((item) =>
-                              '${item['schid']} ${item['fg_code']} ${item['cust_name']}')
-                          .toList(),
-                      dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                          border: InputBorder.none,
-                          filled: true,
-                          fillColor: Colors.white,
-                          labelText: 'เลขที่คำสั่งผลผลิต *',
-                          labelStyle: const TextStyle(
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ),
-                      onChanged: (String? value) {
-                        setState(() {
-                          // Find the selected item
-                          var selectedItem = dataLovMoDoNo.firstWhere(
-                            (item) =>
-                                '${item['schid']} ${item['fg_code']} ${item['cust_name']}' ==
-                                value,
-                            orElse: () => <String, dynamic>{},
-                          );
+                    // DropdownSearch<String>(
+                    //   popupProps: PopupProps.menu(
+                    //     showSearchBox: true,
+                    //     showSelectedItems: true,
+                    //     itemBuilder: (context, item, isSelected) {
+                    //       return ListTile(
+                    //         title: Text(item),
+                    //         selected: isSelected,
+                    //       );
+                    //     },
+                    //     constraints: BoxConstraints(
+                    //       maxHeight: 250,
+                    //     ),
+                    //   ),
+                    //   items: dataLovMoDoNo
+                    //       .map<String>((item) =>
+                    //           '${item['schid']} ${item['fg_code']} ${item['cust_name']}')
+                    //       .toList(),
+                    //   dropdownDecoratorProps: DropDownDecoratorProps(
+                    //     dropdownSearchDecoration: InputDecoration(
+                    //       border: InputBorder.none,
+                    //       filled: true,
+                    //       fillColor: Colors.white,
+                    //       labelText: 'เลขที่คำสั่งผลผลิต *',
+                    //       labelStyle: const TextStyle(
+                    //         color: Colors.black87,
+                    //       ),
+                    //     ),
+                    //   ),
+                    //   onChanged: (String? value) {
+                    //     setState(() {
+                    //       // Find the selected item
+                    //       var selectedItem = dataLovMoDoNo.firstWhere(
+                    //         (item) =>
+                    //             '${item['schid']} ${item['fg_code']} ${item['cust_name']}' ==
+                    //             value,
+                    //         orElse: () => <String, dynamic>{},
+                    //       );
 
-                          // Update variables based on selected item
-                          if (selectedItem.isNotEmpty) {
-                            returnStatusLovMoDoNo =
-                                selectedItem['schid'].toString();
-                            selectLovMoDoNo = selectedItem['schid'].toString();
-                            selectCust(returnStatusLovMoDoNo);
-                            //////-----------------------------------------------
-                            shidForChk = selectedItem['schid'].toString();
-                            print(selectedItem['schid'].toString());
-                            chkCust(
-                              shidForChk,
-                              soNoForChk.isNotEmpty ? soNoForChk : 'null',
-                              testChk = 0,
-                            );
-                          }
-                        });
-                        print(
-                            'dataLovMoDoNo in body: $dataLovMoDoNo type: ${dataLovMoDoNo.runtimeType}');
-                        print(
-                            'returnStatusLovMoDoNo in body: $returnStatusLovMoDoNo type: ${returnStatusLovMoDoNo.runtimeType}');
-                      },
-                      selectedItem: selectLovMoDoNo,
+                    //       // Update variables based on selected item
+                    //       if (selectedItem.isNotEmpty) {
+                    //         returnStatusLovMoDoNo =
+                    //             selectedItem['schid'].toString();
+                    //         selectLovMoDoNo = selectedItem['schid'].toString();
+                    //         selectCust(returnStatusLovMoDoNo);
+                    //         //////-----------------------------------------------
+                    //         shidForChk = selectedItem['schid'].toString();
+                    //         print(selectedItem['schid'].toString());
+                    //         chkCust(
+                    //           shidForChk,
+                    //           soNoForChk.isNotEmpty ? soNoForChk : 'null',
+                    //           testChk = 0,
+                    //         );
+                    //       }
+                    //     });
+                    //     print(
+                    //         'dataLovMoDoNo in body: $dataLovMoDoNo type: ${dataLovMoDoNo.runtimeType}');
+                    //     print(
+                    //         'returnStatusLovMoDoNo in body: $returnStatusLovMoDoNo type: ${returnStatusLovMoDoNo.runtimeType}');
+                    //   },
+                    //   selectedItem: selectLovMoDoNo,
+                    // ),
+                    TextFormField(
+                      controller: moDoNoController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchMoDoNo(),
+                      // onTap: () => showDialogDropdownSearchMoDoNo(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'เลขที่คำสั่งผลผลิต *',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 8),
                     // -----------------------------
@@ -1196,6 +1193,361 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
             // ),
           );
         });
+  }
+
+  void showDialogDropdownSearchMoDoNo() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'เลขที่คำสั่งผลผลิต *',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _searchController.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // ช่องค้นหา
+                    TextField(
+                      controller: _searchController,
+                      decoration: const InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final filteredItems = dataLovMoDoNo.where((item) {
+                            final docString =
+                                '${item['schid']} ${item['fg_code']} ${item['cust_name']}'
+                                    .toLowerCase();
+                            final searchQuery =
+                                _searchController.text.trim().toLowerCase();
+                            return docString.contains(searchQuery);
+                          }).toList();
+
+                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          if (filteredItems.isEmpty) {
+                            return const Center(
+                              child: Text('NO DATA FOUND'),
+                            );
+                          }
+
+                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final doc =
+                                  '${item['schid']} ${item['fg_code']} ${item['cust_name']}';
+                              final returnCode = '${item['schid']}';
+
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  doc,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    returnStatusLovMoDoNo = returnCode;
+                                    moDoNoController.text = returnCode;
+                                    print(
+                                        'returnStatusLovMoDoNo New: $returnStatusLovMoDoNo Type : ${returnStatusLovMoDoNo.runtimeType}');
+                                    print(
+                                        'doc New: $doc Type : ${doc.runtimeType}');
+                                    print(
+                                        'moDoNoController New: $moDoNoController Type : ${moDoNoController.runtimeType}');
+                                    shidForChk = returnCode;
+                                    selectCust(returnStatusLovMoDoNo);
+                                    print('shidForChk : $shidForChk');
+                                    chkCust(
+                                      shidForChk,
+                                      soNoForChk.isNotEmpty
+                                          ? soNoForChk
+                                          : 'null',
+                                      testChk = 0,
+                                    );
+                                  });
+                                  _searchController.clear();
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void showDialogDropdownSearchRefNo() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'เลขที่เอกสารอ้างอิง',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _searchController.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // ช่องค้นหา
+                    TextField(
+                      controller: _searchController,
+                      decoration: const InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final filteredItems = dataLovRefNo.where((item) {
+                            final docString =
+                                '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}'
+                                    .toLowerCase();
+                            final searchQuery =
+                                _searchController.text.trim().toLowerCase();
+                            return docString.contains(searchQuery);
+                          }).toList();
+
+                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          if (filteredItems.isEmpty) {
+                            return const Center(
+                              child: Text('NO DATA FOUND'),
+                            );
+                          }
+
+                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final doc =
+                                  '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}';
+                              final returnCode = '${item['so_no']}';
+
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  doc,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    returnStatusLovRefNo = returnCode;
+                                    refNoController.text = returnCode;
+                                    print(
+                                        'returnStatusLovRefNo New: $returnStatusLovRefNo Type : ${returnStatusLovRefNo.runtimeType}');
+                                    print(
+                                        'doc New: $doc Type : ${doc.runtimeType}');
+                                    print(
+                                        'moDoNoController New: $moDoNoController Type : ${moDoNoController.runtimeType}');
+                                    soNoForChk = returnCode;
+                                  });
+                                  _searchController.clear();
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void showDialogDropdownSearchDocType() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'ประเภทการจ่าย *',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _searchController.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // ช่องค้นหา
+                    TextField(
+                      controller: _searchController,
+                      decoration: const InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final filteredItems = dataLovDocType.where((item) {
+                            final docString =
+                                '${item['doc_type']} ${item['doc_desc']}'
+                                    .toLowerCase();
+                            final searchQuery =
+                                _searchController.text.trim().toLowerCase();
+                            return docString.contains(searchQuery);
+                          }).toList();
+
+                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          if (filteredItems.isEmpty) {
+                            return const Center(
+                              child: Text('NO DATA FOUND'),
+                            );
+                          }
+
+                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final doc = '${item['doc_desc']}';
+                              final returnCode = '${item['doc_type']}';
+
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  '${item['doc_type']} ${item['doc_desc']}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    selectLovDocType = doc;
+                                    docTypeController.text = doc;
+                                    returnStatusLovDocType = returnCode;
+                                  });
+                                  print(
+                                      'dataLovDocType in body: $dataLovDocType type: ${dataLovDocType.runtimeType}');
+                                  // print(selectedItem);
+                                  print(
+                                      'returnStatusLovDocType in body: $returnStatusLovDocType type: ${returnStatusLovDocType.runtimeType}');
+                                  _searchController.clear();
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }
 
