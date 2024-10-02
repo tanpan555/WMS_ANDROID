@@ -228,43 +228,6 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                           width: 50, height: 25),
                     ),
                     const SizedBox(width: 20),
-                    // ElevatedButton(
-                    //   onPressed: selectedItem.isNotEmpty
-                    //       ? () {
-                    //           // ตรวจสอบว่ามีการกรอกวันที่หรือไม่
-                    //           if (_dateController.text.isNotEmpty) {
-                    //             // จัดรูปแบบวันที่ dd/MM/yyyy สำหรับการแสดงผล
-                    //             DateTime parsedDate = DateFormat('dd/MM/yyyy')
-                    //                 .parse(_dateController.text);
-
-                    //             // ส่งค่าเป็น dd-MM-yyyy
-                    //             String formattedDateForSearch =
-                    //                 DateFormat('dd-MM-yyyy').format(parsedDate);
-
-                    //             // ส่งค่าผ่าน _navigateToPage
-                    //             _navigateToPage(
-                    //               context,
-                    //               SSFGDT04_CARD(
-                    //                 pFlag: pFlag,
-                    //                 soNo: pSoNo,
-                    //                 date:
-                    //                     formattedDateForSearch, // ส่งรูปแบบ dd-MM-yyyy
-                    //                 status: status,
-                    //                 pWareCode: widget.pWareCode,
-                    //                 pErpOuCode: widget.pErpOuCode,
-                    //                 pAppUser: appUser,
-                    //               ),
-                    //             );
-                    //           }
-                    //         }
-                    //       : null,
-                    //   child: Image.asset(
-                    //     'assets/images/search_color.png',
-                    //     width: 50,
-                    //     height: 25,
-                    //   ),
-                    //   style: AppStyles.SearchButtonStyle(),
-                    // ),
                     ElevatedButton(
                       onPressed: selectedItem.isNotEmpty
                           ? () {
@@ -295,8 +258,8 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                                       selectedDate = 'null';
                                       selectedItem = dropdownItems.first;
                                       status = '0';
-                                      _dateController.clear();
-                                      _controller.clear();
+                                      // _dateController.clear();
+                                      // _controller.clear();
                                     });
                                   });
                                 } catch (e) {

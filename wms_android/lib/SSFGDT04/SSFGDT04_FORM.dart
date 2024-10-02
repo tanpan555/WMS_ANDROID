@@ -318,9 +318,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   Future<void> cancel_INHeadNonePO_WMS(
     String selectedCancelCode,
   ) async {
-    // print('Hiiiiiiiii');
-    // print(
-    //     'update called with po_doc_type: $po_doc_type, po_doc_no: $po_doc_no, p_cancel_code: $p_cancel_code');
     final url = Uri.parse(
         'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_cancel_INHeadNonePO_WMS');
     final response = await http.put(url,
@@ -457,6 +454,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                       Navigator.of(
                                                                               context)
                                                                           .pop(); // Close popup
+                                                                      _searchController
+                                                                          .clear();
                                                                     },
                                                                   ),
                                                                 ],
@@ -562,7 +561,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                             TextSpan(
                                                                               text: '$code ',
                                                                               style: TextStyle(
-                                                                                fontSize: 12,
+                                                                                fontSize: 14,
                                                                                 fontWeight: FontWeight.bold,
                                                                                 color: Colors.black,
                                                                               ),
@@ -570,7 +569,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                             TextSpan(
                                                                               text: '$desc',
                                                                               style: TextStyle(
-                                                                                fontSize: 12,
+                                                                                fontSize: 14,
                                                                                 fontWeight: FontWeight.normal,
                                                                                 color: Colors.black,
                                                                               ),
@@ -644,6 +643,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
+                                        _canCelController.clear();
                                         // Close popup
                                         Navigator.of(context).pop();
                                       },
@@ -671,7 +671,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                           .then((_) {
                                                         // Navigate to SSFGDT04_MENU after canceling
                                                         Navigator.of(context)
-                                                            .pushAndRemoveUntil(
+                                                            .pop(
                                                           MaterialPageRoute(
                                                             builder: (context) =>
                                                                 SSFGDT04_MENU(
@@ -681,18 +681,22 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                   .P_ERP_OU_CODE,
                                                             ),
                                                           ),
-                                                          (route) =>
-                                                              false, // Remove all previous routes
+                                                          // (route) =>
+                                                          //     false, // Remove all previous routes
                                                         );
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        Navigator.of(context)
+                                                            .pop();
                                                       }).catchError((error) {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          SnackBar(
-                                                            content: Text(
-                                                                'An error occurred: $error'),
-                                                          ),
-                                                        );
+                                                        // ScaffoldMessenger.of(
+                                                        //         context)
+                                                        //     .showSnackBar(
+                                                        //   SnackBar(
+                                                        //     content: Text(
+                                                        //         'An error occurred: $error'),
+                                                        //   ),
+                                                        // );
                                                       });
                                                     },
                                                   ),
@@ -836,8 +840,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          const SizedBox(height: 16),
-                          //               // เลขที่ใบเบิก WMS* //
+                          // เลขที่ใบเบิก WMS* //
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8),
                             child: TextField(
@@ -845,23 +848,26 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                               decoration: InputDecoration(
                                 // labelText: 'เลขที่เอกสาร WMS*',
                                 label: RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: 'เลขที่ใบเบิก WMS',
-                                            style: TextStyle(
-                                                color: Colors
-                                                    .black,fontSize: 16), // Color for the label
-                                          ),
-                                          TextSpan(
-                                            text: ' *',
-                                            style: TextStyle(
-                                                color: Colors
-                                                    .red,fontSize: 16,fontWeight: FontWeight.bold), // Color for the asterisk
-                                          ),
-                                        ],
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: 'เลขที่ใบเบิก WMS',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize:
+                                                16), // Color for the label
                                       ),
-                                    ),
+                                      TextSpan(
+                                        text: ' *',
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight
+                                                .bold), // Color for the asterisk
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 filled: true,
                                 fillColor: Colors.grey[300],
                                 labelStyle: TextStyle(color: Colors.black),
@@ -872,79 +878,293 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                           ),
 
                           //ประเภทการจ่าย*//
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(vertical: 0),
+                          //   child: DropdownButtonFormField2<String>(
+                          //     isExpanded: true,
+                          //     decoration: InputDecoration(
+                          //       border: InputBorder.none,
+                          //       filled: true,
+                          //       fillColor: Colors.white,
+                          //       // labelText: 'ประเภทการรับ*',
+                          //       label: RichText(
+                          //         text: TextSpan(
+                          //           children: [
+                          //             TextSpan(
+                          //               text: 'ประเภทการรับ',
+                          //               style: TextStyle(
+                          //                   color: Colors.black,
+                          //                   fontSize:
+                          //                       16), // Color for the label
+                          //             ),
+                          //             TextSpan(
+                          //               text: ' *',
+                          //               style: TextStyle(
+                          //                   color: Colors.red,
+                          //                   fontSize: 16,
+                          //                   fontWeight: FontWeight
+                          //                       .bold), // Color for the asterisk
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       ),
+                          //       labelStyle: TextStyle(
+                          //         fontSize: 16,
+                          //         color: Colors.black,
+                          //       ),
+                          //     ),
+                          //     items: docTypeItems
+                          //         .map((item) => DropdownMenuItem<String>(
+                          //               value: item['doc_desc'],
+                          //               child: Text(
+                          //                 item['doc_desc'] ?? 'doc_desc = null',
+                          //                 style: const TextStyle(
+                          //                   fontSize: 16,
+                          //                   color: Colors.black,
+                          //                 ),
+                          //               ),
+                          //             ))
+                          //         .toList(),
+                          //     onChanged: (String? value) {
+                          //       setState(() {
+                          //         selectedDocType = value;
+                          //       });
+                          //     },
+                          //     onSaved: (value) {
+                          //       selectedDocType = value;
+                          //     },
+                          //     value:
+                          //         selectedDocType, // Set the default selected value
+                          //     buttonStyleData: const ButtonStyleData(
+                          //       padding: EdgeInsets.only(right: 0),
+                          //     ),
+                          //     iconStyleData: const IconStyleData(
+                          //       icon: Icon(
+                          //         Icons.arrow_drop_down,
+                          //         color: Color.fromARGB(255, 113, 113, 113),
+                          //       ),
+                          //       iconSize: 24,
+                          //     ),
+                          //     dropdownStyleData: DropdownStyleData(
+                          //       decoration: BoxDecoration(
+                          //         borderRadius: BorderRadius.circular(10),
+                          //         color: Colors.white,
+                          //       ),
+                          //       maxHeight: 150,
+                          //     ),
+                          //     menuItemStyleData: const MenuItemStyleData(
+                          //       padding: EdgeInsets.symmetric(horizontal: 16),
+                          //     ),
+                          //   ),
+                          // ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 0),
-                            child: DropdownButtonFormField2<String>(
-                              isExpanded: true,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                filled: true,
-                                fillColor: Colors.white,
-                                // labelText: 'ประเภทการรับ*',
-                                label: RichText(
+                            child: GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: StatefulBuilder(
+                                        builder: (context, setState) {
+                                          return Container(
+                                            padding: const EdgeInsets.all(16),
+                                            height:
+                                                300, // ปรับความสูงของ Popup ตามต้องการ
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      'ประเภทการรับ',
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    IconButton(
+                                                      icon: Icon(Icons.close),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop(); // ปิด Popup
+                                                        _searchController
+                                                            .clear();
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 10),
+                                                // ช่องค้นหา
+                                                TextField(
+                                                  controller: _searchController,
+                                                  decoration: InputDecoration(
+                                                    hintText: 'ค้นหา',
+                                                    border:
+                                                        OutlineInputBorder(),
+                                                  ),
+                                                  onChanged: (query) {
+                                                    setState(() {});
+                                                  },
+                                                ),
+                                                const SizedBox(height: 10),
+                                                Expanded(
+                                                  child: ListView.builder(
+                                                    itemCount: docTypeItems
+                                                        .where((item) {
+                                                          // แปลง schid เป็น int ก่อนการเปรียบเทียบ
+                                                          final docString =
+                                                              item['doc_desc']
+                                                                  .toString();
+                                                          final searchQuery =
+                                                              _searchController
+                                                                  .text
+                                                                  .trim();
+
+                                                          // ตรวจสอบว่า searchQuery เป็นจำนวนเต็มหรือไม่
+                                                          final searchQueryInt =
+                                                              int.tryParse(
+                                                                  searchQuery);
+
+                                                          // แปลง schid เป็น int ถ้าค่ามันเป็นจำนวนเต็ม
+                                                          final docInt =
+                                                              int.tryParse(
+                                                                  docString);
+
+                                                          // เปรียบเทียบกับ searchQuery
+                                                          return (searchQueryInt !=
+                                                                      null &&
+                                                                  docInt !=
+                                                                      null &&
+                                                                  docInt ==
+                                                                      searchQueryInt) ||
+                                                              docString.contains(
+                                                                  searchQuery);
+                                                        })
+                                                        .toList()
+                                                        .length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      final filteredItems =
+                                                          docTypeItems
+                                                              .where((item) {
+                                                        final docString =
+                                                            item['doc_desc']
+                                                                .toString();
+                                                        final searchQuery =
+                                                            _searchController
+                                                                .text
+                                                                .trim();
+
+                                                        final searchQueryInt =
+                                                            int.tryParse(
+                                                                searchQuery);
+                                                        final docInt =
+                                                            int.tryParse(
+                                                                docString);
+
+                                                        return (searchQueryInt !=
+                                                                    null &&
+                                                                docInt !=
+                                                                    null &&
+                                                                docInt ==
+                                                                    searchQueryInt) ||
+                                                            docString.contains(
+                                                                searchQuery);
+                                                      }).toList();
+
+                                                      final item =
+                                                          filteredItems[index];
+                                                      final doc =
+                                                          item['doc_desc']
+                                                              .toString();
+
+                                                      return ListTile(
+                                                        contentPadding:
+                                                            EdgeInsets.zero,
+                                                        title: RichText(
+                                                          text: TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                text: '$doc',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 14,
+                                                                  color: Colors
+                                                                      .black,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        onTap: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                          setState(() {
+                                                            selectedDocType =
+                                                                doc;
+                                                            // _custController.text =
+                                                            //     '$empName';
+                                                            fetchRefReceiveItems();
+                                                          });
+                                                        },
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: AbsorbPointer(
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    // labelText: 'ประเภทการรับ',
+                                    label: RichText(
                                       text: TextSpan(
                                         children: [
                                           TextSpan(
                                             text: 'ประเภทการรับ',
                                             style: TextStyle(
-                                                color: Colors
-                                                    .black,fontSize: 16), // Color for the label
+                                                color: Colors.black,
+                                                fontSize:
+                                                    16), // Color for the label
                                           ),
                                           TextSpan(
                                             text: ' *',
                                             style: TextStyle(
-                                                color: Colors
-                                                    .red,fontSize: 16,fontWeight: FontWeight.bold), // Color for the asterisk
+                                                color: Colors.red,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight
+                                                    .bold), // Color for the asterisk
                                           ),
                                         ],
                                       ),
                                     ),
-                                labelStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    labelStyle: TextStyle(color: Colors.black),
+                                    border: InputBorder.none,
+                                    suffixIcon: Icon(
+                                      Icons.arrow_drop_down,
+                                      color: Color.fromARGB(255, 113, 113, 113),
+                                    ),
+                                  ),
+                                  controller: TextEditingController(
+                                      text: selectedDocType),
                                 ),
-                              ),
-                              items: docTypeItems
-                                  .map((item) => DropdownMenuItem<String>(
-                                        value: item['doc_desc'],
-                                        child: Text(
-                                          item['doc_desc'] ?? 'doc_desc = null',
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ))
-                                  .toList(),
-                              onChanged: (String? value) {
-                                setState(() {
-                                  selectedDocType = value;
-                                });
-                              },
-                              onSaved: (value) {
-                                selectedDocType = value;
-                              },
-                              value:
-                                  selectedDocType, // Set the default selected value
-                              buttonStyleData: const ButtonStyleData(
-                                padding: EdgeInsets.only(right: 0),
-                              ),
-                              iconStyleData: const IconStyleData(
-                                icon: Icon(
-                                  Icons.arrow_drop_down,
-                                  color: Color.fromARGB(255, 113, 113, 113),
-                                ),
-                                iconSize: 24,
-                              ),
-                              dropdownStyleData: DropdownStyleData(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.white,
-                                ),
-                                maxHeight: 150,
-                              ),
-                              menuItemStyleData: const MenuItemStyleData(
-                                padding: EdgeInsets.symmetric(horizontal: 16),
                               ),
                             ),
                           ),
@@ -967,14 +1187,17 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                           TextSpan(
                                             text: 'วันที่บันทึก',
                                             style: TextStyle(
-                                                color: Colors
-                                                    .black,fontSize: 16), // Color for the label
+                                                color: Colors.black,
+                                                fontSize:
+                                                    16), // Color for the label
                                           ),
                                           TextSpan(
                                             text: ' *',
                                             style: TextStyle(
-                                                color: Colors
-                                                    .red,fontSize: 16,fontWeight: FontWeight.bold), // Color for the asterisk
+                                                color: Colors.red,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight
+                                                    .bold), // Color for the asterisk
                                           ),
                                         ],
                                       ),
@@ -1041,6 +1264,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                       onPressed: () {
                                                         Navigator.of(context)
                                                             .pop(); // ปิด Popup
+                                                        _searchController
+                                                            .clear();
                                                       },
                                                     ),
                                                   ],
@@ -1067,11 +1292,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                           final docString =
                                                               item['doc']
                                                                   .toString();
-                                                          // final fgCode = item['fg_code']
-                                                          //     .toString();
-                                                          // final empName =
-                                                          //     item['emp_name']
-                                                          // .toString();
                                                           final searchQuery =
                                                               _searchController
                                                                   .text
@@ -1096,12 +1316,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                       searchQueryInt) ||
                                                               docString.contains(
                                                                   searchQuery);
-
-                                                          // ||
-                                                          // fgCode.contains(
-                                                          //     searchQuery) ||
-                                                          // empName.contains(
-                                                          //     searchQuery);
                                                         })
                                                         .toList()
                                                         .length,
@@ -1113,10 +1327,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                         final docString =
                                                             item['doc']
                                                                 .toString();
-                                                        // final fgCode =
-                                                        //     item['fg_code'].toString();
-                                                        // final empName =
-                                                        //     item['d'].toString();
                                                         final searchQuery =
                                                             _searchController
                                                                 .text
@@ -1137,23 +1347,12 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                     searchQueryInt) ||
                                                             docString.contains(
                                                                 searchQuery);
-                                                        //     ||
-                                                        // // fgCode.contains(
-                                                        // //     searchQuery) ||
-                                                        // empName
-                                                        //     .contains(searchQuery);
                                                       }).toList();
 
                                                       final item =
                                                           filteredItems[index];
                                                       final doc = item['doc']
                                                           .toString();
-                                                      // final fgCode =
-                                                      //     item['fg_code'].toString();
-                                                      // final empName =
-                                                      //     item['d'].toString();
-                                                      // final displayValue =
-                                                      //     '$schid  $fgCode  $custName';
 
                                                       return ListTile(
                                                         contentPadding:
@@ -1165,7 +1364,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                 text: '$doc',
                                                                 style:
                                                                     TextStyle(
-                                                                  fontSize: 12,
+                                                                  fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
@@ -1173,15 +1372,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                       .black,
                                                                 ),
                                                               ),
-                                                              // TextSpan(
-                                                              //   text: '$empName',
-                                                              //   style: TextStyle(
-                                                              //     fontSize: 12,
-                                                              //     fontWeight:
-                                                              //         FontWeight.normal,
-                                                              //     color: Colors.black,
-                                                              //   ),
-                                                              // ),
                                                             ],
                                                           ),
                                                         ),
@@ -1229,20 +1419,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             ),
                           ),
 
-                          // อ้างอิง SO //
-                          // Padding(
-                          //   padding: const EdgeInsets.symmetric(vertical: 8),
-                          //   child: TextField(
-                          //     decoration: InputDecoration(
-                          //       labelText: 'อ้างอิง SO',
-                          //       filled: true,
-                          //       fillColor: Colors.white,
-                          //       labelStyle: TextStyle(color: Colors.black),
-                          //       border: InputBorder.none,
-                          //     ),
-                          //     controller: _oderNoController,
-                          //   ),
-                          // ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8),
                             child: GestureDetector(
@@ -1281,6 +1457,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                       onPressed: () {
                                                         Navigator.of(context)
                                                             .pop(); // ปิด Popup
+                                                        _searchController
+                                                            .clear();
                                                       },
                                                     ),
                                                   ],
@@ -1446,7 +1624,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                 text: '$soNo\n',
                                                                 style:
                                                                     TextStyle(
-                                                                  fontSize: 12,
+                                                                  fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
@@ -1460,7 +1638,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                     '$soDate',
                                                                 style:
                                                                     TextStyle(
-                                                                  fontSize: 12,
+                                                                  fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .normal,
@@ -1475,7 +1653,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                     '$arCode',
                                                                 style:
                                                                     TextStyle(
-                                                                  fontSize: 12,
+                                                                  fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .normal,
@@ -1584,6 +1762,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                       onPressed: () {
                                                         Navigator.of(context)
                                                             .pop(); // Close popup
+                                                        _searchController
+                                                            .clear();
                                                       },
                                                     ),
                                                   ],
@@ -1690,7 +1870,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                     '$empId\n',
                                                                 style:
                                                                     TextStyle(
-                                                                  fontSize: 12,
+                                                                  fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
@@ -1703,7 +1883,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                     '$empName',
                                                                 style:
                                                                     TextStyle(
-                                                                  fontSize: 12,
+                                                                  fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .normal,
@@ -1751,14 +1931,17 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                           TextSpan(
                                             text: 'ผู้รับมอบสินค้า',
                                             style: TextStyle(
-                                                color: Colors
-                                                    .black,fontSize: 16), // Color for the label
+                                                color: Colors.black,
+                                                fontSize:
+                                                    16), // Color for the label
                                           ),
                                           TextSpan(
                                             text: ' *',
                                             style: TextStyle(
-                                                color: Colors
-                                                    .red,fontSize: 16,fontWeight: FontWeight.bold), // Color for the asterisk
+                                                color: Colors.red,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight
+                                                    .bold), // Color for the asterisk
                                           ),
                                         ],
                                       ),
