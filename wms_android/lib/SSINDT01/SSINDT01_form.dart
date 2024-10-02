@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
@@ -152,6 +153,23 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     } catch (e) {
       print('Error: $e');
     }
+  }
+
+  String formatDate(String input) {
+    if (input.length == 8) {
+      // Attempt to parse the input string as a date in ddMMyyyy format
+      final day = int.tryParse(input.substring(0, 2));
+      final month = int.tryParse(input.substring(2, 4));
+      final year = int.tryParse(input.substring(4, 8));
+      if (day != null && month != null && year != null) {
+        final date = DateTime(year, month, day);
+        if (date.year == year && date.month == month && date.day == day) {
+          // Return the formatted date if valid
+          return DateFormat('dd/MM/yyyy').format(date);
+        }
+      }
+    }
+    return input; // Return original input if invalid
   }
 
   Future<void> fetchReceiveHeadData(String receiveNo) async {
@@ -681,386 +699,399 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   }
 
   Widget _buildFormFields() {
-  return Container(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextFormField(
-          style: const TextStyle(
-            color: Colors.black87,
-          ),
-          controller: poNoController,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.grey[300],
-            label: Row(
-              children: [
-                const Text(
-                  'เลขที่อ้างอิง (PO)',
-                  style: TextStyle(
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(width: 2), // Add a small space
-                Text(
-                  '*',
-                  style: TextStyle(
-                    color: Colors.red, // Change asterisk color to red
-                  ),
-                ),
-              ],
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFormField(
+            style: const TextStyle(
+              color: Colors.black87,
             ),
-            border: InputBorder.none,
-          ),
-          readOnly: true,
-        ),
-        const SizedBox(height: 8.0),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 0),
-          child: GestureDetector(
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return Dialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+            controller: poNoController,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey[300],
+              label: Row(
+                children: [
+                  const Text(
+                    'เลขที่อ้างอิง (PO)',
+                    style: TextStyle(
+                      color: Colors.black87,
                     ),
-                    child: StatefulBuilder(
-                      builder: (context, setState) {
-                        return Container(
-                          padding: const EdgeInsets.all(16),
-                          constraints: BoxConstraints(
-                            maxHeight: MediaQuery.of(context).size.height *
-                                0.7, // 70% of screen height
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'เลือกประเภทการรับ',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
+                  ),
+                  const SizedBox(width: 2), // Add a small space
+                  Text(
+                    '*',
+                    style: TextStyle(
+                      color: Colors.red, // Change asterisk color to red
+                    ),
+                  ),
+                ],
+              ),
+              border: InputBorder.none,
+            ),
+            readOnly: true,
+          ),
+          const SizedBox(height: 8.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 0),
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: StatefulBuilder(
+                        builder: (context, setState) {
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            constraints: BoxConstraints(
+                              maxHeight: MediaQuery.of(context).size.height *
+                                  0.7, // 70% of screen height
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'เลือกประเภทการรับ',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: () {
-                                      Navigator.of(context)
-                                          .pop(); // Close the dialog
-                                    },
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              // Optional: Search field for filtering items
-                              TextField(
-                                controller: _searchController,
-                                decoration: InputDecoration(
-                                  hintText: 'ค้นหา',
-                                  border: OutlineInputBorder(),
+                                    IconButton(
+                                      icon: Icon(Icons.close),
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                      },
+                                    ),
+                                  ],
                                 ),
-                                onChanged: (query) {
-                                  setState(() {});
-                                },
-                              ),
-                              const SizedBox(height: 10),
-                              Expanded(
-                                child: ListView.builder(
-                                  itemCount: poType
-                                      .where((item) {
+                                const SizedBox(height: 10),
+                                // Optional: Search field for filtering items
+                                TextField(
+                                  controller: _searchController,
+                                  decoration: InputDecoration(
+                                    hintText: 'ค้นหา',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  onChanged: (query) {
+                                    setState(() {});
+                                  },
+                                ),
+                                const SizedBox(height: 10),
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemCount: poType
+                                        .where((item) {
+                                          final poTypeCode =
+                                              item['po_type_code'].toString();
+                                          final searchQuery =
+                                              _searchController.text.trim();
+                                          return poTypeCode.contains(
+                                              searchQuery); // Filtering
+                                        })
+                                        .toList()
+                                        .length,
+                                    itemBuilder: (context, index) {
+                                      final filteredItems =
+                                          poType.where((item) {
                                         final poTypeCode =
                                             item['po_type_code'].toString();
                                         final searchQuery =
                                             _searchController.text.trim();
-                                        return poTypeCode.contains(
-                                            searchQuery); // Filtering
-                                      })
-                                      .toList()
-                                      .length,
-                                  itemBuilder: (context, index) {
-                                    final filteredItems =
-                                        poType.where((item) {
+                                        return poTypeCode.contains(searchQuery);
+                                      }).toList();
+
+                                      final item = filteredItems[index];
                                       final poTypeCode =
                                           item['po_type_code'].toString();
-                                      final searchQuery =
-                                          _searchController.text.trim();
-                                      return poTypeCode.contains(searchQuery);
-                                    }).toList();
 
-                                    final item = filteredItems[index];
-                                    final poTypeCode =
-                                        item['po_type_code'].toString();
-
-                                    return ListTile(
-                                      title: Text(
-                                        poTypeCode,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                      onTap: () {
-                                        Navigator.of(context).pop();
-                                        setState(() {
-                                          selectedPoType = poTypeCode;
-                                          poTypeCodeController.text =
-                                              poTypeCode;
-                                        });
-                                      },
-                                    );
-                                  },
+                                      return ListTile(
+                                        title: Text(
+                                          poTypeCode,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                        onTap: () {
+                                          Navigator.of(context).pop();
+                                          setState(() {
+                                            selectedPoType = poTypeCode;
+                                            poTypeCodeController.text =
+                                                poTypeCode;
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
+              },
+              child: AbsorbPointer(
+                child: TextField(
+                  decoration: InputDecoration(
+                    label: Row(
+                      children: [
+                        const Text(
+                          'ประเภทการรับ',
+                          style: TextStyle(
+                            color: Colors.black,
                           ),
-                        );
-                      },
+                        ),
+                        const SizedBox(width: 2), // Add a small space
+                        Text(
+                          '*',
+                          style: TextStyle(
+                            color: Colors.red, // Change asterisk color to red
+                          ),
+                        ),
+                      ],
                     ),
-                  );
-                },
-              );
-            },
-            child: AbsorbPointer(
-              child: TextField(
-                decoration: InputDecoration(
-                  label: Row(
-                    children: [
-                      const Text(
-                        'ประเภทการรับ',
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(width: 2), // Add a small space
-                      Text(
-                        '*',
-                        style: TextStyle(
-                          color: Colors.red, // Change asterisk color to red
-                        ),
-                      ),
-                    ],
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: InputBorder.none,
+                    suffixIcon: Icon(
+                      Icons.arrow_drop_down,
+                      color: Color.fromARGB(255, 113, 113, 113),
+                    ),
                   ),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: InputBorder.none,
-                  suffixIcon: Icon(
-                    Icons.arrow_drop_down,
-                    color: Color.fromARGB(255, 113, 113, 113),
-                  ),
+                  controller: TextEditingController(text: selectedPoType),
                 ),
-                controller: TextEditingController(text: selectedPoType),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 8.0),
-        TextFormField(
-          controller: receiveDateController,
-          decoration: InputDecoration(
-            labelText: 'วันที่ตรวจรับ',
-            filled: true,
-            fillColor: Colors.white,
-            border: InputBorder.none,
-            labelStyle: TextStyle(
-              color: Colors.black,
-            ),
-            hintStyle: TextStyle(
-              color: Colors.white70,
-            ),
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.calendar_today, color: Colors.black),
-              onPressed: () {
-                _selectReceiveDate(context);
-              },
-            ),
-          ),
-          style: TextStyle(
-            color: Colors.black,
-          ),
-          readOnly: false,
-          onChanged: (value) {
-            receiveDateController.text = value;
-          },
-        ),
-        const SizedBox(height: 8.0),
-        Row(
-          children: [
-            Expanded(
-              child: TextFormField(
-                controller: invoiceNoController,
-                decoration: InputDecoration(
-                  label: Row(
-                    children: [
-                      const Text(
-                        'เลขที่ใบแจ้งหนี้',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      const SizedBox(width: 2), // Add a small space
-                      Text(
-                        '*',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ],
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: InputBorder.none,
-                  hintStyle: TextStyle(
-                    color: Colors.white70,
-                  ),
-                ),
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'กรุณากรอกเลขที่ใบแจ้งหนี้';
-                  }
-                  return null;
-                },
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8.0),
-        TextFormField(
-          controller: invoiceDateController,
-          decoration: InputDecoration(
-            labelText: 'วันที่ใบแจ้งหนี้',
-            filled: true,
-            fillColor: Colors.white,
-            border: InputBorder.none,
-            labelStyle: TextStyle(
-              color: Colors.black,
-            ),
-            hintStyle: TextStyle(
-              color: Colors.white70,
-            ),
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.calendar_today, color: Colors.black),
-              onPressed: () {
-                _selectInvoiceDate(context);
-              },
-            ),
-          ),
-          style: TextStyle(
-            color: Colors.black,
-          ),
-          readOnly: false,
-          onChanged: (value) {
-            invoiceDateController.text = value;
-          },
-        ),
-        const SizedBox(height: 8.0),
-        TextFormField(
-          controller: poRemarkController,
-          decoration: InputDecoration(
+          const SizedBox(height: 8.0),
+          TextFormField(
+            controller: receiveDateController,
+            decoration: InputDecoration(
+              labelText: 'วันที่ตรวจรับ',
               filled: true,
               fillColor: Colors.white,
               border: InputBorder.none,
-              labelStyle: TextStyle(color: Colors.black),
-              labelText: 'หมายเหตุ'),
-        ),
-        const SizedBox(height: 8.0),
-        Row(
-          children: [
-            Expanded(
-              child: TextFormField(
-                style: const TextStyle(
-                  color: Colors.black87,
-                ),
-                controller: sellerController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: const Color.fromRGBO(224, 224, 224, 1),
-                  labelText: 'ผู้ขาย',
-                  labelStyle: const TextStyle(
-                    color: Colors.black87,
-                  ),
-                  border: InputBorder.none,
-                ),
-                readOnly: true,
+              labelStyle: TextStyle(
+                color: Colors.black,
+              ),
+              hintStyle: TextStyle(
+                color: Colors.white70,
+              ),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.calendar_today, color: Colors.black),
+                onPressed: () {
+                  _selectReceiveDate(context);
+                },
               ),
             ),
-            const SizedBox(width: 16.0),
-            Expanded(
-              child: TextFormField(
-                style: const TextStyle(
-                  color: Colors.black87,
-                ),
-                controller: crByController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  labelText: 'ผู้รับ',
-                  labelStyle: const TextStyle(
-                    color: Colors.black87,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+            readOnly: false,
+            onChanged: (value) {
+              // Format the input as the user types
+              final formattedDate = formatDate(value);
+              if (formattedDate != value) {
+                // Update the text field if the formatted date is different
+                receiveDateController.value = TextEditingValue(
+                  text: formattedDate,
+                  selection: TextSelection.fromPosition(
+                    TextPosition(offset: formattedDate.length),
                   ),
-                  border: InputBorder.none,
+                );
+              }
+            },
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly, // Allow only digits
+              LengthLimitingTextInputFormatter(8), // Limit to 8 digits
+            ],
+          ),
+          const SizedBox(height: 8.0),
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: invoiceNoController,
+                  decoration: InputDecoration(
+                    label: Row(
+                      children: [
+                        const Text(
+                          'เลขที่ใบแจ้งหนี้',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        const SizedBox(width: 2), // Add a small space
+                        Text(
+                          '*',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ],
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: InputBorder.none,
+                    hintStyle: TextStyle(
+                      color: Colors.white70,
+                    ),
+                  ),
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'กรุณากรอกเลขที่ใบแจ้งหนี้';
+                    }
+                    return null;
+                  },
                 ),
-                readOnly: true,
+              ),
+            ],
+          ),
+          const SizedBox(height: 8.0),
+          TextFormField(
+            controller: invoiceDateController,
+            decoration: InputDecoration(
+              labelText: 'วันที่ใบแจ้งหนี้',
+              filled: true,
+              fillColor: Colors.white,
+              border: InputBorder.none,
+              labelStyle: TextStyle(
+                color: Colors.black,
+              ),
+              hintStyle: TextStyle(
+                color: Colors.white70,
+              ),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.calendar_today, color: Colors.black),
+                onPressed: () {
+                  _selectInvoiceDate(context);
+                },
               ),
             ),
-          ],
-        ),
-        const SizedBox(height: 8.0),
-        TextFormField(
-  style: const TextStyle(
-    color: Colors.black87,
-  ),
-  controller: receiveNoController,
-  decoration: InputDecoration(
-    filled: true,
-    fillColor: Colors.grey[300],
-    label: Row(
-      children: [
-        const Text(
-          'เลขที่เอกสาร WMS',
-          style: TextStyle(
-            color: Colors.black87,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+            readOnly: false,
+            onChanged: (value) {
+              invoiceDateController.text = value;
+            },
           ),
-        ),
-        const SizedBox(width: 2), // Add a small space
-        Text(
-          '*',
-          style: TextStyle(
-            color: Colors.red, // Change asterisk color to red
+          const SizedBox(height: 8.0),
+          TextFormField(
+            controller: poRemarkController,
+            decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: InputBorder.none,
+                labelStyle: TextStyle(color: Colors.black),
+                labelText: 'หมายเหตุ'),
           ),
-        ),
-      ],
-    ),
-    labelStyle: const TextStyle(
-      color: Colors.black87,
-    ),
-    border: InputBorder.none,
-  ),
-  readOnly: true,
-),
-
-        const SizedBox(height: 16.0),
-        TextFormField(
-          style: const TextStyle(
-            color: Colors.black87,
+          const SizedBox(height: 8.0),
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  style: const TextStyle(
+                    color: Colors.black87,
+                  ),
+                  controller: sellerController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: const Color.fromRGBO(224, 224, 224, 1),
+                    labelText: 'ผู้ขาย',
+                    labelStyle: const TextStyle(
+                      color: Colors.black87,
+                    ),
+                    border: InputBorder.none,
+                  ),
+                  readOnly: true,
+                ),
+              ),
+              const SizedBox(width: 16.0),
+              Expanded(
+                child: TextFormField(
+                  style: const TextStyle(
+                    color: Colors.black87,
+                  ),
+                  controller: crByController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey[300],
+                    labelText: 'ผู้รับ',
+                    labelStyle: const TextStyle(
+                      color: Colors.black87,
+                    ),
+                    border: InputBorder.none,
+                  ),
+                  readOnly: true,
+                ),
+              ),
+            ],
           ),
-          controller: wareCodeController,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.grey[300],
-            labelText: 'คลังสินค้า',
-            labelStyle: const TextStyle(
+          const SizedBox(height: 8.0),
+          TextFormField(
+            style: const TextStyle(
               color: Colors.black87,
             ),
-            border: InputBorder.none,
+            controller: receiveNoController,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey[300],
+              label: Row(
+                children: [
+                  const Text(
+                    'เลขที่เอกสาร WMS',
+                    style: TextStyle(
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(width: 2), // Add a small space
+                  Text(
+                    '*',
+                    style: TextStyle(
+                      color: Colors.red, // Change asterisk color to red
+                    ),
+                  ),
+                ],
+              ),
+              labelStyle: const TextStyle(
+                color: Colors.black87,
+              ),
+              border: InputBorder.none,
+            ),
+            readOnly: true,
           ),
-          readOnly: true,
-        ),
-      ],
-    ),
-  );
-}
-
+          const SizedBox(height: 16.0),
+          TextFormField(
+            style: const TextStyle(
+              color: Colors.black87,
+            ),
+            controller: wareCodeController,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey[300],
+              labelText: 'คลังสินค้า',
+              labelStyle: const TextStyle(
+                color: Colors.black87,
+              ),
+              border: InputBorder.none,
+            ),
+            readOnly: true,
+          ),
+        ],
+      ),
+    );
+  }
 }

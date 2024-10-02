@@ -71,6 +71,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                   isExpanded: true,
                   decoration: InputDecoration(
                     border: InputBorder.none,
+                    alignLabelWithHint: true,
                     filled: true,
                     fillColor: Colors.white,
                     labelText: 'ประเภทรายการ',
@@ -142,7 +143,8 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2101),
                         );
-                        if (selectedDate != null && selectedDate != _selectedDate) {
+                        if (selectedDate != null &&
+                            selectedDate != _selectedDate) {
                           setState(() {
                             _selectedDate = selectedDate;
                             _dateController.text =
@@ -161,7 +163,8 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                       final year = int.parse(value.substring(4, 8));
                       final date = DateTime(year, month, day);
                       setState(() {
-                        _dateController.text = DateFormat('dd/MM/yyyy').format(date);
+                        _dateController.text =
+                            DateFormat('dd/MM/yyyy').format(date);
                         _selectedDate = date;
                       });
                     }

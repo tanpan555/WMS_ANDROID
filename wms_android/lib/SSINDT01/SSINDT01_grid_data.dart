@@ -1602,7 +1602,9 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                               }
                                             },
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: const Color.fromARGB(255, 45,68,116),
+                                              backgroundColor:
+                                                  const Color.fromARGB(
+                                                      255, 45, 68, 116),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(15),
@@ -2057,137 +2059,134 @@ class _LotDialogState extends State<LotDialog> {
   }
 
   Widget _buildInfoRow2(Map<String, String> info) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4.0),
-    child: Row(
-      children: info.entries.map((entry) {
-        return Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: Align(
-                    alignment: Alignment.centerRight,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: info.entries.map((entry) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        height: 30,
+                        alignment: Alignment.center,
+                        child: Text(
+                          entry.key,
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 12,
+                          ),
+                          softWrap: false,
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 4),
+                  Flexible(
+                    flex: 3,
                     child: Container(
                       height: 30,
                       alignment: Alignment.center,
-                      child: Text(
-                        entry.key,
+                      child: TextField(
+                        controller: TextEditingController(text: entry.value),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: const Color.fromARGB(255, 254, 247, 230),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                            horizontal: 0,
+                          ),
+                        ),
                         style: TextStyle(
                           color: const Color.fromARGB(255, 0, 0, 0),
                           fontSize: 12,
                         ),
-                        softWrap: false,
                         textAlign: TextAlign.right,
+                        readOnly: true,
                       ),
                     ),
                   ),
-                ),
-                SizedBox(width: 4),
-                Flexible(
-                  flex: 3,
-                  child: Container(
-                    height: 30,
-                    alignment: Alignment.center,
-                    child: TextField(
-                      controller: TextEditingController(text: entry.value),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: const Color.fromARGB(255, 254, 247, 230),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 14,
-                          horizontal: 0,
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow3(Map<String, String> info) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: info.entries.map((entry) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        height: 30,
+                        alignment: Alignment.center,
+                        child: Text(
+                          entry.key,
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 12,
+                          ),
+                          softWrap: false,
+                          textAlign: TextAlign.right,
                         ),
                       ),
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 12,
-                      ),
-                      textAlign: TextAlign.right,
-                      readOnly: true,
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }).toList(),
-    ),
-  );
-}
-
-Widget _buildInfoRow3(Map<String, String> info) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4.0),
-    child: Row(
-      children: info.entries.map((entry) {
-        return Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: Align(
-                    alignment: Alignment.centerRight,
+                  SizedBox(width: 4),
+                  Flexible(
+                    flex: 3,
                     child: Container(
                       height: 30,
                       alignment: Alignment.center,
-                      child: Text(
-                        entry.key,
+                      child: TextField(
+                        controller: TextEditingController(text: entry.value),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: const Color.fromARGB(255, 254, 247, 230),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                            horizontal: 8,
+                          ),
+                        ),
                         style: TextStyle(
                           color: const Color.fromARGB(255, 0, 0, 0),
                           fontSize: 12,
                         ),
-                        softWrap: false,
-                        textAlign: TextAlign.right,
-                        
+                        textAlign: TextAlign.left,
+                        readOnly: true,
                       ),
-                      
                     ),
                   ),
-                ),
-                SizedBox(width: 4),
-                Flexible(
-                  flex: 3,
-                  child: Container(
-                    height: 30,
-                    alignment: Alignment.center,
-                    child: TextField(
-                      controller: TextEditingController(text: entry.value),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor:  const Color.fromARGB(255, 254, 247, 230),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 14,
-                          horizontal: 8,
-                        ),
-                      ),
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 12,
-                      ),
-                      textAlign: TextAlign.left,
-                      readOnly: true,
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      }).toList(),
-    ),
-  );
-}
-
+          );
+        }).toList(),
+      ),
+    );
+  }
 
   Widget _buildDateField({
     required TextEditingController controller,
@@ -2199,10 +2198,29 @@ Widget _buildInfoRow3(Map<String, String> info) {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
         controller: controller,
-         readOnly: false,
-                  onChanged: (value) {
-   controller.text = value;
-  },
+        readOnly: false,
+        onChanged: (value) {
+          if (value.length == 8) {
+            try {
+              // Parsing input format (ddMMyyyy) to DateTime
+              DateTime parsedDate = DateTime.parse(
+                "${value.substring(4, 8)}-${value.substring(2, 4)}-${value.substring(0, 2)}",
+              );
+
+              // Formatting it to the desired format (dd/MM/yyyy)
+              controller.text = displayFormat.format(parsedDate);
+              controller.selection = TextSelection.fromPosition(
+                TextPosition(offset: controller.text.length),
+              );
+
+              if (onChanged != null) {
+                onChanged(displayFormat.format(parsedDate));
+              }
+            } catch (e) {
+              print('Error parsing date: $e');
+            }
+          }
+        },
         decoration: InputDecoration(
           labelText: labelText,
           border: OutlineInputBorder(
@@ -2210,34 +2228,33 @@ Widget _buildInfoRow3(Map<String, String> info) {
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
           suffixIcon: IconButton(
-      icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
-      onPressed: () async {
-           FocusScope.of(context).requestFocus(FocusNode());
-          DateTime initialDate = DateTime.now();
-          if (controller.text.isNotEmpty) {
-            try {
-              initialDate = displayFormat.parse(controller.text);
-            } catch (e) {
-              print('Error parsing date: $e');
-            }
-          }
-          final DateTime? picked = await showDatePicker(
-            context: context,
-            
-            initialDate: initialDate,
-            firstDate: DateTime(2000),
-            lastDate: DateTime(2101),
-            initialEntryMode: DatePickerEntryMode.calendarOnly,
-          );
-          if (picked != null) {
-            controller.text = displayFormat.format(picked);
-            if (onChanged != null) {
-              onChanged(displayFormat.format(picked));
-            }
-          }
-      }),
+            icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
+            onPressed: () async {
+              FocusScope.of(context).requestFocus(FocusNode());
+              DateTime initialDate = DateTime.now();
+              if (controller.text.isNotEmpty) {
+                try {
+                  initialDate = displayFormat.parse(controller.text);
+                } catch (e) {
+                  print('Error parsing date: $e');
+                }
+              }
+              final DateTime? picked = await showDatePicker(
+                context: context,
+                initialDate: initialDate,
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2101),
+                initialEntryMode: DatePickerEntryMode.calendarOnly,
+              );
+              if (picked != null) {
+                controller.text = displayFormat.format(picked);
+                if (onChanged != null) {
+                  onChanged(displayFormat.format(picked));
+                }
+              }
+            },
+          ),
         ),
-        
       ),
     );
   }
@@ -2622,22 +2639,22 @@ Widget _buildInfoRow3(Map<String, String> info) {
                                   _buildInfoRow3({
                                     'Seq:':
                                         item['lot_seq_nb']?.toString() ?? '',
-                                         }),
-                                _buildInfoRow3({
+                                  }),
+                                  _buildInfoRow3({
                                     'Lot No:':
                                         item['lot_product_no']?.toString() ??
                                             '',
-                                             }),
-                                             _buildInfoRow2({
+                                  }),
+                                  _buildInfoRow2({
                                     'Lot QTY:': item['lot_qty'] != null
                                         ? numberFormat.format(item['lot_qty'])
                                         : '',
-                                        }),
-                                         _buildInfoRow3({
+                                  }),
+                                  _buildInfoRow3({
                                     'Lot ผู้ผลิต:':
                                         item['lot_supplier']?.toString() ?? '',
-                                          }),
-                                        _buildInfoRow3({
+                                  }),
+                                  _buildInfoRow3({
                                     'MFG Date:':
                                         item['mfg_date']?.toString() ?? '',
                                   }),
