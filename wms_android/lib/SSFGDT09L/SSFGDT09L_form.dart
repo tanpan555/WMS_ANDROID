@@ -710,9 +710,22 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         border: InputBorder.none,
                         filled: true,
                         fillColor: Colors.grey[300],
-                        labelText: 'เลขที่ใบเบิก WMS *',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                        label: RichText(
+                          text: const TextSpan(
+                            text: 'เลขที่ใบเบิก WMS', // ชื่อ label
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: ' *', // เพิ่มเครื่องหมาย *
+                                style: TextStyle(
+                                  color: Colors.red, // สีแดงสำหรับ *
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -726,15 +739,32 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                       minLines: 1,
                       maxLines: 3,
                       // overflow: TextOverflow.ellipsis,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         border: InputBorder.none,
                         filled: true,
                         fillColor: Colors.white,
-                        labelText: 'ประเภทการจ่าย *',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
+                        label: RichText(
+                          text: const TextSpan(
+                            text: 'ประเภทการจ่าย', // ชื่อ label
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: ' *', // เพิ่มเครื่องหมาย *
+                                style: TextStyle(
+                                  color: Colors.red, // สีแดงสำหรับ *
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        suffixIcon: Icon(
+                        // labelText: 'ประเภทการจ่าย *',
+                        // labelStyle: TextStyle(
+                        //   color: Colors.black87,
+                        // ),
+                        suffixIcon: const Icon(
                           Icons.arrow_drop_down,
                           color: Color.fromARGB(255, 113, 113, 113),
                         ),
@@ -757,10 +787,27 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         border: InputBorder.none,
                         filled: true,
                         fillColor: Colors.white,
-                        labelText: 'วันที่บันทึก *',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                        label: RichText(
+                          text: const TextSpan(
+                            text: 'วันที่บันทึก', // ชื่อ label
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: ' *', // เพิ่มเครื่องหมาย *
+                                style: TextStyle(
+                                  color: Colors.red, // สีแดงสำหรับ *
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+                        // labelText: 'วันที่บันทึก *',
+                        // labelStyle: const TextStyle(
+                        //   color: Colors.black87,
+                        // ),
                         suffixIcon: IconButton(
                           icon: const Icon(
                               Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
@@ -954,14 +1001,31 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                       minLines: 1,
                       maxLines: 3,
                       // overflow: TextOverflow.ellipsis,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         border: InputBorder.none,
                         filled: true,
                         fillColor: Colors.white,
-                        labelText: 'เลขที่คำสั่งผลผลิต *',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
+                        label: RichText(
+                          text: const TextSpan(
+                            text: 'เลขที่คำสั่งผลผลิต', // ชื่อ label
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: ' *', // เพิ่มเครื่องหมาย *
+                                style: TextStyle(
+                                  color: Colors.red, // สีแดงสำหรับ *
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+                        // labelText: 'เลขที่คำสั่งผลผลิต *',
+                        // labelStyle: TextStyle(
+                        //   color: Colors.black87,
+                        // ),
                         suffixIcon: Icon(
                           Icons.arrow_drop_down,
                           color: Color.fromARGB(255, 113, 113, 113),

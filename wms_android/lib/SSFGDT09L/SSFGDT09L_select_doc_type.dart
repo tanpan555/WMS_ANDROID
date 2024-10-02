@@ -203,7 +203,7 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
                 },
                 style: AppStyles.ConfirmbuttonStyle(),
                 child:
-                    Text('ยืนยัน', style: AppStyles.ConfirmbuttonTextStyle()),
+                    Text('CONFIRM', style: AppStyles.ConfirmbuttonTextStyle()),
               ),
             ],
           ),

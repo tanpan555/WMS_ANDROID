@@ -93,7 +93,8 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   String? displayEndItem;
   String returnEndItem = '';
   TextEditingController endItemController = TextEditingController();
-  // -----------------------------
+  // ----------------------------- Radio
+  String selectedRadio = '';
 
   TextEditingController searchController = TextEditingController();
 
@@ -865,6 +866,34 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     color: Color.fromARGB(255, 113, 113, 113),
                   ),
                 ),
+              ),
+              Column(
+                children: <Widget>[
+                  ListTile(
+                    title: Text('แสดงข้อมูลทั้งหมด'),
+                    leading: Radio<String>(
+                      value: '1',
+                      groupValue: selectedRadio, // ค่าที่เลือก
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedRadio = value.toString();
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('แสดงข้อมูลเฉพาะข้อมูลที่มีผลต่าง'),
+                    leading: Radio<String>(
+                      value: '0',
+                      groupValue: selectedRadio, // ค่าที่เลือก
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedRadio = value.toString();
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

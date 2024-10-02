@@ -350,14 +350,14 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                                         pDocDate: 'null')),
                               ).then((value) async {
                                 // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                                setState(() {
-                                  pSoNo = '';
-                                  selectedDate = '';
-                                  selectedItem = 'ระหว่างบันทึก';
-                                  statusDESC = 'ระหว่างบันทึก';
-                                  dateController.clear();
-                                  pSoNoController.clear();
-                                });
+                                // setState(() {
+                                //   pSoNo = '';
+                                //   selectedDate = '';
+                                //   selectedItem = 'ระหว่างบันทึก';
+                                //   statusDESC = 'ระหว่างบันทึก';
+                                //   dateController.clear();
+                                //   pSoNoController.clear();
+                                // });
                               });
                               // _navigateToPage(
                               //     context,

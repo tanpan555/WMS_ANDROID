@@ -231,12 +231,12 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                     ).then((value) async {
                       // เมื่อกลับมาหน้าเดิม เรียก fetchData
                       setState(() {
-                        pDocNo = '';
-                        selectedDate = '';
-                        selectedItem = 'รอตรวจนับ';
-                        status = 'N';
-                        _controller.clear();
-                        _dateController.clear();
+                        // pDocNo = '';
+                        // selectedDate = '';
+                        // selectedItem = 'รอตรวจนับ';
+                        // status = 'N';
+                        // _controller.clear();
+                        // _dateController.clear();
                       });
                     });
                     // _navigateToPage(

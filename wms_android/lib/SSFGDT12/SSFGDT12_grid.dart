@@ -433,7 +433,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                       ),
                                       SizedBox(
                                         child: Text(
-                                          '${item['get_item_name']}',
+                                          'ชื่อสินค้า : ${item['get_item_name']}',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 14.0),

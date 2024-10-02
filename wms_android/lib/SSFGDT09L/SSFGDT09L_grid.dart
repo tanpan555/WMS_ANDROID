@@ -312,7 +312,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             // --------------------------------------------------------------------
             Expanded(
               child: ListView(children: [
@@ -371,7 +371,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 8),
                 // --------------------------------------------------------------------
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -429,6 +429,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                     // --------------------------------------------------------------------
                   ],
                 ),
+                const SizedBox(height: 8),
                 // ข้อมูลที่ต้องการแสดงใน ListView
                 ListView.builder(
                   shrinkWrap: true,

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
+import 'dart:ui';
+import 'dart:developer';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -48,6 +51,10 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   String broeserLanguage = globals.BROWSER_LANGUAGE;
   String sessionID = globals.APP_SESSION;
   String pDsPdf = globals.P_DS_PDF;
+
+  bool isLoading = true;
+  String? nextLink = '';
+  String? prevLink = '';
 
   // PDF
   String? V_DS_PDF;
@@ -121,32 +128,102 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     );
   }
 
-  Future<void> fetchData() async {
+  Future<void> fetchData([String? url]) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final String requestUrl = url ??
+        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${widget.pErpOuCode}/${widget.pAttr1}/${widget.pAppUser}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}';
+
     try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${widget.pErpOuCode}/${widget.pAttr1}/${widget.pAppUser}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}'));
+      final response = await http.get(Uri.parse(requestUrl));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
-        print('Fetched data: $jsonDecode');
-        if (mounted) {
-          setState(() {
-            dataCard =
-                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          });
-        }
-        print('dataCard : $dataCard');
+        final parsedResponse = json.decode(responseBody);
+
+        setState(() {
+          if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+            dataCard = parsedResponse['items'];
+          } else {
+            dataCard = [];
+          }
+
+          List<dynamic> links = parsedResponse['links'] ?? [];
+          nextLink = getLink(links, 'next');
+          prevLink = getLink(links, 'prev');
+          isLoading = false;
+        });
       } else {
-        throw Exception('Failed to load fetchData');
+        setState(() {
+          print('Failed to load data: ${response.statusCode}');
+        });
+        print('HTTP Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
-      if (mounted) {
-        setState(() {});
-      }
-      print('ERROR IN Fetch Data : $e');
+      // Handle exceptions that may occur
+      setState(() {
+        // isLoading = false;
+        print('Error occurred: $e');
+      });
+      print('Exception: $e');
     }
   }
+
+  String? getLink(List<dynamic> links, String rel) {
+    final link =
+        links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
+    return link != null ? link['href'] : null;
+  }
+
+  void loadNextPage() {
+    if (nextLink != '') {
+      setState(() {
+        print('nextLink $nextLink');
+        isLoading = true;
+      });
+      fetchData(nextLink);
+    }
+  }
+
+  void loadPrevPage() {
+    if (prevLink != '') {
+      setState(() {
+        isLoading = true;
+      });
+      fetchData(prevLink);
+    }
+  }
+
+  // Future<void> fetchData([String? url]) async {
+  //   isLoading = true;
+  //   try {
+  //     final response = await http.get(Uri.parse(url ??
+  //         'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${widget.pErpOuCode}/${widget.pAttr1}/${widget.pAppUser}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}'));
+
+  //     if (response.statusCode == 200) {
+  //       final responseBody = utf8.decode(response.bodyBytes);
+  //       final responseData = jsonDecode(responseBody);
+  //       print('Fetched data: $jsonDecode');
+  //       if (mounted) {
+  //         setState(() {
+  //           dataCard =
+  //           List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+  //         });
+  //       }
+  //       print('dataCard : $dataCard');
+  //     } else {
+  //       throw Exception('Failed to load fetchData');
+  //     }
+  //   } catch (e) {
+  //     if (mounted) {
+  //       setState(() {});
+  //     }
+  //     print('ERROR IN Fetch Data : $e');
+  //   }
+  // }
 
   Future<void> checkStatusCard(
       String pReceiveNo, String pDocNo, String pDocType) async {
@@ -598,159 +675,234 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
+            // dataCard.isEmpty
+            // ? const Center(
+            //     child: Column(
+            //     mainAxisSize: MainAxisSize.min,
+            //     mainAxisAlignment:
+            //         MainAxisAlignment.center, // จัดกึ่งกลางในแนวตั้ง
+            //     crossAxisAlignment:
+            //         CrossAxisAlignment.center, // จัดกึ่งกลางในแนวนอน
+            //     children: [
+            //       // Text(
+            //       //   'No Data Available',
+            //       //   style: TextStyle(color: Colors.white),
+            //       // ),
+            //       Center(
+            //         child: Text(
+            //           'No Data Available',
+            //           style: TextStyle(color: Colors.white),
+            //         ),
+            //       )
+            //     ],
+            //   ))
             Expanded(
-              child: ListView(
-                children: dataCard.map((item) {
-                  Color cardColor;
-                  String statusText;
-                  String iconImageYorN;
-                  print(item['card_status_desc']);
-                  switch (item['card_status_desc']) {
-                    case 'ระหว่างบันทึก':
-                      cardColor = Color.fromRGBO(246, 250, 112, 1.0);
-                      statusText = 'ระหว่างบันทึก';
-                      break;
-                    case 'ยืนยันการรับ':
-                      cardColor = Color.fromRGBO(146, 208, 80, 1.0);
-                      statusText = 'ยืนยันการรับ';
-                      break;
-                    case 'ยกเลิก':
-                      cardColor = Color.fromRGBO(208, 206, 206, 1.0);
-                      statusText = 'ยกเลิก';
-                      break;
-                    case 'ยืนยันการจ่าย':
-                      cardColor = Color.fromRGBO(255, 255, 255, 1.0);
-                      statusText = 'ยืนยันการจ่าย';
-                      break;
-                    case 'ปกติ':
-                      cardColor = Color.fromRGBO(255, 255, 255, 1.0);
-                      statusText = 'ยืนยันการจ่าย';
-                      break;
-                    case 'อ้างอิงแล้ว':
-                      cardColor = Color.fromRGBO(255, 255, 255, 1.0);
-                      statusText = 'อ้างอิงแล้ว';
-                      break;
-                    default:
-                      cardColor = Color.fromRGBO(255, 255, 255, 1.0);
-                      statusText = 'Unknown';
-                  }
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : dataCard.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No Data Available',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
+                      : ListView(
+                          children: [
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics:
+                                  const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
+                              itemCount: dataCard.length,
+                              itemBuilder: (context, index) {
+                                // ดึงข้อมูลรายการจาก dataCard
+                                var item = dataCard[index];
+                                Color cardColor;
+                                String statusText;
+                                String iconImageYorN;
+                                print(item['card_status_desc']);
+                                switch (item['card_status_desc']) {
+                                  case 'ระหว่างบันทึก':
+                                    cardColor =
+                                        Color.fromRGBO(246, 250, 112, 1.0);
+                                    statusText = 'ระหว่างบันทึก';
+                                    break;
+                                  case 'ยืนยันการรับ':
+                                    cardColor =
+                                        Color.fromRGBO(146, 208, 80, 1.0);
+                                    statusText = 'ยืนยันการรับ';
+                                    break;
+                                  case 'ยกเลิก':
+                                    cardColor =
+                                        Color.fromRGBO(208, 206, 206, 1.0);
+                                    statusText = 'ยกเลิก';
+                                    break;
+                                  case 'ยืนยันการจ่าย':
+                                    cardColor =
+                                        Color.fromRGBO(255, 255, 255, 1.0);
+                                    statusText = 'ยืนยันการจ่าย';
+                                    break;
+                                  case 'ปกติ':
+                                    cardColor =
+                                        Color.fromRGBO(255, 255, 255, 1.0);
+                                    statusText = 'ยืนยันการจ่าย';
+                                    break;
+                                  case 'อ้างอิงแล้ว':
+                                    cardColor =
+                                        Color.fromRGBO(255, 255, 255, 1.0);
+                                    statusText = 'อ้างอิงแล้ว';
+                                    break;
+                                  default:
+                                    cardColor =
+                                        Color.fromRGBO(255, 255, 255, 1.0);
+                                    statusText = 'Unknown';
+                                }
 
-                  switch (item['qc_yn']) {
-                    case 'Y':
-                      iconImageYorN = 'assets/images/rt_machine_on.png';
-                      break;
-                    case 'N':
-                      iconImageYorN = 'assets/images/rt_machine_off.png';
-                      break;
-                    default:
-                      iconImageYorN = 'assets/images/rt_machine_off.png';
-                  }
+                                switch (item['qc_yn']) {
+                                  case 'Y':
+                                    iconImageYorN =
+                                        'assets/images/rt_machine_on.png';
+                                    break;
+                                  case 'N':
+                                    iconImageYorN =
+                                        'assets/images/rt_machine_off.png';
+                                    break;
+                                  default:
+                                    iconImageYorN =
+                                        'assets/images/rt_machine_off.png';
+                                }
+                                return Card(
+                                  elevation: 8.0,
+                                  margin: EdgeInsets.symmetric(vertical: 8.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  color: Color.fromRGBO(204, 235, 252, 1.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      checkStatusCard(
+                                          item['po_no'] ?? '',
+                                          item['p_doc_no'] ?? '',
+                                          item['p_doc_type'] ?? '');
 
-                  return Card(
-                    elevation: 8.0,
-                    margin: EdgeInsets.symmetric(vertical: 8.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    color: Color.fromRGBO(204, 235, 252, 1.0),
-                    child: InkWell(
-                      onTap: () {
-                        checkStatusCard(item['po_no'] ?? '',
-                            item['p_doc_no'] ?? '', item['p_doc_type'] ?? '');
+                                      print(
+                                          'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
+                                      print(
+                                          'p_doc_no in Card : ${item['p_doc_no']} Type : ${item['p_doc_no'].runtimeType}');
+                                      print(
+                                          'p_doc_type in Card : ${item['p_doc_type']} Type : ${item['p_doc_type'].runtimeType}');
+                                    },
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    child: Stack(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    DateTime parsedDate =
+                                                        DateFormat('dd/MM/yyyy')
+                                                            .parse(item[
+                                                                'po_date']);
+                                                    String formattedDate =
+                                                        DateFormat('dd-MM-yyyy')
+                                                            .format(parsedDate);
 
-                        print(
-                            'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
-                        print(
-                            'p_doc_no in Card : ${item['p_doc_no']} Type : ${item['p_doc_no'].runtimeType}');
-                        print(
-                            'p_doc_type in Card : ${item['p_doc_type']} Type : ${item['p_doc_type'].runtimeType}');
-                      },
-                      borderRadius: BorderRadius.circular(15.0),
-                      child: Stack(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      DateTime parsedDate =
-                                          DateFormat('dd/MM/yyyy')
-                                              .parse(item['po_date']);
-                                      String formattedDate =
-                                          DateFormat('dd-MM-yyyy')
-                                              .format(parsedDate);
-
-                                      formattedDateDocDate = formattedDate;
-                                      getPDF(
-                                        item['p_doc_no'],
-                                        item['p_doc_type'],
-                                        formattedDate,
-                                      );
-                                    });
-                                  },
-                                  child: Container(
-                                    width: 100,
-                                    height: 40,
-                                    // color: cardColor, // เปลี่ยนสีพื้นหลังที่นี่
-                                    child: Image.asset(
-                                      'assets/images/printer.png',
-                                      fit: BoxFit.contain,
+                                                    formattedDateDocDate =
+                                                        formattedDate;
+                                                    getPDF(
+                                                      item['p_doc_no'],
+                                                      item['p_doc_type'],
+                                                      formattedDate,
+                                                    );
+                                                  });
+                                                },
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 40,
+                                                  // color: cardColor, // เปลี่ยนสีพื้นหลังที่นี่
+                                                  child: Image.asset(
+                                                    'assets/images/printer.png',
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(height: 20.0),
+                                              Text(
+                                                '${item['po_date']} ${item['po_no']} ${item['item_stype_desc']}',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        // Positioned สำหรับสถานะ
+                                        if (statusText != 'Unknown')
+                                          Positioned(
+                                            top: 8.0,
+                                            right: 8.0,
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 12.0,
+                                                      vertical: 6.0),
+                                                  decoration: BoxDecoration(
+                                                    color: cardColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.0),
+                                                    border: Border.all(
+                                                        color: cardColor,
+                                                        width: 2.0),
+                                                  ),
+                                                  child: Text(
+                                                    statusText,
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                                // SizedBox(height: 5.0),
+                                                SizedBox(
+                                                  width: 100,
+                                                  height: 40,
+                                                  child: Image.asset(
+                                                    iconImageYorN,
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                      ],
                                     ),
                                   ),
+                                );
+                              },
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                  onPressed:
+                                      prevLink != '' ? loadPrevPage : null,
+                                  child: const Text('Previous'),
                                 ),
-                                SizedBox(height: 20.0),
-                                Text(
-                                  '${item['po_date']} ${item['po_no']} ${item['item_stype_desc']}',
-                                  style: TextStyle(color: Colors.black),
+                                ElevatedButton(
+                                  onPressed:
+                                      nextLink != '' ? loadNextPage : null,
+                                  child: const Text('Next'),
                                 ),
                               ],
                             ),
-                          ),
-                          // Positioned สำหรับสถานะ
-                          if (statusText != 'Unknown')
-                            Positioned(
-                              top: 8.0,
-                              right: 8.0,
-                              child: Column(
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 12.0, vertical: 6.0),
-                                    decoration: BoxDecoration(
-                                      color: cardColor,
-                                      borderRadius: BorderRadius.circular(12.0),
-                                      border: Border.all(
-                                          color: cardColor, width: 2.0),
-                                    ),
-                                    child: Text(
-                                      statusText,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  // SizedBox(height: 5.0),
-                                  SizedBox(
-                                    width: 100,
-                                    height: 40,
-                                    child: Image.asset(
-                                      iconImageYorN,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
+                          ],
+                        ),
             ),
           ],
         ),
