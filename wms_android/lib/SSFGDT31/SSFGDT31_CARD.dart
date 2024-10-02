@@ -330,7 +330,7 @@ String? LT_CHECK;
     }
   }
 
- Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
+Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
   Map<String, Color> statusColors = {
     'ยืนยันการรับ': const Color.fromARGB(255, 146, 208, 80),
     'ระหว่างบันทึก': const Color.fromARGB(255, 246, 250, 112),
@@ -366,54 +366,30 @@ String? LT_CHECK;
           // Handle tap
         },
         borderRadius: BorderRadius.circular(15.0),
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Add ap_name as title
-                  Text(
-                    item['ap_name'] ?? 'Unknown AP Name', // Show ap_name here
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0, // Adjust size as needed
-                    ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Center ap_name as title
+              Center(
+                child: Text(
+                  item['ap_name'] ?? 'Unknown AP Name', // Show ap_name here
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0, // Adjust size as needed
                   ),
-                  const SizedBox(height: 4.0), // Space between title and divider
-                  const Divider(color: Color.fromARGB(255, 0, 0, 0)), // Divider between title and rest of data
-                  const SizedBox(height: 4.0), // Space between divider and next widget
-                  InkWell(
-                    onTap: () {
-                      print(item['doc_no']);
-                      print('${item['doc_type']}');
-                      Inteface_receive_WMS2ERP(item['doc_no'], item['doc_type']);
-                    },
-                    child: Container(
-                      width: 100,
-                      height: 40,
-                      child: Image.asset(
-                        'assets/images/printer.png',
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20.0), // Space between printer icon and next text
-                  Text(
-                    '${item['po_date']} ${item['po_no']} ${item['item_stype_desc']} ',
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                ],
+                ),
               ),
-            ),
-            Positioned(
-              top: 8.0,
-              right: 8.0,
-              child: Column(
+              const SizedBox(height: 4.0), // Space between title and divider
+              const Divider(color: Color.fromARGB(255, 0, 0, 0)), // Divider between title and rest of data
+              const SizedBox(height: 4.0), // Space between divider and next widget
+             
+          // Space between text and next row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Space out the items in the row
                 children: [
-                  const SizedBox(height: 50.0),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     height: 35, // Set height to match the printer icon
@@ -433,22 +409,43 @@ String? LT_CHECK;
                     ),
                   ),
                   SizedBox(
-                    width: 100,
+                    width: 40, // Adjust width as needed
                     height: 40,
                     child: Image.asset(
                       iconImageYorN,
                       fit: BoxFit.contain,
                     ),
                   ),
+                  InkWell(
+                    onTap: () {
+                      print(item['doc_no']);
+                      print('${item['doc_type']}');
+                      Inteface_receive_WMS2ERP(item['doc_no'], item['doc_type']);
+                    },
+                    child: SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: Image.asset(
+                        'assets/images/printer.png',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: 4.0),
+               Text(
+                '${item['po_date']} ${item['po_no']} ${item['item_stype_desc']} ',
+                style: const TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
         ),
       ),
     ),
   );
 }
+
 
 
 
