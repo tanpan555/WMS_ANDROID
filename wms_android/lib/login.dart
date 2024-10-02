@@ -25,6 +25,21 @@ class UpperCaseTextFormatter extends TextInputFormatter {
   }
 }
 
+class UpperCaseNoSpaceTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // Remove spaces and convert to uppercase
+    final formattedText = newValue.text.replaceAll(' ', '').toUpperCase();
+    return TextEditingValue(
+      text: formattedText,
+      selection: TextSelection.collapsed(offset: formattedText.length),
+    );
+  }
+}
+
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -103,6 +118,8 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.pushNamed(context, '/forgotPassword');
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -151,32 +168,30 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               const SizedBox(height: 20),
                               TextFormField(
-                                controller: _usernameController,
-                                inputFormatters: [UpperCaseTextFormatter()],
-                                style: TextStyle(color: Colors.white),
-                                decoration: InputDecoration(
-                                  prefixIcon: Padding(
-                                    padding: const EdgeInsets.all(13),
-                                    child: Icon(Icons.person,
-                                        color: Colors.white, size: 20),
-                                  ),
-                                  hintText: 'Username',
-                                  hintStyle: TextStyle(
-                                      fontSize: 14, color: Colors.white),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                ),
-                              ),
+  controller: _usernameController,
+  inputFormatters: [UpperCaseNoSpaceTextFormatter()], // Updated here
+  style: TextStyle(color: Colors.white),
+  decoration: InputDecoration(
+    prefixIcon: Padding(
+      padding: const EdgeInsets.all(13),
+      child: Icon(Icons.person, color: Colors.white, size: 20),
+    ),
+    hintText: 'Username',
+    hintStyle: TextStyle(fontSize: 14, color: Colors.white),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: BorderSide(color: Colors.white),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: BorderSide(color: Colors.white),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: BorderSide(color: Colors.white),
+    ),
+  ),
+),
                               const SizedBox(height: 10),
                               TextFormField(
                                 controller: _passwordController,
