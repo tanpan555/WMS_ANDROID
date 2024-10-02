@@ -50,6 +50,8 @@ class SessionManager {
   }
 }
 
+
+
 class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> dataMenu = [];
   late String sessionID;
@@ -65,6 +67,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
   void _navigateToPage(BuildContext context, Widget page) {
     Navigator.push(
       context,
@@ -73,30 +81,30 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> fetchData() async {
-    String sessionID = SessionManager().sessionID;
-    print('sessionID in Main : $sessionID Type : ${sessionID.runtimeType}');
-    try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/c/menu_level_1/$sessionID'));
+  String sessionID = SessionManager().sessionID;
+  print('sessionID in Main : $sessionID Type : ${sessionID.runtimeType}');
+  try {
+    final response = await http.get(Uri.parse(
+        'http://172.16.0.82:8888/apex/wms/c/menu_level_1/${globals.APP_SESSION}'));
 
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
-        print('Fetched data: $jsonDecode');
+    if (response.statusCode == 200) {
+      final responseBody = utf8.decode(response.bodyBytes);
+      final responseData = jsonDecode(responseBody);
+      print('Fetched data: $responseData');
 
-        setState(() {
-          dataMenu =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
-        print('dataMenu : $dataMenu');
-      } else {
-        throw Exception('Failed to load fetchData');
-      }
-    } catch (e) {
-      setState(() {});
-      print('ERROR IN Fetch Data : $e');
+      setState(() {
+        dataMenu =
+            List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+      });
+      print('dataMenu : $dataMenu');
+    } else {
+      throw Exception('Failed to load fetchData');
     }
+  } catch (e) {
+    setState(() {});
+    print('ERROR IN Fetch Data : $e');
   }
+}
 
   @override
   Widget build(BuildContext context) {

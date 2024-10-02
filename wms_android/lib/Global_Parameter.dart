@@ -10,6 +10,10 @@ String BROWSER_LANGUAGE = 'EN';
 String Raw_Material = 'Raw Material';
 String Finishing = 'Finishing';
 String P_DS_PDF = 'wms';
+String P_OU_NAME = '';
+String P_DIV_CODE = '';
+String P_SUBINV = '';
+String P_SUBINV_NAME = '';
 
 String ATTR1 = '';
 String P_WARE_CODE = '';

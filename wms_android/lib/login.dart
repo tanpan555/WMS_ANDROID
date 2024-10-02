@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'dart:ui'; // Import for BackdropFilter
+import 'dart:ui';
 import 'data_api.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
-
-import 'package:flutter/services.dart'; // Import this for TextInputFormatter
-
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -18,77 +18,87 @@ class UpperCaseTextFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    final upperCaseText = newValue.text.toUpperCase();
-    return newValue.copyWith(
-      text: upperCaseText,
-      selection: newValue.selection.copyWith(
-        baseOffset: upperCaseText.length,
-        extentOffset: upperCaseText.length,
-      ),
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
     );
   }
 }
 
-
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String _usernameError = '';
-  String _passwordError = '';
-  String sessionID = '';
+  String _loginError = '';
   final ApiService _apiService = ApiService();
 
-  // Sign in logic
-  void _signIn() {
+  bool _isLoading = false;
+
+  Future<void> _signIn() async {
     final username = _usernameController.text;
     final password = _passwordController.text;
-    sessionID = globals.APP_SESSION;
 
     setState(() {
-      _usernameError = '';
-      _passwordError = '';
-      sessionID = globals.APP_SESSION;
+      _loginError = '';
+      _isLoading = true;
     });
 
-    if (username.isEmpty) {
+    if (username.isEmpty || password.isEmpty) {
       setState(() {
-        _usernameError = 'Please enter your username.';
+        _loginError = 'Please enter both username and password.';
+        _isLoading = false;
       });
+      return;
     }
-    if (password.isEmpty) {
-      setState(() {
-        _passwordError = 'Please enter your password.';
-      });
-    }
-    if (username.isNotEmpty && password.isNotEmpty) {
-      if (username == 'SS-STAFF' && password == 'Soft2') {
-        Navigator.pushReplacementNamed(
-          context,
-          '/home',
-          arguments: sessionID, // ส่ง sessionID เป็น arguments
-        );
-        print(
-            'sessionID in Login : $sessionID Type : ${sessionID.runtimeType}');
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://172.16.0.82:8888/apex/wms/login_wms/process'),
+        body: {
+          'P_USERNAME': username,
+          'P_PASSWORD': password,
+          'P_OU': 'LIK',
+          'P_DIV': 'HQ',
+          'APP_ALIAS': 'WMS',
+          'P_HTTP_HOST': '172.16.0.82:8888',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['PO_STATUS'] == '0') {
+          // Login successful
+          globals.P_OU_CODE = data['P_OU_CODE'];
+          globals.P_OU_NAME = data['P_OU_NAME'];
+          globals.P_DIV_CODE = data['P_DIV_CODE'];
+          globals.P_SUBINV = data['P_SUBINV'];
+          globals.P_SUBINV_NAME = data['P_SUBINV_NAME'];
+          globals.APP_SESSION = data['V_AUDSID'];
+
+          Navigator.pushReplacementNamed(
+            context,
+            '/home',
+            arguments: globals.APP_SESSION,
+          );
+        } else if (data['PO_STATUS'] == '1') {
+          setState(() {
+            _loginError = data['v_Result'];
+            _isLoading = false;
+          });
+        }
       } else {
-        _passwordController.clear();
+        throw Exception('Failed to connect to the server');
       }
+    } catch (e) {
+      setState(() {
+        _loginError = 'username or password Incorrect.';
+        _isLoading = false;
+      });
+      print('Error during login: $e');
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _apiService.fetchSessionid().then((_) {
-      setState(() {
-        // sessionID = globals.APP_SESSION;
-      });
-    });
-  }
-
-  // Handle forgot password action
   void _forgotPassword() {
-    Navigator.pushNamed(
-        context, '/forgotPassword'); // Replace with your actual route
+    Navigator.pushNamed(context, '/forgotPassword');
   }
 
   @override
@@ -101,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
         height: screenHeight,
         width: screenWidth,
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 17, 0, 56), // Use the solid purple color
+          color: Color.fromARGB(255, 17, 0, 56),
         ),
         child: Center(
           child: SingleChildScrollView(
@@ -118,8 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Container(
                           padding: const EdgeInsets.all(16.0),
                           decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 255, 255, 255)
-                                .withOpacity(0.1),
+                            color: Colors.white.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Column(
@@ -131,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               const SizedBox(height: 10),
                               Text(
-                                'Warehouse Management', // Title text
+                                'Warehouse Management',
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.white,
@@ -140,101 +149,85 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               const SizedBox(height: 20),
                               TextFormField(
-  controller: _usernameController,
-  inputFormatters: [
-    UpperCaseTextFormatter(), // Apply the UpperCaseTextFormatter
-  ],
-  style: TextStyle(
-    color: Colors.white,
-  ),
-  decoration: InputDecoration(
-    prefixIcon: Padding(
-      padding: const EdgeInsets.all(13),
-      child: Icon(
-        Icons.person,
-        color: Color.fromARGB(255, 255, 255, 255),
-        size: 20,
-      ),
-    ),
-    hintText: 'Username',
-    hintStyle: TextStyle(
-      fontSize: 14,
-      color: Color.fromARGB(255, 255, 255, 255),
-    ),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.0),
-      borderSide: BorderSide(
-        color: Color.fromARGB(255, 255, 255, 255),
-      ),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.0),
-      borderSide: BorderSide(
-        color: Color.fromARGB(255, 255, 255, 255),
-      ),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.0),
-      borderSide: BorderSide(
-        color: Color.fromARGB(255, 255, 255, 255),
-      ),
-    ),
-    errorText: _usernameError.isNotEmpty ? _usernameError : null,
-  ),
-),
-
+                                controller: _usernameController,
+                                inputFormatters: [UpperCaseTextFormatter()],
+                                style: TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  prefixIcon: Padding(
+                                    padding: const EdgeInsets.all(13),
+                                    child: Icon(Icons.person,
+                                        color: Colors.white, size: 20),
+                                  ),
+                                  hintText: 'Username',
+                                  hintStyle: TextStyle(
+                                      fontSize: 14, color: Colors.white),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                ),
+                              ),
                               const SizedBox(height: 10),
                               TextFormField(
                                 controller: _passwordController,
                                 obscureText: true,
-                                style: TextStyle(
-                                    color: Colors
-                                        .white), // Change text color to white
+                                style: TextStyle(color: Colors.white),
                                 decoration: InputDecoration(
                                   prefixIcon: Padding(
                                     padding: const EdgeInsets.all(16),
-                                    child: FaIcon(
-                                      FontAwesomeIcons.key,
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                      size: 15,
-                                    ),
+                                    child: FaIcon(FontAwesomeIcons.key,
+                                        color: Colors.white, size: 15),
                                   ),
                                   hintText: 'Password',
                                   hintStyle: TextStyle(
-                                    fontSize: 14,
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                  ),
+                                      fontSize: 14, color: Colors.white),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                    ),
+                                    borderSide: BorderSide(color: Colors.white),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                    ),
+                                    borderSide: BorderSide(color: Colors.white),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                    ),
+                                    borderSide: BorderSide(color: Colors.white),
                                   ),
-                                  errorText: _passwordError.isNotEmpty
-                                      ? _passwordError
-                                      : null,
                                 ),
                               ),
+                              if (_loginError.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text(
+                                    _loginError,
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              if (_isLoading)
+                                Container(
+                                  // color: Color.fromARGB(255, 17, 0, 56),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    ),
+                                  ),
+                                ),
                               const SizedBox(height: 10),
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton(
                                   onPressed: _signIn,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Color.fromARGB(255, 255, 255, 255),
+                                    backgroundColor: Colors.white,
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 16.0),
                                     shape: RoundedRectangleBorder(
@@ -251,7 +244,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 0),
+                              const SizedBox(height: 10),
                               TextButton(
                                 onPressed: _forgotPassword,
                                 child: Text(
@@ -259,8 +252,7 @@ class _LoginPageState extends State<LoginPage> {
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Color.fromARGB(255, 180, 180, 180),
-                                    decoration: TextDecoration
-                                        .underline, // Underline text
+                                    decoration: TextDecoration.underline,
                                   ),
                                 ),
                               ),
