@@ -19,13 +19,13 @@ class SSFGDT04_SCANBARCODE extends StatefulWidget {
   final String po_doc_type;
   final String setqc;
 
-  SSFGDT04_SCANBARCODE({
-    Key? key,
+  const SSFGDT04_SCANBARCODE({
+    super.key,
     required this.pWareCode,
     required this.po_doc_no,
     required this.po_doc_type,
     required this.setqc,
-  }) : super(key: key);
+  });
 
   @override
   _SSFGDT04_SCANBARCODEState createState() => _SSFGDT04_SCANBARCODEState();
@@ -127,15 +127,11 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
           po_status = barCodeItems['po_status'] ?? '';
           po_message = barCodeItems['po_message'] ?? '';
           _lotNumberController.text = barCodeItems['po_lot_number'] ?? '';
-          // _quantityController.text = barCodeItems['po_quantity'] ?? '';
-          // Format the quantity
           double quantity =
               double.tryParse(barCodeItems['po_quantity'] ?? '0') ?? 0;
           _quantityController.text = numberFormat.format(quantity);
-
           _currLotController.text = barCodeItems['po_curr_loc'] ?? '';
           _balLotController.text = barCodeItems['po_bal_lot'] ?? '';
-          // _balQtyController.text = barCodeItems['po_bal_qty'] ?? '';
           double balQty =
               double.tryParse(barCodeItems['po_bal_qty'] ?? '0') ?? 0;
           _balQtyController.text = numberFormat.format(balQty);
@@ -153,7 +149,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
   String? poMessage;
 
   Future<void> scan_INmove_Location(String? lcbarcode) async {
-    final url =
+    const url =
         'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_4_scan_INmove_location';
 
     final headers = {
@@ -202,7 +198,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 content: Text('Update Locator Complete. $poMessage'),
                 actions: [
                   TextButton(
-                    child: Text('OK'),
+                    child: const Text('OK'),
                     onPressed: () {
                       Navigator.of(context).pop();
                       clearScreen(); // ฟังก์ชันสำหรับเคลียร์ค่าที่หน้าจอ
@@ -222,7 +218,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 content: Text('$poMessage'),
                 actions: [
                   TextButton(
-                    child: Text('OK'),
+                    child: const Text('OK'),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -261,14 +257,14 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer:CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Container(
+            SizedBox(
               width: double.infinity,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -290,12 +286,12 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                       );
                       // เพิ่มโค้ดสำหรับการทำงานของปุ่มถัดไปที่นี่
                     },
+                    style: AppStyles.NextButtonStyle(),
                     child: Image.asset(
                       'assets/images/right.png', // เปลี่ยนเป็นเส้นทางของรูปภาพของคุณ
                       width: 20, // ปรับขนาดตามที่ต้องการ
                       height: 20, // ปรับขนาดตามที่ต้องการ
                     ),
-                    style: AppStyles.NextButtonStyle(),
                   ),
                 ],
               ),
@@ -319,7 +315,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
@@ -329,27 +325,27 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                   BorderRadius.circular(8), // Rounded corners (optional)
             ),
             child: Text(
-              '${widget.po_doc_no}',
+              widget.po_doc_no,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 18),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           // Text with background color
           Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 80),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 80),
             decoration: BoxDecoration(
               color: Colors.lightBlue[100], // Background color for the text
               borderRadius:
                   BorderRadius.circular(8), // Rounded corners (optional)
             ),
             child: Text(
-              '${widget.setqc}', // Text ที่ต้องการแสดง
-              style: TextStyle(
+              widget.setqc, // Text ที่ต้องการแสดง
+              style: const TextStyle(
                 color: Colors.black, // Text color
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -363,7 +359,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Barcode',
                 filled: true,
                 fillColor: Colors.white,
@@ -384,7 +380,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('คำเตือน'),
+                        title: const Text('คำเตือน'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -394,7 +390,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                         ),
                         actions: [
                           TextButton(
-                            child: Text('OK'),
+                            child: const Text('OK'),
                             onPressed: () {
                               Navigator.of(context).pop(); // Close the dialog
                             },
@@ -410,7 +406,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
           // const SizedBox(height: 5),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0),
+            padding: const EdgeInsets.symmetric(horizontal: 0),
             child: GestureDetector(
               onTap: () {
                 showDialog(
@@ -432,14 +428,14 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
+                                    const Text(
                                       'Locator',
                                       style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.close),
+                                      icon: const Icon(Icons.close),
                                       onPressed: () {
                                         Navigator.of(context)
                                             .pop(); // Close popup
@@ -451,7 +447,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                                 // Search Field
                                 TextField(
                                   controller: _searchController,
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     hintText: 'ค้นหา...',
                                     border: OutlineInputBorder(),
                                   ),
@@ -498,7 +494,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                                         // Add the special case for "-- No Value Set --"
                                         return ListTile(
                                           contentPadding: EdgeInsets.zero,
-                                          title: Text(
+                                          title: const Text(
                                             '-- No Value Set --',
                                             style: TextStyle(
                                               fontSize: 12,
@@ -560,7 +556,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                                             children: [
                                               TextSpan(
                                                 text: '$lcbarcode\n',
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black,
@@ -569,7 +565,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                                               TextSpan(
                                                 text:
                                                     '$locationCode $locationName',
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.normal,
                                                   color: Colors.black,
@@ -604,7 +600,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
               },
               child: AbsorbPointer(
                 child: TextField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Locator',
                     filled: true,
                     fillColor: Colors.white,
@@ -618,9 +614,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                   controller: _locatorBarcodeController.text.isNotEmpty
                       ? _locatorBarcodeController
                       : TextEditingController(
-                          text: selectedLocator != null
-                              ? selectedLocator
-                              : '-- No Value Set --'),
+                          text: selectedLocator ?? '-- No Value Set --'),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -636,7 +630,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 labelText: 'Lot Number',
                 filled: true,
                 fillColor: Colors.grey[300],
-                labelStyle: TextStyle(color: Colors.black),
+                labelStyle: const TextStyle(color: Colors.black),
                 border: InputBorder.none,
               ),
               controller: _lotNumberController,
@@ -654,7 +648,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 labelText: 'Quantity',
                 filled: true,
                 fillColor: Colors.grey[300],
-                labelStyle: TextStyle(color: Colors.black),
+                labelStyle: const TextStyle(color: Colors.black),
                 border: InputBorder.none,
               ),
               controller: _quantityController,
@@ -671,7 +665,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 labelText: 'Current Locator',
                 filled: true,
                 fillColor: Colors.grey[300],
-                labelStyle: TextStyle(color: Colors.black),
+                labelStyle: const TextStyle(color: Colors.black),
                 border: InputBorder.none,
               ),
               controller: _currLotController,
@@ -688,7 +682,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 labelText: 'จำนวนล็อต/รายการรอจัดเก็บ',
                 filled: true,
                 fillColor: Colors.yellow[200],
-                labelStyle: TextStyle(color: Colors.black),
+                labelStyle: const TextStyle(color: Colors.black),
                 border: InputBorder.none,
               ),
               controller: _balLotController,
@@ -705,7 +699,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 labelText: 'จำนวน (หน่วยสต๊อก) รอจัดเก็บ',
                 filled: true,
                 fillColor: Colors.yellow[200],
-                labelStyle: TextStyle(color: Colors.black),
+                labelStyle: const TextStyle(color: Colors.black),
                 border: InputBorder.none,
               ),
               controller: _balQtyController,

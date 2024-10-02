@@ -8,16 +8,17 @@ import '../bottombar.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGDT04_FORM.dart';
 import '../styles.dart';
+// import 'package:wms_android/custom_drawer.dart';
 
 class SSFGDT04_TYPE extends StatefulWidget {
   final String pWareCode;
   final String pErpOuCode;
 
-  SSFGDT04_TYPE({
-    Key? key,
+  const SSFGDT04_TYPE({
+    super.key,
     required this.pWareCode,
     required this.pErpOuCode,
-  }) : super(key: key);
+  });
   @override
   _SSFGDT04_TYPEState createState() => _SSFGDT04_TYPEState();
 }
@@ -82,13 +83,13 @@ String? pDocTypeCreateNewINXferWMS;
   String? po_doc_no;
   String? po_doc_type;
 
-  Future<void> create_NewINXfer_WMS(String? p_doc_type) async {
-    final url = 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_Create_NewINHead';
+  Future<void> create_NewINXfer_WMS(String? pDocType) async {
+    const url = 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_Create_NewINHead';
 
     final headers = {
       'Content-Type': 'application/json',
     };
-    print(p_doc_type);
+    print(pDocType);
     print(gb.P_OU_CODE);
     print(gb.P_ERP_OU_CODE);
     print(gb.APP_SESSION);
@@ -96,7 +97,7 @@ String? pDocTypeCreateNewINXferWMS;
 
 
     final body = jsonEncode({
-      'P_DOC_TYPE': p_doc_type,
+      'P_DOC_TYPE': pDocType,
       'P_WARE_CODE': gb.P_WARE_CODE,
       'P_OU_CODE': gb.P_OU_CODE,
       'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
@@ -142,8 +143,9 @@ String? pDocTypeCreateNewINXferWMS;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+      // endDrawer:CustomDrawer(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),
         child: Form(
@@ -155,7 +157,7 @@ String? pDocTypeCreateNewINXferWMS;
               children: [
                 DropdownButtonFormField2<String>(
                   isExpanded: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     filled: true,
                     fillColor: Colors.white,
@@ -181,6 +183,7 @@ String? pDocTypeCreateNewINXferWMS;
                     if (value == null) {
                       return 'Please select a status.';
                     }
+                    return null;
                   },
                   onChanged: (value) {
                     setState(() {
@@ -243,21 +246,21 @@ String? pDocTypeCreateNewINXferWMS;
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text('คำเตือน'),
+                                    title: const Text('คำเตือน'),
                                     content: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         // Text('Status: ${poStatus ?? 'No status available'}'),
                                         // SizedBox(height: 8.0),
-                                        Text('${poMessage}'),
+                                        Text('$poMessage'),
                                         // SizedBox(height: 8.0),
                                         // Text('Step: ${poStep ?? 'No message available'}'),
                                       ],
                                     ),
                                     actions: [
                                       TextButton(
-                                        child: Text('OK'),
+                                        child: const Text('OK'),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
@@ -270,12 +273,13 @@ String? pDocTypeCreateNewINXferWMS;
                             } else {
                               // แสดงข้อความแจ้งเตือนหากไม่ได้เลือกข้อมูล
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                                const SnackBar(
                                   content: Text('กรุณาเลือกข้อมูลก่อนกด CONFIRM'),
                                 ),
                               );
                             }
                           },
+                          style: AppStyles.ConfirmbuttonStyle(),
                           child: Text(
                             'CONFIRM',
                             style: TextStyle(
@@ -285,7 +289,6 @@ String? pDocTypeCreateNewINXferWMS;
                               letterSpacing: 1.2,
                             ),
                           ),
-                          style: AppStyles.ConfirmbuttonStyle(),
                           // style: ElevatedButton.styleFrom(
                           //   backgroundColor: Colors.green[500],
                           //   padding: EdgeInsets.all(10),

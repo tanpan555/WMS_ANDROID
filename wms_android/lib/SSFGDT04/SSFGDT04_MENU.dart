@@ -3,17 +3,18 @@ import '../custom_appbar.dart';
 import '../bottombar.dart';
 import 'SSFGDT04_SEARCH.dart';
 import 'SSFGDT04_TYPE.dart';
+// import 'package:wms_android/custom_drawer.dart';
 
 
 class SSFGDT04_MENU extends StatelessWidget {
   final String pWareCode;
   final String pErpOuCode;
 
-  SSFGDT04_MENU({
-    Key? key,
+  const SSFGDT04_MENU({
+    super.key,
     required this.pWareCode,
     required this.pErpOuCode,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,22 +28,23 @@ class SSFGDT04_MENU extends StatelessWidget {
     });
 
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
-      backgroundColor: Color.fromARGB(255, 17, 0, 56),
+      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+      // endDrawer:CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Card(
-              color: Color.fromARGB(255, 231, 231, 231),
+              color: const Color.fromARGB(255, 231, 231, 231),
               child: ListTile(
                 leading: Image.asset(
                   'assets/images/search_doc.png',
                   width: 40,
                   height: 40,
                 ),
-                title: Text('ค้นหาเอกสาร', style: TextStyle(fontSize: 18)),
+                title: const Text('ค้นหาเอกสาร', style: TextStyle(fontSize: 18)),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -56,16 +58,16 @@ class SSFGDT04_MENU extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Card(
-              color: Color.fromARGB(255, 231, 231, 231),
+              color: const Color.fromARGB(255, 231, 231, 231),
               child: ListTile(
                 leading: Image.asset(
                   'assets/images/add_doc.png',
                   width: 40,
                   height: 40,
                 ),
-                title: Text('สร้างเอกสาร', style: TextStyle(fontSize: 18)),
+                title: const Text('สร้างเอกสาร', style: TextStyle(fontSize: 18)),
                 onTap: () {
                   Navigator.push(
                     context,

@@ -19,8 +19,8 @@ class SSFGDT04_CARD extends StatefulWidget {
   final String pErpOuCode;
   final String pAppUser;
 
-  SSFGDT04_CARD({
-    Key? key,
+  const SSFGDT04_CARD({
+    super.key,
     required this.soNo,
     required this.date,
     required this.status,
@@ -29,13 +29,16 @@ class SSFGDT04_CARD extends StatefulWidget {
     required this.pErpOuCode,
     required this.pFlag,
     required this.pAppUser,
-  }) : super(key: key);
+  });
 
   @override
   _SSFGDT04_CARDState createState() => _SSFGDT04_CARDState();
 }
 
 class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
+  int currentPage = 0; // Variable to track the current page
+  final int itemsPerPage = 15; // Number of items to display per page
+
   bool isLoading = true;
   List<dynamic> dataCard = [];
   List<dynamic> displayedData = [];
@@ -116,13 +119,14 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   }
 
   Future<void> fetchData() async {
-        // ? 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}'
-        // : 'http://172.16.0.82:8888/apex/wms/SSFGDT12/selectCard/${gb.P_ERP_OU_CODE}/$data_null/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}';
+    // ? 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}'
+    // : 'http://172.16.0.82:8888/apex/wms/SSFGDT12/selectCard/${gb.P_ERP_OU_CODE}/$data_null/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}';
 
     // print('Fetching data from: $endpoint');
 
     try {
-      final response = await http.get(Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}'));
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -133,7 +137,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
           // isLoading = false;
           dataCard =
               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-              isLoading = false;
+          isLoading = false;
           filterData();
         });
         print('dataCard: $dataCard');
@@ -148,9 +152,8 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     }
   }
 
-
   Future<void> checkStatusCard(
-      String pReceiveNo, String po_doc_no, String po_doc_type) async {
+      String pReceiveNo, String poDocNo, String poDocType) async {
     print('po_status $pReceiveNo Type: ${pReceiveNo.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
@@ -166,8 +169,8 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
           dataStatusCard['po_status'] ?? '',
           dataStatusCard['po_message'] ?? '',
           dataStatusCard['po_goto_step'] ?? '',
-          po_doc_no,
-          po_doc_type,
+          poDocNo,
+          poDocType,
         );
       } else {
         print(
@@ -182,7 +185,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   }
 
   void checkGoTostep(String statusCard, String messageCard, String goToStep,
-      String po_doc_no, String po_doc_type) {
+      String poDocNo, String poDocType) {
     //
     print('statusCard : $statusCard Type : ${statusCard.runtimeType}');
     print('messageCard : $messageCard Type : ${messageCard.runtimeType}');
@@ -193,8 +196,8 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     if (statusCard == '0') {
       getInhead(
         goToStep,
-        po_doc_no,
-        po_doc_type,
+        poDocNo,
+        poDocType,
       );
     }
   }
@@ -205,12 +208,12 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   // String? po_doc_type;
 
   Future<void> getInhead(
-      String po_doc_no, String po_doc_type, String goToStep) async {
-    print('po_doc_no $po_doc_no Type: ${po_doc_no.runtimeType}');
-    print('po_doc_type $po_doc_type Type: ${po_doc_type.runtimeType}');
+      String poDocNo, String poDocType, String goToStep) async {
+    print('po_doc_no $poDocNo Type: ${poDocNo.runtimeType}');
+    print('po_doc_type $poDocType Type: ${poDocType.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_get_INHead_WMS/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}/$po_doc_type/$po_doc_no/${gb.APP_USER}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_get_INHead_WMS/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}/$poDocType/$poDocNo/${gb.APP_USER}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> dataGetInHead =
@@ -288,17 +291,17 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                 po_doc_type: pDocTypeGetInHead,
               ));
         default:
-          return null;
+          return;
       }
     }
   }
 
-  Future<void> getPDF(String po_doc_no, String po_doc_type) async {
-    po_doc_no = '67020001';
-    po_doc_type = 'FGI03';
+  Future<void> getPDF(String poDocNo, String poDocType) async {
+    poDocNo = '67020001';
+    poDocType = 'FGI03';
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_GET_PDF/$po_doc_type/$po_doc_no/${gb.P_DS_PDF}/${gb.BROWSER_LANGUAGE}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}/${gb.APP_SESSION}/${widget.pFlag}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_GET_PDF/$poDocType/$poDocNo/${gb.P_DS_PDF}/${gb.BROWSER_LANGUAGE}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}/${gb.APP_SESSION}/${widget.pFlag}'));
 
       print('Response body: ${response.body}'); // แสดงข้อมูลที่ได้รับจาก API
 
@@ -352,7 +355,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
           LB_PALLET_QTY = dataPDF['LB_PALLET_QTY'] ?? '';
           LH_MO_DO_NO = dataPDF['LH_MO_DO_NO'] ?? '';
 
-          _launchUrl(po_doc_no);
+          _launchUrl(poDocNo);
         });
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
@@ -363,12 +366,12 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     }
   }
 
-  Future<void> _launchUrl(String po_doc_no) async {
+  Future<void> _launchUrl(String poDocNo) async {
     final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
         '&_repName=/WMS/SSFGOD01'
         '&_repFormat=pdf'
         '&_dataSource=${gb.P_DS_PDF}'
-        '&_outFilename=$po_doc_no.pdf'
+        '&_outFilename=$poDocNo.pdf'
         '&_repLocale=en_US'
         '&V_DS_PDF=$V_DS_PDF'
         '&LIN_ID=$LIN_ID'
@@ -416,7 +419,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
         '&_repName=/WMS/SSFGOD01'
         '&_repFormat=pdf'
         '&_dataSource=${gb.P_DS_PDF}'
-        '&_outFilename=$po_doc_no.pdf'
+        '&_outFilename=$poDocNo.pdf'
         '&_repLocale=en_US'
         '&V_DS_PDF=$V_DS_PDF'
         '&LIN_ID=$LIN_ID'
@@ -459,160 +462,229 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
 
   @override
   Widget build(BuildContext context) {
+    // Calculate the total number of pages
+    int totalPages = (dataCard.length / itemsPerPage).ceil();
+
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
-      // endDrawer:CustomDrawer(),
+      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: isLoading
-            ? Center(child: CircularProgressIndicator()) // Show loading indicator
-            : ListView.builder(
-                itemCount: dataCard.length,
-                itemBuilder: (context, index) {
-                  final item = dataCard[index];
-
-                  return Card(
-                    elevation: 8.0,
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+            ? const Center(child: CircularProgressIndicator())
+            : dataCard.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No Data Available',
+                      style: TextStyle(color: Colors.white),
                     ),
-                    color: Colors.lightBlue[100],
-                    child: InkWell(
-                      onTap: () {
-                        checkStatusCard(item['po_no'] ?? '', item['p_doc_no'] ?? '', item['p_doc_type'] ?? '');
+                  )
+                : ListView.builder(
+                    itemCount: itemsPerPage + 1, // +1 for the buttons
+                    itemBuilder: (context, index) {
+                      if (index < itemsPerPage) {
+                        int actualIndex = (currentPage * itemsPerPage) + index;
 
-                        print('po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
-                        print('p_doc_no in Card : ${item['p_doc_no']} Type : ${item['p_doc_no'].runtimeType}');
-                        print('p_doc_type in Card : ${item['p_doc_type']} Type : ${item['p_doc_type'].runtimeType}');
-                      },
-                      borderRadius: BorderRadius.circular(15.0),
-                      child: Stack(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                        // Check if we have reached the end of the data
+                        if (actualIndex >= dataCard.length) {
+                          return const SizedBox.shrink();
+                        }
+
+                        final item = dataCard[actualIndex];
+
+                        return Card(
+                          elevation: 8.0,
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          color: Colors.lightBlue[100],
+                          child: InkWell(
+                            onTap: () {
+                              checkStatusCard(
+                                  item['po_no'] ?? '',
+                                  item['p_doc_no'] ?? '',
+                                  item['p_doc_type'] ?? '');
+
+                              print(
+                                  'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
+                              print(
+                                  'p_doc_no in Card : ${item['p_doc_no']} Type : ${item['p_doc_no'].runtimeType}');
+                              print(
+                                  'p_doc_type in Card : ${item['p_doc_type']} Type : ${item['p_doc_type'].runtimeType}');
+                            },
+                            borderRadius: BorderRadius.circular(15.0),
+                            child: Stack(
                               children: [
-                                // Center(
-                                  // child: 
-                                  Text(
-                                    item['ap_name'] ?? 'No Name',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 17,
-                                        color: Color.fromARGB(255, 0, 0, 0)),
-                                  ),
-                                // ),
-                                const Divider(
-                                  color: Colors.black26,
-                                  thickness: 1,
-                                ),
-                                // Center(
-                                  // child: 
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                                        decoration: BoxDecoration(
-                                          color: (() {
-                                            switch (item['card_status_desc']) {
-                                              case 'ระหว่างบันทึก':
-                                                return Color.fromRGBO(246, 250, 112, 1);
-                                              case 'ยืนยันการรับ':
-                                                return Color.fromRGBO(146, 208, 80, 1);
-                                              case 'ยกเลิก':
-                                                return Color.fromRGBO(208, 206, 206, 1);
-                                              case 'ทั้งหมด':
-                                              default:
-                                                return Color.fromARGB(255, 255, 255, 255);
-                                            }
-                                          })(),
-                                          borderRadius: BorderRadius.circular(5),
-                                        ),
-                                        child: Text(
-                                          item['card_status_desc'],
-                                          style: const TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
+                                      Text(
+                                        item['ap_name'] ?? 'No Name',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 17,
+                                            color:
+                                                Color.fromARGB(255, 0, 0, 0)),
+                                      ),
+                                      const Divider(
+                                          color: Colors.black26, thickness: 1),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12.0,
+                                                vertical: 6.0),
+                                            decoration: BoxDecoration(
+                                              color: (() {
+                                                switch (
+                                                    item['card_status_desc']) {
+                                                  case 'ระหว่างบันทึก':
+                                                    return const Color.fromRGBO(
+                                                        246, 250, 112, 1);
+                                                  case 'ยืนยันการรับ':
+                                                    return const Color.fromRGBO(
+                                                        146, 208, 80, 1);
+                                                  case 'ยกเลิก':
+                                                    return const Color.fromRGBO(
+                                                        208, 206, 206, 1);
+                                                  case 'ทั้งหมด':
+                                                  default:
+                                                    return const Color.fromARGB(
+                                                        255, 255, 255, 255);
+                                                }
+                                              })(),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: Text(
+                                              item['card_status_desc'],
+                                              style: const TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                          const SizedBox(width: 8),
+                                          Center(
+                                            child: (() {
+                                              if (item['card_qc'] ==
+                                                  '#APP_IMAGES#rt_machine_on.png') {
+                                                return Image.asset(
+                                                  'assets/images/rt_machine_on.png',
+                                                  width: 50,
+                                                  height: 50,
+                                                );
+                                              } else if (item['card_qc'] ==
+                                                  '#APP_IMAGES#rt_machine_off.png') {
+                                                return Image.asset(
+                                                  'assets/images/rt_machine_off.png',
+                                                  width: 50,
+                                                  height: 50,
+                                                );
+                                              } else if (item['card_qc'] ==
+                                                  '') {
+                                                return const SizedBox.shrink();
+                                              } else {
+                                                return const Text('');
+                                              }
+                                            })(),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Center(
+                                            child: item['status'] != null
+                                                ? Container(
+                                                    decoration: BoxDecoration(
+                                                      color: const Color.fromARGB(
+                                                          72, 145, 144, 144),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        getPDF(item['doc_no'],
+                                                            item['doc_type']);
+                                                      },
+                                                      child: item['status'] ==
+                                                              'พิมพ์'
+                                                          ? Image.asset(
+                                                              'assets/images/printer.png',
+                                                              width: 30,
+                                                              height: 30,
+                                                            )
+                                                          : Text(
+                                                              item['status']!,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 15,
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        137,
+                                                                        0,
+                                                                        0,
+                                                                        0),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                    ),
+                                                  )
+                                                : const SizedBox.shrink(),
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(width: 8),
-                                      Center(
-                                        child: (() {
-                                          if (item['card_qc'] == '#APP_IMAGES#rt_machine_on.png') {
-                                            return Image.asset(
-                                              'assets/images/rt_machine_on.png',
-                                              width: 50,
-                                              height: 50,
-                                            );
-                                          } else if (item['card_qc'] == '#APP_IMAGES#rt_machine_off.png') {
-                                            return Image.asset(
-                                              'assets/images/rt_machine_off.png',
-                                              width: 50,
-                                              height: 50,
-                                            );
-                                          } else if (item['card_qc'] == '') {
-                                            return SizedBox.shrink();
-                                          } else {
-                                            return Text('');
-                                          }
-                                        })(),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Center(
-                                        child: item['status'] != null
-                                            ? Container(
-                                                decoration: BoxDecoration(
-                                                  color: Color.fromARGB(72, 145, 144, 144),
-                                                  borderRadius: BorderRadius.circular(5),
-                                                ),
-                                                child: TextButton(
-                                                  onPressed: () {
-                                                    getPDF(item['doc_no'], item['doc_type']);
-                                                  },
-                                                  child: item['status'] == 'พิมพ์'
-                                                      ? Image.asset(
-                                                          'assets/images/printer.png',
-                                                          width: 30,
-                                                          height: 30,
-                                                        )
-                                                      : Text(
-                                                          item['status']!,
-                                                          style: const TextStyle(
-                                                            fontSize: 15,
-                                                            color: Color.fromARGB(137, 0, 0, 0),
-                                                            fontWeight: FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                ),
-                                              )
-                                            : SizedBox.shrink(),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        '${item['po_date']} ${item['po_no']} ${item['item_stype_desc'] ?? ''}',
+                                        style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.black54),
                                       ),
                                     ],
                                   ),
-                                // ),
-                                SizedBox(height: 8),
-                                // Center(
-                                  // child: 
-                                  Text(
-                                    '${item['po_date']} ${item['po_no']} ${item['item_stype_desc'] ?? ''}',
-                                    style: const TextStyle(fontSize: 12, color: Colors.black54),
-                                  ),
-                                // ),
+                                ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+                        );
+                      } else {
+                        // Render the buttons when index reaches itemsPerPage
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                              onPressed: currentPage > 0
+                                  ? () {
+                                      setState(() {
+                                        currentPage--;
+                                      });
+                                    }
+                                  : null, // Disable button if on first page
+                              child: const Text('Previous'),
+                            ),
+                            ElevatedButton(
+                              onPressed: currentPage < totalPages - 1
+                                  ? () {
+                                      setState(() {
+                                        currentPage++;
+                                      });
+                                    }
+                                  : null, // Disable button if on last page
+                              child: const Text('Next'),
+                            ),
+                          ],
+                        );
+                      }
+                    },
+                  ),
       ),
       bottomNavigationBar: BottomBar(),
     );
@@ -623,11 +695,11 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('คำเตือน'),
+          title: const Text('คำเตือน'),
           content: Text(messageCard),
           actions: <Widget>[
             TextButton(
-              child: Text('ตกลง'),
+              child: const Text('ตกลง'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
