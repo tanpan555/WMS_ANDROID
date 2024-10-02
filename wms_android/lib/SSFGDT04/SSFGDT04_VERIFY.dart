@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import '../styles.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'SSFGDT04_MENU.dart';
+// import 'package:wms_android/custom_drawer.dart';
 
 class SSFGDT04_VERIFY extends StatefulWidget {
   final String pWareCode;
@@ -15,13 +16,13 @@ class SSFGDT04_VERIFY extends StatefulWidget {
   final String po_doc_type;
   final String setqc;
 
-  SSFGDT04_VERIFY({
-    Key? key,
+  const SSFGDT04_VERIFY({
+    super.key,
     required this.pWareCode,
     required this.po_doc_no,
     required this.po_doc_type,
     required this.setqc,
-  }) : super(key: key);
+  });
 
   @override
   _SSFGDT04_VERIFYState createState() => _SSFGDT04_VERIFYState();
@@ -122,7 +123,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
     }
   }
 
-  Future<void> getPDF(String po_doc_no) async {
+  Future<void> getPDF(String poDocNo) async {
     // po_doc_no = 'WM00-24090776';
     // po_doc_type = 'FGI03';
     try {
@@ -179,7 +180,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
           LB_PALLET_QTY = dataPDF['LB_PALLET_QTY'] ?? '';
           LH_MO_DO_NO = dataPDF['LH_MO_DO_NO'] ?? '';
 
-          _launchUrl(po_doc_no);
+          _launchUrl(poDocNo);
         });
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
@@ -190,12 +191,12 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
     }
   }
 
-  Future<void> _launchUrl(String po_doc_no) async {
+  Future<void> _launchUrl(String poDocNo) async {
     final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
         '&_repName=/WMS/SSFGOD01'
         '&_repFormat=pdf'
         '&_dataSource=${gb.P_DS_PDF}'
-        '&_outFilename=$po_doc_no.pdf'
+        '&_outFilename=$poDocNo.pdf'
         '&_repLocale=en_US'
         '&V_DS_PDF=$V_DS_PDF'
         '&LIN_ID=$LIN_ID'
@@ -241,7 +242,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
         '&_repName=/WMS/SSFGOD01'
         '&_repFormat=pdf'
         '&_dataSource=${gb.P_DS_PDF}'
-        '&_outFilename=$po_doc_no.pdf'
+        '&_outFilename=$poDocNo.pdf'
         '&_repLocale=en_US'
         '&V_DS_PDF=$V_DS_PDF'
         '&LIN_ID=$LIN_ID'
@@ -289,8 +290,9 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+      // endDrawer:CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -317,7 +319,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        content: Text(
+                                        content: const Text(
                                             'ต้องการพิมพ์เอกสารใบรับหรือไม่ ?'),
                                         actions: <Widget>[
                                           TextButton(
@@ -326,7 +328,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                                   .pop(); // ปิด popup ที่สอง
                                               // ทำงานเมื่อผู้ใช้กด "Cancel"
                                             },
-                                            child: Text('Cancel'),
+                                            child: const Text('Cancel'),
                                           ),
                                           TextButton(
                                             onPressed: () {
@@ -353,14 +355,14 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                                 );
                                               });
                                             },
-                                            child: Text('OK'),
+                                            child: const Text('OK'),
                                           ),
                                         ],
                                       );
                                     },
                                   );
                                 },
-                                child: Text('OK'),
+                                child: const Text('OK'),
                               ),
                             ],
                           );
@@ -374,7 +376,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                             content: Text(poMessage ?? ''),
                             actions: [
                               TextButton(
-                                child: Text('OK'),
+                                child: const Text('OK'),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
@@ -385,6 +387,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                       );
                     }
                   },
+                  style: AppStyles.ConfirmbuttonStyle(),
                   child: Text(
                     'Confirm',
                     style: TextStyle(
@@ -393,19 +396,6 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                       color: Colors.black,
                     ),
                   ),
-                  style: AppStyles.ConfirmbuttonStyle(),
-                  // style: ElevatedButton.styleFrom(
-                  //   side: BorderSide(
-                  //     color: Colors.green,
-                  //     width: 2,
-                  //   ),
-                  //   backgroundColor: Colors.green[100],
-                  //   padding: EdgeInsets.all(10),
-                  //   shape: RoundedRectangleBorder(
-                  //     borderRadius: BorderRadius.circular(10),
-                  //   ),
-                  //   minimumSize: const Size(60, 40),
-                  // ),
                 ),
               ],
             ),
@@ -427,7 +417,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
@@ -436,8 +426,8 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              '${widget.po_doc_no}',
-              style: TextStyle(
+              widget.po_doc_no,
+              style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
@@ -445,19 +435,19 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           // Text with background color
           Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 80),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 80),
             decoration: BoxDecoration(
               color: Colors.lightBlue[100], // Background color for the text
               borderRadius:
                   BorderRadius.circular(8), // Rounded corners (optional)
             ),
             child: Text(
-              '${widget.setqc}', // Text ที่ต้องการแสดง
-              style: TextStyle(
+              widget.setqc, // Text ที่ต้องการแสดง
+              style: const TextStyle(
                 color: Colors.black, // Text color
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -468,7 +458,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
           const SizedBox(height: 10),
           ListView.builder(
             shrinkWrap: true, // ให้ ListView มีขนาดตามข้อมูล
-            physics: NeverScrollableScrollPhysics(), // ปิดการเลื่อน
+            physics: const NeverScrollableScrollPhysics(), // ปิดการเลื่อน
             itemCount: gridItems.length,
             itemBuilder: (context, index) {
               final item = gridItems[index];
@@ -483,7 +473,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                       Center(
                         child: Text(
                           item['item_code'] ?? '',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),
@@ -491,13 +481,13 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                         ),
                       ),
                       const Divider(color: Colors.black26, thickness: 1),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Expanded(
+                              const Expanded(
                                 flex: 1,
                                 child: Text(
                                   'จำนวนรับ:',
@@ -507,12 +497,12 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Expanded(
                                 flex: 1,
                                 child: Container(
                                   color: Colors.white,
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     vertical: 2,
                                     horizontal: 8,
                                   ),
@@ -523,7 +513,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                             .format(item['pack_qty'])
                                         : '',
                                     textAlign: TextAlign.end,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
@@ -538,7 +528,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                             mainAxisAlignment: MainAxisAlignment
                                 .start, // จัดให้อยู่ทางซ้ายในแนวนอน
                             children: [
-                              Expanded(
+                              const Expanded(
                                 flex: 1,
                                 child: Text(
                                   'จำนวน Pallet:',
@@ -548,20 +538,20 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Expanded(
                                 flex: 1,
                                 child: Container(
                                   color:
                                       Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     vertical: 2,
                                     horizontal: 8,
                                   ), // เพิ่ม padding รอบๆข้อความ
                                   child: Text(
                                     item['count_qty'] ?? '',
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
@@ -576,7 +566,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                             mainAxisAlignment: MainAxisAlignment
                                 .start, // จัดให้อยู่ทางซ้ายในแนวนอน
                             children: [
-                              Expanded(
+                              const Expanded(
                                 flex: 1,
                                 child: Text(
                                   'จำนวนรวม:',
@@ -586,20 +576,20 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Expanded(
                                 flex: 1,
                                 child: Container(
                                   color:
                                       Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     vertical: 2,
                                     horizontal: 8,
                                   ), // เพิ่ม padding รอบๆข้อความ
                                   child: Text(
                                     item['count_qty_in'] ?? '',
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,

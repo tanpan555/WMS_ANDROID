@@ -1,63 +1,296 @@
-Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
-    Map<String, Color> statusColors = {
-      'ระหว่างบันทึก': Colors.orange, 
-      'ยืนยันการรับ': Colors.blue,
-      'ยกเลิก': Colors.green,
-    };
+ // ปุ่ม ถัดไป และ ยกเลิก //
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // ปุ่ม ยกเลิก //
+                        ElevatedButton(
+                          onPressed: () {
+                            // แสดง popup ยืนยันการยกเลิก
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('สาเหตุการยกเลิก'),
+                                  contentPadding: EdgeInsets.all(
+                                      20), // เพิ่ม padding รอบๆ content
+                                  content: SizedBox(
+                                    width: 300, // กำหนดความกว้างที่ต้องการ
+                                    height: 150, // กำหนดความสูงที่ต้องการ
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        DropdownButtonFormField2<String>(
+                                          isExpanded: true,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                            labelText: 'สาเหตุการยกเลิก',
+                                            labelStyle: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black,
+                                            ),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                              vertical:
+                                                  16.0, // เพิ่มความสูงแนวตั้ง
+                                              horizontal:
+                                                  12.0, // เพิ่มความกว้างแนวนอน
+                                            ),
+                                          ),
+                                          items: cancelItems.map((item) {
+                                            return DropdownMenuItem<String>(
+                                              // เชื่อมต่อ cancel_code และ cancel_desc ใน value
+                                              value:
+                                                  '${item['cancel_code'] ?? 'N/A'} ${item['cancel_desc'] ?? 'N/A'}',
+                                              child: Text(
+                                                '${item['cancel_code'] ?? 'N/A'} ${item['cancel_desc'] ?? 'N/A'}',
+                                                // maxLines:
+                                                //     2, // จำกัดให้แสดง 2 บรรทัด
+                                                overflow: TextOverflow
+                                                    .ellipsis, // ใช้ ... เมื่อข้อความยาวเกินไป
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              selectedCancelCode = value;
+                                            });
+                                          },
+                                          onSaved: (value) {
+                                            selectedCancelCode = value;
+                                          },
+                                          value:
+                                              selectedCancelCode, // Set the default selected value
+                                          buttonStyleData:
+                                              const ButtonStyleData(),
+                                          iconStyleData: const IconStyleData(
+                                            icon: Icon(
+                                              Icons.arrow_drop_down,
+                                              color: Color.fromARGB(
+                                                  255, 113, 113, 113),
+                                            ),
+                                            iconSize: 24,
+                                          ),
+                                          dropdownStyleData: DropdownStyleData(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: Colors.white,
+                                            ),
+                                            maxHeight: 150,
+                                          ),
+                                          // menuItemStyleData:
+                                          //     const MenuItemStyleData(
+                                          //   padding: EdgeInsets.symmetric(
+                                          //       horizontal: 10, vertical: 5),
+                                          // ),
+                                          menuItemStyleData:
+                                              const MenuItemStyleData(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  // actionsPadding: EdgeInsets.symmetric(
+                                  //     horizontal:
+                                  //         10), // เพิ่ม padding รอบๆ actions
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        // ปิด popup
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        if (selectedCancelCode != null) {
+                                          Navigator.of(context).pop();
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text('คำเตือน'),
+                                                content: Text(
+                                                    'ยกเลิกรายการเสร็จสมบูรณ์...'),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: Text('ตกลง'),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
 
-    Color statusColor = statusColors[item['card_status_desc']] ?? Colors.grey;
-
-    TextStyle statusStyle = TextStyle(
-      color: statusColor,
-      fontWeight: FontWeight.bold,
-    );
-
-    BoxDecoration statusDecoration = BoxDecoration(
-      border: Border.all(color: statusColor, width: 2.0),
-      borderRadius: BorderRadius.circular(4.0),
-    );
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-      child: Card(
-        color: const Color.fromRGBO(204, 235, 252, 1.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        elevation: 5,
-        child: ListTile(
-          title: Text(item['ap_name'] ?? 'No Namer'),
-          subtitle: Row(
-            children: [
-              Expanded(
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: '${item['po_no'] ?? ''} '
-                            '${item['item_stype_desc'] ?? ''}\n',
-                        style: TextStyle(color: Colors.black, fontSize: 12),
-                      ),
-                      if (item['card_status_desc'] != null)
-                        WidgetSpan(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 4.0, vertical: 2.0),
-                            decoration: statusDecoration,
-                            child: Text(
-                              '${item['card_status_desc'] ?? 'No Status'}',
-                              style: statusStyle,
+                                                      cancel_INHeadNonePO_WMS(
+                                                              selectedCancelCode!)
+                                                          .then((_) {
+                                                        Navigator
+                                                            .pushAndRemoveUntil(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                SSFGDT04_MENU(
+                                                              pWareCode: gb
+                                                                  .P_WARE_CODE,
+                                                              pErpOuCode: gb
+                                                                  .P_ERP_OU_CODE,
+                                                            ),
+                                                          ),
+                                                          (route) =>
+                                                              false, // ปิดเส้นทางทั้งหมดก่อนหน้านี้
+                                                        );
+                                                      }).catchError((error) {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                                'An error occurred: $error'),
+                                                          ),
+                                                        );
+                                                      });
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        } else {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text('คำเตือน'),
+                                                content:
+                                                    Text('โปรดเลือกเหตุยกเลิก'),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: Text('ตกลง'),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        }
+                                      },
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: const Text(
+                            'ยกเลิก',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
+                          style: AppStyles.cancelButtonStyle(),
+                          // ),
                         ),
-                    ],
+
+                        // const SizedBox(width: 10), // ระยะห่างระหว่างปุ่ม
+                        // ปุ่ม ถัดไป //
+                        ElevatedButton(
+                          onPressed: () async {
+                            // Check if the date field is filled and valid
+                            if (_docDateController.text.isEmpty) {
+                              setState(() {
+                                _dateError =
+                                    'กรุณาระบุข้อมูลวันที่บันทึก.'; // Set error message for empty input
+                              });
+                              return; // Stop further execution if the date is empty
+                            }
+
+                            // Check if the date format is valid
+                            if (!dateRegExp.hasMatch(_docDateController.text)) {
+                              setState(() {
+                                _dateError =
+                                    'กรุณากรอกวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY.'; // Set error message for invalid format
+                              });
+                              return; // Stop further execution if the date format is invalid
+                            } else {
+                              setState(() {
+                                _dateError =
+                                    null; // Clear the error message if the date is valid
+                              });
+                            }
+
+                            // Call functions to update and save data
+                            await update(widget.po_doc_type, widget.po_doc_no);
+                            await save_INHeadNonePO_WMS(selectedValue ?? '');
+
+                            // Check poStatus and navigate or show warning
+                            if (poStatus == '0') {
+                              // Navigate to the next screen
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SSFGDT04_GRID(
+                                    po_doc_no:
+                                        widget.po_doc_no, // pass po_doc_no
+                                    po_doc_type: widget.po_doc_type ??
+                                        '', // pass po_doc_type
+                                    pWareCode: widget.pWareCode,
+                                    p_ref_no: _refNoController.text,
+                                    mo_do_no: _moDoNoController.text,
+                                  ),
+                                ),
+                              ).then((_) {
+                                // Clear the screen or reset values after returning
+                                _refNoController.clear();
+                                _moDoNoController.clear();
+                                // _noteController.clear();
+                                _erpDocNoController.clear();
+                                setState(() {
+                                  // selectedRefReceive = null;
+                                  // selectedRefNo =
+                                  //     null; // Clear selectedRefReceive
+                                });
+                                // Any additional reset logic can go here
+                              });
+                            } else if (poStatus == '1') {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Warning'),
+                                    content: Text('$poMessage'),
+                                    actions: [
+                                      TextButton(
+                                        child: Text('OK'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          },
+                          child: Image.asset(
+                            'assets/images/right.png', // change to the path of your image
+                            width: 20, // adjust size as needed
+                            height: 20, // adjust size as needed
+                          ),
+                          style: AppStyles.NextButtonStyle(),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ),
-            ],
-          ),
-          // onTap: {},
-        ),
-      ),
-    );
-  }

@@ -5,16 +5,17 @@ import '../custom_appbar.dart';
 import '../bottombar.dart';
 import 'SSFGDT04_MENU.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+// import 'package:wms_android/custom_drawer.dart';
 
 class SSFGDT04_MAIN extends StatefulWidget {
   final String p_attr1;
   final String p_ou_code;
 
   const SSFGDT04_MAIN({
-    Key? key,
+    super.key,
     required this.p_attr1,
     required this.p_ou_code,
-  }) : super(key: key);
+  });
 
   @override
   _SSFGDT04_MAINState createState() => _SSFGDT04_MAINState();
@@ -62,12 +63,13 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
-      backgroundColor: Color.fromARGB(255, 17, 0, 56),
+      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+      // endDrawer:CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
                   Container(
@@ -76,7 +78,7 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
                         bottom: 8.0), // Add some space below the container
                     color: Colors.grey[
                         300], // Customize the background color of the container
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         'เลือกคลังปฏิบัติงาน',
                         style: TextStyle(
@@ -138,7 +140,7 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
                               );
                             },
                           )
-                        : Center(
+                        : const Center(
                             child: Text(
                               'No warehouse codes available',
                               style: TextStyle(

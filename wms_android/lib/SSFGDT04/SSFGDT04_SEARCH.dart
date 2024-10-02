@@ -13,11 +13,11 @@ class SSFGDT04_SEARCH extends StatefulWidget {
   final String pWareCode;
   final String pErpOuCode;
 
-  SSFGDT04_SEARCH({
-    Key? key,
+  const SSFGDT04_SEARCH({
+    super.key,
     required this.pWareCode,
     required this.pErpOuCode,
-  }) : super(key: key);
+  });
 
   @override
   _SSFGDT04_SEARCHState createState() => _SSFGDT04_SEARCHState();
@@ -41,6 +41,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
     'ยืนยันการรับ',
     'ยกเลิก',
   ];
+  String? _dateError;
 
   @override
   void initState() {
@@ -84,7 +85,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
     );
 
     if (pickedDate != null) {
-      String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
+      String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
       if (mounted) {
         setState(() {
           _dateController.text = formattedDate;
@@ -105,7 +106,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),
         child: Form(
@@ -124,11 +125,10 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                             child: Text(item),
                           ))
                       .toList(),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     labelText: 'ประเภทรายการ',
-                    hintStyle:
-                        TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+                    hintStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                     filled: true,
                     fillColor: Colors.white,
                   ),
@@ -158,11 +158,10 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _controller,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     labelText: 'เลขที่เอกสาร',
-                    hintStyle:
-                        TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+                    hintStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                     filled: true,
                     fillColor: Colors.white,
                   ),
@@ -179,7 +178,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
                     LengthLimitingTextInputFormatter(
-                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
+                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 8 ตัว
                     DateInputFormatter(), // กำหนดรูปแบบ __/__/____
                   ],
                   onTap: () {
@@ -192,20 +191,20 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     labelText: 'วันที่ส่งสินค้า',
-                    hintStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                    hintStyle:
+                        const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                     filled: true,
                     fillColor: Colors.white,
                     suffixIcon: IconButton(
-                      icon: Icon(Icons.calendar_today,
+                      icon: const Icon(Icons.calendar_today,
                           color: Color.fromARGB(255, 64, 64, 64)),
-                      onPressed: () => _selectDate(
-                          context), // คลิกที่ไอคอนเพื่อเปิด DatePicker
+                      onPressed: () => _selectDate(context),
                     ),
+                    errorText: _dateError, // แสดงข้อผิดพลาดที่นี่
                   ),
                   onChanged: (value) {
                     setState(() {
                       _dateController.text = value;
-                      print('selectedDate : $selectedDate');
                     });
                   },
                 ),
@@ -224,9 +223,9 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                           status = '0'; // Reset status to default
                         });
                       },
+                      style: AppStyles.EraserButtonStyle(),
                       child: Image.asset('assets/images/eraser_red.png',
                           width: 50, height: 25),
-                      style: AppStyles.EraserButtonStyle(),
                     ),
                     const SizedBox(width: 20),
                     // ElevatedButton(
@@ -269,18 +268,14 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     ElevatedButton(
                       onPressed: selectedItem.isNotEmpty
                           ? () {
-                              // Check if the date is in the expected format
                               if (_dateController.text.isNotEmpty) {
                                 try {
-                                  // Parse the date from the controller's text
                                   DateTime parsedDate = DateFormat('dd/MM/yyyy')
                                       .parse(_dateController.text);
-                                  // Format the date as dd-MM-yyyy for sending
                                   String formattedDateForSearch =
                                       DateFormat('dd-MM-yyyy')
                                           .format(parsedDate);
 
-                                  // Navigate to the next page
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -294,28 +289,23 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                                         status: status,
                                       ),
                                     ),
-                                  ).then((value) async {
-                                    // Reset values when coming back to this page
+                                  ).then((value) {
                                     setState(() {
                                       pSoNo = '';
                                       selectedDate = 'null';
-                                      selectedItem = dropdownItems
-                                          .first; // Reset to a valid dropdown value
-                                      status = '0'; // Reset status to default
+                                      selectedItem = dropdownItems.first;
+                                      status = '0';
                                       _dateController.clear();
                                       _controller.clear();
                                     });
                                   });
                                 } catch (e) {
-                                  // Handle the parsing error, e.g., show a message to the user
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            'Invalid date format. Please use dd/MM/yyyy.')),
-                                  );
+                                  setState(() {
+                                    _dateError =
+                                        'กรุณากรอกวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY';
+                                  });
                                 }
                               } else {
-                                // Navigate without a date
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -329,14 +319,12 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                                       status: status,
                                     ),
                                   ),
-                                ).then((value) async {
-                                  // Reset values when coming back to this page
+                                ).then((value) {
                                   setState(() {
                                     pSoNo = '';
                                     selectedDate = 'null';
-                                    selectedItem = dropdownItems
-                                        .first; // Reset to a valid dropdown value
-                                    status = '0'; // Reset status to default
+                                    selectedItem = dropdownItems.first;
+                                    status = '0';
                                     _dateController.clear();
                                     _controller.clear();
                                   });
@@ -344,12 +332,12 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                               }
                             }
                           : null,
+                      style: AppStyles.SearchButtonStyle(),
                       child: Image.asset(
                         'assets/images/search_color.png',
                         width: 50,
                         height: 25,
                       ),
-                      style: AppStyles.SearchButtonStyle(),
                     ),
                   ],
                 ),
@@ -374,13 +362,10 @@ class DateInputFormatter extends TextInputFormatter {
 
     // จัดรูปแบบเป็น DD/MM/YYYY
     if (text.length > 2 && text.length <= 4) {
-      text = text.substring(0, 2) + '/' + text.substring(2);
+      text = '${text.substring(0, 2)}/${text.substring(2)}';
     } else if (text.length > 4 && text.length <= 8) {
-      text = text.substring(0, 2) +
-          '/' +
-          text.substring(2, 4) +
-          '/' +
-          text.substring(4);
+      text =
+          '${text.substring(0, 2)}/${text.substring(2, 4)}/${text.substring(4)}';
     }
 
     // จำกัดความยาวไม่เกิน 10 ตัว (รวม /)

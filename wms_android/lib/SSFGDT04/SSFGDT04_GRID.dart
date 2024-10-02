@@ -17,14 +17,14 @@ class SSFGDT04_GRID extends StatefulWidget {
   final String p_ref_no;
   final String mo_do_no;
 
-  SSFGDT04_GRID({
-    Key? key,
+  const SSFGDT04_GRID({
+    super.key,
     required this.pWareCode,
     required this.po_doc_no,
     required this.po_doc_type,
     required this.p_ref_no,
     required this.mo_do_no,
-  }) : super(key: key);
+  });
 
   @override
   _SSFGDT04_GRIDState createState() => _SSFGDT04_GRIDState();
@@ -50,13 +50,13 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
 
   Future<void> _showEditDialog(
       BuildContext context, Map<String, dynamic> item) async {
-    final _quantityController = TextEditingController(
+    final quantityController = TextEditingController(
       text: item['pack_qty'] != null
           ? NumberFormat('#,###').format(item['pack_qty'])
           : '',
     );
 
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return showDialog<void>(
       context: context,
@@ -72,7 +72,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                 right: -10,
                 top: -10,
                 child: IconButton(
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close),
                   onPressed: () {
                     Navigator.of(context).pop(); // Close the dialog
                   },
@@ -84,14 +84,14 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                     top: 40.0), // Adjust top padding to control space
                 child: SingleChildScrollView(
                   child: Form(
-                    key: _formKey,
+                    key: formKey,
                     child: ListBody(
                       children: <Widget>[
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         TextFormField(
-                          controller: _quantityController,
+                          controller: quantityController,
                           keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'จำนวนรับ',
                             border: OutlineInputBorder(),
                           ),
@@ -115,13 +115,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
           actions: <Widget>[
             Center(
               child: ElevatedButton(
-                child: Image.asset(
-                  'assets/images/check-mark.png',
-                  width: 30,
-                  height: 30,
-                ),
                 style: ElevatedButton.styleFrom(
-                  side: BorderSide(
+                  side: const BorderSide(
                     color: Colors.green, // Add a border color
                     width: 1.5, // Border width
                   ),
@@ -133,9 +128,9 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                   padding: const EdgeInsets.all(0),
                 ),
                 onPressed: () async {
-                  if (_formKey.currentState?.validate() ?? false) {
+                  if (formKey.currentState?.validate() ?? false) {
                     final newQuantity = NumberFormat('#,###')
-                        .parse(_quantityController.text)
+                        .parse(quantityController.text)
                         .toString();
 
                     // Update the item in the gridItems list
@@ -148,6 +143,11 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                     Navigator.of(context).pop();
                   }
                 },
+                child: Image.asset(
+                  'assets/images/check-mark.png',
+                  width: 30,
+                  height: 30,
+                ),
               ),
             ),
           ],
@@ -156,8 +156,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     );
   }
 
-  Future<void> fetchUpdate(String? po_pack_qty, int po_seq) async {
-    final url =
+  Future<void> fetchUpdate(String? poPackQty, int poSeq) async {
+    const url =
         'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_update_wms_itd';
 
     final headers = {
@@ -165,8 +165,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     };
 
     final body = jsonEncode({
-      'PACK_QTY': po_pack_qty,
-      'SEQ': po_seq.toString(),
+      'PACK_QTY': poPackQty,
+      'SEQ': poSeq.toString(),
       'DOC_NO': widget.po_doc_no,
       'DOC_TYPE': widget.po_doc_type,
       'OU_CODE': gb.P_ERP_OU_CODE,
@@ -217,7 +217,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   }
 
   Future<void> fetchGetPo() async {
-    final url = 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_GET_PO';
+    const url = 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_GET_PO';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -258,12 +258,12 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     }
   }
 
-  Future<void> delete(String? po_doc_no, String? po_doc_tpye, int po_seq,
-      String? po_item_code) async {
-    print(po_doc_no);
-    print(po_doc_tpye);
-    print(po_seq);
-    print(po_item_code);
+  Future<void> delete(String? poDocNo, String? poDocTpye, int poSeq,
+      String? poItemCode) async {
+    print(poDocNo);
+    print(poDocTpye);
+    print(poSeq);
+    print(poItemCode);
     final url = Uri.parse(
         'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_delete_DTL_WMS');
     final response = await http.delete(
@@ -272,12 +272,12 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        'P_DOC_NO': po_doc_no,
-        'P_DOC_TYPE': po_doc_tpye,
+        'P_DOC_NO': poDocNo,
+        'P_DOC_TYPE': poDocTpye,
         'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
         'APP_USER': gb.APP_USER,
-        'P_SEQ': po_seq,
-        'P_ITEM_CODE': po_item_code,
+        'P_SEQ': poSeq,
+        'P_ITEM_CODE': poItemCode,
       }),
     );
 
@@ -292,8 +292,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
         setState(() {
           // Remove the item from the list
           gridItems.removeWhere((item) =>
-              item['item_code'] == po_item_code && item['po_seq'] == po_seq);
-          deletedItemCodes.add(po_item_code!);
+              item['item_code'] == poItemCode && item['po_seq'] == poSeq);
+          deletedItemCodes.add(poItemCode!);
         });
       }
     } else {
@@ -332,7 +332,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer: CustomDrawer(),
       body: Padding(
@@ -345,23 +345,23 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
-                    if (gridItems.length != 0) {
+                    if (gridItems.isNotEmpty) {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
                             // title: Center(child: Text('คำเตือน')),
-                            content: Text(
+                            content: const Text(
                                 'ระบบมีการบันทึกรายการทิ้งไว้ หากดึง ใบผลิต จะเคลียร์รายการทั้งหมดทิ้ง, ต้องการดึงใบผลิตใหม่หรือไม่'),
                             actions: <Widget>[
                               TextButton(
-                                child: Text('cancel'),
+                                child: const Text('cancel'),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
                               ),
                               TextButton(
-                                child: Text('OK'),
+                                child: const Text('OK'),
                                 onPressed: () async {
                                   Navigator.of(context).pop();
                                   await fetchGetPo();
@@ -383,7 +383,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                               content: Text(poMessage ?? ''),
                               actions: [
                                 TextButton(
-                                  child: Text('OK'),
+                                  child: const Text('OK'),
                                   onPressed: () {
                                     Navigator.of(context)
                                         .pop(); // Close the dialog
@@ -403,7 +403,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                               content: Text(poMessage ?? ''),
                               actions: [
                                 TextButton(
-                                  child: Text('OK'),
+                                  child: const Text('OK'),
                                   onPressed: () {
                                     Navigator.of(context)
                                         .pop(); // Close the dialog
@@ -416,11 +416,6 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                       }
                     }
                   },
-                  child: Image.asset(
-                    'assets/images/business.png', // Path to your image
-                    width: 30, // Adjust width
-                    height: 30, // Adjust height
-                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                     shape: RoundedRectangleBorder(
@@ -428,6 +423,11 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                     ),
                     minimumSize: const Size(60, 40),
                     padding: const EdgeInsets.all(0),
+                  ),
+                  child: Image.asset(
+                    'assets/images/business.png', // Path to your image
+                    width: 30, // Adjust width
+                    height: 30, // Adjust height
                   ),
                 ),
                 ElevatedButton(
@@ -444,16 +444,16 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                       ),
                     );
                   },
+                  style: AppStyles.NextButtonStyle(),
                   child: Image.asset(
                     'assets/images/right.png', // เปลี่ยนเป็นเส้นทางของรูปภาพของคุณ
                     width: 20, // ปรับขนาดตามที่ต้องการ
                     height: 20, // ปรับขนาดตามที่ต้องการ
                   ),
-                  style: AppStyles.NextButtonStyle(),
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Expanded(
               child: SingleChildScrollView(
                 child: _buildCards(),
@@ -471,7 +471,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
@@ -480,8 +480,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              '${widget.po_doc_no}',
-              style: TextStyle(
+              widget.po_doc_no,
+              style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
@@ -489,23 +489,23 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
 // Text with background color
           Container(
             width: double.infinity, // ทำให้กว้างเต็มที่
             padding:
-                EdgeInsets.symmetric(vertical: 8), // ปรับ padding ซ้ายขวาเป็น 0
+                const EdgeInsets.symmetric(vertical: 8), // ปรับ padding ซ้ายขวาเป็น 0
             decoration: BoxDecoration(
               color: Colors.lightBlue[100], // Background color for the text
               borderRadius:
                   BorderRadius.circular(8), // Rounded corners (optional)
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30), // Padding ซ้ายขวา
+              padding: const EdgeInsets.symmetric(horizontal: 30), // Padding ซ้ายขวา
               child: Text(
                 setqc ?? '',
                 //'${widget.setqc}', // Text ที่ต้องการแสดง
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black, // Text color
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -518,7 +518,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
           const SizedBox(height: 10),
           ListView.builder(
             shrinkWrap: true, // ให้ ListView มีขนาดตามข้อมูล
-            physics: NeverScrollableScrollPhysics(), // ปิดการเลื่อน
+            physics: const NeverScrollableScrollPhysics(), // ปิดการเลื่อน
             itemCount: gridItems.length,
             itemBuilder: (context, index) {
               final item = gridItems[index];
@@ -533,7 +533,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                       Center(
                         child: Text(
                           item['item_code'] ?? '',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),
@@ -541,13 +541,13 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                         ),
                       ),
                       const Divider(color: Colors.black26, thickness: 1),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Expanded(
+                              const Expanded(
                                 flex: 1,
                                 child: Text(
                                   'จำนวนรับ:',
@@ -557,12 +557,12 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Expanded(
                                 flex: 1,
                                 child: Container(
                                   color: Colors.white,
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     vertical: 2,
                                     horizontal: 8,
                                   ),
@@ -573,7 +573,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                             .format(item['pack_qty'])
                                         : '',
                                     textAlign: TextAlign.end,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
@@ -588,7 +588,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                             mainAxisAlignment: MainAxisAlignment
                                 .start, // จัดให้อยู่ทางซ้ายในแนวนอน
                             children: [
-                              Expanded(
+                              const Expanded(
                                 flex: 1,
                                 child: Text(
                                   'จำนวน Pallet:',
@@ -598,20 +598,20 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Expanded(
                                 flex: 1,
                                 child: Container(
                                   color:
                                       Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     vertical: 2,
                                     horizontal: 8,
                                   ), // เพิ่ม padding รอบๆข้อความ
                                   child: Text(
                                     item['count_qty'] ?? '',
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
@@ -626,7 +626,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                             mainAxisAlignment: MainAxisAlignment
                                 .start, // จัดให้อยู่ทางซ้ายในแนวนอน
                             children: [
-                              Expanded(
+                              const Expanded(
                                 flex: 1,
                                 child: Text(
                                   'จำนวนรวม:',
@@ -636,20 +636,20 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Expanded(
                                 flex: 1,
                                 child: Container(
                                   color:
                                       Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     vertical: 2,
                                     horizontal: 8,
                                   ), // เพิ่ม padding รอบๆข้อความ
                                   child: Text(
                                     item['count_qty_in'] ?? '',
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
@@ -661,7 +661,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       // Row with delete and edit buttons
                       Row(
                         mainAxisAlignment: MainAxisAlignment
@@ -680,30 +680,30 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     // title: Text('ยืนยันการลบรายการ'),
-                                    content: Text('ต้องการลบรายการหรือไม่?'),
+                                    content: const Text('ต้องการลบรายการหรือไม่?'),
                                     actions: <Widget>[
                                       TextButton(
-                                        child: Text('ยกเลิก'),
+                                        child: const Text('ยกเลิก'),
                                         onPressed: () {
                                           Navigator.of(context).pop(false);
                                         },
                                       ),
                                       TextButton(
-                                        child: Text('ลบ'),
+                                        child: const Text('ลบ'),
                                         onPressed: () async {
-                                          final po_item_code =
+                                          final poItemCode =
                                               item['item_code'];
-                                          final po_seq = item['seq'];
+                                          final poSeq = item['seq'];
                                           await delete(
                                               widget.po_doc_no,
                                               widget.po_doc_type,
-                                              po_seq,
-                                              po_item_code);
+                                              poSeq,
+                                              poItemCode);
                                           setState(() {
                                             gridItems.removeWhere((item) =>
                                                 item['item_code'] ==
-                                                    po_item_code &&
-                                                item['seq'] == po_seq);
+                                                    poItemCode &&
+                                                item['seq'] == poSeq);
                                           });
                                           Navigator.of(context).pop(true);
                                         },
