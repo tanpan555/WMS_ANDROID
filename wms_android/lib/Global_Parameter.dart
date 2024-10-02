@@ -4,8 +4,8 @@ library wms_android.globals;
 
 // bool isLoggedIn = false;
 String APP_USER = 'SS-STAFF';
-String P_OU_CODE = 'LIK';
-String P_ERP_OU_CODE = '000';
+String P_OU_CODE = '';
+String P_ERP_OU_CODE = '';
 String BROWSER_LANGUAGE = 'EN';
 String Raw_Material = 'Raw Material';
 String Finishing = 'Finishing';

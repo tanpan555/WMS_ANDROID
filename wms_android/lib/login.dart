@@ -73,7 +73,8 @@ class _LoginPageState extends State<LoginPage> {
           globals.P_SUBINV = data['P_SUBINV'];
           globals.P_SUBINV_NAME = data['P_SUBINV_NAME'];
           globals.APP_SESSION = data['V_AUDSID'];
-
+          
+          globals.P_ERP_OU_CODE = data['P_ERP_OU_CODE'];
           Navigator.pushReplacementNamed(
             context,
             '/home',
@@ -81,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
           );
         } else if (data['PO_STATUS'] == '1') {
           setState(() {
-            _loginError = data['v_Result'];
+            _loginError = data['PO_MESSAGE'];
             _isLoading = false;
           });
         }
