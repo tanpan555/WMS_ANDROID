@@ -30,6 +30,32 @@ class AppStyles {
     );
   }
 
+  static ButtonStyle createButtonStyle() {
+    return ElevatedButton.styleFrom(
+      backgroundColor: Colors.green, // Green background for the button
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5.0), // Rounded rectangle border
+        side: const BorderSide(color: Colors.white, width: 2), // White outline
+      ),
+      padding: const EdgeInsets.symmetric(
+          horizontal: 10, vertical: 5), // Padding to control button size
+      minimumSize: const Size(80, 45), // Button size can be adjusted
+    );
+  }
+
+  static ButtonStyle ClearButtonStyle() {
+    return ElevatedButton.styleFrom(
+      backgroundColor: Colors.red, // Red background
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5.0), // Rounded rectangle border
+        side: const BorderSide(color: Colors.white, width: 2), // White outline
+      ),
+      padding: const EdgeInsets.symmetric(
+          horizontal: 10, vertical: 5), // Padding for button size
+      minimumSize: const Size(80, 45), // Button size
+    );
+  }
+
   static TextStyle CancelbuttonTextStyle() {
     return TextStyle(
       fontSize: 14,
@@ -61,18 +87,18 @@ class AppStyles {
   }
 
   static ButtonStyle ConfirmChecRecievekButtonStyle() {
-  return ElevatedButton.styleFrom(
-    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10),
-      side: const BorderSide(color: Colors.green, width: 2),
-    ),
-    minimumSize: const Size(60, 40),
-    padding: const EdgeInsets.all(0),
-  );
-}
+    return ElevatedButton.styleFrom(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        side: const BorderSide(color: Colors.green, width: 2),
+      ),
+      minimumSize: const Size(60, 40),
+      padding: const EdgeInsets.all(0),
+    );
+  }
 
-static ButtonStyle EraserButtonStyle() {
+  static ButtonStyle EraserButtonStyle() {
     return ElevatedButton.styleFrom(
       backgroundColor: Colors.grey[300],
       shape: RoundedRectangleBorder(
@@ -93,5 +119,4 @@ static ButtonStyle EraserButtonStyle() {
       padding: const EdgeInsets.all(0),
     );
   }
-
 }

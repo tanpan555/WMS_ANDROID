@@ -31,7 +31,7 @@ class SSFGDT31_GRID extends StatefulWidget {
     required this.pWareCode,
     required this.v_ref_doc_no,
     required this.v_ref_type,
-    required this.SCHID, 
+    required this.SCHID,
     required this.DOC_DATE,
   }) : super(key: key);
 
@@ -282,17 +282,17 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
       appBar: CustomAppBar(title: 'รับคืนจากการเบิกผลิต'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Column(
-        
         children: [
-          const SizedBox(height: 20,),
+          const SizedBox(
+            height: 20,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            
             children: [
-              
-              const SizedBox(width: 8,),
-            
-               ElevatedButton(
+              const SizedBox(
+                width: 8,
+              ),
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -309,13 +309,13 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                   print('Picking Slip');
                 },
                 style: ElevatedButton.styleFrom(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      minimumSize: const Size(90, 40),
-      padding: const EdgeInsets.all(0),
-    ),
+                  backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  minimumSize: const Size(90, 40),
+                  padding: const EdgeInsets.all(0),
+                ),
                 child: const Text(
                   'Picking Slip',
                   style: TextStyle(
@@ -324,61 +324,67 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                   ),
                 ),
               ),
-            Spacer(),
+              Spacer(),
               ElevatedButton(
-  style: AppStyles.NextButtonStyle(),
-  onPressed: () async {
-    await get_grid_data();
-    if (vChkCol == '1') {
-      print('Confirmationจำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!');
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('คำเตือน'),
-            content: const Text('Confirmation จำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
+                style: AppStyles.NextButtonStyle(),
+                onPressed: () async {
+                  await get_grid_data();
+                  if (vChkCol == '1') {
+                    print(
+                        'Confirmationจำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!');
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('คำเตือน'),
+                          content: const Text(
+                              'Confirmation จำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('ตกลง'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    await validateSave_NonePOLine_WMS();
+                    print('==================');
+                    print('po_status: $po_status');
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => SSFGDT31_VERIFY(
+                          po_doc_no: widget.po_doc_no,
+                          po_doc_type: widget.po_doc_type,
+                          pWareCode: widget.pWareCode,
+                          v_ref_doc_no: widget.v_ref_doc_no,
+                          v_ref_type: widget.v_ref_type,
+                          SCHID: widget.SCHID,
+                          DOC_DATE: widget.DOC_DATE,
+                        ),
+                      ),
+                    );
+                  }
+
+                  print('Right button pressed');
                 },
-                child: const Text('ตกลง'),
+                child: Image.asset(
+                  'assets/images/right.png',
+                  width: 20.0,
+                  height: 20.0,
+                ),
+              ),
+              const SizedBox(
+                width: 8,
               ),
             ],
-          );
-        },
-      );
-    } else {
-      await validateSave_NonePOLine_WMS();
-      print('==================');
-      print('po_status: $po_status');
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => SSFGDT31_VERIFY(
-            po_doc_no: widget.po_doc_no,
-            po_doc_type: widget.po_doc_type,
-            pWareCode: widget.pWareCode,
-            v_ref_doc_no: widget.v_ref_doc_no,
-            v_ref_type: widget.v_ref_type,
-            SCHID: widget.SCHID,
-            DOC_DATE: widget.DOC_DATE,
           ),
-        ),
-      );
-    }
-
-    print('Right button pressed');
-  },
-  child: Image.asset(
-    'assets/images/right.png',
-    width: 20.0,
-    height: 20.0,
-  ),
-),
-              const SizedBox(width: 8,),
-            ],
+          const SizedBox(
+            height: 8,
           ),
-          const SizedBox(height: 8,),
           Expanded(
             child: ListView.builder(
               itemCount: items.length + 1,
@@ -407,72 +413,80 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                           ),
                         ),
                       ),
-                const SizedBox(height: 8,),
-              Row(
-                children: [
-                  const SizedBox(width: 8,),
-                  
-               ElevatedButton(
-                onPressed: () async {
-                  final result = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SSFGDT31_BARCODE(
-                        po_doc_no: widget.po_doc_no,
-                        po_doc_type: widget.po_doc_type,
-                        pWareCode: widget.pWareCode,
-                        v_ref_doc_no: widget.v_ref_doc_no,
-                        v_ref_type: widget.v_ref_type,
+                      const SizedBox(
+                        height: 8,
                       ),
-                    ),
-                  );
-                  if (result == true) {
-                    await get_grid_data();
-                  }
-                  print('+Create');
-                },
-                style: ElevatedButton.styleFrom(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      minimumSize: const Size(60, 40),
-      padding: const EdgeInsets.all(0),
-    ),
-                child: const Text(
-                  '+Create',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-                  Spacer(),
-                 ElevatedButton(
-                onPressed: () async {
-                  await deleteAll();
-                  print('-Clear All');
-                },
-                style: ElevatedButton.styleFrom(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      minimumSize: const Size(80, 40),
-      padding: const EdgeInsets.all(0),
-    ),
-                child: const Text(
-                  '-Clear All',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-                  
-              const SizedBox(width: 8,),
-                ],
-              ),
-             
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              final result = await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => SSFGDT31_BARCODE(
+                                    po_doc_no: widget.po_doc_no,
+                                    po_doc_type: widget.po_doc_type,
+                                    pWareCode: widget.pWareCode,
+                                    v_ref_doc_no: widget.v_ref_doc_no,
+                                    v_ref_type: widget.v_ref_type,
+                                  ),
+                                ),
+                              );
+                              if (result == true) {
+                                await get_grid_data();
+                              }
+                              print('+Create');
+                            },
+                            style: AppStyles.createButtonStyle(),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    color: Colors.white,
+                                    width: 3), // White border for the circle
+                              ),
+                              padding: const EdgeInsets.all(
+                                  2), // Padding to make the circle
+                              child: const Icon(
+                                Icons.add, // Plus icon inside the circle
+                                color: Colors.white, // White plus icon
+                                size: 24, // Icon size
+                              ),
+                            ),
+                          ),
+                          // Spacer(),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              await deleteAll();
+                              print('-Clear All');
+                            },
+                            style: AppStyles.ClearButtonStyle(),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    color: Colors.white,
+                                    width: 3), // White border for the circle
+                              ),
+                              padding: const EdgeInsets.all(
+                                  3), // Padding for circle size
+                              child: const Icon(
+                                Icons.delete, // Trash icon inside the circle
+                                color: Colors.white, // White trash icon
+                                size: 20, // Icon size
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                        ],
+                      ),
                     ],
                   );
                 } else {
@@ -501,8 +515,7 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                             Text('Item: ${item['item_code'] ?? ''}'),
                             Text('จำนวนจ่าย: ${item['old_pack_qty'] ?? ''}'),
                             Text('Pack: ${item['pack_code'] ?? ''}'),
-                            Text(
-                                'Locator: ${item['location_code'] ?? ''}'),
+                            Text('Locator: ${item['location_code'] ?? ''}'),
                             Text('PD Location: ${item['attribute1'] ?? ''}'),
                             Text('Reason: ${item['attribute2'] ?? ''}'),
                             Text('ใช้แทนจุด: ${item['attribute3'] ?? ''}'),
@@ -618,8 +631,8 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
 
                                                   await updateLot(
                                                     pack_qty: newPackQty,
-                                                    OLD_PACK_QTY: item[
-                                                        'pack_qty'],
+                                                    OLD_PACK_QTY:
+                                                        item['pack_qty'],
                                                     item_code:
                                                         item['item_code'],
                                                     pack_code:
