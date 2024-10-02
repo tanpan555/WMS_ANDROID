@@ -279,11 +279,11 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     );
 
     print('Cancel form with data: ${jsonEncode({
-        'v_rec': widget.poReceiveNo,
-        'v_cancel': selectedcCode,
-        'APP_USER': gb.APP_USER,
-        'p_ou': gb.P_OU_CODE,
-        'p_erp_ou': gb.P_ERP_OU_CODE,
+          'v_rec': widget.poReceiveNo,
+          'v_cancel': selectedcCode,
+          'APP_USER': gb.APP_USER,
+          'p_ou': gb.P_OU_CODE,
+          'p_erp_ou': gb.P_ERP_OU_CODE,
         })}');
 
     if (response.statusCode == 200) {
@@ -303,167 +303,168 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   }
 
   void showCancelDialog() {
-  String? selectedcCode;
+    String? selectedcCode;
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        child: Container(
-          width: 600.0,
-          height: 250.0,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: DropdownButtonFormField<String>(
-                  value: selectedcCode,
-                  isExpanded: true,
-                  items: cCode.map((item) {
-                    return DropdownMenuItem<String>(
-                      value: item['r'],
-                      child: Container(
-                        width: 250.0,
-                        child: Row(
-                          children: [
-                            Text(
-                              item['r'] ?? 'No code',
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Flexible(
-                              child: Text(
-                                item['d'] ?? '',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedcCode = newValue;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Cancel Code',
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-                    border: OutlineInputBorder(),
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            width: 600.0,
+            height: 250.0,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Cancel',
+                    style:
+                        TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                   ),
                 ),
-              ),
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      child: Text('Cancel'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: DropdownButtonFormField<String>(
+                    value: selectedcCode,
+                    isExpanded: true,
+                    items: cCode.map((item) {
+                      return DropdownMenuItem<String>(
+                        value: item['r'],
+                        child: Container(
+                          width: 250.0,
+                          child: Row(
+                            children: [
+                              Text(
+                                item['r'] ?? 'No code',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Flexible(
+                                child: Text(
+                                  item['d'] ?? '',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedcCode = newValue;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Cancel Code',
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                      border: OutlineInputBorder(),
                     ),
-                    TextButton(
-                      child: Text('OK'),
-                      onPressed: () {
-                        if (selectedcCode != null) {
+                  ),
+                ),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        child: Text('Cancel'),
+                        onPressed: () {
                           Navigator.of(context).pop();
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('คำเตือน'),
-                                content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text('ตกลง'),
-                                    onPressed: ()  {
-                                      // Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: Text('OK'),
+                        onPressed: () {
+                          if (selectedcCode != null) {
+                            Navigator.of(context).pop();
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('คำเตือน'),
+                                  content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text('ตกลง'),
+                                      onPressed: () {
+                                        // Navigator.of(context).pop();
 
-                                      cancel_from(selectedcCode!).then((_) {
-                                        Navigator.of(context).pop(
-                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                SSINDT01_MAIN(
-                                            pWareCode: widget.pWareCode,
+                                        cancel_from(selectedcCode!).then((_) {
+                                          Navigator.of(context).pop(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SSINDT01_MAIN(
+                                                pWareCode: widget.pWareCode,
                                                 pWareName: widget.pWareName,
                                                 p_ou_code: widget.p_ou_code,
                                                 selectedValue: 'ทั้งหมด',
                                                 apCode: 'ทั้งหมด',
                                                 documentNumber: '',
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                         Navigator.of(context).pop();
-                                      }).catchError((error) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                                'An error occurred: $error'),
-                                          ),
-                                        );
-                                      });
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('คำเตือน'),
-                                content: Text('โปรดเลือกเหตุยกเลิก'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text('ตกลง'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      },
-                    ),
-                  ],
+                                          );
+                                          Navigator.of(context).pop();
+                                        }).catchError((error) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                  'An error occurred: $error'),
+                                            ),
+                                          );
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('คำเตือน'),
+                                  content: Text('โปรดเลือกเหตุยกเลิก'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text('ตกลง'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
-final String updDateForm = DateFormat('MM/dd/yyyy').format(DateTime.now());
+  final String updDateForm = DateFormat('MM/dd/yyyy').format(DateTime.now());
 
   Future<void> updateForm_REMARK(
       String receiveNo,
@@ -594,8 +595,13 @@ final String updDateForm = DateFormat('MM/dd/yyyy').format(DateTime.now());
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) =>
-            Ssindt01Grid(poReceiveNo: receiveNo, poPONO: poNo, pWareCode: widget.pWareCode, pWareName: widget.pWareName, p_ou_code: widget.p_ou_code,),
+        builder: (context) => Ssindt01Grid(
+          poReceiveNo: receiveNo,
+          poPONO: poNo,
+          pWareCode: widget.pWareCode,
+          pWareName: widget.pWareName,
+          p_ou_code: widget.p_ou_code,
+        ),
       ),
     );
   }
@@ -641,10 +647,8 @@ final String updDateForm = DateFormat('MM/dd/yyyy').format(DateTime.now());
                     onPressed: () {
                       showCancelDialog();
                     },
-                    child: Text(
-                      'ยกเลิก',
-                      style: AppStyles.CancelbuttonTextStyle()
-                    ),
+                    child: Text('ยกเลิก',
+                        style: AppStyles.CancelbuttonTextStyle()),
                   ),
                   const Spacer(),
                   ElevatedButton(
@@ -676,13 +680,8 @@ final String updDateForm = DateFormat('MM/dd/yyyy').format(DateTime.now());
     );
   }
 
-Widget _buildFormFields() {
+  Widget _buildFormFields() {
   return Container(
-    // padding: const EdgeInsets.all(16.0),
-    // decoration: BoxDecoration(
-    //   border: Border.all(color: Colors.black38),
-    //   borderRadius: BorderRadius.circular(5.0),
-    // ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -694,9 +693,22 @@ Widget _buildFormFields() {
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.grey[300],
-            labelText: 'เลขที่อ้างอิง (PO)',
-            labelStyle: const TextStyle(
-              color: Colors.black87,
+            label: Row(
+              children: [
+                const Text(
+                  'เลขที่อ้างอิง (PO)',
+                  style: TextStyle(
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(width: 2), // Add a small space
+                Text(
+                  '*',
+                  style: TextStyle(
+                    color: Colors.red, // Change asterisk color to red
+                  ),
+                ),
+              ],
             ),
             border: InputBorder.none,
           ),
@@ -704,126 +716,147 @@ Widget _buildFormFields() {
         ),
         const SizedBox(height: 8.0),
         Padding(
-  padding: const EdgeInsets.symmetric(vertical: 0),
-  child: GestureDetector(
-    onTap: () {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: StatefulBuilder(
-              builder: (context, setState) {
-                return Container(
-                  padding: const EdgeInsets.all(16),
-                  height: 300, // Adjust the height as needed
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'เลือกประเภทการรับ',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+          padding: const EdgeInsets.symmetric(vertical: 0),
+          child: GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: StatefulBuilder(
+                      builder: (context, setState) {
+                        return Container(
+                          padding: const EdgeInsets.all(16),
+                          constraints: BoxConstraints(
+                            maxHeight: MediaQuery.of(context).size.height *
+                                0.7, // 70% of screen height
                           ),
-                          IconButton(
-                            icon: Icon(Icons.close),
-                            onPressed: () {
-                              Navigator.of(context).pop(); // Close the dialog
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      // Optional: Search field for filtering items
-                      TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText: 'ค้นหา',
-                          border: OutlineInputBorder(),
-                        ),
-                        onChanged: (query) {
-                          setState(() {});
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: poType
-                              .where((item) {
-                                final poTypeCode =
-                                    item['po_type_code'].toString();
-                                final searchQuery =
-                                    _searchController.text.trim();
-
-                                return poTypeCode
-                                    .contains(searchQuery); // Filtering
-                              })
-                              .toList()
-                              .length,
-                          itemBuilder: (context, index) {
-                            final filteredItems = poType.where((item) {
-                              final poTypeCode =
-                                  item['po_type_code'].toString();
-                              final searchQuery =
-                                  _searchController.text.trim();
-                              return poTypeCode.contains(searchQuery);
-                            }).toList();
-
-                            final item = filteredItems[index];
-                            final poTypeCode = item['po_type_code'].toString();
-
-                            return ListTile(
-                              title: Text(
-                                poTypeCode,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(color: Colors.black),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'เลือกประเภทการรับ',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.close),
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                    },
+                                  ),
+                                ],
                               ),
-                              onTap: () {
-                                Navigator.of(context).pop();
-                                setState(() {
-                                  selectedPoType = poTypeCode;
-                                  poTypeCodeController.text = poTypeCode;
-                                });
-                              },
-                            );
-                          },
+                              const SizedBox(height: 10),
+                              // Optional: Search field for filtering items
+                              TextField(
+                                controller: _searchController,
+                                decoration: InputDecoration(
+                                  hintText: 'ค้นหา',
+                                  border: OutlineInputBorder(),
+                                ),
+                                onChanged: (query) {
+                                  setState(() {});
+                                },
+                              ),
+                              const SizedBox(height: 10),
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: poType
+                                      .where((item) {
+                                        final poTypeCode =
+                                            item['po_type_code'].toString();
+                                        final searchQuery =
+                                            _searchController.text.trim();
+                                        return poTypeCode.contains(
+                                            searchQuery); // Filtering
+                                      })
+                                      .toList()
+                                      .length,
+                                  itemBuilder: (context, index) {
+                                    final filteredItems =
+                                        poType.where((item) {
+                                      final poTypeCode =
+                                          item['po_type_code'].toString();
+                                      final searchQuery =
+                                          _searchController.text.trim();
+                                      return poTypeCode.contains(searchQuery);
+                                    }).toList();
+
+                                    final item = filteredItems[index];
+                                    final poTypeCode =
+                                        item['po_type_code'].toString();
+
+                                    return ListTile(
+                                      title: Text(
+                                        poTypeCode,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      onTap: () {
+                                        Navigator.of(context).pop();
+                                        setState(() {
+                                          selectedPoType = poTypeCode;
+                                          poTypeCodeController.text =
+                                              poTypeCode;
+                                        });
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            },
+            child: AbsorbPointer(
+              child: TextField(
+                decoration: InputDecoration(
+                  label: Row(
+                    children: [
+                      const Text(
+                        'ประเภทการรับ',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(width: 2), // Add a small space
+                      Text(
+                        '*',
+                        style: TextStyle(
+                          color: Colors.red, // Change asterisk color to red
                         ),
                       ),
                     ],
                   ),
-                );
-              },
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: InputBorder.none,
+                  suffixIcon: Icon(
+                    Icons.arrow_drop_down,
+                    color: Color.fromARGB(255, 113, 113, 113),
+                  ),
+                ),
+                controller: TextEditingController(text: selectedPoType),
+              ),
             ),
-          );
-        },
-      );
-    },
-    child: AbsorbPointer(
-      child: TextField(
-        decoration: InputDecoration(
-          labelText: 'ประเภทการรับ',
-          filled: true,
-          fillColor: Colors.white,
-          border: InputBorder.none,
-          labelStyle: TextStyle(color: Colors.black),
-          suffixIcon: Icon(
-            Icons.arrow_drop_down,
-            color: Color.fromARGB(255, 113, 113, 113),
           ),
         ),
-        controller: TextEditingController(text: selectedPoType),
-      ),
-    ),
-  ),
-),
-
         const SizedBox(height: 8.0),
         TextFormField(
           controller: receiveDateController,
@@ -848,10 +881,10 @@ Widget _buildFormFields() {
           style: TextStyle(
             color: Colors.black,
           ),
-            readOnly: false,
-  onChanged: (value) {
-   receiveDateController.text = value;
-  },
+          readOnly: false,
+          onChanged: (value) {
+            receiveDateController.text = value;
+          },
         ),
         const SizedBox(height: 8.0),
         Row(
@@ -860,14 +893,22 @@ Widget _buildFormFields() {
               child: TextFormField(
                 controller: invoiceNoController,
                 decoration: InputDecoration(
-                  labelText: 'เลขที่ใบแจ้งหนี้ *',
+                  label: Row(
+                    children: [
+                      const Text(
+                        'เลขที่ใบแจ้งหนี้',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      const SizedBox(width: 2), // Add a small space
+                      Text(
+                        '*',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ],
+                  ),
                   filled: true,
                   fillColor: Colors.white,
                   border: InputBorder.none,
-                  labelStyle: TextStyle(
-                    color: Colors.black,
-                    // fontSize: 12
-                  ),
                   hintStyle: TextStyle(
                     color: Colors.white70,
                   ),
@@ -882,73 +923,38 @@ Widget _buildFormFields() {
                   return null;
                 },
               ),
-
             ),
-            // const SizedBox(width: 8.0),
-            // Expanded(
-            //   child: TextFormField(
-            //     controller: invoiceDateController,
-            //     decoration: InputDecoration(
-            //       labelText: 'วันที่ใบแจ้งหนี้',
-            //       filled: true,
-            //       fillColor: Colors.white,
-            //       border: InputBorder.none,
-            //       labelStyle: TextStyle(
-            //         color: Colors.black,
-            //       ),
-            //       hintStyle: TextStyle(
-            //         color: Colors.white70,
-                    
-            //       ),
-            //       suffixIcon: IconButton(
-            //         icon: const Icon(Icons.calendar_today, color: Colors.black),
-            //         onPressed: () {
-            //           _selectInvoiceDate(context);
-            //         },
-            //       ),
-            //     ),
-            //     style: TextStyle(
-            //       color: Colors.black,
-            //       // fontSize: 11
-            //     ),
-            //     readOnly: true,
-            //     onTap: () => _selectInvoiceDate(context),
-            //   ),
-            // ),
           ],
         ),
         const SizedBox(height: 8.0),
         TextFormField(
-  controller: invoiceDateController,
-  decoration: InputDecoration(
-    labelText: 'วันที่ใบแจ้งหนี้',
-    filled: true,
-    fillColor: Colors.white,
-    border: InputBorder.none,
-    labelStyle: TextStyle(
-      color: Colors.black,
-    ),
-    hintStyle: TextStyle(
-      color: Colors.white70,
-    ),
-    suffixIcon: IconButton(
-      icon: const Icon(Icons.calendar_today, color: Colors.black),
-      onPressed: () {
-        _selectInvoiceDate(context);
-      },
-    ),
-  ),
-  style: TextStyle(
-    color: Colors.black,
-    // fontSize: 11
-  ),
-  readOnly: false,
-  onChanged: (value) {
-   invoiceDateController.text = value;
-  },
-),
-
-        
+          controller: invoiceDateController,
+          decoration: InputDecoration(
+            labelText: 'วันที่ใบแจ้งหนี้',
+            filled: true,
+            fillColor: Colors.white,
+            border: InputBorder.none,
+            labelStyle: TextStyle(
+              color: Colors.black,
+            ),
+            hintStyle: TextStyle(
+              color: Colors.white70,
+            ),
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.calendar_today, color: Colors.black),
+              onPressed: () {
+                _selectInvoiceDate(context);
+              },
+            ),
+          ),
+          style: TextStyle(
+            color: Colors.black,
+          ),
+          readOnly: false,
+          onChanged: (value) {
+            invoiceDateController.text = value;
+          },
+        ),
         const SizedBox(height: 8.0),
         TextFormField(
           controller: poRemarkController,
@@ -1003,22 +1009,38 @@ Widget _buildFormFields() {
         ),
         const SizedBox(height: 8.0),
         TextFormField(
-          style: const TextStyle(
+  style: const TextStyle(
+    color: Colors.black87,
+  ),
+  controller: receiveNoController,
+  decoration: InputDecoration(
+    filled: true,
+    fillColor: Colors.grey[300],
+    label: Row(
+      children: [
+        const Text(
+          'เลขที่เอกสาร WMS',
+          style: TextStyle(
             color: Colors.black87,
           ),
-          controller: receiveNoController,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.grey[300],
-            labelText: 'เลขที่เอกสาร WMS',
-            labelStyle: const TextStyle(
-              color: Colors.black87,
-              
-            ),
-             border: InputBorder.none,
-          ),
-          readOnly: true,
         ),
+        const SizedBox(width: 2), // Add a small space
+        Text(
+          '*',
+          style: TextStyle(
+            color: Colors.red, // Change asterisk color to red
+          ),
+        ),
+      ],
+    ),
+    labelStyle: const TextStyle(
+      color: Colors.black87,
+    ),
+    border: InputBorder.none,
+  ),
+  readOnly: true,
+),
+
         const SizedBox(height: 16.0),
         TextFormField(
           style: const TextStyle(
@@ -1028,41 +1050,7 @@ Widget _buildFormFields() {
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.grey[300],
-            labelText: 'รับเข้าคลัง',
-            labelStyle: const TextStyle(
-              color: Colors.black87,
-            ),
-            border: InputBorder.none,
-          ),
-          readOnly: true,
-        ),
-        const SizedBox(height: 8.0),
-        TextFormField(
-          style: const TextStyle(
-            color: Colors.black87,
-          ),
-          controller: erpReceiveNoController,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.grey[300],
-            labelText: 'เลขที่ใบรับคลัง',
-            labelStyle: const TextStyle(
-              color: Colors.black87,
-            ),
-            border: InputBorder.none,
-          ),
-          readOnly: true,
-        ),
-        const SizedBox(height: 8.0),
-        TextFormField(
-          style: const TextStyle(
-            color: Colors.black87,
-          ),
-          controller: crDateController,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.grey[300],
-            labelText: 'วันที่บันทึก',
+            labelText: 'คลังสินค้า',
             labelStyle: const TextStyle(
               color: Colors.black87,
             ),

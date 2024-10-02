@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _loginError = '';
-  final ApiService _apiService = ApiService();
+  // final ApiService _apiService = ApiService();
 
   bool _isLoading = false;
 
@@ -91,6 +91,7 @@ class _LoginPageState extends State<LoginPage> {
       }
     } catch (e) {
       setState(() {
+        print(e);
         _loginError = 'username or password Incorrect.';
         _isLoading = false;
       });

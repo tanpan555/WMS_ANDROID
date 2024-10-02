@@ -1959,7 +1959,7 @@ class _LotDialogState extends State<LotDialog> {
                     SizedBox(height: 12.0),
                     _buildTextField(
                       controller: lotQtyController,
-                      labelText: 'LOT Qty',
+                      labelText: 'LOT QTY',
                       keyboardType: TextInputType.number,
                       onChanged: (value) {
                         item['lot_qty'] = value;
@@ -1974,7 +1974,7 @@ class _LotDialogState extends State<LotDialog> {
                     ),
                     _buildDateField(
                       controller: mfgDateController,
-                      labelText: 'mfg Date',
+                      labelText: 'MFG Date',
                       context: context,
                       onChanged: (value) {
                         item['mfg_date'] = value;

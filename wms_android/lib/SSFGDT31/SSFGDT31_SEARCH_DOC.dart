@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/services.dart'; // Importing for input formatters
 import 'package:wms_android/styles.dart';
 import '../custom_appbar.dart';
 import '../bottombar.dart';
-import 'SSFGDT31_CARD.dart'; // นำเข้าไฟล์ที่สร้างหน้า SSFGDT31_CARD
+import 'SSFGDT31_CARD.dart'; // Import the SSFGDT31_CARD file
 
 class SSFGDT31_SEARCH_DOC extends StatefulWidget {
   final String pWareCode;
@@ -48,6 +49,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
   @override
   void dispose() {
     _dateController.dispose();
+    searchController.dispose();
     super.dispose();
   }
 
@@ -121,11 +123,8 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                 ),
                 const SizedBox(height: 16),
                 TextField(
-                  readOnly: false,
-                  onChanged: (value) {
-                    _dateController.text = value;
-                  },
                   controller: _dateController,
+                  readOnly: false, // Make the TextField read-only
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     labelText: 'วันที่รับคืน',
@@ -133,26 +132,44 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                     filled: true,
                     fillColor: Colors.white,
                     suffixIcon: IconButton(
-                        icon: Icon(Icons.calendar_today_outlined,
-                            color: Colors.black),
-                        onPressed: () async {
-                          DateTime? selectedDate = await showDatePicker(
-                            context: context,
-                            initialEntryMode: DatePickerEntryMode.calendarOnly,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2101),
-                          );
-                          if (selectedDate != null &&
-                              selectedDate != _selectedDate) {
-                            setState(() {
-                              _selectedDate = selectedDate;
-                              _dateController.text =
-                                  DateFormat('dd/MM/yyyy').format(selectedDate);
-                            });
-                          }
-                        }),
+                      icon: Icon(Icons.calendar_today_outlined,
+                          color: Colors.black),
+                      onPressed: () async {
+                        DateTime? selectedDate = await showDatePicker(
+                          context: context,
+                          initialEntryMode: DatePickerEntryMode.calendarOnly,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101),
+                        );
+                        if (selectedDate != null && selectedDate != _selectedDate) {
+                          setState(() {
+                            _selectedDate = selectedDate;
+                            _dateController.text =
+                                DateFormat('dd/MM/yyyy').format(selectedDate);
+                          });
+                        }
+                      },
+                    ),
                   ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    // Handle input formatting
+                    if (RegExp(r'^\d{8}$').hasMatch(value)) {
+                      final day = int.parse(value.substring(0, 2));
+                      final month = int.parse(value.substring(2, 4));
+                      final year = int.parse(value.substring(4, 8));
+                      final date = DateTime(year, month, day);
+                      setState(() {
+                        _dateController.text = DateFormat('dd/MM/yyyy').format(date);
+                        _selectedDate = date;
+                      });
+                    }
+                  },
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly, // Allow only digits
+                    LengthLimitingTextInputFormatter(8), // Limit to 8 digits
+                  ],
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -178,7 +195,6 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                             ? 'null'
                             : searchController.text;
 
-                        // If _selectedDate is null, use 'null' for selectedDate
                         final selectedDate = _selectedDate == null
                             ? 'null'
                             : DateFormat('dd/MM/yyyy').format(_selectedDate!);
@@ -189,11 +205,9 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                           MaterialPageRoute(
                             builder: (context) => SSFGDT31_CARD(
                               soNo: documentNumber,
-                              statusDesc: selectedValue ??
-                                  'ทั้งหมด', // Default to 'ทั้งหมด' if no status is selected
+                              statusDesc: selectedValue ?? 'ทั้งหมด',
                               wareCode: widget.pWareCode,
-                              receiveDate:
-                                  selectedDate, // Pass the selected date
+                              receiveDate: selectedDate,
                             ),
                           ),
                         );

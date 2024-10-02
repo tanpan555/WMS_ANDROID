@@ -564,7 +564,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                 children: [
                   _buildBarcodeTextField(
                     BARCODE,
-                    'BARCODE',
+                    'Barcode',
                     readOnly: false,
                     onSubmitted: (value) {
                       Barcode = value;

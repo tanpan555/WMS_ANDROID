@@ -10,6 +10,7 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:wms_android/styles.dart';
+import 'package:flutter/services.dart'; // Add this import
 
 class SSFGDT17_SEARCH extends StatefulWidget {
   final String pWareCode;
@@ -144,41 +145,56 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                 ),
                 const SizedBox(height: 16),
                 TextField(
-                  readOnly: false,
-                  controller: _dateController,
-                  onChanged: (value) {
-                    _dateController.text = value;
-                  },
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    labelText: 'วันที่โอน',
-                    labelStyle: TextStyle(color: Colors.black),
-                    filled: true,
-                    fillColor: Colors.white,
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.calendar_today_outlined,
-                          color: Colors.black),
-                      onPressed: () async {
-                        DateTime? selectedDate = await showDatePicker(
-                          initialEntryMode: DatePickerEntryMode.calendarOnly,
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2101),
-                        );
-                        if (selectedDate != null &&
-                            selectedDate != _selectedDate) {
-                          setState(() {
-                            _selectedDate = selectedDate;
-                            _dateController.text =
-                                DateFormat('dd/MM/yyyy').format(selectedDate);
-                          });
-                        }
-                      },
-                    ),
-                  ),
-                  onTap: () async {},
-                ),
+  controller: _dateController,
+  decoration: InputDecoration(
+    border: InputBorder.none,
+    labelText: 'วันที่โอน',
+    labelStyle: TextStyle(color: Colors.black),
+    filled: true,
+    fillColor: Colors.white,
+    suffixIcon: IconButton(
+      icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
+      onPressed: () async {
+        DateTime? selectedDate = await showDatePicker(
+          initialEntryMode: DatePickerEntryMode.calendarOnly,
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2101),
+        );
+        if (selectedDate != null && selectedDate != _selectedDate) {
+          setState(() {
+            _selectedDate = selectedDate;
+            _dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate);
+          });
+        }
+      },
+    ),
+  ),
+  keyboardType: TextInputType.number, // Set keyboard type to number
+  inputFormatters: [
+    FilteringTextInputFormatter.digitsOnly, // Allow only digits
+    LengthLimitingTextInputFormatter(8), // Limit to 8 digits
+  ],
+  onChanged: (value) {
+    // Check if the input is in the format ddMMyyyy
+    if (RegExp(r'^\d{8}$').hasMatch(value)) {
+      // Parse the date from the input
+      final day = int.parse(value.substring(0, 2));
+      final month = int.parse(value.substring(2, 4));
+      final year = int.parse(value.substring(4, 8));
+      // Create a DateTime object
+      final date = DateTime(year, month, day);
+      // Format and set the controller's text
+      setState(() {
+        _dateController.text = DateFormat('dd/MM/yyyy').format(date);
+        // Update the selected date
+        _selectedDate = date;
+      });
+    }
+  },
+),
+
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

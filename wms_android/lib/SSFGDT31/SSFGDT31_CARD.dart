@@ -330,113 +330,127 @@ String? LT_CHECK;
     }
   }
 
-  Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
- Map<String, Color> statusColors = {
-  'ยืนยันการรับ': const Color.fromARGB(255, 146, 208, 80),
-  'ระหว่างบันทึก': const Color.fromARGB(255, 246, 250, 112),
-  'ยกเลิก': const Color.fromARGB(255, 208, 206, 206),
-};
+ Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
+  Map<String, Color> statusColors = {
+    'ยืนยันการรับ': const Color.fromARGB(255, 146, 208, 80),
+    'ระหว่างบันทึก': const Color.fromARGB(255, 246, 250, 112),
+    'ยกเลิก': const Color.fromARGB(255, 208, 206, 206),
+  };
 
-String iconImageYorN;
+  String iconImageYorN;
 
-switch (item['qc_yn']) {
-                    case 'Y':
-                      iconImageYorN = 'assets/images/rt_machine_on.png';
-                      break;
-                    case 'N':
-                      iconImageYorN = 'assets/images/rt_machine_off.png';
-                      break;
-                    default:
-                      iconImageYorN = 'assets/images/rt_machine_off.png';
-                  }
+  switch (item['qc_yn']) {
+    case 'Y':
+      iconImageYorN = 'assets/images/rt_machine_on.png';
+      break;
+    case 'N':
+      iconImageYorN = 'assets/images/rt_machine_off.png';
+      break;
+    default:
+      iconImageYorN = 'assets/images/rt_machine_off.png';
+  }
 
   Color statusColor = statusColors[item['card_status_desc']] ?? Colors.white;
 
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-    child:  Card(
-  elevation: 8.0,
-  margin: const EdgeInsets.symmetric(vertical: 8.0),
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(15.0),
-  ),
-  color: const Color.fromRGBO(204, 235, 252, 1.0),
-  child: InkWell(
-    onTap: () {
-      
-    },
-    borderRadius: BorderRadius.circular(15.0),
-    child: Stack(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              InkWell(
-                onTap: ()  {
-                 print(item['doc_no']);
-                print('${item['doc_type']}');
-                Inteface_receive_WMS2ERP(item['doc_no'],item['doc_type']);
-                
-               
-                },
-                child: Container(
-                  width: 100,
-                  height: 40,
-                  child: Image.asset(
-                    'assets/images/printer.png',
-                    fit: BoxFit.contain,
+    child: Card(
+      elevation: 8.0,
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      color: const Color.fromRGBO(204, 235, 252, 1.0),
+      child: InkWell(
+        onTap: () {
+          // Handle tap
+        },
+        borderRadius: BorderRadius.circular(15.0),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Add ap_name as title
+                  Text(
+                    item['ap_name'] ?? 'Unknown AP Name', // Show ap_name here
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0, // Adjust size as needed
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 20.0),
-              Text(
-                '${item['po_date']} ${item['po_no']} ${item['item_stype_desc'] } ',
-                style: const TextStyle(color: Colors.black),
-              ),
-            ],
-          ),
-        ),
-      
-        Positioned(
-          top: 8.0,
-          right: 8.0,
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                decoration: BoxDecoration(
-                  color: statusColor, // Use the color from the map
-                  borderRadius: BorderRadius.circular(12.0),
-                  border: Border.all(color: statusColor, width: 2.0),
-                ),
-                child: Text(
-                  item['card_status_desc'] ?? 'Unknown',
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
+                  const SizedBox(height: 4.0), // Space between title and divider
+                  const Divider(color: Color.fromARGB(255, 0, 0, 0)), // Divider between title and rest of data
+                  const SizedBox(height: 4.0), // Space between divider and next widget
+                  InkWell(
+                    onTap: () {
+                      print(item['doc_no']);
+                      print('${item['doc_type']}');
+                      Inteface_receive_WMS2ERP(item['doc_no'], item['doc_type']);
+                    },
+                    child: Container(
+                      width: 100,
+                      height: 40,
+                      child: Image.asset(
+                        'assets/images/printer.png',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 20.0), // Space between printer icon and next text
+                  Text(
+                    '${item['po_date']} ${item['po_no']} ${item['item_stype_desc']} ',
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                ],
               ),
-              // const SizedBox(height: 1.0),
-              SizedBox(
-                width: 100,
-                height: 40,
-                child: Image.asset(
-                  iconImageYorN,
-                  fit: BoxFit.contain,
-                ),
+            ),
+            Positioned(
+              top: 8.0,
+              right: 8.0,
+              child: Column(
+                children: [
+                  const SizedBox(height: 50.0),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    height: 35, // Set height to match the printer icon
+                    decoration: BoxDecoration(
+                      color: statusColor, // Use the color from the map
+                      borderRadius: BorderRadius.circular(12.0),
+                      border: Border.all(color: statusColor, width: 2.0),
+                    ),
+                    child: Center( // Center the text vertically
+                      child: Text(
+                        item['card_status_desc'] ?? 'Unknown',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 100,
+                    height: 40,
+                    child: Image.asset(
+                      iconImageYorN,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
+      ),
     ),
-  ),
-),
   );
 }
+
+
 
   @override
 Widget build(BuildContext context) {

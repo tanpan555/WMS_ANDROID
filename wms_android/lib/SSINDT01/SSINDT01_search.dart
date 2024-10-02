@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_main.dart';
@@ -38,22 +37,22 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
 
   String currentSessionID = '';
   List<dynamic> apCodes = [];
-  String? selectedApCode;
   String errorMessage = '';
   String? _selectedValue = 'ทั้งหมด';
+  String? selectedApCode = 'ทั้งหมด'; // Initialize with 'ทั้งหมด'
 
   final TextEditingController _documentNumberController =
+      TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
+
+  final TextEditingController _selectedApCodeController =
       TextEditingController();
 
   @override
   void initState() {
     super.initState();
     currentSessionID = SessionManager().sessionID;
-    _selectedValue = 'ทั้งหมด';
     fetchApCodes();
-    selectedApCode = 'ทั้งหมด';
-    // print('$selectedApCode' ?? 'test');
-
     print('Search Global Ware Code: ${gb.P_WARE_CODE}');
     log('Search Global Ware Code: ${gb.P_WARE_CODE}');
   }
@@ -69,7 +68,6 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
         setState(() {
           apCodes = jsonData['items'] ?? [];
           apCodes.insert(0, {'ap_code': 'ทั้งหมด', 'ap_name': 'ทั้งหมด'});
-          selectedApCode = 'ทั้งหมด';
         });
       } else {
         throw Exception('Failed to load AP codes');
@@ -86,11 +84,105 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
   void _resetForm() {
     setState(() {
       _selectedValue = 'ทั้งหมด';
-      selectedApCode = '';
-
+      selectedApCode = 'ทั้งหมด';
       _documentNumberController.clear();
       errorMessage = '';
     });
+  }
+
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 450, // Adjust the height as needed
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'เลือกผู้ขาย',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        setState(() {});
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: apCodes.length,
+                        itemBuilder: (context, index) {
+                          final item = apCodes[index];
+                          final apCode = item['ap_code'];
+                          final apName = item['ap_name'];
+
+                          if (_searchController.text.isNotEmpty &&
+                              !apCode.toLowerCase().contains(
+                                  _searchController.text.toLowerCase())) {
+                            return SizedBox
+                                .shrink(); // Filter out non-matching items
+                          }
+
+                          return ListTile(
+                            title: Text(
+                              apCode,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            subtitle: Text(
+                              apName,
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 12),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                selectedApCode = apCode; // Set selected code
+                                _selectedApCodeController.text =
+                                    selectedApCode ??
+                                        ''; // Update the controller's text
+                              });
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -118,9 +210,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                         selected: isSelected,
                       );
                     },
-                    constraints: BoxConstraints(
-                      maxHeight: 175,
-                    ),
+                    constraints: BoxConstraints(maxHeight: 175),
                   ),
                   items: <String>[
                     'ทั้งหมด',
@@ -145,59 +235,25 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                   selectedItem: _selectedValue,
                 ),
                 SizedBox(height: 15),
-                DropdownSearch<String>(
-  popupProps: PopupProps.menu(
-    showSearchBox: true,
-    showSelectedItems: true,
-    itemBuilder: (context, item, isSelected) {
-      // Find the corresponding item details from apCodes
-      final apCodeItem = apCodes.firstWhere(
-        (element) => element['ap_code'] == item,
-        orElse: () => {'ap_name': 'No name'},
-      );
-      return ListTile(
-        title: Text(
-          item,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Text(
-          apCodeItem['ap_name'] ?? 'No name',
-          style: TextStyle(color: Colors.grey, fontSize: 8),
-        ),
-        selected: isSelected,
-      );
-    },
-    constraints: BoxConstraints(maxHeight: 300),
-  ),
-  items: apCodes.map((item) => item['ap_code'] as String).toList(),
-  dropdownDecoratorProps: DropDownDecoratorProps(
-    dropdownSearchDecoration: InputDecoration(
-      border: InputBorder.none,
-      filled: true,
-      fillColor: Colors.white,
-      labelText: "ผู้ขาย",
-      hintText: "เลือกผู้ขาย",
-    ),
-  ),
-  // Enable search for both 'ap_code' and 'ap_name'
-  filterFn: (item, filter) {
-    final apCodeItem = apCodes.firstWhere(
-      (element) => element['ap_code'] == item,
-      orElse: () => {'ap_name': ''},
-    );
-    final apCode = item.toLowerCase();
-    final apName = apCodeItem['ap_name']?.toLowerCase() ?? '';
-    final searchLower = filter.toLowerCase();
-    return apCode.contains(searchLower) || apName.contains(searchLower);
-  },
-  onChanged: (String? value) {
-    setState(() {
-      selectedApCode = value ?? 'ทั้งหมด';
-    });
-  },
-  selectedItem: selectedApCode,
-),
-
+                GestureDetector(
+                  onTap: _showDialog,
+                  child: AbsorbPointer(
+                    child: TextField(
+                      controller: _selectedApCodeController,
+                      decoration: InputDecoration(
+                        labelText: 'ผู้ขาย',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: InputBorder.none,
+                        labelStyle: TextStyle(color: Colors.black),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _documentNumberController,
@@ -218,7 +274,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                       onPressed: _resetForm,
                       child: Image.asset('assets/images/eraser_red.png',
                           width: 50, height: 25),
-                      style: AppStyles.EraserButtonStyle()
+                      style: AppStyles.EraserButtonStyle(),
                     ),
                     const SizedBox(width: 20),
                     ElevatedButton(
@@ -228,13 +284,9 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                                 ? _documentNumberController.text
                                 : 'null';
 
-                        // final apCode =
-                        selectedApCode ?? 'ทั้งหมด';
                         print('selectedApCode $selectedApCode');
                         print(_selectedValue);
-                        // print('apCode $apCode');
                         print(documentNumber);
-                        // log(apCode);
 
                         Navigator.push(
                           context,

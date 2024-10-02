@@ -8,6 +8,8 @@ import 'dart:convert';
 import '../custom_appbar.dart';
 import '../bottombar.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
 class SSFGDT31_FROM extends StatefulWidget {
@@ -35,6 +37,8 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
   late final TextEditingController CUST = TextEditingController();
   late final TextEditingController NOTE = TextEditingController();
   late final TextEditingController ERP_DOC_NO = TextEditingController();
+
+   final TextEditingController _dateController = TextEditingController();
 
   DateTime selectedDate = DateTime.now();
   List<dynamic> statusItems = [];
@@ -622,9 +626,9 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
               // padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  _buildTextField(DOC_NO, 'เลขที่เอกสาร WMS*', readOnly: true),
+                  _buildTextFieldstar(DOC_NO, 'เลขที่เอกสาร WMS', readOnly: true),
                   _buildDropdownForDocType(),
-                  _buildDateTextField(DOC_DATE, 'วันที่บันทึก*'),
+                  _buildDateTextField(DOC_DATE, 'วันที่บันทึก'),
                   _buildDropdownForRefNo(),
                   _buildDropdownSearch(),
                   _buildTextField(CUST, 'ลูกค้า', readOnly: true),
@@ -660,45 +664,125 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     );
   }
 
-  Widget _buildDateTextField(TextEditingController controller, String label) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: TextField(
-        controller: controller,
-        style: TextStyle(color: Colors.black),
-        readOnly: false,
-                  onChanged: (value) {
-   controller.text = value;
-  },
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: TextStyle(color: Colors.black),
-          filled: true,
-          fillColor: Colors.white,
-          border: InputBorder.none,
-          suffixIcon: IconButton(
-      icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
-      onPressed: () async {
-  final DateTime? pickedDate = await showDatePicker(
-    initialEntryMode: DatePickerEntryMode.calendarOnly,
-            context: context,
-            initialDate: selectedDate,
-            firstDate: DateTime(1900),
-            lastDate: DateTime.now(),
-          );
-
-          if (pickedDate != null && pickedDate != selectedDate) {
-            setState(() {
-              selectedDate = pickedDate;
-              controller.text = _formatDate(pickedDate);
-            });
-          }
-      }),
+  Widget _buildTextFieldstar(TextEditingController controller, String label,
+    {bool readOnly = false}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: TextField(
+      controller: controller,
+      style: const TextStyle(color: Colors.black),
+      readOnly: readOnly,
+      decoration: InputDecoration(
+        label: RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: label,
+                style: const TextStyle(color: Colors.black),
+              ),
+              const TextSpan(
+                text: ' *', // Asterisk for required field
+                style: TextStyle(color: Colors.red), // Red color for asterisk
+              ),
+            ],
+          ),
         ),
-       
+        filled: true,
+        fillColor: readOnly ? Colors.grey[300] : Colors.white,
+        border: InputBorder.none,
       ),
-    );
+    ),
+  );
+}
+
+
+Widget _buildDateTextField(TextEditingController controller, String label) {
+  DateTime? selectedDate;
+
+  // Function to format the input string into a date string
+  String formatDate(String input) {
+    if (input.length == 8) {
+      // Attempt to parse the input string as a date in ddMMyyyy format
+      final day = int.tryParse(input.substring(0, 2));
+      final month = int.tryParse(input.substring(2, 4));
+      final year = int.tryParse(input.substring(4, 8));
+      if (day != null && month != null && year != null) {
+        final date = DateTime(year, month, day);
+        if (date.year == year && date.month == month && date.day == day) {
+          // Return the formatted date if valid
+          return DateFormat('dd/MM/yyyy').format(date);
+        }
+      }
+    }
+    return input; // Return original input if invalid
   }
+
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: TextFormField(
+      controller: controller,
+      style: const TextStyle(color: Colors.black),
+      readOnly: false, // Set to true since we're using a date picker
+      decoration: InputDecoration(
+        label: RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: label,
+                style: const TextStyle(color: Colors.black),
+              ),
+              const TextSpan(
+                text: ' *', // Asterisk for required field
+                style: TextStyle(color: Colors.red), // Red color for asterisk
+              ),
+            ],
+          ),
+        ),
+        filled: true,
+        fillColor: Colors.white,
+        border: InputBorder.none,
+        suffixIcon: IconButton(
+          icon: const Icon(Icons.calendar_today_outlined, color: Colors.black),
+          onPressed: () async {
+            final DateTime? pickedDate = await showDatePicker(
+              context: context,
+              initialDate: selectedDate ?? DateTime.now(),
+              firstDate: DateTime(1900),
+              lastDate: DateTime.now(),
+              initialEntryMode: DatePickerEntryMode.calendarOnly,
+            );
+
+            if (pickedDate != null && pickedDate != selectedDate) {
+              setState(() {
+                selectedDate = pickedDate;
+                controller.text = DateFormat('dd/MM/yyyy').format(pickedDate);
+              });
+            }
+          },
+        ),
+      ),
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly, // Allow only digits
+        LengthLimitingTextInputFormatter(8), // Limit to 8 digits
+      ],
+      onChanged: (value) {
+        // Format the input as the user types
+        final formattedDate = formatDate(value);
+        if (formattedDate != value) {
+          // Update the text field if the formatted date is different
+          controller.value = TextEditingValue(
+            text: formattedDate,
+            selection: TextSelection.fromPosition(
+              TextPosition(offset: formattedDate.length),
+            ),
+          );
+        }
+      },
+    ),
+  );
+}
+
 
 Widget _buildDropdownSearch() {
   return Padding(
@@ -712,9 +796,8 @@ Widget _buildDropdownSearch() {
             hintText: "ค้นหาเลขที่คำสั่งผลิต", // Hint text for the search field
             hintStyle: TextStyle(fontSize: 12.0, color: Colors.grey), // Style for the hint text
             border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-     
-    ),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
           ),
         ),
         itemBuilder: (context, item, isSelected) {
@@ -724,17 +807,17 @@ Widget _buildDropdownSearch() {
           );
 
           return ListTile(
-            title: Text(item),
-            subtitle: Text(itemData['cust_name'] ?? ''),
+            title: Text(item), // Displaying schid
+            subtitle: Text(itemData['cust_name'] ?? ''), // Displaying corresponding cust_name
             selected: isSelected,
           );
         },
         constraints: BoxConstraints(
-          maxHeight: 250,
+          minHeight: 300, // Set the minimum height of the dialog
+          maxHeight: 400, // Set the maximum height of the dialog
         ),
       ),
       items: [
-        // '',
         ...moDoNoItems.map((item) => '${item['schid']}'.toString()).toList()
       ],
       dropdownDecoratorProps: DropDownDecoratorProps(
@@ -747,6 +830,14 @@ Widget _buildDropdownSearch() {
           hintStyle: TextStyle(fontSize: 12.0),
         ),
       ),
+      filterFn: (String item, String search) {
+        final itemData = moDoNoItems.firstWhere(
+          (element) => '${element['schid']}' == item,
+          orElse: () => {'schid': '', 'cust_name': ''},
+        );
+        // Check if either schid or cust_name contains the search text
+        return item.contains(search) || (itemData['cust_name'] ?? '').contains(search);
+      },
       onChanged: (String? value) async {
         setState(() {
           selectedMoDoNo = value;
@@ -782,6 +873,8 @@ Widget _buildDropdownSearch() {
 
 
 
+
+
 Widget _buildDropdownForRefNo() {
   return Padding(
     padding: const EdgeInsets.only(bottom: 8.0),
@@ -791,26 +884,27 @@ Widget _buildDropdownForRefNo() {
         showSelectedItems: true,
         searchFieldProps: TextFieldProps(
           decoration: InputDecoration(
-            hintText: "ค้นหาเลขที่เอกสารอ้างอิง",
-            hintStyle: TextStyle(color: Colors.grey),
+            hintText: "ค้นหาเลขที่เอกสารอ้างอิง", // Hint text for the search field
+            hintStyle: TextStyle(color: Colors.grey), // Style for the hint text
             border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-     
-    ),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
           ),
+        ),
+        constraints: BoxConstraints(
+          minHeight: 100, // Set the minimum height of the dialog
+          maxHeight: 250, // Set the maximum height of the dialog
         ),
       ),
       items: [
-        // '',
         ...REF_NOItems.map((item) => item['doc_no'].toString()).toList(),
       ],
       dropdownDecoratorProps: DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
           border: InputBorder.none,
-          labelText: "เลขที่เอกสารอ้างอิง",
+          labelText: "เลขที่เอกสารอ้างอิง", // Label text for the dropdown
           filled: true,
           fillColor: Colors.white,
-          
         ),
       ),
       onChanged: (String? value) {
@@ -835,61 +929,76 @@ Widget _buildDropdownForDocType() {
   return Padding(
     padding: const EdgeInsets.only(bottom: 8.0),
     child: DropdownSearch<String>(
-      popupProps: PopupProps.dialog(
-        showSearchBox: true,
-        showSelectedItems: true,
-        searchFieldProps: TextFieldProps(
-          decoration: InputDecoration(
-            hintText: "ค้นหาประเภทการจ่าย", // Hint text added here
-            hintStyle: TextStyle(color: Colors.grey),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
+  popupProps: PopupProps.dialog(
+    showSearchBox: true,
+    showSelectedItems: true,
+    searchFieldProps: TextFieldProps(
+      decoration: InputDecoration(
+        hintText: "ค้นหาประเภทการจ่าย", // Hint text added here
+        hintStyle: TextStyle(color: Colors.grey),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    ),
+    constraints: BoxConstraints(
+      maxHeight: 250, // Set the max height to 250
+    ),
+    itemBuilder: (context, item, isSelected) {
+      return ListTile(
+        title: Text(item),
+        selected: isSelected,
+      );
+    },
+  ),
+  items: [
+    ...statusItems.map((item) => item['doc_desc'].toString()).toList(),
+  ],
+  dropdownDecoratorProps: DropDownDecoratorProps(
+    dropdownSearchDecoration: InputDecoration(
+      border: InputBorder.none,
+      label: Row(
+        children: [
+          const Text(
+            "ประเภทการจ่าย",
+            style: TextStyle(color: Colors.black87), // Default label color
+          ),
+          const SizedBox(width: 2), // Small space between label and asterisk
+          Text(
+            '*',
+            style: TextStyle(
+              color: Colors.red, // Change asterisk color to red
             ),
           ),
-        ),
-        constraints: BoxConstraints(
-          maxHeight: 250, // Set the max height to 250
-        ),
-        itemBuilder: (context, item, isSelected) {
-          return ListTile(
-            title: Text(item),
-            selected: isSelected,
-          );
-        },
+        ],
       ),
-      items: [
-        ...statusItems.map((item) => item['doc_desc'].toString()).toList(),
-      ],
-      dropdownDecoratorProps: DropDownDecoratorProps(
-        dropdownSearchDecoration: InputDecoration(
-          border: InputBorder.none,
-          labelText: "ประเภทการจ่าย",
-          filled: true,
-          fillColor: Colors.white,
-        ),
-      ),
-      onChanged: (String? value) {
-        setState(() {
-          if (value == '') {
-            selectedValue = null;
-            DOC_TYPE.text = '';
-          } else {
-            final selectedItem = statusItems.firstWhere(
-              (element) => element['doc_desc'] == value,
-              orElse: () => {'doc_type': '', 'doc_desc': ''},
-            );
-            selectedValue = selectedItem['doc_type'];
-            DOC_TYPE.text = value ?? '';
-          }
-        });
-      },
-      selectedItem: statusItems
-          .firstWhere(
-            (element) => element['doc_type'] == selectedValue,
-            orElse: () => {'doc_type': '', 'doc_desc': ''},
-          )['doc_desc']
-          .toString(),
+      filled: true,
+      fillColor: Colors.white,
     ),
+  ),
+  onChanged: (String? value) {
+    setState(() {
+      if (value == '') {
+        selectedValue = null;
+        DOC_TYPE.text = '';
+      } else {
+        final selectedItem = statusItems.firstWhere(
+          (element) => element['doc_desc'] == value,
+          orElse: () => {'doc_type': '', 'doc_desc': ''},
+        );
+        selectedValue = selectedItem['doc_type'];
+        DOC_TYPE.text = value ?? '';
+      }
+    });
+  },
+  selectedItem: statusItems
+      .firstWhere(
+        (element) => element['doc_type'] == selectedValue,
+        orElse: () => {'doc_type': '', 'doc_desc': ''},
+      )['doc_desc']
+      .toString(),
+),
+
   );
 }
 
