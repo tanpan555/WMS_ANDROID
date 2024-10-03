@@ -44,6 +44,7 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
     'กำลังปรับปรุงจำนวน/มูลค่า',
     'ยืนยันปรับปรุงจำนวน/มูลค่าแล้ว',
   ]; // รายการใน dropdown
+  bool chkDate = false;
 
   @override
   void initState() {
@@ -124,11 +125,15 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 filled: true,
                 fillColor: Colors.white,
                 labelText: 'วันที่เตรียมข้อมูลตรวจนับ',
-                labelStyle: const TextStyle(
-                  color: Colors.black87,
-                ),
+                labelStyle: chkDate == false
+                    ? const TextStyle(
+                        color: Colors.black87,
+                      )
+                    : const TextStyle(
+                        color: Colors.red,
+                      ),
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
+                  icon: const Icon(Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
                   onPressed: () async {
                     // กดไอคอนเพื่อเปิด date picker
                     _selectDate(context);
@@ -138,8 +143,35 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
               onChanged: (value) {
                 selectedDate = value;
                 print('selectedDate : $selectedDate');
+                setState(() {
+                  RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                  // String messageAlertValueDate =
+                  //     'กรุณากรองวันที่ให้ถูกต้อง';
+                  if (!dateRegExp.hasMatch(selectedDate)) {
+                    // setState(() {
+                    //   chkDate == true;
+                    // });
+                    // showDialogAlert(context, messageAlertValueDate);
+                  } else {
+                    setState(() {
+                      chkDate = false;
+                    });
+                  }
+                });
               },
             ),
+            chkDate == true
+                ? const Padding(
+                    padding: EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      'กรุณากรอกวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                      ),
+                    ))
+                : const SizedBox.shrink(),
             const SizedBox(height: 8),
             DropdownButtonFormField2<String>(
               value: selectedItem,
@@ -215,30 +247,64 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 /// //////////////////////////////////////////////////////
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Ssfgdt12Card(
-                                docNo: pDocNo,
-                                date: selectedDate,
-                                status: status,
-                                pWareCode: widget.pWareCode,
-                                p_flag: p_flag,
-                                browser_language: globals.BROWSER_LANGUAGE,
-                                pErpOuCode: widget.pErpOuCode,
-                                p_attr1: widget.p_attr1,
-                              )),
-                    ).then((value) async {
-                      // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                      setState(() {
-                        // pDocNo = '';
-                        // selectedDate = '';
-                        // selectedItem = 'รอตรวจนับ';
-                        // status = 'N';
-                        // _controller.clear();
-                        // _dateController.clear();
+                    if (selectedDate.isNotEmpty) {
+                      RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                      if (!dateRegExp.hasMatch(selectedDate)) {
+                        setState(() {
+                          chkDate = true;
+                        });
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Ssfgdt12Card(
+                                    docNo: pDocNo,
+                                    date: selectedDate,
+                                    status: status,
+                                    pWareCode: widget.pWareCode,
+                                    p_flag: p_flag,
+                                    browser_language: globals.BROWSER_LANGUAGE,
+                                    pErpOuCode: widget.pErpOuCode,
+                                    p_attr1: widget.p_attr1,
+                                  )),
+                        ).then((value) async {
+                          // เมื่อกลับมาหน้าเดิม เรียก fetchData
+                          setState(() {
+                            // pDocNo = '';
+                            // selectedDate = '';
+                            // selectedItem = 'รอตรวจนับ';
+                            // status = 'N';
+                            // _controller.clear();
+                            // _dateController.clear();
+                          });
+                        });
+                      }
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Ssfgdt12Card(
+                                  docNo: pDocNo,
+                                  date: selectedDate,
+                                  status: status,
+                                  pWareCode: widget.pWareCode,
+                                  p_flag: p_flag,
+                                  browser_language: globals.BROWSER_LANGUAGE,
+                                  pErpOuCode: widget.pErpOuCode,
+                                  p_attr1: widget.p_attr1,
+                                )),
+                      ).then((value) async {
+                        // เมื่อกลับมาหน้าเดิม เรียก fetchData
+                        setState(() {
+                          // pDocNo = '';
+                          // selectedDate = '';
+                          // selectedItem = 'รอตรวจนับ';
+                          // status = 'N';
+                          // _controller.clear();
+                          // _dateController.clear();
+                        });
                       });
-                    });
+                    }
                     // _navigateToPage(
                     //     context,
                     //     Ssfgdt12Card(

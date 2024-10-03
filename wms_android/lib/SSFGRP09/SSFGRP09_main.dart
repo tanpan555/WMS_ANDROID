@@ -1270,6 +1270,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchDate() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1326,10 +1327,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -1391,6 +1392,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchDocNo() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1448,10 +1450,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -1510,6 +1512,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchStartWareCode() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1568,10 +1571,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -1635,6 +1638,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchEndWareCode() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1693,10 +1697,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -1759,6 +1763,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchStartLoc() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1816,10 +1821,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -1881,6 +1886,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchEndLoc() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1938,10 +1944,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -2000,6 +2006,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchStartGroup() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -2057,10 +2064,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -2128,6 +2135,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchEndGroup() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -2185,10 +2193,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -2255,6 +2263,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchStartCategory() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -2313,10 +2322,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -2382,6 +2391,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchEndCategory() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -2440,10 +2450,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -2508,6 +2518,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchStartSubCategory() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -2566,10 +2577,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -2633,6 +2644,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchEndSubCategory() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -2691,10 +2703,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -2757,6 +2769,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchStartItem() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -2814,10 +2827,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -2879,6 +2892,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchEndItem() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -2936,10 +2950,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -3001,6 +3015,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   ) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Row(

@@ -126,8 +126,8 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
                         cardColor = Colors.white;
                         break;
                       default:
-                        imagePath = 'assets/images/warehouse2.png';
-                        cardColor = Colors.red;
+                        imagePath = 'assets/images/warehouse_blue.png';
+                        cardColor = Colors.white;
                     }
 
                     return GestureDetector(
@@ -147,7 +147,8 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
                       },
                       child: Card(
                         elevation: 4.0,
-                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 5),
                         color: cardColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),

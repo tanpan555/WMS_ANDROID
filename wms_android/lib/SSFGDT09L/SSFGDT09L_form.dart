@@ -842,7 +842,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         ? const Padding(
                             padding: EdgeInsets.only(top: 4.0),
                             child: Text(
-                              'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                              'กรุณากรอกวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
                               style: TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
@@ -1298,6 +1298,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   void showDialogDropdownSearchMoDoNo() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1355,10 +1356,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -1423,6 +1424,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   void showDialogDropdownSearchRefNo() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1480,10 +1482,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -1539,6 +1541,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   void showDialogDropdownSearchDocType() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1596,10 +1599,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -1708,10 +1711,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
