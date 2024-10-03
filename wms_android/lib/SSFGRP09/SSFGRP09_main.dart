@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wms_android/styles.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -94,9 +95,71 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   String returnEndItem = '';
   TextEditingController endItemController = TextEditingController();
   // ----------------------------- Radio
-  String selectedRadio = '';
+  String selectedRadio = '1';
 
   TextEditingController searchController = TextEditingController();
+
+  String? P_USER_ID;
+  String? PROGRAM_ID;
+  String? PROGRAM_NAME;
+  String? P_LIN_ID;
+  String? P_OU_NAME;
+  String? P_OU_CODE;
+  String? P_E_CAT;
+  String? P_E_GRP;
+  String? P_E_ITEM;
+  String? P_E_LOC;
+  String? P_E_SUB_CAT;
+  String? P_E_WARE;
+  String? P_F_DOC_NO;
+  String? P_F_P_DATE;
+  String? P_I_E_WARE;
+  String? P_I_S_WARE;
+  String? P_SHOW_MODE = '1';
+  String? P_S_CAT;
+  String? P_S_GRP;
+  String? P_S_ITEM;
+  String? P_S_LOC;
+  String? P_S_SUB_CAT;
+  String? P_S_WARE;
+  //------------------------------
+  String? LH_PROGRAM_ID;
+  String? LH_WARE;
+  String? LH_GRP;
+  String? LH_SUB_CAT;
+  String? LH_DOC_NO;
+  String? LH_LOC;
+  String? LH_CAT;
+  String? LH_ITEM;
+  String? LH_PREPARE;
+  String? LH_PAGE;
+  String? LH_DATE;
+  // --------------------------------
+  String? LB_SEQ;
+  String? LB_ITEM;
+  String? LB_ITEM_DESC;
+  String? LB_UMS;
+  String? LB_LOC;
+  String? LB_LOC1;
+  String? LB_WARE;
+  String? LB_SYS_BAL;
+  String? LB_PHY_BAL;
+  String? LB_DIFF_BAL;
+  String? LB_IN;
+  String? LB_RE;
+  String? LB_UNIT;
+  String? LB_UNIT1;
+  String? LB_RIGHT;
+  String? LB_TOTAL;
+  // -----------------------------
+  String? H_WARE;
+  String? H_LOC;
+  String? H_GRP;
+  String? H_CAT;
+  String? H_SEB;
+  String? H_ITEM;
+  // --------------------------------
+  String? V_SYSDATE;
 
   @override
   void initState() {
@@ -532,6 +595,251 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     return input;
   }
 
+  Future<void> getPDF() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_GET_PDF'
+          '/${globals.BROWSER_LANGUAGE}'
+          '/${returnStartWareCode.isNotEmpty ? returnStartWareCode : 'null'}'
+          '/${returnEndWareCode.isNotEmpty ? returnEndWareCode : 'null'}'
+          '/${returnStartLoc.isNotEmpty ? returnStartLoc : 'null'}'
+          '/${returnEndLoc.isNotEmpty ? returnEndLoc : 'null'}'
+          '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
+          '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
+          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
+          '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
+          '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'
+          '/${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'null'}'
+          '/${returnStartItem.isNotEmpty ? returnStartItem : 'null'}'
+          '/${returnEndItem.isNotEmpty ? returnEndItem : 'null'}'
+          '/${globals.P_ERP_OU_CODE}'
+          '/${globals.APP_USER}'
+          '/${globals.P_DS_PDF}'));
+
+      print('Response body: ${response.body}'); // แสดงข้อมูลที่ได้รับจาก API
+
+      if (response.statusCode == 200) {
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataPDF = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
+        if (mounted) {
+          setState(() {
+            // P_USER_ID = dataPDF['V_DS_PDF'] ?? '';
+            P_USER_ID = dataPDF['P_USER_ID'] ?? '';
+            PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
+            PROGRAM_NAME = dataPDF['PROGRAM_NAME'] ?? '';
+            P_LIN_ID = dataPDF['P_LIN_ID'] ?? '';
+            P_OU_NAME = dataPDF['P_OU_NAME'] ?? '';
+            P_OU_CODE = dataPDF['P_OU_CODE'] ?? '';
+            P_E_CAT = dataPDF['P_E_CAT'] ?? '';
+            P_E_GRP = dataPDF['P_E_GRP'] ?? '';
+            P_E_ITEM = dataPDF['P_E_ITEM'] ?? '';
+            P_E_LOC = dataPDF['P_E_LOC'] ?? '';
+            P_E_SUB_CAT = dataPDF['P_E_SUB_CAT'] ?? '';
+            P_E_WARE = dataPDF['P_E_WARE'] ?? '';
+            P_F_DOC_NO = dataPDF['P_F_DOC_NO'] ?? '';
+            P_F_P_DATE = dataPDF['P_F_P_DATE'] ?? '';
+            P_I_E_WARE = dataPDF['P_I_E_WARE'] ?? '';
+            P_I_S_WARE = dataPDF['P_I_S_WARE'] ?? '';
+            // P_SHOW_MODE = dataPDF['P_SHOW_MODE'] ?? '';
+            P_S_CAT = dataPDF['P_S_CAT'] ?? '';
+            P_S_GRP = dataPDF['P_S_GRP'] ?? '';
+            P_S_ITEM = dataPDF['P_S_ITEM'] ?? '';
+            P_S_LOC = dataPDF['P_S_LOC'] ?? '';
+            P_S_SUB_CAT = dataPDF['P_S_SUB_CAT'] ?? '';
+            P_S_WARE = dataPDF['P_S_WARE'] ?? '';
+            //------------------------------
+            LH_PROGRAM_ID = dataPDF['LH_PROGRAM_ID'] ?? '';
+            LH_WARE = dataPDF['LH_WARE'] ?? '';
+            LH_GRP = dataPDF['LH_GRP'] ?? '';
+            LH_SUB_CAT = dataPDF['LH_SUB_CAT'] ?? '';
+            LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
+            LH_LOC = dataPDF['LH_LOC'] ?? '';
+            LH_CAT = dataPDF['LH_CAT'] ?? '';
+            LH_ITEM = dataPDF['LH_ITEM'] ?? '';
+            LH_PREPARE = dataPDF['LH_PREPARE'] ?? '';
+            LH_PAGE = dataPDF['LH_PAGE'] ?? '';
+            LH_DATE = dataPDF['LH_DATE'] ?? '';
+            // --------------------------------
+            LB_SEQ = dataPDF['LB_SEQ'] ?? '';
+            LB_ITEM = dataPDF['LB_ITEM'] ?? '';
+            LB_ITEM_DESC = dataPDF['LB_ITEM_DESC'] ?? '';
+            LB_UMS = dataPDF['LB_UMS'] ?? '';
+            LB_LOC = dataPDF['LB_LOC'] ?? '';
+            LB_LOC1 = dataPDF['LB_LOC1'] ?? '';
+            LB_WARE = dataPDF['LB_WARE'] ?? '';
+            LB_SYS_BAL = dataPDF['LB_SYS_BAL'] ?? '';
+            LB_PHY_BAL = dataPDF['LB_PHY_BAL'] ?? '';
+            LB_DIFF_BAL = dataPDF['LB_DIFF_BAL'] ?? '';
+            LB_IN = dataPDF['LB_IN'] ?? '';
+            LB_RE = dataPDF['LB_RE'] ?? '';
+            LB_UNIT = dataPDF['LB_UNIT'] ?? '';
+            LB_UNIT1 = dataPDF['LB_UNIT1'] ?? '';
+            LB_RIGHT = dataPDF['LB_RIGHT'] ?? '';
+            LB_TOTAL = dataPDF['LB_TOTAL'] ?? '';
+            // -----------------------------
+            H_WARE = dataPDF['H_WARE'] ?? '';
+            H_LOC = dataPDF['H_LOC'] ?? '';
+            H_GRP = dataPDF['H_GRP'] ?? '';
+            H_CAT = dataPDF['H_CAT'] ?? '';
+            H_SEB = dataPDF['H_SEB'] ?? '';
+            H_ITEM = dataPDF['H_ITEM'] ?? '';
+            // ==============================
+            V_SYSDATE = dataPDF['V_SYSDATE'] ?? '';
+
+            _launchUrl();
+          });
+        }
+      } else {
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error in submit Data: $e');
+    }
+  }
+
+  Future<void> _launchUrl() async {
+    final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
+        '&_repName=/WMS/WMS_SSFGRP09'
+        '&_repFormat=pdf'
+        '&_dataSource=${globals.P_DS_PDF}'
+        '&_outFilename=SSFGRP09_$V_SYSDATE.pdf'
+        '&_repLocale=en_US'
+        '&V_DS_PDF=${globals.P_DS_PDF}'
+        '&P_USER_ID=$P_USER_ID'
+        '&PROGRAM_ID=$PROGRAM_ID'
+        '&PROGRAM_NAME=$PROGRAM_NAME'
+        '&P_LIN_ID=$P_LIN_ID'
+        '&P_OU_NAME=$P_OU_NAME'
+        '&P_OU_CODE=$P_OU_CODE'
+        '&P_E_CAT=$P_E_CAT'
+        '&P_E_GRP=$P_E_GRP'
+        '&P_E_ITEM=$P_E_ITEM'
+        '&P_E_LOC=$P_E_LOC'
+        '&P_E_SUB_CAT=$P_E_SUB_CAT'
+        '&P_E_WARE=$P_E_WARE'
+        '&P_F_DOC_NO=$P_F_DOC_NO'
+        '&P_F_P_DATE=$P_F_P_DATE'
+        '&P_I_E_WARE=$P_I_E_WARE'
+        '&P_I_S_WARE=$P_I_S_WARE'
+        '&P_SHOW_MODE=$P_SHOW_MODE'
+        '&P_S_CAT=$P_S_CAT'
+        '&P_S_GRP=$P_S_GRP'
+        '&P_S_ITEM=$P_S_ITEM'
+        '&P_S_LOC=$P_S_LOC'
+        '&P_S_SUB_CAT=$P_S_SUB_CAT'
+        '&P_S_WARE=$P_S_WARE'
+        //
+        '&LH_PROGRAM_ID=$LH_PROGRAM_ID'
+        '&LH_WARE=$LH_WARE'
+        '&LH_GRP=$LH_GRP'
+        '&LH_SUB_CAT=$LH_SUB_CAT'
+        '&LH_DOC_NO=$LH_DOC_NO'
+        '&LH_LOC=$LH_LOC'
+        '&LH_CAT=$LH_CAT'
+        '&LH_ITEM=$LH_ITEM'
+        '&LH_PREPARE=$LH_PREPARE'
+        '&LH_PAGE=$LH_PAGE'
+        '&LH_DATE=$LH_DATE'
+        //
+        '&LB_SEQ=$LB_SEQ'
+        '&LB_ITEM=$LB_ITEM'
+        '&LB_ITEM_DESC=$LB_ITEM_DESC'
+        '&LB_UMS=$LB_UMS'
+        '&LB_LOC=$LB_LOC'
+        '&LB_LOC1=$LB_LOC1'
+        '&LB_WARE=$LB_WARE'
+        '&LB_SYS_BAL=$LB_SYS_BAL'
+        '&LB_PHY_BAL=$LB_PHY_BAL'
+        '&LB_DIFF_BAL=$LB_DIFF_BAL'
+        '&LB_IN=$LB_IN'
+        '&LB_RE=$LB_RE'
+        '&LB_UNIT=$LB_UNIT'
+        '&LB_UNIT1=$LB_UNIT1'
+        '&LB_RIGHT=$LB_RIGHT'
+        '&LB_TOTAL=$LB_TOTAL'
+        //
+        '&H_WARE=$H_WARE'
+        '&H_LOC=$H_LOC'
+        '&H_GRP=$H_GRP'
+        '&H_CAT=$H_CAT'
+        '&H_SEB=$H_SEB'
+        '&H_ITEM=$H_ITEM');
+
+    print(uri);
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch $uri');
+    }
+    print('RRRRRRRRRRRRRRRRRR       http://172.16.0.82:8888/jri/report?'
+        '&_repName=/WMS/WMS_SSFGRP09'
+        '&_repFormat=pdf'
+        '&_dataSource=${globals.P_DS_PDF}'
+        '&_outFilename=SSFGRP09_$V_SYSDATE.pdf'
+        '&_repLocale=en_US'
+        '&V_DS_PDF=${globals.P_DS_PDF}'
+        '&P_USER_ID=$P_USER_ID'
+        '&PROGRAM_ID=$PROGRAM_ID'
+        '&PROGRAM_NAME=$PROGRAM_NAME'
+        '&P_LIN_ID=$P_LIN_ID'
+        '&P_OU_NAME=$P_OU_NAME'
+        '&P_OU_CODE=$P_OU_CODE'
+        '&P_E_CAT=$P_E_CAT'
+        '&P_E_GRP=$P_E_GRP'
+        '&P_E_ITEM=$P_E_ITEM'
+        '&P_E_LOC=$P_E_LOC'
+        '&P_E_SUB_CAT=$P_E_SUB_CAT'
+        '&P_E_WARE=$P_E_WARE'
+        '&P_F_DOC_NO=$P_F_DOC_NO'
+        '&P_F_P_DATE=$P_F_P_DATE'
+        '&P_I_E_WARE=$P_I_E_WARE'
+        '&P_I_S_WARE=$P_I_S_WARE'
+        '&P_SHOW_MODE=$P_SHOW_MODE'
+        '&P_S_CAT=$P_S_CAT'
+        '&P_S_GRP=$P_S_GRP'
+        '&P_S_ITEM=$P_S_ITEM'
+        '&P_S_LOC=$P_S_LOC'
+        '&P_S_SUB_CAT=$P_S_SUB_CAT'
+        '&P_S_WARE=$P_S_WARE'
+        //
+        '&LH_PROGRAM_ID=$LH_PROGRAM_ID'
+        '&LH_WARE=$LH_WARE'
+        '&LH_GRP=$LH_GRP'
+        '&LH_SUB_CAT=$LH_SUB_CAT'
+        '&LH_DOC_NO=$LH_DOC_NO'
+        '&LH_LOC=$LH_LOC'
+        '&LH_CAT=$LH_CAT'
+        '&LH_ITEM=$LH_ITEM'
+        '&LH_PREPARE=$LH_PREPARE'
+        '&LH_PAGE=$LH_PAGE'
+        '&LH_DATE=$LH_DATE'
+        //
+        '&LB_SEQ=$LB_SEQ'
+        '&LB_ITEM=$LB_ITEM'
+        '&LB_ITEM_DESC=$LB_ITEM_DESC'
+        '&LB_UMS=$LB_UMS'
+        '&LB_LOC=$LB_LOC'
+        '&LB_LOC1=$LB_LOC1'
+        '&LB_WARE=$LB_WARE'
+        '&LB_SYS_BAL=$LB_SYS_BAL'
+        '&LB_PHY_BAL=$LB_PHY_BAL'
+        '&LB_DIFF_BAL=$LB_DIFF_BAL'
+        '&LB_IN=$LB_IN'
+        '&LB_RE=$LB_RE'
+        '&LB_UNIT=$LB_UNIT'
+        '&LB_UNIT1=$LB_UNIT1'
+        '&LB_RIGHT=$LB_RIGHT'
+        '&LB_TOTAL=$LB_TOTAL'
+        //
+        '&H_WARE=$H_WARE'
+        '&H_LOC=$H_LOC'
+        '&H_GRP=$H_GRP'
+        '&H_CAT=$H_CAT'
+        '&H_SEB=$H_SEB'
+        '&H_ITEM=$H_ITEM');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -884,6 +1192,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                         onChanged: (String? value) {
                           setState(() {
                             selectedRadio = value.toString();
+                            P_SHOW_MODE = value;
                             print('selectedRadio : $selectedRadio');
                           });
                         },
@@ -900,6 +1209,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                         onChanged: (String? value) {
                           setState(() {
                             selectedRadio = value.toString();
+                            P_SHOW_MODE = value;
                             print('selectedRadio : $selectedRadio');
                           });
                         },
@@ -914,18 +1224,20 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 children: [
                   ElevatedButton(
                     onPressed: () async {
-                      if (returnLovDate.isEmpty && returnLovDocNo.isEmpty) {
-                        String message =
-                            'กรุณาระบุ วันที่เตรียมการตรวจนับ และ เลขที่ตรวจนับ';
-                        showDialogAlert(context, message);
-                      } else if (returnLovDate.isEmpty) {
-                        String message = 'กรุณาระบุ วันที่เตรียมการตรวจนับ';
-                        showDialogAlert(context, message);
-                      } else if (returnLovDocNo.isEmpty) {
-                        String message = 'กรุณาระบุ เลขที่ตรวจนับ';
-                        showDialogAlert(context, message);
-                      } else {
-                        // PDF
+                      if (selectedRadio.isNotEmpty && P_SHOW_MODE != '') {
+                        if (returnLovDate.isEmpty && returnLovDocNo.isEmpty) {
+                          String message =
+                              'กรุณาระบุ วันที่เตรียมการตรวจนับ และ เลขที่ตรวจนับ';
+                          showDialogAlert(context, message);
+                        } else if (returnLovDate.isEmpty) {
+                          String message = 'กรุณาระบุ วันที่เตรียมการตรวจนับ';
+                          showDialogAlert(context, message);
+                        } else if (returnLovDocNo.isEmpty) {
+                          String message = 'กรุณาระบุ เลขที่ตรวจนับ';
+                          showDialogAlert(context, message);
+                        } else {
+                          getPDF();
+                        }
                       }
                     },
                     style: AppStyles.ConfirmbuttonStyle(),

@@ -374,7 +374,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                 const SizedBox(height: 8),
                 // --------------------------------------------------------------------
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     ElevatedButton(
                       onPressed: () async {
@@ -397,12 +397,24 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                           await fetchData();
                         });
                       },
-                      style: AppStyles.cancelButtonStyle(),
-                      child: Text(
-                        '+Create',
-                        style: AppStyles.CancelbuttonTextStyle(),
+                      style: AppStyles.createButtonStyle(),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                              color: Colors.white,
+                              width: 3), // White border for the circle
+                        ),
+                        padding: const EdgeInsets.all(
+                            2), // Padding to make the circle
+                        child: const Icon(
+                          Icons.add, // Plus icon inside the circle
+                          color: Colors.white, // White plus icon
+                          size: 24, // Icon size
+                        ),
                       ),
                     ),
+                    const SizedBox(width: 8),
                     // --------------------------------------------------------------------
                     ElevatedButton(
                       onPressed: () {
@@ -420,10 +432,21 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                           });
                         }
                       },
-                      style: AppStyles.cancelButtonStyle(),
-                      child: Text(
-                        '-Clear All',
-                        style: AppStyles.CancelbuttonTextStyle(),
+                      style: AppStyles.ClearButtonStyle(),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                              color: Colors.white,
+                              width: 3), // White border for the circle
+                        ),
+                        padding: const EdgeInsets.all(
+                            2), // Padding to make the circle
+                        child: const Icon(
+                          Icons.delete, // Plus icon inside the circle
+                          color: Colors.white, // White plus icon
+                          size: 24, // Icon size
+                        ),
                       ),
                     ),
                     // --------------------------------------------------------------------
