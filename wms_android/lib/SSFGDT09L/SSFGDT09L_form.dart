@@ -842,7 +842,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         ? const Padding(
                             padding: EdgeInsets.only(top: 4.0),
                             child: Text(
-                              'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                              'กรุณากรอกวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
                               style: TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
@@ -1298,6 +1298,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   void showDialogDropdownSearchMoDoNo() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1423,6 +1424,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   void showDialogDropdownSearchRefNo() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1539,6 +1541,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   void showDialogDropdownSearchDocType() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(

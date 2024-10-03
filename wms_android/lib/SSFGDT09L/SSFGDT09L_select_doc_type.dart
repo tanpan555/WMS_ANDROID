@@ -6,6 +6,7 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:wms_android/styles.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'SSFGDT09L_form.dart';
 
 class Ssfgdt09lSelectDocType extends StatefulWidget {
@@ -158,7 +159,7 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(children: [
-          DropdownButtonFormField<Map<String, dynamic>>(
+          DropdownButtonFormField2<Map<String, dynamic>>(
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 filled: true,
@@ -191,7 +192,7 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
                   print('d: $docTypeLovD, r: $docTypeLovR');
                 });
               },
-              dropdownColor: Colors.white,
+              // dropdownColor: Colors.white,
               style: const TextStyle(color: Colors.black)),
           const SizedBox(height: 20),
           Row(

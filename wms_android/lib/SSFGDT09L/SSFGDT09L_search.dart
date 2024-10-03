@@ -45,6 +45,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
     'อ้างอิงแล้ว',
     'ยกเลิก',
   ]; // รายการใน dropdown
+  bool chkDate = false;
 
   @override
   void initState() {
@@ -196,11 +197,16 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                   filled: true,
                   fillColor: Colors.white,
                   labelText: 'วันที่เบิกจ่าย',
-                  labelStyle: const TextStyle(
-                    color: Colors.black87,
-                  ),
+                  labelStyle: chkDate == false
+                      ? const TextStyle(
+                          color: Colors.black87,
+                        )
+                      : const TextStyle(
+                          color: Colors.red,
+                        ),
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
+                    icon:
+                        const Icon(Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
                     onPressed: () async {
                       // กดไอคอนเพื่อเปิด date picker
                       _selectDate(context);
@@ -210,8 +216,35 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                 onChanged: (value) {
                   selectedDate = value;
                   print('selectedDate : $selectedDate');
+                  setState(() {
+                    RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                    // String messageAlertValueDate =
+                    //     'กรุณากรองวันที่ให้ถูกต้อง';
+                    if (!dateRegExp.hasMatch(selectedDate)) {
+                      // setState(() {
+                      //   chkDate == true;
+                      // });
+                      // showDialogAlert(context, messageAlertValueDate);
+                    } else {
+                      setState(() {
+                        chkDate = false;
+                      });
+                    }
+                  });
                 },
               ),
+              chkDate == true
+                  ? const Padding(
+                      padding: EdgeInsets.only(top: 4.0),
+                      child: Text(
+                        'กรุณากรอกวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                        ),
+                      ))
+                  : const SizedBox.shrink(),
               // TextFormField(
               //   controller: dateController,
               //   readOnly: true,
@@ -280,100 +313,57 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                   const SizedBox(width: 20),
                   //////////////////////////////////////////////////////
                   ElevatedButton(
-                    onPressed: selectedItem.isNotEmpty
-                        ? () {
-                            if (selectedDate != '') {
-                              DateTime parsedDate =
-                                  DateFormat('dd/MM/yyyy').parse(selectedDate);
-                              String formattedDate =
-                                  DateFormat('dd-MM-yyyy').format(parsedDate);
+                    onPressed: () {
+                      if (selectedDate.isNotEmpty) {
+                        RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                        if (!dateRegExp.hasMatch(selectedDate)) {
+                          setState(() {
+                            chkDate = true;
+                          });
+                        } else if (selectedDate != '') {
+                          DateTime parsedDate =
+                              DateFormat('dd/MM/yyyy').parse(selectedDate);
+                          String formattedDate =
+                              DateFormat('dd-MM-yyyy').format(parsedDate);
 
-                              setState(() {
-                                selectedDate = formattedDate;
-                              });
+                          setState(() {
+                            selectedDate = formattedDate;
+                          });
 
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Ssfgdt09lCard(
-                                        pErpOuCode: widget.pErpOuCode,
-                                        pWareCode: widget.pWareCode,
-                                        pOuCode: widget.pOuCode,
-                                        pAttr1: widget.pAttr1,
-                                        pAppUser: appUser,
-                                        pFlag: pFlag,
-                                        pStatusDESC: statusDESC,
-                                        pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                                        pDocDate: formattedDate == ''
-                                            ? 'null'
-                                            : formattedDate)),
-                              ).then((value) async {
-                                // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                                // setState(() {
-                                //   pSoNo = '';
-                                //   selectedDate = '';
-                                //   selectedItem = 'ระหว่างบันทึก';
-                                //   statusDESC = 'ระหว่างบันทึก';
-                                //   dateController.clear();
-                                //   pSoNoController.clear();
-                                // });
-                              });
-
-                              // _navigateToPage(
-                              //   context,
-                              //   Ssfgdt09lCard(
-                              //       pErpOuCode: widget.pErpOuCode,
-                              //       pWareCode: widget.pWareCode,
-                              //       pOuCode: widget.pOuCode,
-                              //       pAttr1: widget.pAttr1,
-                              //       pAppUser: appUser,
-                              //       pFlag: pFlag,
-                              //       pStatusDESC: statusDESC,
-                              //       pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                              //       pDocDate: formattedDate == ''
-                              //           ? 'null'
-                              //           : formattedDate),
-                              // );
-                            } else {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Ssfgdt09lCard(
-                                        pErpOuCode: widget.pErpOuCode,
-                                        pWareCode: widget.pWareCode,
-                                        pOuCode: widget.pOuCode,
-                                        pAttr1: widget.pAttr1,
-                                        pAppUser: appUser,
-                                        pFlag: pFlag,
-                                        pStatusDESC: statusDESC,
-                                        pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                                        pDocDate: 'null')),
-                              ).then((value) async {
-                                // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                                // setState(() {
-                                //   pSoNo = '';
-                                //   selectedDate = '';
-                                //   selectedItem = 'ระหว่างบันทึก';
-                                //   statusDESC = 'ระหว่างบันทึก';
-                                //   dateController.clear();
-                                //   pSoNoController.clear();
-                                // });
-                              });
-                              // _navigateToPage(
-                              //     context,
-                              //     Ssfgdt09lCard(
-                              //         pErpOuCode: widget.pErpOuCode,
-                              //         pWareCode: widget.pWareCode,
-                              //         pOuCode: widget.pOuCode,
-                              //         pAttr1: widget.pAttr1,
-                              //         pAppUser: appUser,
-                              //         pFlag: pFlag,
-                              //         pStatusDESC: statusDESC,
-                              //         pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                              //         pDocDate: 'null'));
-                            }
-                          }
-                        : null,
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Ssfgdt09lCard(
+                                    pErpOuCode: widget.pErpOuCode,
+                                    pWareCode: widget.pWareCode,
+                                    pOuCode: widget.pOuCode,
+                                    pAttr1: widget.pAttr1,
+                                    pAppUser: appUser,
+                                    pFlag: pFlag,
+                                    pStatusDESC: statusDESC,
+                                    pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                                    pDocDate: formattedDate == ''
+                                        ? 'null'
+                                        : formattedDate)),
+                          ).then((value) async {});
+                        }
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Ssfgdt09lCard(
+                                  pErpOuCode: widget.pErpOuCode,
+                                  pWareCode: widget.pWareCode,
+                                  pOuCode: widget.pOuCode,
+                                  pAttr1: widget.pAttr1,
+                                  pAppUser: appUser,
+                                  pFlag: pFlag,
+                                  pStatusDESC: statusDESC,
+                                  pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                                  pDocDate: 'null')),
+                        ).then((value) async {});
+                      }
+                    },
                     style: AppStyles.SearchButtonStyle(),
                     child: Image.asset(
                       'assets/images/search_color.png', // ใส่ภาพจากไฟล์ asset
@@ -381,60 +371,6 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                       height: 25,
                     ),
                   ),
-                  // Container(
-                  //   // decoration: AppStyles.SearchButtonStyle(),
-                  //   child: IconButton(
-                  //     iconSize: 20.0,
-                  //     icon: Image.asset(
-                  //       'assets/images/search_color.png',
-                  //       width: 50.0,
-                  //       height: 25.0,
-                  //     ),
-                  //     onPressed: selectedItem.isNotEmpty
-                  //         ? () {
-                  //             if (selectedDate != '') {
-                  //               DateTime parsedDate = DateFormat('dd/MM/yyyy')
-                  //                   .parse(selectedDate);
-                  //               String formattedDate =
-                  //                   DateFormat('dd-MM-yyyy').format(parsedDate);
-
-                  //               setState(() {
-                  //                 selectedDate = formattedDate;
-                  //               });
-
-                  //               _navigateToPage(
-                  //                 context,
-                  //                 Ssfgdt09lCard(
-                  //                     pErpOuCode: widget.pErpOuCode,
-                  //                     pWareCode: widget.pWareCode,
-                  //                     pOuCode: widget.pOuCode,
-                  //                     pAttr1: widget.pAttr1,
-                  //                     pAppUser: appUser,
-                  //                     pFlag: pFlag,
-                  //                     pStatusDESC: statusDESC,
-                  //                     pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                  //                     pDocDate: formattedDate == ''
-                  //                         ? 'null'
-                  //                         : formattedDate),
-                  //               );
-                  //             } else {
-                  //               _navigateToPage(
-                  //                   context,
-                  //                   Ssfgdt09lCard(
-                  //                       pErpOuCode: widget.pErpOuCode,
-                  //                       pWareCode: widget.pWareCode,
-                  //                       pOuCode: widget.pOuCode,
-                  //                       pAttr1: widget.pAttr1,
-                  //                       pAppUser: appUser,
-                  //                       pFlag: pFlag,
-                  //                       pStatusDESC: statusDESC,
-                  //                       pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                  //                       pDocDate: 'null'));
-                  //             }
-                  //           }
-                  //         : null,
-                  //   ),
-                  // ),
                 ],
               ),
             ],

@@ -103,11 +103,13 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
           p_ou_code: widget.p_ou_code,
         );
       case 'SSFGDT09L_MAIN Raw Material':
+      case 'SSFGDT09L_MAIN Finishing':
         return SSFGDT09L_MAIN(
             pAttr1: widget.p_attr1,
             pErpOuCode: widget.p_ou_code,
             pOuCode: globals.P_OU_CODE);
       case 'SSFGDT12_MAIN Raw Material':
+      case 'SSFGDT12_MAIN Finishing':
         return SSFGDT12_MAIN(
             p_attr1: widget.p_attr1, pErpOuCode: widget.p_ou_code);
       case 'SSFGDT31_MAIN Raw Material':
