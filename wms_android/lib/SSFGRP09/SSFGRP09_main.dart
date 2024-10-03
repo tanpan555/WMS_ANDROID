@@ -720,8 +720,8 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
         '&P_E_LOC=$P_E_LOC'
         '&P_E_SUB_CAT=$P_E_SUB_CAT'
         '&P_E_WARE=$P_E_WARE'
-        '&P_F_DOC_NO=$P_F_DOC_NO'
-        '&P_F_P_DATE=$P_F_P_DATE'
+        '&P_F_DOC_NO=$returnLovDocNo'
+        '&P_F_P_DATE=$returnLovDate'
         '&P_I_E_WARE=$P_I_E_WARE'
         '&P_I_S_WARE=$P_I_S_WARE'
         '&P_SHOW_MODE=$P_SHOW_MODE'
@@ -772,7 +772,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     if (!await launchUrl(uri)) {
       throw Exception('Could not launch $uri');
     }
-    print('RRRRRRRRRRRRRRRRRR       http://172.16.0.82:8888/jri/report?'
+    print('http://172.16.0.82:8888/jri/report?'
         '&_repName=/WMS/WMS_SSFGRP09'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
@@ -791,8 +791,8 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
         '&P_E_LOC=$P_E_LOC'
         '&P_E_SUB_CAT=$P_E_SUB_CAT'
         '&P_E_WARE=$P_E_WARE'
-        '&P_F_DOC_NO=$P_F_DOC_NO'
-        '&P_F_P_DATE=$P_F_P_DATE'
+        '&P_F_DOC_NO=$returnLovDocNo'
+        '&P_F_P_DATE=$returnLovDate'
         '&P_I_E_WARE=$P_I_E_WARE'
         '&P_I_S_WARE=$P_I_S_WARE'
         '&P_SHOW_MODE=$P_SHOW_MODE'
@@ -1461,7 +1461,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
                               final doc = '${item['doc_no']}';
-                              final returnCode = '${item['prepare_date']}';
+                              final returnCode = '${item['doc_no']}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
