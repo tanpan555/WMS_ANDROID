@@ -34,55 +34,114 @@ class _SSFGDT31_PICKINGSLIPState extends State<SSFGDT31_PICKINGSLIP> {
   @override
   void initState() {
     super.initState();
-    get_slip_data();
+    // get_slip_data();
+    getPDF();
   }
+
+//  -----------------------------  p  -----------------------------  \\
+  String? P_LIN_ID;
+  String? V_DS_PDF;
+  String? P_MO_DO_NO;
+  String? P_OU_CODE;
+  String? P_ERP_OU_CODE;
+//  -----------------------------  LH  -----------------------------  \\
+  String? LH_PICKING_SLIP;
+  String? LH_MO_DO_NO;
+  //  -----------------------------  LB  -----------------------------  \\
+  String? LB_MATERIAL_CODE;
+  String? LB_LOT;
+  String? LB_COMB;
+  String? LB_USAGE_QTY;
+  String? LB_WARE_CODE;
+  String? LB_LOCATION_CODE;
 
   List<dynamic> items = [];
 
-  Future<void> get_slip_data() async {
-    final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT31/picking_slip_data/${gb.P_ERP_OU_CODE}/${gb.P_OU_CODE}/${widget.SCHID}');
+  Future<void> getPDF() async {
     try {
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_GET_PDF/${gb.P_ERP_OU_CODE}/${gb.P_OU_CODE}/${widget.SCHID}/${gb.BROWSER_LANGUAGE}/${gb.P_DS_PDF}'));
+
+      print('Response body: ${response.body}'); // แสดงข้อมูลที่ได้รับจาก API
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data =
-            jsonDecode(utf8.decode(response.bodyBytes));
-        final List<dynamic> fetchedItems = data['items'] ?? [];
-        print(fetchedItems);
-
-        if (fetchedItems.isNotEmpty) {
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataPDF = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
+        if (mounted) {
           setState(() {
-            items = fetchedItems;
+            P_LIN_ID = dataPDF['P_LIN_ID'] ?? '';
+            V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
+            P_MO_DO_NO = dataPDF['P_MO_DO_NO'] ?? '';
+            P_OU_CODE = dataPDF['P_OU_CODE'] ?? '';
+            P_ERP_OU_CODE = dataPDF['P_ERP_OU_CODE'] ?? '';
+
+            LH_PICKING_SLIP = dataPDF['LH_PICKING_SLIP'] ?? '';
+            LH_MO_DO_NO = dataPDF['LH_MO_DO_NO'] ?? '';
+            LB_MATERIAL_CODE = dataPDF['LB_MATERIAL_CODE'] ?? '';
+            LB_LOT = dataPDF['LB_LOT'] ?? '';
+            LB_COMB = dataPDF['LB_COMB'] ?? '';
+            LB_USAGE_QTY = dataPDF['LB_USAGE_QTY'] ?? '';
+            LB_WARE_CODE = dataPDF['LB_WARE_CODE'] ?? '';
+            LB_LOCATION_CODE = dataPDF['LB_LOCATION_CODE'] ?? '';
+
+            _launchUrl();
           });
-        } else {
-          print('No items found.');
         }
       } else {
-        print('Failed to load data. Status code: ${response.statusCode}');
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
+      print('Error in submit Data: $e');
     }
   }
 
-  String? reportname = 'WMS_SSFGDT09L_Picking_Slip';
-
   Future<void> _launchUrl() async {
     final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
-        '&_repName=/WMS/$reportname'
+        '&_repName=/WMS/WMS_SSFGDT09L_Picking_Slip'
         '&_repFormat=pdf'
-        '&_dataSource=wms'
-        '&_outFilename=${widget.po_doc_no}'
+        '&_dataSource=${gb.P_DS_PDF}'
+        '&_outFilename=${widget.po_doc_no}.pdf'
         '&_repLocale=en_US'
-        '&P_MO_DO_NO=${widget.SCHID}'
-        '&P_OU_CODE=${gb.P_OU_CODE}'
-        '&P_ERP_OU_CODE=${gb.P_ERP_OU_CODE}');
+        '&P_LIN_ID=$P_LIN_ID'
+        '&V_DS_PDF=$V_DS_PDF'
+        '&P_MO_DO_NO=$P_MO_DO_NO'
+        '&P_OU_CODE=$P_OU_CODE'
+        '&P_ERP_OU_CODE=$P_ERP_OU_CODE'
+        '&LH_PICKING_SLIP=$LH_PICKING_SLIP'
+        '&LH_MO_DO_NO=$LH_MO_DO_NO'
+        '&LB_MATERIAL_CODE=$LB_MATERIAL_CODE'
+        '&LB_LOT=$LB_LOT'
+        '&LB_COMB=$LB_COMB'
+        '&LB_USAGE_QTY=$LB_USAGE_QTY'
+        '&LB_WARE_CODE=$LB_WARE_CODE'
+        '&LB_LOCATION_CODE=$LB_LOCATION_CODE');
 
     print(uri);
     if (!await launchUrl(uri)) {
       throw Exception('Could not launch $uri');
     }
+    print('http://172.16.0.82:8888/jri/report?'
+        '&_repName=/WMS/SSFGOD02A5'
+        '&_repFormat=pdf'
+        '&_dataSource=${gb.P_DS_PDF}'
+        '&_outFilename=${widget.po_doc_no}.pdf'
+        '&_repLocale=en_US'
+        '&P_LIN_ID=$P_LIN_ID'
+        '&V_DS_PDF=$V_DS_PDF'
+        '&P_MO_DO_NO=$P_MO_DO_NO'
+        '&P_OU_CODE=$P_OU_CODE'
+        '&P_ERP_OU_CODE=$P_ERP_OU_CODE'
+        '&LH_PICKING_SLIP=$LH_PICKING_SLIP'
+        '&LH_MO_DO_NO=$LH_MO_DO_NO'
+        '&LB_MATERIAL_CODE=$LB_MATERIAL_CODE'
+        '&LB_LOT=$LB_LOT'
+        '&LB_COMB=$LB_COMB'
+        '&LB_USAGE_QTY=$LB_USAGE_QTY'
+        '&LB_WARE_CODE=$LB_WARE_CODE'
+        '&LB_LOCATION_CODE=$LB_LOCATION_CODE');
   }
 
   @override
