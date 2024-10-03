@@ -891,12 +891,12 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                               children: [
                                 ElevatedButton(
                                   onPressed:
-                                      prevLink != '' ? loadPrevPage : null,
+                                      prevLink != null ? loadPrevPage : null,
                                   child: const Text('Previous'),
                                 ),
                                 ElevatedButton(
                                   onPressed:
-                                      nextLink != '' ? loadNextPage : null,
+                                      nextLink != null ? loadNextPage : null,
                                   child: const Text('Next'),
                                 ),
                               ],

@@ -293,7 +293,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   border: InputBorder.none,
                   filled: true,
                   fillColor: Colors.white,
-                  labelText: 'Locator ตรวจนับ TEST ',
+                  labelText: 'Locator ตรวจนับ',
                   labelStyle: const TextStyle(
                     color: Colors.black87,
                   ),
