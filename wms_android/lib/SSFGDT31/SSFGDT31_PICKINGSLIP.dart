@@ -22,7 +22,7 @@ class SSFGDT31_PICKINGSLIP extends StatefulWidget {
     required this.po_doc_type,
     required this.pWareCode,
     required this.v_ref_doc_no,
-    required this.v_ref_type, 
+    required this.v_ref_type,
     required this.SCHID,
   }) : super(key: key);
 
@@ -31,15 +31,15 @@ class SSFGDT31_PICKINGSLIP extends StatefulWidget {
 }
 
 class _SSFGDT31_PICKINGSLIPState extends State<SSFGDT31_PICKINGSLIP> {
-
   @override
   void initState() {
     super.initState();
     get_slip_data();
   }
+
   List<dynamic> items = [];
 
-   Future<void> get_slip_data() async {
+  Future<void> get_slip_data() async {
     final url = Uri.parse(
         'http://172.16.0.82:8888/apex/wms/SSFGDT31/picking_slip_data/${gb.P_ERP_OU_CODE}/${gb.P_OU_CODE}/${widget.SCHID}');
     try {
@@ -75,9 +75,9 @@ class _SSFGDT31_PICKINGSLIPState extends State<SSFGDT31_PICKINGSLIP> {
         '&_dataSource=wms'
         '&_outFilename=${widget.po_doc_no}'
         '&_repLocale=en_US'
-        '&P_MO_DO_NO=${widget.SCHID}}'
-        '&P_OU_CODE=${gb.P_OU_CODE}}'
-        '&P_ERP_OU_CODE=${gb.P_ERP_OU_CODE}}');
+        '&P_MO_DO_NO=${widget.SCHID}'
+        '&P_OU_CODE=${gb.P_OU_CODE}'
+        '&P_ERP_OU_CODE=${gb.P_ERP_OU_CODE}');
 
     print(uri);
     if (!await launchUrl(uri)) {
@@ -85,128 +85,126 @@ class _SSFGDT31_PICKINGSLIPState extends State<SSFGDT31_PICKINGSLIP> {
     }
   }
 
-
-
- @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: CustomAppBar(title: 'Picking Slip'),
-    backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-    body: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: ElevatedButton(
-                onPressed: () async {
-                  await _launchUrl();
-                  print('พิมพ์');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CustomAppBar(title: 'Picking Slip'),
+      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+      body: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await _launchUrl();
+                    print('พิมพ์');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    minimumSize: const Size(10, 20),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   ),
-                  minimumSize: const Size(10, 20),
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                ),
-                child: const Text(
-                  'พิมพ์',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        Expanded(
-          child: items.isEmpty
-              ? Center(
-                  child: Text(
-                    'No Data',
+                  child: const Text(
+                    'พิมพ์',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                )
-              : ListView.builder(
-                  itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    final item = items[index];
-                    return Card(
-                      elevation: 4,
-                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Item: ${item['material_code']}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.black,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'LOT: ${item['lot_no']}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black54,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Comb: ${item['comb']}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black54,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'ความต้องการใช้: ${item['usage_qty']}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black54,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Warehouse: ${item['ware_code']}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black54,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Locator: ${item['location_code']}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
                 ),
-        ),
-      ],
-    ),
-    bottomNavigationBar: BottomBar(),
-  );
-}
-
-
+              ),
+            ],
+          ),
+          Expanded(
+            child: items.isEmpty
+                ? Center(
+                    child: Text(
+                      'No Data',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      final item = items[index];
+                      return Card(
+                        elevation: 4,
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Item: ${item['material_code']}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'LOT: ${item['lot_no']}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Comb: ${item['comb']}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'ความต้องการใช้: ${item['usage_qty']}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Warehouse: ${item['ware_code']}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Locator: ${item['location_code']}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomBar(),
+    );
+  }
 }
