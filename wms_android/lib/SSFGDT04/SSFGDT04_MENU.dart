@@ -19,12 +19,6 @@ class SSFGDT04_MENU extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     content: Text('คุณได้เลือกคลัง: $pWareCode'),
-      //     duration: Duration(seconds: 2),
-      //   ),
-      // );
     });
 
     return Scaffold(

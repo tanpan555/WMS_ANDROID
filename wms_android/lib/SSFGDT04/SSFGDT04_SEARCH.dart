@@ -51,30 +51,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
       selectedItem = dropdownItems.first;
     }
   }
-
-  // Future<void> _selectDate(BuildContext context) async {
-  //   DateTime? pickedDate = await showDatePicker(
-  //     context: context,
-  //     initialDate: DateTime.now(),
-  //     firstDate: DateTime(2000),
-  //     lastDate: DateTime(2101),
-  //     initialEntryMode: DatePickerEntryMode.calendarOnly,
-  //   );
-
-  //   if (pickedDate != null) {
-  //     // Format the date as dd-MM-yyyy for internal use
-  //     String formattedDateForSearch =
-  //         DateFormat('dd-MM-yyyy').format(pickedDate);
-  //     // Format the date as dd/MM/yyyy for display
-  //     String formattedDateForDisplay =
-  //         DateFormat('dd/MM/yyyy').format(pickedDate);
-
-  //     setState(() {
-  //       _dateController.text = formattedDateForDisplay;
-  //       selectedDate = formattedDateForSearch;
-  //     });
-  //   }
-  // }
+  
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -199,15 +176,24 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                       icon: const Icon(Icons.calendar_today,
                           color: Color.fromARGB(255, 64, 64, 64)),
                       onPressed: () => _selectDate(context),
-                    ),
-                    errorText: _dateError, // แสดงข้อผิดพลาดที่นี่
+                    ), // แสดงข้อผิดพลาดที่นี่
                   ),
                   onChanged: (value) {
                     setState(() {
                       _dateController.text = value;
                     });
                   },
-                ),
+                ),if (_dateError !=
+                                    null) // Only display if there's an error
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4.0),
+                                    child: Text(
+                                      _dateError!,
+                                      style: TextStyle(
+                                          color: Colors
+                                              .red), // Style the error message
+                                    ),
+                                  ),
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
