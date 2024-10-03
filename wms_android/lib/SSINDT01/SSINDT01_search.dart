@@ -86,6 +86,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
       _selectedValue = 'ทั้งหมด';
       selectedApCode = 'ทั้งหมด';
       _documentNumberController.clear();
+      _selectedApCodeController.clear();
       errorMessage = '';
     });
   }
