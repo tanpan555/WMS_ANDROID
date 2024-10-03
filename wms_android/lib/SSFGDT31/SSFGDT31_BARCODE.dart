@@ -480,6 +480,15 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                       filled: true,
                       fillColor: Colors.white,
                       border: InputBorder.none,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color:
+                                Colors.black), // Border color when not focused
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.black), // Border color when focused
+                      ),
                     ),
                   ),
                 ],
@@ -536,7 +545,9 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 4,),
+            SizedBox(
+              height: 4,
+            ),
             Container(
               padding: const EdgeInsets.all(10.0),
               decoration: BoxDecoration(

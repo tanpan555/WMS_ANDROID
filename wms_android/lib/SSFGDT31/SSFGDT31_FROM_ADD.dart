@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:wms_android/SSFGDT31/SSFGDT31_CARD.dart';
 import 'package:wms_android/SSFGDT31/SSFGDT31_GRID.dart';
+import 'package:wms_android/SSFGDT31/SSFGDT31_SCREEN2.dart';
 import 'package:wms_android/SSFGDT31/SSFGDT31_SEARCH_DOC.dart';
 import 'package:wms_android/styles.dart';
 import 'dart:convert';
@@ -38,7 +39,11 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
   late final TextEditingController NOTE = TextEditingController();
   late final TextEditingController ERP_DOC_NO = TextEditingController();
 
-   final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController2 = TextEditingController();
+  final TextEditingController _searchController3 = TextEditingController();
+  final TextEditingController _CcodeController = TextEditingController();
 
   DateTime selectedDate = DateTime.now();
   List<dynamic> statusItems = [];
@@ -104,6 +109,24 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
       }
     } catch (e) {
       print('Error: $e');
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      context: context,
+      initialDate: selectedDate ??
+          DateTime.now(), // Fallback to current date if selectedDate is null
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        _dateController.text =
+            _formatDate(selectedDate); // Update CR_DATE with the selected date
+      });
     }
   }
 
@@ -326,16 +349,104 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     }
   }
 
-  void showCancelDialog() {
-    String? selectedcCode;
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // Adjust the height as needed
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'เลือกเหตุยกเลิก', // Title for the dialog
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'ค้นหา', // Search hint
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        setState(() {});
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: cCode.length,
+                        itemBuilder: (context, index) {
+                          final item = cCode[index];
+                          final code = item['r']?.toString() ?? 'No code';
 
+                          // Filter based on search query
+                          if (_searchController.text.isNotEmpty &&
+                              !code.toLowerCase().contains(
+                                  _searchController.text.toLowerCase())) {
+                            return SizedBox
+                                .shrink(); // Filter out non-matching items
+                          }
+
+                          return ListTile(
+                            title: Text(
+                              code,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            subtitle: Text(item['d']?.toString() ?? 'No code'),
+                            onTap: () {
+                              setState(() {
+                                selectedcCode = code; // Set selected code
+                                _CcodeController.text = selectedcCode ?? '';
+                                print('$selectedcCode');
+                              });
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void showCancelDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
           child: Container(
             width: 600.0,
-            height: 250.0,
+            height: 200.0,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -347,53 +458,22 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                         TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: DropdownButtonFormField<String>(
-                    value: selectedcCode,
-                    isExpanded: true,
-                    items: cCode.map((item) {
-                      return DropdownMenuItem<String>(
-                        value: item['r'],
-                        child: Container(
-                          width: 250.0,
-                          child: Row(
-                            children: [
-                              Text(
-                                item['r'] ?? 'No code',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              Flexible(
-                                child: Text(
-                                  item['d'] ?? '',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                GestureDetector(
+                  onTap: _showDialog,
+                  child: AbsorbPointer(
+                    child: TextField(
+                      controller: _CcodeController,
+                      decoration: InputDecoration(
+                        labelText: 'สาเหตุยกเลิก',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: InputBorder.none,
+                        labelStyle: TextStyle(color: Colors.black),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
                         ),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedcCode = newValue;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Cancel Code',
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-                      border: OutlineInputBorder(),
+                      ),
                     ),
                   ),
                 ),
@@ -414,10 +494,11 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                         onPressed: () {
                           if (selectedcCode != null) {
                             Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                if (poStatus == '1') {}
                                 return AlertDialog(
                                   title: Text('คำเตือน'),
                                   content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
@@ -425,20 +506,17 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                     TextButton(
                                       child: Text('ตกลง'),
                                       onPressed: () {
-                                  
-
                                         cancel_from(selectedcCode!).then((_) {
-                                          Navigator.of(context).pop(
+                                          Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
+                                          Navigator.push(
+                                            context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SSFGDT31_SEARCH_DOC(
-                                                pWareCode: widget.pWareCode,
-                                              ),
-                                            ),
+                                                builder: (context) =>
+                                                    SSFGDT31_SCREEN2(
+                                                        pWareCode:
+                                                            widget.pWareCode)),
                                           );
-
-                                           Navigator.of(context).pop();
-                                        Navigator.of(context).pop();
                                         }).catchError((error) {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
@@ -561,85 +639,92 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     return Scaffold(
       appBar: CustomAppBar(title: 'รับคืนจากการเบิกผลิต'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            const SizedBox(height: 8.0),
-            Row(
-              children: [
-                const SizedBox(width: 4.0),
-                ElevatedButton(
-                  style: AppStyles.cancelButtonStyle(),
-                  onPressed: () {
-                    showCancelDialog();
-                  },
-                  child: Text(
-                    'ยกเลิก',
-                    style: AppStyles.CancelbuttonTextStyle(),
-                  ),
+      body: Column(
+        children: [
+          // Row for the fixed buttons at the top
+          Row(
+            children: [
+              const SizedBox(width: 8.0),
+              ElevatedButton(
+                style: AppStyles.cancelButtonStyle(),
+                onPressed: () {
+                  showCancelDialog();
+                },
+                child: Text(
+                  'ยกเลิก',
+                  style: AppStyles.CancelbuttonTextStyle(),
                 ),
-                const Spacer(),
-                ElevatedButton(
-  style: AppStyles.NextButtonStyle(),
-  onPressed: () async {
-    await updateForm();
-    await fetchPoStatus();
-    if (poStatus == '0') {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SSFGDT31_GRID(
-            po_doc_no: widget.po_doc_no, 
-            po_doc_type: widget.po_doc_type, 
-            pWareCode: widget.pWareCode,
-            v_ref_doc_no: v_ref_doc_no ?? '',
-            v_ref_type: v_ref_type ?? '',
-            SCHID: selectedMoDoNo ?? '',
-            DOC_DATE: DOC_DATE.text ?? '',
+              ),
+              const Spacer(),
+              ElevatedButton(
+                style: AppStyles.NextButtonStyle(),
+                onPressed: () async {
+                  await updateForm();
+                  await fetchPoStatus();
+                  if (poStatus == '0') {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SSFGDT31_GRID(
+                          po_doc_no: widget.po_doc_no,
+                          po_doc_type: widget.po_doc_type,
+                          pWareCode: widget.pWareCode,
+                          v_ref_doc_no: v_ref_doc_no ?? '',
+                          v_ref_type: v_ref_type ?? '',
+                          SCHID: selectedMoDoNo ?? '',
+                          DOC_DATE: DOC_DATE.text ?? '',
+                        ),
+                      ),
+                    );
+                    print('pass');
+                  }
+
+                  print(widget.po_doc_no);
+                  print(widget.po_doc_type);
+                  print(selectedMoDoNo);
+                  print(NOTE.text);
+
+                  // Log the button press
+                  print('Right button pressed');
+                },
+                child: Image.asset(
+                  'assets/images/right.png',
+                  width: 20.0,
+                  height: 20.0,
+                ),
+              ),
+              const SizedBox(width: 8.0),
+            ],
           ),
-        ),
-      );
-      print('pass');
-    }
 
-    print(widget.po_doc_no);
-    print(widget.po_doc_type);
-    print(selectedMoDoNo);
-    print(NOTE.text);
-
-    // Log the button press
-    print('Right button pressed');
-  },
-  child: Image.asset(
-    'assets/images/right.png',
-    width: 20.0,
-    height: 20.0,
-  ),
-),
-                const SizedBox(width: 4.0),
-               
-              ],
-            ),
-             const SizedBox(height: 20.0),
-            Container(
-              // padding: const EdgeInsets.all(16.0),
+          // Space between buttons and scrollable content
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
-                  _buildTextFieldstar(DOC_NO, 'เลขที่เอกสาร WMS', readOnly: true),
-                  _buildDropdownForDocType(),
-                  _buildDateTextField(DOC_DATE, 'วันที่บันทึก'),
-                  _buildDropdownForRefNo(),
-                  _buildDropdownSearch(),
-                  _buildTextField(CUST, 'ลูกค้า', readOnly: true),
-                  _buildTextField(NOTE, 'หมายเหตุ'),
-                  _buildTextField(ERP_DOC_NO, 'เลขที่เอกสาร ERP',
-                      readOnly: true),
+                  const SizedBox(height: 8.0),
+                  Container(
+                    child: Column(
+                      children: [
+                        _buildTextFieldstar(DOC_NO, 'เลขที่เอกสาร WMS',
+                            readOnly: true),
+                        _buildDropdownForDocType(),
+                        _buildDateTextField(DOC_DATE, 'วันที่บันทึก'),
+                        _buildDropdownForRefNo(),
+                        _buildDropdownSearch(),
+                        _buildTextField(CUST, 'ลูกค้า', readOnly: true),
+                        _buildTextField(NOTE, 'หมายเหตุ'),
+                        _buildTextField(ERP_DOC_NO, 'เลขที่เอกสาร ERP',
+                            readOnly: true),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomBar(),
     );
@@ -665,345 +750,581 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
   }
 
   Widget _buildTextFieldstar(TextEditingController controller, String label,
-    {bool readOnly = false}) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 8.0),
-    child: TextField(
-      controller: controller,
-      style: const TextStyle(color: Colors.black),
-      readOnly: readOnly,
-      decoration: InputDecoration(
-        label: RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: label,
-                style: const TextStyle(color: Colors.black),
-              ),
-              const TextSpan(
-                text: ' *', // Asterisk for required field
-                style: TextStyle(color: Colors.red), // Red color for asterisk
-              ),
-            ],
+      {bool readOnly = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: TextField(
+        controller: controller,
+        style: const TextStyle(color: Colors.black),
+        readOnly: readOnly,
+        decoration: InputDecoration(
+          label: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: label,
+                  style: const TextStyle(color: Colors.black),
+                ),
+                const TextSpan(
+                  text: ' *', // Asterisk for required field
+                  style: TextStyle(color: Colors.red), // Red color for asterisk
+                ),
+              ],
+            ),
           ),
+          filled: true,
+          fillColor: readOnly ? Colors.grey[300] : Colors.white,
+          border: InputBorder.none,
         ),
-        filled: true,
-        fillColor: readOnly ? Colors.grey[300] : Colors.white,
-        border: InputBorder.none,
       ),
-    ),
-  );
-}
-
-
-Widget _buildDateTextField(TextEditingController controller, String label) {
-  DateTime? selectedDate;
-
-  // Function to format the input string into a date string
-  String formatDate(String input) {
-    if (input.length == 8) {
-      // Attempt to parse the input string as a date in ddMMyyyy format
-      final day = int.tryParse(input.substring(0, 2));
-      final month = int.tryParse(input.substring(2, 4));
-      final year = int.tryParse(input.substring(4, 8));
-      if (day != null && month != null && year != null) {
-        final date = DateTime(year, month, day);
-        if (date.year == year && date.month == month && date.day == day) {
-          // Return the formatted date if valid
-          return DateFormat('dd/MM/yyyy').format(date);
-        }
-      }
-    }
-    return input; // Return original input if invalid
+    );
   }
 
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 8.0),
-    child: TextFormField(
-      controller: controller,
-      style: const TextStyle(color: Colors.black),
-      readOnly: false, // Set to true since we're using a date picker
-      decoration: InputDecoration(
-        label: RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: label,
-                style: const TextStyle(color: Colors.black),
+  bool isDateValid = true;
+  final DateFormat displayFormat = DateFormat('dd/MM/yyyy');
+
+  Widget _buildDateTextField(TextEditingController controller, String label) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextField(
+            controller: controller,
+            style: TextStyle(color: Colors.black),
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              // Allow only digits (numbers)
+              FilteringTextInputFormatter.digitsOnly,
+            ],
+            onChanged: (value) {
+              if (value.length == 8) {
+                try {
+                  // Parse the date assuming the format is ddMMyyyy
+                  DateTime parsedDate = DateTime.parse(
+                    "${value.substring(4, 8)}-${value.substring(2, 4)}-${value.substring(0, 2)}",
+                  );
+
+                  // Validate the date (e.g., check if it's a valid day of the month)
+                  if (parsedDate.day == int.parse(value.substring(0, 2)) &&
+                      parsedDate.month == int.parse(value.substring(2, 4)) &&
+                      parsedDate.year == int.parse(value.substring(4, 8))) {
+                    // Update the controller with formatted date
+                    controller.text = displayFormat.format(parsedDate);
+                    controller.selection = TextSelection.fromPosition(
+                      TextPosition(offset: controller.text.length),
+                    );
+                    setState(() {
+                      isDateValid = true; // Date is valid
+                    });
+                  } else {
+                    throw FormatException("Invalid date");
+                  }
+                } catch (e) {
+                  print('Error parsing date: $e');
+                  setState(() {
+                    isDateValid = false; // Invalid date
+                  });
+                }
+              } else {
+                setState(() {
+                  isDateValid = false; // Invalid length
+                });
+              }
+            },
+            decoration: InputDecoration(
+              labelText: null,
+              label: RichText(
+                text: TextSpan(
+                  text: label,
+                  style: TextStyle(color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: ' *',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ],
+                ),
               ),
-              const TextSpan(
-                text: ' *', // Asterisk for required field
-                style: TextStyle(color: Colors.red), // Red color for asterisk
+              filled: true,
+              fillColor: Colors.white,
+              border: InputBorder.none,
+              suffixIcon: IconButton(
+                icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
+                onPressed: () async {
+                  _selectDate(context);
+                },
+              ),
+            ),
+          ),
+          isDateValid == false
+              ? const Padding(
+                  padding: EdgeInsets.only(top: 4.0),
+                  child: Text(
+                    'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink(),
+        ],
+      ),
+    );
+  }
+
+  void _showProductionOrderDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // Adjust the height as needed
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'ค้นหาเลขที่คำสั่งผลิต',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _searchController.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        setState(() {});
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: moDoNoItems.length,
+                        itemBuilder: (context, index) {
+                          final item = moDoNoItems[index];
+                          final schid = '${item['schid']}';
+                          final custName = item['cust_name'] ?? '';
+
+                          // Filter based on search query (match schid or cust_name)
+                          if (_searchController.text.isNotEmpty &&
+                              !schid.toLowerCase().contains(
+                                  _searchController.text.toLowerCase()) &&
+                              !custName.toLowerCase().contains(
+                                  _searchController.text.toLowerCase())) {
+                            return SizedBox.shrink();
+                          }
+
+                          return ListTile(
+                            title: Text(
+                              schid,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            subtitle: Text(
+                              custName,
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 12),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                selectedMoDoNo =
+                                    schid; // Update the selected item
+                                CUST.text = custName; // Update text controller
+                                print('Selected SCHID: $schid');
+                                print('Selected Cust Name: $custName');
+                              });
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    ).then((_) {
+      setState(() {
+        // Force rebuild to reflect the selected production order in the dropdown
+      });
+    });
+  }
+
+  Widget _buildDropdownSearch() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: GestureDetector(
+        onTap: () {
+          _showProductionOrderDialog(); // Show the dialog on tap
+        },
+        child: InputDecorator(
+          decoration: InputDecoration(
+            labelText: "เลขที่คำสั่งผลิต",
+            filled: true,
+            fillColor: Colors.white,
+            border: InputBorder.none,
+            labelStyle: TextStyle(fontSize: 16, color: Colors.black),
+          ),
+          child: Row(
+            mainAxisAlignment:
+                MainAxisAlignment.spaceBetween, // Align text and arrow
+            children: [
+              Text(
+                selectedMoDoNo ?? '', // Default placeholder text
+                style: TextStyle(fontSize: 16),
+              ),
+              Icon(
+                Icons.arrow_drop_down, // Dropdown arrow icon
+                color: Colors.grey,
               ),
             ],
           ),
         ),
-        filled: true,
-        fillColor: Colors.white,
-        border: InputBorder.none,
-        suffixIcon: IconButton(
-          icon: const Icon(Icons.calendar_today_outlined, color: Colors.black),
-          onPressed: () async {
-            final DateTime? pickedDate = await showDatePicker(
-              context: context,
-              initialDate: selectedDate ?? DateTime.now(),
-              firstDate: DateTime(1900),
-              lastDate: DateTime.now(),
-              initialEntryMode: DatePickerEntryMode.calendarOnly,
-            );
-
-            if (pickedDate != null && pickedDate != selectedDate) {
-              setState(() {
-                selectedDate = pickedDate;
-                controller.text = DateFormat('dd/MM/yyyy').format(pickedDate);
-              });
-            }
-          },
-        ),
       ),
-      keyboardType: TextInputType.number,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly, // Allow only digits
-        LengthLimitingTextInputFormatter(8), // Limit to 8 digits
-      ],
-      onChanged: (value) {
-        // Format the input as the user types
-        final formattedDate = formatDate(value);
-        if (formattedDate != value) {
-          // Update the text field if the formatted date is different
-          controller.value = TextEditingValue(
-            text: formattedDate,
-            selection: TextSelection.fromPosition(
-              TextPosition(offset: formattedDate.length),
-            ),
-          );
-        }
-      },
-    ),
-  );
-}
+    );
+  }
 
+  // Widget _buildDropdownForRefNo() {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(bottom: 8.0),
+  //     child: DropdownSearch<String>(
+  //       popupProps: PopupProps.dialog(
+  //         showSearchBox: true,
+  //         showSelectedItems: true,
+  //         searchFieldProps: TextFieldProps(
+  //           decoration: InputDecoration(
+  //             hintText:
+  //                 "ค้นหาเลขที่เอกสารอ้างอิง", // Hint text for the search field
+  //             hintStyle:
+  //                 TextStyle(color: Colors.grey), // Style for the hint text
+  //             border: OutlineInputBorder(
+  //               borderRadius: BorderRadius.circular(10.0),
+  //             ),
+  //           ),
+  //         ),
+  //         constraints: BoxConstraints(
+  //           minHeight: 100, // Set the minimum height of the dialog
+  //           maxHeight: 250, // Set the maximum height of the dialog
+  //         ),
+  //       ),
+  //       items: [
+  //         ...REF_NOItems.map((item) => item['doc_no'].toString()).toList(),
+  //       ],
+  //       dropdownDecoratorProps: DropDownDecoratorProps(
+  //         dropdownSearchDecoration: InputDecoration(
+  //           border: InputBorder.none,
+  //           labelText: "เลขที่เอกสารอ้างอิง", // Label text for the dropdown
+  //           filled: true,
+  //           fillColor: Colors.white,
+  //         ),
+  //       ),
+  //       onChanged: (String? value) {
+  //         setState(() {
+  //           if (value == '') {
+  //             doc_no = null;
+  //             REF_NO.text = 'null';
+  //           } else {
+  //             doc_no = value;
+  //             REF_NO.text = value ?? 'null';
+  //           }
+  //         });
+  //       },
+  //       selectedItem: doc_no ?? '',
+  //     ),
+  //   );
+  // }
 
-Widget _buildDropdownSearch() {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 8.0),
-    child: DropdownSearch<String>(
-      popupProps: PopupProps.dialog(
-        showSearchBox: true,
-        showSelectedItems: true,
-        searchFieldProps: TextFieldProps(
-          decoration: InputDecoration(
-            hintText: "ค้นหาเลขที่คำสั่งผลิต", // Hint text for the search field
-            hintStyle: TextStyle(fontSize: 12.0, color: Colors.grey), // Style for the hint text
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
+  String? selectedDocType = '';
+  String? displayDocType = '';
+
+  Future<void> _showDocTypeDialog() async {
+    String? selectedValue = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-        ),
-        itemBuilder: (context, item, isSelected) {
-          final itemData = moDoNoItems.firstWhere(
-            (element) => '${element['schid']}' == item,
-            orElse: () => {'schid': '', 'cust_name': ''},
-          );
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'เลือกประเภทเอกสาร',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _searchController2,
+                      decoration: InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (_) => setState(() {}),
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: statusItems.length,
+                        itemBuilder: (context, index) {
+                          final item = statusItems[index];
+                          final docType = item['doc_type'] as String;
+                          final docDesc = item['doc_desc'] as String;
+                          displayDocType = docDesc;
+                          if (_searchController2.text.isNotEmpty &&
+                              !docDesc.toLowerCase().contains(
+                                  _searchController2.text.toLowerCase()) &&
+                              !docType.toLowerCase().contains(
+                                  _searchController2.text.toLowerCase())) {
+                            return SizedBox.shrink();
+                          }
 
-          return ListTile(
-            title: Text(item), // Displaying schid
-            subtitle: Text(itemData['cust_name'] ?? ''), // Displaying corresponding cust_name
-            selected: isSelected,
-          );
+                          return ListTile(
+                            title: Text(
+                              docType,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            subtitle: Text(
+                              docDesc,
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 12),
+                            ),
+                            onTap: () => Navigator.of(context).pop(docType),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+
+    if (selectedValue != null) {
+      setState(() {
+        selectedDocType = selectedValue;
+        DOC_TYPE.text = statusItems.firstWhere(
+          (item) => item['doc_type'] == selectedValue,
+          orElse: () => {'doc_desc': ''},
+        )['doc_desc'] as String;
+      });
+    }
+  }
+
+  Widget _buildDropdownForDocType() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: GestureDetector(
+        onTap: () {
+          _showDocTypeDialog(); // Show dialog on tap
         },
-        constraints: BoxConstraints(
-          minHeight: 300, // Set the minimum height of the dialog
-          maxHeight: 400, // Set the maximum height of the dialog
-        ),
-      ),
-      items: [
-        ...moDoNoItems.map((item) => '${item['schid']}'.toString()).toList()
-      ],
-      dropdownDecoratorProps: DropDownDecoratorProps(
-        dropdownSearchDecoration: InputDecoration(
-          border: InputBorder.none,
-          filled: true,
-          fillColor: Colors.white,
-          labelText: "เลขที่คำสั่งผลิต",
-          hintText: "Select Item",
-          hintStyle: TextStyle(fontSize: 12.0),
-        ),
-      ),
-      filterFn: (String item, String search) {
-        final itemData = moDoNoItems.firstWhere(
-          (element) => '${element['schid']}' == item,
-          orElse: () => {'schid': '', 'cust_name': ''},
-        );
-        // Check if either schid or cust_name contains the search text
-        return item.contains(search) || (itemData['cust_name'] ?? '').contains(search);
-      },
-      onChanged: (String? value) async {
-        setState(() {
-          selectedMoDoNo = value;
-        });
-
-        if (value == '') {
-          setState(() {
-            csValue = null;
-            CUST.text = 'null';
-          });
-        } else {
-          await fetchCustCode();
-
-          final selectedItem = moDoNoItems.firstWhere(
-            (element) => '${element['schid']}' == value,
-            orElse: () => {'schid': '', 'cust_name': ''},
-          );
-
-          print('Selected SCHID: ${selectedItem['schid']}');
-          print('Selected Cust Name: ${selectedItem['cust_name']}');
-
-          setState(() {
-            CUST.text = csValue ?? 'null';
-          });
-        }
-
-        print(selectedMoDoNo);
-      },
-      selectedItem: selectedMoDoNo ?? '',
-    ),
-  );
-}
-
-
-
-
-
-Widget _buildDropdownForRefNo() {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 8.0),
-    child: DropdownSearch<String>(
-      popupProps: PopupProps.dialog(
-        showSearchBox: true,
-        showSelectedItems: true,
-        searchFieldProps: TextFieldProps(
+        child: InputDecorator(
           decoration: InputDecoration(
-            hintText: "ค้นหาเลขที่เอกสารอ้างอิง", // Hint text for the search field
-            hintStyle: TextStyle(color: Colors.grey), // Style for the hint text
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
+            labelText: "เลขที่เอกสารอ้างอิง",
+            // hintText: "Select Item",
+            hintStyle: TextStyle(fontSize: 12.0),
+            filled: true,
+            fillColor: Colors.white,
+            border: InputBorder.none,
+          ),
+          child: Row(
+            mainAxisAlignment:
+                MainAxisAlignment.spaceBetween, // Align text and arrow
+            children: [
+              Text(
+                displayDocType ?? '', // Default placeholder text
+                style: TextStyle(fontSize: 16),
+              ),
+              Icon(
+                Icons.arrow_drop_down, // Dropdown arrow icon
+                color: Colors.grey,
+              ),
+            ],
           ),
         ),
-        constraints: BoxConstraints(
-          minHeight: 100, // Set the minimum height of the dialog
-          maxHeight: 250, // Set the maximum height of the dialog
-        ),
       ),
-      items: [
-        ...REF_NOItems.map((item) => item['doc_no'].toString()).toList(),
-      ],
-      dropdownDecoratorProps: DropDownDecoratorProps(
-        dropdownSearchDecoration: InputDecoration(
-          border: InputBorder.none,
-          labelText: "เลขที่เอกสารอ้างอิง", // Label text for the dropdown
-          filled: true,
-          fillColor: Colors.white,
-        ),
-      ),
-      onChanged: (String? value) {
-        setState(() {
-          if (value == '') {
-            doc_no = null;
-            REF_NO.text = 'null';
-          } else {
-            doc_no = value;
-            REF_NO.text = value ?? 'null';
-          }
-        });
-      },
-      selectedItem: doc_no ?? '',
-    ),
-  );
-}
+    );
+  }
 
+  String? selectedrRefNo = '';
 
-
-Widget _buildDropdownForDocType() {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 8.0),
-    child: DropdownSearch<String>(
-  popupProps: PopupProps.dialog(
-    showSearchBox: true,
-    showSelectedItems: true,
-    searchFieldProps: TextFieldProps(
-      decoration: InputDecoration(
-        hintText: "ค้นหาประเภทการจ่าย", // Hint text added here
-        hintStyle: TextStyle(color: Colors.grey),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-    ),
-    constraints: BoxConstraints(
-      maxHeight: 250, // Set the max height to 250
-    ),
-    itemBuilder: (context, item, isSelected) {
-      return ListTile(
-        title: Text(item),
-        selected: isSelected,
-      );
-    },
-  ),
-  items: [
-    ...statusItems.map((item) => item['doc_desc'].toString()).toList(),
-  ],
-  dropdownDecoratorProps: DropDownDecoratorProps(
-    dropdownSearchDecoration: InputDecoration(
-      border: InputBorder.none,
-      label: Row(
-        children: [
-          const Text(
-            "ประเภทการจ่าย",
-            style: TextStyle(color: Colors.black87), // Default label color
+  Future<void> _showRefNoDialog() async {
+    String? selectedValue = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-          const SizedBox(width: 2), // Small space between label and asterisk
-          Text(
-            '*',
-            style: TextStyle(
-              color: Colors.red, // Change asterisk color to red
-            ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'เลือกประเภทเอกสาร',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _searchController3,
+                      decoration: InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (_) => setState(() {}),
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: statusItems.length,
+                        itemBuilder: (context, index) {
+                          final item = statusItems[index];
+                          final docNo = item['doc_no'] ?? '';
+
+                          // Filter based on search query
+                          if (_searchController3.text.isNotEmpty &&
+                              !docNo.toLowerCase().contains(
+                                  _searchController3.text.toLowerCase())) {
+                            return SizedBox.shrink();
+                          }
+
+                          return ListTile(
+                            title: Text(
+                              docNo,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            onTap: () => Navigator.of(context).pop(docNo),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
-        ],
-      ),
-      filled: true,
-      fillColor: Colors.white,
-    ),
-  ),
-  onChanged: (String? value) {
-    setState(() {
-      if (value == '') {
-        selectedValue = null;
-        DOC_TYPE.text = '';
-      } else {
-        final selectedItem = statusItems.firstWhere(
-          (element) => element['doc_desc'] == value,
-          orElse: () => {'doc_type': '', 'doc_desc': ''},
         );
-        selectedValue = selectedItem['doc_type'];
-        DOC_TYPE.text = value ?? '';
-      }
-    });
-  },
-  selectedItem: statusItems
-      .firstWhere(
-        (element) => element['doc_type'] == selectedValue,
-        orElse: () => {'doc_type': '', 'doc_desc': ''},
-      )['doc_desc']
-      .toString(),
-),
+      },
+    );
 
-  );
-}
+    // Ensure that selectedValue is not null
+    if (selectedValue != null && selectedValue.isNotEmpty) {
+      setState(() {
+        selectedDocType = selectedValue;
 
+        // Use a safe way to get the document type
+        var foundItem = statusItems.firstWhere(
+          (item) => item['doc_no'] == selectedValue,
+          orElse: () => null, // Change to return null if not found
+        );
 
+        // Check if foundItem is not null before accessing its properties
+        DOC_TYPE.text = foundItem != null ? foundItem['doc_no'] as String : '';
+      });
+    }
+  }
 
+  Widget _buildDropdownForRefNo() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: GestureDetector(
+        onTap: () {
+          _showRefNoDialog(); // Show dialog on tap
+        },
+        child: InputDecorator(
+          decoration: InputDecoration(
+            labelText: "ประเภทเอกสาร",
+            // hintText: "Select Item",
+            hintStyle: TextStyle(fontSize: 12.0),
+            filled: true,
+            fillColor: Colors.white,
+            border: InputBorder.none,
+          ),
+          child: Row(
+            mainAxisAlignment:
+                MainAxisAlignment.spaceBetween, // Align text and arrow
+            children: [
+              Text(
+                selectedrRefNo ?? '', // Default placeholder text
+                style: TextStyle(fontSize: 16),
+              ),
+              Icon(
+                Icons.arrow_drop_down, // Dropdown arrow icon
+                color: Colors.grey,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';

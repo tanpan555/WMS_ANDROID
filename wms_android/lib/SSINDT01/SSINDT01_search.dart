@@ -102,7 +102,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
             builder: (context, setState) {
               return Container(
                 padding: const EdgeInsets.all(16),
-                height: 450, // Adjust the height as needed
+                height: 300, // Adjust the height as needed
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

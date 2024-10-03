@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -65,11 +66,15 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   final TextEditingController crDateController = TextEditingController();
 
   final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _CcodeController = TextEditingController();
 
   final DateFormat displayFormat = DateFormat("dd/MM/yyyy");
   final DateFormat apiFormat = DateFormat("MM/dd/yyyy");
 
   final _formKey = GlobalKey<FormState>();
+
+  bool isDateValid = true;
+  bool isInvoiceDateValid = true;
 
   List<dynamic> poType = [];
   String? selectedPoType;
@@ -184,7 +189,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
     try {
       final http.Response response = await http.get(uri);
-
+      print(apiUrl);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
             jsonDecode(utf8.decode(response.bodyBytes));
@@ -250,6 +255,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
   List<Map<String, dynamic>> cCode = [];
   String? selectedcCode;
+
   bool isLoading = true;
   String errorMessage = '';
 
@@ -320,16 +326,104 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     }
   }
 
-  void showCancelDialog() {
-    String? selectedcCode;
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // Adjust the height as needed
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'เลือกเหตุยกเลิก', // Title for the dialog
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'ค้นหา', // Search hint
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        setState(() {});
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: cCode.length,
+                        itemBuilder: (context, index) {
+                          final item = cCode[index];
+                          final code = item['r']?.toString() ?? 'No code';
 
+                          // Filter based on search query
+                          if (_searchController.text.isNotEmpty &&
+                              !code.toLowerCase().contains(
+                                  _searchController.text.toLowerCase())) {
+                            return SizedBox
+                                .shrink(); // Filter out non-matching items
+                          }
+
+                          return ListTile(
+                            title: Text(
+                              code,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            subtitle: Text(item['d']?.toString() ?? 'No code'),
+                            onTap: () {
+                              setState(() {
+                                selectedcCode = code; // Set selected code
+                                _CcodeController.text = selectedcCode ?? '';
+                                print('$selectedcCode');
+                              });
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void showCancelDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
           child: Container(
             width: 600.0,
-            height: 250.0,
+            height: 200.0,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -341,53 +435,22 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                         TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: DropdownButtonFormField<String>(
-                    value: selectedcCode,
-                    isExpanded: true,
-                    items: cCode.map((item) {
-                      return DropdownMenuItem<String>(
-                        value: item['r'],
-                        child: Container(
-                          width: 250.0,
-                          child: Row(
-                            children: [
-                              Text(
-                                item['r'] ?? 'No code',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              Flexible(
-                                child: Text(
-                                  item['d'] ?? '',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                GestureDetector(
+                  onTap: _showDialog,
+                  child: AbsorbPointer(
+                    child: TextField(
+                      controller: _CcodeController,
+                      decoration: InputDecoration(
+                        labelText: 'สาเหตุยกเลิก',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: InputBorder.none,
+                        labelStyle: TextStyle(color: Colors.black),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
                         ),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedcCode = newValue;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Cancel Code',
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-                      border: OutlineInputBorder(),
+                      ),
                     ),
                   ),
                 ),
@@ -418,10 +481,9 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                                     TextButton(
                                       child: Text('ตกลง'),
                                       onPressed: () {
-                                        // Navigator.of(context).pop();
-
                                         cancel_from(selectedcCode!).then((_) {
-                                          Navigator.of(context).pop(
+                                          Navigator.of(context).pop();
+                                          Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   SSINDT01_MAIN(
@@ -430,11 +492,10 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                                                 p_ou_code: widget.p_ou_code,
                                                 selectedValue: 'ทั้งหมด',
                                                 apCode: 'ทั้งหมด',
-                                                documentNumber: '',
+                                                documentNumber: 'null',
                                               ),
                                             ),
                                           );
-                                          Navigator.of(context).pop();
                                         }).catchError((error) {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
@@ -789,45 +850,57 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                                 ),
                                 const SizedBox(height: 10),
                                 Expanded(
-                                  child: ListView.builder(
-                                    itemCount: poType
-                                        .where((item) {
-                                          final poTypeCode =
-                                              item['po_type_code'].toString();
-                                          final searchQuery =
-                                              _searchController.text.trim();
-                                          return poTypeCode.contains(
-                                              searchQuery); // Filtering
-                                        })
-                                        .toList()
-                                        .length,
-                                    itemBuilder: (context, index) {
+                                  child: Builder(
+                                    builder: (context) {
+                                      // Create a filtered list of items
                                       final filteredItems =
                                           poType.where((item) {
-                                        final poTypeCode =
-                                            item['po_type_code'].toString();
-                                        final searchQuery =
-                                            _searchController.text.trim();
+                                        final poTypeCode = item['po_type_code']
+                                            .toString()
+                                            .toLowerCase(); // Convert to lowercase
+                                        final searchQuery = _searchController
+                                            .text
+                                            .trim()
+                                            .toLowerCase(); // Convert to lowercase
                                         return poTypeCode.contains(searchQuery);
                                       }).toList();
 
-                                      final item = filteredItems[index];
-                                      final poTypeCode =
-                                          item['po_type_code'].toString();
+                                      // Check if filtered items are empty
+                                      if (filteredItems.isEmpty) {
+                                        return Center(
+                                          child: Text(
+                                            'Data Not Found',
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 16),
+                                          ),
+                                        );
+                                      }
 
-                                      return ListTile(
-                                        title: Text(
-                                          poTypeCode,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                        onTap: () {
-                                          Navigator.of(context).pop();
-                                          setState(() {
-                                            selectedPoType = poTypeCode;
-                                            poTypeCodeController.text =
-                                                poTypeCode;
-                                          });
+                                      return ListView.builder(
+                                        itemCount: filteredItems.length,
+                                        itemBuilder: (context, index) {
+                                          final item = filteredItems[index];
+                                          final poTypeCode = item[
+                                                  'po_type_code']
+                                              .toString(); // Keep original case for display
+
+                                          return ListTile(
+                                            title: Text(
+                                              poTypeCode,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                            onTap: () {
+                                              Navigator.of(context).pop();
+                                              setState(() {
+                                                selectedPoType = poTypeCode;
+                                                poTypeCodeController.text =
+                                                    poTypeCode;
+                                              });
+                                            },
+                                          );
                                         },
                                       );
                                     },
@@ -854,12 +927,6 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                           ),
                         ),
                         const SizedBox(width: 2), // Add a small space
-                        Text(
-                          '*',
-                          style: TextStyle(
-                            color: Colors.red, // Change asterisk color to red
-                          ),
-                        ),
                       ],
                     ),
                     filled: true,
@@ -903,15 +970,22 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             onChanged: (value) {
               // Format the input as the user types
               final formattedDate = formatDate(value);
-              if (formattedDate != value) {
-                // Update the text field if the formatted date is different
-                receiveDateController.value = TextEditingValue(
-                  text: formattedDate,
-                  selection: TextSelection.fromPosition(
-                    TextPosition(offset: formattedDate.length),
-                  ),
-                );
-              }
+
+              // Check if the length is valid (8 characters) and if it matches the expected format
+              setState(() {
+                isDateValid = value.length == 8 &&
+                    RegExp(r'^\d{2}/\d{2}/\d{4}$').hasMatch(formattedDate);
+
+                if (formattedDate != value) {
+                  // Update the text field if the formatted date is different
+                  receiveDateController.value = TextEditingValue(
+                    text: formattedDate,
+                    selection: TextSelection.fromPosition(
+                      TextPosition(offset: formattedDate.length),
+                    ),
+                  );
+                }
+              });
             },
             keyboardType: TextInputType.number,
             inputFormatters: [
@@ -919,6 +993,20 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               LengthLimitingTextInputFormatter(8), // Limit to 8 digits
             ],
           ),
+          isDateValid ==
+                  false // Change this check to false for incorrect format
+              ? const Padding(
+                  padding: EdgeInsets.only(top: 4.0),
+                  child: Text(
+                    'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink(),
           const SizedBox(height: 8.0),
           Row(
             children: [
@@ -963,7 +1051,19 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           TextFormField(
             controller: invoiceDateController,
             decoration: InputDecoration(
-              labelText: 'วันที่ใบแจ้งหนี้',
+              label: Row(
+                children: [
+                  const Text(
+                    'วันที่ใบแจ้งหนี้',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  const SizedBox(width: 2), // Add a small space
+                  Text(
+                    '*',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ],
+              ),
               filled: true,
               fillColor: Colors.white,
               border: InputBorder.none,
@@ -985,9 +1085,45 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             ),
             readOnly: false,
             onChanged: (value) {
-              invoiceDateController.text = value;
+              // Format the input as the user types
+              final formattedDate = formatDate(value);
+
+              // Update the text field if the formatted date is different
+              if (formattedDate != value) {
+                invoiceDateController.value = TextEditingValue(
+                  text: formattedDate,
+                  selection: TextSelection.fromPosition(
+                    TextPosition(offset: formattedDate.length),
+                  ),
+                );
+              }
+
+              // Check if the date format is valid (you can adjust the regex as needed)
+              setState(() {
+                isInvoiceDateValid = formattedDate.length == 10 &&
+                    RegExp(r'^\d{2}/\d{2}/\d{4}$').hasMatch(formattedDate);
+              });
             },
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly, // Allow only digits
+              LengthLimitingTextInputFormatter(
+                  10), // Limit to 10 characters for DD/MM/YYYY
+            ],
           ),
+          isInvoiceDateValid == false
+              ? const Padding(
+                  padding: EdgeInsets.only(top: 4.0),
+                  child: Text(
+                    'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink(),
           const SizedBox(height: 8.0),
           TextFormField(
             controller: poRemarkController,
@@ -1082,7 +1218,41 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.grey[300],
-              labelText: 'คลังสินค้า',
+              labelText: 'รับเข้าคลัง',
+              labelStyle: const TextStyle(
+                color: Colors.black87,
+              ),
+              border: InputBorder.none,
+            ),
+            readOnly: true,
+          ),
+          const SizedBox(height: 16.0),
+          TextFormField(
+            style: const TextStyle(
+              color: Colors.black87,
+            ),
+            controller: erpReceiveNoController,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey[300],
+              labelText: 'เลขที่ใบรับคลัง',
+              labelStyle: const TextStyle(
+                color: Colors.black87,
+              ),
+              border: InputBorder.none,
+            ),
+            readOnly: true,
+          ),
+          const SizedBox(height: 16.0),
+          TextFormField(
+            style: const TextStyle(
+              color: Colors.black87,
+            ),
+            controller: receiveDateController,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey[300],
+              labelText: 'วันที่บันทึก',
               labelStyle: const TextStyle(
                 color: Colors.black87,
               ),

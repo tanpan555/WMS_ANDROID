@@ -118,7 +118,7 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
       // case 'SSFGDT12_MAIN Raw Material':
       //   return SSFGDT12_MAIN(
       //       p_attr1: widget.p_attr1, pErpOuCode: widget.p_ou_code);
-      case 'SSFGRP08_MAIN Raw Material':
+      case 'SSFGRP08_MAIN ':
         return SSFGRP08_MAIN();
 
       default:

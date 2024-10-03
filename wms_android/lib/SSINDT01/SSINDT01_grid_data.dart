@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
@@ -1339,8 +1340,25 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                             },
                           );
                         } else {
-                          await sendPostRequestlineWMS();
-                          await sendGetRequestlineWMS();
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Center(child: Text('คำเตือน')),
+                                content: Text('Complete'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('OK'),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      await sendPostRequestlineWMS();
+                                      await sendGetRequestlineWMS();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         }
                       },
                     ),
@@ -2188,73 +2206,116 @@ class _LotDialogState extends State<LotDialog> {
     );
   }
 
+  bool isDateValid = false;
   Widget _buildDateField({
     required TextEditingController controller,
     required String labelText,
     required BuildContext context,
     ValueChanged<String>? onChanged,
   }) {
+    // Variable to track date validity
+    bool isDateValid = true;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
-        controller: controller,
-        readOnly: false,
-        onChanged: (value) {
-          if (value.length == 8) {
-            try {
-              // Parsing input format (ddMMyyyy) to DateTime
-              DateTime parsedDate = DateTime.parse(
-                "${value.substring(4, 8)}-${value.substring(2, 4)}-${value.substring(0, 2)}",
-              );
-
-              // Formatting it to the desired format (dd/MM/yyyy)
-              controller.text = displayFormat.format(parsedDate);
-              controller.selection = TextSelection.fromPosition(
-                TextPosition(offset: controller.text.length),
-              );
-
-              if (onChanged != null) {
-                onChanged(displayFormat.format(parsedDate));
-              }
-            } catch (e) {
-              print('Error parsing date: $e');
-            }
-          }
-        },
-        decoration: InputDecoration(
-          labelText: labelText,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(1.0),
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-          suffixIcon: IconButton(
-            icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
-            onPressed: () async {
-              FocusScope.of(context).requestFocus(FocusNode());
-              DateTime initialDate = DateTime.now();
-              if (controller.text.isNotEmpty) {
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFormField(
+            controller: controller,
+            readOnly: false, // Make it read-only to enforce date selection
+            onChanged: (value) {
+              if (value.length == 8) {
                 try {
-                  initialDate = displayFormat.parse(controller.text);
+                  // Parsing input format (ddMMyyyy) to DateTime
+                  DateTime parsedDate = DateTime.parse(
+                    "${value.substring(4, 8)}-${value.substring(2, 4)}-${value.substring(0, 2)}",
+                  );
+
+                  // Formatting it to the desired format (dd/MM/yyyy)
+                  String formattedDate = displayFormat.format(parsedDate);
+                  controller.text = formattedDate;
+                  controller.selection = TextSelection.fromPosition(
+                    TextPosition(offset: formattedDate.length),
+                  );
+
+                  // Update the date validity
+                  isDateValid = true;
+                  if (onChanged != null) {
+                    onChanged(formattedDate); // Notify the parent widget
+                  }
                 } catch (e) {
                   print('Error parsing date: $e');
+                  // Update the date validity
+                  isDateValid = false;
                 }
-              }
-              final DateTime? picked = await showDatePicker(
-                context: context,
-                initialDate: initialDate,
-                firstDate: DateTime(2000),
-                lastDate: DateTime(2101),
-                initialEntryMode: DatePickerEntryMode.calendarOnly,
-              );
-              if (picked != null) {
-                controller.text = displayFormat.format(picked);
-                if (onChanged != null) {
-                  onChanged(displayFormat.format(picked));
-                }
+              } else {
+                // Update the date validity for incorrect length
+                isDateValid = false;
               }
             },
+            decoration: InputDecoration(
+              labelText: labelText,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(1.0),
+              ),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              suffixIcon: IconButton(
+                icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
+                onPressed: () async {
+                  FocusScope.of(context).unfocus(); // Hide keyboard
+
+                  DateTime initialDate = DateTime.now();
+                  if (controller.text.isNotEmpty) {
+                    try {
+                      // Attempt to parse the current text in the field
+                      initialDate = displayFormat.parse(controller.text);
+                    } catch (e) {
+                      print('Error parsing date: $e');
+                    }
+                  }
+                  final DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: initialDate,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2101),
+                    initialEntryMode: DatePickerEntryMode.calendarOnly,
+                  );
+                  if (picked != null) {
+                    String formattedDate = displayFormat.format(picked);
+                    controller.text =
+                        formattedDate; // Show the selected date in the field
+
+                    // Notify the parent widget
+                    if (onChanged != null) {
+                      onChanged(formattedDate);
+                    }
+                  }
+                },
+              ),
+            ),
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly, // Allow only digits
+              LengthLimitingTextInputFormatter(8), // Limit to 8 digits
+            ],
           ),
-        ),
+          // Display error message if date is invalid
+          isDateValid == false
+              ? const Padding(
+                  padding: EdgeInsets.only(top: 4.0),
+                  child: Text(
+                    'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink(),
+        ],
       ),
     );
   }

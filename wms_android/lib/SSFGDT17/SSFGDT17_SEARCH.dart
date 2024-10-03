@@ -25,9 +25,10 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
   final _dateController = TextEditingController();
   DateTime? _selectedDate;
   String? selectedValue;
-  final List<String> statusItems = ['ทั้งหมด', 'ปกติ',  'ยกเลิก','รับโอนแล้ว'];
+  final List<String> statusItems = ['ทั้งหมด', 'ปกติ', 'ยกเลิก', 'รับโอนแล้ว'];
   String? docData;
   String? docData1;
+  bool isDateValid = true;
 
   @override
   void initState() {
@@ -53,6 +54,23 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
       selectedValue = 'ทั้งหมด';
       _selectedDate = null;
     });
+  }
+
+  String formatDate(String input) {
+    if (input.length == 8) {
+      // Attempt to parse the input string as a date in ddMMyyyy format
+      final day = int.tryParse(input.substring(0, 2));
+      final month = int.tryParse(input.substring(2, 4));
+      final year = int.tryParse(input.substring(4, 8));
+      if (day != null && month != null && year != null) {
+        final date = DateTime(year, month, day);
+        if (date.year == year && date.month == month && date.day == day) {
+          // Return the formatted date if valid
+          return DateFormat('dd/MM/yyyy').format(date);
+        }
+      }
+    }
+    return input; // Return original input if invalid
   }
 
   Future<void> fetchDocType() async {
@@ -95,7 +113,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                     labelText: 'ประเภทรายการ',
                     labelStyle: TextStyle(fontSize: 16, color: Colors.black),
                   ),
-                  
+
                   items: statusItems
                       .map((item) => DropdownMenuItem<String>(
                             value: item,
@@ -114,7 +132,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                   onSaved: (value) => selectedValue = value,
                   value: selectedValue,
                   style: TextStyle(color: Colors.black),
-               buttonStyleData:
+                  buttonStyleData:
                       const ButtonStyleData(padding: EdgeInsets.only(right: 8)),
                   iconStyleData: const IconStyleData(
                     icon: Icon(Icons.arrow_drop_down,
@@ -129,7 +147,6 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                   // ),
                   menuItemStyleData: const MenuItemStyleData(
                       padding: EdgeInsets.symmetric(horizontal: 16)),
-                  
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -145,56 +162,91 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                 ),
                 const SizedBox(height: 16),
                 TextField(
-  controller: _dateController,
-  decoration: InputDecoration(
-    border: InputBorder.none,
-    labelText: 'วันที่โอน',
-    labelStyle: TextStyle(color: Colors.black),
-    filled: true,
-    fillColor: Colors.white,
-    suffixIcon: IconButton(
-      icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
-      onPressed: () async {
-        DateTime? selectedDate = await showDatePicker(
-          initialEntryMode: DatePickerEntryMode.calendarOnly,
-          context: context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime(2000),
-          lastDate: DateTime(2101),
-        );
-        if (selectedDate != null && selectedDate != _selectedDate) {
-          setState(() {
-            _selectedDate = selectedDate;
-            _dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate);
-          });
-        }
-      },
-    ),
-  ),
-  keyboardType: TextInputType.number, // Set keyboard type to number
-  inputFormatters: [
-    FilteringTextInputFormatter.digitsOnly, // Allow only digits
-    LengthLimitingTextInputFormatter(8), // Limit to 8 digits
-  ],
-  onChanged: (value) {
-    // Check if the input is in the format ddMMyyyy
-    if (RegExp(r'^\d{8}$').hasMatch(value)) {
-      // Parse the date from the input
-      final day = int.parse(value.substring(0, 2));
-      final month = int.parse(value.substring(2, 4));
-      final year = int.parse(value.substring(4, 8));
-      // Create a DateTime object
-      final date = DateTime(year, month, day);
-      // Format and set the controller's text
-      setState(() {
-        _dateController.text = DateFormat('dd/MM/yyyy').format(date);
-        // Update the selected date
-        _selectedDate = date;
-      });
-    }
-  },
-),
+                  controller: _dateController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    labelText: 'วันที่โอน',
+                    labelStyle: TextStyle(color: Colors.black),
+                    filled: true,
+                    fillColor: Colors.white,
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.calendar_today_outlined,
+                          color: Colors.black),
+                      onPressed: () async {
+                        DateTime? selectedDate = await showDatePicker(
+                          initialEntryMode: DatePickerEntryMode.calendarOnly,
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101),
+                        );
+                        if (selectedDate != null) {
+                          setState(() {
+                            _selectedDate = selectedDate;
+                            _dateController.text =
+                                DateFormat('dd/MM/yyyy').format(selectedDate);
+                            isDateValid =
+                                true; // Set to true when a date is selected from the picker
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(8),
+                  ],
+                  onChanged: (value) {
+                    // Check if the input is in the format ddMMyyyy
+                    if (value.length == 8 &&
+                        RegExp(r'^\d{8}$').hasMatch(value)) {
+                      final day = int.tryParse(value.substring(0, 2));
+                      final month = int.tryParse(value.substring(2, 4));
+                      final year = int.tryParse(value.substring(4, 8));
+                      if (day != null && month != null && year != null) {
+                        final date = DateTime(year, month, day);
+                        if (date.year == year &&
+                            date.month == month &&
+                            date.day == day) {
+                          setState(() {
+                            isDateValid = true; // Valid date
+                            _selectedDate = date; // Update selected date
+                            _dateController.text =
+                                DateFormat('dd/MM/yyyy').format(date);
+                          });
+                        } else {
+                          setState(() {
+                            isDateValid = false; // Invalid date
+                          });
+                        }
+                      } else {
+                        setState(() {
+                          isDateValid = false; // Parsing failed
+                        });
+                      }
+                    } else {
+                      setState(() {
+                        isDateValid = false; // Not the correct length or format
+                      });
+                    }
+                  },
+                ),
 
+// Update the validation message display logic as needed
+                isDateValid == false
+                    ? const Padding(
+                        padding: EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

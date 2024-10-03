@@ -20,9 +20,9 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
   // Controller for the text field
   final TextEditingController _F_eDateController = TextEditingController();
   String F_eDate = '';
-  String SendF_eDate = '';
+  String SendF_eDate = 'null';
   final TextEditingController _Doc_NoController = TextEditingController();
-  final TextEditingController _selectedController3 = TextEditingController();
+  final TextEditingController _E_Doc_NoController = TextEditingController();
   final TextEditingController _selectedController4 = TextEditingController();
   final TextEditingController _selectedController5 = TextEditingController();
   final TextEditingController _selectedController6 = TextEditingController();
@@ -46,6 +46,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     super.initState();
     fetch_F_DATE();
     fetch_DOC_NO();
+    fetch_E_DOC_NO();
   }
 
   Widget _showDialog1() {
@@ -63,7 +64,6 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
 
             return ListTile(
               title: Text(item),
-              subtitle: Text(itemData['prepare_date'] ?? ''),
               selected: isSelected,
             );
           },
@@ -132,7 +132,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
           setState(() {
             prepareDatesItem = List<Map<String, dynamic>>.from(items);
             if (prepareDatesItem.isNotEmpty) {
-              selectedprepareDates = prepareDatesItem[0]['prepare_date'];
+              selectedprepareDates = '';
             }
           });
         } else {
@@ -151,9 +151,10 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
   Future<void> fetch_DOC_NO() async {
     final url = Uri.parse(
         'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_DOC_NO/${gb.P_ERP_OU_CODE}/$SendF_eDate');
+
     try {
       final response = await http.get(url);
-
+      print(url);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
             jsonDecode(utf8.decode(response.bodyBytes));
@@ -164,7 +165,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
           setState(() {
             doc_noItem = List<Map<String, dynamic>>.from(items);
             if (doc_noItem.isNotEmpty) {
-              selecteddoc_no = doc_noItem[0]['doc_no'];
+              selecteddoc_no = '';
             }
           });
         } else {
@@ -193,13 +194,13 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
 
             return ListTile(
               title: Text(item),
-              subtitle: Text(itemData['doc_no'] ?? ''),
+              subtitle: Text(itemData['prepare_date'] ?? ''),
               selected: isSelected,
             );
           },
           searchFieldProps: TextFieldProps(
             decoration: InputDecoration(
-              hintText: 'วันที่เตรียมการตรวจนับ',
+              hintText: 'จาก เลขที่เอกสาร',
               hintStyle: TextStyle(color: Colors.grey),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
@@ -208,22 +209,21 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
             ),
           ),
         ),
-        items: doc_noItem
-            .map((item) => '${item['prepare_date']}'.toString())
-            .toList(),
+        items:
+            doc_noItem.map((item) => '${item['doc_no']}'.toString()).toList(),
         dropdownDecoratorProps: DropDownDecoratorProps(
           dropdownSearchDecoration: InputDecoration(
             border: InputBorder.none,
             filled: true,
             fillColor: Colors.white,
-            labelText: "วันที่เตรียมการตรวจนับ",
+            labelText: "จาก เลขที่เอกสาร",
             hintStyle: TextStyle(fontSize: 12.0),
           ),
         ),
         onChanged: (String? value) async {
           setState(() {
             selecteddoc_no = value;
-
+            print(selecteddoc_no);
             if (value == '') {
               _F_eDateController.text = 'null';
             } else {
@@ -232,58 +232,113 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
                 orElse: () => {'doc_no': ''},
               );
 
-              _Doc_NoController.text = value ?? 'null';
+              _Doc_NoController.text = value ?? '';
+              fetch_E_DOC_NO();
             }
           });
-
-          await fetch_DOC_NO();
         },
         selectedItem: selecteddoc_no ?? '',
       ),
     );
   }
 
-  void _showDialog3() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Seller'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Add your selection or any content here
-                ListTile(
-                  title: Text('Seller 1'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController3.text = 'Seller 1';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: Text('Seller 2'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController3.text = 'Seller 2';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
+  List<Map<String, dynamic>> e_doc_noItem = [];
+  String? selected_e_doc_no;
+  Future<void> fetch_E_DOC_NO() async {
+    final String sendDate = selecteddoc_no ?? 'null';
+    final url = Uri.parse(
+        'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_E_DOC_NO/${gb.P_ERP_OU_CODE}/$SendF_eDate/$sendDate');
+
+    try {
+      final response = await http.get(url);
+      print('===============================');
+      print('fetch_E_DOC_NO : $url');
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> items = data['items'] ?? [];
+        print(items);
+
+        if (items.isNotEmpty) {
+          setState(() {
+            e_doc_noItem = List<Map<String, dynamic>>.from(items);
+            if (e_doc_noItem.isNotEmpty) {
+              selected_e_doc_no = '';
+            }
+          });
+        } else {
+          print('No items found.');
+        }
+      } else {
+        print('Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  String? display_doc_date;
+
+  Widget _showDialog3() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: DropdownSearch<String>(
+        popupProps: PopupProps.dialog(
+          showSearchBox: true,
+          showSelectedItems: true,
+          itemBuilder: (context, item, isSelected) {
+            final itemData = e_doc_noItem.firstWhere(
+              (element) => '${element['doc_no']}' == item,
+              orElse: () => {'doc_no': '', 'doc_date': ''},
+            );
+
+            return ListTile(
+              title: Text(item),
+              subtitle: Text(itemData['doc_date'] ?? ''),
+              selected: isSelected,
+            );
+          },
+          searchFieldProps: TextFieldProps(
+            decoration: InputDecoration(
+              hintText: 'จาก เลขที่เอกสาร',
+              hintStyle: TextStyle(color: Colors.grey),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                borderSide: BorderSide(color: Colors.grey),
+              ),
             ),
           ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+        ),
+        items: e_doc_noItem.map((item) => '${item['doc_no']}').toList(),
+        dropdownDecoratorProps: DropDownDecoratorProps(
+          dropdownSearchDecoration: InputDecoration(
+            border: InputBorder.none,
+            filled: true,
+            fillColor: Colors.white,
+            labelText: "ถึง เลขที่เอกสาร",
+            hintStyle: TextStyle(fontSize: 12.0),
+          ),
+        ),
+        onChanged: (String? value) {
+          setState(() {
+            if (value == null || value.isEmpty) {
+              selected_e_doc_no = null;
+              _F_eDateController.text = 'null';
+            } else {
+              final selectedItem = e_doc_noItem.firstWhere(
+                (element) => '${element['doc_no']}' == value,
+                orElse: () => {'doc_no': '', 'doc_date': ''},
+              );
+
+              selected_e_doc_no = '${selectedItem['doc_no']}';
+
+              display_doc_date = '${selectedItem['doc_date']}';
+            }
+            print(selected_e_doc_no);
+          });
+        },
+        selectedItem: display_doc_date ?? '',
+      ),
     );
   }
 
@@ -877,25 +932,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
               SizedBox(
                 height: 8,
               ),
-              GestureDetector(
-                onTap: _showDialog3,
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: _selectedController3,
-                    decoration: InputDecoration(
-                      labelText: '3st',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(color: Colors.black),
-                      suffixIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              _showDialog3(),
               SizedBox(
                 height: 8,
               ),

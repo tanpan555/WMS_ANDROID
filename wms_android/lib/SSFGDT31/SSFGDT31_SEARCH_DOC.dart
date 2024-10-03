@@ -35,6 +35,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
+  bool isDateValid = true;
 
   @override
   void initState() {
@@ -51,6 +52,37 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
     _dateController.dispose();
     searchController.dispose();
     super.dispose();
+  }
+
+  void _validateDate(String value) {
+    if (value.isNotEmpty) {
+      final parts = value.split('/');
+      if (parts.length == 3) {
+        final day = int.tryParse(parts[0]);
+        final month = int.tryParse(parts[1]);
+        final year = int.tryParse(parts[2]);
+
+        if (day != null && month != null && year != null) {
+          final date = DateTime(year, month, day);
+          setState(() {
+            _selectedDate = date;
+            isDateValid = true; // Set date valid if parsing is successful
+          });
+        } else {
+          setState(() {
+            isDateValid = false; // Set date invalid if parsing fails
+          });
+        }
+      } else {
+        setState(() {
+          isDateValid = false; // Set date invalid if format is incorrect
+        });
+      }
+    } else {
+      setState(() {
+        isDateValid = true; // Allow empty input as valid
+      });
+    }
   }
 
   @override
@@ -149,6 +181,8 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                             _selectedDate = selectedDate;
                             _dateController.text =
                                 DateFormat('dd/MM/yyyy').format(selectedDate);
+                            isDateValid =
+                                true; // Reset validity when a date is picked
                           });
                         }
                       },
@@ -156,6 +190,9 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                   ),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
+                    // Validate the date format
+                    _validateDate(value);
+
                     // Handle input formatting
                     if (RegExp(r'^\d{8}$').hasMatch(value)) {
                       final day = int.parse(value.substring(0, 2));
@@ -163,6 +200,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                       final year = int.parse(value.substring(4, 8));
                       final date = DateTime(year, month, day);
                       setState(() {
+                        isDateValid = true; // Valid date
                         _dateController.text =
                             DateFormat('dd/MM/yyyy').format(date);
                         _selectedDate = date;
@@ -174,6 +212,19 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                     LengthLimitingTextInputFormatter(8), // Limit to 8 digits
                   ],
                 ),
+                isDateValid == false
+                    ? const Padding(
+                        padding: EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -185,6 +236,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                           _dateController.clear();
                           searchController.clear();
                           selectedValue = 'ทั้งหมด';
+                          isDateValid = true; // Reset the validity
                         });
                       },
                       child: Image.asset('assets/images/eraser_red.png',
@@ -226,7 +278,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(), // Ensure you have a BottomBar widget
     );
   }
 }

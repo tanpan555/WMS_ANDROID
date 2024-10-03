@@ -229,7 +229,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     }
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
@@ -317,14 +317,16 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                         style: TextStyle(color: Colors.black),
                       ),
                       content: buildLocationDropdown(
-                        locCode,
-                        selectedLocCode,
+                        context, // Pass the BuildContext here
+                        locCode, // List of location items
+                        selectedLocCode, // Current selected value
                         (value) {
                           setState(() {
-                            selectedLocCode = value?['location_code'];
+                            selectedLocCode = value?[
+                                'location_code']; // Update the selected location code
                           });
                         },
-                        'เลือก Location ต้นทาง',
+                        '', // Label for the dropdown
                       ),
                     ),
                     Step(
@@ -333,31 +335,36 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                         style: TextStyle(color: Colors.black),
                       ),
                       content: buildWarehouseOutDropdown(
-                        whOUTCode,
-                        selectedwhOUTCode,
+                        context, // Pass the BuildContext here
+                        whOUTCode, // List of warehouse items
+                        selectedwhOUTCode, // Currently selected warehouse code
                         (value) {
                           setState(() {
-                            selectedwhOUTCode = value?['ware_code'];
-                            fetchLocationOutCodes();
+                            selectedwhOUTCode = value?[
+                                'ware_code']; // Update selected warehouse code
+                            fetchLocationOutCodes(); // Fetch location codes after selection
                           });
                         },
-                        'เลือกคลังปลายทาง',
+                        '', // Provide a meaningful label for the dropdown
                       ),
                     ),
                     Step(
                       title: Text(
-                        'เลือก Location ปลายทาง',
+                        'เลือก Location ปลายทาง', // "Select Destination Location" in Thai
                         style: TextStyle(color: Colors.black),
                       ),
                       content: buildLocationOutDropdown(
-                        locOUTCode,
-                        selectedLocOUTCode,
+                        context, // Add the BuildContext parameter
+                        locOUTCode, // List of location items
+                        selectedLocOUTCode, // Currently selected value
                         (value) {
+                          // onChanged function
                           setState(() {
-                            selectedLocOUTCode = value?['location_code'];
+                            selectedLocOUTCode = value?[
+                                'location_code']; // Set selected location
                           });
                         },
-                        'เลือก Location ปลายทาง',
+                        '', // Label for dropdown
                       ),
                     ),
                   ],
@@ -395,157 +402,369 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   }
 
   Widget buildLocationDropdown(
+    BuildContext context,
     List<dynamic> items,
     String? selectedValue,
     Function(Map<String, dynamic>?) onChanged,
     String label,
   ) {
-    return DropdownSearch<Map<String, dynamic>>(
-      items: items.map((item) => item as Map<String, dynamic>).toList(),
-      selectedItem: items.isNotEmpty
-          ? items.firstWhere(
-              (item) => item['location_code'] == selectedValue,
-              orElse: () => items.first,
-            )
-          : null,
-      itemAsString: (item) => '${item['location_code']}' ?? '',
-      onChanged: onChanged,
-      dropdownBuilder: (context, item) {
-        if (item == null) {
-          return Text(label);
-        }
-        return ListTile(
-          title: Text(item['location_name'] ?? ''),
-        );
+    return GestureDetector(
+      onTap: () {
+        _showDialog1(context, items, selectedValue, onChanged, label);
       },
-      dropdownDecoratorProps: DropDownDecoratorProps(
-        dropdownSearchDecoration: InputDecoration(
+      child: InputDecorator(
+        decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(),
           labelStyle: TextStyle(color: Colors.black, fontSize: 16),
-          hintStyle: TextStyle(color: Colors.black),
         ),
-      ),
-      popupProps: PopupProps.dialog(
-        showSearchBox: true,
-        searchFieldProps: TextFieldProps(
-          decoration: InputDecoration(
-            hintText: "ค้นหาตำแหน่ง",
-            hintStyle: TextStyle(color: Colors.black),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-          ),
+        child: Text(
+          selectedValue ?? 'Select Location',
           style: TextStyle(color: Colors.black),
         ),
-        constraints: BoxConstraints(
-          maxHeight: 300,
-        ),
       ),
+    );
+  }
+
+  void _showDialog1(
+      BuildContext context,
+      List<dynamic> items,
+      String? selectedValue,
+      Function(Map<String, dynamic>?) onChanged,
+      String label) {
+    final TextEditingController _searchController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // Adjust the height as needed
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        setState(() {});
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          final item = items[index] as Map<String, dynamic>;
+                          final locationCode = item['location_code'];
+                          final locationName = item['location_name'];
+
+                          // Filter items based on the search query
+                          if (_searchController.text.isNotEmpty &&
+                              !locationCode.toLowerCase().contains(
+                                  _searchController.text.toLowerCase())) {
+                            return SizedBox
+                                .shrink(); // Filter out non-matching items
+                          }
+
+                          return ListTile(
+                            title: Text(
+                              locationCode,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            subtitle: Text(
+                              locationName,
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 12),
+                            ),
+                            onTap: () {
+                              onChanged(
+                                  item); // Call onChanged with the selected item
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void _showDialog2(
+    BuildContext context,
+    List<dynamic> items,
+    String? selectedValue,
+    Function(Map<String, dynamic>?) onChanged,
+    String label,
+  ) {
+    final TextEditingController _searchController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // Adjust the height as needed
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'ค้นหา', // Search hint text
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        setState(() {}); // Trigger UI update on search
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          final item = items[index] as Map<String, dynamic>;
+                          final wareCode = item['ware_code'];
+                          final wareName = item['ware_name'];
+
+                          // Filter items based on the search query
+                          if (_searchController.text.isNotEmpty &&
+                              !wareName.toLowerCase().contains(
+                                  _searchController.text.toLowerCase())) {
+                            return SizedBox
+                                .shrink(); // Filter out non-matching items
+                          }
+
+                          return ListTile(
+                            title: Text(
+                              wareName,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            onTap: () {
+                              onChanged(
+                                  item); // Call onChanged with the selected item
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
   Widget buildWarehouseOutDropdown(
+    BuildContext context,
     List<dynamic> items,
     String? selectedValue,
     Function(Map<String, dynamic>?) onChanged,
     String label,
   ) {
-    return DropdownSearch<Map<String, dynamic>>(
-      items: items.map((item) => item as Map<String, dynamic>).toList(),
-      selectedItem: items.isNotEmpty
-          ? items.firstWhere(
-              (item) => item['ware_code'] == selectedValue,
-              orElse: () => items.first,
-            )
-          : null,
-      itemAsString: (item) => '${item['ware_name']}' ?? '',
-      onChanged: onChanged,
-      dropdownBuilder: (context, item) {
-        if (item == null) {
-          return Text(label);
-        }
-        return ListTile(
-          subtitle: Text(item['ware_name'] ?? ''),
-        );
+    return GestureDetector(
+      onTap: () {
+        _showDialog2(context, items, selectedValue, onChanged, label);
       },
-      dropdownDecoratorProps: DropDownDecoratorProps(
-        dropdownSearchDecoration: InputDecoration(
+      child: InputDecorator(
+        decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(),
           labelStyle: TextStyle(color: Colors.black, fontSize: 16),
-          hintStyle: TextStyle(color: Colors.black),
         ),
-      ),
-      popupProps: PopupProps.dialog(
-        showSearchBox: true,
-        searchFieldProps: TextFieldProps(
-          decoration: InputDecoration(
-            hintText: "ค้นหาคลังออก",
-            hintStyle: TextStyle(color: Colors.black),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-          ),
+        child: Text(
+          selectedValue ?? 'Select Location',
           style: TextStyle(color: Colors.black),
-        ),
-        constraints: BoxConstraints(
-          maxHeight: 300,
         ),
       ),
     );
   }
 
-  Widget buildLocationOutDropdown(
+  void _showDialog3(
+    BuildContext context,
     List<dynamic> items,
     String? selectedValue,
     Function(Map<String, dynamic>?) onChanged,
     String label,
   ) {
-    return DropdownSearch<Map<String, dynamic>>(
-      items: items.map((item) => item as Map<String, dynamic>).toList(),
-      selectedItem: items.isNotEmpty
-          ? items.firstWhere(
-              (item) => item['location_code'] == selectedValue,
-              orElse: () => items.first,
-            )
-          : null,
-      itemAsString: (item) => item['location_code'] ?? '',
-      onChanged: onChanged,
-      dropdownBuilder: (context, item) {
-        if (item == null) {
-          return Text(label);
-        }
-        return ListTile(
-          title: Text(item['location_code'] ?? ''),
-          subtitle: Text(item['location_name'] ?? ''),
+    final TextEditingController _searchController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // Adjust the height as needed
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'ค้นหาตำแหน่งออก', // Search hint text
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        setState(() {}); // Trigger UI update on search
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          final item = items[index] as Map<String, dynamic>;
+                          final locationCode = item['location_code'];
+                          final locationName = item['location_name'];
+
+                          // Filter items based on the search query
+                          if (_searchController.text.isNotEmpty &&
+                              !locationCode.toLowerCase().contains(
+                                  _searchController.text.toLowerCase())) {
+                            return SizedBox
+                                .shrink(); // Filter out non-matching items
+                          }
+
+                          return ListTile(
+                            title: Text(
+                              locationCode,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            subtitle: Text(
+                              locationName ?? '',
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 12),
+                            ),
+                            onTap: () {
+                              onChanged(
+                                  item); // Call onChanged with the selected item
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         );
       },
-      dropdownDecoratorProps: DropDownDecoratorProps(
-        dropdownSearchDecoration: InputDecoration(
+    );
+  }
+
+  Widget buildLocationOutDropdown(
+    BuildContext context,
+    List<dynamic> items,
+    String? selectedValue,
+    Function(Map<String, dynamic>?) onChanged,
+    String label,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        _showDialog3(context, items, selectedValue, onChanged, label);
+      },
+      child: InputDecorator(
+        decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(),
-          labelStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-          ),
-          hintStyle: TextStyle(color: Colors.black),
+          labelStyle: TextStyle(color: Colors.black, fontSize: 16),
         ),
-      ),
-      popupProps: PopupProps.dialog(
-        showSearchBox: true,
-        searchFieldProps: TextFieldProps(
-          decoration: InputDecoration(
-            hintText: "ค้นหาตำแหน่งออก",
-            hintStyle: TextStyle(color: Colors.black),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-          ),
+        child: Text(
+          selectedValue ?? 'Select Location',
           style: TextStyle(color: Colors.black),
-        ),
-        constraints: BoxConstraints(
-          maxHeight: 300,
         ),
       ),
     );

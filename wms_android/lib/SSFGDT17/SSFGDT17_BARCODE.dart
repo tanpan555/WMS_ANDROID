@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wms_android/SSFGDT17/SSFGD17_VERIFY.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
@@ -31,7 +32,9 @@ class SSFGDT17_BARCODE extends StatefulWidget {
       this.selectedwhCode,
       this.selectedLocCode,
       this.whOUTCode,
-      this.LocOUTCode, this.pWareCode, this.pWareName});
+      this.LocOUTCode,
+      this.pWareCode,
+      this.pWareName});
 
   @override
   _SSFGDT17_BARCODEState createState() => _SSFGDT17_BARCODEState();
@@ -197,110 +200,115 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   }
 
   void _showLocatorDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('เปลี่ยน Locator'),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              DropdownSearch<Map<String, dynamic>>(
-                items: locCode.map((item) => item as Map<String, dynamic>).toList(),
-                selectedItem: locCode.isNotEmpty ? locCode.first : null,
-                itemAsString: (item) => item['r'] ?? '',
-                onChanged: (value) {
-                  setState(() {
-                    selectedLocCode = value?['r'];
-                  });
-                },
-                dropdownBuilder: (context, item) {
-                  if (item == null) {
-                    return Text('เลือก Location ต้นทาง');
-                  }
-                  return ListTile(
-                    title: Text(item['r'] ?? ''),
-                    subtitle: Text(item['location_name'] ?? ''),
-                  );
-                },
-                dropdownDecoratorProps: DropDownDecoratorProps(
-                  dropdownSearchDecoration: InputDecoration(
-                    labelText: "เลือก Location ต้นทาง",
-                    border: OutlineInputBorder(),
-                    labelStyle: TextStyle(color: Colors.black, fontSize: 16),
-                    hintStyle: TextStyle(color: Colors.black),
-                  ),
-                ),
-                popupProps: PopupProps.menu(
-                  showSearchBox: true,
-                  searchFieldProps: TextFieldProps(
-                    decoration: InputDecoration(
-                      hintText: "ค้นหาตำแหน่ง",
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('เปลี่ยน Locator'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                DropdownSearch<Map<String, dynamic>>(
+                  items: locCode
+                      .map((item) => item as Map<String, dynamic>)
+                      .toList(),
+                  selectedItem: locCode.isNotEmpty ? locCode.first : null,
+                  itemAsString: (item) => item['r'] ?? '',
+                  onChanged: (value) {
+                    setState(() {
+                      selectedLocCode = value?['r'];
+                    });
+                  },
+                  dropdownBuilder: (context, item) {
+                    if (item == null) {
+                      return Text('เลือก Location ต้นทาง');
+                    }
+                    return ListTile(
+                      title: Text(item['r'] ?? ''),
+                      subtitle: Text(item['location_name'] ?? ''),
+                    );
+                  },
+                  dropdownDecoratorProps: DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      labelText: "เลือก Location ต้นทาง",
+                      border: OutlineInputBorder(),
+                      labelStyle: TextStyle(color: Colors.black, fontSize: 16),
                       hintStyle: TextStyle(color: Colors.black),
                     ),
-                    style: TextStyle(color: Colors.black),
                   ),
-                  constraints: BoxConstraints(
-                    maxHeight: 250,
+                  popupProps: PopupProps.menu(
+                    showSearchBox: true,
+                    searchFieldProps: TextFieldProps(
+                      decoration: InputDecoration(
+                        hintText: "ค้นหาตำแหน่ง",
+                        hintStyle: TextStyle(color: Colors.black),
+                      ),
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    constraints: BoxConstraints(
+                      maxHeight: 250,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Cancel'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: Text('OK'),
-            onPressed: () {
-              // First, close the current dialog
-              Navigator.of(context).pop();
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                // First, close the current dialog
+                Navigator.of(context).pop();
 
-              // Then show the confirmation dialog
-              showDialog<void>(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('คำเตือน'),
-                    content: SingleChildScrollView(
-                      child: ListBody(
-                        children: <Widget>[
-                          Text('ต้องการเปลี่ยนแปลง Locator ต้นทาง หรือไม่ !!!'),
-                        ],
+                // Then show the confirmation dialog
+                showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('คำเตือน'),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[
+                            Text(
+                                'ต้องการเปลี่ยนแปลง Locator ต้นทาง หรือไม่ !!!'),
+                          ],
+                        ),
                       ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text('Cancel'),
-                        onPressed: () {
-                          Navigator.of(context).pop(); // Close the confirmation dialog
-                        },
-                      ),
-                      TextButton(
-                        child: Text('OK'),
-                        onPressed: () {
-                          setState(() {
-                            LOCATOR_FROM.text = selectedLocCode ?? '';
-                          });
-                          Navigator.of(context).pop(); // Close the confirmation dialog
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text('Cancel'),
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pop(); // Close the confirmation dialog
+                          },
+                        ),
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () {
+                            setState(() {
+                              LOCATOR_FROM.text = selectedLocCode ?? '';
+                            });
+                            Navigator.of(context)
+                                .pop(); // Close the confirmation dialog
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   String? poStatus;
   String? poMessage;
@@ -333,39 +341,40 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: const CustomAppBar(title: 'Move Locator',),
+      appBar: const CustomAppBar(
+        title: 'Move Locator',
+      ),
       body: Column(
         children: [
           const SizedBox(height: 8.0),
           Row(
             children: [
-                  const Spacer(),
-                  ElevatedButton(
-  style: AppStyles.NextButtonStyle(),
-  onPressed: () async {
-    await chk_validateSave();
-    if (poStatus == '0') {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => SSFGD17_VERIFY(
-            po_doc_no: widget.po_doc_no,
-            po_doc_type: widget.po_doc_type,
-            selectedwhCode: widget.selectedwhCode,
-            pWareCode: widget.pWareCode,
-            pWareName: widget.pWareName,
-          ),
-        ),
-      );
-    }
-  },
-  child: Image.asset(
-    'assets/images/right.png',
-    width: 20.0,
-    height: 20.0,
-  ),
-),
-                const SizedBox(width: 8.0),
-                
+              const Spacer(),
+              ElevatedButton(
+                style: AppStyles.NextButtonStyle(),
+                onPressed: () async {
+                  await chk_validateSave();
+                  if (poStatus == '0') {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => SSFGD17_VERIFY(
+                          po_doc_no: widget.po_doc_no,
+                          po_doc_type: widget.po_doc_type,
+                          selectedwhCode: widget.selectedwhCode,
+                          pWareCode: widget.pWareCode,
+                          pWareName: widget.pWareName,
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: Image.asset(
+                  'assets/images/right.png',
+                  width: 20.0,
+                  height: 20.0,
+                ),
+              ),
+              const SizedBox(width: 8.0),
             ],
           ),
           Expanded(
@@ -426,11 +435,12 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
                       _showLocatorDialog(context);
                     },
                   ),
-                  _buildTextField(LOT_NUMBER, 'Lot Number'),
-                  _buildTextField(QUANTITY, 'Quantity'),
+                  _buildTextFieldNumber(LOT_NUMBER, 'Lot Number'),
+                  _buildTextFieldNumber(QUANTITY, 'Quantity'),
                   _buildTextField(LOCATOR_TO, 'Locator ปลายทาง',
                       readOnly: true),
-                  _buildYellowTextField(BAL_LOT, 'รวมรายการโอน', readOnly: true),
+                  _buildYellowTextField(BAL_LOT, 'รวมรายการโอน',
+                      readOnly: true),
                   _buildYellowTextField(BAL_QTY, 'รวมจำนวนโอน', readOnly: true),
                 ],
               ),
@@ -442,10 +452,10 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
     );
   }
 
-    Widget _buildYellowTextField(TextEditingController controller, String label,
+  Widget _buildYellowTextField(TextEditingController controller, String label,
       {bool readOnly = false}) {
     return Padding(
-     padding: const EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
         controller: controller,
         style: TextStyle(color: Colors.black),
@@ -454,7 +464,9 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
           labelText: label,
           labelStyle: TextStyle(color: Colors.black),
           filled: true,
-          fillColor: readOnly ? const Color.fromARGB(255, 251,251,123) : Colors.white,
+          fillColor: readOnly
+              ? const Color.fromARGB(255, 251, 251, 123)
+              : Colors.white,
           border: InputBorder.none,
         ),
       ),
@@ -477,8 +489,36 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
           border: InputBorder.none,
         ),
         onChanged: (text) {
-    fetchBarcodeData();
-  },
+          fetchBarcodeData();
+        },
+      ),
+    );
+  }
+
+  Widget _buildTextFieldNumber(TextEditingController controller, String label,
+      {bool readOnly = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: TextField(
+        controller: controller,
+        style: const TextStyle(color: Colors.black),
+        readOnly: readOnly,
+        keyboardType: TextInputType.number, // Allow only number input
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter
+              .digitsOnly, // Filter out non-numeric characters
+        ],
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: Colors.black),
+          filled: true,
+          fillColor: readOnly ? Colors.grey[300] : Colors.white,
+          border: InputBorder.none,
+        ),
+        onChanged: (text) {
+          // You can implement any additional logic here
+          fetchBarcodeData();
+        },
       ),
     );
   }
