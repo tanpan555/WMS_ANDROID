@@ -35,19 +35,39 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
   String selectedDate = '';
   TextEditingController _dateController = TextEditingController();
   final TextEditingController _controller = TextEditingController();
+  final TextEditingController dataLovStatusController = TextEditingController();
   final String sDateFormat = "dd/MM/yyyy";
-  final List<String> dropdownItems = [
-    'ทั้งหมด',
-    'รอตรวจนับ',
-    'กำลังตรวจนับ',
-    'ยืนยันตรวจนับแล้ว',
-    'กำลังปรับปรุงจำนวน/มูลค่า',
-    'ยืนยันปรับปรุงจำนวน/มูลค่าแล้ว',
-  ]; // รายการใน dropdown
+  List<dynamic> dropdownItems = [
+    {
+      'd': 'ทั้งหมด',
+      'r': '1',
+    },
+    {
+      'd': 'รอตรวจนับ',
+      'r': 'N',
+    },
+    {
+      'd': 'กำลังตรวจนับ',
+      'r': 'T',
+    },
+    {
+      'd': 'ยืนยันตรวจนับแล้ว',
+      'r': 'X',
+    },
+    {
+      'd': 'กำลังปรับปรุงจำนวน/มูลค่า',
+      'r': 'A',
+    },
+    {
+      'd': 'ยืนยันปรับปรุงจำนวน/มูลค่าแล้ว',
+      'r': 'B',
+    },
+  ];
   bool chkDate = false;
 
   @override
   void initState() {
+    setData();
     super.initState();
     print(
         'pWareCode in search page : ${widget.pWareCode} Type : ${widget.pWareCode.runtimeType}');
@@ -73,6 +93,14 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
           selectedDate = _dateController.text;
         });
       }
+    }
+  }
+
+  void setData() {
+    if (mounted) {
+      setState(() {
+        dataLovStatusController.text = 'รอตรวจนับ';
+      });
     }
   }
 
@@ -173,14 +201,10 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                     ))
                 : const SizedBox.shrink(),
             const SizedBox(height: 8),
-            DropdownButtonFormField2<String>(
-              value: selectedItem,
-              items: dropdownItems
-                  .map((item) => DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(item),
-                      ))
-                  .toList(),
+            TextFormField(
+              controller: dataLovStatusController,
+              readOnly: true,
+              onTap: () => showDialogSelectDataStatus(),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 filled: true,
@@ -189,35 +213,13 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 labelStyle: const TextStyle(
                   color: Colors.black87,
                 ),
+                suffixIcon: Icon(
+                  Icons.arrow_drop_down,
+                  color: Color.fromARGB(255, 113, 113, 113),
+                ),
               ),
-              onChanged: (value) {
-                setState(() {
-                  selectedItem = value ?? '';
-                  switch (selectedItem) {
-                    case 'ทั้งหมด':
-                      status = '1';
-                      break;
-                    case 'รอตรวจนับ':
-                      status = 'N';
-                      break;
-                    case 'กำลังตรวจนับ':
-                      status = 'T';
-                      break;
-                    case 'ยืนยันตรวจนับแล้ว':
-                      status = 'X';
-                      break;
-                    case 'กำลังปรับปรุงจำนวน/มูลค่า':
-                      status = 'A';
-                      break;
-                    case 'ยืนยันปรับปรุงจำนวน/มูลค่าแล้ว':
-                      status = 'B';
-                      break;
-                    default:
-                      status = 'Unknown';
-                  }
-                });
-              },
             ),
+
             const SizedBox(height: 20),
             //////////////////////////////////////////////////////////////////////////////////////
             Row(
@@ -232,6 +234,7 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                       selectedDate = '';
                       selectedItem = 'รอตรวจนับ';
                       status = 'N';
+                      dataLovStatusController.text = 'รอตรวจนับ';
                     });
                   },
                   style: AppStyles.EraserButtonStyle(),
@@ -363,6 +366,128 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
         ),
       ),
       bottomNavigationBar: BottomBar(),
+    );
+  }
+
+  void showDialogSelectDataStatus() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey, // สีของเส้น
+                            width: 1.0, // ความหนาของเส้น
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'สถานะ',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics:
+                                const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
+                            itemCount: dropdownItems.length,
+                            itemBuilder: (context, index) {
+                              // ดึงข้อมูลรายการจาก dataCard
+                              var item = dropdownItems[index];
+
+                              // return GestureDetector(
+                              //   onTap: () {
+                              //     setState(() {
+                              //       dataLocator = item['location_code'];
+                              //     });
+                              //   },
+                              //   child: SizedBox(
+                              //     child: Text('${item['location_code']}'),
+                              //   ),
+                              // );
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
+                                      width: 2.0, // ความหนาของขอบ
+                                    ),
+                                    borderRadius: BorderRadius.circular(
+                                        10.0), // ทำให้ขอบมีความโค้ง
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                      vertical:
+                                          8.0), // เพิ่ม padding ด้านซ้าย-ขวา และ ด้านบน-ล่าง
+                                  child: Text(
+                                    item['d'],
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    selectedItem = item['d'];
+                                    status = item['r'];
+                                    dataLovStatusController.text = selectedItem;
+                                    // -----------------------------------------
+                                    print(
+                                        'dataLovStatusController New: $dataLovStatusController Type : ${dataLovStatusController.runtimeType}');
+                                    print(
+                                        'selectedItem New: $selectedItem Type : ${selectedItem.runtimeType}');
+                                    print(
+                                        'status New: $status Type : ${status.runtimeType}');
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+
+                    // ช่องค้นหา
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

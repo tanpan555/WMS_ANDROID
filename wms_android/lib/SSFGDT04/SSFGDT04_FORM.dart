@@ -492,7 +492,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                             item['cancel_desc'].toString();
                                                                         final searchQuery = _searchController
                                                                             .text
-                                                                            .trim();
+                                                                            .trim()
+                                                                            .toLowerCase();
                                                                         final searchQueryInt =
                                                                             int.tryParse(searchQuery);
                                                                         final codeInt =
@@ -502,7 +503,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                                 codeInt != null &&
                                                                                 codeInt == searchQueryInt) ||
                                                                             code.contains(searchQuery) ||
-                                                                            desc.contains(searchQuery);
+                                                                            desc.toLowerCase().contains(searchQuery);
                                                                       })
                                                                       .toList()
                                                                       .length,
@@ -520,7 +521,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                               .toString();
                                                                       final searchQuery = _searchController
                                                                           .text
-                                                                          .trim();
+                                                                          .trim()
+                                                                          .toLowerCase();
                                                                       final searchQueryInt =
                                                                           int.tryParse(
                                                                               searchQuery);
@@ -535,8 +537,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                                   searchQueryInt) ||
                                                                           code.contains(
                                                                               searchQuery) ||
-                                                                          desc.contains(
-                                                                              searchQuery);
+                                                                          desc
+                                                                              .toLowerCase()
+                                                                              .contains(searchQuery);
                                                                     }).toList();
 
                                                                     final item =
@@ -793,10 +796,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 ),
                               ).then((_) {
                                 // Clear the screen or reset values after returning
-                                _refNoController.clear();
-                                _moDoNoController.clear();
+                                // _refNoController.clear();
+                                // _moDoNoController.clear();
                                 // _noteController.clear();
-                                _erpDocNoController.clear();
+                                // _erpDocNoController.clear();
                                 setState(() {
                                   // selectedRefReceive = null;
                                   // selectedRefNo =
@@ -878,85 +881,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                           ),
 
                           //ประเภทการจ่าย*//
-                          // Padding(
-                          //   padding: const EdgeInsets.symmetric(vertical: 0),
-                          //   child: DropdownButtonFormField2<String>(
-                          //     isExpanded: true,
-                          //     decoration: InputDecoration(
-                          //       border: InputBorder.none,
-                          //       filled: true,
-                          //       fillColor: Colors.white,
-                          //       // labelText: 'ประเภทการรับ*',
-                          //       label: RichText(
-                          //         text: TextSpan(
-                          //           children: [
-                          //             TextSpan(
-                          //               text: 'ประเภทการรับ',
-                          //               style: TextStyle(
-                          //                   color: Colors.black,
-                          //                   fontSize:
-                          //                       16), // Color for the label
-                          //             ),
-                          //             TextSpan(
-                          //               text: ' *',
-                          //               style: TextStyle(
-                          //                   color: Colors.red,
-                          //                   fontSize: 16,
-                          //                   fontWeight: FontWeight
-                          //                       .bold), // Color for the asterisk
-                          //             ),
-                          //           ],
-                          //         ),
-                          //       ),
-                          //       labelStyle: TextStyle(
-                          //         fontSize: 16,
-                          //         color: Colors.black,
-                          //       ),
-                          //     ),
-                          //     items: docTypeItems
-                          //         .map((item) => DropdownMenuItem<String>(
-                          //               value: item['doc_desc'],
-                          //               child: Text(
-                          //                 item['doc_desc'] ?? 'doc_desc = null',
-                          //                 style: const TextStyle(
-                          //                   fontSize: 16,
-                          //                   color: Colors.black,
-                          //                 ),
-                          //               ),
-                          //             ))
-                          //         .toList(),
-                          //     onChanged: (String? value) {
-                          //       setState(() {
-                          //         selectedDocType = value;
-                          //       });
-                          //     },
-                          //     onSaved: (value) {
-                          //       selectedDocType = value;
-                          //     },
-                          //     value:
-                          //         selectedDocType, // Set the default selected value
-                          //     buttonStyleData: const ButtonStyleData(
-                          //       padding: EdgeInsets.only(right: 0),
-                          //     ),
-                          //     iconStyleData: const IconStyleData(
-                          //       icon: Icon(
-                          //         Icons.arrow_drop_down,
-                          //         color: Color.fromARGB(255, 113, 113, 113),
-                          //       ),
-                          //       iconSize: 24,
-                          //     ),
-                          //     dropdownStyleData: DropdownStyleData(
-                          //       decoration: BoxDecoration(
-                          //         borderRadius: BorderRadius.circular(10),
-                          //         color: Colors.white,
-                          //       ),
-                          //       maxHeight: 150,
-                          //     ),
-                          //     menuItemStyleData: const MenuItemStyleData(
-                          //       padding: EdgeInsets.symmetric(horizontal: 16),
-                          //     ),
-                          //   ),
-                          // ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 0),
                             child: GestureDetector(
@@ -1026,7 +950,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                           final searchQuery =
                                                               _searchController
                                                                   .text
-                                                                  .trim();
+                                                                  .trim()
+                                                                  .toLowerCase();
 
                                                           // ตรวจสอบว่า searchQuery เป็นจำนวนเต็มหรือไม่
                                                           final searchQueryInt =
@@ -1045,8 +970,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                       null &&
                                                                   docInt ==
                                                                       searchQueryInt) ||
-                                                              docString.contains(
-                                                                  searchQuery);
+                                                              docString
+                                                                  .toLowerCase()
+                                                                  .contains(
+                                                                      searchQuery);
                                                         })
                                                         .toList()
                                                         .length,
@@ -1061,7 +988,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                         final searchQuery =
                                                             _searchController
                                                                 .text
-                                                                .trim();
+                                                                .trim()
+                                                                .toLowerCase();
 
                                                         final searchQueryInt =
                                                             int.tryParse(
@@ -1076,8 +1004,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                     null &&
                                                                 docInt ==
                                                                     searchQueryInt) ||
-                                                            docString.contains(
-                                                                searchQuery);
+                                                            docString
+                                                                .toLowerCase()
+                                                                .contains(
+                                                                    searchQuery);
                                                       }).toList();
 
                                                       final item =
@@ -1295,7 +1225,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                           final searchQuery =
                                                               _searchController
                                                                   .text
-                                                                  .trim();
+                                                                  .trim()
+                                                                  .toLowerCase();
 
                                                           // ตรวจสอบว่า searchQuery เป็นจำนวนเต็มหรือไม่
                                                           final searchQueryInt =
@@ -1314,8 +1245,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                       null &&
                                                                   docInt ==
                                                                       searchQueryInt) ||
-                                                              docString.contains(
-                                                                  searchQuery);
+                                                              docString
+                                                                  .toLowerCase()
+                                                                  .contains(
+                                                                      searchQuery);
                                                         })
                                                         .toList()
                                                         .length,
@@ -1330,7 +1263,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                         final searchQuery =
                                                             _searchController
                                                                 .text
-                                                                .trim();
+                                                                .trim()
+                                                                .toLowerCase();
 
                                                         final searchQueryInt =
                                                             int.tryParse(
@@ -1345,8 +1279,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                     null &&
                                                                 docInt ==
                                                                     searchQueryInt) ||
-                                                            docString.contains(
-                                                                searchQuery);
+                                                            docString
+                                                                .toLowerCase()
+                                                                .contains(
+                                                                    searchQuery);
                                                       }).toList();
 
                                                       final item =
@@ -1478,206 +1414,228 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                 ),
                                                 const SizedBox(height: 10),
                                                 Expanded(
-                                                  child: ListView.builder(
-                                                    itemCount: refNoItems
-                                                        .where((item) {
-                                                          // แปลง schid เป็น int ก่อนการเปรียบเทียบ
-                                                          final soNoString =
-                                                              item['so_no']
-                                                                  .toString();
-                                                          final soDateDisp =
-                                                              item['so_date_disp']
-                                                                  .toString();
-                                                          final soDate =
-                                                              item['so_date']
-                                                                  .toString();
-                                                          final soRemark =
-                                                              item['so_remark']
-                                                                  .toString();
-                                                          final arName =
-                                                              item['ar_name']
-                                                                  .toString();
-                                                          final arCode =
-                                                              item['ar_code']
-                                                                  .toString();
-                                                          final searchQuery =
-                                                              _searchController
-                                                                  .text
-                                                                  .trim();
-
-                                                          // ตรวจสอบว่า searchQuery เป็นจำนวนเต็มหรือไม่
-                                                          final searchQueryInt =
-                                                              int.tryParse(
-                                                                  searchQuery);
-
-                                                          // แปลง schid เป็น int ถ้าค่ามันเป็นจำนวนเต็ม
-                                                          final soNoInt =
-                                                              int.tryParse(
-                                                                  soNoString);
-
-                                                          // เปรียบเทียบกับ searchQuery
-                                                          return (searchQueryInt !=
-                                                                      null &&
-                                                                  soNoInt !=
-                                                                      null &&
-                                                                  soNoInt ==
-                                                                      searchQueryInt) ||
-                                                              soNoString.contains(
-                                                                  searchQuery) ||
-                                                              soDateDisp.contains(
-                                                                  searchQuery) ||
-                                                              soDate.contains(
-                                                                  searchQuery) ||
-                                                              soRemark.contains(
-                                                                  searchQuery) ||
-                                                              arName.contains(
-                                                                  searchQuery) ||
-                                                              arCode.contains(
-                                                                  searchQuery);
-                                                        })
-                                                        .toList()
-                                                        .length,
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      final filteredItems =
-                                                          refReceiveItems
+                                                  child: refNoItems.isEmpty
+                                                      ? Center(
+                                                          child: Text(
+                                                              'No data found')) // แสดงข้อความเมื่อไม่มีข้อมูล
+                                                      : ListView.builder(
+                                                          itemCount: refNoItems
                                                               .where((item) {
-                                                        final soNoString =
-                                                            item['so_no']
-                                                                .toString();
-                                                        final soDateDisp =
-                                                            item['so_date_disp']
-                                                                .toString();
-                                                        final soDate =
-                                                            item['so_date']
-                                                                .toString();
-                                                        final soRemark =
-                                                            item['so_remark']
-                                                                .toString();
-                                                        final arName =
-                                                            item['ar_name']
-                                                                .toString();
-                                                        final arCode =
-                                                            item['ar_code']
-                                                                .toString();
-                                                        final searchQuery =
-                                                            _searchController
-                                                                .text
-                                                                .trim();
+                                                                final soNoString =
+                                                                    item['so_no']
+                                                                        .toString();
+                                                                final soDateDisp =
+                                                                    item['so_date_disp']
+                                                                        .toString();
+                                                                final soDate = item[
+                                                                        'so_date']
+                                                                    .toString();
+                                                                final soRemark =
+                                                                    item['so_remark']
+                                                                        .toString();
+                                                                final arName = item[
+                                                                        'ar_name']
+                                                                    .toString();
+                                                                final arCode = item[
+                                                                        'ar_code']
+                                                                    .toString();
+                                                                final searchQuery =
+                                                                    _searchController
+                                                                        .text
+                                                                        .trim()
+                                                                        .toLowerCase();
 
-                                                        final searchQueryInt =
-                                                            int.tryParse(
-                                                                searchQuery);
-                                                        final soNoInt =
-                                                            int.tryParse(
-                                                                soNoString);
+                                                                final searchQueryInt =
+                                                                    int.tryParse(
+                                                                        searchQuery);
+                                                                final soNoInt =
+                                                                    int.tryParse(
+                                                                        soNoString);
 
-                                                        return (searchQueryInt !=
-                                                                    null &&
-                                                                soNoInt !=
-                                                                    null &&
-                                                                soNoInt ==
-                                                                    searchQueryInt) ||
-                                                            soNoString.contains(
-                                                                searchQuery) ||
-                                                            soDateDisp.contains(
-                                                                searchQuery) ||
-                                                            soDate.contains(
-                                                                searchQuery) ||
-                                                            soRemark.contains(
-                                                                searchQuery) ||
-                                                            arName.contains(
-                                                                searchQuery) ||
-                                                            arCode.contains(
-                                                                searchQuery);
-                                                      }).toList();
+                                                                return (searchQueryInt != null &&
+                                                                        soNoInt !=
+                                                                            null &&
+                                                                        soNoInt ==
+                                                                            searchQueryInt) ||
+                                                                    soNoString
+                                                                        .toLowerCase()
+                                                                        .contains(
+                                                                            searchQuery) ||
+                                                                    soDateDisp
+                                                                        .toLowerCase()
+                                                                        .contains(
+                                                                            searchQuery) ||
+                                                                    soDate
+                                                                        .toLowerCase()
+                                                                        .contains(
+                                                                            searchQuery) ||
+                                                                    soRemark
+                                                                        .toLowerCase()
+                                                                        .contains(
+                                                                            searchQuery) ||
+                                                                    arName
+                                                                        .toLowerCase()
+                                                                        .contains(
+                                                                            searchQuery) ||
+                                                                    arCode
+                                                                        .toLowerCase()
+                                                                        .contains(
+                                                                            searchQuery);
+                                                              })
+                                                              .toList()
+                                                              .length,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            final filteredItems =
+                                                                refNoItems
+                                                                    .where(
+                                                                        (item) {
+                                                              final soNoString =
+                                                                  item['so_no']
+                                                                      .toString();
+                                                              final soDateDisp =
+                                                                  item['so_date_disp']
+                                                                      .toString();
+                                                              final soDate = item[
+                                                                      'so_date']
+                                                                  .toString();
+                                                              final soRemark =
+                                                                  item['so_remark']
+                                                                      .toString();
+                                                              final arName = item[
+                                                                      'ar_name']
+                                                                  .toString();
+                                                              final arCode = item[
+                                                                      'ar_code']
+                                                                  .toString();
+                                                              final searchQuery =
+                                                                  _searchController
+                                                                      .text
+                                                                      .trim()
+                                                                      .toLowerCase();
 
-                                                      final item =
-                                                          filteredItems[index];
-                                                      final soNo = item['so_no']
-                                                          .toString();
-                                                      final soDateDisp =
-                                                          item['so_date_disp']
-                                                              .toString();
-                                                      final soDate =
-                                                          item['so_date']
-                                                              .toString();
-                                                      final soRemark =
-                                                          item['so_remark']
-                                                              .toString();
-                                                      final arName =
-                                                          item['ar_name']
-                                                              .toString();
-                                                      final arCode =
-                                                          item['ar_code']
-                                                              .toString();
-                                                      // final displayValue =
-                                                      //     '$schid  $fgCode  $custName';
+                                                              final searchQueryInt =
+                                                                  int.tryParse(
+                                                                      searchQuery);
+                                                              final soNoInt =
+                                                                  int.tryParse(
+                                                                      soNoString);
 
-                                                      return ListTile(
-                                                        contentPadding:
-                                                            EdgeInsets.zero,
-                                                        title: RichText(
-                                                          text: TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                text: '$soNo\n',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 14,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black,
+                                                              return (searchQueryInt != null &&
+                                                                      soNoInt !=
+                                                                          null &&
+                                                                      soNoInt ==
+                                                                          searchQueryInt) ||
+                                                                  soNoString
+                                                                      .toLowerCase()
+                                                                      .contains(
+                                                                          searchQuery) ||
+                                                                  soDateDisp
+                                                                      .toLowerCase()
+                                                                      .contains(
+                                                                          searchQuery) ||
+                                                                  soDate
+                                                                      .toLowerCase()
+                                                                      .contains(
+                                                                          searchQuery) ||
+                                                                  soRemark
+                                                                      .toLowerCase()
+                                                                      .contains(
+                                                                          searchQuery) ||
+                                                                  arName
+                                                                      .toLowerCase()
+                                                                      .contains(
+                                                                          searchQuery) ||
+                                                                  arCode
+                                                                      .toLowerCase()
+                                                                      .contains(
+                                                                          searchQuery);
+                                                            }).toList();
+
+                                                            final item =
+                                                                filteredItems[
+                                                                    index];
+                                                            final soNo =
+                                                                item['so_no']
+                                                                    .toString();
+                                                            final soDateDisp =
+                                                                item['so_date_disp']
+                                                                    .toString();
+                                                            final soDate =
+                                                                item['so_date']
+                                                                    .toString();
+                                                            final soRemark =
+                                                                item['so_remark']
+                                                                    .toString();
+                                                            final arName =
+                                                                item['ar_name']
+                                                                    .toString();
+                                                            final arCode =
+                                                                item['ar_code']
+                                                                    .toString();
+
+                                                            return ListTile(
+                                                              contentPadding:
+                                                                  EdgeInsets
+                                                                      .zero,
+                                                              title: RichText(
+                                                                text: TextSpan(
+                                                                  children: [
+                                                                    TextSpan(
+                                                                      text:
+                                                                          '$soNo\n',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                    TextSpan(
+                                                                      text:
+                                                                          '$soDateDisp$soDate',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                    TextSpan(
+                                                                      text:
+                                                                          '$soRemark$arName$arCode',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                               ),
-                                                              TextSpan(
-                                                                text:
-                                                                    '$soDateDisp'
-                                                                    '$soDate',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 14,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal,
-                                                                  color: Colors
-                                                                      .black,
-                                                                ),
-                                                              ),
-                                                              TextSpan(
-                                                                text:
-                                                                    '$soRemark'
-                                                                    '$arName'
-                                                                    '$arCode',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 14,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal,
-                                                                  color: Colors
-                                                                      .black,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
+                                                              onTap: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                                setState(() {
+                                                                  selectedRefNo =
+                                                                      soNo;
+                                                                  fetchRefNoItems();
+                                                                });
+                                                              },
+                                                            );
+                                                          },
                                                         ),
-                                                        onTap: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                          setState(() {
-                                                            selectedRefNo =
-                                                                soNo;
-                                                            // _custController.text =
-                                                            //     '$empName';
-                                                            fetchRefNoItems();
-                                                          });
-                                                        },
-                                                      );
-                                                    },
-                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -1795,7 +1753,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                           final searchQuery =
                                                               _searchController
                                                                   .text
-                                                                  .trim();
+                                                                  .trim()
+                                                                  .toLowerCase(); // Convert to lowercase
                                                           final searchQueryInt =
                                                               int.tryParse(
                                                                   searchQuery);
@@ -1803,6 +1762,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                               int.tryParse(
                                                                   empIdString);
 
+                                                          // Use toLowerCase() for comparison to ignore case sensitivity
                                                           return (searchQueryInt !=
                                                                       null &&
                                                                   empIdInt !=
@@ -1811,8 +1771,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                       searchQueryInt) ||
                                                               empIdString.contains(
                                                                   searchQuery) ||
-                                                              empName.contains(
-                                                                  searchQuery);
+                                                              empName
+                                                                  .toLowerCase()
+                                                                  .contains(
+                                                                      searchQuery); // Convert empName to lowercase
                                                         })
                                                         .toList()
                                                         .length,
@@ -1830,7 +1792,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                         final searchQuery =
                                                             _searchController
                                                                 .text
-                                                                .trim();
+                                                                .trim()
+                                                                .toLowerCase(); // Convert to lowercase
                                                         final searchQueryInt =
                                                             int.tryParse(
                                                                 searchQuery);
@@ -1846,8 +1809,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                     searchQueryInt) ||
                                                             empIdString.contains(
                                                                 searchQuery) ||
-                                                            empName.contains(
-                                                                searchQuery);
+                                                            empName
+                                                                .toLowerCase()
+                                                                .contains(
+                                                                    searchQuery); // Convert empName to lowercase
                                                       }).toList();
 
                                                       final item =
