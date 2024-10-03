@@ -14,6 +14,7 @@ import 'SSFGDT12/SSFGDT12_main.dart';
 import 'SSFGDT09L/SSFGDT09L_main.dart';
 import 'SSFGRP09/SSFGRP09_main.dart';
 import 'SSFGDT04/SSFGDT04_main.dart';
+import 'SSFGPC04/SSFGPC04_MAIN.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_WARE.dart';
 import 'SSFGDT31/SSFGDT31_MAIN.dart';
 import 'Global_Parameter.dart' as gb;
@@ -122,6 +123,8 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
       //       p_attr1: widget.p_attr1, pErpOuCode: widget.p_ou_code);
       case 'SSFGRP08_MAIN ':
         return SSFGRP08_MAIN();
+      case 'SSFGPC04_MAIN Raw Material':
+        return SSFGPC04_MAIN();
 
       default:
         return null;
