@@ -1356,10 +1356,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -1482,10 +1482,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -1599,10 +1599,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
@@ -1711,10 +1711,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ NO DATA FOUND หากไม่มีข้อมูลที่ค้นหา
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
-                              child: Text('NO DATA FOUND'),
+                              child: Text('No data found'),
                             );
                           }
 
