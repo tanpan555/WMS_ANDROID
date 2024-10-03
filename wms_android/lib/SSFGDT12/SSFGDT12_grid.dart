@@ -448,87 +448,234 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        'รหัสสินค้า : ${item['item_code']}',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18.0),
-                                      ),
-                                      SizedBox(
-                                        child: Text(
-                                          'ชื่อสินค้า : ${item['get_item_name']}',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14.0),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        child: Text(
-                                          'จำนวนคงเหลือในระบบ : ${NumberFormat('#,###,###,###,###,###.##').format(item['sys_qty'])}',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14.0,
+                                      Container(
+                                        decoration: const BoxDecoration(
+                                          border: Border(
+                                            bottom: BorderSide(
+                                              color: Colors.grey, // สีของเส้น
+                                              width: 1.0, // ความหนาของเส้น
+                                            ),
                                           ),
                                         ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'รหัสสินค้า : ${item['item_code']}',
+                                              style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            // IconButton(
+                                            //   icon: const Icon(Icons.close),
+                                            //   onPressed: () {
+                                            //     Navigator.of(context).pop();
+                                            //   },
+                                            // ),
+                                          ],
+                                        ),
                                       ),
+                                      const SizedBox(height: 8),
+                                      // Text(
+                                      //   'รหัสสินค้า : ${item['item_code']}',
+                                      //   style: const TextStyle(
+                                      //       fontWeight: FontWeight.bold,
+                                      //       fontSize: 18.0),
+                                      // ),
                                       SizedBox(
-                                        child: Text(
-                                          'ผลต่างการตรวจนับ : ${NumberFormat('#,###,###,###,###,###.###').format(item['diff_qty'])}',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14.0,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              'ชื่อสินค้า : ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14.0),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.all(3.0),
+                                              color: Colors.white,
+                                              child: Text(
+                                                item['get_item_name'],
+                                                style: const TextStyle(
+                                                    fontSize: 14.0),
+                                              ),
+                                            ),
+                                            // Text(
+                                            //   item['get_item_name'],
+                                            //   style: TextStyle(fontSize: 14.0),
+                                            // ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      SizedBox(
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              'จำนวนคงเหลือในระบบ : ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14.0),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.all(5.0),
+                                              color: Colors.white,
+                                              child: Text(
+                                                NumberFormat(
+                                                        '#,###,###,###,###,###.##')
+                                                    .format(item['sys_qty']),
+                                                style: const TextStyle(
+                                                    fontSize: 14.0),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      SizedBox(
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              'ผลต่างการตรวจนับ : ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14.0),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.all(5.0),
+                                              color: Colors.white,
+                                              child: Text(
+                                                NumberFormat(
+                                                        '#,###,###,###,###,###.##')
+                                                    .format(item['diff_qty']),
+                                                style: const TextStyle(
+                                                    fontSize: 14.0),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  'คลังสินค้า : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14.0),
+                                                ),
+                                                Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  color: Colors.white,
+                                                  child: Text(
+                                                    item['ware_code'],
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
+                                          SizedBox(
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  'ตำแหน่งจัดเก็บ : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14.0),
+                                                ),
+                                                Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  color: Colors.white,
+                                                  child: Text(
+                                                    item['location_code'],
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      SizedBox(
-                                        child: Text(
-                                          'คลังสินค้า : ${item['ware_code']}',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14.0),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        child: Text(
-                                          'ตำแหน่งจัดเก็บ : ${item['location_code']}',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14.0),
-                                        ),
-                                      ),
+                                      // const SizedBox(height: 4),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                            iconSize: 10.0,
+                                            icon: Image.asset(
+                                              'assets/images/edit.png',
+                                              width: 20.0,
+                                              height: 20.0,
+                                            ),
+                                            onPressed: () {
+                                              showDetailsDialog(
+                                                context,
+                                                item['sys_qty'].toDouble(),
+                                                item['diff_qty'].toDouble(),
+                                                // double.parse(item['diff_qty']),
+                                                item['rowid'],
+                                                item['count_qty'] ?? 0,
+                                                item['remark'] ?? '',
+                                                widget.docNo,
+                                                widget.pErpOuCode,
+                                                item['seq'],
+                                                item['item_code'],
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      )
                                     ],
                                   ),
                                 ),
-                                Positioned(
-                                  bottom: 8.0,
-                                  right: 8.0,
-                                  child: GestureDetector(
-                                    onTap: () {},
-                                    child: IconButton(
-                                      iconSize: 20.0,
-                                      icon: Image.asset(
-                                        'assets/images/edit.png',
-                                        width: 20.0,
-                                        height: 20.0,
-                                      ),
-                                      onPressed: () {
-                                        showDetailsDialog(
-                                          context,
-                                          item['sys_qty'].toDouble(),
-                                          item['diff_qty'].toDouble(),
-                                          // double.parse(item['diff_qty']),
-                                          item['rowid'],
-                                          item['count_qty'] ?? 0,
-                                          item['remark'] ?? '',
-                                          widget.docNo,
-                                          widget.pErpOuCode,
-                                          item['seq'],
-                                          item['item_code'],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
+                                // Positioned(
+                                //   bottom: 0.4,
+                                //   right: 8.0,
+                                //   child: GestureDetector(
+                                //     onTap: () {},
+                                //     child: IconButton(
+                                //       iconSize: 20.0,
+                                //       icon: Image.asset(
+                                //         'assets/images/edit.png',
+                                //         width: 20.0,
+                                //         height: 20.0,
+                                //       ),
+                                //       onPressed: () {
+                                //         showDetailsDialog(
+                                //           context,
+                                //           item['sys_qty'].toDouble(),
+                                //           item['diff_qty'].toDouble(),
+                                //           // double.parse(item['diff_qty']),
+                                //           item['rowid'],
+                                //           item['count_qty'] ?? 0,
+                                //           item['remark'] ?? '',
+                                //           widget.docNo,
+                                //           widget.pErpOuCode,
+                                //           item['seq'],
+                                //           item['item_code'],
+                                //         );
+                                //       },
+                                //     ),
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),
@@ -779,57 +926,58 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     ),
                   ),
                   const SizedBox(height: 8.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text(
+                          'ย้อนกลับ',
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          int updatedCountQty = int.tryParse(countQtyController
+                                  .text
+                                  .replaceAll(',', '')) ??
+                              count_qty;
+                          String updatedRemark =
+                              remarkController.text.isNotEmpty
+                                  ? remarkController.text
+                                  : remark;
+
+                          Navigator.of(context).pop();
+                          await updateDataGridDetail(
+                            updatedCountQty,
+                            updatedRemark,
+                            ou_code,
+                            doc_no,
+                            seq,
+                          );
+                          await fetchData();
+                          setState(() {});
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text(
+                          'บันทึก',
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
           ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.grey),
-                  ),
-                  child: const Text(
-                    'ย้อนกลับ',
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    int updatedCountQty = int.tryParse(
-                            countQtyController.text.replaceAll(',', '')) ??
-                        count_qty;
-                    String updatedRemark = remarkController.text.isNotEmpty
-                        ? remarkController.text
-                        : remark;
-
-                    Navigator.of(context).pop();
-                    await updateDataGridDetail(
-                      updatedCountQty,
-                      updatedRemark,
-                      ou_code,
-                      doc_no,
-                      seq,
-                    );
-                    await fetchData();
-                    setState(() {});
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.grey),
-                  ),
-                  child: const Text(
-                    'บันทึก',
-                  ),
-                ),
-              ],
-            ),
-          ],
+          actions: [],
         );
       },
     );

@@ -144,6 +144,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
           setState(() {
             dataLocatorList =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+            dataGridStatusBarcodeController.text = 'สภาพปกติ/ของดี';
           });
         }
         print('dataLocatorList : $dataLocatorList');
@@ -297,6 +298,10 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   labelStyle: const TextStyle(
                     color: Colors.black87,
                   ),
+                  suffixIcon: Icon(
+                    Icons.arrow_drop_down,
+                    color: Color.fromARGB(255, 113, 113, 113),
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
@@ -448,6 +453,10 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   labelStyle: const TextStyle(
                     color: Colors.black87,
                   ),
+                  suffixIcon: Icon(
+                    Icons.arrow_drop_down,
+                    color: Color.fromARGB(255, 113, 113, 113),
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
@@ -495,6 +504,8 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   ElevatedButton(
                     onPressed: () {
                       // Navigator.of(context).pop();
+                      fetchDataLocator();
+                      fetchDataGradeStatus();
                       setState(() {
                         dataLocator = '';
                         barcodeTextString = '';
@@ -505,6 +516,8 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                         locatorCodeBarcode = '';
                         dataGridStatus = 'สภาพปกติ/ของดี';
                         statusGridBarcode = '01';
+                        dataGridStatusBarcodeController.text = 'สภาพปกติ/ของดี';
+                        dataLocatorListBarcodeController.clear();
                         dataLocatorList.clear();
                         barcodeTextController.clear();
                         wareCodeBarcodeController.clear();
@@ -710,7 +723,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            'Locator ตรวจนับ',
+                            'สภาพ',
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
