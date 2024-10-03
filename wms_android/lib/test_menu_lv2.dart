@@ -113,10 +113,12 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
       case 'SSFGDT31_MAIN Raw Material':
         return SSFGDT31_MAIN();
       //---------------------------------- ตรวจนับประจำงวด----------------------------\\
-      case 'SSFGRP09_MAIN ':
+      case 'SSFGRP09_MAIN Raw Material':
         return SSFGRP09_MAIN();
-
-      case 'SSFGRP08_MAIN ':
+      // case 'SSFGDT12_MAIN Raw Material':
+      //   return SSFGDT12_MAIN(
+      //       p_attr1: widget.p_attr1, pErpOuCode: widget.p_ou_code);
+      case 'SSFGRP08_MAIN Raw Material':
         return SSFGRP08_MAIN();
 
       default:

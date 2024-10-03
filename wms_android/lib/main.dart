@@ -50,8 +50,6 @@ class SessionManager {
   }
 }
 
-
-
 class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> dataMenu = [];
   late String sessionID;
@@ -81,30 +79,31 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> fetchData() async {
-  String sessionID = SessionManager().sessionID;
-  print('sessionID in Main : $sessionID Type : ${sessionID.runtimeType}');
-  try {
-    final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/c/menu_level_1/${globals.APP_SESSION}'));
+    String sessionID = SessionManager().sessionID;
+    print('sessionID in Main : $sessionID Type : ${sessionID.runtimeType}');
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/c/menu_level_1/${globals.APP_SESSION}'));
 
-    if (response.statusCode == 200) {
-      final responseBody = utf8.decode(response.bodyBytes);
-      final responseData = jsonDecode(responseBody);
-      print('Fetched data: $responseData');
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        print('Fetched data: $responseData');
 
-      setState(() {
-        dataMenu =
-            List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-      });
-      print('dataMenu : $dataMenu');
-    } else {
-      throw Exception('Failed to load fetchData');
+        setState(() {
+          dataMenu =
+              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+        });
+        print('dataMenu : $dataMenu');
+      } else {
+        throw Exception('Failed to load fetchData');
+      }
+    } catch (e) {
+      setState(() {});
+      print('ERROR IN Fetch Data : $e');
     }
-  } catch (e) {
-    setState(() {});
-    print('ERROR IN Fetch Data : $e');
   }
-}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,7 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       case 'ตรวจนับประจำงวด':
                         imagePath = 'assets/images/open-box2.png';
                         cardColor = Colors.orange[200];
-                        p_attr1 = '';
+                        p_attr1 = globals.Raw_Material;
                         p_ou_code = globals.P_ERP_OU_CODE;
                         break;
                       // Add more cases as needed
