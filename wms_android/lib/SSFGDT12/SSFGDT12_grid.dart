@@ -425,245 +425,248 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
               child: isLoading
                   ? Center(child: CircularProgressIndicator())
                   : ListView(
-                      // children: dataCard.map((item) {
-                      //   return Card(
-                      //     elevation: 8.0,
-                      //     margin: EdgeInsets.symmetric(vertical: 8.0),
-                      //     shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(
-                      //           15.0), // กำหนดมุมโค้งของ Card
-                      //     ),
-                      //     color: Color.fromRGBO(204, 235, 252, 1.0),
-                      //     child: InkWell(
-                      //       onTap: () {},
-                      //       borderRadius: BorderRadius.circular(
-                      //           15.0), // กำหนดมุมโค้งให้ InkWell เช่นกัน
-                      //       child: Stack(
-                      //         children: [
-                      //           Padding(
-                      //             padding: const EdgeInsets.all(
-                      //                 16.0), // เพิ่ม padding เพื่อให้ content ไม่ชิดขอบ
-                      //             child: Column(
-                      //               crossAxisAlignment:
-                      //                   CrossAxisAlignment.start,
-                      //               children: [
-                      //                 Text(
-                      //                   'รหัสสินค้า : ${item['item_code']}',
-                      //                   style: const TextStyle(
-                      //                       fontWeight: FontWeight.bold,
-                      //                       fontSize: 18.0),
-                      //                 ),
-                      //                 SizedBox(
-                      //                   child: Text(
-                      //                     'ชื่อสินค้า : ${item['get_item_name']}',
-                      //                     style: TextStyle(
-                      //                         fontWeight: FontWeight.bold,
-                      //                         fontSize: 14.0),
-                      //                   ),
-                      //                 ),
-                      //                 SizedBox(
-                      //                   child: Text(
-                      //                     'จำนวนคงเหลือในระบบ : ${NumberFormat('#,###,###,###,###,###.##').format(item['sys_qty'])}',
-                      //                     style: TextStyle(
-                      //                       fontWeight: FontWeight.bold,
-                      //                       fontSize: 14.0,
-                      //                     ),
-                      //                   ),
-                      //                 ),
-                      //                 SizedBox(
-                      //                   child: Text(
-                      //                     'ผลต่างการตรวจนับ : ${NumberFormat('#,###,###,###,###,###.###').format(item['diff_qty'])}',
-                      //                     style: TextStyle(
-                      //                       fontWeight: FontWeight.bold,
-                      //                       fontSize: 14.0,
-                      //                     ),
-                      //                   ),
-                      //                 ),
-                      //                 SizedBox(
-                      //                   child: Text(
-                      //                     'คลังสินค้า : ${item['ware_code']}',
-                      //                     style: TextStyle(
-                      //                         fontWeight: FontWeight.bold,
-                      //                         fontSize: 14.0),
-                      //                   ),
-                      //                 ),
-                      //                 SizedBox(
-                      //                   child: Text(
-                      //                     'ตำแหน่งจัดเก็บ : ${item['location_code']}',
-                      //                     style: TextStyle(
-                      //                         fontWeight: FontWeight.bold,
-                      //                         fontSize: 14.0),
-                      //                   ),
-                      //                 ),
-                      //               ],
-                      //             ),
-                      //           ),
-                      //           Positioned(
-                      //             bottom: 8.0,
-                      //             right: 8.0,
-                      //             child: GestureDetector(
-                      //               onTap: () {},
-                      //               child: IconButton(
-                      //                 iconSize: 20.0,
-                      //                 icon: Image.asset(
-                      //                   'assets/images/edit.png',
-                      //                   width: 20.0,
-                      //                   height: 20.0,
-                      //                 ),
-                      //                 onPressed: () {
-                      //                   showDetailsDialog(
-                      //                     context,
-                      //                     item['sys_qty'].toDouble(),
-                      //                     item['diff_qty'].toDouble(),
-                      //                     // double.parse(item['diff_qty']),
-                      //                     item['rowid'],
-                      //                     item['count_qty'] ?? 0,
-                      //                     item['remark'] ?? '',
-                      //                     widget.docNo,
-                      //                     widget.pErpOuCode,
-                      //                     item['seq'],
-                      //                     item['item_code'],
-                      //                   );
-                      //                 },
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         ],
-                      //       ),
-                      //     ),
-                      //   );
-                      // }).toList(),
-                      children: [
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics:
-                              const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
-                          itemCount: dataCard.length,
-                          itemBuilder: (context, index) {
-                            // ดึงข้อมูลรายการจาก dataCard
-                            var item = dataCard[index];
-                            return Card(
-                              elevation: 8.0,
-                              margin: EdgeInsets.symmetric(vertical: 8.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    15.0), // กำหนดมุมโค้งของ Card
-                              ),
-                              color: Color.fromRGBO(204, 235, 252, 1.0),
-                              child: InkWell(
-                                onTap: () {},
-                                borderRadius: BorderRadius.circular(
-                                    15.0), // กำหนดมุมโค้งให้ InkWell เช่นกัน
-                                child: Stack(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(
-                                          16.0), // เพิ่ม padding เพื่อให้ content ไม่ชิดขอบ
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'รหัสสินค้า : ${item['item_code']}',
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18.0),
-                                          ),
-                                          SizedBox(
-                                            child: Text(
-                                              'ชื่อสินค้า : ${item['get_item_name']}',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14.0),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            child: Text(
-                                              'จำนวนคงเหลือในระบบ : ${NumberFormat('#,###,###,###,###,###.##').format(item['sys_qty'])}',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14.0,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            child: Text(
-                                              'ผลต่างการตรวจนับ : ${NumberFormat('#,###,###,###,###,###.###').format(item['diff_qty'])}',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14.0,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            child: Text(
-                                              'คลังสินค้า : ${item['ware_code']}',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14.0),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            child: Text(
-                                              'ตำแหน่งจัดเก็บ : ${item['location_code']}',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14.0),
-                                            ),
-                                          ),
-                                        ],
+                      //
+                      children: dataCard.map((item) {
+                        return Card(
+                          elevation: 8.0,
+                          margin: EdgeInsets.symmetric(vertical: 8.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                15.0), // กำหนดมุมโค้งของ Card
+                          ),
+                          color: Color.fromRGBO(204, 235, 252, 1.0),
+                          child: InkWell(
+                            onTap: () {},
+                            borderRadius: BorderRadius.circular(
+                                15.0), // กำหนดมุมโค้งให้ InkWell เช่นกัน
+                            child: Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(
+                                      16.0), // เพิ่ม padding เพื่อให้ content ไม่ชิดขอบ
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'รหัสสินค้า : ${item['item_code']}',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0),
                                       ),
-                                    ),
-                                    Positioned(
-                                      bottom: 8.0,
-                                      right: 8.0,
-                                      child: GestureDetector(
-                                        onTap: () {},
-                                        child: IconButton(
-                                          iconSize: 20.0,
-                                          icon: Image.asset(
-                                            'assets/images/edit.png',
-                                            width: 20.0,
-                                            height: 20.0,
-                                          ),
-                                          onPressed: () {
-                                            showDetailsDialog(
-                                              context,
-                                              item['sys_qty'].toDouble(),
-                                              item['diff_qty'].toDouble(),
-                                              // double.parse(item['diff_qty']),
-                                              item['rowid'],
-                                              item['count_qty'] ?? 0,
-                                              item['remark'] ?? '',
-                                              widget.docNo,
-                                              widget.pErpOuCode,
-                                              item['seq'],
-                                              item['item_code'],
-                                            );
-                                          },
+                                      SizedBox(
+                                        child: Text(
+                                          'ชื่อสินค้า : ${item['get_item_name']}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14.0),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                      SizedBox(
+                                        child: Text(
+                                          'จำนวนคงเหลือในระบบ : ${NumberFormat('#,###,###,###,###,###.##').format(item['sys_qty'])}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14.0,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        child: Text(
+                                          'ผลต่างการตรวจนับ : ${NumberFormat('#,###,###,###,###,###.###').format(item['diff_qty'])}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14.0,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        child: Text(
+                                          'คลังสินค้า : ${item['ware_code']}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14.0),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        child: Text(
+                                          'ตำแหน่งจัดเก็บ : ${item['location_code']}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14.0),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ElevatedButton(
-                              onPressed: prevLink != null ? loadPrevPage : null,
-                              child: const Text('Previous'),
+                                Positioned(
+                                  bottom: 8.0,
+                                  right: 8.0,
+                                  child: GestureDetector(
+                                    onTap: () {},
+                                    child: IconButton(
+                                      iconSize: 20.0,
+                                      icon: Image.asset(
+                                        'assets/images/edit.png',
+                                        width: 20.0,
+                                        height: 20.0,
+                                      ),
+                                      onPressed: () {
+                                        showDetailsDialog(
+                                          context,
+                                          item['sys_qty'].toDouble(),
+                                          item['diff_qty'].toDouble(),
+                                          // double.parse(item['diff_qty']),
+                                          item['rowid'],
+                                          item['count_qty'] ?? 0,
+                                          item['remark'] ?? '',
+                                          widget.docNo,
+                                          widget.pErpOuCode,
+                                          item['seq'],
+                                          item['item_code'],
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            ElevatedButton(
-                              onPressed: nextLink != null ? loadNextPage : null,
-                              child: const Text('Next'),
-                            ),
-                          ],
-                        ),
-                      ],
+                          ),
+                        );
+                      }).toList(),
+
+                      ///////////////////////////////////////////////////
+                      // children: [
+                      //   ListView.builder(
+                      //     shrinkWrap: true,
+                      //     physics:
+                      //         const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
+                      //     itemCount: dataCard.length,
+                      //     itemBuilder: (context, index) {
+                      //       // ดึงข้อมูลรายการจาก dataCard
+                      //       var item = dataCard[index];
+                      //       return Card(
+                      //         elevation: 8.0,
+                      //         margin: EdgeInsets.symmetric(vertical: 8.0),
+                      //         shape: RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.circular(
+                      //               15.0), // กำหนดมุมโค้งของ Card
+                      //         ),
+                      //         color: Color.fromRGBO(204, 235, 252, 1.0),
+                      //         child: InkWell(
+                      //           onTap: () {},
+                      //           borderRadius: BorderRadius.circular(
+                      //               15.0), // กำหนดมุมโค้งให้ InkWell เช่นกัน
+                      //           child: Stack(
+                      //             children: [
+                      //               Padding(
+                      //                 padding: const EdgeInsets.all(
+                      //                     16.0), // เพิ่ม padding เพื่อให้ content ไม่ชิดขอบ
+                      //                 child: Column(
+                      //                   crossAxisAlignment:
+                      //                       CrossAxisAlignment.start,
+                      //                   children: [
+                      //                     Text(
+                      //                       'รหัสสินค้า : ${item['item_code']}',
+                      //                       style: const TextStyle(
+                      //                           fontWeight: FontWeight.bold,
+                      //                           fontSize: 18.0),
+                      //                     ),
+                      //                     SizedBox(
+                      //                       child: Text(
+                      //                         'ชื่อสินค้า : ${item['get_item_name']}',
+                      //                         style: TextStyle(
+                      //                             fontWeight: FontWeight.bold,
+                      //                             fontSize: 14.0),
+                      //                       ),
+                      //                     ),
+                      //                     SizedBox(
+                      //                       child: Text(
+                      //                         'จำนวนคงเหลือในระบบ : ${NumberFormat('#,###,###,###,###,###.##').format(item['sys_qty'])}',
+                      //                         style: TextStyle(
+                      //                           fontWeight: FontWeight.bold,
+                      //                           fontSize: 14.0,
+                      //                         ),
+                      //                       ),
+                      //                     ),
+                      //                     SizedBox(
+                      //                       child: Text(
+                      //                         'ผลต่างการตรวจนับ : ${NumberFormat('#,###,###,###,###,###.###').format(item['diff_qty'])}',
+                      //                         style: TextStyle(
+                      //                           fontWeight: FontWeight.bold,
+                      //                           fontSize: 14.0,
+                      //                         ),
+                      //                       ),
+                      //                     ),
+                      //                     SizedBox(
+                      //                       child: Text(
+                      //                         'คลังสินค้า : ${item['ware_code']}',
+                      //                         style: TextStyle(
+                      //                             fontWeight: FontWeight.bold,
+                      //                             fontSize: 14.0),
+                      //                       ),
+                      //                     ),
+                      //                     SizedBox(
+                      //                       child: Text(
+                      //                         'ตำแหน่งจัดเก็บ : ${item['location_code']}',
+                      //                         style: TextStyle(
+                      //                             fontWeight: FontWeight.bold,
+                      //                             fontSize: 14.0),
+                      //                       ),
+                      //                     ),
+                      //                   ],
+                      //                 ),
+                      //               ),
+                      //               Positioned(
+                      //                 bottom: 8.0,
+                      //                 right: 8.0,
+                      //                 child: GestureDetector(
+                      //                   onTap: () {},
+                      //                   child: IconButton(
+                      //                     iconSize: 20.0,
+                      //                     icon: Image.asset(
+                      //                       'assets/images/edit.png',
+                      //                       width: 20.0,
+                      //                       height: 20.0,
+                      //                     ),
+                      //                     onPressed: () {
+                      //                       showDetailsDialog(
+                      //                         context,
+                      //                         item['sys_qty'].toDouble(),
+                      //                         item['diff_qty'].toDouble(),
+                      //                         // double.parse(item['diff_qty']),
+                      //                         item['rowid'],
+                      //                         item['count_qty'] ?? 0,
+                      //                         item['remark'] ?? '',
+                      //                         widget.docNo,
+                      //                         widget.pErpOuCode,
+                      //                         item['seq'],
+                      //                         item['item_code'],
+                      //                       );
+                      //                     },
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       );
+                      //     },
+                      //   ),
+                      //   Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //     children: [
+                      //       ElevatedButton(
+                      //         onPressed: prevLink != null ? loadPrevPage : null,
+                      //         child: const Text('Previous'),
+                      //       ),
+                      //       ElevatedButton(
+                      //         onPressed: nextLink != null ? loadNextPage : null,
+                      //         child: const Text('Next'),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ],
                     ),
             ),
           ],
