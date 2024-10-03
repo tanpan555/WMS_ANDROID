@@ -867,34 +867,86 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                   ),
                 ),
               ),
-              Column(
-                children: <Widget>[
-                  ListTile(
-                    title: Text('แสดงข้อมูลทั้งหมด'),
-                    leading: Radio<String>(
-                      value: '1',
-                      groupValue: selectedRadio, // ค่าที่เลือก
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedRadio = value.toString();
-                        });
-                      },
+              const SizedBox(height: 8),
+
+              Container(
+                color: Colors.white, // กำหนดสีพื้นหลังของ Container
+                child: Column(
+                  children: <Widget>[
+                    ListTile(
+                      title: const Text(
+                        'แสดงข้อมูลทั้งหมด',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      leading: Radio<String>(
+                        value: '1',
+                        groupValue: selectedRadio, // ค่าที่เลือก
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedRadio = value.toString();
+                            print('selectedRadio : $selectedRadio');
+                          });
+                        },
+                      ),
                     ),
-                  ),
-                  ListTile(
-                    title: Text('แสดงข้อมูลเฉพาะข้อมูลที่มีผลต่าง'),
-                    leading: Radio<String>(
-                      value: '0',
-                      groupValue: selectedRadio, // ค่าที่เลือก
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedRadio = value.toString();
-                        });
-                      },
+                    ListTile(
+                      title: const Text(
+                        'แสดงข้อมูลเฉพาะข้อมูลที่มีผลต่าง',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      leading: Radio<String>(
+                        value: '0',
+                        groupValue: selectedRadio, // ค่าที่เลือก
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedRadio = value.toString();
+                            print('selectedRadio : $selectedRadio');
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (returnLovDate.isEmpty && returnLovDocNo.isEmpty) {
+                        String message =
+                            'กรุณาระบุ วันที่เตรียมการตรวจนับ และ เลขที่ตรวจนับ';
+                        showDialogAlert(context, message);
+                      } else if (returnLovDate.isEmpty) {
+                        String message = 'กรุณาระบุ วันที่เตรียมการตรวจนับ';
+                        showDialogAlert(context, message);
+                      } else if (returnLovDocNo.isEmpty) {
+                        String message = 'กรุณาระบุ เลขที่ตรวจนับ';
+                        showDialogAlert(context, message);
+                      } else {
+                        // PDF
+                      }
+                    },
+                    style: AppStyles.ConfirmbuttonStyle(),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.print,
+                          color: Colors.black,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Print',
+                          style: AppStyles.ConfirmbuttonTextStyle(),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
+              const SizedBox(width: 8),
             ],
           ),
         ),
@@ -2625,6 +2677,60 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 ),
               );
             },
+          ),
+        );
+      },
+    );
+  }
+
+  void showDialogAlert(
+    BuildContext context,
+    String messageAlert,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Row(
+            children: [
+              Icon(
+                Icons.notification_important,
+                color: Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'แจ้งเตือน',
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    messageAlert,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text('ย้อนกลับ'),
+                      ),
+                    ],
+                  )
+                ])),
           ),
         );
       },

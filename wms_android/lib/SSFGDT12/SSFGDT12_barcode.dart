@@ -68,6 +68,10 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
       TextEditingController();
   final TextEditingController locatorCodeBarcodeController =
       TextEditingController();
+  final TextEditingController dataGridStatusBarcodeController =
+      TextEditingController();
+  final TextEditingController dataLocatorListBarcodeController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -78,6 +82,8 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
     lotNumberBarcodeController.dispose();
     countQuantityBarcodeController.dispose();
     locatorCodeBarcodeController.dispose();
+    dataGridStatusBarcodeController.dispose();
+    dataLocatorListBarcodeController.dispose();
     super.dispose();
   }
 
@@ -279,30 +285,46 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
               ),
               const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
-              DropdownButtonFormField2<String>(
-                value: dataLocator.isNotEmpty ? dataLocator : null,
-                items: dataLocatorList
-                    .map((item) => DropdownMenuItem<String>(
-                          value: item['location_code'],
-                          child: Text(item['location_code']),
-                        ))
-                    .toList(),
+              TextFormField(
+                controller: dataLocatorListBarcodeController,
+                readOnly: true,
+                onTap: () => showDialogSelectDataLocator(),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   filled: true,
                   fillColor: Colors.white,
-                  labelText: 'Locator ตรวจนับ',
+                  labelText: 'Locator ตรวจนับ TEST ',
                   labelStyle: const TextStyle(
                     color: Colors.black87,
                   ),
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    dataLocator = value ?? '';
-                  });
-                },
               ),
               const SizedBox(height: 8),
+              // DropdownButtonFormField2<String>(
+              //   value: dataLocator.isNotEmpty ? dataLocator : null,
+              //   items: dataLocatorList
+              //       .map((item) => DropdownMenuItem<String>(
+              //             value: item['location_code'],
+              //             child: Text(item['location_code']),
+              //           ))
+              //       .toList(),
+              //   decoration: InputDecoration(
+              //     border: InputBorder.none,
+              //     filled: true,
+              //     fillColor: Colors.white,
+              //     labelText: 'Locator ตรวจนับ',
+              //     labelStyle: const TextStyle(
+              //       color: Colors.black87,
+              //     ),
+              //   ),
+              //   onChanged: (value) {
+              //     setState(() {
+              //       dataLocator = value ?? '';
+              //     });
+              //   },
+              // ),
+              // const SizedBox(height: 8),
+
               //////////////////////////////////////////////////////////////////////////////
               Row(
                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -414,14 +436,10 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
               ),
               const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
-              DropdownButtonFormField2<String>(
-                value: dataGridStatus.isNotEmpty ? dataGridStatus : null,
-                items: dataGradeStatuslist
-                    .map((item) => DropdownMenuItem<String>(
-                          value: item['d'],
-                          child: Text(item['d']),
-                        ))
-                    .toList(),
+              TextFormField(
+                controller: dataGridStatusBarcodeController,
+                readOnly: true,
+                onTap: () => showDialogSelectStatus(),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   filled: true,
@@ -431,25 +449,45 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                     color: Colors.black87,
                   ),
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    dataGridStatus = value ?? '';
-                    switch (dataGridStatus) {
-                      case 'สภาพปกติ/ของดี':
-                        statusGridBarcode = '01';
-                        break;
-                      case 'สภาพรอคัด/แยกซ่อม':
-                        statusGridBarcode = '02';
-                        break;
-                      case 'ชำรุด/เสียหาย':
-                        statusGridBarcode = '03';
-                        break;
-                      default:
-                        statusGridBarcode = 'Unknown';
-                    }
-                  });
-                },
               ),
+              const SizedBox(height: 8),
+
+              // DropdownButtonFormField2<String>(
+              //   value: dataGridStatus.isNotEmpty ? dataGridStatus : null,
+              //   items: dataGradeStatuslist
+              //       .map((item) => DropdownMenuItem<String>(
+              //             value: item['d'],
+              //             child: Text(item['d']),
+              //           ))
+              //       .toList(),
+              //   decoration: InputDecoration(
+              //     border: InputBorder.none,
+              //     filled: true,
+              //     fillColor: Colors.white,
+              //     labelText: 'สภาพ',
+              //     labelStyle: const TextStyle(
+              //       color: Colors.black87,
+              //     ),
+              //   ),
+              //   onChanged: (value) {
+              //     setState(() {
+              //       dataGridStatus = value ?? '';
+              //       switch (dataGridStatus) {
+              //         case 'สภาพปกติ/ของดี':
+              //           statusGridBarcode = '01';
+              //           break;
+              //         case 'สภาพรอคัด/แยกซ่อม':
+              //           statusGridBarcode = '02';
+              //           break;
+              //         case 'ชำรุด/เสียหาย':
+              //           statusGridBarcode = '03';
+              //           break;
+              //         default:
+              //           statusGridBarcode = 'Unknown';
+              //       }
+              //     });
+              //   },
+              // ),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -522,4 +560,368 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
       bottomNavigationBar: BottomBar(),
     );
   }
+
+  void showDialogSelectDataLocator() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey, // สีของเส้น
+                            width: 1.0, // ความหนาของเส้น
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Locator ตรวจนับ',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics:
+                                const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
+                            itemCount: dataLocatorList.length,
+                            itemBuilder: (context, index) {
+                              // ดึงข้อมูลรายการจาก dataCard
+                              var item = dataLocatorList[index];
+
+                              // return GestureDetector(
+                              //   onTap: () {
+                              //     setState(() {
+                              //       dataLocator = item['location_code'];
+                              //     });
+                              //   },
+                              //   child: SizedBox(
+                              //     child: Text('${item['location_code']}'),
+                              //   ),
+                              // );
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
+                                      width: 2.0, // ความหนาของขอบ
+                                    ),
+                                    borderRadius: BorderRadius.circular(
+                                        10.0), // ทำให้ขอบมีความโค้ง
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                      vertical:
+                                          8.0), // เพิ่ม padding ด้านซ้าย-ขวา และ ด้านบน-ล่าง
+                                  child: Text(
+                                    item['location_code'],
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    dataLocator = item['location_code'];
+                                    dataLocatorListBarcodeController.text =
+                                        dataLocator;
+                                    // -----------------------------------------
+                                    print(
+                                        'dataLocatorListBarcodeController New: $dataLocatorListBarcodeController Type : ${dataLocatorListBarcodeController.runtimeType}');
+                                    print(
+                                        'dataLocator New: $dataLocator Type : ${dataLocator.runtimeType}');
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+
+                    // ช่องค้นหา
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void showDialogSelectStatus() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey, // สีของเส้น
+                            width: 1.0, // ความหนาของเส้น
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Locator ตรวจนับ',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics:
+                                const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
+                            itemCount: dataGradeStatuslist.length,
+                            itemBuilder: (context, index) {
+                              // ดึงข้อมูลรายการจาก dataCard
+                              var item = dataGradeStatuslist[index];
+
+                              // return GestureDetector(
+                              //   onTap: () {
+                              //     setState(() {
+                              //       dataLocator = item['location_code'];
+                              //     });
+                              //   },
+                              //   child: SizedBox(
+                              //     child: Text('${item['location_code']}'),
+                              //   ),
+                              // );
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
+                                      width: 2.0, // ความหนาของขอบ
+                                    ),
+                                    borderRadius: BorderRadius.circular(
+                                        10.0), // ทำให้ขอบมีความโค้ง
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                      vertical:
+                                          8.0), // เพิ่ม padding ด้านซ้าย-ขวา และ ด้านบน-ล่าง
+                                  child: Text(
+                                    item['d'],
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    dataGridStatus = item['d'];
+                                    statusGridBarcode = item['r'];
+                                    dataGridStatusBarcodeController.text =
+                                        dataGridStatus;
+                                    Navigator.of(context).pop();
+                                    print('dataGridStatus : $dataGridStatus');
+                                    print(
+                                        'statusGridBarcode : $statusGridBarcode');
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+
+                    // ช่องค้นหา
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  // void showDialogSelectStatus() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Dialog(
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(10),
+  //         ),
+  //         child: StatefulBuilder(
+  //           builder: (context, setState) {
+  //             return Container(
+  //               padding: const EdgeInsets.all(16),
+  //               height: 300, // ปรับความสูงของ Popup ตามต้องการ
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Row(
+  //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                     children: [
+  //                       const Text(
+  //                         'สภาพ',
+  //                         style: TextStyle(
+  //                             fontSize: 18, fontWeight: FontWeight.bold),
+  //                       ),
+  //                       IconButton(
+  //                         icon: const Icon(Icons.close),
+  //                         onPressed: () {
+  //                           Navigator.of(context).pop();
+  //                         },
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   const SizedBox(height: 10),
+  //                   Expanded(
+  //                     child: ListView(
+  //                       children: [
+  //                         ListView.builder(
+  //                           shrinkWrap: true,
+  //                           physics:
+  //                               const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
+  //                           itemCount: dataGradeStatuslist.length,
+  //                           itemBuilder: (context, index) {
+  //                             // ดึงข้อมูลรายการจาก dataCard
+  //                             var item = dataGradeStatuslist[index];
+  //                             Color cardColor;
+  //                             String statusText;
+  //                             String iconImageYorN;
+  //                             print(item['d']);
+  //                             switch (item['d']) {
+  //                               case 'สภาพปกติ/ของดี':
+  //                                 cardColor =
+  //                                     Color.fromRGBO(246, 250, 112, 1.0);
+  //                                 statusText = '01';
+  //                                 break;
+  //                               case 'สภาพรอคัด/แยกซ่อม':
+  //                                 cardColor = Color.fromRGBO(146, 208, 80, 1.0);
+  //                                 statusText = '02';
+  //                                 break;
+  //                               case 'ชำรุด/เสียหาย':
+  //                                 cardColor =
+  //                                     Color.fromRGBO(208, 206, 206, 1.0);
+  //                                 statusText = '03';
+  //                                 break;
+  //                               default:
+  //                                 cardColor =
+  //                                     Color.fromRGBO(255, 255, 255, 1.0);
+  //                                 statusText = 'Unknown';
+  //                             }
+
+  //                             switch (item['qc_yn']) {
+  //                               case 'Y':
+  //                                 iconImageYorN =
+  //                                     'assets/images/rt_machine_on.png';
+  //                                 break;
+  //                               case 'N':
+  //                                 iconImageYorN =
+  //                                     'assets/images/rt_machine_off.png';
+  //                                 break;
+  //                               default:
+  //                                 iconImageYorN =
+  //                                     'assets/images/rt_machine_off.png';
+  //                             }
+  //                             return InkWell(
+  //                               onTap: () {
+  //                                 setState(() {
+  //                                   dataGridStatus = item['d'];
+  //                                   statusGridBarcode = statusText;
+  //                                   dataGridStatusBarcodeController.text =
+  //                                       dataGridStatus;
+  //                                   Navigator.of(context).pop();
+  //                                   print('dataGridStatus : $dataGridStatus');
+  //                                   print(
+  //                                       'statusGridBarcode : $statusGridBarcode');
+  //                                 });
+  //                               },
+  //                               child: Card(
+  //                                 elevation: 8.0,
+  //                                 margin: EdgeInsets.symmetric(vertical: 8.0),
+  //                                 shape: RoundedRectangleBorder(
+  //                                   borderRadius: BorderRadius.circular(15.0),
+  //                                 ),
+  //                                 color: Color.fromRGBO(204, 235, 252, 1.0),
+  //                                 child: Padding(
+  //                                   padding: const EdgeInsets.all(16.0),
+  //                                   child: Text('${item['d']}'),
+  //                                 ),
+  //                               ),
+  //                             );
+  //                           },
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   )
+
+  //                   // ช่องค้นหา
+  //                 ],
+  //               ),
+  //             );
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }
