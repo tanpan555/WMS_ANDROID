@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wms_android/SSFGDT17/SSFGD17T_WARE.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_MAIN.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_MENU.dart';
+import 'package:wms_android/SSFGRP08/SSFGRP08.dart';
 import 'custom_appbar.dart';
 // import 'custom_drawer.dart';
 import 'package:http/http.dart' as http;
@@ -49,6 +50,8 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
     print('P_MAIN_MENU : $P_MAIN_MENU');
     print('=======================================');
     print(gb.ATTR1);
+    print(
+        'http://172.16.0.82:8888/apex/wms/c/menu_level_2/${widget.sessionID}/${widget.menu_id}');
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -112,6 +115,9 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
       //---------------------------------- ตรวจนับประจำงวด----------------------------\\
       case 'SSFGRP09_MAIN ':
         return SSFGRP09_MAIN();
+
+      case 'SSFGRP08_MAIN ':
+        return SSFGRP08_MAIN();
 
       default:
         return null;
