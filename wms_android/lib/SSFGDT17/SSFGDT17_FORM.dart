@@ -968,18 +968,31 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
             onChanged: (value) {
               if (value.length == 8) {
                 try {
-                  // Parse the date assuming the format is ddMMyyyy
-                  DateTime parsedDate = DateTime.parse(
-                    "${value.substring(4, 8)}-${value.substring(2, 4)}-${value.substring(0, 2)}",
-                  );
-                  // Update the controller with formatted date
-                  controller.text = displayFormat.format(parsedDate);
-                  controller.selection = TextSelection.fromPosition(
-                    TextPosition(offset: controller.text.length),
-                  );
-                  setState(() {
-                    isDateValid = true; // Date is valid
-                  });
+                  // Extract day, month, and year from the input
+                  final day = int.tryParse(value.substring(0, 2));
+                  final month = int.tryParse(value.substring(2, 4));
+                  final year = int.tryParse(value.substring(4, 8));
+
+                  // Check if the day, month, and year are valid
+                  if (day != null && month != null && year != null) {
+                    final date = DateTime(year, month, day);
+                    if (date.year == year &&
+                        date.month == month &&
+                        date.day == day) {
+                      setState(() {
+                        isDateValid = true; // Valid date
+                        controller.text = DateFormat('dd/MM/yyyy')
+                            .format(date); // Update the controller
+                        controller.selection = TextSelection.fromPosition(
+                          TextPosition(offset: controller.text.length),
+                        );
+                      });
+                    } else {
+                      throw Exception('Invalid date');
+                    }
+                  } else {
+                    throw Exception('Invalid date components');
+                  }
                 } catch (e) {
                   print('Error parsing date: $e');
                   setState(() {

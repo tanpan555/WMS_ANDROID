@@ -157,7 +157,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                 const SizedBox(height: 16),
                 TextField(
                   controller: _dateController,
-                  readOnly: false, // Make the TextField read-only
+                  readOnly: false, // Make the TextField editable
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     labelText: 'วันที่รับคืน',
@@ -195,15 +195,35 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
 
                     // Handle input formatting
                     if (RegExp(r'^\d{8}$').hasMatch(value)) {
-                      final day = int.parse(value.substring(0, 2));
-                      final month = int.parse(value.substring(2, 4));
-                      final year = int.parse(value.substring(4, 8));
-                      final date = DateTime(year, month, day);
+                      final day = int.tryParse(value.substring(0, 2));
+                      final month = int.tryParse(value.substring(2, 4));
+                      final year = int.tryParse(value.substring(4, 8));
+
+                      if (day != null && month != null && year != null) {
+                        final date = DateTime(year, month, day);
+                        // Check if the constructed date matches the provided day, month, and year
+                        if (date.year == year &&
+                            date.month == month &&
+                            date.day == day) {
+                          setState(() {
+                            isDateValid = true; // Valid date
+                            _selectedDate = date; // Update selected date
+                            _dateController.text = DateFormat('dd/MM/yyyy')
+                                .format(date); // Update the controller
+                          });
+                        } else {
+                          setState(() {
+                            isDateValid = false; // Invalid date
+                          });
+                        }
+                      } else {
+                        setState(() {
+                          isDateValid = false; // Invalid date components
+                        });
+                      }
+                    } else {
                       setState(() {
-                        isDateValid = true; // Valid date
-                        _dateController.text =
-                            DateFormat('dd/MM/yyyy').format(date);
-                        _selectedDate = date;
+                        isDateValid = false; // Invalid length
                       });
                     }
                   },

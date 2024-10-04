@@ -968,16 +968,35 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             ),
             readOnly: false,
             onChanged: (value) {
-              // Format the input as the user types
               final formattedDate = formatDate(value);
 
-              // Check if the length is valid (8 characters) and if it matches the expected format
-              setState(() {
-                isDateValid = value.length == 8 &&
-                    RegExp(r'^\d{2}/\d{2}/\d{4}$').hasMatch(formattedDate);
+              RegExp dateRegExp = RegExp(r'^(\d{2})/(\d{2})/(\d{4})$');
 
+              bool isValidDate = false;
+
+              if (dateRegExp.hasMatch(formattedDate)) {
+                final match = dateRegExp.firstMatch(formattedDate);
+                final day = int.parse(match?.group(1) ?? '0');
+                final month = int.parse(match?.group(2) ?? '0');
+                final year = int.parse(match?.group(3) ?? '0');
+                if (month >= 1 && month <= 12) {
+                  final maxDaysInMonth = DateTime(year, month + 1, 0).day;
+                  if (day >= 1 && day <= maxDaysInMonth) {
+                    try {
+                      final date = DateTime(year, month, day);
+                      isValidDate = date.day == day &&
+                          date.month == month &&
+                          date.year == year;
+                    } catch (e) {
+                      isValidDate = false;
+                    }
+                  }
+                }
+              }
+
+              setState(() {
+                isDateValid = isValidDate;
                 if (formattedDate != value) {
-                  // Update the text field if the formatted date is different
                   receiveDateController.value = TextEditingValue(
                     text: formattedDate,
                     selection: TextSelection.fromPosition(
@@ -993,8 +1012,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               LengthLimitingTextInputFormatter(8), // Limit to 8 digits
             ],
           ),
-          isDateValid ==
-                  false // Change this check to false for incorrect format
+          isDateValid == false
               ? const Padding(
                   padding: EdgeInsets.only(top: 4.0),
                   child: Text(
