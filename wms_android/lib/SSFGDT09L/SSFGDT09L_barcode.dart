@@ -597,16 +597,22 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             ),
             const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
-            TextFormField(
-              controller: itemCodeController,
-              readOnly: true,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                filled: true,
-                fillColor: Colors.grey[300],
-                labelText: 'Item Code',
-                labelStyle: const TextStyle(
-                  color: Colors.black87,
+            GestureDetector(
+              child: AbsorbPointer(
+                child: TextFormField(
+                  controller: itemCodeController,
+                  readOnly: true,
+                  minLines: 1,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    filled: true,
+                    fillColor: Colors.grey[300],
+                    labelText: 'Item Code',
+                    labelStyle: const TextStyle(
+                      color: Colors.black87,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -669,43 +675,51 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             ),
             const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
-            TextFormField(
-              controller: lotQtyController,
-              readOnly: true,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(
-                    RegExp(r'[0-9.]')), // อนุญาตเฉพาะตัวเลขและจุดทศนิยม
-              ],
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                filled: true,
-                fillColor: Colors.yellow[200],
-                labelText: 'รวมรายการจ่าย',
-                labelStyle: const TextStyle(
-                  color: Colors.black87,
+            GestureDetector(
+              child: AbsorbPointer(
+                child: TextFormField(
+                  controller: lotQtyController,
+                  readOnly: true,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                        RegExp(r'[0-9.]')), // อนุญาตเฉพาะตัวเลขและจุดทศนิยม
+                  ],
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    filled: true,
+                    fillColor: Colors.yellow[200],
+                    labelText: 'รวมรายการจ่าย',
+                    labelStyle: const TextStyle(
+                      color: Colors.black87,
+                    ),
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               ),
-              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
-            TextFormField(
-              controller: lotUnitController,
-              readOnly: true,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(
-                    RegExp(r'[0-9.]')), // อนุญาตเฉพาะตัวเลขและจุดทศนิยม
-              ],
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                filled: true,
-                fillColor: Colors.yellow[200],
-                labelText: 'รวมจำนวนจ่าย',
-                labelStyle: const TextStyle(
-                  color: Colors.black87,
+            GestureDetector(
+              child: AbsorbPointer(
+                child: TextFormField(
+                  controller: lotUnitController,
+                  readOnly: true,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                        RegExp(r'[0-9.]')), // อนุญาตเฉพาะตัวเลขและจุดทศนิยม
+                  ],
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    filled: true,
+                    fillColor: Colors.yellow[200],
+                    labelText: 'รวมจำนวนจ่าย',
+                    labelStyle: const TextStyle(
+                      color: Colors.black87,
+                    ),
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               ),
-              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------

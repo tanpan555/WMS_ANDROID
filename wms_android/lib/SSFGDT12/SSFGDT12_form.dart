@@ -50,6 +50,9 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   String docNo = '';
   String statuForCHK = '';
   bool chkDate = false;
+  bool dateColorCheck = false;
+  bool monthColorCheck = false;
+  bool noDate = false;
 
   final FocusNode _focusNode = FocusNode();
   final TextEditingController staffCodeController = TextEditingController();
@@ -279,40 +282,50 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    TextFormField(
-                      style: const TextStyle(
-                        color: Colors.black87,
-                      ),
-                      controller: docNoController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'เลขที่เอกสาร',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          style: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                          controller: docNoController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'เลขที่เอกสาร',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
+                          readOnly: true,
                         ),
                       ),
-                      readOnly: true,
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      style: const TextStyle(
-                        color: Colors.black87,
-                      ),
-                      controller: docDateController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'วันที่เตรียมการตรวจนับ',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          style: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                          controller: docDateController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'วันที่เตรียมการตรวจนับ',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
+                          readOnly: true,
                         ),
                       ),
-                      readOnly: true,
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
@@ -345,7 +358,24 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                       onChanged: (value) {
                         nbCountDate = value;
                         print('nbCountDate : $nbCountDate');
+                        setState(() {
+                          // สร้าง instance ของ DateInputFormatter
+                          DateInputFormatter formatter = DateInputFormatter();
 
+                          // ตรวจสอบการเปลี่ยนแปลงของข้อความ
+                          TextEditingValue oldValue = TextEditingValue(
+                              text: nbCountDateController.text);
+                          TextEditingValue newValue =
+                              TextEditingValue(text: value);
+
+                          // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
+                          formatter.formatEditUpdate(oldValue, newValue);
+
+                          // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
+                          dateColorCheck = formatter.dateColorCheck;
+                          monthColorCheck = formatter.monthColorCheck;
+                          noDate = formatter.noDate; // เพิ่มการตรวจสอบ noDate
+                        });
                         setState(() {
                           RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
                           // String messageAlertValueDate =
@@ -363,48 +393,59 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                         });
                       },
                     ),
-                    chkDate == true
+                    chkDate == true || noDate == true
                         ? const Padding(
                             padding: EdgeInsets.only(top: 4.0),
                             child: Text(
-                              'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                              'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
                               style: TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
                               ),
                             ))
-                        : SizedBox.shrink(),
+                        : const SizedBox.shrink(),
+                    const SizedBox(height: 8),
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      controller: staffCodeController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'ผู้เตรียมข้อมูลตรวจนับ',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: staffCodeController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'ผู้เตรียมข้อมูลตรวจนับ',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      controller: nbStaffNameController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: '',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: nbStaffNameController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: '',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
@@ -428,79 +469,104 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                     ),
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      controller: nbStaffCountNameController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: '',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: nbStaffCountNameController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: '',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      controller: remarkController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'คำอธิบาย',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: remarkController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'คำอธิบาย',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      controller: statusController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'สถานะเอกสาร',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: statusController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'สถานะเอกสาร',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      controller: updBy1Controller,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'ผู้ปรับปรุงล่าสุด',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: updBy1Controller,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'ผู้ปรับปรุงล่าสุด',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      controller: updDateController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'วันที่ปรับปรุงล่าสุด',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: updDateController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'วันที่ปรับปรุงล่าสุด',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
                   ],
@@ -570,6 +636,10 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
 }
 
 class DateInputFormatter extends TextInputFormatter {
+  bool dateColorCheck = false;
+  bool monthColorCheck = false;
+  bool noDate = false; // ตัวแปรเพื่อตรวจสอบว่ามีวันที่ไม่ถูกต้อง
+
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
@@ -593,11 +663,16 @@ class DateInputFormatter extends TextInputFormatter {
       year = text.substring(4);
     }
 
+    dateColorCheck = false;
+    monthColorCheck = false;
+    noDate = false; // รีเซ็ตตัวแปรเมื่อเริ่ม
+
     // ตรวจสอบว่าค่าใน day ไม่เกิน 31
     if (day.isNotEmpty) {
       int dayInt = int.parse(day);
       if (dayInt < 1 || dayInt > 31) {
-        return oldValue; // คืนค่าเดิมถ้าค่า day ไม่ถูกต้อง
+        dateColorCheck = true; // ตั้งค่าให้ dateColorCheck เป็น true
+        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
       }
     }
 
@@ -605,7 +680,8 @@ class DateInputFormatter extends TextInputFormatter {
     if (month.isNotEmpty) {
       int monthInt = int.parse(month);
       if (monthInt < 1 || monthInt > 12) {
-        return oldValue; // คืนค่าเดิมถ้าค่า month ไม่ถูกต้อง
+        monthColorCheck = true; // ตั้งค่าให้ monthColorCheck เป็น true
+        noDate = true; // บอกว่าไม่มีเดือนที่ถูกต้อง
       }
     }
 
@@ -613,7 +689,7 @@ class DateInputFormatter extends TextInputFormatter {
     if (day.isNotEmpty && month.isNotEmpty && year.length == 4) {
       if (!isValidDate(day, month, year)) {
         // ถ้าค่าไม่ถูกต้อง คืนค่าเก่าแทน
-        return oldValue;
+        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
       }
     }
 
@@ -647,6 +723,7 @@ class DateInputFormatter extends TextInputFormatter {
 
     // ตรวจสอบเดือนที่เกินขอบเขต
     if (monthInt < 1 || monthInt > 12) {
+      monthColorCheck = false;
       return false;
     }
 
@@ -669,9 +746,12 @@ class DateInputFormatter extends TextInputFormatter {
 
     // ตรวจสอบว่าค่าวันไม่เกินจำนวนวันที่ในเดือนนั้น ๆ
     if (dayInt < 1 || dayInt > maxDays) {
+      dateColorCheck = false;
       return false;
     }
 
+    dateColorCheck = true;
+    monthColorCheck = true;
     return true;
   }
 
