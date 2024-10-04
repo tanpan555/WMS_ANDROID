@@ -71,6 +71,7 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
             selectedDocTypeItem = dataLovDocType[0];
             docTypeLovD = selectedDocTypeItem?['d'] ?? '';
             docTypeLovR = selectedDocTypeItem?['r'] ?? '';
+            dataLovDocTypeController.text = docTypeLovD;
           });
         }
         print('dataLovDocType : $dataLovDocType');
