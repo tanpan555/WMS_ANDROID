@@ -33,12 +33,20 @@ class UpperCaseNoSpaceTextFormatter extends TextInputFormatter {
   ) {
     // Remove spaces and convert to uppercase
     final formattedText = newValue.text.replaceAll(' ', '').toUpperCase();
+
+    // Maintain the selection position
+    int selectionIndex = newValue.selection.baseOffset;
+    if (selectionIndex > formattedText.length) {
+      selectionIndex = formattedText.length; // Adjust if selection is beyond new length
+    }
+
     return TextEditingValue(
       text: formattedText,
-      selection: TextSelection.collapsed(offset: formattedText.length),
+      selection: TextSelection.collapsed(offset: selectionIndex),
     );
   }
 }
+
 
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
@@ -88,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
           globals.P_SUBINV = data['P_SUBINV'];
           globals.P_SUBINV_NAME = data['P_SUBINV_NAME'];
           globals.APP_SESSION = data['V_AUDSID'];
-          
+
           globals.P_ERP_OU_CODE = data['P_ERP_OU_CODE'];
           Navigator.pushReplacementNamed(
             context,
@@ -117,8 +125,6 @@ class _LoginPageState extends State<LoginPage> {
   void _forgotPassword() {
     Navigator.pushNamed(context, '/forgotPassword');
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -168,30 +174,34 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               const SizedBox(height: 20),
                               TextFormField(
-  controller: _usernameController,
-  inputFormatters: [UpperCaseNoSpaceTextFormatter()], // Updated here
-  style: TextStyle(color: Colors.white),
-  decoration: InputDecoration(
-    prefixIcon: Padding(
-      padding: const EdgeInsets.all(13),
-      child: Icon(Icons.person, color: Colors.white, size: 20),
-    ),
-    hintText: 'Username',
-    hintStyle: TextStyle(fontSize: 14, color: Colors.white),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.0),
-      borderSide: BorderSide(color: Colors.white),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.0),
-      borderSide: BorderSide(color: Colors.white),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.0),
-      borderSide: BorderSide(color: Colors.white),
-    ),
-  ),
-),
+                                controller: _usernameController,
+                                inputFormatters: [
+                                  UpperCaseNoSpaceTextFormatter()
+                                ], // Updated here
+                                style: TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  prefixIcon: Padding(
+                                    padding: const EdgeInsets.all(13),
+                                    child: Icon(Icons.person,
+                                        color: Colors.white, size: 20),
+                                  ),
+                                  hintText: 'Username',
+                                  hintStyle: TextStyle(
+                                      fontSize: 14, color: Colors.white),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                ),
+                              ),
                               const SizedBox(height: 10),
                               TextFormField(
                                 controller: _passwordController,

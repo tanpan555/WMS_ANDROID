@@ -1944,18 +1944,21 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                           // เลขที่เอกสาร ERP //
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: TextField(
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                labelText: 'เลขที่เอกสาร ERP',
-                                filled: true,
-                                fillColor: Colors.grey[300],
-                                labelStyle: TextStyle(color: Colors.black),
-                                border: InputBorder.none,
+                            child: AbsorbPointer(
+                              child: TextField(
+                                readOnly: true,
+                                decoration: InputDecoration(
+                                  labelText: 'เลขที่เอกสาร ERP',
+                                  filled: true,
+                                  fillColor: Colors.grey[300],
+                                  labelStyle: TextStyle(color: Colors.black),
+                                  border: InputBorder.none,
+                                ),
+                                controller: _erpDocNoController,
                               ),
-                              controller: _erpDocNoController,
                             ),
                           ),
+
                           // Your content goes here
                         ],
                       ),

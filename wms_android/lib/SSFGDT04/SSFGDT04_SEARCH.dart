@@ -4,7 +4,7 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'SSFGDT04_CARD.dart';
 import 'dart:ui';
-import 'package:dropdown_button2/dropdown_button2.dart';
+// import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import '../styles.dart';
 import 'package:flutter/services.dart';
@@ -51,7 +51,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
       selectedItem = dropdownItems.first;
     }
   }
-  
+
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -79,41 +79,35 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
-      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(10),
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
-                DropdownButtonFormField2<String>(
-                  value: selectedItem,
-                  items: dropdownItems
-                      .map((item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(item),
-                          ))
-                      .toList(),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    labelText: 'ประเภทรายการ',
-                    hintStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                    filled: true,
-                    fillColor: Colors.white,
-                  ),
-                  onChanged: (value) {
+  void _showDropdownPopup() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'เลือกประเภทรายการ',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the popup
+                },
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: dropdownItems.map((item) {
+                return GestureDetector(
+                  onTap: () {
                     setState(() {
-                      selectedItem = value ??
-                          dropdownItems.first; // Ensure selectedItem is valid
-                      switch (selectedItem) {
+                      selectedItem = item; // Set the selected item
+                      // Update status based on selection
+                      switch (item) {
                         case 'ทั้งหมด':
                           status = '0';
                           break;
@@ -130,14 +124,76 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                           status = '0'; // Default status
                       }
                     });
+                    Navigator.of(context).pop(); // Close the popup
                   },
+                  child: Container(
+                    // padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
+                    margin: const EdgeInsets.symmetric(vertical: 4.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
+                        width: 2.0, // ความหนาของขอบ
+                      ), // Gray border
+                      borderRadius:
+                          BorderRadius.circular(10.0), // ทำให้ขอบมีความโค้ง
+                    ),
+                    child: Text(
+                      item,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF17153B),
+      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(10),
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                TextFormField(
+                  readOnly: true, // Make it read-only to prevent keyboard popup
+                  onTap: _showDropdownPopup, // Show the dropdown popup on tap
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    labelText: 'ประเภทรายการ',
+                    labelStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                    filled: true,
+                    fillColor: Colors.white,
+                    suffixIcon: Icon(
+                      Icons.arrow_drop_down,
+                      color: Color.fromARGB(255, 113, 113, 113),
+                    ),
+                  ),
+                  controller: TextEditingController(text: selectedItem),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _controller,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     labelText: 'เลขที่เอกสาร',
+                    labelStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                     hintStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                     filled: true,
                     fillColor: Colors.white,
@@ -148,7 +204,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     });
                   },
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _dateController,
                   keyboardType: TextInputType.number,
@@ -168,6 +224,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     labelText: 'วันที่ส่งสินค้า',
+                    labelStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                     hintStyle:
                         const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                     filled: true,
@@ -183,17 +240,16 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                       _dateController.text = value;
                     });
                   },
-                ),if (_dateError !=
-                                    null) // Only display if there's an error
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4.0),
-                                    child: Text(
-                                      _dateError!,
-                                      style: TextStyle(
-                                          color: Colors
-                                              .red), // Style the error message
-                                    ),
-                                  ),
+                ),
+                if (_dateError != null) // Only display if there's an error
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      _dateError!,
+                      style: TextStyle(
+                          color: Colors.red), // Style the error message
+                    ),
+                  ),
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
