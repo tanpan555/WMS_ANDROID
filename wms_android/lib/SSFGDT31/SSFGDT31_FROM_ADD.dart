@@ -918,47 +918,71 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (query) {
-                        setState(() {});
+                        setState(
+                            () {}); // Trigger UI update when search query changes
                       },
                     ),
                     const SizedBox(height: 10),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: moDoNoItems.length,
-                        itemBuilder: (context, index) {
-                          final item = moDoNoItems[index];
-                          final schid = '${item['schid']}';
-                          final custName = item['cust_name'] ?? '';
+                      child: Builder(
+                        builder: (context) {
+                          // Filter the items based on the search query
+                          final filteredItems = moDoNoItems.where((item) {
+                            final schid = '${item['schid']}';
+                            final custName = item['cust_name'] ?? '';
+                            return schid.toLowerCase().contains(
+                                    _searchController.text.toLowerCase()) ||
+                                custName.toLowerCase().contains(
+                                    _searchController.text.toLowerCase());
+                          }).toList();
 
-                          // Filter based on search query (match schid or cust_name)
-                          if (_searchController.text.isNotEmpty &&
-                              !schid.toLowerCase().contains(
-                                  _searchController.text.toLowerCase()) &&
-                              !custName.toLowerCase().contains(
-                                  _searchController.text.toLowerCase())) {
-                            return SizedBox.shrink();
+                          if (filteredItems.isEmpty) {
+                            // Show "No data found" if no results match the search query
+                            return Center(
+                              child: Text(
+                                'No data found',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            );
                           }
 
-                          return ListTile(
-                            title: Text(
-                              schid,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            subtitle: Text(
-                              custName,
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12),
-                            ),
-                            onTap: () {
-                              setState(() {
-                                selectedMoDoNo =
-                                    schid; // Update the selected item
-                                CUST.text = custName; // Update text controller
-                                print('Selected SCHID: $schid');
-                                print('Selected Cust Name: $custName');
-                              });
-                              Navigator.of(context).pop(); // Close the dialog
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final schid = '${item['schid']}';
+                              final custName = item['cust_name'] ?? '';
+
+                              return ListTile(
+                                title: Text(
+                                  schid,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                subtitle: Text(
+                                  custName,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    selectedMoDoNo =
+                                        schid; // Update the selected item
+                                    CUST.text =
+                                        custName; // Update the text controller
+                                    print('Selected SCHID: $schid');
+                                    print('Selected Cust Name: $custName');
+                                  });
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                },
+                              );
                             },
                           );
                         },
@@ -1066,6 +1090,8 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
   String? displayDocType = '';
 
   Future<void> _showDocTypeDialog() async {
+    final TextEditingController _searchController2 = TextEditingController();
+
     String? selectedValue = await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
@@ -1077,7 +1103,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
             builder: (context, setState) {
               return Container(
                 padding: const EdgeInsets.all(16),
-                height: 300,
+                height: 300, // Adjust height as necessary
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -1105,37 +1131,58 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.search),
                       ),
-                      onChanged: (_) => setState(() {}),
+                      onChanged: (query) => setState(() {}),
                     ),
                     const SizedBox(height: 10),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: statusItems.length,
-                        itemBuilder: (context, index) {
-                          final item = statusItems[index];
-                          final docType = item['doc_type'] as String;
-                          final docDesc = item['doc_desc'] as String;
-                          displayDocType = docDesc;
-                          if (_searchController2.text.isNotEmpty &&
-                              !docDesc.toLowerCase().contains(
-                                  _searchController2.text.toLowerCase()) &&
-                              !docType.toLowerCase().contains(
-                                  _searchController2.text.toLowerCase())) {
-                            return SizedBox.shrink();
+                      child: Builder(
+                        builder: (context) {
+                          // Filter statusItems based on search query
+                          final filteredItems = statusItems.where((item) {
+                            final docType =
+                                item['doc_type']?.toLowerCase() ?? '';
+                            final docDesc =
+                                item['doc_desc']?.toLowerCase() ?? '';
+                            final searchQuery =
+                                _searchController2.text.toLowerCase();
+
+                            return docType.contains(searchQuery) ||
+                                docDesc.contains(searchQuery);
+                          }).toList();
+
+                          if (filteredItems.isEmpty) {
+                            return Center(
+                              child: Text(
+                                'No data found',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            );
                           }
 
-                          return ListTile(
-                            title: Text(
-                              docType,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            subtitle: Text(
-                              docDesc,
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12),
-                            ),
-                            onTap: () => Navigator.of(context).pop(docType),
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final docType = item['doc_type'] as String;
+                              final docDesc = item['doc_desc'] as String;
+
+                              return ListTile(
+                                title: Text(
+                                  docType,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                subtitle: Text(
+                                  docDesc,
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 12),
+                                ),
+                                onTap: () => Navigator.of(context).pop(docType),
+                              );
+                            },
                           );
                         },
                       ),
@@ -1149,6 +1196,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
       },
     );
 
+    // Update the selected document type after the dialog is closed
     if (selectedValue != null) {
       setState(() {
         selectedDocType = selectedValue;
@@ -1198,6 +1246,8 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
   String? selectedrRefNo = '';
 
   Future<void> _showRefNoDialog() async {
+    final TextEditingController _searchController3 = TextEditingController();
+
     String? selectedValue = await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
@@ -1209,7 +1259,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
             builder: (context, setState) {
               return Container(
                 padding: const EdgeInsets.all(16),
-                height: 300,
+                height: 300, // Adjust the height as necessary
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -1237,30 +1287,48 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.search),
                       ),
-                      onChanged: (_) => setState(() {}),
+                      onChanged: (query) => setState(() {}),
                     ),
                     const SizedBox(height: 10),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: statusItems.length,
-                        itemBuilder: (context, index) {
-                          final item = statusItems[index];
-                          final docNo = item['doc_no'] ?? '';
+                      child: Builder(
+                        builder: (context) {
+                          // Filter statusItems based on the search query
+                          final filteredItems = statusItems.where((item) {
+                            final docNo = item['doc_no']?.toLowerCase() ?? '';
+                            final searchQuery =
+                                _searchController3.text.toLowerCase();
+                            return docNo.contains(searchQuery);
+                          }).toList();
 
-                          // Filter based on search query
-                          if (_searchController3.text.isNotEmpty &&
-                              !docNo.toLowerCase().contains(
-                                  _searchController3.text.toLowerCase())) {
-                            return SizedBox.shrink();
+                          // Show "No data found" if the filtered list is empty
+                          if (filteredItems.isEmpty) {
+                            return Center(
+                              child: Text(
+                                'No data found',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            );
                           }
 
-                          return ListTile(
-                            title: Text(
-                              docNo,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            onTap: () => Navigator.of(context).pop(docNo),
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final docNo = item['doc_no'] ?? '';
+
+                              return ListTile(
+                                title: Text(
+                                  docNo,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                onTap: () => Navigator.of(context).pop(docNo),
+                              );
+                            },
                           );
                         },
                       ),
@@ -1274,7 +1342,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
       },
     );
 
-    // Ensure that selectedValue is not null
+    // Ensure that selectedValue is not null and not empty
     if (selectedValue != null && selectedValue.isNotEmpty) {
       setState(() {
         selectedDocType = selectedValue;
@@ -1282,7 +1350,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         // Use a safe way to get the document type
         var foundItem = statusItems.firstWhere(
           (item) => item['doc_no'] == selectedValue,
-          orElse: () => null, // Change to return null if not found
+          orElse: () => null, // Return null if not found
         );
 
         // Check if foundItem is not null before accessing its properties

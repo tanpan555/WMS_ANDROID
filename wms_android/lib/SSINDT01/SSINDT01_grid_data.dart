@@ -1344,8 +1344,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Center(child: Text('คำเตือน')),
-                                content: Text('Complete'),
+                                // title: Center(child: Text('คำเตือน')),
+                                content: Text('Complete.'),
                                 actions: <Widget>[
                                   TextButton(
                                     child: Text('OK'),
