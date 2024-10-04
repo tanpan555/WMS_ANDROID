@@ -34,19 +34,24 @@ class UpperCaseNoSpaceTextFormatter extends TextInputFormatter {
     // Remove spaces and convert to uppercase
     final formattedText = newValue.text.replaceAll(' ', '').toUpperCase();
 
-    // Maintain the selection position
-    int selectionIndex = newValue.selection.baseOffset;
-    if (selectionIndex > formattedText.length) {
-      selectionIndex = formattedText.length; // Adjust if selection is beyond new length
+    // Calculate the new cursor position
+    int newSelectionIndex = newValue.selection.baseOffset;
+    int diff = formattedText.length - newValue.text.length;
+    newSelectionIndex = newSelectionIndex + diff;
+
+    // Ensure the cursor position is within bounds
+    if (newSelectionIndex < 0) {
+      newSelectionIndex = 0;
+    } else if (newSelectionIndex > formattedText.length) {
+      newSelectionIndex = formattedText.length;
     }
 
     return TextEditingValue(
       text: formattedText,
-      selection: TextSelection.collapsed(offset: selectionIndex),
+      selection: TextSelection.collapsed(offset: newSelectionIndex),
     );
   }
 }
-
 
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
