@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:wms_android/login.dart';
 
@@ -15,7 +16,8 @@ class _BottomBarState extends State<BottomBar> {
     setState(() {
       sessionID = globals.APP_SESSION;
       _selectedIndex = index;
-      print('sessionID in BottomBar : $sessionID Type : ${sessionID.runtimeType}');
+      print(
+          'sessionID in BottomBar : $sessionID Type : ${sessionID.runtimeType}');
     });
 
     switch (index) {
@@ -68,6 +70,7 @@ class _BottomBarState extends State<BottomBar> {
           ],
         ),
       ),
+      statusBarColor: Colors.white,
     );
   }
 
@@ -102,28 +105,44 @@ class _BottomBarState extends State<BottomBar> {
   }
 }
 
-// Custom SideSheet implementation
+// Updated SideSheet implementation
 void showSideSheet({
   required BuildContext context,
   required Widget body,
+  Color statusBarColor = Colors.transparent,
 }) {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: statusBarColor,
+    statusBarIconBrightness: Brightness.light,
+    statusBarBrightness: Brightness.light,
+  ));
+
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
     barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
     barrierColor: Colors.black54,
     transitionDuration: const Duration(milliseconds: 300),
-    pageBuilder: (BuildContext buildContext, Animation animation, Animation secondaryAnimation) {
-      return Align(
-        alignment: Alignment.centerRight,
-        child: Material(
-          child: SafeArea(
-            child: body,
+    pageBuilder: (BuildContext buildContext, Animation animation,
+        Animation secondaryAnimation) {
+      return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+          statusBarColor: statusBarColor,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+        ),
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: Material(
+            child: SafeArea(
+              child: body,
+            ),
           ),
         ),
       );
     },
-    transitionBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+    transitionBuilder: (BuildContext context, Animation<double> animation,
+        Animation<double> secondaryAnimation, Widget child) {
       return SlideTransition(
         position: Tween<Offset>(
           begin: const Offset(1.0, 0.0),
@@ -132,5 +151,8 @@ void showSideSheet({
         child: child,
       );
     },
-  );
+  ).then((_) {
+    // Reset system UI overlay style when the side sheet is closed
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+  });
 }
