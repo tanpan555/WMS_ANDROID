@@ -166,6 +166,8 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     labelText: 'วันที่โอน',
+                    hintText: 'DD/MM/YYYY',
+                    hintStyle: TextStyle(color: Colors.grey),
                     labelStyle: TextStyle(color: Colors.black),
                     filled: true,
                     fillColor: Colors.white,
@@ -238,11 +240,11 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                     ? const Padding(
                         padding: EdgeInsets.only(top: 4.0),
                         child: Text(
-                          'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                          'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
                           style: TextStyle(
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
-                            fontSize: 14,
+                            fontSize: 12,
                           ),
                         ),
                       )

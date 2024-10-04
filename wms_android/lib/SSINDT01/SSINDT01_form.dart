@@ -1049,11 +1049,11 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               ? const Padding(
                   padding: EdgeInsets.only(top: 4.0),
                   child: Text(
-                    'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                    'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
                     style: TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      fontSize: 12,
                     ),
                   ),
                 )

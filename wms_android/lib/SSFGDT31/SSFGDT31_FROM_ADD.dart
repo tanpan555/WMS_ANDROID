@@ -834,6 +834,8 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
             },
             decoration: InputDecoration(
               labelText: null,
+              hintText: 'DD/MM/YYYY',
+              hintStyle: TextStyle(color: Colors.grey),
               label: RichText(
                 text: TextSpan(
                   text: label,
@@ -861,11 +863,11 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
               ? const Padding(
                   padding: EdgeInsets.only(top: 4.0),
                   child: Text(
-                    'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                    'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
                     style: TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      fontSize: 12,
                     ),
                   ),
                 )
