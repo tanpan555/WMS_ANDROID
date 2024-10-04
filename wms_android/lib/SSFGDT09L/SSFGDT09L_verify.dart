@@ -384,7 +384,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  // submitData();                  // รอ check จาก rujxyho ก่อน **************************************************
+                  submitData(); // รอ check จาก rujxyho ก่อน **************************************************
                 },
                 style: AppStyles.ConfirmbuttonStyle(),
                 child: Text(

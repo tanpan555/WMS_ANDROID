@@ -97,7 +97,20 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   // ----------------------------- Radio
   String selectedRadio = '1';
 
-  TextEditingController searchController = TextEditingController();
+  TextEditingController searchController1 = TextEditingController();
+  TextEditingController searchController2 = TextEditingController();
+  TextEditingController searchController3 = TextEditingController();
+  TextEditingController searchController4 = TextEditingController();
+  TextEditingController searchController5 = TextEditingController();
+  TextEditingController searchController6 = TextEditingController();
+  TextEditingController searchController7 = TextEditingController();
+  TextEditingController searchController8 = TextEditingController();
+  TextEditingController searchController9 = TextEditingController();
+  TextEditingController searchController10 = TextEditingController();
+  TextEditingController searchController11 = TextEditingController();
+  TextEditingController searchController12 = TextEditingController();
+  TextEditingController searchController13 = TextEditingController();
+  TextEditingController searchController14 = TextEditingController();
 
   String? P_USER_ID;
   String? PROGRAM_ID;
@@ -182,7 +195,20 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
 
   @override
   void dispose() {
-    searchController.dispose();
+    searchController1.dispose();
+    searchController2.dispose();
+    searchController3.dispose();
+    searchController4.dispose();
+    searchController5.dispose();
+    searchController6.dispose();
+    searchController7.dispose();
+    searchController8.dispose();
+    searchController9.dispose();
+    searchController10.dispose();
+    searchController11.dispose();
+    searchController12.dispose();
+    searchController13.dispose();
+    searchController14.dispose();
     dateController.dispose();
     docNoController.dispose();
     startWareCodeController.dispose();
@@ -714,23 +740,24 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
         '&P_LIN_ID=$P_LIN_ID'
         '&P_OU_NAME=$P_OU_NAME'
         '&P_OU_CODE=$P_OU_CODE'
-        '&P_E_CAT=$P_E_CAT'
-        '&P_E_GRP=$P_E_GRP'
-        '&P_E_ITEM=$P_E_ITEM'
-        '&P_E_LOC=$P_E_LOC'
-        '&P_E_SUB_CAT=$P_E_SUB_CAT'
-        '&P_E_WARE=$P_E_WARE'
+        //
+        '&P_E_CAT=${returnEndCategory.isNotEmpty ? returnEndCategory : 'สิ้นสุด'}'
+        '&P_E_GRP=${returnEndGroup.isNotEmpty ? returnEndGroup : 'สิ้นสุด'}'
+        '&P_E_ITEM=${returnEndItem.isNotEmpty ? returnEndItem : 'สิ้นสุด'}'
+        '&P_E_LOC=${returnEndLoc.isNotEmpty ? returnEndLoc : 'สิ้นสุด'}'
+        '&P_E_SUB_CAT=${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'สิ้นสุด'}'
+        '&P_E_WARE=${returnEndWareCode.isNotEmpty ? returnEndWareCode : 'สิ้นสุด'}'
         '&P_F_DOC_NO=$returnLovDocNo'
         '&P_F_P_DATE=$returnLovDate'
         '&P_I_E_WARE=$P_I_E_WARE'
         '&P_I_S_WARE=$P_I_S_WARE'
         '&P_SHOW_MODE=$P_SHOW_MODE'
-        '&P_S_CAT=$P_S_CAT'
-        '&P_S_GRP=$P_S_GRP'
-        '&P_S_ITEM=$P_S_ITEM'
-        '&P_S_LOC=$P_S_LOC'
-        '&P_S_SUB_CAT=$P_S_SUB_CAT'
-        '&P_S_WARE=$P_S_WARE'
+        '&P_S_CAT=${returnStartCategory.isNotEmpty ? returnStartCategory : 'เริ่มต้น'}'
+        '&P_S_GRP=${returnStartGroup.isNotEmpty ? returnStartGroup : 'เริ่มต้น'}'
+        '&P_S_ITEM=${returnStartItem.isNotEmpty ? returnStartItem : 'เริ่มต้น'}'
+        '&P_S_LOC=${returnStartLoc.isNotEmpty ? returnStartLoc : 'เริ่มต้น'}'
+        '&P_S_SUB_CAT=${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'เริ่มต้น'}'
+        '&P_S_WARE=${returnStartWareCode.isNotEmpty ? returnStartWareCode : 'เริ่มต้น'}'
         //
         '&LH_PROGRAM_ID=$LH_PROGRAM_ID'
         '&LH_WARE=$LH_WARE'
@@ -1296,7 +1323,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            searchController.clear();
+                            searchController1.clear();
                           },
                         ),
                       ],
@@ -1304,7 +1331,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: searchController,
+                      controller: searchController1,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -1323,7 +1350,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             final docString =
                                 '${item['prepare_date']}'.toLowerCase();
                             final searchQuery =
-                                searchController.text.trim().toLowerCase();
+                                searchController1.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -1371,7 +1398,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnLovDate New: $returnLovDate Type : ${returnLovDate.runtimeType}');
                                   });
-                                  searchController.clear();
+                                  searchController1.clear();
                                 },
                               );
                             },
@@ -1418,7 +1445,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            searchController.clear();
+                            searchController2.clear();
                           },
                         ),
                       ],
@@ -1426,7 +1453,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: searchController,
+                      controller: searchController2,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -1446,7 +1473,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 '${item['doc_no']} ${item['prepare_date']}'
                                     .toLowerCase();
                             final searchQuery =
-                                searchController.text.trim().toLowerCase();
+                                searchController2.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -1491,7 +1518,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnLovDocNo New: $returnLovDocNo Type : ${returnLovDocNo.runtimeType}');
                                   });
-                                  searchController.clear();
+                                  searchController2.clear();
                                 },
                               );
                             },
@@ -1538,7 +1565,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            searchController.clear();
+                            searchController3.clear();
                           },
                         ),
                       ],
@@ -1546,7 +1573,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: searchController,
+                      controller: searchController3,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -1567,7 +1594,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 '${item['ware_code']} ${item['ware_name']}'
                                     .toLowerCase();
                             final searchQuery =
-                                searchController.text.trim().toLowerCase();
+                                searchController3.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -1617,7 +1644,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnStartWareCode New: $returnStartWareCode Type : ${returnStartWareCode.runtimeType}');
                                   });
-                                  searchController.clear();
+                                  searchController3.clear();
                                 },
                               );
                             },
@@ -1664,7 +1691,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            searchController.clear();
+                            searchController4.clear();
                           },
                         ),
                       ],
@@ -1672,7 +1699,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: searchController,
+                      controller: searchController4,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -1693,7 +1720,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 '${item['ware_code']} ${item['ware_name']}'
                                     .toLowerCase();
                             final searchQuery =
-                                searchController.text.trim().toLowerCase();
+                                searchController4.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -1742,7 +1769,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnEndWareCode New: $returnEndWareCode Type : ${returnEndWareCode.runtimeType}');
                                   });
-                                  searchController.clear();
+                                  searchController4.clear();
                                 },
                               );
                             },
@@ -1789,7 +1816,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            searchController.clear();
+                            searchController5.clear();
                           },
                         ),
                       ],
@@ -1797,7 +1824,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: searchController,
+                      controller: searchController5,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -1817,7 +1844,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 '${item['location_code']} ${item['location_name']}'
                                     .toLowerCase();
                             final searchQuery =
-                                searchController.text.trim().toLowerCase();
+                                searchController5.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -1865,7 +1892,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnStartLoc New: $returnStartLoc Type : ${returnStartLoc.runtimeType}');
                                   });
-                                  searchController.clear();
+                                  searchController5.clear();
                                 },
                               );
                             },
@@ -1912,7 +1939,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            searchController.clear();
+                            searchController6.clear();
                           },
                         ),
                       ],
@@ -1920,7 +1947,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: searchController,
+                      controller: searchController6,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -1940,7 +1967,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 '${item['location_code']} ${item['location_name']}'
                                     .toLowerCase();
                             final searchQuery =
-                                searchController.text.trim().toLowerCase();
+                                searchController6.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -1985,7 +2012,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnEndLoc New: $returnEndLoc Type : ${returnEndLoc.runtimeType}');
                                   });
-                                  searchController.clear();
+                                  searchController6.clear();
                                 },
                               );
                             },
@@ -2032,7 +2059,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            searchController.clear();
+                            searchController7.clear();
                           },
                         ),
                       ],
@@ -2040,7 +2067,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: searchController,
+                      controller: searchController7,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -2060,7 +2087,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 '${item['group_code']} ${item['group_name']}'
                                     .toLowerCase();
                             final searchQuery =
-                                searchController.text.trim().toLowerCase();
+                                searchController7.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -2114,7 +2141,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnStartGroup New: $returnStartGroup Type : ${returnStartGroup.runtimeType}');
                                   });
-                                  searchController.clear();
+                                  searchController7.clear();
                                 },
                               );
                             },
@@ -2161,7 +2188,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            searchController.clear();
+                            searchController8.clear();
                           },
                         ),
                       ],
@@ -2169,7 +2196,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: searchController,
+                      controller: searchController8,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -2189,7 +2216,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 '${item['group_code']} ${item['group_name']}'
                                     .toLowerCase();
                             final searchQuery =
-                                searchController.text.trim().toLowerCase();
+                                searchController8.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -2242,7 +2269,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnEndGroup New: $returnEndGroup Type : ${returnEndGroup.runtimeType}');
                                   });
-                                  searchController.clear();
+                                  searchController8.clear();
                                 },
                               );
                             },
@@ -2289,7 +2316,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            searchController.clear();
+                            searchController9.clear();
                           },
                         ),
                       ],
@@ -2297,7 +2324,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: searchController,
+                      controller: searchController9,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -2318,7 +2345,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 '${item['category_code']} ${item['category_desc']}'
                                     .toLowerCase();
                             final searchQuery =
-                                searchController.text.trim().toLowerCase();
+                                searchController9.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -2370,7 +2397,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnStartCategory New: $returnStartCategory Type : ${returnStartCategory.runtimeType}');
                                   });
-                                  searchController.clear();
+                                  searchController9.clear();
                                 },
                               );
                             },
@@ -2417,7 +2444,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            searchController.clear();
+                            searchController10.clear();
                           },
                         ),
                       ],
@@ -2425,7 +2452,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: searchController,
+                      controller: searchController10,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -2446,7 +2473,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 '${item['category_code']} ${item['category_desc']}'
                                     .toLowerCase();
                             final searchQuery =
-                                searchController.text.trim().toLowerCase();
+                                searchController10.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -2497,7 +2524,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnEndCategory New: $returnEndCategory Type : ${returnEndCategory.runtimeType}');
                                   });
-                                  searchController.clear();
+                                  searchController10.clear();
                                 },
                               );
                             },
@@ -2544,7 +2571,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            searchController.clear();
+                            searchController11.clear();
                           },
                         ),
                       ],
@@ -2552,7 +2579,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: searchController,
+                      controller: searchController11,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -2573,7 +2600,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 '${item['sub_cat_code']} ${item['sub_cat_desc']}'
                                     .toLowerCase();
                             final searchQuery =
-                                searchController.text.trim().toLowerCase();
+                                searchController11.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -2623,7 +2650,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnStartSubCategory New: $returnStartSubCategory Type : ${returnStartSubCategory.runtimeType}');
                                   });
-                                  searchController.clear();
+                                  searchController11.clear();
                                 },
                               );
                             },
@@ -2670,7 +2697,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            searchController.clear();
+                            searchController12.clear();
                           },
                         ),
                       ],
@@ -2678,7 +2705,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: searchController,
+                      controller: searchController12,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -2699,7 +2726,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 '${item['sub_cat_code']} ${item['sub_cat_desc']}'
                                     .toLowerCase();
                             final searchQuery =
-                                searchController.text.trim().toLowerCase();
+                                searchController12.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -2748,7 +2775,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnEndSubCategory New: $returnEndSubCategory Type : ${returnEndSubCategory.runtimeType}');
                                   });
-                                  searchController.clear();
+                                  searchController12.clear();
                                 },
                               );
                             },
@@ -2795,7 +2822,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            searchController.clear();
+                            searchController13.clear();
                           },
                         ),
                       ],
@@ -2803,7 +2830,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: searchController,
+                      controller: searchController13,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -2823,7 +2850,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 '${item['item_code']} ${item['name']}'
                                     .toLowerCase();
                             final searchQuery =
-                                searchController.text.trim().toLowerCase();
+                                searchController13.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -2871,7 +2898,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnStartItem New: $returnStartItem Type : ${returnStartItem.runtimeType}');
                                   });
-                                  searchController.clear();
+                                  searchController13.clear();
                                 },
                               );
                             },
@@ -2918,7 +2945,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            searchController.clear();
+                            searchController14.clear();
                           },
                         ),
                       ],
@@ -2926,7 +2953,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: searchController,
+                      controller: searchController14,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -2946,7 +2973,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 '${item['item_code']} ${item['name']}'
                                     .toLowerCase();
                             final searchQuery =
-                                searchController.text.trim().toLowerCase();
+                                searchController14.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -2991,7 +3018,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnEndItem New: $returnEndItem Type : ${returnEndItem.runtimeType}');
                                   });
-                                  searchController.clear();
+                                  searchController14.clear();
                                 },
                               );
                             },
