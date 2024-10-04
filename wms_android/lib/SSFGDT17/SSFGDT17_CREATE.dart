@@ -427,11 +427,12 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   }
 
   void _showDialog1(
-      BuildContext context,
-      List<dynamic> items,
-      String? selectedValue,
-      Function(Map<String, dynamic>?) onChanged,
-      String label) {
+    BuildContext context,
+    List<dynamic> items,
+    String? selectedValue,
+    Function(Map<String, dynamic>?) onChanged,
+    String label,
+  ) {
     final TextEditingController _searchController = TextEditingController();
 
     showDialog(
@@ -475,41 +476,60 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (query) {
-                        setState(() {});
+                        setState(() {}); // Trigger UI update on search
                       },
                     ),
                     const SizedBox(height: 10),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: items.length,
-                        itemBuilder: (context, index) {
-                          final item = items[index] as Map<String, dynamic>;
-                          final locationCode = item['location_code'];
-                          final locationName = item['location_name'];
-
+                      child: Builder(
+                        builder: (context) {
                           // Filter items based on the search query
-                          if (_searchController.text.isNotEmpty &&
-                              !locationCode.toLowerCase().contains(
-                                  _searchController.text.toLowerCase())) {
-                            return SizedBox
-                                .shrink(); // Filter out non-matching items
+                          final filteredItems = items.where((item) {
+                            final locationCode =
+                                item['location_code']?.toLowerCase() ?? '';
+                            final searchQuery =
+                                _searchController.text.toLowerCase();
+                            return locationCode.contains(searchQuery);
+                          }).toList();
+
+                          if (filteredItems.isEmpty) {
+                            return Center(
+                              child: Text(
+                                'No data found', // Display this when no items match
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            );
                           }
 
-                          return ListTile(
-                            title: Text(
-                              locationCode,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            subtitle: Text(
-                              locationName,
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12),
-                            ),
-                            onTap: () {
-                              onChanged(
-                                  item); // Call onChanged with the selected item
-                              Navigator.of(context).pop(); // Close the dialog
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item =
+                                  filteredItems[index] as Map<String, dynamic>;
+                              final locationCode = item['location_code'];
+                              final locationName = item['location_name'];
+
+                              return ListTile(
+                                title: Text(
+                                  locationCode,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                subtitle: Text(
+                                  locationName,
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 12),
+                                ),
+                                onTap: () {
+                                  onChanged(
+                                      item); // Call onChanged with the selected item
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                },
+                              );
                             },
                           );
                         },
@@ -580,31 +600,50 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                     ),
                     const SizedBox(height: 10),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: items.length,
-                        itemBuilder: (context, index) {
-                          final item = items[index] as Map<String, dynamic>;
-                          final wareCode = item['ware_code'];
-                          final wareName = item['ware_name'];
-
+                      child: Builder(
+                        builder: (context) {
                           // Filter items based on the search query
-                          if (_searchController.text.isNotEmpty &&
-                              !wareName.toLowerCase().contains(
-                                  _searchController.text.toLowerCase())) {
-                            return SizedBox
-                                .shrink(); // Filter out non-matching items
+                          final filteredItems = items.where((item) {
+                            final wareName =
+                                item['ware_name']?.toLowerCase() ?? '';
+                            final searchQuery =
+                                _searchController.text.toLowerCase();
+                            return wareName.contains(searchQuery);
+                          }).toList();
+
+                          if (filteredItems.isEmpty) {
+                            return Center(
+                              child: Text(
+                                'No data found', // Display this when no items match
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            );
                           }
 
-                          return ListTile(
-                            title: Text(
-                              wareName,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            onTap: () {
-                              onChanged(
-                                  item); // Call onChanged with the selected item
-                              Navigator.of(context).pop(); // Close the dialog
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item =
+                                  filteredItems[index] as Map<String, dynamic>;
+                              final wareCode = item['ware_code'];
+                              final wareName = item['ware_name'];
+
+                              return ListTile(
+                                title: Text(
+                                  wareName,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                onTap: () {
+                                  onChanged(
+                                      item); // Call onChanged with the selected item
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                },
+                              );
                             },
                           );
                         },
@@ -700,36 +739,57 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                     ),
                     const SizedBox(height: 10),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: items.length,
-                        itemBuilder: (context, index) {
-                          final item = items[index] as Map<String, dynamic>;
-                          final locationCode = item['location_code'];
-                          final locationName = item['location_name'];
-
+                      child: Builder(
+                        builder: (context) {
                           // Filter items based on the search query
-                          if (_searchController.text.isNotEmpty &&
-                              !locationCode.toLowerCase().contains(
-                                  _searchController.text.toLowerCase())) {
-                            return SizedBox
-                                .shrink(); // Filter out non-matching items
+                          final filteredItems = items.where((item) {
+                            final locationCode =
+                                item['location_code']?.toLowerCase() ?? '';
+                            final searchQuery =
+                                _searchController.text.toLowerCase();
+                            return locationCode.contains(searchQuery);
+                          }).toList();
+
+                          if (filteredItems.isEmpty) {
+                            return Center(
+                              child: Text(
+                                'No data found', // Show message when no data is found
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            );
                           }
 
-                          return ListTile(
-                            title: Text(
-                              locationCode,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            subtitle: Text(
-                              locationName ?? '',
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12),
-                            ),
-                            onTap: () {
-                              onChanged(
-                                  item); // Call onChanged with the selected item
-                              Navigator.of(context).pop(); // Close the dialog
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item =
+                                  filteredItems[index] as Map<String, dynamic>;
+                              final locationCode = item['location_code'];
+                              final locationName = item['location_name'];
+
+                              return ListTile(
+                                title: Text(
+                                  locationCode,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                subtitle: Text(
+                                  locationName ?? '',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                onTap: () {
+                                  onChanged(
+                                      item); // Call onChanged with the selected item
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                },
+                              );
                             },
                           );
                         },

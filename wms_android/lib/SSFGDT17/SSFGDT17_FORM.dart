@@ -634,6 +634,8 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   }
 
   void _showStaffDialog() {
+    final TextEditingController _searchController = TextEditingController();
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -675,47 +677,66 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (query) {
-                        setState(() {});
+                        setState(() {}); // Update the UI on search text change
                       },
                     ),
                     const SizedBox(height: 10),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: StaffItems.length,
-                        itemBuilder: (context, index) {
-                          final item = StaffItems[index];
-                          final staffCode = item['r'];
-                          final empName = item['emp_name'] ?? '';
+                      child: Builder(
+                        builder: (context) {
+                          // Filter StaffItems based on search query
+                          final filteredItems = StaffItems.where((item) {
+                            final staffCode = item['r']?.toLowerCase() ?? '';
+                            final empName =
+                                item['emp_name']?.toLowerCase() ?? '';
+                            final searchQuery =
+                                _searchController.text.toLowerCase();
 
-                          // Filter based on search query (match staffCode or empName)
-                          if (_searchController.text.isNotEmpty &&
-                              !staffCode.toLowerCase().contains(
-                                  _searchController.text.toLowerCase()) &&
-                              !empName.toLowerCase().contains(
-                                  _searchController.text.toLowerCase())) {
-                            return SizedBox.shrink();
+                            return staffCode.contains(searchQuery) ||
+                                empName.contains(searchQuery);
+                          }).toList();
+
+                          if (filteredItems.isEmpty) {
+                            return Center(
+                              child: Text(
+                                'No data found',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            );
                           }
 
-                          return ListTile(
-                            title: Text(
-                              staffCode,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            subtitle: Text(
-                              empName,
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12),
-                            ),
-                            onTap: () {
-                              setState(() {
-                                selectedStaff =
-                                    staffCode; // Update the selected item
-                                STAFF_CODE.text =
-                                    staffCode; // Update text controller
-                                print(staffCode);
-                              });
-                              Navigator.of(context).pop(); // Close the dialog
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final staffCode = item['r'];
+                              final empName = item['emp_name'] ?? '';
+
+                              return ListTile(
+                                title: Text(
+                                  staffCode,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                subtitle: Text(
+                                  empName,
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 12),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    selectedStaff =
+                                        staffCode; // Update the selected item
+                                    STAFF_CODE.text =
+                                        staffCode; // Update the text controller
+                                  });
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                },
+                              );
                             },
                           );
                         },
@@ -731,7 +752,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     ).then((_) {
       // This code runs after the dialog is closed
       setState(() {
-        // Force rebuild to reflect the selected staff in the dropdown
+        // Force rebuild to reflect the selected staff in the dropdown or other UI element
       });
     });
   }
@@ -771,6 +792,8 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   }
 
   void _showRefNoDialog() {
+    final TextEditingController _searchController = TextEditingController();
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -792,7 +815,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                         Text(
                           'เลือกเลขที่เอกสารอ้างอิง',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -812,43 +835,62 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (query) {
-                        setState(() {});
+                        setState(() {}); // Update UI on text change
                       },
                     ),
                     const SizedBox(height: 10),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: REF_NOItems.length,
-                        itemBuilder: (context, index) {
-                          final item = REF_NOItems[index];
-                          final soNo = item['so_no'];
-                          final arName = item['ar_name'];
+                      child: Builder(
+                        builder: (context) {
+                          // Filter REF_NOItems based on the search query
+                          final filteredItems = REF_NOItems.where((item) {
+                            final soNo = item['so_no']?.toLowerCase() ?? '';
+                            final searchQuery =
+                                _searchController.text.toLowerCase();
+                            return soNo.contains(searchQuery);
+                          }).toList();
 
-                          // Filter based on search query
-                          if (_searchController.text.isNotEmpty &&
-                              !soNo.toLowerCase().contains(
-                                  _searchController.text.toLowerCase())) {
-                            return SizedBox.shrink();
+                          if (filteredItems.isEmpty) {
+                            return Center(
+                              child: Text(
+                                'No data found',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            );
                           }
 
-                          return ListTile(
-                            title: Text(
-                              soNo,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            subtitle: Text(
-                              arName ?? '',
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12),
-                            ),
-                            onTap: () {
-                              setState(() {
-                                selectedREF_NO =
-                                    soNo; // Update the selected item
-                                MO_DO_NO.text = soNo; // Update text controller
-                              });
-                              Navigator.of(context).pop(); // Close the dialog
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final soNo = item['so_no'];
+                              final arName = item['ar_name'];
+
+                              return ListTile(
+                                title: Text(
+                                  soNo,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                subtitle: Text(
+                                  arName ?? '',
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 12),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    selectedREF_NO =
+                                        soNo; // Update the selected item
+                                    MO_DO_NO.text =
+                                        soNo; // Update the text controller
+                                  });
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                },
+                              );
                             },
                           );
                         },

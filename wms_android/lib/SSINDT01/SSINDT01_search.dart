@@ -138,39 +138,60 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                     ),
                     const SizedBox(height: 10),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: apCodes.length,
-                        itemBuilder: (context, index) {
-                          final item = apCodes[index];
-                          final apCode = item['ap_code'];
-                          final apName = item['ap_name'];
+                      child: Builder(
+                        builder: (context) {
+                          // Filter apCodes based on search query
+                          final filteredApCodes = apCodes.where((item) {
+                            final apCode = item['ap_code'].toLowerCase();
+                            final searchQuery =
+                                _searchController.text.toLowerCase();
+                            return apCode.contains(searchQuery);
+                          }).toList();
 
-                          if (_searchController.text.isNotEmpty &&
-                              !apCode.toLowerCase().contains(
-                                  _searchController.text.toLowerCase())) {
-                            return SizedBox
-                                .shrink(); // Filter out non-matching items
+                          if (filteredApCodes.isEmpty) {
+                            return Center(
+                              child: Text(
+                                'No data found', // Show message when no data is found
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            );
                           }
 
-                          return ListTile(
-                            title: Text(
-                              apCode,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            subtitle: Text(
-                              apName,
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12),
-                            ),
-                            onTap: () {
-                              setState(() {
-                                selectedApCode = apCode; // Set selected code
-                                _selectedApCodeController.text =
-                                    selectedApCode ??
-                                        ''; // Update the controller's text
-                              });
-                              Navigator.of(context).pop(); // Close the dialog
+                          return ListView.builder(
+                            itemCount: filteredApCodes.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredApCodes[index];
+                              final apCode = item['ap_code'];
+                              final apName = item['ap_name'];
+
+                              return ListTile(
+                                title: Text(
+                                  apCode,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                subtitle: Text(
+                                  apName,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    selectedApCode =
+                                        apCode; // Set selected code
+                                    _selectedApCodeController.text =
+                                        selectedApCode ??
+                                            ''; // Update the controller's text
+                                  });
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                },
+                              );
                             },
                           );
                         },
