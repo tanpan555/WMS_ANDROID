@@ -109,6 +109,8 @@ class _LoginPageState extends State<LoginPage> {
             arguments: globals.APP_SESSION,
           );
         } else if (data['PO_STATUS'] == '1') {
+          // Clear password and show error
+          _passwordController.clear(); // Clear the password field
           setState(() {
             _loginError = data['PO_MESSAGE'];
             _isLoading = false;
@@ -121,6 +123,7 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         print(e);
         _loginError = 'username or password Incorrect.';
+        _passwordController.clear(); // Clear the password field on error
         _isLoading = false;
       });
       print('Error during login: $e');
