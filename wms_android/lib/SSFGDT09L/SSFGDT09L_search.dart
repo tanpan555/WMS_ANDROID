@@ -65,6 +65,9 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
     },
   ];
   bool chkDate = false;
+  bool dateColorCheck = false;
+  bool monthColorCheck = false;
+  bool noDate = false;
 
   @override
   void initState() {
@@ -199,7 +202,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                   filled: true,
                   fillColor: Colors.white,
                   labelText: 'วันที่เบิกจ่าย',
-                  labelStyle: chkDate == false
+                  labelStyle: chkDate == false && noDate == false
                       ? const TextStyle(
                           color: Colors.black87,
                         )
@@ -219,6 +222,23 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                   selectedDate = value;
                   print('selectedDate : $selectedDate');
                   setState(() {
+                    // สร้าง instance ของ DateInputFormatter
+                    DateInputFormatter formatter = DateInputFormatter();
+
+                    // ตรวจสอบการเปลี่ยนแปลงของข้อความ
+                    TextEditingValue oldValue =
+                        TextEditingValue(text: dateController.text);
+                    TextEditingValue newValue = TextEditingValue(text: value);
+
+                    // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
+                    formatter.formatEditUpdate(oldValue, newValue);
+
+                    // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
+                    dateColorCheck = formatter.dateColorCheck;
+                    monthColorCheck = formatter.monthColorCheck;
+                    noDate = formatter.noDate; // เพิ่มการตรวจสอบ noDate
+                  });
+                  setState(() {
                     RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
                     // String messageAlertValueDate =
                     //     'กรุณากรองวันที่ให้ถูกต้อง';
@@ -235,11 +255,17 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                   });
                 },
               ),
-              chkDate == true
+              // noDate
+              //     ? const Text(
+              //         'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
+              //         style: TextStyle(color: Colors.red),
+              //       )
+              //     : const SizedBox.shrink(),
+              chkDate == true || noDate == true
                   ? const Padding(
                       padding: EdgeInsets.only(top: 4.0),
                       child: Text(
-                        'กรุณากรอกวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                        'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
                         style: TextStyle(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
@@ -513,6 +539,10 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
 }
 
 class DateInputFormatter extends TextInputFormatter {
+  bool dateColorCheck = false;
+  bool monthColorCheck = false;
+  bool noDate = false; // ตัวแปรเพื่อตรวจสอบว่ามีวันที่ไม่ถูกต้อง
+
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
@@ -536,11 +566,16 @@ class DateInputFormatter extends TextInputFormatter {
       year = text.substring(4);
     }
 
+    dateColorCheck = false;
+    monthColorCheck = false;
+    noDate = false; // รีเซ็ตตัวแปรเมื่อเริ่ม
+
     // ตรวจสอบว่าค่าใน day ไม่เกิน 31
     if (day.isNotEmpty) {
       int dayInt = int.parse(day);
       if (dayInt < 1 || dayInt > 31) {
-        return oldValue; // คืนค่าเดิมถ้าค่า day ไม่ถูกต้อง
+        dateColorCheck = true; // ตั้งค่าให้ dateColorCheck เป็น true
+        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
       }
     }
 
@@ -548,7 +583,8 @@ class DateInputFormatter extends TextInputFormatter {
     if (month.isNotEmpty) {
       int monthInt = int.parse(month);
       if (monthInt < 1 || monthInt > 12) {
-        return oldValue; // คืนค่าเดิมถ้าค่า month ไม่ถูกต้อง
+        monthColorCheck = true; // ตั้งค่าให้ monthColorCheck เป็น true
+        noDate = true; // บอกว่าไม่มีเดือนที่ถูกต้อง
       }
     }
 
@@ -556,7 +592,7 @@ class DateInputFormatter extends TextInputFormatter {
     if (day.isNotEmpty && month.isNotEmpty && year.length == 4) {
       if (!isValidDate(day, month, year)) {
         // ถ้าค่าไม่ถูกต้อง คืนค่าเก่าแทน
-        return oldValue;
+        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
       }
     }
 
@@ -590,6 +626,7 @@ class DateInputFormatter extends TextInputFormatter {
 
     // ตรวจสอบเดือนที่เกินขอบเขต
     if (monthInt < 1 || monthInt > 12) {
+      monthColorCheck = false;
       return false;
     }
 
@@ -612,9 +649,12 @@ class DateInputFormatter extends TextInputFormatter {
 
     // ตรวจสอบว่าค่าวันไม่เกินจำนวนวันที่ในเดือนนั้น ๆ
     if (dayInt < 1 || dayInt > maxDays) {
+      dateColorCheck = false;
       return false;
     }
 
+    dateColorCheck = true;
+    monthColorCheck = true;
     return true;
   }
 
