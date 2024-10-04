@@ -92,7 +92,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   TextEditingController updProgIDController = TextEditingController();
   TextEditingController docDateController = TextEditingController();
 
-  TextEditingController _searchController = TextEditingController();
+  TextEditingController _searchController1 = TextEditingController();
+  TextEditingController _searchController2 = TextEditingController();
+  TextEditingController _searchController3 = TextEditingController();
+  TextEditingController _searchController4 = TextEditingController();
   TextEditingController cancelController = TextEditingController();
 
   @override
@@ -107,7 +110,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
   @override
   void dispose() {
-    _searchController.dispose();
+    _searchController1.dispose();
+    _searchController2.dispose();
+    _searchController3.dispose();
+    _searchController4.dispose();
     custNameController.dispose();
     ouCodeController.dispose();
     docNoController.dispose();
@@ -930,6 +936,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                       ),
                     ),
                     const SizedBox(height: 8),
+
                     // ----------------------------------------------------------------------------------------------------------------------------------
                     // DropdownSearch<String>(
                     //   popupProps: PopupProps.menu(
@@ -1295,10 +1302,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         });
   }
 
-  void showDialogDropdownSearchMoDoNo() {
-    showDialog(
+  void showDialogDropdownSearchMoDoNo() async {
+    final result = await showDialog(
       context: context,
-      barrierDismissible: false,
+      // barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1323,8 +1330,9 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         IconButton(
                           icon: const Icon(Icons.close),
                           onPressed: () {
-                            Navigator.of(context).pop();
-                            _searchController.clear();
+                            // Navigator.of(context).pop();
+                            Navigator.of(context).pop('button');
+                            _searchController1.clear();
                           },
                         ),
                       ],
@@ -1332,7 +1340,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: _searchController,
+                      controller: _searchController1,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -1352,7 +1360,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                 '${item['schid']} ${item['fg_code']} ${item['cust_name']}'
                                     .toLowerCase();
                             final searchQuery =
-                                _searchController.text.trim().toLowerCase();
+                                _searchController1.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -1403,7 +1411,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                       testChk = 0,
                                     );
                                   });
-                                  _searchController.clear();
+                                  _searchController1.clear();
                                 },
                               );
                             },
@@ -1419,12 +1427,19 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         );
       },
     );
+    if (result == null) {
+      // กดปิดจากพื้นที่นอก dialog
+      print('Dialog closed by clicking outside.');
+    } else if (result == 'button') {
+      // กดปิดโดยใช้ปุ่มใน dialog
+      print('Dialog closed by button.');
+    }
   }
 
   void showDialogDropdownSearchRefNo() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      // barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1450,7 +1465,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            _searchController.clear();
+                            _searchController2.clear();
                           },
                         ),
                       ],
@@ -1458,7 +1473,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: _searchController,
+                      controller: _searchController2,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -1478,7 +1493,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                 '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}'
                                     .toLowerCase();
                             final searchQuery =
-                                _searchController.text.trim().toLowerCase();
+                                _searchController2.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -1520,7 +1535,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                         'moDoNoController New: $moDoNoController Type : ${moDoNoController.runtimeType}');
                                     soNoForChk = returnCode;
                                   });
-                                  _searchController.clear();
+                                  _searchController2.clear();
                                 },
                               );
                             },
@@ -1541,7 +1556,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   void showDialogDropdownSearchDocType() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      // barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1567,7 +1582,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            _searchController.clear();
+                            _searchController3.clear();
                           },
                         ),
                       ],
@@ -1575,7 +1590,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: _searchController,
+                      controller: _searchController3,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -1595,7 +1610,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                 '${item['doc_type']} ${item['doc_desc']}'
                                     .toLowerCase();
                             final searchQuery =
-                                _searchController.text.trim().toLowerCase();
+                                _searchController3.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -1635,7 +1650,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                   // print(selectedItem);
                                   print(
                                       'returnStatusLovDocType in body: $returnStatusLovDocType type: ${returnStatusLovDocType.runtimeType}');
-                                  _searchController.clear();
+                                  _searchController3.clear();
                                 },
                               );
                             },
@@ -1681,7 +1696,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                           icon: const Icon(Icons.close),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            _searchController.clear();
+                            _searchController4.clear();
                           },
                         ),
                       ],
@@ -1689,7 +1704,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                     const SizedBox(height: 10),
                     // ช่องค้นหา
                     TextField(
-                      controller: _searchController,
+                      controller: _searchController4,
                       decoration: const InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
@@ -1707,7 +1722,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                           final filteredItems = dataLovCancel.where((item) {
                             final docString = '${item['d']}'.toLowerCase();
                             final searchQuery =
-                                _searchController.text.trim().toLowerCase();
+                                _searchController4.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
                           }).toList();
 
@@ -1747,7 +1762,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                   // print(selectedItem);
                                   print(
                                       'returnStatusLovCancel in body: $returnStatusLovCancel type: ${returnStatusLovCancel.runtimeType}');
-                                  _searchController.clear();
+                                  _searchController4.clear();
                                 },
                               );
                             },
