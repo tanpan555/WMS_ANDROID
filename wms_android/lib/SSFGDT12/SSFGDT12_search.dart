@@ -501,6 +501,45 @@ class DateInputFormatter extends TextInputFormatter {
     // กรองเฉพาะตัวเลข
     text = text.replaceAll(RegExp(r'[^0-9]'), '');
 
+    String day = '';
+    String month = '';
+    String year = '';
+
+    // แยกค่า day, month, year
+    if (text.length >= 2) {
+      day = text.substring(0, 2);
+    }
+    if (text.length >= 4) {
+      month = text.substring(2, 4);
+    }
+    if (text.length > 4) {
+      year = text.substring(4);
+    }
+
+    // ตรวจสอบว่าค่าใน day ไม่เกิน 31
+    if (day.isNotEmpty) {
+      int dayInt = int.parse(day);
+      if (dayInt < 1 || dayInt > 31) {
+        return oldValue; // คืนค่าเดิมถ้าค่า day ไม่ถูกต้อง
+      }
+    }
+
+    // ตรวจสอบว่าค่าใน month ไม่เกิน 12
+    if (month.isNotEmpty) {
+      int monthInt = int.parse(month);
+      if (monthInt < 1 || monthInt > 12) {
+        return oldValue; // คืนค่าเดิมถ้าค่า month ไม่ถูกต้อง
+      }
+    }
+
+    // ตรวจสอบวันที่เฉพาะเมื่อพิมพ์ปีครบถ้วน
+    if (day.isNotEmpty && month.isNotEmpty && year.length == 4) {
+      if (!isValidDate(day, month, year)) {
+        // ถ้าค่าไม่ถูกต้อง คืนค่าเก่าแทน
+        return oldValue;
+      }
+    }
+
     // จัดรูปแบบเป็น DD/MM/YYYY
     if (text.length > 2 && text.length <= 4) {
       text = text.substring(0, 2) + '/' + text.substring(2);
@@ -521,5 +560,58 @@ class DateInputFormatter extends TextInputFormatter {
       text: text,
       selection: TextSelection.collapsed(offset: text.length),
     );
+  }
+
+  // ฟังก์ชันตรวจสอบว่าวันที่ถูกต้องหรือไม่
+  bool isValidDate(String day, String month, String year) {
+    int dayInt = int.parse(day);
+    int monthInt = int.parse(month);
+    int yearInt = int.parse(year);
+
+    // ตรวจสอบเดือนที่เกินขอบเขต
+    if (monthInt < 1 || monthInt > 12) {
+      return false;
+    }
+
+    // ตรวจสอบจำนวนวันในแต่ละเดือน
+    List<int> daysInMonth = [
+      31,
+      isLeapYear(yearInt) ? 29 : 28, // ตรวจสอบปีอธิกสุรทินเมื่อปีครบถ้วน
+      31,
+      30,
+      31,
+      30,
+      31,
+      31,
+      30,
+      31,
+      30,
+      31
+    ];
+    int maxDays = daysInMonth[monthInt - 1];
+
+    // ตรวจสอบว่าค่าวันไม่เกินจำนวนวันที่ในเดือนนั้น ๆ
+    if (dayInt < 1 || dayInt > maxDays) {
+      return false;
+    }
+
+    return true;
+  }
+
+  // ฟังก์ชันตรวจสอบปีอธิกสุรทิน (leap year)
+  bool isLeapYear(int year) {
+    if (year % 4 == 0) {
+      if (year % 100 == 0) {
+        if (year % 400 == 0) {
+          return true; // ปีที่หาร 400 ลงตัวเป็นปีอธิกสุรทิน
+        } else {
+          return false; // ปีที่หาร 100 ลงตัวแต่หาร 400 ไม่ลงตัวไม่ใช่ปีอธิกสุรทิน
+        }
+      } else {
+        return true; // ปีที่หาร 4 ลงตัวแต่หาร 100 ไม่ลงตัวเป็นปีอธิกสุรทิน
+      }
+    } else {
+      return false; // ปีที่หาร 4 ไม่ลงตัวไม่ใช่ปีอธิกสุรทิน
+    }
   }
 }
