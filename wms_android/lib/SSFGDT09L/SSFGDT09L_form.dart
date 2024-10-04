@@ -550,8 +550,9 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   }
 
   Future<void> deleteForm(String cancelCode) async {
+    print('cancelCode : $cancelCode');
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_deleteCardGrid';
+        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_DeleteForm';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -562,7 +563,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
       'pErpOuCode': globals.P_ERP_OU_CODE,
       'pDocType': widget.pDocType,
       'pDocNo': widget.pDocNo,
-      'p_cancel_code': cancelCode,
+      'p_cancel_code': cancelCode ?? '',
       'pAppUser': globals.APP_USER,
     });
     print('Request body: $body');
@@ -1268,9 +1269,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        if (returnStatusLovCancel.isNotEmpty) {
-                          deleteForm(returnStatusLovCancel);
-                        }
+                        deleteForm(returnStatusLovCancel);
+                        // if (returnStatusLovCancel.isNotEmpty) {
+                        //   deleteForm(returnStatusLovCancel);
+                        // }
                       });
                     },
                     style: ElevatedButton.styleFrom(
