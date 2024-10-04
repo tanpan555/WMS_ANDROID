@@ -418,9 +418,19 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
           border: OutlineInputBorder(),
           labelStyle: TextStyle(color: Colors.black, fontSize: 16),
         ),
-        child: Text(
-          selectedValue ?? 'Select Location',
-          style: TextStyle(color: Colors.black),
+        child: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.spaceBetween, // Align text and arrow
+          children: [
+            Text(
+              selectedValue ?? 'Select Location',
+              style: TextStyle(color: Colors.black),
+            ),
+            Icon(
+              Icons.arrow_drop_down, // Dropdown arrow icon
+              color: Colors.grey,
+            ),
+          ],
         ),
       ),
     );
@@ -454,9 +464,9 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          label,
+                          'เลือก Location ต้นทาง',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -573,9 +583,9 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          label,
+                          'เลือกคลังปลายทาง',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -676,9 +686,19 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
           border: OutlineInputBorder(),
           labelStyle: TextStyle(color: Colors.black, fontSize: 16),
         ),
-        child: Text(
-          selectedValue ?? 'Select Location',
-          style: TextStyle(color: Colors.black),
+        child: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.spaceBetween, // Align text and arrow
+          children: [
+            Text(
+              selectedValue ?? 'Select Location',
+              style: TextStyle(color: Colors.black),
+            ),
+            Icon(
+              Icons.arrow_drop_down, // Dropdown arrow icon
+              color: Colors.grey,
+            ),
+          ],
         ),
       ),
     );
@@ -712,9 +732,9 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          label,
+                          'เลือก Location ปลายทาง',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -822,9 +842,19 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
           border: OutlineInputBorder(),
           labelStyle: TextStyle(color: Colors.black, fontSize: 16),
         ),
-        child: Text(
-          selectedValue ?? 'Select Location',
-          style: TextStyle(color: Colors.black),
+        child: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.spaceBetween, // Align text and arrow
+          children: [
+            Text(
+              selectedValue ?? 'เลือก Location ปลายทาง',
+              style: TextStyle(color: Colors.black),
+            ),
+            Icon(
+              Icons.arrow_drop_down, // Dropdown arrow icon
+              color: Colors.grey,
+            ),
+          ],
         ),
       ),
     );

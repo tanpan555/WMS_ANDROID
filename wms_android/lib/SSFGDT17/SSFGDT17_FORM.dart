@@ -187,7 +187,8 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
           cCode = (jsonData['items'] as List)
               .map((item) => item as Map<String, dynamic>)
               .toList();
-          selectedcCode = cCode.isNotEmpty ? cCode[0]['r'] : null;
+          selectedcCode = '';
+          print('selectedcCode $selectedcCode');
           isLoading = false;
         });
       } else {
@@ -240,7 +241,18 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                       controller: _searchController,
                       decoration: InputDecoration(
                         hintText: 'ค้นหา', // Search hint
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black), // Black border
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.black), // Black border when focused
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.black), // Black border when enabled
+                        ),
                       ),
                       onChanged: (query) {
                         setState(() {});
@@ -268,12 +280,12 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(color: Colors.black),
                             ),
-                            subtitle: Text(
-                                item['cancel_desc']?.toString() ?? 'No code'),
+                            subtitle: Text(item['d']?.toString() ?? 'No code'),
                             onTap: () {
                               setState(() {
                                 selectedcCode = code; // Set selected code
-                                _CcodeController.text = selectedcCode ?? '';
+                                _CcodeController.text =
+                                    selectedcCode.toString();
                                 print('$selectedcCode');
                               });
                               Navigator.of(context).pop(); // Close the dialog
@@ -292,13 +304,13 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     );
   }
 
-  void showCancelDialog() {
+  void showCancelDialog(BuildContext parentContext) {
     showDialog(
-      context: context,
+      context: parentContext,
       builder: (BuildContext context) {
         return Dialog(
           child: Container(
-            width: 600.0,
+            // width: 600.0,
             height: 200.0,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -311,20 +323,38 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                         TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                   ),
                 ),
-                GestureDetector(
-                  onTap: _showDialog,
-                  child: AbsorbPointer(
-                    child: TextField(
-                      controller: _CcodeController,
-                      decoration: InputDecoration(
-                        labelText: 'สาเหตุยกเลิก',
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: InputBorder.none,
-                        labelStyle: TextStyle(color: Colors.black),
-                        suffixIcon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0), // Add horizontal padding
+                  child: GestureDetector(
+                    onTap: _showDialog,
+                    child: AbsorbPointer(
+                      child: TextField(
+                        controller: _CcodeController,
+                        decoration: InputDecoration(
+                          labelText: 'สาเหตุยกเลิก',
+                          filled: true,
+                          fillColor: Colors.white,
+                          // Add black border to TextField
+                          border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.black), // Black border
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color:
+                                    Colors.black), // Black border when focused
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color:
+                                    Colors.black), // Black border when enabled
+                          ),
+                          labelStyle: TextStyle(color: Colors.black),
+                          suffixIcon: Icon(
+                            Icons.arrow_drop_down,
+                            color: Color.fromARGB(255, 113, 113, 113),
+                          ),
                         ),
                       ),
                     ),
@@ -344,8 +374,27 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                       ),
                       TextButton(
                         child: Text('OK'),
-                        onPressed: () {
-                          if (selectedcCode != null) {
+                        onPressed: () async {
+                          await cancel_from(selectedcCode ?? '');
+                          if (selectedcCode == '') {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('คำเตือน'),
+                                  content: Text('$pomsg'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text('ตกลง'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          } else {
                             Navigator.of(context).pop();
                             showDialog(
                               context: context,
@@ -359,7 +408,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                                       onPressed: () {
                                         cancel_from(selectedcCode!).then((_) {
                                           Navigator.of(context).pop();
-                                          Navigator.of(context).push(
+                                          Navigator.of(context).pop(
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   SSFGDT17_MENU(
@@ -372,7 +421,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                                             ),
                                           );
                                         }).catchError((error) {
-                                          ScaffoldMessenger.of(context)
+                                          ScaffoldMessenger.of(parentContext)
                                               .showSnackBar(
                                             SnackBar(
                                               content: Text(
@@ -380,24 +429,6 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                                             ),
                                           );
                                         });
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('คำเตือน'),
-                                  content: Text('โปรดเลือกเหตุยกเลิก'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text('ตกลง'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
                                       },
                                     ),
                                   ],
@@ -442,7 +473,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
 
         final poStatus = responseData['po_status'] ?? 'Unknown';
-        final pomsg = responseData['po_message'] ?? 'Unknown';
+        pomsg = responseData['po_message'] ?? 'Unknown';
         print('po_status: $poStatus');
         print('po_message: $pomsg');
         print(widget.po_doc_type);
@@ -475,7 +506,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
               ElevatedButton(
                 style: AppStyles.cancelButtonStyle(),
                 onPressed: () {
-                  showCancelDialog();
+                  showCancelDialog(context);
                 },
                 child: Text(
                   'ยกเลิก',
