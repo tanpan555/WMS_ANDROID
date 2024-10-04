@@ -976,36 +976,44 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start, // จัดชิดซ้าย
                 children: [
-                  TextFormField(
-                    controller: sysQtyController,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: Colors.grey[300],
-                      labelText: 'จำนวนคงเหลือในระบบ',
-                      labelStyle: const TextStyle(
-                        color: Colors.black87,
+                  GestureDetector(
+                    child: AbsorbPointer(
+                      child: TextFormField(
+                        controller: sysQtyController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          filled: true,
+                          fillColor: Colors.grey[300],
+                          labelText: 'จำนวนคงเหลือในระบบ',
+                          labelStyle: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                        ),
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.right,
                       ),
                     ),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.right,
                   ),
                   const SizedBox(height: 8.0),
-                  TextFormField(
-                    controller: diffQtyController,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: Colors.grey[300],
-                      labelText: 'ผลต่างการตรวจนับ',
-                      labelStyle: const TextStyle(
-                        color: Colors.black87,
+                  GestureDetector(
+                    child: AbsorbPointer(
+                      child: TextFormField(
+                        controller: diffQtyController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          filled: true,
+                          fillColor: Colors.grey[300],
+                          labelText: 'ผลต่างการตรวจนับ',
+                          labelStyle: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                        ),
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.right,
                       ),
                     ),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.right,
                   ),
                   const SizedBox(height: 8.0),
                   TextFormField(

@@ -282,40 +282,50 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    TextFormField(
-                      style: const TextStyle(
-                        color: Colors.black87,
-                      ),
-                      controller: docNoController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'เลขที่เอกสาร',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          style: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                          controller: docNoController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'เลขที่เอกสาร',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
+                          readOnly: true,
                         ),
                       ),
-                      readOnly: true,
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      style: const TextStyle(
-                        color: Colors.black87,
-                      ),
-                      controller: docDateController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'วันที่เตรียมการตรวจนับ',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          style: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                          controller: docDateController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'วันที่เตรียมการตรวจนับ',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
+                          readOnly: true,
                         ),
                       ),
-                      readOnly: true,
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
@@ -398,34 +408,44 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                     const SizedBox(height: 8),
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      controller: staffCodeController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'ผู้เตรียมข้อมูลตรวจนับ',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: staffCodeController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'ผู้เตรียมข้อมูลตรวจนับ',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      controller: nbStaffNameController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: '',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: nbStaffNameController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: '',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
@@ -449,79 +469,104 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                     ),
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      controller: nbStaffCountNameController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: '',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: nbStaffCountNameController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: '',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      controller: remarkController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'คำอธิบาย',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: remarkController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'คำอธิบาย',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      controller: statusController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'สถานะเอกสาร',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: statusController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'สถานะเอกสาร',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      controller: updBy1Controller,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'ผู้ปรับปรุงล่าสุด',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: updBy1Controller,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'ผู้ปรับปรุงล่าสุด',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      controller: updDateController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'วันที่ปรับปรุงล่าสุด',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: updDateController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'วันที่ปรับปรุงล่าสุด',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
                   ],

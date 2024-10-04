@@ -358,34 +358,44 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
               ),
               const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
-              TextFormField(
-                controller: wareCodeBarcodeController,
-                readOnly: true,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  labelText: 'Warehouse',
-                  labelStyle: const TextStyle(
-                    color: Colors.black87,
+              GestureDetector(
+                child: AbsorbPointer(
+                  child: TextFormField(
+                    controller: wareCodeBarcodeController,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.grey[300],
+                      labelText: 'Warehouse',
+                      labelStyle: const TextStyle(
+                        color: Colors.black87,
+                      ),
+                    ),
                   ),
                 ),
               ),
+
               const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
-              TextFormField(
-                controller: itemCodeBarcodeController,
-                readOnly: true,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  labelText: 'Item Code',
-                  labelStyle: const TextStyle(
-                    color: Colors.black87,
+              GestureDetector(
+                child: AbsorbPointer(
+                  child: TextFormField(
+                    controller: itemCodeBarcodeController,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.grey[300],
+                      labelText: 'Item Code',
+                      labelStyle: const TextStyle(
+                        color: Colors.black87,
+                      ),
+                    ),
                   ),
                 ),
               ),
+
               const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
               TextFormField(
@@ -426,19 +436,24 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
               ),
               const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
-              TextFormField(
-                controller: locatorCodeBarcodeController,
-                readOnly: true,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  labelText: 'Locator ระบบ',
-                  labelStyle: const TextStyle(
-                    color: Colors.black87,
+              GestureDetector(
+                child: AbsorbPointer(
+                  child: TextFormField(
+                    controller: locatorCodeBarcodeController,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.grey[300],
+                      labelText: 'Locator ระบบ',
+                      labelStyle: const TextStyle(
+                        color: Colors.black87,
+                      ),
+                    ),
                   ),
                 ),
               ),
+
               const SizedBox(height: 8),
               //////////////////////////////////////////////////////////////////////////////
               TextFormField(

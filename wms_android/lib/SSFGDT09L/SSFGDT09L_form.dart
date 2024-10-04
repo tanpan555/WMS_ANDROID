@@ -709,35 +709,40 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    TextFormField(
-                      style: const TextStyle(
-                        color: Colors.black87,
-                      ),
-                      controller: docNoController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        label: RichText(
-                          text: const TextSpan(
-                            text: 'เลขที่ใบเบิก WMS', // ชื่อ label
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: 16,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: ' *', // เพิ่มเครื่องหมาย *
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          style: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                          controller: docNoController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            label: RichText(
+                              text: const TextSpan(
+                                text: 'เลขที่ใบเบิก WMS', // ชื่อ label
                                 style: TextStyle(
-                                  color: Colors.red, // สีแดงสำหรับ *
+                                  color: Colors.black87,
+                                  fontSize: 16,
                                 ),
+                                children: [
+                                  TextSpan(
+                                    text: ' *', // เพิ่มเครื่องหมาย *
+                                    style: TextStyle(
+                                      color: Colors.red, // สีแดงสำหรับ *
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 8),
                     // -----------------------------
 
@@ -1067,19 +1072,22 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                     ),
                     const SizedBox(height: 8),
                     // -----------------------------
-                    TextFormField(
-                      controller: custNameController,
-                      readOnly: true,
-                      minLines: 1,
-                      maxLines: 3,
-                      // overflow: TextOverflow.ellipsis,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'ลูกค้า',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: custNameController,
+                          readOnly: true,
+                          minLines: 1,
+                          maxLines: 3,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'ลูกค้า',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -1107,16 +1115,22 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                     ),
                     const SizedBox(height: 8),
                     // -----------------------------
-                    TextFormField(
-                      controller: erpDocNoController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.grey[300],
-                        labelText: 'เลขที่เอกสาร ERP',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: erpDocNoController,
+                          readOnly: true,
+                          minLines: 1,
+                          maxLines: 3,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: 'เลขที่เอกสาร ERP',
+                            labelStyle: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                     ),
