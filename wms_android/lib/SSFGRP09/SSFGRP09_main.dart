@@ -1462,6 +1462,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                         displayLovDate.toString();
                                     if (returnLovDate.isNotEmpty) {
                                       selectLovDocNo();
+                                      displayLovDocNo = '';
+                                      returnLovDocNo = '';
+                                      docNoController.clear();
                                     }
                                     // -----------------------------------------
                                     print(
@@ -1706,8 +1709,17 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                         displayStartWareCode.toString();
                                     if (returnStartWareCode.isNotEmpty) {
                                       selectLovEndWareCode();
+                                      displayEndWareCode = '';
+                                      returnEndWareCode = '';
+                                      endWareCodeController.clear();
                                       selectLovStartLoc();
+                                      displayStartLoc = '';
+                                      returnStartLoc = '';
+                                      startLocController.clear();
                                       selectLovEndLoc();
+                                      displayEndLoc = '';
+                                      returnEndLoc = '';
+                                      endLocController.clear();
                                     }
                                     // -----------------------------------------
                                     print(
@@ -1832,7 +1844,13 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                         displayEndWareCode.toString();
                                     if (returnEndWareCode.isNotEmpty) {
                                       selectLovStartLoc();
+                                      displayStartLoc = '';
+                                      returnStartLoc = '';
+                                      startLocController.clear();
                                       selectLovEndLoc();
+                                      displayEndLoc = '';
+                                      returnEndLoc = '';
+                                      endLocController.clear();
                                     }
                                     // -----------------------------------------
                                     print(
@@ -1956,6 +1974,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                         displayStartLoc.toString();
                                     if (returnStartLoc.isNotEmpty) {
                                       selectLovEndLoc();
+                                      displayEndLoc = '';
+                                      returnEndLoc = '';
+                                      endLocController.clear();
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2199,12 +2220,33 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                         displayStartGroup.toString();
                                     if (returnStartGroup.isNotEmpty) {
                                       selectLovEndGroup();
+                                      displayEndGroup = '';
+                                      returnEndGroup = '';
+                                      endGroupController.clear();
                                       selectLovStartCategory();
+                                      displayStartCategory = '';
+                                      returnStartCategory = '';
+                                      startCategoryController.clear();
                                       selectLovEndCategory();
+                                      displayEndCategory = '';
+                                      returnEndCategory = '';
+                                      endCategoryController.clear();
                                       selectLovStartSubCategory();
+                                      displayStartSubCategory = '';
+                                      returnStartSubCategory = '';
+                                      startSubCategoryController.clear();
                                       selectLovEndSubCategory();
+                                      displayEndSubCategory = '';
+                                      returnEndSubCategory = '';
+                                      endSubCategoryController.clear();
                                       selectLovStartItem();
+                                      displayStartItem = '';
+                                      returnStartItem = '';
+                                      startItemController.clear();
                                       selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2328,11 +2370,29 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                         displayEndGroup.toString();
                                     if (returnEndGroup.isNotEmpty) {
                                       selectLovStartCategory();
+                                      displayStartCategory = '';
+                                      returnStartCategory = '';
+                                      startCategoryController.clear();
                                       selectLovEndCategory();
+                                      displayEndCategory = '';
+                                      returnEndCategory = '';
+                                      endCategoryController.clear();
                                       selectLovStartSubCategory();
+                                      displayStartSubCategory = '';
+                                      returnStartSubCategory = '';
+                                      startSubCategoryController.clear();
                                       selectLovEndSubCategory();
+                                      displayEndSubCategory = '';
+                                      returnEndSubCategory = '';
+                                      endSubCategoryController.clear();
                                       selectLovStartItem();
+                                      displayStartItem = '';
+                                      returnStartItem = '';
+                                      startItemController.clear();
                                       selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2457,10 +2517,25 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                         displayStartCategory.toString();
                                     if (returnStartCategory.isNotEmpty) {
                                       selectLovEndCategory();
+                                      displayEndCategory = '';
+                                      returnEndCategory = '';
+                                      endCategoryController.clear();
                                       selectLovStartSubCategory();
+                                      displayStartSubCategory = '';
+                                      returnStartSubCategory = '';
+                                      startSubCategoryController.clear();
                                       selectLovEndSubCategory();
+                                      displayEndSubCategory = '';
+                                      returnEndSubCategory = '';
+                                      endSubCategoryController.clear();
                                       selectLovStartItem();
+                                      displayStartItem = '';
+                                      returnStartItem = '';
+                                      startItemController.clear();
                                       selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2585,9 +2660,21 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                         displayEndCategory.toString();
                                     if (returnEndCategory.isNotEmpty) {
                                       selectLovStartSubCategory();
+                                      displayStartSubCategory = '';
+                                      returnStartSubCategory = '';
+                                      startSubCategoryController.clear();
                                       selectLovEndSubCategory();
+                                      displayEndSubCategory = '';
+                                      returnEndSubCategory = '';
+                                      endSubCategoryController.clear();
                                       selectLovStartItem();
+                                      displayStartItem = '';
+                                      returnStartItem = '';
+                                      startItemController.clear();
                                       selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2712,8 +2799,17 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                         displayStartSubCategory.toString();
                                     if (returnStartSubCategory.isNotEmpty) {
                                       selectLovEndSubCategory();
+                                      displayEndSubCategory = '';
+                                      returnEndSubCategory = '';
+                                      endSubCategoryController.clear();
                                       selectLovStartItem();
+                                      displayStartItem = '';
+                                      returnStartItem = '';
+                                      startItemController.clear();
                                       selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2838,7 +2934,13 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                         displayEndSubCategory.toString();
                                     if (returnEndSubCategory.isNotEmpty) {
                                       selectLovStartItem();
+                                      displayStartItem = '';
+                                      returnStartItem = '';
+                                      startItemController.clear();
                                       selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2962,6 +3064,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                         displayEndSubCategory.toString();
                                     if (returnStartItem.isNotEmpty) {
                                       selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
                                     }
                                     // -----------------------------------------
                                     print(
