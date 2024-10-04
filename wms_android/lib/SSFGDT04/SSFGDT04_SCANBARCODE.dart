@@ -624,6 +624,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
           // Lot Number //
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
+            child: AbsorbPointer(
             child: TextField(
               readOnly: true,
               decoration: InputDecoration(
@@ -636,12 +637,14 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
               controller: _lotNumberController,
               textAlign: TextAlign.center,
             ),
+            ),
           ),
 
           //Quantity//
           // if (pBarcode != null && pBarcode!.isNotEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: AbsorbPointer(
             child: TextField(
               readOnly: true,
               decoration: InputDecoration(
@@ -654,11 +657,13 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
               controller: _quantityController,
               textAlign: TextAlign.center,
             ),
+            ),
           ),
 
           //Current Locator//
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
+            child: AbsorbPointer(
             child: TextField(
               readOnly: true,
               decoration: InputDecoration(
@@ -671,11 +676,13 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
               controller: _currLotController,
               textAlign: TextAlign.center,
             ),
+            ),
           ),
 
           //จำนวนล็อต/รายการรอจัดเก็บ//
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: AbsorbPointer(
             child: TextField(
               readOnly: true,
               decoration: InputDecoration(
@@ -688,11 +695,13 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
               controller: _balLotController,
               textAlign: TextAlign.center,
             ),
+            ),
           ),
 
           //จำนวน (หน่วยสต๊อก) รอจัดเก็บ//
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
+            child: AbsorbPointer(
             child: TextField(
               readOnly: true,
               decoration: InputDecoration(
@@ -704,6 +713,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
               ),
               controller: _balQtyController,
               textAlign: TextAlign.center,
+            ),
             ),
           ),
         ],

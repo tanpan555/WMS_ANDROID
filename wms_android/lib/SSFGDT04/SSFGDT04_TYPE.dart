@@ -4,11 +4,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../custom_appbar.dart';
 import '../bottombar.dart';
-// import 'SSFGDT04_FORM.dart'; // เพิ่มการนำเข้าไฟล์ FROM.dart
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGDT04_FORM.dart';
 import '../styles.dart';
-// import 'package:wms_android/custom_drawer.dart';
 
 class SSFGDT04_TYPE extends StatefulWidget {
   final String pWareCode;
@@ -24,23 +22,14 @@ class SSFGDT04_TYPE extends StatefulWidget {
 }
 
 class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
-  // DateTime? _selectedDate;
+  TextEditingController docTypeController = TextEditingController();
   List<dynamic> statusItems = [];
   String? pWareCodeCreateNewINXferWMS;
-String? pDocTypeCreateNewINXferWMS;
-
-  // String? selectedValue;
+  String? pDocTypeCreateNewINXferWMS;
   String? selectedDocType;
+  String? selectedDocDesc;
 
   final _formKey = GlobalKey<FormState>();
-  // 'V_CR_WHCODE': selectedValue,
-  //     'p_doc_type': LocCode,
-  //     'P_WARE_CODE': whOUTCode,
-  //     'P_OU_CODE': LocOUTCode,
-  //     'P_ERP_OU_CODE': currentSessionID,
-  //     'APP_SESSION': docData,
-  //     'p_ware_code': warecode,
-  //     'APP_USER': appuser,
 
   @override
   void initState() {
@@ -71,20 +60,14 @@ String? pDocTypeCreateNewINXferWMS;
     }
   }
 
-
-  // String? poStatus;
-  // String? poMessage;
-  // String? po_doc_no;
-  // String? po_doc_type;
-  // String? p_ware_code;
-
   String? poStatus;
   String? poMessage;
   String? po_doc_no;
   String? po_doc_type;
 
   Future<void> create_NewINXfer_WMS(String? pDocType) async {
-    const url = 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_Create_NewINHead';
+    const url =
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_Create_NewINHead';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -95,7 +78,6 @@ String? pDocTypeCreateNewINXferWMS;
     print(gb.APP_SESSION);
     print(gb.APP_USER);
 
-
     final body = jsonEncode({
       'P_DOC_TYPE': pDocType,
       'P_WARE_CODE': gb.P_WARE_CODE,
@@ -103,8 +85,6 @@ String? pDocTypeCreateNewINXferWMS;
       'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
       'APP_SESSION': gb.APP_SESSION,
       'APP_USER': gb.APP_USER,
-      // 'p_ware_code': 'WH001',
-      
     });
 
     print('headers : $headers Type : ${headers.runtimeType}');
@@ -138,14 +118,73 @@ String? pDocTypeCreateNewINXferWMS;
     }
   }
 
-  
+  // void _showDocumentTypePopup() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         title: Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Text(
+  //               'เลือกประเภทรายการ',
+  //               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+  //             ),
+  //             IconButton(
+  //               icon: Icon(Icons.close),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop(); // Close the popup
+  //               },
+  //             ),
+  //           ],
+  //         ),
+  //         content: SingleChildScrollView(
+  //           child: ListBody(
+  //             children: statusItems.map((item) {
+  //               return GestureDetector(
+  //                 onTap: () {
+  //                   setState(() {
+  //                     selectedDocType = item['doc_type'];
+  //                     docTypeController.text =
+  //                         item['doc_desc']; 
+  //                   });
+  //                   Navigator.of(context).pop(); // Close the popup
+  //                 },
+  //                 child: Container(
+  //                   // padding: const EdgeInsets.all(8.0),
+  //                   padding: const EdgeInsets.symmetric(
+  //                       horizontal: 16.0, vertical: 8.0),
+  //                   margin: const EdgeInsets.symmetric(vertical: 4.0),
+  //                   decoration: BoxDecoration(
+  //                     border: Border.all(
+  //                       color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
+  //                       width: 2.0, // ความหนาของขอบ
+  //                     ), // Gray border
+  //                     borderRadius:
+  //                         BorderRadius.circular(10.0), // ทำให้ขอบมีความโค้ง
+  //                   ),
+  //                   child: Text(
+  //                     item['doc_desc'] ?? 'doc_desc = null',
+  //                     style: const TextStyle(
+  //                       fontSize: 16,
+  //                       fontWeight: FontWeight.bold,
+  //                     ),
+  //                   ),
+  //                 ),
+  //               );
+  //             }).toList(),
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-      // endDrawer:CustomDrawer(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),
         child: Form(
@@ -215,89 +254,97 @@ String? pDocTypeCreateNewINXferWMS;
                     padding: EdgeInsets.symmetric(horizontal: 16),
                   ),
                 ),
+                // TextFormField(
+                //   readOnly: true, // Make it read-only to prevent keyboard popup
+                //   onTap: _showDocumentTypePopup, // Show the popup on tap
+                //   decoration: InputDecoration(
+                //     border: InputBorder.none,
+                //     labelText: 'ประเภทเอกสาร',
+                //     filled: true,
+                //     fillColor: Colors.white,
+                //   ),
+                //   controller: docTypeController,
+                //   // controller: TextEditingController(
+                //   //                     text: selectedDocType)
+                // ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                          onPressed: () async {
-                            // เรียกใช้ฟังก์ชันเพื่อสร้างเอกสารใหม่
-                            await create_NewINXfer_WMS(selectedDocType ?? '');
+                      onPressed: () async {
+                        // เรียกใช้ฟังก์ชันเพื่อสร้างเอกสารใหม่
+                        await create_NewINXfer_WMS(selectedDocType ?? '');
 
-                            // ตรวจสอบว่า form ได้รับการตรวจสอบแล้วหรือไม่
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
+                        // ตรวจสอบว่า form ได้รับการตรวจสอบแล้วหรือไม่
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
 
-                              // ตรวจสอบว่า poStatus เป็น 0 เพื่อไปยังหน้าฟอร์ม
-                              if (poStatus == '0') {
-                                await create_NewINXfer_WMS(selectedDocType);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SSFGDT04_FORM(
-                                      po_doc_no: po_doc_no ?? '',   // ส่งค่า po_doc_no
-                                      po_doc_type: po_doc_type,     // ส่งค่า po_doc_type
-                                      pWareCode: widget.pWareCode,
-                                    ),
-                                  ),
-                                );
-                              } else if (poStatus == '1') {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('คำเตือน'),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        // Text('Status: ${poStatus ?? 'No status available'}'),
-                                        // SizedBox(height: 8.0),
-                                        Text('$poMessage'),
-                                        // SizedBox(height: 8.0),
-                                        // Text('Step: ${poStep ?? 'No message available'}'),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        child: const Text('OK'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                            } else {
-                              // แสดงข้อความแจ้งเตือนหากไม่ได้เลือกข้อมูล
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('กรุณาเลือกข้อมูลก่อนกด CONFIRM'),
+                          // ตรวจสอบว่า poStatus เป็น 0 เพื่อไปยังหน้าฟอร์ม
+                          if (poStatus == '0') {
+                            await create_NewINXfer_WMS(selectedDocType);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SSFGDT04_FORM(
+                                  po_doc_no:
+                                      po_doc_no ?? '', // ส่งค่า po_doc_no
+                                  po_doc_type:
+                                      po_doc_type, // ส่งค่า po_doc_type
+                                  pWareCode: widget.pWareCode,
                                 ),
-                              );
-                            }
-                          },
-                          style: AppStyles.ConfirmbuttonStyle(),
-                          child: Text(
-                            'CONFIRM',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              letterSpacing: 1.2,
+                              ),
+                            );
+                          } else if (poStatus == '1') {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('คำเตือน'),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Text('Status: ${poStatus ?? 'No status available'}'),
+                                      // SizedBox(height: 8.0),
+                                      Text('$poMessage'),
+                                      // SizedBox(height: 8.0),
+                                      // Text('Step: ${poStep ?? 'No message available'}'),
+                                    ],
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      child: const Text('OK'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        } else {
+                          // แสดงข้อความแจ้งเตือนหากไม่ได้เลือกข้อมูล
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('กรุณาเลือกข้อมูลก่อนกด CONFIRM'),
                             ),
-                          ),
-                          // style: ElevatedButton.styleFrom(
-                          //   backgroundColor: Colors.green[500],
-                          //   padding: EdgeInsets.all(10),
-                          //   shape: RoundedRectangleBorder(
-                          //     borderRadius: BorderRadius.circular(10),
-                          //   ),
-                          // ),
+                          );
+                        }
+                      },
+                      style: AppStyles.ConfirmbuttonStyle(),
+                      child: Text(
+                        'CONFIRM',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          letterSpacing: 1.2,
                         ),
-
+                      ),
+                    ),
                   ],
                 ),
               ],
