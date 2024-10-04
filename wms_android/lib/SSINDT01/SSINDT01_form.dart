@@ -316,8 +316,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       try {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
 
-        final poStatus = responseData['po_status'] ?? 'Unknown';
-        final pomsg = responseData['po_message'] ?? 'Unknown';
+        poStatus = responseData['po_status'] ?? 'Unknown';
+        pomsg = responseData['po_message'] ?? 'Unknown';
         print('po_status: $poStatus');
         print('po_message: $pomsg');
       } catch (e) {
@@ -500,14 +500,15 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                       ),
                       TextButton(
                         child: Text('OK'),
-                        onPressed: () {
+                        onPressed: () async {
+                          await cancel_from(selectedcCode ?? '');
                           if (selectedcCode == null) {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Text('คำเตือน'),
-                                  content: Text('โปรดเลือกเหตุยกเลิก'),
+                                  content: Text('$pomsg'),
                                   actions: <Widget>[
                                     TextButton(
                                       child: Text('ตกลง'),
