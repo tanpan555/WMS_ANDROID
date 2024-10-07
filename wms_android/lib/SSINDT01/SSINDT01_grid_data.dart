@@ -1404,7 +1404,18 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Center(child: Text('คำเตือน')),
+                              title: Row(
+                                children: [
+                                  Icon(
+                                    Icons.notifications, // Use the bell icon
+                                    color: Colors.red, // Set the color to red
+                                  ),
+                                  SizedBox(
+                                      width:
+                                          8), // Add some space between the icon and the text
+                                  Text('แจ้งเตือน'), // Title text
+                                ],
+                              ),
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1415,7 +1426,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                               ),
                               actions: [
                                 TextButton(
-                                  child: Text('OK'),
+                                  child: Text('ตกลง'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
@@ -1548,8 +1559,21 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                           context: context,
                                           builder: (BuildContext context) {
                                             return AlertDialog(
-                                              title: Center(
-                                                  child: Text('คำเตือน')),
+                                              title: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons
+                                                        .notifications, // Use the bell icon
+                                                    color: Colors
+                                                        .red, // Set the color to red
+                                                  ),
+                                                  SizedBox(
+                                                      width:
+                                                          8), // Add some space between the icon and the text
+                                                  Text(
+                                                      'แจ้งเตือน'), // Title text
+                                                ],
+                                              ),
                                               content:
                                                   Text('ยืนยันที่จะลบหรือไม่'),
                                               actions: <Widget>[
@@ -1741,11 +1765,21 @@ class _LotDialogState extends State<LotDialog> {
         // );
 
         AlertDialog(
-          title: Center(child: Text('คำเตือน')),
+          title: Row(
+            children: [
+              Icon(
+                Icons.notifications, // Use the bell icon
+                color: Colors.red, // Set the color to red
+              ),
+              SizedBox(
+                  width: 8), // Add some space between the icon and the text
+              Text('แจ้งเตือน'), // Title text
+            ],
+          ),
           content: Text(poMessage ?? ''),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: Text('ตกลง'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -2520,14 +2554,24 @@ class _LotDialogState extends State<LotDialog> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Center(child: Text('คำเตือน')),
+          title: Row(
+            children: [
+              Icon(
+                Icons.notifications, // Use the bell icon
+                color: Colors.red, // Set the color to red
+              ),
+              SizedBox(
+                  width: 8), // Add some space between the icon and the text
+              Text('แจ้งเตือน'), // Title text
+            ],
+          ),
           content: Text('$poMessage'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: Text('ตกลง'),
             ),
           ],
         );
@@ -2740,8 +2784,21 @@ class _LotDialogState extends State<LotDialog> {
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
-                                                  title: Center(
-                                                      child: Text('คำเตือน')),
+                                                  title: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons
+                                                            .notifications, // Use the bell icon
+                                                        color: Colors
+                                                            .red, // Set the color to red
+                                                      ),
+                                                      SizedBox(
+                                                          width:
+                                                              8), // Add some space between the icon and the text
+                                                      Text(
+                                                          'แจ้งเตือน'), // Title text
+                                                    ],
+                                                  ),
                                                   content: Text(
                                                       'ยืนยันที่จะลบหรือไม่'),
                                                   actions: <Widget>[

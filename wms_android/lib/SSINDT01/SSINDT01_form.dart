@@ -507,7 +507,20 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('คำเตือน'),
+                                  title: Row(
+                                    children: [
+                                      Icon(
+                                        Icons
+                                            .notifications, // Use the bell icon
+                                        color:
+                                            Colors.red, // Set the color to red
+                                      ),
+                                      SizedBox(
+                                          width:
+                                              8), // Add some space between the icon and the text
+                                      Text('แจ้งเตือน'), // Title text
+                                    ],
+                                  ),
                                   content: Text('$pomsg'),
                                   actions: <Widget>[
                                     TextButton(
@@ -526,7 +539,20 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('คำเตือน'),
+                                  title: Row(
+                                    children: [
+                                      Icon(
+                                        Icons
+                                            .notifications, // Use the bell icon
+                                        color:
+                                            Colors.red, // Set the color to red
+                                      ),
+                                      SizedBox(
+                                          width:
+                                              8), // Add some space between the icon and the text
+                                      Text('แจ้งเตือน'), // Title text
+                                    ],
+                                  ),
                                   content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
                                   actions: <Widget>[
                                     TextButton(
@@ -689,7 +715,17 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('คำเตือน'),
+            title: Row(
+              children: [
+                Icon(
+                  Icons.notifications, // Use the bell icon
+                  color: Colors.red, // Set the color to red
+                ),
+                SizedBox(
+                    width: 8), // Add some space between the icon and the text
+                Text('แจ้งเตือน'), // Title text
+              ],
+            ),
             content: Text('ต้องระบุข้อมูลที่จำเป็น * ให้ครบถ้วน !!!'),
             actions: <Widget>[
               TextButton(

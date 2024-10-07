@@ -39,8 +39,6 @@ class _SSFGDT31_VERIFYState extends State<SSFGDT31_VERIFY> {
   void initState() {
     super.initState();
     get_grid_data();
-    
-    
   }
 
   List<dynamic> items = [];
@@ -77,11 +75,11 @@ class _SSFGDT31_VERIFYState extends State<SSFGDT31_VERIFY> {
     }
   }
 
-String? p_doc_no;
-String? p_doc_type;
-String? erp_doc_no;
-String? po_status;
-String? po_message;
+  String? p_doc_no;
+  String? p_doc_type;
+  String? erp_doc_no;
+  String? po_status;
+  String? po_message;
 
   Future<void> Inteface_receive_WMS2ERP() async {
     final url =
@@ -115,54 +113,52 @@ String? po_message;
     }
   }
 
-String? V_DS_PDF;
-String? LIN_ID;
-String? OU_CODE;
-String? PROGRAM_NAME;
-String? CURRENT_DATE;
-String? USER_ID;
-String? PROGRAM_ID;
-String? P_WARE;
-String? P_SESSION;
-String? v_filename;
-String? S_DOC_TYPE;
-String? S_DOC_DATE;
-String? S_DOC_NO;
-String? E_DOC_TYPE;
-String? E_DOC_DATE;
-String? E_DOC_NO;
-String? FLAG;
-String? LH_PAGE;
-String? LH_DATE;
-String? LH_AR_NAME;
-String? LH_LOGISTIC_COMP;
-String? LH_DOC_TYPE;
-String? LH_WARE;
-String? LH_CAR_ID;
-String? LH_DOC_NO;
-String? LH_DOC_DATE;
-String? LH_INVOICE_NO;
-String? LB_SEQ;
-String? LB_ITEM_CODE;
-String? LB_ITEM_NAME;
-String? LB_LOCATION;
-String? LB_UMS;
-String? LB_LOTS_PRODUCT;
-String? LB_MO_NO;
-String? LB_TRAN_QTY;
-String? LB_WEIGHT;
-String? LB_PD_LOCATION;
-String? LB_USED_TOTAL;
-String? LT_NOTE;
-String? LT_TOTAL_QTY;
-String? LT_ISSUE;
-String? LT_APPROVE;
-String? LT_OUT;
-String? LT_RECEIVE;
-String? LT_BILL;
-String? LT_CHECK;
-
-
+  String? V_DS_PDF;
+  String? LIN_ID;
+  String? OU_CODE;
+  String? PROGRAM_NAME;
+  String? CURRENT_DATE;
+  String? USER_ID;
+  String? PROGRAM_ID;
+  String? P_WARE;
+  String? P_SESSION;
+  String? v_filename;
+  String? S_DOC_TYPE;
+  String? S_DOC_DATE;
+  String? S_DOC_NO;
+  String? E_DOC_TYPE;
+  String? E_DOC_DATE;
+  String? E_DOC_NO;
+  String? FLAG;
+  String? LH_PAGE;
+  String? LH_DATE;
+  String? LH_AR_NAME;
+  String? LH_LOGISTIC_COMP;
+  String? LH_DOC_TYPE;
+  String? LH_WARE;
+  String? LH_CAR_ID;
+  String? LH_DOC_NO;
+  String? LH_DOC_DATE;
+  String? LH_INVOICE_NO;
+  String? LB_SEQ;
+  String? LB_ITEM_CODE;
+  String? LB_ITEM_NAME;
+  String? LB_LOCATION;
+  String? LB_UMS;
+  String? LB_LOTS_PRODUCT;
+  String? LB_MO_NO;
+  String? LB_TRAN_QTY;
+  String? LB_WEIGHT;
+  String? LB_PD_LOCATION;
+  String? LB_USED_TOTAL;
+  String? LT_NOTE;
+  String? LT_TOTAL_QTY;
+  String? LT_ISSUE;
+  String? LT_APPROVE;
+  String? LT_OUT;
+  String? LT_RECEIVE;
+  String? LT_BILL;
+  String? LT_CHECK;
 
   void fetchPDFData() async {
     final url = Uri.parse(
@@ -226,7 +222,6 @@ String? LT_CHECK;
         LT_BILL = data['LT_BILL'];
         LT_CHECK = data['LT_CHECK'];
         _launchUrl();
-
       } else {
         print('Failed to load data, status code: ${response.statusCode}');
       }
@@ -235,72 +230,68 @@ String? LT_CHECK;
     }
   }
 
-String? reportname = 'SSFGDT31_REPORT';
+  String? reportname = 'SSFGDT31_REPORT';
   Future<void> _launchUrl() async {
-  final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
-      '&_repName=/WMS/$reportname'
-      '&_repFormat=pdf'
-      '&_dataSource=wms'
-      '&_outFilename=${p_doc_type}-${widget.po_doc_no}'
-      '&_repLocale=en_US'
-      '&V_DS_PDF=$V_DS_PDF'
-      '&LIN_ID=$LIN_ID'
-      '&OU_CODE=$OU_CODE'
-      '&PROGRAM_NAME=$PROGRAM_NAME'
-      '&CURRENT_DATE=$CURRENT_DATE'
-      '&USER_ID=$USER_ID'
-      '&PROGRAM_ID=$PROGRAM_ID'
-      '&P_WARE=$P_WARE'
-      '&P_SESSION=$P_SESSION'
-      '&P_DOC_TYPE=RMI09'
-      '&P_ERP_DOC_NO=61010011'
+    final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
+        '&_repName=/WMS/$reportname'
+        '&_repFormat=pdf'
+        '&_dataSource=wms'
+        '&_outFilename=${p_doc_type}-${widget.po_doc_no}'
+        '&_repLocale=en_US'
+        '&V_DS_PDF=$V_DS_PDF'
+        '&LIN_ID=$LIN_ID'
+        '&OU_CODE=$OU_CODE'
+        '&PROGRAM_NAME=$PROGRAM_NAME'
+        '&CURRENT_DATE=$CURRENT_DATE'
+        '&USER_ID=$USER_ID'
+        '&PROGRAM_ID=$PROGRAM_ID'
+        '&P_WARE=$P_WARE'
+        '&P_SESSION=$P_SESSION'
+        '&P_DOC_TYPE=RMI09'
+        '&P_ERP_DOC_NO=61010011'
+        '&S_DOC_TYPE=$S_DOC_TYPE'
+        '&S_DOC_DATE=$S_DOC_DATE'
+        '&S_DOC_NO=$S_DOC_NO'
+        '&E_DOC_TYPE=$E_DOC_TYPE'
+        '&E_DOC_DATE=$E_DOC_DATE'
+        '&E_DOC_NO=$E_DOC_NO'
+        '&FLAG=$FLAG'
+        '&LH_PAGE=$LH_PAGE'
+        '&LH_DATE=$LH_DATE'
+        '&LH_AR_NAME=$LH_AR_NAME'
+        '&LH_LOGISTIC_COMP=$LH_LOGISTIC_COMP'
+        '&LH_DOC_TYPE=$LH_DOC_TYPE'
+        '&LH_WARE=$LH_WARE'
+        '&LH_CAR_ID=$LH_CAR_ID'
+        '&LH_DOC_NO=$LH_DOC_NO'
+        '&LH_DOC_DATE=$LH_DOC_DATE'
+        '&LH_INVOICE_NO=$LH_INVOICE_NO'
+        '&LB_SEQ=$LB_SEQ'
+        '&LB_ITEM_CODE=$LB_ITEM_CODE'
+        '&LB_ITEM_NAME=$LB_ITEM_NAME'
+        '&LB_LOCATION=$LB_LOCATION'
+        '&LB_UMS=$LB_UMS'
+        '&LB_LOTS_PRODUCT=$LB_LOTS_PRODUCT'
+        '&LB_MO_NO=$LB_MO_NO'
+        '&LB_TRAN_QTY=$LB_TRAN_QTY'
+        '&LB_WEIGHT=$LB_WEIGHT'
+        '&LB_PD_LOCATION=$LB_PD_LOCATION'
+        '&LB_USED_TOTAL=$LB_USED_TOTAL'
+        '&LT_NOTE=$LT_NOTE'
+        '&LT_TOTAL_QTY=$LT_TOTAL_QTY'
+        '&LT_ISSUE=$LT_ISSUE'
+        '&LT_APPROVE=$LT_APPROVE'
+        '&LT_OUT=$LT_OUT'
+        '&LT_RECEIVE=$LT_RECEIVE'
+        '&LT_BILL=$LT_BILL'
+        '&LT_CHECK=$LT_CHECK');
 
-      '&S_DOC_TYPE=$S_DOC_TYPE'
-      '&S_DOC_DATE=$S_DOC_DATE'
-      '&S_DOC_NO=$S_DOC_NO'
-      '&E_DOC_TYPE=$E_DOC_TYPE'
-      '&E_DOC_DATE=$E_DOC_DATE'
-      '&E_DOC_NO=$E_DOC_NO'
-      '&FLAG=$FLAG'
-      '&LH_PAGE=$LH_PAGE'
-      '&LH_DATE=$LH_DATE'
-      '&LH_AR_NAME=$LH_AR_NAME'
-      '&LH_LOGISTIC_COMP=$LH_LOGISTIC_COMP'
-      '&LH_DOC_TYPE=$LH_DOC_TYPE'
-      '&LH_WARE=$LH_WARE'
-      '&LH_CAR_ID=$LH_CAR_ID'
-      '&LH_DOC_NO=$LH_DOC_NO'
-      '&LH_DOC_DATE=$LH_DOC_DATE'
-      '&LH_INVOICE_NO=$LH_INVOICE_NO'
-      '&LB_SEQ=$LB_SEQ'
-      '&LB_ITEM_CODE=$LB_ITEM_CODE'
-      '&LB_ITEM_NAME=$LB_ITEM_NAME'
-      '&LB_LOCATION=$LB_LOCATION'
-      '&LB_UMS=$LB_UMS'
-      '&LB_LOTS_PRODUCT=$LB_LOTS_PRODUCT'
-      '&LB_MO_NO=$LB_MO_NO'
-      '&LB_TRAN_QTY=$LB_TRAN_QTY'
-      '&LB_WEIGHT=$LB_WEIGHT'
-      '&LB_PD_LOCATION=$LB_PD_LOCATION'
-      '&LB_USED_TOTAL=$LB_USED_TOTAL'
-      '&LT_NOTE=$LT_NOTE'
-      '&LT_TOTAL_QTY=$LT_TOTAL_QTY'
-      '&LT_ISSUE=$LT_ISSUE'
-      '&LT_APPROVE=$LT_APPROVE'
-      '&LT_OUT=$LT_OUT'
-      '&LT_RECEIVE=$LT_RECEIVE'
-      '&LT_BILL=$LT_BILL'
-      '&LT_CHECK=$LT_CHECK'
-  );
+    print(uri);
 
-  print(uri);
-
-
-  if (!await launchUrl(uri)) {
-    throw Exception('Could not launch $uri');
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch $uri');
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -316,55 +307,75 @@ String? reportname = 'SSFGDT31_REPORT';
               ElevatedButton(
                 onPressed: () async {
                   await Inteface_receive_WMS2ERP();
-                  if(po_status == '0'){
+                  if (po_status == '0') {
                     showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('คำเตือน'),
-                            content: Text(po_message ?? ''),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () async {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('ตกลง'),
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Row(
+                            children: [
+                              Icon(
+                                Icons.notifications, // Use the bell icon
+                                color: Colors.red, // Set the color to red
                               ),
+                              SizedBox(
+                                  width:
+                                      8), // Add some space between the icon and the text
+                              Text('แจ้งเตือน'), // Title text
                             ],
-                          );
-                        },
-                      );
-                  }
-                  else{
+                          ),
+                          content: Text(po_message ?? ''),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('ตกลง'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
                     showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('คำเตือน'),
-                            content: const Text(
-                                'ต้องการพิมพ์เอกสารการรับคืนหรือไม่ ?'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () async {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('ยกเลิก'),
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Row(
+                            children: [
+                              Icon(
+                                Icons.notifications, // Use the bell icon
+                                color: Colors.red, // Set the color to red
                               ),
-                            
-                              TextButton(
-                                onPressed: () async {
-                                  Navigator.of(context).pop();
-                                  fetchPDFData();
-                                },
-                                child: const Text('ตกลง'),
-                              ),
+                              SizedBox(
+                                  width:
+                                      8), // Add some space between the icon and the text
+                              Text('แจ้งเตือน'), // Title text
                             ],
-                          );
-                        },
-                      );
+                          ),
+                          content: const Text(
+                              'ต้องการพิมพ์เอกสารการรับคืนหรือไม่ ?'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('ยกเลิก'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                                fetchPDFData();
+                              },
+                              child: const Text('ตกลง'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   }
                 },
-                style:AppStyles.ConfirmbuttonStyle(),
+                style: AppStyles.ConfirmbuttonStyle(),
                 child: Text(
                   'Confirm',
                   style: AppStyles.ConfirmbuttonTextStyle(),
@@ -411,8 +422,8 @@ String? reportname = 'SSFGDT31_REPORT';
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: TextField(
-                          controller: TextEditingController(
-                              text: selectedItemDescName),
+                          controller:
+                              TextEditingController(text: selectedItemDescName),
                           decoration: InputDecoration(
                             labelText: 'Item Desc',
                             labelStyle: TextStyle(
@@ -420,10 +431,8 @@ String? reportname = 'SSFGDT31_REPORT';
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
                             ),
-                            border:
-                                InputBorder.none, 
-                            contentPadding:
-                                EdgeInsets.zero,
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
                           ),
                           style: TextStyle(
                             color: Colors.black,
@@ -444,9 +453,8 @@ String? reportname = 'SSFGDT31_REPORT';
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: TextField(
-                          controller: TextEditingController(
-                              text: widget
-                                  .DOC_DATE),
+                          controller:
+                              TextEditingController(text: widget.DOC_DATE),
                           decoration: InputDecoration(
                             labelText: 'วันที่บันทึก',
                             labelStyle: TextStyle(
@@ -454,10 +462,8 @@ String? reportname = 'SSFGDT31_REPORT';
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
                             ),
-                            border:
-                                InputBorder.none,
-                            contentPadding:
-                                EdgeInsets.zero,
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
                           ),
                           style: TextStyle(
                             color: Colors.black,
@@ -478,9 +484,8 @@ String? reportname = 'SSFGDT31_REPORT';
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: TextField(
-                          controller: TextEditingController(
-                              text: selectedInvoiceNo
-                                  ),
+                          controller:
+                              TextEditingController(text: selectedInvoiceNo),
                           decoration: InputDecoration(
                             labelText: 'เลขที่เอกสารอ้างอิง',
                             labelStyle: TextStyle(
@@ -488,10 +493,8 @@ String? reportname = 'SSFGDT31_REPORT';
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
                             ),
-                            border:
-                                InputBorder.none, 
-                            contentPadding:
-                                EdgeInsets.zero,
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
                           ),
                           style: TextStyle(
                             color: Colors.black,
@@ -512,9 +515,7 @@ String? reportname = 'SSFGDT31_REPORT';
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: TextField(
-                          controller: TextEditingController(
-                              text: widget
-                                  .SCHID),
+                          controller: TextEditingController(text: widget.SCHID),
                           decoration: InputDecoration(
                             labelText: 'เลขที่คำสั่งผลิต',
                             labelStyle: TextStyle(
@@ -522,10 +523,8 @@ String? reportname = 'SSFGDT31_REPORT';
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
                             ),
-                            border:
-                                InputBorder.none, 
-                            contentPadding:
-                                EdgeInsets.zero,
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
                           ),
                           style: TextStyle(
                             color: Colors.black,
@@ -535,7 +534,6 @@ String? reportname = 'SSFGDT31_REPORT';
                           readOnly: true,
                         ),
                       ),
-                    
                     ],
                   );
                 } else {

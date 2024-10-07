@@ -54,7 +54,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
   void initState() {
     super.initState();
     sendGetRequestlineWMS();
-    
+
     // chk_sub();
     // fetchPDFData();
 
@@ -284,240 +284,251 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
       print('Error: $e');
     }
   }
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: Color(0xFF17153B),
-    appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
-    body: Column(
-      children: [
-        // Row for widget.poPONO and Confirm button
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Flexible(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  color: const Color.fromARGB(255, 255, 242, 204),
-                  child: Center(
-                    child: Text(
-                      '${widget.poPONO}',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 0, 0, 0),
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton(
-                onPressed: () async {
-                  await chk_sub();
-                  if (poStatus == '1') {
-                    await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Center(child: Text('คำเตือน')),
-                          content: Text(poMessage ?? ''),
-                          actions: <Widget>[
-                            TextButton(
-                              child: Text('OK'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  } else if (poStatus == '0') {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Center(child: Text('$erp_doc_no')),
-                          actions: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TextButton(
-                                  child: Text('ยืนยัน'),
-                                  onPressed: () async {
-                                    showCustomDialog(context);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-                },
-                style: AppStyles.ConfirmbuttonStyle(),
-                child: Text(
-                  'Confirm',
-                  style: AppStyles.CancelbuttonTextStyle(),
-                ),
-              ),
-            ],
-          ),
-        ),
-        // Row for widget.poReceiveNo
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Flexible(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  color: const Color.fromARGB(255, 244, 244, 244),
-                  child: Center(
-                    child: Text(
-                      '${widget.poReceiveNo}',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 0, 0, 0),
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: dataList.isEmpty
-              ? Center(
-                  child: Text('No data available',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)))
-              : SingleChildScrollView(
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    children: dataList.map((data) {
-                      Map<String, String> info1 = {
-                        'จำนวนรับ:': data['receive_qty']?.toString() ?? '-',
-                        'ค้างรับ:': data['pending_qty']?.toString() ?? '-',
-                      };
-                      Map<String, String> info2 = {
-                        'Locator:': data['locator_det']?.toString() ?? '-',
-                        'Lot No:': data['lot_product_no']?.toString() ?? '-',
-                      };
-                      return Card(
-                        margin: EdgeInsets.symmetric(vertical: 8.0),
-                        elevation: 6.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        color: Color.fromRGBO(204, 235, 252, 1.0),
-                        child: Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Center(
-                                child: Text(
-                                  ' ${data['item'] ?? ''}',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: const Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                ),
-                              ),
-                              Divider(color: const Color.fromARGB(255, 0, 0, 0)),
-                              _buildInfoRow2(info1),
-                              _buildInfoRow2(info2),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-        ),
-      ],
-    ),
-    bottomNavigationBar: BottomBar(),
-  );
-}
 
-Widget _buildInfoRow2(Map<String, String> info) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4.0),
-    child: Row(
-      children: info.entries.map((entry) {
-        return Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3.0),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xFF17153B),
+      appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
+      body: Column(
+        children: [
+          // Row for widget.poPONO and Confirm button
+          Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Flexible(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      height: 30,
-                      alignment: Alignment.center,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    color: const Color.fromARGB(255, 255, 242, 204),
+                    child: Center(
                       child: Text(
-                        entry.key,
+                        '${widget.poPONO}',
                         style: TextStyle(
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 12,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 0, 0, 0),
                         ),
-                        softWrap: false,
-                        textAlign: TextAlign.right,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),
                 ),
-                SizedBox(width: 1),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () async {
+                    await chk_sub();
+                    if (poStatus == '1') {
+                      await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Row(
+                              children: [
+                                Icon(
+                                  Icons.notifications, // Use the bell icon
+                                  color: Colors.red, // Set the color to red
+                                ),
+                                SizedBox(
+                                    width:
+                                        8), // Add some space between the icon and the text
+                                Text('แจ้งเตือน'), // Title text
+                              ],
+                            ),
+                            content: Text(poMessage ?? ''),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('ตกลง'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else if (poStatus == '0') {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Center(child: Text('$erp_doc_no')),
+                            actions: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  TextButton(
+                                    child: Text('ยืนยัน'),
+                                    onPressed: () async {
+                                      showCustomDialog(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
+                  style: AppStyles.ConfirmbuttonStyle(),
+                  child: Text(
+                    'Confirm',
+                    style: AppStyles.CancelbuttonTextStyle(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Row for widget.poReceiveNo
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
                 Flexible(
-                  flex: 1,
                   child: Container(
-                    height: 30,
-                    alignment: Alignment.center,
-                    child: TextField(
-                      controller: TextEditingController(text: entry.value),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: const Color.fromARGB(255, 254, 247, 230),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 14,
-                          horizontal: 0,
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    color: const Color.fromARGB(255, 244, 244, 244),
+                    child: Center(
+                      child: Text(
+                        '${widget.poReceiveNo}',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 0, 0, 0),
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 12,
-                      ),
-                      textAlign: TextAlign.right,
-                      readOnly: true,
                     ),
                   ),
                 ),
               ],
             ),
           ),
-        );
-      }).toList(),
-    ),
-  );
-}
+          Expanded(
+            child: dataList.isEmpty
+                ? Center(
+                    child: Text('No data available',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white)))
+                : SingleChildScrollView(
+                    padding: EdgeInsets.all(8.0),
+                    child: Column(
+                      children: dataList.map((data) {
+                        Map<String, String> info1 = {
+                          'จำนวนรับ:': data['receive_qty']?.toString() ?? '-',
+                          'ค้างรับ:': data['pending_qty']?.toString() ?? '-',
+                        };
+                        Map<String, String> info2 = {
+                          'Locator:': data['locator_det']?.toString() ?? '-',
+                          'Lot No:': data['lot_product_no']?.toString() ?? '-',
+                        };
+                        return Card(
+                          margin: EdgeInsets.symmetric(vertical: 8.0),
+                          elevation: 6.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          color: Color.fromRGBO(204, 235, 252, 1.0),
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    ' ${data['item'] ?? ''}',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color.fromARGB(255, 0, 0, 0),
+                                    ),
+                                  ),
+                                ),
+                                Divider(
+                                    color: const Color.fromARGB(255, 0, 0, 0)),
+                                _buildInfoRow2(info1),
+                                _buildInfoRow2(info2),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomBar(),
+    );
+  }
 
-
+  Widget _buildInfoRow2(Map<String, String> info) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: info.entries.map((entry) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        height: 30,
+                        alignment: Alignment.center,
+                        child: Text(
+                          entry.key,
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 12,
+                          ),
+                          softWrap: false,
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 1),
+                  Flexible(
+                    flex: 1,
+                    child: Container(
+                      height: 30,
+                      alignment: Alignment.center,
+                      child: TextField(
+                        controller: TextEditingController(text: entry.value),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: const Color.fromARGB(255, 254, 247, 230),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                            horizontal: 0,
+                          ),
+                        ),
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 12,
+                        ),
+                        textAlign: TextAlign.right,
+                        readOnly: true,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
 
   void showCustomDialog(BuildContext context) {
     showDialog(

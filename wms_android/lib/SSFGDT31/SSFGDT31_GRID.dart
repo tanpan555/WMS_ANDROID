@@ -336,7 +336,18 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text('คำเตือน'),
+                          title: Row(
+                            children: [
+                              Icon(
+                                Icons.notifications, // Use the bell icon
+                                color: Colors.red, // Set the color to red
+                              ),
+                              SizedBox(
+                                  width:
+                                      8), // Add some space between the icon and the text
+                              Text('แจ้งเตือน'), // Title text
+                            ],
+                          ),
                           content: const Text(
                               'Confirmation จำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!'),
                           actions: <Widget>[
@@ -542,7 +553,21 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                                           context: context,
                                           builder: (BuildContext context) {
                                             return AlertDialog(
-                                              title: const Text('คำเตือน'),
+                                              title: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons
+                                                        .notifications, // Use the bell icon
+                                                    color: Colors
+                                                        .red, // Set the color to red
+                                                  ),
+                                                  SizedBox(
+                                                      width:
+                                                          8), // Add some space between the icon and the text
+                                                  Text(
+                                                      'แจ้งเตือน'), // Title text
+                                                ],
+                                              ),
                                               content: const Text(
                                                   'ยืนยันที่จะลบหรือไม่'),
                                               actions: <Widget>[

@@ -382,7 +382,20 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('คำเตือน'),
+                                  title: Row(
+                                    children: [
+                                      Icon(
+                                        Icons
+                                            .notifications, // Use the bell icon
+                                        color:
+                                            Colors.red, // Set the color to red
+                                      ),
+                                      SizedBox(
+                                          width:
+                                              8), // Add some space between the icon and the text
+                                      Text('แจ้งเตือน'), // Title text
+                                    ],
+                                  ),
                                   content: Text('$pomsg'),
                                   actions: <Widget>[
                                     TextButton(
@@ -401,7 +414,20 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('คำเตือน'),
+                                  title: Row(
+                                    children: [
+                                      Icon(
+                                        Icons
+                                            .notifications, // Use the bell icon
+                                        color:
+                                            Colors.red, // Set the color to red
+                                      ),
+                                      SizedBox(
+                                          width:
+                                              8), // Add some space between the icon and the text
+                                      Text('แจ้งเตือน'), // Title text
+                                    ],
+                                  ),
                                   content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
                                   actions: <Widget>[
                                     TextButton(
@@ -523,7 +549,18 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('คำเตือน'),
+                          title: Row(
+                            children: [
+                              Icon(
+                                Icons.notifications, // Use the bell icon
+                                color: Colors.red, // Set the color to red
+                              ),
+                              SizedBox(
+                                  width:
+                                      8), // Add some space between the icon and the text
+                              Text('แจ้งเตือน'), // Title text
+                            ],
+                          ),
                           content: SingleChildScrollView(
                             child: ListBody(
                               children: <Widget>[
@@ -534,7 +571,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                           ),
                           actions: <Widget>[
                             TextButton(
-                              child: Text('OK'),
+                              child: Text('ตกลง'),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },

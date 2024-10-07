@@ -440,14 +440,25 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                       context: dialogContext,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('คำเตือน'),
+                          title: Row(
+                            children: [
+                              Icon(
+                                Icons.notifications, // Use the bell icon
+                                color: Colors.red, // Set the color to red
+                              ),
+                              SizedBox(
+                                  width:
+                                      8), // Add some space between the icon and the text
+                              Text('แจ้งเตือน'), // Title text
+                            ],
+                          ),
                           content: Text('$po__loc_message_curr'),
                           actions: [
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text('OK'),
+                              child: Text('ตกลง'),
                             ),
                           ],
                         );
@@ -521,14 +532,25 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                       context: dialogContext,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('คำเตือน'),
+                          title: Row(
+                            children: [
+                              Icon(
+                                Icons.notifications, // Use the bell icon
+                                color: Colors.red, // Set the color to red
+                              ),
+                              SizedBox(
+                                  width:
+                                      8), // Add some space between the icon and the text
+                              Text('แจ้งเตือน'), // Title text
+                            ],
+                          ),
                           content: Text('$po__loc_message'),
                           actions: [
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text('OK'),
+                              child: Text('ตกลง'),
                             ),
                           ],
                         );
@@ -612,7 +634,18 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('คำเตือน'),
+                              title: Row(
+                                children: [
+                                  Icon(
+                                    Icons.notifications, // Use the bell icon
+                                    color: Colors.red, // Set the color to red
+                                  ),
+                                  SizedBox(
+                                      width:
+                                          8), // Add some space between the icon and the text
+                                  Text('แจ้งเตือน'), // Title text
+                                ],
+                              ),
                               content: Text(
                                   'ต้องการยืนยันการสร้างรายการรับ หรือไม่ ?'),
                               actions: [
@@ -633,7 +666,20 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
-                                            title: Text('คำเตือน'),
+                                            title: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons
+                                                      .notifications, // Use the bell icon
+                                                  color: Colors
+                                                      .red, // Set the color to red
+                                                ),
+                                                SizedBox(
+                                                    width:
+                                                        8), // Add some space between the icon and the text
+                                                Text('แจ้งเตือน'), // Title text
+                                              ],
+                                            ),
                                             content: Text(poMessage ??
                                                 'No message provided'),
                                             actions: [
@@ -641,7 +687,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                                                 onPressed: () {
                                                   Navigator.of(context).pop();
                                                 },
-                                                child: Text('OK'),
+                                                child: Text('ตกลง'),
                                               ),
                                             ],
                                           );

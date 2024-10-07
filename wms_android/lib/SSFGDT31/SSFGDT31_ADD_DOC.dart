@@ -153,7 +153,7 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
                       setState(() {
                         selectedValue = item['doc_type'];
                       });
-                      Navigator.of(context).pop(); // Close the dialog
+                      Navigator.of(context).pop();
                     },
                   ),
                 );

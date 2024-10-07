@@ -48,7 +48,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
   final TextEditingController _selectedApCodeController =
       TextEditingController();
   final TextEditingController _selectedProductTypeController =
-      TextEditingController(); // Controller for product type
+      TextEditingController(text: 'ทั้งหมด'); // Controller for product type
 
   @override
   void initState() {

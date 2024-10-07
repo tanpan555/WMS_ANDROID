@@ -531,7 +531,20 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('คำเตือน'),
+                                  title: Row(
+                                    children: [
+                                      Icon(
+                                        Icons
+                                            .notifications, // Use the bell icon
+                                        color:
+                                            Colors.red, // Set the color to red
+                                      ),
+                                      SizedBox(
+                                          width:
+                                              8), // Add some space between the icon and the text
+                                      Text('แจ้งเตือน'), // Title text
+                                    ],
+                                  ),
                                   content: Text('$pomsg'),
                                   actions: <Widget>[
                                     TextButton(
@@ -550,7 +563,20 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('คำเตือน'),
+                                  title: Row(
+                                    children: [
+                                      Icon(
+                                        Icons
+                                            .notifications, // Use the bell icon
+                                        color:
+                                            Colors.red, // Set the color to red
+                                      ),
+                                      SizedBox(
+                                          width:
+                                              8), // Add some space between the icon and the text
+                                      Text('แจ้งเตือน'), // Title text
+                                    ],
+                                  ),
                                   content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
                                   actions: <Widget>[
                                     TextButton(
