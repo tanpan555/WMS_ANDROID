@@ -698,95 +698,99 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     return Scaffold(
       appBar: CustomAppBar(title: 'รับคืนจากการเบิกผลิต'),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-      body: Column(
-        children: [
-          // Row for the fixed buttons at the top
-          Row(
-            children: [
-              const SizedBox(width: 8.0),
-              ElevatedButton(
-                style: AppStyles.cancelButtonStyle(),
-                onPressed: () {
-                  showCancelDialog(context);
-                },
-                child: Text(
-                  'ยกเลิก',
-                  style: AppStyles.CancelbuttonTextStyle(),
-                ),
-              ),
-              const Spacer(),
-              ElevatedButton(
-                style: AppStyles.NextButtonStyle(),
-                onPressed: () async {
-                  if (isDateValid == false) {
-                  } else {
-                    await updateForm();
-                    await fetchPoStatus();
-                    if (poStatus == '0') {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SSFGDT31_GRID(
-                            po_doc_no: widget.po_doc_no,
-                            po_doc_type: widget.po_doc_type,
-                            pWareCode: widget.pWareCode,
-                            v_ref_doc_no: v_ref_doc_no ?? '',
-                            v_ref_type: v_ref_type ?? '',
-                            SCHID: selectedMoDoNo ?? '',
-                            DOC_DATE: DOC_DATE.text ?? '',
-                          ),
-                        ),
-                      );
-                      print('pass');
-                    }
-
-                    print(widget.po_doc_no);
-                    print(widget.po_doc_type);
-                    print(selectedMoDoNo);
-                    print(NOTE.text);
-
-                    // Log the button press
-                    print('Right button pressed');
-                  }
-                },
-                child: Image.asset(
-                  'assets/images/right.png',
-                  width: 20.0,
-                  height: 20.0,
-                ),
-              ),
-              const SizedBox(width: 8.0),
-            ],
-          ),
-
-          // Space between buttons and scrollable content
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  const SizedBox(height: 8.0),
-                  Container(
-                    child: Column(
-                      children: [
-                        _buildTextFieldstar(DOC_NO, 'เลขที่เอกสาร WMS',
-                            readOnly: true),
-                        _buildDropdownForDocType(),
-                        _buildDateTextField(DOC_DATE, 'วันที่บันทึก'),
-                        _buildDropdownForRefNo(),
-                        _buildDropdownSearch(),
-                        _buildTextField(CUST, 'ลูกค้า', readOnly: true),
-                        _buildTextField(NOTE, 'หมายเหตุ'),
-                        _buildTextField(ERP_DOC_NO, 'เลขที่เอกสาร ERP',
-                            readOnly: true),
-                      ],
-                    ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0), // Adjust padding as needed
+        child: Column(
+          children: [
+            // Row for the fixed buttons at the top
+            Row(
+              children: [
+                const SizedBox(width: 8.0),
+                ElevatedButton(
+                  style: AppStyles.cancelButtonStyle(),
+                  onPressed: () {
+                    showCancelDialog(context);
+                  },
+                  child: Text(
+                    'ยกเลิก',
+                    style: AppStyles.CancelbuttonTextStyle(),
                   ),
-                ],
+                ),
+                const Spacer(),
+                ElevatedButton(
+                  style: AppStyles.NextButtonStyle(),
+                  onPressed: () async {
+                    if (isDateValid == false) {
+                      // Handle invalid date case
+                    } else {
+                      await updateForm();
+                      await fetchPoStatus();
+                      if (poStatus == '0') {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SSFGDT31_GRID(
+                              po_doc_no: widget.po_doc_no,
+                              po_doc_type: widget.po_doc_type,
+                              pWareCode: widget.pWareCode,
+                              v_ref_doc_no: v_ref_doc_no ?? '',
+                              v_ref_type: v_ref_type ?? '',
+                              SCHID: selectedMoDoNo ?? '',
+                              DOC_DATE: DOC_DATE.text ?? '',
+                            ),
+                          ),
+                        );
+                        print('pass');
+                      }
+
+                      print(widget.po_doc_no);
+                      print(widget.po_doc_type);
+                      print(selectedMoDoNo);
+                      print(NOTE.text);
+
+                      // Log the button press
+                      print('Right button pressed');
+                    }
+                  },
+                  child: Image.asset(
+                    'assets/images/right.png',
+                    width: 20.0,
+                    height: 20.0,
+                  ),
+                ),
+                const SizedBox(width: 8.0),
+              ],
+            ),
+
+            // Space between buttons and scrollable content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 8.0),
+                    Container(
+                      child: Column(
+                        children: [
+                          _buildTextFieldstar(DOC_NO, 'เลขที่เอกสาร WMS',
+                              readOnly: true),
+                          _buildDropdownForDocType(),
+                          _buildDateTextField(DOC_DATE, 'วันที่บันทึก'),
+                          _buildDropdownForRefNo(),
+                          _buildDropdownSearch(),
+                          _buildTextField(CUST, 'ลูกค้า', readOnly: true),
+                          _buildTextField(NOTE, 'หมายเหตุ'),
+                          _buildTextField(ERP_DOC_NO, 'เลขที่เอกสาร ERP',
+                              readOnly: true),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: BottomBar(),
     );
