@@ -54,6 +54,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
     _dateController.clear();
     _selectedProductTypeController.text = 'ทั้งหมด';
     setState(() {
+      isDateValid = true;
       selectedValue = 'ทั้งหมด';
       _selectedDate = null;
     });
