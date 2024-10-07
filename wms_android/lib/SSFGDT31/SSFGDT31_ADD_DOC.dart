@@ -21,9 +21,7 @@ class SSFGDT31_ADD_DOC extends StatefulWidget {
 }
 
 class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
-  // DateTime? _selectedDate;
   List<dynamic> statusItems = [];
-
   String? selectedValue;
 
   final _formKey = GlobalKey<FormState>();
@@ -41,27 +39,26 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
   String? po_message;
 
   Future<void> fetchStatusItems() async {
-  final response = await http.get(Uri.parse(
-      'http://172.16.0.82:8888/apex/wms/SSFGDT31/DOC_TYPE/${gb.ATTR1}'));
+    final response = await http.get(Uri.parse(
+        'http://172.16.0.82:8888/apex/wms/SSFGDT31/DOC_TYPE/${gb.ATTR1}'));
 
-  if (response.statusCode == 200) {
-    final responseBody = utf8.decode(response.bodyBytes);
-    final data = jsonDecode(responseBody);
-    print('Fetched data: $data');
+    if (response.statusCode == 200) {
+      final responseBody = utf8.decode(response.bodyBytes);
+      final data = jsonDecode(responseBody);
+      print('Fetched data: $data');
 
-    setState(() {
-      statusItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-      if (statusItems.isNotEmpty) {
-        selectedValue = statusItems[0]['doc_type'];
-      }
-      print('dataMenu: $statusItems');
-      print('Initial selectedValue: $selectedValue');
-    });
-  } else {
-    throw Exception('Failed to load status items');
+      setState(() {
+        statusItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+        if (statusItems.isNotEmpty) {
+          selectedValue = statusItems[0]['doc_type'];
+        }
+        print('dataMenu: $statusItems');
+        print('Initial selectedValue: $selectedValue');
+      });
+    } else {
+      throw Exception('Failed to load status items');
+    }
   }
-}
-
 
   Future<void> create_NewINXfer_WMS() async {
     final url = 'http://172.16.0.82:8888/apex/wms/SSFGDT31/Creacte_NewINHead';
@@ -110,6 +107,64 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
     }
   }
 
+  // Method to show the document type selection dialog
+  void _showDocumentTypeDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'เลือกประเภทเอกสาร',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () =>
+                    Navigator.of(context).pop(), // Close the dialog
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: statusItems.map((item) {
+                return Container(
+                  margin:
+                      const EdgeInsets.only(bottom: 8), // Margin between items
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Colors.black, width: 1.0), // Black border
+                    borderRadius: BorderRadius.circular(5.0), // Rounded corners
+                  ),
+                  child: ListTile(
+                    title: Text(
+                      item['doc_desc'] ?? '',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onTap: () {
+                      setState(() {
+                        selectedValue = item['doc_type'];
+                      });
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,77 +179,34 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                DropdownButtonFormField2<String>(
-  isExpanded: true,
-  decoration: InputDecoration(
-    border: InputBorder.none,
-    filled: true,
-    fillColor: Colors.white,
-    labelText: 'ประเภทเอกสาร',
-    labelStyle: TextStyle(
-      fontSize: 14,
-      color: Colors.black,
-    ),
-  ),
-  value: selectedValue, // Set the initial selected value
-  items: statusItems
-      .map((item) => DropdownMenuItem<String>(
-            value: item['doc_type'],
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    item['doc_desc'] ?? '',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
+                // Replace DropdownButton with a button to open dialog
+                GestureDetector(
+                  onTap: _showDocumentTypeDialog,
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      // borderRadius: BorderRadius.circular(5),
+                      color: Colors.white,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          selectedValue != null
+                              ? statusItems.firstWhere((item) =>
+                                      item['doc_type'] ==
+                                      selectedValue)['doc_desc'] ??
+                                  ''
+                              : 'ประเภทเอกสาร',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
+                        Icon(Icons.arrow_drop_down, color: Colors.black),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
-          ))
-      .toList(),
-  validator: (value) {
-    if (value == null) {
-      return 'Please select a status.';
-    }
-    return null;
-  },
-  onChanged: (value) {
-    setState(() {
-      selectedValue = value.toString();
-      print(selectedValue);
-    });
-  },
-  onSaved: (value) {
-    selectedValue = value.toString();
-  },
-  style: const TextStyle(
-    fontSize: 16,
-    color: Colors.black,
-  ),
-  iconStyleData: const IconStyleData(
-    icon: Icon(
-      Icons.arrow_drop_down,
-      color: Color.fromARGB(255, 113, 113, 113),
-    ),
-    iconSize: 20,
-  ),
-  dropdownStyleData: DropdownStyleData(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(1),
-      color: Colors.white,
-    ),
-    maxHeight: 150,
-  ),
-  menuItemStyleData: const MenuItemStyleData(
-    padding: EdgeInsets.symmetric(horizontal: 16),
-  ),
-),
-
-
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

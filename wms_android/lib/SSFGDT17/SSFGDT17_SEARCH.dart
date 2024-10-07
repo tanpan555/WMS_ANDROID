@@ -23,6 +23,8 @@ class SSFGDT17_SEARCH extends StatefulWidget {
 class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
   final _formKey = GlobalKey<FormState>();
   final _dateController = TextEditingController();
+  final TextEditingController _selectedProductTypeController =
+      TextEditingController(text: 'ปกติ'); // Controller for product type
   DateTime? _selectedDate;
   String? selectedValue;
   final List<String> statusItems = ['ทั้งหมด', 'ปกติ', 'ยกเลิก', 'รับโอนแล้ว'];
@@ -50,6 +52,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
     _formKey.currentState?.reset();
     _documentNumberController.clear();
     _dateController.clear();
+    _selectedProductTypeController.text = 'ทั้งหมด';
     setState(() {
       selectedValue = 'ทั้งหมด';
       _selectedDate = null;
@@ -88,6 +91,85 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
     }
   }
 
+  void _showProductTypeDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            height: 300, // Adjust the height as needed
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title and Close Button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'เลือกประเภทรายการ', // Title
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+
+                // List of Items with black frame around each item
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: statusItems.length,
+                    itemBuilder: (context, index) {
+                      final item = statusItems[index];
+
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Colors.black,
+                              width: 1.0), // Black border around each item
+                          borderRadius: BorderRadius.circular(
+                              5.0), // Rounded corners (optional)
+                        ),
+                        child: ListTile(
+                          title: Text(
+                            item,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              selectedValue = item;
+                              _selectedProductTypeController.text = item;
+                            });
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,49 +186,22 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                DropdownButtonFormField2<String>(
-                  isExpanded: true,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelText: 'ประเภทรายการ',
-                    labelStyle: TextStyle(fontSize: 16, color: Colors.black),
+                GestureDetector(
+                  onTap: _showProductTypeDialog,
+                  child: AbsorbPointer(
+                    child: TextField(
+                      controller: _selectedProductTypeController,
+                      decoration: InputDecoration(
+                        labelText: 'ประเภทรายการ',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: InputBorder.none,
+                        suffixIcon: Icon(Icons.arrow_drop_down,
+                            color: Color.fromARGB(255, 0, 0, 0)),
+                      ),
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
-
-                  items: statusItems
-                      .map((item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(item,
-                                style: const TextStyle(
-                                    fontSize: 14, color: Colors.black)),
-                          ))
-                      .toList(),
-                  validator: (value) =>
-                      value == null ? 'Please select a status.' : null,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedValue = value;
-                    });
-                  },
-                  onSaved: (value) => selectedValue = value,
-                  value: selectedValue,
-                  style: TextStyle(color: Colors.black),
-                  buttonStyleData:
-                      const ButtonStyleData(padding: EdgeInsets.only(right: 8)),
-                  iconStyleData: const IconStyleData(
-                    icon: Icon(Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113)),
-                    iconSize: 24,
-                  ),
-                  //  dropdownStyleData: DropdownStyleData(
-                  //   decoration: BoxDecoration(
-                  //       borderRadius: BorderRadius.circular(15),
-                  //       color: Colors.white),
-                  //   maxHeight: 350,
-                  // ),
-                  menuItemStyleData: const MenuItemStyleData(
-                      padding: EdgeInsets.symmetric(horizontal: 16)),
                 ),
                 const SizedBox(height: 16),
                 TextField(

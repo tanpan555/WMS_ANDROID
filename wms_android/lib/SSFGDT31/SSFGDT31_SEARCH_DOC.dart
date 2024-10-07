@@ -35,6 +35,8 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
+  final TextEditingController _selectedStatusController =
+      TextEditingController();
   bool isDateValid = true;
 
   @override
@@ -42,6 +44,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
     super.initState();
     print(widget.pWareCode);
     selectedValue = 'ระหว่างบันทึก';
+    _selectedStatusController.text = selectedValue!;
     _dateController.text = _selectedDate == null
         ? ''
         : DateFormat('dd/MM/yyyy').format(_selectedDate!);
@@ -50,8 +53,83 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
   @override
   void dispose() {
     _dateController.dispose();
+    _selectedStatusController.dispose();
     searchController.dispose();
     super.dispose();
+  }
+
+  void _showStatusDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title and Close Button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'เลือกประเภทรายการ',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+
+                // ListView with items having a black frame
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: statusItems.length,
+                    itemBuilder: (context, index) {
+                      final item = statusItems[index];
+
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Colors.black,
+                              width: 1.0), // Black border around each item
+                          borderRadius: BorderRadius.circular(
+                              5.0), // Rounded corners for each item (optional)
+                        ),
+                        child: ListTile(
+                          title: Text(item),
+                          onTap: () {
+                            setState(() {
+                              selectedValue = item;
+                              _selectedStatusController.text = item;
+                            });
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _validateDate(String value) {
@@ -99,48 +177,24 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                DropdownButtonFormField2<String>(
-                  isExpanded: true,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    alignLabelWithHint: true,
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelText: 'ประเภทรายการ',
-                    labelStyle: TextStyle(fontSize: 16, color: Colors.black),
+                GestureDetector(
+                  onTap: _showStatusDialog,
+                  child: AbsorbPointer(
+                    child: TextField(
+                      controller: _selectedStatusController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'ประเภทรายการ',
+                        labelStyle:
+                            TextStyle(fontSize: 16, color: Colors.black),
+                        suffixIcon: Icon(Icons.arrow_drop_down,
+                            color: Color.fromARGB(255, 113, 113, 113)),
+                      ),
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
-                  value: selectedValue,
-                  items: statusItems
-                      .map((item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(item,
-                                style: const TextStyle(
-                                    fontSize: 14, color: Colors.black)),
-                          ))
-                      .toList(),
-                  validator: (value) =>
-                      value == null ? 'Please select a status.' : null,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedValue = value;
-                    });
-                  },
-                  onSaved: (value) => selectedValue = value,
-                  buttonStyleData:
-                      const ButtonStyleData(padding: EdgeInsets.only(right: 8)),
-                  iconStyleData: const IconStyleData(
-                    icon: Icon(Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113)),
-                    iconSize: 24,
-                  ),
-                  dropdownStyleData: DropdownStyleData(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.white),
-                    maxHeight: 350,
-                  ),
-                  menuItemStyleData: const MenuItemStyleData(
-                      padding: EdgeInsets.symmetric(horizontal: 16)),
                 ),
                 const SizedBox(height: 16),
                 TextField(
