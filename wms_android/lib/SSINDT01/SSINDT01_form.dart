@@ -643,6 +643,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       setState(() {
         invoiceDate = apiFormat.format(picked);
         invoiceDateController.text = displayFormat.format(picked);
+        isInvoiceDateValid = true;
       });
     }
   }
@@ -668,6 +669,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       setState(() {
         receiveDate = apiFormat.format(picked);
         receiveDateController.text = displayFormat.format(picked);
+        isDateValid = true; // Add this line to set isDateValid to true
       });
     }
   }
@@ -983,6 +985,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             controller: receiveDateController,
             decoration: InputDecoration(
               labelText: 'วันที่ตรวจรับ',
+              hintText: 'DD/MM/YYYY',
               filled: true,
               fillColor: Colors.white,
               border: InputBorder.none,
@@ -990,7 +993,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                 color: Colors.black,
               ),
               hintStyle: TextStyle(
-                color: Colors.white70,
+                color: Colors.grey, // Change to a darker color
               ),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.calendar_today, color: Colors.black),
@@ -1120,12 +1123,13 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               ),
               filled: true,
               fillColor: Colors.white,
+              hintText: 'DD/MM/YYYY',
               border: InputBorder.none,
               labelStyle: TextStyle(
                 color: Colors.black,
               ),
               hintStyle: TextStyle(
-                color: Colors.white70,
+                color: Colors.grey,
               ),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.calendar_today, color: Colors.black),
@@ -1169,11 +1173,11 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               ? const Padding(
                   padding: EdgeInsets.only(top: 4.0),
                   child: Text(
-                    'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
+                    'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
                     style: TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      fontSize: 12,
                     ),
                   ),
                 )
