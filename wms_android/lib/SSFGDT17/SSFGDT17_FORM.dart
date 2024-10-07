@@ -280,7 +280,8 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(color: Colors.black),
                             ),
-                            subtitle: Text(item['d']?.toString() ?? 'No code'),
+                            subtitle: Text(
+                                item['cancel_desc']?.toString() ?? 'No code'),
                             onTap: () {
                               setState(() {
                                 selectedcCode = code; // Set selected code
@@ -517,7 +518,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
               ElevatedButton(
                 style: AppStyles.NextButtonStyle(),
                 onPressed: () async {
-                  if (CR_DATE.text.isEmpty) {
+                  if (CR_DATE.text.isEmpty || isDateValid == false) {
                     showDialog<void>(
                       context: context,
                       builder: (BuildContext context) {
