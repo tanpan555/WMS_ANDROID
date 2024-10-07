@@ -129,9 +129,11 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   }
 
   Future<void> fetchData([String? url]) async {
-    setState(() {
-      isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
 
     final String requestUrl = url ??
         'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${widget.pErpOuCode}/${widget.pAttr1}/${widget.pAppUser}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}';
@@ -143,30 +145,36 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
         final responseBody = utf8.decode(response.bodyBytes);
         final parsedResponse = json.decode(responseBody);
 
-        setState(() {
-          if (parsedResponse is Map && parsedResponse.containsKey('items')) {
-            dataCard = parsedResponse['items'];
-          } else {
-            dataCard = [];
-          }
+        if (mounted) {
+          setState(() {
+            if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+              dataCard = parsedResponse['items'];
+            } else {
+              dataCard = [];
+            }
 
-          List<dynamic> links = parsedResponse['links'] ?? [];
-          nextLink = getLink(links, 'next');
-          prevLink = getLink(links, 'prev');
-          isLoading = false;
-        });
+            List<dynamic> links = parsedResponse['links'] ?? [];
+            nextLink = getLink(links, 'next');
+            prevLink = getLink(links, 'prev');
+            isLoading = false;
+          });
+        }
       } else {
-        setState(() {
-          print('Failed to load data: ${response.statusCode}');
-        });
+        if (mounted) {
+          setState(() {
+            print('Failed to load data: ${response.statusCode}');
+          });
+        }
         print('HTTP Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
       // Handle exceptions that may occur
-      setState(() {
-        // isLoading = false;
-        print('Error occurred: $e');
-      });
+      if (mounted) {
+        setState(() {
+          // isLoading = false;
+          print('Error occurred: $e');
+        });
+      }
       print('Exception: $e');
     }
   }
@@ -179,19 +187,23 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
 
   void loadNextPage() {
     if (nextLink != '') {
-      setState(() {
-        print('nextLink $nextLink');
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          print('nextLink $nextLink');
+          isLoading = true;
+        });
+      }
       fetchData(nextLink);
     }
   }
 
   void loadPrevPage() {
     if (prevLink != '') {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       fetchData(prevLink);
     }
   }
@@ -945,7 +957,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                   const SizedBox(height: 10),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
                         onPressed: () {
@@ -955,7 +967,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                           backgroundColor: Colors.white,
                           side: BorderSide(color: Colors.grey),
                         ),
-                        child: const Text('ย้อนกลับ'),
+                        child: const Text('ตกลง'),
                       ),
                     ],
                   )

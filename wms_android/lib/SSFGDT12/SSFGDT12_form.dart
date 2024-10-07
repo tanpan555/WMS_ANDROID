@@ -345,6 +345,8 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                         filled: true,
                         fillColor: Colors.white,
                         labelText: 'วันที่ตรวจนับ',
+                        hintText: 'DD/MM/YYYY',
+                        hintStyle: TextStyle(color: Colors.grey),
                         labelStyle: const TextStyle(
                           color: Colors.black87,
                         ),
@@ -615,7 +617,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                   const SizedBox(height: 10),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
                         onPressed: () {
@@ -625,7 +627,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                           backgroundColor: Colors.white,
                           side: const BorderSide(color: Colors.grey),
                         ),
-                        child: const Text('ย้อนกลับ'),
+                        child: const Text('ตกลง'),
                       ),
                     ],
                   )
@@ -653,6 +655,10 @@ class DateInputFormatter extends TextInputFormatter {
     String day = '';
     String month = '';
     String year = '';
+
+    // เก็บตำแหน่งของเคอร์เซอร์ปัจจุบันก่อนจัดรูปแบบข้อความ
+    int cursorPosition = newValue.selection.baseOffset;
+    int additionalOffset = 0;
 
     // แยกค่า day, month, year
     if (text.length >= 2) {
@@ -687,44 +693,53 @@ class DateInputFormatter extends TextInputFormatter {
       noDate = true;
     } else if (text.length == 8) {
       noDate = false;
+    } else {
+      noDate = false;
     }
 
     // ตรวจสอบว่าค่าใน day ไม่เกิน 31
     if (day.isNotEmpty && !noDate) {
-      // เช็คเฉพาะเมื่อ noDate ยังไม่เป็น true
       int dayInt = int.parse(day);
       if (dayInt < 1 || dayInt > 31) {
-        dateColorCheck = true; // ตั้งค่าให้ dateColorCheck เป็น true
-        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
+        dateColorCheck = true;
+        noDate = true;
       }
     }
 
     // ตรวจสอบว่าค่าใน month ไม่เกิน 12
     if (month.isNotEmpty && !noDate) {
-      // เช็คเฉพาะเมื่อ noDate ยังไม่เป็น true
       int monthInt = int.parse(month);
       if (monthInt < 1 || monthInt > 12) {
-        monthColorCheck = true; // ตั้งค่าให้ monthColorCheck เป็น true
-        noDate = true; // บอกว่าไม่มีเดือนที่ถูกต้อง
+        monthColorCheck = true;
+        noDate = true;
       }
     }
 
     // ตรวจสอบวันที่เฉพาะเมื่อพิมพ์ปีครบถ้วน
     if (day.isNotEmpty && month.isNotEmpty && year.length == 4 && !noDate) {
       if (!isValidDate(day, month, year)) {
-        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
+        noDate = true;
       }
     }
 
     // จัดรูปแบบเป็น DD/MM/YYYY
     if (text.length > 2 && text.length <= 4) {
       text = text.substring(0, 2) + '/' + text.substring(2);
+      if (cursorPosition > 2) {
+        additionalOffset++;
+      }
     } else if (text.length > 4 && text.length <= 8) {
       text = text.substring(0, 2) +
           '/' +
           text.substring(2, 4) +
           '/' +
           text.substring(4);
+      if (cursorPosition > 2) {
+        additionalOffset++;
+      }
+      if (cursorPosition > 4) {
+        additionalOffset++;
+      }
     }
 
     // จำกัดความยาวไม่เกิน 10 ตัว (รวม /)
@@ -732,9 +747,16 @@ class DateInputFormatter extends TextInputFormatter {
       text = text.substring(0, 10);
     }
 
+    // คำนวณตำแหน่งของเคอร์เซอร์หลังจากจัดรูปแบบ
+    cursorPosition += additionalOffset;
+
+    if (cursorPosition > text.length) {
+      cursorPosition = text.length;
+    }
+
     return TextEditingValue(
       text: text,
-      selection: TextSelection.collapsed(offset: text.length),
+      selection: TextSelection.collapsed(offset: cursorPosition),
     );
   }
 

@@ -156,6 +156,8 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 filled: true,
                 fillColor: Colors.white,
                 labelText: 'วันที่เตรียมข้อมูลตรวจนับ',
+                hintText: 'DD/MM/YYYY',
+                hintStyle: TextStyle(color: Colors.grey),
                 labelStyle: chkDate == false
                     ? const TextStyle(
                         color: Colors.black87,
@@ -270,14 +272,42 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 /// //////////////////////////////////////////////////////
                 ElevatedButton(
                   onPressed: () {
-                    if (selectedDate.isNotEmpty &&
-                        noDate != true &&
-                        chkDate != true) {
-                      RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                      if (!dateRegExp.hasMatch(selectedDate)) {
-                        setState(() {
-                          chkDate = true;
-                        });
+                    if (noDate == false && chkDate == false) {
+                      if (selectedDate.isNotEmpty &&
+                          noDate != true &&
+                          chkDate != true) {
+                        RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                        if (!dateRegExp.hasMatch(selectedDate)) {
+                          setState(() {
+                            chkDate = true;
+                          });
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Ssfgdt12Card(
+                                      docNo: pDocNo,
+                                      date: selectedDate,
+                                      status: status,
+                                      pWareCode: widget.pWareCode,
+                                      p_flag: p_flag,
+                                      browser_language:
+                                          globals.BROWSER_LANGUAGE,
+                                      pErpOuCode: widget.pErpOuCode,
+                                      p_attr1: widget.p_attr1,
+                                    )),
+                          ).then((value) async {
+                            // เมื่อกลับมาหน้าเดิม เรียก fetchData
+                            setState(() {
+                              // pDocNo = '';
+                              // selectedDate = '';
+                              // selectedItem = 'รอตรวจนับ';
+                              // status = 'N';
+                              // _controller.clear();
+                              // _dateController.clear();
+                            });
+                          });
+                        }
                       } else {
                         Navigator.push(
                           context,
@@ -304,31 +334,6 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                           });
                         });
                       }
-                    } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Ssfgdt12Card(
-                                  docNo: pDocNo,
-                                  date: selectedDate,
-                                  status: status,
-                                  pWareCode: widget.pWareCode,
-                                  p_flag: p_flag,
-                                  browser_language: globals.BROWSER_LANGUAGE,
-                                  pErpOuCode: widget.pErpOuCode,
-                                  p_attr1: widget.p_attr1,
-                                )),
-                      ).then((value) async {
-                        // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                        setState(() {
-                          // pDocNo = '';
-                          // selectedDate = '';
-                          // selectedItem = 'รอตรวจนับ';
-                          // status = 'N';
-                          // _controller.clear();
-                          // _dateController.clear();
-                        });
-                      });
                     }
                     // _navigateToPage(
                     //     context,
@@ -531,6 +536,10 @@ class DateInputFormatter extends TextInputFormatter {
     String month = '';
     String year = '';
 
+    // เก็บตำแหน่งของเคอร์เซอร์ปัจจุบันก่อนจัดรูปแบบข้อความ
+    int cursorPosition = newValue.selection.baseOffset;
+    int additionalOffset = 0;
+
     // แยกค่า day, month, year
     if (text.length >= 2) {
       day = text.substring(0, 2);
@@ -570,40 +579,47 @@ class DateInputFormatter extends TextInputFormatter {
 
     // ตรวจสอบว่าค่าใน day ไม่เกิน 31
     if (day.isNotEmpty && !noDate) {
-      // เช็คเฉพาะเมื่อ noDate ยังไม่เป็น true
       int dayInt = int.parse(day);
       if (dayInt < 1 || dayInt > 31) {
-        dateColorCheck = true; // ตั้งค่าให้ dateColorCheck เป็น true
-        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
+        dateColorCheck = true;
+        noDate = true;
       }
     }
 
     // ตรวจสอบว่าค่าใน month ไม่เกิน 12
     if (month.isNotEmpty && !noDate) {
-      // เช็คเฉพาะเมื่อ noDate ยังไม่เป็น true
       int monthInt = int.parse(month);
       if (monthInt < 1 || monthInt > 12) {
-        monthColorCheck = true; // ตั้งค่าให้ monthColorCheck เป็น true
-        noDate = true; // บอกว่าไม่มีเดือนที่ถูกต้อง
+        monthColorCheck = true;
+        noDate = true;
       }
     }
 
     // ตรวจสอบวันที่เฉพาะเมื่อพิมพ์ปีครบถ้วน
     if (day.isNotEmpty && month.isNotEmpty && year.length == 4 && !noDate) {
       if (!isValidDate(day, month, year)) {
-        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
+        noDate = true;
       }
     }
 
     // จัดรูปแบบเป็น DD/MM/YYYY
     if (text.length > 2 && text.length <= 4) {
       text = text.substring(0, 2) + '/' + text.substring(2);
+      if (cursorPosition > 2) {
+        additionalOffset++;
+      }
     } else if (text.length > 4 && text.length <= 8) {
       text = text.substring(0, 2) +
           '/' +
           text.substring(2, 4) +
           '/' +
           text.substring(4);
+      if (cursorPosition > 2) {
+        additionalOffset++;
+      }
+      if (cursorPosition > 4) {
+        additionalOffset++;
+      }
     }
 
     // จำกัดความยาวไม่เกิน 10 ตัว (รวม /)
@@ -611,9 +627,16 @@ class DateInputFormatter extends TextInputFormatter {
       text = text.substring(0, 10);
     }
 
+    // คำนวณตำแหน่งของเคอร์เซอร์หลังจากจัดรูปแบบ
+    cursorPosition += additionalOffset;
+
+    if (cursorPosition > text.length) {
+      cursorPosition = text.length;
+    }
+
     return TextEditingValue(
       text: text,
-      selection: TextSelection.collapsed(offset: text.length),
+      selection: TextSelection.collapsed(offset: cursorPosition),
     );
   }
 

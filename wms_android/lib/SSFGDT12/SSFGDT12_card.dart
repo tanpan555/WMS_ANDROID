@@ -62,9 +62,11 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
   }
 
   Future<void> fetchData([String? url]) async {
-    setState(() {
-      isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
 
     final String requestUrl = url ??
         'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_1_SelectDataCard/${widget.pErpOuCode}/${widget.docNo.isNotEmpty ? widget.docNo : 'null'}/${widget.status}/${widget.browser_language}';
@@ -76,19 +78,21 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
         final responseBody = utf8.decode(response.bodyBytes);
         final parsedResponse = json.decode(responseBody);
 
-        setState(() {
-          if (parsedResponse is Map && parsedResponse.containsKey('items')) {
-            dataCard = parsedResponse['items'];
-          } else {
-            dataCard = [];
-          }
+        if (mounted) {
+          setState(() {
+            if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+              dataCard = parsedResponse['items'];
+            } else {
+              dataCard = [];
+            }
 
-          List<dynamic> links = parsedResponse['links'] ?? [];
-          nextLink = getLink(links, 'next');
-          prevLink = getLink(links, 'prev');
-          filterData();
-          print('dataCard : $dataCard Type : ${dataCard.runtimeType}');
-        });
+            List<dynamic> links = parsedResponse['links'] ?? [];
+            nextLink = getLink(links, 'next');
+            prevLink = getLink(links, 'prev');
+            filterData();
+            print('dataCard : $dataCard Type : ${dataCard.runtimeType}');
+          });
+        }
       } else {
         setState(() {
           print('Failed to load data: ${response.statusCode}');
@@ -97,10 +101,12 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
       }
     } catch (e) {
       // Handle exceptions that may occur
-      setState(() {
-        // isLoading = false;
-        print('Error occurred: $e');
-      });
+      if (mounted) {
+        setState(() {
+          // isLoading = false;
+          print('Error occurred: $e');
+        });
+      }
       print('Exception: $e');
     }
   }
@@ -133,19 +139,23 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
 
   void loadNextPage() {
     if (nextLink != '') {
-      setState(() {
-        print('nextLink $nextLink');
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          print('nextLink $nextLink');
+          isLoading = true;
+        });
+      }
       fetchData(nextLink);
     }
   }
 
   void loadPrevPage() {
     if (prevLink != '') {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       fetchData(prevLink);
     }
   }

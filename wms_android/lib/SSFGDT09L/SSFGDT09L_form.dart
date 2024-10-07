@@ -821,6 +821,8 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             ],
                           ),
                         ),
+                        hintText: 'DD/MM/YYYY',
+                        hintStyle: TextStyle(color: Colors.grey),
                         // labelText: 'วันที่บันทึก *',
                         // labelStyle: const TextStyle(
                         //   color: Colors.black87,
@@ -838,6 +840,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         crDate = value;
                         print('crDate : $crDate');
                         setState(() {
+                          //----------------------------------------------\\
                           // สร้าง instance ของ DateInputFormatter
                           DateInputFormatter formatter = DateInputFormatter();
 
@@ -854,8 +857,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                           dateColorCheck = formatter.dateColorCheck;
                           monthColorCheck = formatter.monthColorCheck;
                           noDate = formatter.noDate; // เพิ่มการตรวจสอบ noDate
-                        });
-                        setState(() {
+                          //--------------------------------------------------\\
                           RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
                           // String messageAlertValueDate =
                           //     'กรุณากรองวันที่ให้ถูกต้อง';
@@ -1238,7 +1240,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             borderSide: BorderSide(color: Colors.black)),
                         filled: true,
                         fillColor: Colors.white,
-                        labelText: 'เลขที่คำสั่งผลผลิต *',
+                        labelText: 'สาเหตุการยกเลิก',
                         labelStyle: TextStyle(
                           color: Colors.black87,
                         ),
@@ -1266,7 +1268,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ย้อนกลับ'),
+                    child: const Text('Cancel'),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -1281,7 +1283,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ยืนยัน'),
+                    child: const Text('OK'),
                   ),
                 ],
               )
@@ -1326,7 +1328,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
             ),
             actions: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
                     onPressed: () {
@@ -1336,7 +1338,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ย้อนกลับ'),
+                    child: const Text('ตกลง'),
                   ),
                 ],
               )
@@ -1401,7 +1403,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         builder: (context) {
                           final filteredItems = dataLovMoDoNo.where((item) {
                             final docString =
-                                '${item['schid']} ${item['fg_code']} ${item['cust_name']}'
+                                '${item['schid'] ?? ''} ${item['fg_code'] ?? ''} ${item['cust_name'] ?? ''}'
                                     .toLowerCase();
                             final searchQuery =
                                 _searchController1.text.trim().toLowerCase();
@@ -1421,7 +1423,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
                               final doc =
-                                  '${item['schid']} ${item['fg_code']} ${item['cust_name']}';
+                                  '${item['schid'] ?? ''} ${item['fg_code'] ?? ''} ${item['cust_name'] ?? ''}';
                               final returnCode = '${item['schid']}';
 
                               return ListTile(
@@ -1788,12 +1790,11 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['d']}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  '${item['r']}',
+                                  style: TextStyle(color: Colors.black),
                                 ),
+                                subtitle:
+                                    Text(item['d']?.toString() ?? 'No code'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -1842,6 +1843,10 @@ class DateInputFormatter extends TextInputFormatter {
     String month = '';
     String year = '';
 
+    // เก็บตำแหน่งของเคอร์เซอร์ปัจจุบันก่อนจัดรูปแบบข้อความ
+    int cursorPosition = newValue.selection.baseOffset;
+    int additionalOffset = 0;
+
     // แยกค่า day, month, year
     if (text.length >= 2) {
       day = text.substring(0, 2);
@@ -1875,44 +1880,53 @@ class DateInputFormatter extends TextInputFormatter {
       noDate = true;
     } else if (text.length == 8) {
       noDate = false;
+    } else {
+      noDate = false;
     }
 
     // ตรวจสอบว่าค่าใน day ไม่เกิน 31
     if (day.isNotEmpty && !noDate) {
-      // เช็คเฉพาะเมื่อ noDate ยังไม่เป็น true
       int dayInt = int.parse(day);
       if (dayInt < 1 || dayInt > 31) {
-        dateColorCheck = true; // ตั้งค่าให้ dateColorCheck เป็น true
-        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
+        dateColorCheck = true;
+        noDate = true;
       }
     }
 
     // ตรวจสอบว่าค่าใน month ไม่เกิน 12
     if (month.isNotEmpty && !noDate) {
-      // เช็คเฉพาะเมื่อ noDate ยังไม่เป็น true
       int monthInt = int.parse(month);
       if (monthInt < 1 || monthInt > 12) {
-        monthColorCheck = true; // ตั้งค่าให้ monthColorCheck เป็น true
-        noDate = true; // บอกว่าไม่มีเดือนที่ถูกต้อง
+        monthColorCheck = true;
+        noDate = true;
       }
     }
 
     // ตรวจสอบวันที่เฉพาะเมื่อพิมพ์ปีครบถ้วน
     if (day.isNotEmpty && month.isNotEmpty && year.length == 4 && !noDate) {
       if (!isValidDate(day, month, year)) {
-        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
+        noDate = true;
       }
     }
 
     // จัดรูปแบบเป็น DD/MM/YYYY
     if (text.length > 2 && text.length <= 4) {
       text = text.substring(0, 2) + '/' + text.substring(2);
+      if (cursorPosition > 2) {
+        additionalOffset++;
+      }
     } else if (text.length > 4 && text.length <= 8) {
       text = text.substring(0, 2) +
           '/' +
           text.substring(2, 4) +
           '/' +
           text.substring(4);
+      if (cursorPosition > 2) {
+        additionalOffset++;
+      }
+      if (cursorPosition > 4) {
+        additionalOffset++;
+      }
     }
 
     // จำกัดความยาวไม่เกิน 10 ตัว (รวม /)
@@ -1920,9 +1934,16 @@ class DateInputFormatter extends TextInputFormatter {
       text = text.substring(0, 10);
     }
 
+    // คำนวณตำแหน่งของเคอร์เซอร์หลังจากจัดรูปแบบ
+    cursorPosition += additionalOffset;
+
+    if (cursorPosition > text.length) {
+      cursorPosition = text.length;
+    }
+
     return TextEditingValue(
       text: text,
-      selection: TextSelection.collapsed(offset: text.length),
+      selection: TextSelection.collapsed(offset: cursorPosition),
     );
   }
 

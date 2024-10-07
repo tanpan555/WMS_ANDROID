@@ -233,7 +233,7 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
                   ),
                   const SizedBox(height: 10),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
                         onPressed: () {
@@ -243,7 +243,7 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
                           backgroundColor: Colors.white,
                           side: const BorderSide(color: Colors.grey),
                         ),
-                        child: const Text('ย้อนกลับ'),
+                        child: const Text('ตกลง'),
                       ),
                     ],
                   )

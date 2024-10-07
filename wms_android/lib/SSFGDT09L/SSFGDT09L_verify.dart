@@ -607,7 +607,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                   const SizedBox(height: 10),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
                         onPressed: () {
@@ -617,7 +617,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                           backgroundColor: Colors.white,
                           side: const BorderSide(color: Colors.grey),
                         ),
-                        child: const Text('ย้อนกลับ'),
+                        child: const Text('ตกลง'),
                       ),
                     ],
                   )
@@ -662,7 +662,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                   const SizedBox(height: 10),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
                         onPressed: () {
@@ -677,7 +677,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                           backgroundColor: Colors.white,
                           side: const BorderSide(color: Colors.grey),
                         ),
-                        child: const Text('ยืนยัน'),
+                        child: const Text('ตกลง'),
                       ),
                     ],
                   )
@@ -740,7 +740,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                           backgroundColor: Colors.white,
                           side: const BorderSide(color: Colors.grey),
                         ),
-                        child: const Text('ย้อนกลับ'),
+                        child: const Text('Cancel'),
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -751,7 +751,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                           backgroundColor: Colors.white,
                           side: const BorderSide(color: Colors.grey),
                         ),
-                        child: const Text('ยืนยัน'),
+                        child: const Text('OK'),
                       ),
                     ],
                   )

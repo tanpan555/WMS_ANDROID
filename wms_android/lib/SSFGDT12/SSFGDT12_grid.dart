@@ -102,30 +102,36 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         final responseBody = utf8.decode(response.bodyBytes);
         final parsedResponse = json.decode(responseBody);
 
-        setState(() {
-          if (parsedResponse is Map && parsedResponse.containsKey('items')) {
-            dataCard = parsedResponse['items'];
-          } else {
-            dataCard = [];
-          }
+        if (mounted) {
+          setState(() {
+            if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+              dataCard = parsedResponse['items'];
+            } else {
+              dataCard = [];
+            }
 
-          List<dynamic> links = parsedResponse['links'] ?? [];
-          nextLink = getLink(links, 'next');
-          prevLink = getLink(links, 'prev');
-          isLoading = false;
-        });
+            List<dynamic> links = parsedResponse['links'] ?? [];
+            nextLink = getLink(links, 'next');
+            prevLink = getLink(links, 'prev');
+            isLoading = false;
+          });
+        }
       } else {
-        setState(() {
-          print('Failed to load data: ${response.statusCode}');
-        });
+        if (mounted) {
+          setState(() {
+            print('Failed to load data: ${response.statusCode}');
+          });
+        }
         print('HTTP Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
       // Handle exceptions that may occur
-      setState(() {
-        // isLoading = false;
-        print('Error occurred: $e');
-      });
+      if (mounted) {
+        setState(() {
+          // isLoading = false;
+          print('Error occurred: $e');
+        });
+      }
       print('Exception: $e');
     }
   }
@@ -725,22 +731,38 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
-                                                // IconButton(
-                                                //   icon: const Icon(Icons.close),
-                                                //   onPressed: () {
-                                                //     Navigator.of(context).pop();
-                                                //   },
-                                                // ),
                                               ],
                                             ),
                                           ),
                                           const SizedBox(height: 8),
-                                          // Text(
-                                          //   'รหัสสินค้า : ${item['item_code']}',
-                                          //   style: const TextStyle(
-                                          //       fontWeight: FontWeight.bold,
-                                          //       fontSize: 18.0),
-                                          // ),
+                                          SizedBox(
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  'ลำดับ : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14.0),
+                                                ),
+                                                Container(
+                                                  padding: EdgeInsets.all(3.0),
+                                                  color: Colors.white,
+                                                  child: Text(
+                                                    item['seq'].toString() ??
+                                                        '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                    softWrap:
+                                                        true, // เปิดให้ตัดบรรทัด
+                                                    overflow: TextOverflow
+                                                        .visible, // กำหนดการแสดงผลเมื่อข้อความยาวเกิน
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
                                           SizedBox(
                                             child: Row(
                                               children: [
@@ -758,7 +780,8 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                         EdgeInsets.all(3.0),
                                                     color: Colors.white,
                                                     child: Text(
-                                                      item['get_item_name'],
+                                                      item['get_item_name'] ??
+                                                          '',
                                                       style: const TextStyle(
                                                           fontSize: 14.0),
                                                       softWrap:
@@ -766,58 +789,6 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                       overflow: TextOverflow
                                                           .visible, // กำหนดการแสดงผลเมื่อข้อความยาวเกิน
                                                     ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          SizedBox(
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  'จำนวนคงเหลือในระบบ : ',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14.0),
-                                                ),
-                                                Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    NumberFormat(
-                                                            '#,###,###,###,###,###.##')
-                                                        .format(
-                                                            item['sys_qty']),
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          SizedBox(
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  'ผลต่างการตรวจนับ : ',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14.0),
-                                                ),
-                                                Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    NumberFormat(
-                                                            '#,###,###,###,###,###.##')
-                                                        .format(
-                                                            item['diff_qty']),
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
                                                   ),
                                                 ),
                                               ],
@@ -836,15 +807,18 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                           FontWeight.bold,
                                                       fontSize: 14.0),
                                                 ),
-                                                Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    item['ware_code'],
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
+                                                Expanded(
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.all(5.0),
+                                                    color: Colors.white,
+                                                    child: Text(
+                                                      item['ware_code'] ?? '',
+                                                      style: const TextStyle(
+                                                          fontSize: 14.0),
+                                                    ),
                                                   ),
-                                                ),
+                                                )
                                               ],
                                             ),
                                           ),
@@ -861,19 +835,147 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                           FontWeight.bold,
                                                       fontSize: 14.0),
                                                 ),
-                                                Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    item['location_code'],
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
+                                                Expanded(
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.all(5.0),
+                                                    color: Colors.white,
+                                                    child: Text(
+                                                      item['location_code'] ??
+                                                          '',
+                                                      style: const TextStyle(
+                                                          fontSize: 14.0),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          SizedBox(
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  'จำนวนคงเหลือในระบบ : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14.0),
+                                                ),
+                                                Expanded(
+                                                  // หรือใช้ Flexible ก็ได้
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.all(3.0),
+                                                    color: Colors.white,
+                                                    child: Text(
+                                                      NumberFormat(
+                                                              '#,###,###,###,###,###.##')
+                                                          .format(
+                                                              item['sys_qty'] ??
+                                                                  ''),
+                                                      style: const TextStyle(
+                                                          fontSize: 14.0),
+                                                      softWrap:
+                                                          true, // เปิดให้ตัดบรรทัด
+                                                      overflow: TextOverflow
+                                                          .visible, // กำหนดการแสดงผลเมื่อข้อความยาวเกิน
+                                                    ),
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                          // const SizedBox(height: 4),
+                                          const SizedBox(height: 4),
+                                          SizedBox(
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  'ผลต่างการตรวจนับ : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14.0),
+                                                ),
+                                                Expanded(
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.all(5.0),
+                                                    color: Colors.white,
+                                                    child: Text(
+                                                      NumberFormat(
+                                                              '#,###,###,###,###,###.##')
+                                                          .format(item[
+                                                                  'diff_qty'] ??
+                                                              ''),
+                                                      style: const TextStyle(
+                                                          fontSize: 14.0),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          SizedBox(
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  'จำนวนที่ตรวจนับได้ได้รับ : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14.0),
+                                                ),
+                                                Expanded(
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.all(5.0),
+                                                    color: Colors.white,
+                                                    child: Text(
+                                                      NumberFormat(
+                                                              '#,###,###,###,###,###.##')
+                                                          .format(item[
+                                                                  'count_qty'] ??
+                                                              0),
+                                                      // item['count_qty']
+                                                      //         .toString() ??
+                                                      //     '',
+                                                      style: const TextStyle(
+                                                          fontSize: 14.0),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          SizedBox(
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  'หมายเหตุสินค้า : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14.0),
+                                                ),
+                                                Expanded(
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.all(5.0),
+                                                    color: Colors.white,
+                                                    child: Text(
+                                                      item['remark'] ?? '',
+                                                      style: const TextStyle(
+                                                          fontSize: 14.0),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.end,
@@ -882,8 +984,8 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                 iconSize: 10.0,
                                                 icon: Image.asset(
                                                   'assets/images/edit.png',
-                                                  width: 20.0,
-                                                  height: 20.0,
+                                                  width: 40.0,
+                                                  height: 40.0,
                                                 ),
                                                 onPressed: () {
                                                   showDetailsDialog(
@@ -935,7 +1037,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     );
   }
 
-  void showDetailsDialog(
+  void showDetailsDialog2(
     BuildContext context,
     double sys_qty,
     double diff_qty,
@@ -971,7 +1073,8 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
           title: Text('รหัสสินค้า $item_code'), // หัวเรื่องของ Dialog
           content: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              // padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.only(bottom: 16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start, // จัดชิดซ้าย
@@ -1027,6 +1130,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       labelStyle: TextStyle(
                         color: Colors.black87,
                       ),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                     ),
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.right,
@@ -1103,6 +1207,303 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     );
   }
 
+  void showDetailsDialog(
+    BuildContext context,
+    double sys_qty,
+    double diff_qty,
+    String row_ID,
+    int count_qty,
+    String remark,
+    String doc_no,
+    String ou_code,
+    int seq,
+    String item_code,
+  ) {
+    String formattedSysQty =
+        NumberFormat('#,###,###,###,###,###.##').format(sys_qty);
+    String formattedDiffQty =
+        NumberFormat('#,###,###,###,###,###.##').format(diff_qty);
+    String formattedCountQty =
+        NumberFormat('#,###,###,###,###,###').format(count_qty);
+    String formattedSeq = NumberFormat('#,###,###,###,###,###').format(seq);
+    TextEditingController sysQtyController =
+        TextEditingController(text: formattedSysQty);
+    TextEditingController diffQtyController =
+        TextEditingController(text: formattedDiffQty);
+    TextEditingController countQtyController =
+        TextEditingController(text: formattedCountQty.toString());
+    TextEditingController seqController =
+        TextEditingController(text: formattedSeq.toString());
+    TextEditingController itemCodeController =
+        TextEditingController(text: item_code.toString());
+    // TextEditingController countQtyController =
+    //     TextEditingController(text: count_qty.toString());
+    TextEditingController remarkController =
+        TextEditingController(text: remark.toString());
+
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black54, // Background color with some transparency
+      transitionDuration: const Duration(milliseconds: 200),
+      // title: T,
+      pageBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
+        return Center(
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: Container(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8.0),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: GestureDetector(
+                          child: AbsorbPointer(
+                            child: TextFormField(
+                              controller: seqController,
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                filled: true,
+                                fillColor: Colors.grey[300],
+                                labelText: 'Seq',
+                                labelStyle: const TextStyle(
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              keyboardType: TextInputType.number,
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8.0),
+                      Expanded(
+                        flex: 7,
+                        child: GestureDetector(
+                          child: AbsorbPointer(
+                            child: TextFormField(
+                              controller: itemCodeController,
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                filled: true,
+                                fillColor: Colors.grey[300],
+                                labelText: 'รหัสสินค้า',
+                                labelStyle: const TextStyle(
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              keyboardType: TextInputType.number,
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  // const SizedBox(height: 8.0),
+                  // Row(
+                  //   children: [
+                  //     Expanded(
+                  //       child: GestureDetector(
+                  //         child: AbsorbPointer(
+                  //           child: TextFormField(
+                  //             controller: sysQtyController,
+                  //             readOnly: true,
+                  //             decoration: InputDecoration(
+                  //               border: InputBorder.none,
+                  //               filled: true,
+                  //               fillColor: Colors.grey[300],
+                  //               labelText: 'จำนวนคงเหลือในระบบ',
+                  //               labelStyle: const TextStyle(
+                  //                 color: Colors.black87,
+                  //               ),
+                  //             ),
+                  //             keyboardType: TextInputType.number,
+                  //             textAlign: TextAlign.right,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     const SizedBox(width: 8.0),
+                  //     Expanded(
+                  //       child: GestureDetector(
+                  //         child: AbsorbPointer(
+                  //           child: TextFormField(
+                  //             controller: diffQtyController,
+                  //             readOnly: true,
+                  //             decoration: InputDecoration(
+                  //               border: InputBorder.none,
+                  //               filled: true,
+                  //               fillColor: Colors.grey[300],
+                  //               labelText: 'ผลต่างการตรวจนับ',
+                  //               labelStyle: const TextStyle(
+                  //                 color: Colors.black87,
+                  //               ),
+                  //             ),
+                  //             keyboardType: TextInputType.number,
+                  //             textAlign: TextAlign.right,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     )
+                  //   ],
+                  // ),
+                  const SizedBox(height: 8.0),
+                  TextFormField(
+                    controller: countQtyController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black)),
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: 'จำนวนที่ตรวจได้',
+                      labelStyle: TextStyle(
+                        color: Colors.black87,
+                      ),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                    ),
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.right,
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFormField(
+                    controller: remarkController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black)),
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: 'หมายเหตุสินค้า',
+                      labelStyle: TextStyle(
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     ElevatedButton(
+                  //       onPressed: () {
+                  //         Navigator.of(context).pop();
+                  //       },
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.white,
+                  //         side: const BorderSide(color: Colors.grey),
+                  //       ),
+                  //       child: const Text(
+                  //         'ย้อนกลับ',
+                  //       ),
+                  //     ),
+                  //     ElevatedButton(
+                  //       onPressed: () async {
+                  //         int updatedCountQty = int.tryParse(countQtyController
+                  //                 .text
+                  //                 .replaceAll(',', '')) ??
+                  //             count_qty;
+                  //         String updatedRemark =
+                  //             remarkController.text.isNotEmpty
+                  //                 ? remarkController.text
+                  //                 : remark;
+
+                  //         Navigator.of(context).pop();
+                  //         await updateDataGridDetail(
+                  //           updatedCountQty,
+                  //           updatedRemark,
+                  //           ou_code,
+                  //           doc_no,
+                  //           seq,
+                  //         );
+                  //         await fetchData();
+                  //         setState(() {});
+                  //       },
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.white,
+                  //         side: const BorderSide(color: Colors.grey),
+                  //       ),
+                  //       child: const Text(
+                  //         'บันทึก',
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: AppStyles.ConfirmChecRecievekButtonStyle(),
+                        onPressed: () async {
+                          int updatedCountQty = int.tryParse(countQtyController
+                                  .text
+                                  .replaceAll(',', '')) ??
+                              count_qty;
+                          String updatedRemark =
+                              remarkController.text.isNotEmpty
+                                  ? remarkController.text
+                                  : remark;
+
+                          Navigator.of(context).pop();
+                          await updateDataGridDetail(
+                            updatedCountQty,
+                            updatedRemark,
+                            ou_code,
+                            doc_no,
+                            seq,
+                          );
+                          await fetchData();
+                          setState(() {});
+                        },
+                        child: Image.asset(
+                          'assets/images/check-mark.png',
+                          width: 25.0,
+                          height: 25.0,
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation, Widget child) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0.0, 1.0),
+            end: Offset.zero,
+          ).animate(animation),
+          child: FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
   void showDialogconfirm() {
     showDialog(
         context: context,
@@ -1141,7 +1542,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       side: const BorderSide(color: Colors.grey),
                     ),
                     child: const Text(
-                      'ย้อนกลับ',
+                      'Cancel',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -1158,7 +1559,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       side: const BorderSide(color: Colors.grey),
                     ),
                     child: const Text(
-                      'ยืนยัน',
+                      'OK',
                     ),
                   ),
                 ],
@@ -1255,7 +1656,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     side: const BorderSide(color: Colors.grey),
                   ),
                   child: const Text(
-                    'ย้อนกลับ',
+                    'Cancel',
                   ),
                 ),
                 const SizedBox(width: 8), // Add some spacing between buttons
@@ -1269,7 +1670,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     side: const BorderSide(color: Colors.grey),
                   ),
                   child: const Text(
-                    'ยืนยัน',
+                    'OK',
                   ),
                 ),
               ],
@@ -1340,7 +1741,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
           ),
           actions: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 if (statusSubmit == '1')
                   ElevatedButton(
@@ -1351,7 +1752,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ย้อนกลับ'),
+                    child: const Text('ตกลง'),
                   ),
                 if (statusSubmit == '0')
                   ElevatedButton(
@@ -1369,7 +1770,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ยืนยัน'),
+                    child: const Text('OK'),
                   ),
               ],
             )
@@ -1417,7 +1818,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       side: const BorderSide(color: Colors.grey),
                     ),
                     child: const Text(
-                      'ย้อนกลับ',
+                      'Cancel',
                     ),
                   ),
                   ElevatedButton(
@@ -1429,7 +1830,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       side: const BorderSide(color: Colors.grey),
                     ),
                     child: const Text(
-                      'ยืนยัน',
+                      'OK',
                     ),
                   ),
                 ],
@@ -1492,7 +1893,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       side: const BorderSide(color: Colors.grey),
                     ),
                     child: const Text(
-                      'ยืนยัน',
+                      'OK',
                     ),
                   ),
                 ],

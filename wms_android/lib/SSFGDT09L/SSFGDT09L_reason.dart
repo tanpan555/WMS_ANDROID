@@ -471,7 +471,7 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
                   const SizedBox(height: 10),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
                         onPressed: () {
@@ -481,7 +481,7 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
                           backgroundColor: Colors.white,
                           side: const BorderSide(color: Colors.grey),
                         ),
-                        child: const Text('ย้อนกลับ'),
+                        child: const Text('ตกลง'),
                       ),
                     ],
                   )

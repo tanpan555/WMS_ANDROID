@@ -762,7 +762,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   const SizedBox(height: 10),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
                         onPressed: () async {
@@ -797,7 +797,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                           backgroundColor: Colors.white,
                           side: const BorderSide(color: Colors.grey),
                         ),
-                        child: const Text('ย้อนกลับ'),
+                        child: const Text('ตกลง'),
                       ),
                     ],
                   )
@@ -841,7 +841,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   const SizedBox(height: 10),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
                         onPressed: () {
@@ -851,7 +851,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                           backgroundColor: Colors.white,
                           side: const BorderSide(color: Colors.grey),
                         ),
-                        child: const Text('ย้อนกลับ'),
+                        child: const Text('ตกลง'),
                       ),
                     ],
                   )
@@ -938,7 +938,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                         backgroundColor: Colors.white,
                         side: const BorderSide(color: Colors.grey),
                       ),
-                      child: const Text('ย้อนกลับ'),
+                      child: const Text('Cancel'),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -988,7 +988,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                         backgroundColor: Colors.white,
                         side: const BorderSide(color: Colors.grey),
                       ),
-                      child: const Text('ยืนยัน'),
+                      child: const Text('OK'),
                     ),
                   ],
                 ),
@@ -1043,7 +1043,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ย้อนกลับ'),
+                    child: const Text('Cancel'),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -1053,7 +1053,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ยืนยัน'),
+                    child: const Text('OK'),
                   ),
                 ],
               )
@@ -1123,7 +1123,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ย้อนกลับ'),
+                    child: const Text('Cancel'),
                   ),
                   //---------------------------------------------------
                   ElevatedButton(
@@ -1137,7 +1137,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ยืนยัน'),
+                    child: const Text('OK'),
                   ),
                 ],
               )
@@ -1208,7 +1208,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ย้อนกลับ'),
+                    child: const Text('Cancel'),
                   ),
                   //---------------------------------------------------
                   ElevatedButton(
@@ -1222,7 +1222,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ยืนยัน'),
+                    child: const Text('OK'),
                   ),
                 ],
               )
