@@ -766,8 +766,11 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                   ElevatedButton(
                     style: AppStyles.NextButtonStyle(),
                     onPressed: () {
-                      fetchPoStatus();
-                      _updateForm();
+                      if (isDateValid == false) {
+                      } else {
+                        fetchPoStatus();
+                        _updateForm();
+                      }
                     },
                     child: Image.asset(
                       'assets/images/right.png',

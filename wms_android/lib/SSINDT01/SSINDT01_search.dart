@@ -47,6 +47,8 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
 
   final TextEditingController _selectedApCodeController =
       TextEditingController();
+  final TextEditingController _selectedProductTypeController =
+      TextEditingController(); // Controller for product type
 
   @override
   void initState() {
@@ -91,6 +93,95 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
     });
   }
 
+  void _showProductTypeDialog() {
+    TextEditingController _productTypeSearchController =
+        TextEditingController(); // Controller for search field
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              // Filter the product type list based on search query
+              List<String> filteredProductTypes = statusItems.where((item) {
+                final query = _productTypeSearchController.text.toLowerCase();
+                return item.toLowerCase().contains(query);
+              }).toList();
+
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // Adjust the height as needed
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title and Close Button
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'เลือกประเภทสินค้า', // Title
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close the dialog
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: filteredProductTypes.isEmpty
+                          ? Center(
+                              child: Text(
+                                'ไม่พบข้อมูล', // Message when no data found
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: filteredProductTypes.length,
+                              itemBuilder: (context, index) {
+                                final item = filteredProductTypes[index];
+                                return Container(
+                                  margin: const EdgeInsets.only(bottom: 8),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: ListTile(
+                                    title: Text(item),
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedValue =
+                                            item; // Update the selection
+                                        _selectedProductTypeController.text =
+                                            item; // Update the controller
+                                      });
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
   void _showDialog() {
     showDialog(
       context: context,
@@ -107,14 +198,31 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Search TextField and Close Button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'เลือกผู้ขาย',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText: 'ค้นหาผู้ขาย',
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 10, // Consistent vertical padding
+                                horizontal: 10, // Padding inside the TextField
+                              ),
+                              hintStyle: TextStyle(
+                                fontSize: 18, // Same font size for consistency
+                              ),
+                            ),
+                            style: TextStyle(
+                              fontSize: 18, // Consistent font size
+                            ),
+                            onChanged: (query) {
+                              setState(
+                                  () {}); // Update the state when text changes
+                            },
                           ),
                         ),
                         IconButton(
@@ -126,17 +234,8 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                       ],
                     ),
                     const SizedBox(height: 10),
-                    TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        setState(() {});
-                      },
-                    ),
-                    const SizedBox(height: 10),
+
+                    // List of Filtered Items
                     Expanded(
                       child: Builder(
                         builder: (context) {
@@ -167,30 +266,43 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                               final apCode = item['ap_code'];
                               final apName = item['ap_name'];
 
-                              return ListTile(
-                                title: Text(
-                                  apCode,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.black),
+                              return Container(
+                                margin: const EdgeInsets.only(
+                                    bottom: 8), // Add margin between items
+                                padding: const EdgeInsets.all(
+                                    8), // Padding inside the container
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors
+                                          .grey), // Add border around each item
+                                  borderRadius: BorderRadius.circular(
+                                      5), // Optional rounded corners
                                 ),
-                                subtitle: Text(
-                                  apName,
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12,
+                                child: ListTile(
+                                  title: Text(
+                                    apCode,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: Colors.black),
                                   ),
+                                  subtitle: Text(
+                                    apName,
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      selectedApCode =
+                                          apCode; // Set selected code
+                                      _selectedApCodeController.text =
+                                          selectedApCode ??
+                                              ''; // Update the controller's text
+                                    });
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
                                 ),
-                                onTap: () {
-                                  setState(() {
-                                    selectedApCode =
-                                        apCode; // Set selected code
-                                    _selectedApCodeController.text =
-                                        selectedApCode ??
-                                            ''; // Update the controller's text
-                                  });
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
-                                },
                               );
                             },
                           );
@@ -222,39 +334,23 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const SizedBox(height: 16),
-                DropdownSearch<String>(
-                  popupProps: PopupProps.menu(
-                    showSearchBox: false,
-                    showSelectedItems: true,
-                    itemBuilder: (context, item, isSelected) {
-                      return ListTile(
-                        title: Text(item),
-                        selected: isSelected,
-                      );
-                    },
-                    constraints: BoxConstraints(maxHeight: 175),
-                  ),
-                  items: <String>[
-                    'ทั้งหมด',
-                    'รายการรอรับดำเนินการ',
-                    'รายการใบสั่งซื้อ',
-                  ],
-                  dropdownDecoratorProps: DropDownDecoratorProps(
-                    dropdownSearchDecoration: InputDecoration(
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: "ประเภทสินค้า",
-                      hintText: "เลือกประเภทสินค้า",
-                      hintStyle: TextStyle(fontSize: 16.0),
+                GestureDetector(
+                  onTap: _showProductTypeDialog,
+                  child: AbsorbPointer(
+                    child: TextField(
+                      controller: _selectedProductTypeController,
+                      decoration: InputDecoration(
+                        labelText: 'ประเภทสินค้า',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: InputBorder.none,
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
                     ),
                   ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _selectedValue = value;
-                    });
-                  },
-                  selectedItem: _selectedValue,
                 ),
                 SizedBox(height: 15),
                 GestureDetector(
