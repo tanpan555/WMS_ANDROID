@@ -258,8 +258,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     }
   }
 
-  Future<void> delete(String? poDocNo, String? poDocTpye, int poSeq,
-      String? poItemCode) async {
+  Future<void> delete(
+      String? poDocNo, String? poDocTpye, int poSeq, String? poItemCode) async {
     print(poDocNo);
     print(poDocTpye);
     print(poSeq);
@@ -350,18 +350,36 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            // title: Center(child: Text('คำเตือน')),
+                            title: Row(
+                              children: [
+                                Icon(
+                                  Icons
+                                      .notification_important, // ไอคอนแจ้งเตือน
+                                  color: Colors.red, // สีแดง
+                                  size: 30,
+                                ),
+                                SizedBox(
+                                    width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                                Text('แจ้งเตือน'),
+                              ],
+                            ),
                             content: const Text(
                                 'ระบบมีการบันทึกรายการทิ้งไว้ หากดึง ใบผลิต จะเคลียร์รายการทั้งหมดทิ้ง, ต้องการดึงใบผลิตใหม่หรือไม่'),
                             actions: <Widget>[
                               TextButton(
-                                child: const Text('cancel'),
+                                child: const Text('ยกเลิก'),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
                               ),
                               TextButton(
-                                child: const Text('OK'),
+                                child: const Text('ตกลง',
+                                    style: TextStyle(
+                                      fontSize:
+                                          16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                      color: Colors
+                                          .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                    )),
                                 onPressed: () async {
                                   Navigator.of(context).pop();
                                   await fetchGetPo();
@@ -379,11 +397,30 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              // title: Text('Duplicate Data'),
+                              title: Row(
+                                children: [
+                                  Icon(
+                                    Icons
+                                        .notification_important, // ไอคอนแจ้งเตือน
+                                    color: Colors.red, // สีแดง
+                                    size: 30,
+                                  ),
+                                  SizedBox(
+                                      width:
+                                          8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                                  Text('แจ้งเตือน'),
+                                ],
+                              ),
                               content: Text(poMessage ?? ''),
                               actions: [
                                 TextButton(
-                                  child: const Text('OK'),
+                                  child: const Text('ตกลง',
+                                      style: TextStyle(
+                                        fontSize:
+                                            16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                        color: Colors
+                                            .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                      )),
                                   onPressed: () {
                                     Navigator.of(context)
                                         .pop(); // Close the dialog
@@ -399,11 +436,30 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              // title: Text('Status Alert'),
+                              title: Row(
+                                children: [
+                                  Icon(
+                                    Icons
+                                        .notification_important, // ไอคอนแจ้งเตือน
+                                    color: Colors.red, // สีแดง
+                                    size: 30,
+                                  ),
+                                  SizedBox(
+                                      width:
+                                          8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                                  Text('แจ้งเตือน'),
+                                ],
+                              ),
                               content: Text(poMessage ?? ''),
                               actions: [
                                 TextButton(
-                                  child: const Text('OK'),
+                                  child: const Text('ตกลง',
+                                      style: TextStyle(
+                                        fontSize:
+                                            16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                        color: Colors
+                                            .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                      )),
                                   onPressed: () {
                                     Navigator.of(context)
                                         .pop(); // Close the dialog
@@ -493,15 +549,16 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
 // Text with background color
           Container(
             width: double.infinity, // ทำให้กว้างเต็มที่
-            padding:
-                const EdgeInsets.symmetric(vertical: 8), // ปรับ padding ซ้ายขวาเป็น 0
+            padding: const EdgeInsets.symmetric(
+                vertical: 8), // ปรับ padding ซ้ายขวาเป็น 0
             decoration: BoxDecoration(
               color: Colors.lightBlue[100], // Background color for the text
               borderRadius:
                   BorderRadius.circular(8), // Rounded corners (optional)
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30), // Padding ซ้ายขวา
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 30), // Padding ซ้ายขวา
               child: Text(
                 setqc ?? '',
                 //'${widget.setqc}', // Text ที่ต้องการแสดง
@@ -680,7 +737,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     // title: Text('ยืนยันการลบรายการ'),
-                                    content: const Text('ต้องการลบรายการหรือไม่?'),
+                                    content:
+                                        const Text('ต้องการลบรายการหรือไม่?'),
                                     actions: <Widget>[
                                       TextButton(
                                         child: const Text('ยกเลิก'),
@@ -691,8 +749,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                       TextButton(
                                         child: const Text('ลบ'),
                                         onPressed: () async {
-                                          final poItemCode =
-                                              item['item_code'];
+                                          final poItemCode = item['item_code'];
                                           final poSeq = item['seq'];
                                           await delete(
                                               widget.po_doc_no,
