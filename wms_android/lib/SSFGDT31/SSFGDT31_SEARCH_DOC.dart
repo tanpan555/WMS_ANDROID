@@ -268,26 +268,29 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                     const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () {
-                        final documentNumber = searchController.text.isEmpty
-                            ? 'null'
-                            : searchController.text;
+                        if (isDateValid == false) {
+                        } else {
+                          final documentNumber = searchController.text.isEmpty
+                              ? 'null'
+                              : searchController.text;
 
-                        final selectedDate = _selectedDate == null
-                            ? 'null'
-                            : DateFormat('dd/MM/yyyy').format(_selectedDate!);
+                          final selectedDate = _selectedDate == null
+                              ? 'null'
+                              : DateFormat('dd/MM/yyyy').format(_selectedDate!);
 
-                        // Push to SSFGDT31_CARD with the selected values
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SSFGDT31_CARD(
-                              soNo: documentNumber,
-                              statusDesc: selectedValue ?? 'ทั้งหมด',
-                              wareCode: widget.pWareCode,
-                              receiveDate: selectedDate,
+                          // Push to SSFGDT31_CARD with the selected values
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SSFGDT31_CARD(
+                                soNo: documentNumber,
+                                statusDesc: selectedValue ?? 'ทั้งหมด',
+                                wareCode: widget.pWareCode,
+                                receiveDate: selectedDate,
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       },
                       child: Image.asset('assets/images/search_color.png',
                           width: 50, height: 25),

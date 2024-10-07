@@ -407,7 +407,14 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                       labelStyle: TextStyle(color: Colors.black),
                       filled: true,
                       fillColor: Colors.white,
-                      border: InputBorder.none,
+                      border: OutlineInputBorder(
+                        // Add this line to create a border
+                        borderRadius: BorderRadius.circular(
+                            4.0), // Optional: round corners
+                        borderSide: BorderSide(
+                            color: Colors.black,
+                            width: 1.0), // Set border color and width
+                      ),
                     ),
                   ),
                 ],
