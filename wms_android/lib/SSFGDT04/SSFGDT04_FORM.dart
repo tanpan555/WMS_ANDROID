@@ -3,30 +3,25 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../custom_appbar.dart';
 import '../bottombar.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGDT04_GRID.dart';
 import 'SSFGDT04_MENU.dart';
 import '../styles.dart';
-// import 'package:wms_android/custom_drawer.dart';
-// import 'package:dropdown_search/dropdown_search.dart';
 
 class SSFGDT04_FORM extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจากเลือ lov
-  // final String pAttr1;
   final String po_doc_no;
   final String? po_doc_type;
 
   SSFGDT04_FORM({
     Key? key,
     required this.pWareCode,
-    // required this.pAttr1,
     required this.po_doc_no,
     required this.po_doc_type,
   }) : super(key: key);
 
-  // SSFGDT04_FORM({required this.po_doc_no, this.po_doc_type});
   @override
   _SSFGDT04_FORMState createState() => _SSFGDT04_FORMState();
 }
@@ -51,15 +46,14 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   String? poMessage;
   String? po_doc_no;
   String? _dateError;
-  // String? p_cancel_code;
-  String selectedDate = 'null';
+  String selectedDate = '';
   String selectedCancelDescription = '';
 
   TextEditingController _docNoController = TextEditingController();
   TextEditingController _docDateController = TextEditingController();
   TextEditingController _refNoController = TextEditingController();
-  // TextEditingController _refReceiveController =
-  //     TextEditingController(); // REF_RECEIVE
+  TextEditingController _refReceiveController =
+      TextEditingController(); // REF_RECEIVE
   TextEditingController _oderNoController = TextEditingController(); // order_no
   TextEditingController _moDoNoController = TextEditingController(); // mo_do_no
   TextEditingController _staffCodeController =
@@ -76,6 +70,11 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   // Regular expression to validate dd/MM/yyyy format
   final dateRegExp =
       RegExp(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$");
+
+  bool dateColorCheck = false;
+  bool monthColorCheck = false;
+  bool noDate = false;
+  bool chkDate = false;
 
   @override
   void initState() {
@@ -269,7 +268,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     String? po_doc_type,
     String? po_doc_no,
   ) async {
-    // print('Hiiiiiiiii');
     print(
         'update called with po_doc_type: $po_doc_type, po_doc_no: $po_doc_no');
     final url =
@@ -291,13 +289,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
           'P_DOC_NO': po_doc_no,
           'P_ATTR1': gb.ATTR1,
           'P_DOC_TYPE': po_doc_type,
-        })
-        // print('P_REF_RECEIVE$: ${_refNoController.text}');
-        // print('Updating receive_qty with data: ${jsonEncode({
-        //       'rowid': rowid,
-        //       'receive_qty': receiveQty,
-        //     })}'
-        );
+        }));
 
     print('Navigating to SSFGDT04_GRID with:');
     print('po_doc_no: ${widget.po_doc_no}');
@@ -315,6 +307,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     }
   }
 
+  String? po_status;
+  String? po_message;
   Future<void> cancel_INHeadNonePO_WMS(
     String selectedCancelCode,
   ) async {
@@ -337,11 +331,22 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     print('po_doc_no: ${widget.po_doc_no}');
     print('po_doc_type: ${widget.po_doc_type}');
     print('pWareCode: $selectedCancelCode');
+    print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
+    print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
 
     if (response.statusCode == 200) {
-      print('Update successful');
+      try {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+        po_status = responseData['po_status'] ?? '';
+        po_message = responseData['po_message'] ?? '';
+        print('po_status: $po_status');
+        print('po_message: $po_message');
+      } catch (e) {
+        print('Error parsing response: $e');
+      }
     } else {
-      print('Failed to update: ${response.statusCode}');
+      print('Failed to cancel: ${response.statusCode}');
     }
   }
 
@@ -367,6 +372,29 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
         selectedDate = formattedDateForSearch;
       });
     }
+  }
+
+  String formatDate(String input) {
+    if (input.length == 8) {
+      // Attempt to parse the input string as a date in ddMMyyyy format
+      final day = int.tryParse(input.substring(0, 2));
+      final month = int.tryParse(input.substring(2, 4));
+      final year = int.tryParse(input.substring(4, 8));
+      if (day != null && month != null && year != null) {
+        final date = DateTime(year, month, day);
+        if (date.year == year && date.month == month && date.day == day) {
+          // Return the formatted date if valid
+          return DateFormat('dd/MM/yyyy').format(date);
+        }
+      }
+    }
+    return input; // Return original input if invalid
+  }
+
+  @override
+  void dispose() {
+    _refReceiveController.dispose();
+    super.dispose();
   }
 
   @override
@@ -455,7 +483,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                               context)
                                                                           .pop(); // Close popup
                                                                       _searchController
-                                                                          .clear();
+                                                                          .clear(); // ลบค่าที่ค้นหาเมื่อปิด popup
                                                                     },
                                                                   ),
                                                                 ],
@@ -482,34 +510,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                               const SizedBox(
                                                                   height: 10),
                                                               Expanded(
-                                                                child: ListView
-                                                                    .builder(
-                                                                  itemCount: cancelItems
-                                                                      .where((item) {
-                                                                        final code =
-                                                                            item['cancel_code'].toString();
-                                                                        final desc =
-                                                                            item['cancel_desc'].toString();
-                                                                        final searchQuery = _searchController
-                                                                            .text
-                                                                            .trim()
-                                                                            .toLowerCase();
-                                                                        final searchQueryInt =
-                                                                            int.tryParse(searchQuery);
-                                                                        final codeInt =
-                                                                            int.tryParse(code);
-
-                                                                        return (searchQueryInt != null &&
-                                                                                codeInt != null &&
-                                                                                codeInt == searchQueryInt) ||
-                                                                            code.contains(searchQuery) ||
-                                                                            desc.toLowerCase().contains(searchQuery);
-                                                                      })
-                                                                      .toList()
-                                                                      .length,
-                                                                  itemBuilder:
-                                                                      (context,
-                                                                          index) {
+                                                                child: Builder(
+                                                                  builder:
+                                                                      (context) {
                                                                     final filteredItems =
                                                                         cancelItems
                                                                             .where((item) {
@@ -542,58 +545,67 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                               .contains(searchQuery);
                                                                     }).toList();
 
-                                                                    final item =
-                                                                        filteredItems[
-                                                                            index];
-                                                                    final code =
-                                                                        item['cancel_code']
-                                                                            .toString();
-                                                                    final desc =
-                                                                        item['cancel_desc']
-                                                                            .toString();
+                                                                    if (filteredItems
+                                                                        .isEmpty) {
+                                                                      return Center(
+                                                                          child:
+                                                                              Text('No data found')); // แสดงข้อความเมื่อไม่มีข้อมูล
+                                                                    }
 
-                                                                    return ListTile(
-                                                                      contentPadding:
-                                                                          EdgeInsets
-                                                                              .zero,
-                                                                      title:
-                                                                          RichText(
-                                                                        text:
-                                                                            TextSpan(
-                                                                          children: [
-                                                                            TextSpan(
-                                                                              text: '$code ',
-                                                                              style: TextStyle(
-                                                                                fontSize: 14,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.black,
-                                                                              ),
+                                                                    return ListView
+                                                                        .builder(
+                                                                      itemCount:
+                                                                          filteredItems
+                                                                              .length,
+                                                                      itemBuilder:
+                                                                          (context,
+                                                                              index) {
+                                                                        final item =
+                                                                            filteredItems[index];
+                                                                        final code =
+                                                                            item['cancel_code'].toString();
+                                                                        final desc =
+                                                                            item['cancel_desc'].toString();
+
+                                                                        return ListTile(
+                                                                          contentPadding:
+                                                                              EdgeInsets.zero,
+                                                                          title:
+                                                                              RichText(
+                                                                            text:
+                                                                                TextSpan(
+                                                                              children: [
+                                                                                TextSpan(
+                                                                                  text: '$code ',
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 14,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                    color: Colors.black,
+                                                                                  ),
+                                                                                ),
+                                                                                TextSpan(
+                                                                                  text: '$desc',
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 14,
+                                                                                    fontWeight: FontWeight.normal,
+                                                                                    color: Colors.black,
+                                                                                  ),
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                            TextSpan(
-                                                                              text: '$desc',
-                                                                              style: TextStyle(
-                                                                                fontSize: 14,
-                                                                                fontWeight: FontWeight.normal,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                      onTap:
-                                                                          () {
-                                                                        Navigator.of(context)
-                                                                            .pop();
-                                                                        setState(
-                                                                            () {
-                                                                          selectedCancelCode =
-                                                                              code;
-                                                                          selectedCancelDescription =
-                                                                              '$code $desc'; // อัปเดตค่าที่รวมกัน
-                                                                          _canCelController.text =
-                                                                              selectedCancelDescription; // แสดงใน TextField
-                                                                          fetchSaffCodeItems();
-                                                                        });
+                                                                          ),
+                                                                          onTap:
+                                                                              () {
+                                                                            Navigator.of(context).pop();
+                                                                            setState(() {
+                                                                              selectedCancelCode = code;
+                                                                              selectedCancelDescription = '$code $desc'; // อัปเดตค่าที่รวมกัน
+                                                                              _canCelController.text = selectedCancelDescription; // แสดงใน TextField
+                                                                              fetchSaffCodeItems();
+                                                                              print('$selectedCancelCode');
+                                                                            });
+                                                                          },
+                                                                        );
                                                                       },
                                                                     );
                                                                   },
@@ -606,37 +618,38 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                     ),
                                                   );
                                                 },
-                                              );
+                                              ).then((_) {
+                                                // ลบค่าที่ค้นหาเมื่อ popup ถูกปิด ไม่ว่าจะกดไอคอนหรือกดที่อื่น
+                                                _searchController.clear();
+                                              });
                                             },
                                             child: AbsorbPointer(
                                               child: TextField(
-                                                  decoration: InputDecoration(
-                                                    labelText:
-                                                        'สาเหตุการยกเลิก',
-                                                    filled: true,
-                                                    fillColor: Colors.white,
-                                                    labelStyle: TextStyle(
-                                                        color: Colors.black),
-                                                    border:
-                                                        OutlineInputBorder(),
-                                                    suffixIcon: Icon(
-                                                      Icons.arrow_drop_down,
-                                                      color: Color.fromARGB(
-                                                          255, 113, 113, 113),
-                                                    ),
+                                                decoration: InputDecoration(
+                                                  labelText: 'สาเหตุการยกเลิก',
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  labelStyle: TextStyle(
+                                                      color: Colors.black),
+                                                  border: OutlineInputBorder(),
+                                                  suffixIcon: Icon(
+                                                    Icons.arrow_drop_down,
+                                                    color: Color.fromARGB(
+                                                        255, 113, 113, 113),
                                                   ),
-                                                  controller:
-                                                      _canCelController, // ใช้ controller เดิมที่ปรับอัปเดตใน onTap
-                                                  maxLines:
-                                                      2, // จำกัดจำนวนบรรทัดสูงสุดที่แสดง
-                                                  minLines: 1,
-                                                  style: TextStyle(
-                                                    fontSize:
-                                                        14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                                    color: Colors
-                                                        .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                                  ) // จำนวนบรรทัดขั้นต่ำที่แสดง
-                                                  ),
+                                                ),
+                                                controller:
+                                                    _canCelController, // ใช้ controller เดิมที่ปรับอัปเดตใน onTap
+                                                maxLines:
+                                                    2, // จำกัดจำนวนบรรทัดสูงสุดที่แสดง
+                                                minLines: 1,
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      14, // ปรับขนาดตัวหนังสือตามต้องการ
+                                                  color: Colors
+                                                      .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                                ), // จำนวนบรรทัดขั้นต่ำที่แสดง
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -653,26 +666,81 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                       child: const Text('Cancel'),
                                     ),
                                     TextButton(
-                                      onPressed: () {
-                                        if (selectedCancelCode != null) {
-                                          Navigator.of(context).pop();
-                                          // Show completion dialog
+                                      child: Text('OK'),
+                                      onPressed: () async {
+                                        await cancel_INHeadNonePO_WMS(
+                                            selectedCancelCode ?? '');
+                                        if (selectedCancelCode == null) {
                                           showDialog(
                                             context: context,
                                             builder: (BuildContext context) {
                                               return AlertDialog(
-                                                title: Text('คำเตือน'),
-                                                content: Text(
-                                                    'ยกเลิกรายการเสร็จสมบูรณ์...'),
+                                                title: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons
+                                                          .notification_important, // ไอคอนแจ้งเตือน
+                                                      color:
+                                                          Colors.red, // สีแดง
+                                                          size: 30,
+                                                    ),
+                                                    SizedBox(
+                                                        width:
+                                                            8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                                                    Text('แจ้งเตือน'),
+                                                  ],
+                                                ),
+                                                content: Text('$po_message'),
                                                 actions: <Widget>[
                                                   TextButton(
-                                                    child: Text('ตกลง'),
+                                                    child: Text('ตกลง',style: TextStyle(
+                                                  fontSize:
+                                                      16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                                  color: Colors
+                                                      .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                                )),
                                                     onPressed: () {
-                                                      // Navigator.of(context).pop(); // Close confirmation dialog
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        } else {
+                                          Navigator.of(context).pop();
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons
+                                                          .notification_important, // ไอคอนแจ้งเตือน
+                                                      color:
+                                                          Colors.red, // สีแดง
+                                                          size: 30,
+                                                    ),
+                                                    SizedBox(
+                                                        width:
+                                                            8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                                                    Text('แจ้งเตือน'),
+                                                  ],
+                                                ),
+                                                content: Text(
+                                                    'ยกเลิกรายการเสร็จสมบูรณ์'),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: Text('ตกลง',style: TextStyle(fontSize: 16,color: Colors
+                                                      .black)),
+                                                    onPressed: () {
                                                       cancel_INHeadNonePO_WMS(
                                                               selectedCancelCode!)
                                                           .then((_) {
-                                                        // Navigate to SSFGDT04_MENU after canceling
+                                                        Navigator.of(context)
+                                                            .pop();
                                                         Navigator.of(context)
                                                             .pop(
                                                           MaterialPageRoute(
@@ -684,44 +752,21 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                   .P_ERP_OU_CODE,
                                                             ),
                                                           ),
-                                                          // (route) =>
-                                                          //     false, // Remove all previous routes
                                                         );
                                                         Navigator.of(context)
                                                             .pop();
-                                                        Navigator.of(context)
-                                                            .pop();
+                                                        // Navigator.of(context)
+                                                        //     .pop();
                                                       }).catchError((error) {
-                                                        // ScaffoldMessenger.of(
-                                                        //         context)
-                                                        //     .showSnackBar(
-                                                        //   SnackBar(
-                                                        //     content: Text(
-                                                        //         'An error occurred: $error'),
-                                                        //   ),
-                                                        // );
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                                'An error occurred: $error'),
+                                                          ),
+                                                        );
                                                       });
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        } else {
-                                          // Show warning if no cancellation reason is selected
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: Text('คำเตือน'),
-                                                content:
-                                                    Text('โปรดเลือกเหตุยกเลิก'),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    child: Text('ตกลง'),
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
                                                     },
                                                   ),
                                                 ],
@@ -730,7 +775,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                           );
                                         }
                                       },
-                                      child: const Text('OK'),
                                     ),
                                   ],
                                 );
@@ -910,9 +954,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                     Text(
                                                       'ประเภทการรับ',
                                                       style: TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
                                                     ),
                                                     IconButton(
                                                       icon: Icon(Icons.close),
@@ -920,7 +965,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                         Navigator.of(context)
                                                             .pop(); // ปิด Popup
                                                         _searchController
-                                                            .clear();
+                                                            .clear(); // ลบค่าที่ค้นหาเมื่อปิด popup
                                                       },
                                                     ),
                                                   ],
@@ -940,45 +985,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                 ),
                                                 const SizedBox(height: 10),
                                                 Expanded(
-                                                  child: ListView.builder(
-                                                    itemCount: docTypeItems
-                                                        .where((item) {
-                                                          // แปลง schid เป็น int ก่อนการเปรียบเทียบ
-                                                          final docString =
-                                                              item['doc_desc']
-                                                                  .toString();
-                                                          final searchQuery =
-                                                              _searchController
-                                                                  .text
-                                                                  .trim()
-                                                                  .toLowerCase();
-
-                                                          // ตรวจสอบว่า searchQuery เป็นจำนวนเต็มหรือไม่
-                                                          final searchQueryInt =
-                                                              int.tryParse(
-                                                                  searchQuery);
-
-                                                          // แปลง schid เป็น int ถ้าค่ามันเป็นจำนวนเต็ม
-                                                          final docInt =
-                                                              int.tryParse(
-                                                                  docString);
-
-                                                          // เปรียบเทียบกับ searchQuery
-                                                          return (searchQueryInt !=
-                                                                      null &&
-                                                                  docInt !=
-                                                                      null &&
-                                                                  docInt ==
-                                                                      searchQueryInt) ||
-                                                              docString
-                                                                  .toLowerCase()
-                                                                  .contains(
-                                                                      searchQuery);
-                                                        })
-                                                        .toList()
-                                                        .length,
-                                                    itemBuilder:
-                                                        (context, index) {
+                                                  child: Builder(
+                                                    builder: (context) {
                                                       final filteredItems =
                                                           docTypeItems
                                                               .where((item) {
@@ -990,7 +998,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                 .text
                                                                 .trim()
                                                                 .toLowerCase();
-
                                                         final searchQueryInt =
                                                             int.tryParse(
                                                                 searchQuery);
@@ -1010,40 +1017,56 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                     searchQuery);
                                                       }).toList();
 
-                                                      final item =
-                                                          filteredItems[index];
-                                                      final doc =
-                                                          item['doc_desc']
-                                                              .toString();
+                                                      if (filteredItems
+                                                          .isEmpty) {
+                                                        return Center(
+                                                            child: Text(
+                                                                'No data found')); // แสดงข้อความเมื่อไม่มีข้อมูล
+                                                      }
 
-                                                      return ListTile(
-                                                        contentPadding:
-                                                            EdgeInsets.zero,
-                                                        title: RichText(
-                                                          text: TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                text: '$doc',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 14,
-                                                                  color: Colors
-                                                                      .black,
-                                                                ),
+                                                      return ListView.builder(
+                                                        itemCount: filteredItems
+                                                            .length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          final item =
+                                                              filteredItems[
+                                                                  index];
+                                                          final doc =
+                                                              item['doc_desc']
+                                                                  .toString();
+
+                                                          return ListTile(
+                                                            contentPadding:
+                                                                EdgeInsets.zero,
+                                                            title: RichText(
+                                                              text: TextSpan(
+                                                                children: [
+                                                                  TextSpan(
+                                                                    text:
+                                                                        '$doc',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          14,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        onTap: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                          setState(() {
-                                                            selectedDocType =
-                                                                doc;
-                                                            // _custController.text =
-                                                            //     '$empName';
-                                                            fetchRefReceiveItems();
-                                                          });
+                                                            ),
+                                                            onTap: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                              setState(() {
+                                                                selectedDocType =
+                                                                    doc;
+                                                                fetchRefReceiveItems();
+                                                              });
+                                                            },
+                                                          );
                                                         },
                                                       );
                                                     },
@@ -1056,7 +1079,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                       ),
                                     );
                                   },
-                                );
+                                ).then((_) {
+                                  // ลบค่าที่ค้นหาเมื่อ popup ถูกปิด ไม่ว่าจะกดไอคอนหรือกดที่อื่น
+                                  _searchController.clear();
+                                });
                               },
                               child: AbsorbPointer(
                                 child: TextField(
@@ -1107,51 +1133,97 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                               children: [
                                 TextFormField(
                                   controller: _docDateController,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter
+                                        .digitsOnly, // ยอมรับเฉพาะตัวเลข
+                                    LengthLimitingTextInputFormatter(
+                                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
+                                    DateInputFormatter(), // กำหนดรูปแบบ __/__/____
+                                  ],
                                   decoration: InputDecoration(
-                                    // labelText: 'วันที่บันทึก*',
+                                    border: InputBorder.none,
                                     filled: true,
                                     fillColor: Colors.white,
-                                    label: RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: 'วันที่บันทึก',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize:
-                                                    16), // Color for the label
-                                          ),
-                                          TextSpan(
-                                            text: ' *',
-                                            style: TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight
-                                                    .bold), // Color for the asterisk
-                                          ),
-                                        ],
-                                      ),
+                                    labelText: 'วันที่ส่งสินค้า',
+                                    hintText: 'DD/MM/YYYY',
+                                    hintStyle: TextStyle(
+                                      color: Colors
+                                          .grey, // Change to a darker color
                                     ),
-                                    labelStyle: TextStyle(color: Colors.black),
-                                    border: InputBorder.none,
+                                    labelStyle: chkDate == false
+                                        ? const TextStyle(
+                                            color: Colors.black87,
+                                          )
+                                        : const TextStyle(
+                                            color: Colors.red,
+                                          ),
                                     suffixIcon: IconButton(
-                                      icon: Icon(Icons.calendar_today),
-                                      onPressed: () => _selectDate(context),
+                                      icon: const Icon(Icons
+                                          .calendar_today), // ไอคอนที่อยู่ขวาสุด
+                                      onPressed: () async {
+                                        // กดไอคอนเพื่อเปิด date picker
+                                        _selectDate(context);
+                                      },
                                     ),
                                   ),
-                                  keyboardType: TextInputType.number,
+                                  onChanged: (value) {
+                                    selectedDate = value;
+                                    print('selectedDate : $selectedDate');
+                                    setState(() {
+                                      // สร้าง instance ของ DateInputFormatter
+                                      DateInputFormatter formatter =
+                                          DateInputFormatter();
+
+                                      // ตรวจสอบการเปลี่ยนแปลงของข้อความ
+                                      TextEditingValue oldValue =
+                                          TextEditingValue(
+                                              text: _docDateController.text);
+                                      TextEditingValue newValue =
+                                          TextEditingValue(text: value);
+
+                                      // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
+                                      formatter.formatEditUpdate(
+                                          oldValue, newValue);
+
+                                      // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
+                                      dateColorCheck = formatter.dateColorCheck;
+                                      monthColorCheck =
+                                          formatter.monthColorCheck;
+                                      noDate = formatter
+                                          .noDate; // เพิ่มการตรวจสอบ noDate
+                                    });
+                                    setState(() {
+                                      RegExp dateRegExp =
+                                          RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                                      // String messageAlertValueDate =
+                                      //     'กรุณากรองวันที่ให้ถูกต้อง';
+                                      if (!dateRegExp.hasMatch(selectedDate)) {
+                                        // setState(() {
+                                        //   chkDate == true;
+                                        // });
+                                        // showDialogAlert(context, messageAlertValueDate);
+                                      } else {
+                                        setState(() {
+                                          chkDate = false;
+                                        });
+                                      }
+                                    });
+                                  },
                                 ),
-                                if (_dateError !=
-                                    null) // Only display if there's an error
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4.0),
-                                    child: Text(
-                                      _dateError!,
-                                      style: TextStyle(
-                                          color: Colors
-                                              .red), // Style the error message
-                                    ),
-                                  ),
+                                chkDate == true || noDate == true
+                                    ? const Padding(
+                                        padding: EdgeInsets.only(top: 4.0),
+                                        child: Text(
+                                          'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize:
+                                                12, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                                          ),
+                                        ))
+                                    : const SizedBox.shrink(),
                               ],
                             ),
                           ),
@@ -1185,9 +1257,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                     Text(
                                                       'อ้างอิงใบนำส่งเลขที่',
                                                       style: TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
                                                     ),
                                                     IconButton(
                                                       icon: Icon(Icons.close),
@@ -1195,7 +1268,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                         Navigator.of(context)
                                                             .pop(); // ปิด Popup
                                                         _searchController
-                                                            .clear();
+                                                            .clear(); // ลบค่าที่ค้นหาเมื่อปิด popup
                                                       },
                                                     ),
                                                   ],
@@ -1215,45 +1288,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                 ),
                                                 const SizedBox(height: 10),
                                                 Expanded(
-                                                  child: ListView.builder(
-                                                    itemCount: refReceiveItems
-                                                        .where((item) {
-                                                          // แปลง schid เป็น int ก่อนการเปรียบเทียบ
-                                                          final docString =
-                                                              item['doc']
-                                                                  .toString();
-                                                          final searchQuery =
-                                                              _searchController
-                                                                  .text
-                                                                  .trim()
-                                                                  .toLowerCase();
-
-                                                          // ตรวจสอบว่า searchQuery เป็นจำนวนเต็มหรือไม่
-                                                          final searchQueryInt =
-                                                              int.tryParse(
-                                                                  searchQuery);
-
-                                                          // แปลง schid เป็น int ถ้าค่ามันเป็นจำนวนเต็ม
-                                                          final docInt =
-                                                              int.tryParse(
-                                                                  docString);
-
-                                                          // เปรียบเทียบกับ searchQuery
-                                                          return (searchQueryInt !=
-                                                                      null &&
-                                                                  docInt !=
-                                                                      null &&
-                                                                  docInt ==
-                                                                      searchQueryInt) ||
-                                                              docString
-                                                                  .toLowerCase()
-                                                                  .contains(
-                                                                      searchQuery);
-                                                        })
-                                                        .toList()
-                                                        .length,
-                                                    itemBuilder:
-                                                        (context, index) {
+                                                  child: Builder(
+                                                    builder: (context) {
                                                       final filteredItems =
                                                           refReceiveItems
                                                               .where((item) {
@@ -1265,7 +1301,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                 .text
                                                                 .trim()
                                                                 .toLowerCase();
-
                                                         final searchQueryInt =
                                                             int.tryParse(
                                                                 searchQuery);
@@ -1285,42 +1320,59 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                     searchQuery);
                                                       }).toList();
 
-                                                      final item =
-                                                          filteredItems[index];
-                                                      final doc = item['doc']
-                                                          .toString();
+                                                      if (filteredItems
+                                                          .isEmpty) {
+                                                        return Center(
+                                                            child: Text(
+                                                                'No data found')); // แสดงข้อความเมื่อไม่มีข้อมูล
+                                                      }
 
-                                                      return ListTile(
-                                                        contentPadding:
-                                                            EdgeInsets.zero,
-                                                        title: RichText(
-                                                          text: TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                text: '$doc',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 14,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black,
-                                                                ),
+                                                      return ListView.builder(
+                                                        itemCount: filteredItems
+                                                            .length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          final item =
+                                                              filteredItems[
+                                                                  index];
+                                                          final doc =
+                                                              item['doc']
+                                                                  .toString();
+
+                                                          return ListTile(
+                                                            contentPadding:
+                                                                EdgeInsets.zero,
+                                                            title: RichText(
+                                                              text: TextSpan(
+                                                                children: [
+                                                                  TextSpan(
+                                                                    text:
+                                                                        '$doc',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        onTap: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                          setState(() {
-                                                            selectedRefReceive =
-                                                                doc;
-                                                            // _custController.text =
-                                                            //     '$empName';
-                                                            fetchRefReceiveItems();
-                                                          });
+                                                            ),
+                                                            onTap: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                              setState(() {
+                                                                selectedRefReceive =
+                                                                    doc;
+                                                                fetchRefReceiveItems();
+                                                              });
+                                                            },
+                                                          );
                                                         },
                                                       );
                                                     },
@@ -1333,7 +1385,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                       ),
                                     );
                                   },
-                                );
+                                ).then((_) {
+                                  // ลบค่าที่ค้นหาเมื่อ popup ถูกปิด ไม่ว่าจะกดไอคอนหรือกดที่อื่น
+                                  _searchController.clear();
+                                });
                               },
                               child: AbsorbPointer(
                                 child: TextField(
@@ -1644,7 +1699,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                       ),
                                     );
                                   },
-                                );
+                                ).then((_) {
+                                  // ลบค่าที่ค้นหาเมื่อ popup ถูกปิด ไม่ว่าจะกดไอคอนหรือกดที่อื่น
+                                  _searchController.clear();
+                                });
                               },
                               child: AbsorbPointer(
                                 child: TextField(
@@ -1741,45 +1799,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                 ),
                                                 const SizedBox(height: 10),
                                                 Expanded(
-                                                  child: ListView.builder(
-                                                    itemCount: saffCodeItems
-                                                        .where((item) {
-                                                          final empIdString =
-                                                              item['emp_id']
-                                                                  .toString();
-                                                          final empName =
-                                                              item['emp_name']
-                                                                  .toString();
-                                                          final searchQuery =
-                                                              _searchController
-                                                                  .text
-                                                                  .trim()
-                                                                  .toLowerCase(); // Convert to lowercase
-                                                          final searchQueryInt =
-                                                              int.tryParse(
-                                                                  searchQuery);
-                                                          final empIdInt =
-                                                              int.tryParse(
-                                                                  empIdString);
-
-                                                          // Use toLowerCase() for comparison to ignore case sensitivity
-                                                          return (searchQueryInt !=
-                                                                      null &&
-                                                                  empIdInt !=
-                                                                      null &&
-                                                                  empIdInt ==
-                                                                      searchQueryInt) ||
-                                                              empIdString.contains(
-                                                                  searchQuery) ||
-                                                              empName
-                                                                  .toLowerCase()
-                                                                  .contains(
-                                                                      searchQuery); // Convert empName to lowercase
-                                                        })
-                                                        .toList()
-                                                        .length,
-                                                    itemBuilder:
-                                                        (context, index) {
+                                                  child: Builder(
+                                                    builder: (context) {
                                                       final filteredItems =
                                                           saffCodeItems
                                                               .where((item) {
@@ -1793,7 +1814,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                             _searchController
                                                                 .text
                                                                 .trim()
-                                                                .toLowerCase(); // Convert to lowercase
+                                                                .toLowerCase();
                                                         final searchQueryInt =
                                                             int.tryParse(
                                                                 searchQuery);
@@ -1812,63 +1833,83 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                             empName
                                                                 .toLowerCase()
                                                                 .contains(
-                                                                    searchQuery); // Convert empName to lowercase
+                                                                    searchQuery);
                                                       }).toList();
 
-                                                      final item =
-                                                          filteredItems[index];
-                                                      final empId =
-                                                          item['emp_id']
-                                                              .toString();
-                                                      final empName =
-                                                          item['emp_name']
-                                                              .toString();
+                                                      if (filteredItems
+                                                          .isEmpty) {
+                                                        return Center(
+                                                          child: Text(
+                                                              'No data found'),
+                                                        ); // แสดงข้อความเมื่อไม่มีข้อมูล
+                                                      }
 
-                                                      return ListTile(
-                                                        contentPadding:
-                                                            EdgeInsets.zero,
-                                                        title: RichText(
-                                                          text: TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                text:
-                                                                    '$empId\n',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 14,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black,
-                                                                ),
+                                                      return ListView.builder(
+                                                        itemCount: filteredItems
+                                                            .length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          final item =
+                                                              filteredItems[
+                                                                  index];
+                                                          final empId =
+                                                              item['emp_id']
+                                                                  .toString();
+                                                          final empName =
+                                                              item['emp_name']
+                                                                  .toString();
+
+                                                          return ListTile(
+                                                            contentPadding:
+                                                                EdgeInsets.zero,
+                                                            title: RichText(
+                                                              text: TextSpan(
+                                                                children: [
+                                                                  TextSpan(
+                                                                    text:
+                                                                        '$empId\n',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                                  ),
+                                                                  TextSpan(
+                                                                    text:
+                                                                        '$empName',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .normal,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                              TextSpan(
-                                                                text:
-                                                                    '$empName',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 14,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal,
-                                                                  color: Colors
-                                                                      .black,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        onTap: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                          setState(() {
-                                                            selectedSaffCode =
-                                                                empId;
-                                                            _staffCodeController
-                                                                .text = empName;
-                                                            fetchSaffCodeItems();
-                                                          });
+                                                            ),
+                                                            onTap: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                              setState(() {
+                                                                selectedSaffCode =
+                                                                    empId;
+                                                                _staffCodeController
+                                                                        .text =
+                                                                    empName;
+                                                                fetchSaffCodeItems();
+                                                              });
+                                                            },
+                                                          );
                                                         },
                                                       );
                                                     },
@@ -1881,12 +1922,14 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                       ),
                                     );
                                   },
-                                );
+                                ).then((_) {
+                                  // ลบค่าที่ค้นหาเมื่อ popup ถูกปิด ไม่ว่าจะกดไอคอนหรือกดที่อื่น
+                                  _searchController.clear();
+                                });
                               },
                               child: AbsorbPointer(
                                 child: TextField(
                                   decoration: InputDecoration(
-                                    // labelText: 'ผู้รับมอบสินค้า*',
                                     filled: true,
                                     fillColor: Colors.white,
                                     labelStyle: TextStyle(color: Colors.black),
@@ -1926,6 +1969,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                               ),
                             ),
                           ),
+
                           // หมายเหตุ //
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 0),
@@ -1969,5 +2013,166 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
             ),
       bottomNavigationBar: BottomBar(),
     );
+  }
+}
+
+class DateInputFormatter extends TextInputFormatter {
+  bool dateColorCheck = false;
+  bool monthColorCheck = false;
+  bool noDate = false; // ตัวแปรเพื่อตรวจสอบว่ามีวันที่ไม่ถูกต้อง
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text;
+
+    // กรองเฉพาะตัวเลข
+    text = text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    String day = '';
+    String month = '';
+    String year = '';
+
+    // แยกค่า day, month, year
+    if (text.length >= 2) {
+      day = text.substring(0, 2);
+    }
+
+    if (text.length >= 4) {
+      month = text.substring(2, 4);
+    }
+
+    if (text.length > 4) {
+      year = text.substring(4);
+    }
+
+    dateColorCheck = false;
+    monthColorCheck = false;
+
+    // ตรวจสอบและตั้งค่า noDate ตามกรณีที่ต่างกัน
+    if (text.length == 1) {
+      noDate = true;
+    } else if (text.length == 2) {
+      noDate = false;
+    } else if (text.length == 3) {
+      noDate = true;
+    } else if (text.length == 4) {
+      noDate = false;
+    } else if (text.length == 5) {
+      noDate = true;
+    } else if (text.length == 6) {
+      noDate = true;
+    } else if (text.length == 7) {
+      noDate = true;
+    } else if (text.length == 8) {
+      noDate = false;
+    } else {
+      noDate = false;
+    }
+
+    // ตรวจสอบว่าค่าใน day ไม่เกิน 31
+    if (day.isNotEmpty && !noDate) {
+      // เช็คเฉพาะเมื่อ noDate ยังไม่เป็น true
+      int dayInt = int.parse(day);
+      if (dayInt < 1 || dayInt > 31) {
+        dateColorCheck = true; // ตั้งค่าให้ dateColorCheck เป็น true
+        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
+      }
+    }
+
+    // ตรวจสอบว่าค่าใน month ไม่เกิน 12
+    if (month.isNotEmpty && !noDate) {
+      // เช็คเฉพาะเมื่อ noDate ยังไม่เป็น true
+      int monthInt = int.parse(month);
+      if (monthInt < 1 || monthInt > 12) {
+        monthColorCheck = true; // ตั้งค่าให้ monthColorCheck เป็น true
+        noDate = true; // บอกว่าไม่มีเดือนที่ถูกต้อง
+      }
+    }
+
+    // ตรวจสอบวันที่เฉพาะเมื่อพิมพ์ปีครบถ้วน
+    if (day.isNotEmpty && month.isNotEmpty && year.length == 4 && !noDate) {
+      if (!isValidDate(day, month, year)) {
+        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
+      }
+    }
+
+    // จัดรูปแบบเป็น DD/MM/YYYY
+    if (text.length > 2 && text.length <= 4) {
+      text = text.substring(0, 2) + '/' + text.substring(2);
+    } else if (text.length > 4 && text.length <= 8) {
+      text = text.substring(0, 2) +
+          '/' +
+          text.substring(2, 4) +
+          '/' +
+          text.substring(4);
+    }
+
+    // จำกัดความยาวไม่เกิน 10 ตัว (รวม /)
+    if (text.length > 10) {
+      text = text.substring(0, 10);
+    }
+
+    return TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+
+  // ฟังก์ชันตรวจสอบว่าวันที่ถูกต้องหรือไม่
+  bool isValidDate(String day, String month, String year) {
+    int dayInt = int.parse(day);
+    int monthInt = int.parse(month);
+    int yearInt = int.parse(year);
+
+    // ตรวจสอบเดือนที่เกินขอบเขต
+    if (monthInt < 1 || monthInt > 12) {
+      monthColorCheck = false;
+      return false;
+    }
+
+    // ตรวจสอบจำนวนวันในแต่ละเดือน
+    List<int> daysInMonth = [
+      31,
+      isLeapYear(yearInt) ? 29 : 28, // ตรวจสอบปีอธิกสุรทินเมื่อปีครบถ้วน
+      31,
+      30,
+      31,
+      30,
+      31,
+      31,
+      30,
+      31,
+      30,
+      31
+    ];
+    int maxDays = daysInMonth[monthInt - 1];
+
+    // ตรวจสอบว่าค่าวันไม่เกินจำนวนวันที่ในเดือนนั้น ๆ
+    if (dayInt < 1 || dayInt > maxDays) {
+      dateColorCheck = false;
+      return false;
+    }
+
+    dateColorCheck = true;
+    monthColorCheck = true;
+    return true;
+  }
+
+  // ฟังก์ชันตรวจสอบปีอธิกสุรทิน (leap year)
+  bool isLeapYear(int year) {
+    if (year % 4 == 0) {
+      if (year % 100 == 0) {
+        if (year % 400 == 0) {
+          return true; // ปีที่หาร 400 ลงตัวเป็นปีอธิกสุรทิน
+        } else {
+          return false; // ปีที่หาร 100 ลงตัวแต่หาร 400 ไม่ลงตัวไม่ใช่ปีอธิกสุรทิน
+        }
+      } else {
+        return true; // ปีที่หาร 4 ลงตัวแต่หาร 100 ไม่ลงตัวเป็นปีอธิกสุรทิน
+      }
+    } else {
+      return false; // ปีที่หาร 4 ไม่ลงตัวไม่ใช่ปีอธิกสุรทิน
+    }
   }
 }

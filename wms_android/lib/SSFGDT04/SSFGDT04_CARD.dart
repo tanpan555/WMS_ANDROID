@@ -38,8 +38,11 @@ class SSFGDT04_CARD extends StatefulWidget {
 class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   int currentPage = 0; // Variable to track the current page
   final int itemsPerPage = 15; // Number of items to display per page
-
   bool isLoading = true;
+  String? next;
+  String? previous;
+  String errorMessage = '';
+
   List<dynamic> dataCard = [];
   List<dynamic> displayedData = [];
   String data_null = 'null';
@@ -118,37 +121,109 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     );
   }
 
-  Future<void> fetchData() async {
-    // ? 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}'
-    // : 'http://172.16.0.82:8888/apex/wms/SSFGDT12/selectCard/${gb.P_ERP_OU_CODE}/$data_null/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}';
+  // Future<void> fetchData() async {
+  //   try {
+  //     final response = await http.get(Uri.parse(
+  //         'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}'));
 
-    // print('Fetching data from: $endpoint');
+  //     if (response.statusCode == 200) {
+  //       final responseBody = utf8.decode(response.bodyBytes);
+  //       final responseData = jsonDecode(responseBody);
+  //       print('Fetched data: $responseData');
 
-    try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}'));
+  //       setState(() {
+  //         // isLoading = false;
+  //         dataCard =
+  //             List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+  //         isLoading = false;
+  //         filterData();
+  //       });
+  //       print('dataCard: $dataCard');
+  //     } else {
+  //       print('Failed to load data. Status code: ${response.statusCode}');
+  //       throw Exception(
+  //           'Failed to load data. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     // setState(() {});
+  //     print('ERROR IN Fetch Data: $e');
+  //   }
+  // }
 
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
-        print('Fetched data: $responseData');
+  Future<void> fetchData([String? url]) async {
+  if (!mounted) return; // ตรวจสอบว่าตัว component ยังถูก mount อยู่หรือไม่
 
-        setState(() {
-          // isLoading = false;
-          dataCard =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          isLoading = false;
-          filterData();
-        });
-        print('dataCard: $dataCard');
-      } else {
-        print('Failed to load data. Status code: ${response.statusCode}');
-        throw Exception(
-            'Failed to load data. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      // setState(() {});
-      print('ERROR IN Fetch Data: $e');
+  setState(() {
+    isLoading = true;
+  });
+
+  final String requestUrl = url ?? 
+      'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}';
+
+  try {
+    final response = await http.get(Uri.parse(requestUrl));
+
+    if (response.statusCode == 200) {
+      final responseBody = utf8.decode(response.bodyBytes);
+      final parsedResponse = json.decode(responseBody);
+
+      if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
+
+      setState(() {
+        if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+          dataCard = parsedResponse['items'];
+        } else {
+          dataCard = [];
+        }
+
+        List<dynamic> links = parsedResponse['links'] ?? [];
+        next = getLink(links, 'next');
+        previous = getLink(links, 'prev');
+        isLoading = false;
+      });
+    } else {
+      if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
+
+      // Handle HTTP error responses
+      setState(() {
+        isLoading = false;
+        errorMessage = 'Failed to load data: ${response.statusCode}';
+      });
+    }
+  } catch (e) {
+    if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
+
+    // Handle exceptions that may occur
+    setState(() {
+      isLoading = false;
+      errorMessage = 'Error occurred: $e';
+    });
+  }
+}
+
+
+  String? getLink(List<dynamic> links, String rel) {
+    final link =
+        links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
+    return link != null ? link['href'] : null;
+  }
+
+  void _loadNextPage() {
+    if (next != null) {
+      setState(() {
+        print('next $next');
+        isLoading = true;
+      });
+      fetchData(next);
+    }
+  }
+
+  void _loadPrevPage() {
+    if (previous != null) {
+      setState(() {
+        isLoading = true;
+      });
+      fetchData(previous);
     }
   }
 
@@ -460,6 +535,25 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
         '&LH_MO_DO_NO=$LH_MO_DO_NO');
   }
 
+  // void _loadNextPage() {
+  //   if (nextLink != null) {
+  //     setState(() {
+  //       print('nextLink $nextLink');
+  //       isLoading = true;
+  //     });
+  //     fetchWareCodes(nextLink);
+  //   }
+  // }
+
+  // void _loadPrevPage() {
+  //   if (prevLink != null) {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+  //     fetchWareCodes(prevLink);
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     // Calculate the total number of pages
@@ -601,8 +695,12 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                                             child: item['status'] != null
                                                 ? Container(
                                                     decoration: BoxDecoration(
-                                                      color: const Color.fromARGB(
-                                                          72, 145, 144, 144),
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              72,
+                                                              145,
+                                                              144,
+                                                              144),
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               5),
@@ -661,23 +759,12 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             ElevatedButton(
-                              onPressed: currentPage > 0
-                                  ? () {
-                                      setState(() {
-                                        currentPage--;
-                                      });
-                                    }
-                                  : null, // Disable button if on first page
+                              onPressed:
+                                  previous != null ? _loadPrevPage : null,
                               child: const Text('Previous'),
                             ),
                             ElevatedButton(
-                              onPressed: currentPage < totalPages - 1
-                                  ? () {
-                                      setState(() {
-                                        currentPage++;
-                                      });
-                                    }
-                                  : null, // Disable button if on last page
+                              onPressed: next != null ? _loadNextPage : null,
                               child: const Text('Next'),
                             ),
                           ],
@@ -695,11 +782,30 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('คำเตือน'),
+          title: Row(
+                                children: [
+                                  Icon(
+                                    Icons
+                                        .notification_important, // ไอคอนแจ้งเตือน
+                                    color: Colors.red, // สีแดง
+                                    size: 30,
+                                  ),
+                                  SizedBox(
+                                      width:
+                                          8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                                  Text('แจ้งเตือน'),
+                                ],
+                              ),
           content: Text(messageCard),
           actions: <Widget>[
             TextButton(
-              child: const Text('ตกลง'),
+              child: const Text('ตกลง',
+                                      style: TextStyle(
+                                        fontSize:
+                                            16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                        color: Colors
+                                            .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                      )),
               onPressed: () {
                 Navigator.of(context).pop();
               },
