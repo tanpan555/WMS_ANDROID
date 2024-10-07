@@ -724,7 +724,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ย้อนกลับ')),
+                    child: const Text('Cancel')),
                 ElevatedButton(
                   onPressed: () async {
                     int updatedPackQty =
@@ -740,7 +740,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                     backgroundColor: Colors.white,
                     side: const BorderSide(color: Colors.grey),
                   ),
-                  child: const Text('ยืนยัน'),
+                  child: const Text('OK'),
                 ),
               ],
             )
@@ -814,7 +814,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ย้อนกลับ'),
+                    child: const Text('Cancel'),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -832,7 +832,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ยืนยัน'),
+                    child: const Text('OK'),
                   ),
                 ],
               )
@@ -875,7 +875,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                   const SizedBox(height: 10),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
                         onPressed: () {
@@ -886,7 +886,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                           backgroundColor: Colors.white,
                           side: const BorderSide(color: Colors.grey),
                         ),
-                        child: const Text('ย้อนกลับ'),
+                        child: const Text('ตกลง'),
                       ),
                     ],
                   )
