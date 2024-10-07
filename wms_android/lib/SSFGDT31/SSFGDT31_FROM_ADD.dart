@@ -116,16 +116,17 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     final DateTime? picked = await showDatePicker(
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       context: context,
-      initialDate: selectedDate ??
-          DateTime.now(), // Fallback to current date if selectedDate is null
+      initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        _dateController.text =
-            _formatDate(selectedDate); // Update CR_DATE with the selected date
+        DOC_DATE.text = displayFormat
+            .format(selectedDate); // Update DOC_DATE with the selected date
+        isDateValid =
+            true; // Set isDateValid to true as we know this is a valid date
       });
     }
   }
@@ -1099,56 +1100,6 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     );
   }
 
-  // Widget _buildDropdownForRefNo() {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(bottom: 8.0),
-  //     child: DropdownSearch<String>(
-  //       popupProps: PopupProps.dialog(
-  //         showSearchBox: true,
-  //         showSelectedItems: true,
-  //         searchFieldProps: TextFieldProps(
-  //           decoration: InputDecoration(
-  //             hintText:
-  //                 "ค้นหาเลขที่เอกสารอ้างอิง", // Hint text for the search field
-  //             hintStyle:
-  //                 TextStyle(color: Colors.grey), // Style for the hint text
-  //             border: OutlineInputBorder(
-  //               borderRadius: BorderRadius.circular(10.0),
-  //             ),
-  //           ),
-  //         ),
-  //         constraints: BoxConstraints(
-  //           minHeight: 100, // Set the minimum height of the dialog
-  //           maxHeight: 250, // Set the maximum height of the dialog
-  //         ),
-  //       ),
-  //       items: [
-  //         ...REF_NOItems.map((item) => item['doc_no'].toString()).toList(),
-  //       ],
-  //       dropdownDecoratorProps: DropDownDecoratorProps(
-  //         dropdownSearchDecoration: InputDecoration(
-  //           border: InputBorder.none,
-  //           labelText: "เลขที่เอกสารอ้างอิง", // Label text for the dropdown
-  //           filled: true,
-  //           fillColor: Colors.white,
-  //         ),
-  //       ),
-  //       onChanged: (String? value) {
-  //         setState(() {
-  //           if (value == '') {
-  //             doc_no = null;
-  //             REF_NO.text = 'null';
-  //           } else {
-  //             doc_no = value;
-  //             REF_NO.text = value ?? 'null';
-  //           }
-  //         });
-  //       },
-  //       selectedItem: doc_no ?? '',
-  //     ),
-  //   );
-  // }
-
   String? selectedDocType = '';
   String? displayDocType = '';
 
@@ -1275,28 +1226,23 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: GestureDetector(
-        onTap: () {
-          _showDocTypeDialog(); // Show dialog on tap
-        },
+        onTap: _showDocTypeDialog,
         child: InputDecorator(
           decoration: InputDecoration(
-            labelText: "เลขที่เอกสารอ้างอิง",
-            // hintText: "Select Item",
-            hintStyle: TextStyle(fontSize: 12.0),
+            labelText: "ประเภทเอกสาร", // Changed to "Document Type"
             filled: true,
             fillColor: Colors.white,
             border: InputBorder.none,
           ),
           child: Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween, // Align text and arrow
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                displayDocType ?? '', // Default placeholder text
+                DOC_TYPE.text.isNotEmpty ? DOC_TYPE.text : 'เลือกประเภทเอกสาร',
                 style: TextStyle(fontSize: 16),
               ),
               Icon(
-                Icons.arrow_drop_down, // Dropdown arrow icon
+                Icons.arrow_drop_down,
                 color: Colors.grey,
               ),
             ],
