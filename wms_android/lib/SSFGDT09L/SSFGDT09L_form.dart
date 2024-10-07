@@ -657,40 +657,42 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                      // String messageAlertValueDate =
-                      //     'กรุณากรองวันที่ให้ถูกต้อง';
-                      if (!dateRegExp.hasMatch(crDate)) {
-                        setState(() {
-                          chkDate = true;
-                        });
-                      } else {
-                        if (docNo.isNotEmpty &&
-                            docNo != '' &&
-                            docNo != null &&
-                            docNo != 'null' &&
-                            returnStatusLovDocType.isNotEmpty &&
-                            returnStatusLovDocType != '' &&
-                            returnStatusLovDocType != null &&
-                            returnStatusLovDocType != 'null' &&
-                            crDate.isNotEmpty &&
-                            crDate != '' &&
-                            crDate != null &&
-                            crDate != 'null' &&
-                            returnStatusLovMoDoNo.isNotEmpty &&
-                            returnStatusLovMoDoNo != '' &&
-                            returnStatusLovMoDoNo != null &&
-                            returnStatusLovMoDoNo != 'null') {
-                          chkCust(
-                            shidForChk,
-                            returnStatusLovRefNo.isNotEmpty
-                                ? soNoForChk
-                                : 'null',
-                            testChk = 1,
-                          );
+                      if (noDate != true && chkDate != true) {
+                        RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                        // String messageAlertValueDate =
+                        //     'กรุณากรองวันที่ให้ถูกต้อง';
+                        if (!dateRegExp.hasMatch(crDate)) {
+                          setState(() {
+                            chkDate = true;
+                          });
                         } else {
-                          showDialogErrorCHK(
-                              'ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
+                          if (docNo.isNotEmpty &&
+                              docNo != '' &&
+                              docNo != null &&
+                              docNo != 'null' &&
+                              returnStatusLovDocType.isNotEmpty &&
+                              returnStatusLovDocType != '' &&
+                              returnStatusLovDocType != null &&
+                              returnStatusLovDocType != 'null' &&
+                              crDate.isNotEmpty &&
+                              crDate != '' &&
+                              crDate != null &&
+                              crDate != 'null' &&
+                              returnStatusLovMoDoNo.isNotEmpty &&
+                              returnStatusLovMoDoNo != '' &&
+                              returnStatusLovMoDoNo != null &&
+                              returnStatusLovMoDoNo != 'null') {
+                            chkCust(
+                              shidForChk,
+                              returnStatusLovRefNo.isNotEmpty
+                                  ? soNoForChk
+                                  : 'null',
+                              testChk = 1,
+                            );
+                          } else {
+                            showDialogErrorCHK(
+                                'ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
+                          }
                         }
                       }
                     });
@@ -1844,19 +1846,40 @@ class DateInputFormatter extends TextInputFormatter {
     if (text.length >= 2) {
       day = text.substring(0, 2);
     }
+
     if (text.length >= 4) {
       month = text.substring(2, 4);
     }
+
     if (text.length > 4) {
       year = text.substring(4);
     }
 
     dateColorCheck = false;
     monthColorCheck = false;
-    noDate = false; // รีเซ็ตตัวแปรเมื่อเริ่ม
+
+    // ตรวจสอบและตั้งค่า noDate ตามกรณีที่ต่างกัน
+    if (text.length == 1) {
+      noDate = true;
+    } else if (text.length == 2) {
+      noDate = false;
+    } else if (text.length == 3) {
+      noDate = true;
+    } else if (text.length == 4) {
+      noDate = false;
+    } else if (text.length == 5) {
+      noDate = true;
+    } else if (text.length == 6) {
+      noDate = true;
+    } else if (text.length == 7) {
+      noDate = true;
+    } else if (text.length == 8) {
+      noDate = false;
+    }
 
     // ตรวจสอบว่าค่าใน day ไม่เกิน 31
-    if (day.isNotEmpty) {
+    if (day.isNotEmpty && !noDate) {
+      // เช็คเฉพาะเมื่อ noDate ยังไม่เป็น true
       int dayInt = int.parse(day);
       if (dayInt < 1 || dayInt > 31) {
         dateColorCheck = true; // ตั้งค่าให้ dateColorCheck เป็น true
@@ -1865,7 +1888,8 @@ class DateInputFormatter extends TextInputFormatter {
     }
 
     // ตรวจสอบว่าค่าใน month ไม่เกิน 12
-    if (month.isNotEmpty) {
+    if (month.isNotEmpty && !noDate) {
+      // เช็คเฉพาะเมื่อ noDate ยังไม่เป็น true
       int monthInt = int.parse(month);
       if (monthInt < 1 || monthInt > 12) {
         monthColorCheck = true; // ตั้งค่าให้ monthColorCheck เป็น true
@@ -1874,9 +1898,8 @@ class DateInputFormatter extends TextInputFormatter {
     }
 
     // ตรวจสอบวันที่เฉพาะเมื่อพิมพ์ปีครบถ้วน
-    if (day.isNotEmpty && month.isNotEmpty && year.length == 4) {
+    if (day.isNotEmpty && month.isNotEmpty && year.length == 4 && !noDate) {
       if (!isValidDate(day, month, year)) {
-        // ถ้าค่าไม่ถูกต้อง คืนค่าเก่าแทน
         noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
       }
     }
