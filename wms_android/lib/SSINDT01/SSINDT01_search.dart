@@ -198,14 +198,19 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Title and Close Button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'เลือกผู้ขาย',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: Text(
+                            'เลือกผู้ขาย', // Title
+                            style: TextStyle(
+                              fontSize:
+                                  18, // Same font size as the search TextField
+                              fontWeight:
+                                  FontWeight.bold, // Consistent bold style
+                            ),
                           ),
                         ),
                         IconButton(
@@ -217,17 +222,32 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                       ],
                     ),
                     const SizedBox(height: 10),
+
+                    // Search TextField
                     TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
                         hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical:
+                              10, // Same vertical padding for consistent height
+                          horizontal: 10, // Padding inside the TextField
+                        ),
+                        hintStyle: TextStyle(
+                          fontSize: 18, // Same font size as the title
+                        ),
+                      ),
+                      style: TextStyle(
+                        fontSize: 18, // Same font size as the title
                       ),
                       onChanged: (query) {
                         setState(() {});
                       },
                     ),
                     const SizedBox(height: 10),
+
+                    // List of Filtered Items
                     Expanded(
                       child: Builder(
                         builder: (context) {
@@ -258,30 +278,43 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                               final apCode = item['ap_code'];
                               final apName = item['ap_name'];
 
-                              return ListTile(
-                                title: Text(
-                                  apCode,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                subtitle: Text(
-                                  apName,
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12,
+                              return Container(
+                                margin: const EdgeInsets.only(
+                                    bottom: 8), // Add margin between items
+                                padding: const EdgeInsets.all(
+                                    8), // Padding inside the container
+                                // decoration: BoxDecoration(
+                                //   border: Border.all(
+                                //       color: Colors
+                                //           .grey), // Add border around each item
+                                //   borderRadius: BorderRadius.circular(
+                                //       5), // Optional rounded corners
+                                // ),
+                                child: ListTile(
+                                  title: Text(
+                                    apCode,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: Colors.black),
                                   ),
+                                  subtitle: Text(
+                                    apName,
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      selectedApCode =
+                                          apCode; // Set selected code
+                                      _selectedApCodeController.text =
+                                          selectedApCode ??
+                                              ''; // Update the controller's text
+                                    });
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
                                 ),
-                                onTap: () {
-                                  setState(() {
-                                    selectedApCode =
-                                        apCode; // Set selected code
-                                    _selectedApCodeController.text =
-                                        selectedApCode ??
-                                            ''; // Update the controller's text
-                                  });
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
-                                },
                               );
                             },
                           );
