@@ -757,7 +757,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   const SizedBox(height: 10),
                   Text(
                     messageDelete,
-                    style: const TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.black),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -836,7 +836,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   const SizedBox(height: 10),
                   Text(
                     messageAlert,
-                    style: const TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.black),
                   ),
                   const SizedBox(height: 10),
                   Row(

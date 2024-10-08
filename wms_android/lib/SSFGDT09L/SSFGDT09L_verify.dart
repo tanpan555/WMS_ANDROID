@@ -602,7 +602,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                   const SizedBox(height: 10),
                   Text(
                     messageAlert,
-                    style: const TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.black),
                   ),
                   const SizedBox(height: 10),
                   Row(
