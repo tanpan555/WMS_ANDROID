@@ -67,6 +67,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Container(
+            height: 300,
             padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -102,16 +103,17 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                       final item = statusItems[index];
 
                       return Container(
+                        height: 55,
                         margin: const EdgeInsets.only(bottom: 8),
                         decoration: BoxDecoration(
                           border: Border.all(
                               color: Colors.black,
                               width: 1.0), // Black border around each item
                           borderRadius: BorderRadius.circular(
-                              5.0), // Rounded corners for each item (optional)
+                              16.0), // Rounded corners for each item (optional)
                         ),
                         child: ListTile(
-                          title: Text(item),
+                          title: Text(item, style: TextStyle(fontSize: 14)),
                           onTap: () {
                             setState(() {
                               selectedValue = item;

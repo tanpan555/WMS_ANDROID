@@ -142,7 +142,10 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                           ? Center(
                               child: Text(
                                 'ไม่พบข้อมูล', // Message when no data found
-                                style: TextStyle(color: Colors.grey),
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize:
+                                        16), // Adjust text size for no data message
                               ),
                             )
                           : ListView.builder(
@@ -150,28 +153,42 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                               itemBuilder: (context, index) {
                                 final item = filteredProductTypes[index];
                                 return Container(
+                                  height:
+                                      55, // Set a fixed height for each item
                                   margin: const EdgeInsets.only(bottom: 8),
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(color: Colors.black),
+                                    borderRadius: BorderRadius.circular(16),
                                   ),
-                                  child: ListTile(
-                                    title: Text(item),
-                                    onTap: () {
-                                      setState(() {
-                                        _selectedValue =
-                                            item; // Update the selection
-                                        _selectedProductTypeController.text =
-                                            item; // Update the controller
-                                      });
-                                      Navigator.of(context)
-                                          .pop(); // Close the dialog
-                                    },
+                                  child: Align(
+                                    alignment: Alignment
+                                        .centerLeft, // Align text to center-left
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              16), // Adjust padding for better alignment
+                                      title: Text(
+                                        item,
+                                        style: TextStyle(
+                                            fontSize:
+                                                14), // Adjust text size for each list item
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _selectedValue =
+                                              item; // Update the selection
+                                          _selectedProductTypeController.text =
+                                              item; // Update the controller
+                                        });
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                      },
+                                    ),
                                   ),
                                 );
                               },
                             ),
-                    ),
+                    )
                   ],
                 ),
               );

@@ -138,27 +138,33 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                       final item = statusItems[index];
 
                       return Container(
+                        height: 55,
                         margin: const EdgeInsets.only(bottom: 8),
                         decoration: BoxDecoration(
                           border: Border.all(
                               color: Colors.black,
                               width: 1.0), // Black border around each item
                           borderRadius: BorderRadius.circular(
-                              5.0), // Rounded corners (optional)
+                              16.0), // Rounded corners (optional)
                         ),
-                        child: ListTile(
-                          title: Text(
-                            item,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: Colors.black),
+                        child: Align(
+                          alignment:
+                              Alignment.centerLeft, // Align text to center-left
+                          child: ListTile(
+                            title: Text(
+                              item,
+                              // overflow: TextOverflow.ellipsis,
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 14),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                selectedValue = item;
+                                _selectedProductTypeController.text = item;
+                              });
+                              Navigator.of(context).pop();
+                            },
                           ),
-                          onTap: () {
-                            setState(() {
-                              selectedValue = item;
-                              _selectedProductTypeController.text = item;
-                            });
-                            Navigator.of(context).pop();
-                          },
                         ),
                       );
                     },
