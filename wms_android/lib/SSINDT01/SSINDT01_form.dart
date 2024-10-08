@@ -522,8 +522,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                                       Text('แจ้งเตือน'), // Title text
                                     ],
                                   ),
-                                  content: Text(
-                                      'ต้องระบุเลขที่ใบกำกับ (invoice) และวันที่ตามใบกำกับ-แจ้งหนี้ ของผู้ขายให้ครบถ้วน'),
+                                  content: Text('$pomsg'),
                                   actions: <Widget>[
                                     TextButton(
                                       child: Text('ตกลง'),
