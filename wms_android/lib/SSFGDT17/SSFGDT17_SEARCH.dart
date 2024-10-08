@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -243,8 +244,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                             _selectedDate = selectedDate;
                             _dateController.text =
                                 DateFormat('dd/MM/yyyy').format(selectedDate);
-                            isDateValid =
-                                true; // Set to true when a date is selected from the picker
+                            isDateValid = true;
                           });
                         }
                       },
@@ -252,45 +252,59 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                   ),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(8),
+                    LengthLimitingTextInputFormatter(10),
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9/]')),
                   ],
                   onChanged: (value) {
-                    // Check if the input is in the format ddMMyyyy
-                    if (value.length == 8 &&
-                        RegExp(r'^\d{8}$').hasMatch(value)) {
-                      final day = int.tryParse(value.substring(0, 2));
-                      final month = int.tryParse(value.substring(2, 4));
-                      final year = int.tryParse(value.substring(4, 8));
-                      if (day != null && month != null && year != null) {
+                    // Remove all slashes for processing
+                    String numbersOnly = value.replaceAll('/', '');
+
+                    // Limit the length of the input to 8 digits
+                    if (numbersOnly.length > 8) {
+                      numbersOnly = numbersOnly.substring(0, 8);
+                    }
+
+                    // Format the value with slashes
+                    String formattedValue = '';
+                    for (int i = 0; i < numbersOnly.length; i++) {
+                      if (i == 2 || i == 4) {
+                        formattedValue += '/';
+                      }
+                      formattedValue += numbersOnly[i];
+                    }
+
+                    // Update the controller
+                    _dateController.value = TextEditingValue(
+                      text: formattedValue,
+                      selection: TextSelection.collapsed(
+                          offset:
+                              formattedValue.length), // Set cursor to the end
+                    );
+
+                    // Validate the date
+                    if (numbersOnly.length == 8) {
+                      try {
+                        final day = int.parse(numbersOnly.substring(0, 2));
+                        final month = int.parse(numbersOnly.substring(2, 4));
+                        final year = int.parse(numbersOnly.substring(4, 8));
+
                         final date = DateTime(year, month, day);
-                        if (date.year == year &&
-                            date.month == month &&
-                            date.day == day) {
-                          setState(() {
-                            isDateValid = true; // Valid date
-                            _selectedDate = date; // Update selected date
-                            _dateController.text =
-                                DateFormat('dd/MM/yyyy').format(date);
-                          });
-                        } else {
-                          setState(() {
-                            isDateValid = false; // Invalid date
-                          });
-                        }
-                      } else {
                         setState(() {
-                          isDateValid = false; // Parsing failed
+                          isDateValid = true;
+                          _selectedDate = date;
+                        });
+                      } catch (e) {
+                        setState(() {
+                          isDateValid = false;
                         });
                       }
                     } else {
                       setState(() {
-                        isDateValid = false; // Not the correct length or format
+                        isDateValid = false;
                       });
                     }
                   },
                 ),
-
 // Update the validation message display logic as needed
                 isDateValid == false
                     ? const Padding(

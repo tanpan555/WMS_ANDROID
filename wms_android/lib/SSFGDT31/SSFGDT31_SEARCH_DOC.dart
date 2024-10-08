@@ -198,18 +198,6 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                 ),
                 const SizedBox(height: 16),
                 TextField(
-                  controller: searchController,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    labelText: 'เลขที่เอกสาร',
-                    labelStyle: TextStyle(color: Colors.black),
-                    filled: true,
-                    fillColor: Colors.white,
-                  ),
-                  style: TextStyle(color: Colors.black),
-                ),
-                const SizedBox(height: 16),
-                TextField(
                   controller: _dateController,
                   readOnly: false, // Make the TextField editable
                   decoration: InputDecoration(
@@ -231,8 +219,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2101),
                         );
-                        if (selectedDate != null &&
-                            selectedDate != _selectedDate) {
+                        if (selectedDate != null) {
                           setState(() {
                             _selectedDate = selectedDate;
                             _dateController.text =
@@ -246,26 +233,44 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                   ),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
-                    // Validate the date format
-                    _validateDate(value);
+                    String numbersOnly = value.replaceAll('/', '');
 
-                    // Handle input formatting
-                    if (RegExp(r'^\d{8}$').hasMatch(value)) {
-                      final day = int.tryParse(value.substring(0, 2));
-                      final month = int.tryParse(value.substring(2, 4));
-                      final year = int.tryParse(value.substring(4, 8));
+                    // Limit input to 8 digits (DDMMYYYY)
+                    if (numbersOnly.length > 8) {
+                      numbersOnly = numbersOnly.substring(0, 8);
+                    }
+
+                    // Format the input as DD/MM/YYYY
+                    String formattedValue = '';
+                    for (int i = 0; i < numbersOnly.length; i++) {
+                      if (i == 2 || i == 4) {
+                        formattedValue += '/'; // Add slashes after DD and MM
+                      }
+                      formattedValue += numbersOnly[i];
+                    }
+
+                    // Update the text field with formatted value
+                    _dateController.value = TextEditingValue(
+                      text: formattedValue,
+                      selection: TextSelection.collapsed(
+                          offset: formattedValue.length),
+                    );
+
+                    // Validate the date if it has 8 digits
+                    if (numbersOnly.length == 8) {
+                      final day = int.tryParse(numbersOnly.substring(0, 2));
+                      final month = int.tryParse(numbersOnly.substring(2, 4));
+                      final year = int.tryParse(numbersOnly.substring(4, 8));
 
                       if (day != null && month != null && year != null) {
                         final date = DateTime(year, month, day);
-                        // Check if the constructed date matches the provided day, month, and year
+
                         if (date.year == year &&
                             date.month == month &&
                             date.day == day) {
                           setState(() {
                             isDateValid = true; // Valid date
                             _selectedDate = date; // Update selected date
-                            _dateController.text = DateFormat('dd/MM/yyyy')
-                                .format(date); // Update the controller
                           });
                         } else {
                           setState(() {
@@ -279,13 +284,15 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                       }
                     } else {
                       setState(() {
-                        isDateValid = false; // Invalid length
+                        isDateValid =
+                            false; // Invalid length (not 8 digits yet)
                       });
                     }
                   },
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly, // Allow only digits
-                    LengthLimitingTextInputFormatter(8), // Limit to 8 digits
+                    LengthLimitingTextInputFormatter(
+                        8), // Limit to 8 digits (DDMMYYYY)
                   ],
                 ),
                 isDateValid == false

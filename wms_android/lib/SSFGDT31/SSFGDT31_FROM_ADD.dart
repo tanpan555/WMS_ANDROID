@@ -97,7 +97,6 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
             DOC_DATE.text = _formatDate(DateTime.parse(
                 item['doc_date'] ?? DateTime.now().toIso8601String()));
             REF_NO.text = item['ref_no'] ?? 'null';
-            // CUST.text = item['staff_code'] ?? '';
             NOTE.text = item['note'] ?? '';
             ERP_DOC_NO.text = item['erp_doc_no'] ?? '';
           });
@@ -112,6 +111,11 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     }
   }
 
+// Helper function to format date in dd/MM/yyyy format
+  String _formatDate(DateTime date) {
+    return DateFormat('dd/MM/yyyy').format(date);
+  }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       initialEntryMode: DatePickerEntryMode.calendarOnly,
@@ -120,7 +124,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    if (picked != null && picked != selectedDate) {
+    if (picked != null) {
       setState(() {
         selectedDate = picked;
         DOC_DATE.text = displayFormat
@@ -815,6 +819,38 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     );
   }
 
+  bool isValidDate(int day, int month, int year) {
+    // Handle February and leap year validation
+    if (month == 2) {
+      if (isLeapYear(year)) {
+        return day <= 29; // Leap year, February has 29 days
+      } else {
+        return day <= 28; // Non-leap year, February has 28 days
+      }
+    }
+
+    // List of days for each month
+    List<int> daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+    // Check if the day is valid for the given month
+    if (month >= 1 && month <= 12) {
+      return day >= 1 && day <= daysInMonth[month - 1];
+    }
+
+    return false; // Invalid month
+  }
+
+  /// Function to check if a year is a leap year
+  bool isLeapYear(int year) {
+    if (year % 4 == 0) {
+      if (year % 100 == 0) {
+        return year % 400 == 0; // Century leap year
+      }
+      return true; // Leap year
+    }
+    return false; // Not a leap year
+  }
+
   Widget _buildTextFieldstar(TextEditingController controller, String label,
       {bool readOnly = false}) {
     return Padding(
@@ -862,39 +898,63 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
             inputFormatters: [
               // Allow only digits (numbers)
               FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(
+                  8), // Ensure max length of 8 digits
             ],
             onChanged: (value) {
-              if (value.length == 8) {
-                try {
-                  // Parse the date assuming the format is ddMMyyyy
-                  DateTime parsedDate = DateTime.parse(
-                    "${value.substring(4, 8)}-${value.substring(2, 4)}-${value.substring(0, 2)}",
-                  );
+              String numbersOnly = value.replaceAll('/', '');
 
-                  // Validate the date (e.g., check if it's a valid day of the month)
-                  if (parsedDate.day == int.parse(value.substring(0, 2)) &&
-                      parsedDate.month == int.parse(value.substring(2, 4)) &&
-                      parsedDate.year == int.parse(value.substring(4, 8))) {
-                    // Update the controller with formatted date
-                    controller.text = displayFormat.format(parsedDate);
-                    controller.selection = TextSelection.fromPosition(
-                      TextPosition(offset: controller.text.length),
-                    );
+              // Limit length to 8 digits
+              if (numbersOnly.length > 8) {
+                numbersOnly = numbersOnly.substring(0, 8);
+              }
+
+              // Format the input with slashes (DD/MM/YYYY)
+              String formattedValue = '';
+              for (int i = 0; i < numbersOnly.length; i++) {
+                if (i == 2 || i == 4) {
+                  formattedValue += '/'; // Insert slashes after DD and MM
+                }
+                formattedValue += numbersOnly[i];
+              }
+
+              // Update the controller text
+              controller.value = TextEditingValue(
+                text: formattedValue,
+                selection:
+                    TextSelection.collapsed(offset: formattedValue.length),
+              );
+
+              // Check if we have 8 digits for date validation
+              if (numbersOnly.length == 8) {
+                try {
+                  final day = int.parse(numbersOnly.substring(0, 2));
+                  final month = int.parse(numbersOnly.substring(2, 4));
+                  final year = int.parse(numbersOnly.substring(4, 8));
+
+                  final date = DateTime(year, month, day);
+
+                  if (isValidDate(day, month, year)) {
                     setState(() {
-                      isDateValid = true; // Date is valid
+                      isDateValid = true;
+
+                      // Update with the validated and formatted date
+                      controller.text = DateFormat('dd/MM/yyyy').format(date);
+                      controller.selection = TextSelection.fromPosition(
+                        TextPosition(offset: controller.text.length),
+                      );
                     });
                   } else {
-                    throw FormatException("Invalid date");
+                    throw Exception("Invalid date");
                   }
                 } catch (e) {
-                  print('Error parsing date: $e');
                   setState(() {
                     isDateValid = false; // Invalid date
                   });
                 }
               } else {
                 setState(() {
-                  isDateValid = false; // Invalid length
+                  isDateValid = false; // Input length is incorrect
                 });
               }
             },
@@ -1405,9 +1465,5 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         ),
       ),
     );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
   }
 }

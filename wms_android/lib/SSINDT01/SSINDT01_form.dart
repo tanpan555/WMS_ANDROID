@@ -669,7 +669,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     if (picked != null) {
       setState(() {
         invoiceDate = apiFormat.format(picked);
-        invoiceDateController.text = displayFormat.format(picked);
+        invoiceDateController.text = DateFormat('dd/MM/yyyy').format(picked);
         isInvoiceDateValid = true;
       });
     }
@@ -695,7 +695,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     if (picked != null) {
       setState(() {
         receiveDate = apiFormat.format(picked);
-        receiveDateController.text = displayFormat.format(picked);
+        receiveDateController.text = DateFormat('dd/MM/yyyy').format(picked);
         isDateValid = true; // Add this line to set isDateValid to true
       });
     }
@@ -1022,7 +1022,19 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           TextFormField(
             controller: receiveDateController,
             decoration: InputDecoration(
-              labelText: 'วันที่ตรวจรับ',
+              label: Row(
+                children: [
+                  const Text(
+                    'วันที่ตรวจรับ',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  const SizedBox(width: 2), // Add a small space
+                  Text(
+                    '*',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ],
+              ),
               hintText: 'DD/MM/YYYY',
               filled: true,
               fillColor: Colors.white,
@@ -1031,12 +1043,13 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                 color: Colors.black,
               ),
               hintStyle: TextStyle(
-                color: Colors.grey, // Change to a darker color
+                color: Colors.grey,
               ),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.calendar_today, color: Colors.black),
                 onPressed: () {
-                  _selectReceiveDate(context);
+                  _selectReceiveDate(
+                      context); // Assume this opens a date picker
                 },
               ),
             ),
@@ -1045,48 +1058,70 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             ),
             readOnly: false,
             onChanged: (value) {
-              final formattedDate = formatDate(value);
+              // Remove slashes and get digits only
+              String numbersOnly = value.replaceAll('/', '');
 
-              RegExp dateRegExp = RegExp(r'^(\d{2})/(\d{2})/(\d{4})$');
-
-              bool isValidDate = false;
-
-              if (dateRegExp.hasMatch(formattedDate)) {
-                final match = dateRegExp.firstMatch(formattedDate);
-                final day = int.parse(match?.group(1) ?? '0');
-                final month = int.parse(match?.group(2) ?? '0');
-                final year = int.parse(match?.group(3) ?? '0');
-                if (month >= 1 && month <= 12) {
-                  final maxDaysInMonth = DateTime(year, month + 1, 0).day;
-                  if (day >= 1 && day <= maxDaysInMonth) {
-                    try {
-                      final date = DateTime(year, month, day);
-                      isValidDate = date.day == day &&
-                          date.month == month &&
-                          date.year == year;
-                    } catch (e) {
-                      isValidDate = false;
-                    }
-                  }
-                }
+              if (numbersOnly.length > 8) {
+                numbersOnly =
+                    numbersOnly.substring(0, 8); // Restrict to 8 characters
               }
 
-              setState(() {
-                isDateValid = isValidDate;
-                if (formattedDate != value) {
-                  receiveDateController.value = TextEditingValue(
-                    text: formattedDate,
-                    selection: TextSelection.fromPosition(
-                      TextPosition(offset: formattedDate.length),
-                    ),
-                  );
+              // Format the date string to 'DD/MM/YYYY'
+              String formattedValue = '';
+              for (int i = 0; i < numbersOnly.length; i++) {
+                if (i == 2 || i == 4) {
+                  formattedValue += '/'; // Add slashes after DD and MM
                 }
+                formattedValue += numbersOnly[i];
+              }
+
+              // Validate date if length is 8
+              bool isValidDate = false;
+              if (numbersOnly.length == 8) {
+                try {
+                  final day = int.parse(numbersOnly.substring(0, 2));
+                  final month = int.parse(numbersOnly.substring(2, 4));
+                  final year = int.parse(numbersOnly.substring(4, 8));
+
+                  final date = DateTime(year, month, day);
+
+                  // Check if the date is valid
+                  if (date.year == year &&
+                      date.month == month &&
+                      date.day == day) {
+                    setState(() {
+                      isDateValid = true; // Mark as valid
+                      receiveDateController.text =
+                          date.toString(); // Store the selected date
+                    });
+                  } else {
+                    throw Exception('Invalid date');
+                  }
+                } catch (e) {
+                  setState(() {
+                    isDateValid = false; // Invalid date
+                  });
+                }
+              } else {
+                setState(() {
+                  isDateValid = false; // Input is incomplete
+                });
+              }
+
+              // Update the controller with the formatted value and move the cursor to the end
+              setState(() {
+                receiveDateController.value = TextEditingValue(
+                  text: formattedValue,
+                  selection:
+                      TextSelection.collapsed(offset: formattedValue.length),
+                );
               });
             },
             keyboardType: TextInputType.number,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly, // Allow only digits
-              LengthLimitingTextInputFormatter(8), // Limit to 8 digits
+              LengthLimitingTextInputFormatter(
+                  10), // Limit to 10 (with slashes)
             ],
           ),
           isDateValid == false
@@ -1172,7 +1207,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               suffixIcon: IconButton(
                 icon: const Icon(Icons.calendar_today, color: Colors.black),
                 onPressed: () {
-                  _selectInvoiceDate(context);
+                  _selectInvoiceDate(context); // Function to open date picker
                 },
               ),
             ),
@@ -1181,30 +1216,59 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             ),
             readOnly: false,
             onChanged: (value) {
-              // Format the input as the user types
-              final formattedDate = formatDate(value);
+              // Remove all non-numeric characters (slashes)
+              String numbersOnly = value.replaceAll('/', '');
 
-              // Update the text field if the formatted date is different
-              if (formattedDate != value) {
-                invoiceDateController.value = TextEditingValue(
-                  text: formattedDate,
-                  selection: TextSelection.fromPosition(
-                    TextPosition(offset: formattedDate.length),
-                  ),
-                );
+              // Limit the number of digits to 8 (for DDMMYYYY)
+              if (numbersOnly.length > 8) {
+                numbersOnly = numbersOnly.substring(0, 8);
               }
 
-              // Check if the date format is valid (you can adjust the regex as needed)
+              // Format the string into DD/MM/YYYY
+              String formattedDate = '';
+              for (int i = 0; i < numbersOnly.length; i++) {
+                if (i == 2 || i == 4) {
+                  formattedDate += '/'; // Add slashes after DD and MM
+                }
+                formattedDate += numbersOnly[i];
+              }
+
+              // Update the text field with the formatted date and move cursor to the end
+              invoiceDateController.value = TextEditingValue(
+                text: formattedDate,
+                selection:
+                    TextSelection.collapsed(offset: formattedDate.length),
+              );
+
+              // Validate the date if the length is correct (DD/MM/YYYY = 10 characters)
+              bool isValidDate = false;
+              if (numbersOnly.length == 8) {
+                try {
+                  final day = int.parse(numbersOnly.substring(0, 2));
+                  final month = int.parse(numbersOnly.substring(2, 4));
+                  final year = int.parse(numbersOnly.substring(4, 8));
+
+                  final date = DateTime(year, month, day);
+                  // Check if the date is valid
+                  if (date.year == year &&
+                      date.month == month &&
+                      date.day == day) {
+                    isValidDate = true;
+                  }
+                } catch (e) {
+                  isValidDate = false;
+                }
+              }
+
               setState(() {
-                isInvoiceDateValid = formattedDate.length == 10 &&
-                    RegExp(r'^\d{2}/\d{2}/\d{4}$').hasMatch(formattedDate);
+                isInvoiceDateValid = isValidDate;
               });
             },
             keyboardType: TextInputType.number,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly, // Allow only digits
               LengthLimitingTextInputFormatter(
-                  10), // Limit to 10 characters for DD/MM/YYYY
+                  10), // Limit to 10 characters (DD/MM/YYYY)
             ],
           ),
           isInvoiceDateValid == false

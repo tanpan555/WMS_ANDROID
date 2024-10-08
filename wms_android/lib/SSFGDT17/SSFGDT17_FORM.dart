@@ -113,11 +113,12 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    if (picked != null && picked != selectedDate) {
+    if (picked != null) {
       setState(() {
+        isDateValid = true;
         selectedDate = picked;
-        CR_DATE.text = _formatDate(selectedDate);
-        isDateValid = true; // Update CR_DATE with the selected date
+        CR_DATE.text = DateFormat('dd/MM/yyyy').format(selectedDate);
+        // Update CR_DATE with the selected date
       });
     }
   }
@@ -1077,47 +1078,63 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
               FilteringTextInputFormatter.digitsOnly,
             ],
             onChanged: (value) {
-              if (value.length == 8) {
-                try {
-                  // Extract day, month, and year from the input
-                  final day = int.tryParse(value.substring(0, 2));
-                  final month = int.tryParse(value.substring(2, 4));
-                  final year = int.tryParse(value.substring(4, 8));
+              // Only proceed if there is input
+              if (value.isNotEmpty) {
+                String numbersOnly =
+                    value.replaceAll('/', ''); // Remove existing slashes
+                if (numbersOnly.length > 8) {
+                  numbersOnly =
+                      numbersOnly.substring(0, 8); // Restrict to 8 characters
+                }
 
-                  // Check if the day, month, and year are valid
-                  if (day != null && month != null && year != null) {
-                    final date = DateTime(year, month, day);
-                    if (date.year == year &&
-                        date.month == month &&
-                        date.day == day) {
-                      setState(() {
-                        isDateValid = true; // Valid date
-                        controller.text = DateFormat('dd/MM/yyyy')
-                            .format(date); // Update the controller
-                        controller.selection = TextSelection.fromPosition(
-                          TextPosition(offset: controller.text.length),
-                        );
-                      });
-                    } else {
-                      throw Exception('Invalid date');
-                    }
-                  } else {
-                    throw Exception('Invalid date components');
+                // Format the input as dd/MM/yyyy
+                String formattedValue = '';
+                for (int i = 0; i < numbersOnly.length; i++) {
+                  if (i == 2 || i == 4) {
+                    formattedValue += '/'; // Add slashes after dd and MM
                   }
-                } catch (e) {
-                  print('Error parsing date: $e');
+                  formattedValue += numbersOnly[i];
+                }
+
+                // Update the controller text with the formatted value
+                controller.value = TextEditingValue(
+                  text: formattedValue,
+                  selection: TextSelection.collapsed(
+                      offset: formattedValue.length), // Set cursor to the end
+                );
+
+                // Validate the date
+                if (numbersOnly.length == 8) {
+                  try {
+                    final day = int.parse(numbersOnly.substring(0, 2));
+                    final month = int.parse(numbersOnly.substring(2, 4));
+                    final year = int.parse(numbersOnly.substring(4, 8));
+
+                    final date = DateTime(year, month, day);
+                    setState(() {
+                      isDateValid = true; // Valid date
+                      selectedDate = date; // Store the selected date
+                      CR_DATE.text = DateFormat('dd/MM/yyyy').format(
+                          date); // Assuming CR_DATE is your date variable
+                    });
+                  } catch (e) {
+                    print('Error parsing date: $e');
+                    setState(() {
+                      isDateValid = false; // Invalid date
+                    });
+                  }
+                } else {
                   setState(() {
-                    isDateValid = false; // Invalid date
+                    isDateValid = false; // Input is incomplete
                   });
                 }
               } else {
                 setState(() {
-                  isDateValid = false; // Invalid length
+                  isDateValid = false; // No input
                 });
               }
             },
             decoration: InputDecoration(
-              // labelText: null,
               hintText: 'DD/MM/YYYY',
               hintStyle: TextStyle(color: Colors.grey),
               label: RichText(
@@ -1138,7 +1155,8 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
               suffixIcon: IconButton(
                 icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
                 onPressed: () async {
-                  _selectDate(context);
+                  _selectDate(
+                      context); // Assume this method opens the date picker
                 },
               ),
             ),
