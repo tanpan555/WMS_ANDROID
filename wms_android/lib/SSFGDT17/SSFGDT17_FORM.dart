@@ -116,8 +116,8 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        CR_DATE.text =
-            _formatDate(selectedDate); // Update CR_DATE with the selected date
+        CR_DATE.text = _formatDate(selectedDate);
+        isDateValid = true; // Update CR_DATE with the selected date
       });
     }
   }
