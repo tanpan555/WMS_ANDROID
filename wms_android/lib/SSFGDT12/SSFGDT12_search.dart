@@ -498,7 +498,6 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                                     item['d'],
                                     style: const TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),

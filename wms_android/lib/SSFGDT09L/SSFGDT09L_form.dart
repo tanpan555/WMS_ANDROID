@@ -1254,42 +1254,41 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                     ),
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.grey),
+                          ),
+                          child: const Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              deleteForm(returnStatusLovCancel);
+                              // if (returnStatusLovCancel.isNotEmpty) {
+                              //   deleteForm(returnStatusLovCancel);
+                              // }
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.grey),
+                          ),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
             ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('Cancel'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        deleteForm(returnStatusLovCancel);
-                        // if (returnStatusLovCancel.isNotEmpty) {
-                        //   deleteForm(returnStatusLovCancel);
-                        // }
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('OK'),
-                  ),
-                ],
-              )
-            ],
+            actions: [],
             // ),
           );
         });
