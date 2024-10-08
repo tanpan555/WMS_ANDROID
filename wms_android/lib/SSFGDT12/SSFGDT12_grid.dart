@@ -1257,232 +1257,234 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
             ),
             child: Container(
               padding: EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8.0),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: GestureDetector(
-                          child: AbsorbPointer(
-                            child: TextFormField(
-                              controller: seqController,
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                filled: true,
-                                fillColor: Colors.grey[300],
-                                labelText: 'Seq',
-                                labelStyle: const TextStyle(
-                                  color: Colors.black87,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8.0),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: GestureDetector(
+                            child: AbsorbPointer(
+                              child: TextFormField(
+                                controller: seqController,
+                                readOnly: true,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  filled: true,
+                                  fillColor: Colors.grey[300],
+                                  labelText: 'Seq',
+                                  labelStyle: const TextStyle(
+                                    color: Colors.black87,
+                                  ),
                                 ),
+                                keyboardType: TextInputType.number,
+                                textAlign: TextAlign.right,
                               ),
-                              keyboardType: TextInputType.number,
-                              textAlign: TextAlign.right,
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 8.0),
-                      Expanded(
-                        flex: 7,
-                        child: GestureDetector(
-                          child: AbsorbPointer(
-                            child: TextFormField(
-                              controller: itemCodeController,
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                filled: true,
-                                fillColor: Colors.grey[300],
-                                labelText: 'รหัสสินค้า',
-                                labelStyle: const TextStyle(
-                                  color: Colors.black87,
+                        const SizedBox(width: 8.0),
+                        Expanded(
+                          flex: 7,
+                          child: GestureDetector(
+                            child: AbsorbPointer(
+                              child: TextFormField(
+                                controller: itemCodeController,
+                                readOnly: true,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  filled: true,
+                                  fillColor: Colors.grey[300],
+                                  labelText: 'รหัสสินค้า',
+                                  labelStyle: const TextStyle(
+                                    color: Colors.black87,
+                                  ),
                                 ),
+                                keyboardType: TextInputType.number,
+                                textAlign: TextAlign.right,
                               ),
-                              keyboardType: TextInputType.number,
-                              textAlign: TextAlign.right,
                             ),
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                  // const SizedBox(height: 8.0),
-                  // Row(
-                  //   children: [
-                  //     Expanded(
-                  //       child: GestureDetector(
-                  //         child: AbsorbPointer(
-                  //           child: TextFormField(
-                  //             controller: sysQtyController,
-                  //             readOnly: true,
-                  //             decoration: InputDecoration(
-                  //               border: InputBorder.none,
-                  //               filled: true,
-                  //               fillColor: Colors.grey[300],
-                  //               labelText: 'จำนวนคงเหลือในระบบ',
-                  //               labelStyle: const TextStyle(
-                  //                 color: Colors.black87,
-                  //               ),
-                  //             ),
-                  //             keyboardType: TextInputType.number,
-                  //             textAlign: TextAlign.right,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     const SizedBox(width: 8.0),
-                  //     Expanded(
-                  //       child: GestureDetector(
-                  //         child: AbsorbPointer(
-                  //           child: TextFormField(
-                  //             controller: diffQtyController,
-                  //             readOnly: true,
-                  //             decoration: InputDecoration(
-                  //               border: InputBorder.none,
-                  //               filled: true,
-                  //               fillColor: Colors.grey[300],
-                  //               labelText: 'ผลต่างการตรวจนับ',
-                  //               labelStyle: const TextStyle(
-                  //                 color: Colors.black87,
-                  //               ),
-                  //             ),
-                  //             keyboardType: TextInputType.number,
-                  //             textAlign: TextAlign.right,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     )
-                  //   ],
-                  // ),
-                  const SizedBox(height: 8.0),
-                  TextFormField(
-                    controller: countQtyController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: 'จำนวนที่ตรวจได้',
-                      labelStyle: TextStyle(
-                        color: Colors.black87,
-                      ),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                        )
+                      ],
                     ),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.right,
-                  ),
-                  const SizedBox(height: 8.0),
-                  TextFormField(
-                    controller: remarkController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: 'หมายเหตุสินค้า',
-                      labelStyle: TextStyle(
-                        color: Colors.black87,
+                    // const SizedBox(height: 8.0),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: GestureDetector(
+                    //         child: AbsorbPointer(
+                    //           child: TextFormField(
+                    //             controller: sysQtyController,
+                    //             readOnly: true,
+                    //             decoration: InputDecoration(
+                    //               border: InputBorder.none,
+                    //               filled: true,
+                    //               fillColor: Colors.grey[300],
+                    //               labelText: 'จำนวนคงเหลือในระบบ',
+                    //               labelStyle: const TextStyle(
+                    //                 color: Colors.black87,
+                    //               ),
+                    //             ),
+                    //             keyboardType: TextInputType.number,
+                    //             textAlign: TextAlign.right,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     const SizedBox(width: 8.0),
+                    //     Expanded(
+                    //       child: GestureDetector(
+                    //         child: AbsorbPointer(
+                    //           child: TextFormField(
+                    //             controller: diffQtyController,
+                    //             readOnly: true,
+                    //             decoration: InputDecoration(
+                    //               border: InputBorder.none,
+                    //               filled: true,
+                    //               fillColor: Colors.grey[300],
+                    //               labelText: 'ผลต่างการตรวจนับ',
+                    //               labelStyle: const TextStyle(
+                    //                 color: Colors.black87,
+                    //               ),
+                    //             ),
+                    //             keyboardType: TextInputType.number,
+                    //             textAlign: TextAlign.right,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     )
+                    //   ],
+                    // ),
+                    const SizedBox(height: 8.0),
+                    TextFormField(
+                      controller: countQtyController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'จำนวนที่ตรวจได้',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                      ),
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.right,
+                    ),
+                    const SizedBox(height: 8.0),
+                    TextFormField(
+                      controller: remarkController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'หมายเหตุสินค้า',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     ElevatedButton(
-                  //       onPressed: () {
-                  //         Navigator.of(context).pop();
-                  //       },
-                  //       style: ElevatedButton.styleFrom(
-                  //         backgroundColor: Colors.white,
-                  //         side: const BorderSide(color: Colors.grey),
-                  //       ),
-                  //       child: const Text(
-                  //         'ย้อนกลับ',
-                  //       ),
-                  //     ),
-                  //     ElevatedButton(
-                  //       onPressed: () async {
-                  //         int updatedCountQty = int.tryParse(countQtyController
-                  //                 .text
-                  //                 .replaceAll(',', '')) ??
-                  //             count_qty;
-                  //         String updatedRemark =
-                  //             remarkController.text.isNotEmpty
-                  //                 ? remarkController.text
-                  //                 : remark;
+                    const SizedBox(height: 8.0),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     ElevatedButton(
+                    //       onPressed: () {
+                    //         Navigator.of(context).pop();
+                    //       },
+                    //       style: ElevatedButton.styleFrom(
+                    //         backgroundColor: Colors.white,
+                    //         side: const BorderSide(color: Colors.grey),
+                    //       ),
+                    //       child: const Text(
+                    //         'ย้อนกลับ',
+                    //       ),
+                    //     ),
+                    //     ElevatedButton(
+                    //       onPressed: () async {
+                    //         int updatedCountQty = int.tryParse(countQtyController
+                    //                 .text
+                    //                 .replaceAll(',', '')) ??
+                    //             count_qty;
+                    //         String updatedRemark =
+                    //             remarkController.text.isNotEmpty
+                    //                 ? remarkController.text
+                    //                 : remark;
 
-                  //         Navigator.of(context).pop();
-                  //         await updateDataGridDetail(
-                  //           updatedCountQty,
-                  //           updatedRemark,
-                  //           ou_code,
-                  //           doc_no,
-                  //           seq,
-                  //         );
-                  //         await fetchData();
-                  //         setState(() {});
-                  //       },
-                  //       style: ElevatedButton.styleFrom(
-                  //         backgroundColor: Colors.white,
-                  //         side: const BorderSide(color: Colors.grey),
-                  //       ),
-                  //       child: const Text(
-                  //         'บันทึก',
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        style: AppStyles.ConfirmChecRecievekButtonStyle(),
-                        onPressed: () async {
-                          int updatedCountQty = int.tryParse(countQtyController
-                                  .text
-                                  .replaceAll(',', '')) ??
-                              count_qty;
-                          String updatedRemark =
-                              remarkController.text.isNotEmpty
-                                  ? remarkController.text
-                                  : remark;
+                    //         Navigator.of(context).pop();
+                    //         await updateDataGridDetail(
+                    //           updatedCountQty,
+                    //           updatedRemark,
+                    //           ou_code,
+                    //           doc_no,
+                    //           seq,
+                    //         );
+                    //         await fetchData();
+                    //         setState(() {});
+                    //       },
+                    //       style: ElevatedButton.styleFrom(
+                    //         backgroundColor: Colors.white,
+                    //         side: const BorderSide(color: Colors.grey),
+                    //       ),
+                    //       child: const Text(
+                    //         'บันทึก',
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          style: AppStyles.ConfirmChecRecievekButtonStyle(),
+                          onPressed: () async {
+                            int updatedCountQty = int.tryParse(
+                                    countQtyController.text
+                                        .replaceAll(',', '')) ??
+                                count_qty;
+                            String updatedRemark =
+                                remarkController.text.isNotEmpty
+                                    ? remarkController.text
+                                    : remark;
 
-                          Navigator.of(context).pop();
-                          await updateDataGridDetail(
-                            updatedCountQty,
-                            updatedRemark,
-                            ou_code,
-                            doc_no,
-                            seq,
-                          );
-                          await fetchData();
-                          setState(() {});
-                        },
-                        child: Image.asset(
-                          'assets/images/check-mark.png',
-                          width: 25.0,
-                          height: 25.0,
-                        ),
-                      )
-                    ],
-                  ),
-                ],
+                            Navigator.of(context).pop();
+                            await updateDataGridDetail(
+                              updatedCountQty,
+                              updatedRemark,
+                              ou_code,
+                              doc_no,
+                              seq,
+                            );
+                            await fetchData();
+                            setState(() {});
+                          },
+                          child: Image.asset(
+                            'assets/images/check-mark.png',
+                            width: 25.0,
+                            height: 25.0,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
