@@ -11,9 +11,8 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 
-
 class SSFGDT17_MAIN extends StatefulWidget {
- final String pWareCode;
+  final String pWareCode;
   final String? selectedValue;
   final String documentNumber;
   final String dateController;
@@ -24,7 +23,8 @@ class SSFGDT17_MAIN extends StatefulWidget {
     required this.pWareCode,
     this.selectedValue,
     required this.documentNumber,
-    required this.dateController, required this.docData1,
+    required this.dateController,
+    required this.docData1,
   }) : super(key: key);
 
   @override
@@ -39,68 +39,63 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
 
   String? nextLink;
   String? prevLink;
-  
+
   DateTime? selectedDate;
-String? docNumberFilter;
+  String? docNumberFilter;
   final TextEditingController _docNumberController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-String? DateSend;
+  String? DateSend;
 
   @override
-void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
 
+    currentSessionID = SessionManager().sessionID;
+    selectedwhCode = widget.pWareCode;
+    print(selectedwhCode);
+    // _dateController.text = selectedDate != null ? DateFormat('dd/MM/yyyy').format(selectedDate!) : '';
+    _dateController.text = widget.dateController;
+    _selectedStatusValue = widget.selectedValue;
+    // fixedValue = widget.selectedValue;
+    print('fixedValue: $fixedValue');
+    docNumberFilter = widget.documentNumber;
+    print('=====================');
+    print(widget.docData1);
+    print(widget.documentNumber);
+    print(widget.dateController);
+    print(_dateController.text);
 
-
-  currentSessionID = SessionManager().sessionID;
-selectedwhCode = widget.pWareCode;
-print(selectedwhCode);
-  // _dateController.text = selectedDate != null ? DateFormat('dd/MM/yyyy').format(selectedDate!) : '';
-   _dateController.text = widget.dateController;
-  _selectedStatusValue = widget.selectedValue;
-  // fixedValue = widget.selectedValue;
-  print('fixedValue: $fixedValue');
-  docNumberFilter = widget.documentNumber;
-  print('=====================');
-  print(widget.docData1);
-  print(widget.documentNumber);
-  print(widget.dateController);
-  print(_dateController.text);
-
-  DateSend = widget.dateController;
-  if (DateSend != null) {
-    DateSend = DateSend!.replaceAll('/', '-');
-    
+    DateSend = widget.dateController;
+    if (DateSend != null) {
+      DateSend = DateSend!.replaceAll('/', '-');
+    }
+    data_card_list();
   }
-   data_card_list();
 
-  
-}
-
-@override
-void dispose() {
-  _docNumberController.dispose();
-  _dateController.dispose();
-  super.dispose();
-}
-   void _selectDate() async {
-  final DateTime? pickedDate = await showDatePicker(
-    context: context,
-    initialDate: selectedDate ?? DateTime.now(),
-    firstDate: DateTime(2000),
-    lastDate: DateTime(2101),
-  );
-
-  if (pickedDate != null && pickedDate != selectedDate) {
-    setState(() {
-      selectedDate = pickedDate;
-      _dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
-    });
+  @override
+  void dispose() {
+    _docNumberController.dispose();
+    _dateController.dispose();
+    super.dispose();
   }
-}
 
+  void _selectDate() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
 
-void _loadNextPage() {
+    if (pickedDate != null && pickedDate != selectedDate) {
+      setState(() {
+        selectedDate = pickedDate;
+        _dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
+      });
+    }
+  }
+
+  void _loadNextPage() {
     if (nextLink != null) {
       setState(() {
         print('nextLink $nextLink');
@@ -115,13 +110,11 @@ void _loadNextPage() {
       setState(() {
         isLoading = true;
       });
-      data_card_list(prevLink); 
+      data_card_list(prevLink);
     }
   }
 
-
-
-String? _selectedStatusValue = 'ทั้งหมด';
+  String? _selectedStatusValue = 'ทั้งหมด';
   String? fixedValue;
 
   void _handleSelected(String? value) {
@@ -142,10 +135,11 @@ String? _selectedStatusValue = 'ทั้งหมด';
   bool isLoading = true;
   String errorMessage = '';
 
- Future<void> data_card_list([String? url]) async {
-  final String statusValue = valueMapping[_selectedStatusValue] ?? '0';
+  Future<void> data_card_list([String? url]) async {
+    final String statusValue = valueMapping[_selectedStatusValue] ?? '0';
     try {
-      final uri = url ?? 'http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$statusValue/000/${widget.docData1}/$DateSend/${widget.documentNumber}';
+      final uri = url ??
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$statusValue/000/${widget.docData1}/$DateSend/${widget.documentNumber}';
       final response = await http.get(Uri.parse(uri));
 
       if (response.statusCode == 200) {
@@ -176,180 +170,196 @@ String? _selectedStatusValue = 'ทั้งหมด';
     }
   }
 
-   String? getLink(List<dynamic> links, String rel) {
-    final link = links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
+  String? getLink(List<dynamic> links, String rel) {
+    final link =
+        links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
     return link != null ? link['href'] : null;
   }
-String? doc_no;
-String? doc_out;
 
+  String? doc_no;
+  String? doc_out;
 
- Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
-  Map<String, Color> statusColors = {
-    'ยกเลิก': Colors.grey,
-    'รับโอนแล้ว': Colors.green,
-    'ปกติ': Colors.yellow,
-  };
+  Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
+    Map<String, Color> statusColors = {
+      'ยกเลิก': Colors.grey,
+      'รับโอนแล้ว': Colors.green,
+      'ปกติ': Colors.yellow,
+    };
 
-  Color statusColor = statusColors[item['status_desc']] ?? Colors.grey;
+    Color statusColor = statusColors[item['status_desc']] ?? Colors.grey;
 
-  TextStyle statusStyle = TextStyle(
-    color: Colors.black,
-    // fontWeight: FontWeight.bold,
-  );
+    TextStyle statusStyle = TextStyle(
+      color: Colors.black,
+      // fontWeight: FontWeight.bold,
+    );
 
-  BoxDecoration statusDecoration = BoxDecoration(
-  border: Border.all(color: statusColor, width: 2.0),
-  color: statusColor,
-  borderRadius: BorderRadius.circular(4.0),
-);
+    BoxDecoration statusDecoration = BoxDecoration(
+      border: Border.all(color: statusColor, width: 2.0),
+      color: statusColor,
+      borderRadius: BorderRadius.circular(4.0),
+    );
 
-  return Padding(
-  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-  child: Card(
-    color: const Color.fromRGBO(204, 235, 252, 1.0),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(20.0),
-    ),
-    elevation: 5,
-    child: Column(
-      children: [
-        ListTile(
-          title: Center(
-            child: Text(
-              item['doc_number'] ?? 'No doc_number',
-              style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),
-            ),
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Divider(
-                color: const Color.fromARGB(255, 0, 0, 0),
-              ),
-              RichText(
-                text: TextSpan(
-                  children: [
-                    if (item['status_desc'] != null)
-                      WidgetSpan(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 4.0, vertical: 2.0),
-                          decoration: statusDecoration,
-                          child: Text(
-                            '${item['status_desc'] ?? 'No Status'}',
-                            style: statusStyle,
-                          ),
-                        ),
-                      ),
-                    TextSpan(
-                      text: '\n \n',
-                      style: TextStyle(color: Colors.black, fontSize: 12),
-                    ),
-                    TextSpan(
-                      text: '${item['doc_date'] ?? 'No doc_date'} ${item['from_warehouse'] ?? 'No WAREHOUSE'} ${item['staff_name'] ?? ''}',
-                      style: TextStyle(color: Colors.black, fontSize: 12),
-                    ),
-                  ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+      child: Card(
+        color: const Color.fromRGBO(204, 235, 252, 1.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        elevation: 5,
+        child: Column(
+          children: [
+            ListTile(
+              title: Center(
+                child: Text(
+                  item['doc_number'] ?? 'No doc_number',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ],
-          ),
-          onTap: () async {
-            print('${item['doc_no'] ?? 'No doc_no'} ');
-            print('${item['doc_type'] ?? 'No doc_type'} ');
-            doc_no = item['doc_no'];
-            doc_out = item['doc_type'];
-            await chk_validate();
-            await chk_validate_inhead();
-            print('poStatusinhead: $poStatusinhead');
-            // print('$poStatus $poMessage $goToStep');
-
-            if (poStatus == '1') {
-              print(poMessage);
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('คำเตือน'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Divider(
+                    color: const Color.fromARGB(255, 0, 0, 0),
+                  ),
+                  RichText(
+                    text: TextSpan(
                       children: [
-                        Text('${poMessage ?? 'No message available'}'),
+                        if (item['status_desc'] != null)
+                          WidgetSpan(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 4.0, vertical: 2.0),
+                              decoration: statusDecoration,
+                              child: Text(
+                                '${item['status_desc'] ?? 'No Status'}',
+                                style: statusStyle,
+                              ),
+                            ),
+                          ),
+                        TextSpan(
+                          text: '\n \n',
+                          style: TextStyle(color: Colors.black, fontSize: 12),
+                        ),
+                        TextSpan(
+                          text:
+                              '${item['doc_date'] ?? 'No doc_date'} ${item['from_warehouse'] ?? 'No WAREHOUSE'} ${item['staff_name'] ?? ''}',
+                          style: TextStyle(color: Colors.black, fontSize: 12),
+                        ),
                       ],
                     ),
-                    actions: [
-                      TextButton(
-                        child: Text('OK'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            } else if (poStatus == '0') {
-              if (goToStep == '2') {
-                print('ไปหน้า Form');
-                if (poStatusinhead == '0') {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SSFGDT17_FORM(
-                        po_doc_no: doc_no ?? '',
-                        po_doc_type: doc_out,
-                        LocCode: '',
-                        selectedwhCode: '',
-                        selectedLocCode: '',
-                        whOUTCode: '',
-                        LocOUTCode: '',
-                        pWareCode: '',
-                      ),
-                    ),
-                  );
-                }
-              } else if (goToStep == '3') {
-                print('ไปหน้า barcode');
-                if (poStatusinhead == '0') {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SSFGDT17_BARCODE(
-                        po_doc_no: doc_no ?? '',
-                        po_doc_type: doc_out,
-                        LocCode: '',
-                        selectedwhCode: '',
-                        selectedLocCode: '',
-                        whOUTCode: '',
-                        LocOUTCode: '',
-                      ),
-                    ),
-                  );
-                }
-              } else if (goToStep == '4') {
-                print('ไปหน้ายืนยัน');
-                if (poStatusinhead == '0') {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SSFGD17_VERIFY(
-                        po_doc_no: doc_no ?? '',
-                        po_doc_type: doc_out,
-                        selectedwhCode: '',
-                      ),
-                    ),
-                  );
-                }
-              }
-            }
-          },
-        ),
-      ],
-    ),
-  ),
-);
-}
+                  ),
+                ],
+              ),
+              onTap: () async {
+                print('${item['doc_no'] ?? 'No doc_no'} ');
+                print('${item['doc_type'] ?? 'No doc_type'} ');
+                doc_no = item['doc_no'];
+                doc_out = item['doc_type'];
+                await chk_validate();
+                await chk_validate_inhead();
+                print('poStatusinhead: $poStatusinhead');
+                // print('$poStatus $poMessage $goToStep');
 
-String? poStatus;
+                if (poStatus == '1') {
+                  print(poMessage);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Row(
+                          children: [
+                            Icon(
+                              Icons.notifications, // Use the bell icon
+                              color: Colors.red, // Set the color to red
+                            ),
+                            SizedBox(
+                                width:
+                                    8), // Add some space between the icon and the text
+                            Text('แจ้งเตือน'), // Title text
+                          ],
+                        ),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('${poMessage ?? 'No message available'}'),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            child: Text('OK'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else if (poStatus == '0') {
+                  if (goToStep == '2') {
+                    print('ไปหน้า Form');
+                    if (poStatusinhead == '0') {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => SSFGDT17_FORM(
+                            po_doc_no: doc_no ?? '',
+                            po_doc_type: doc_out,
+                            LocCode: '',
+                            selectedwhCode: '',
+                            selectedLocCode: '',
+                            whOUTCode: '',
+                            LocOUTCode: '',
+                            pWareCode: '',
+                          ),
+                        ),
+                      );
+                    }
+                  } else if (goToStep == '3') {
+                    print('ไปหน้า barcode');
+                    if (poStatusinhead == '0') {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => SSFGDT17_BARCODE(
+                            po_doc_no: doc_no ?? '',
+                            po_doc_type: doc_out,
+                            LocCode: '',
+                            selectedwhCode: '',
+                            selectedLocCode: '',
+                            whOUTCode: '',
+                            LocOUTCode: '',
+                          ),
+                        ),
+                      );
+                    }
+                  } else if (goToStep == '4') {
+                    print('ไปหน้ายืนยัน');
+                    if (poStatusinhead == '0') {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => SSFGD17_VERIFY(
+                            po_doc_no: doc_no ?? '',
+                            po_doc_type: doc_out,
+                            selectedwhCode: '',
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String? poStatus;
   String? poMessage;
   String? goToStep;
 
@@ -389,7 +399,7 @@ String? poStatus;
         final jsonData = json.decode(responseBody);
         setState(() {
           poStatusinhead = jsonData['po_status'];
- 
+
           print('poStatusinhead: $poStatusinhead');
         });
       } else {
@@ -400,69 +410,71 @@ String? poStatus;
     }
   }
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: const Color(0xFF17153B),
-    appBar: const CustomAppBar(title: 'Move Locator'),
-    body: OrientationBuilder(
-      builder: (context, orientation) {
-        final isPortrait = orientation == Orientation.portrait;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF17153B),
+      appBar: const CustomAppBar(title: 'Move Locator'),
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          final isPortrait = orientation == Orientation.portrait;
 
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              if (isPortrait)
-                const SizedBox(height: 4),
-              Expanded(
-                child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : errorMessage.isNotEmpty
-                        ? Center(
-                            child: Text(
-                              'Error: $errorMessage',
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          )
-                        : data.isEmpty
-                            ? const Center(
-                                child: Text(
-                                  'No Data Available',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              )
-                            : ListView(
-                                children: [
-                               
-                                  ...data.map((item) => buildListTile(context, item)).toList(),
-             
-                                  const SizedBox(height: 10),
-                      
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: prevLink != null ? _loadPrevPage : null,
-                                        child: const Text('Previous'),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: nextLink != null ? _loadNextPage : null,
-                                        child: const Text('Next'),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                if (isPortrait) const SizedBox(height: 4),
+                Expanded(
+                  child: isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : errorMessage.isNotEmpty
+                          ? Center(
+                              child: Text(
+                                'Error: $errorMessage',
+                                style: const TextStyle(color: Colors.white),
                               ),
-              ),
-            ],
-          ),
-        );
-      },
-    ),
-    bottomNavigationBar: BottomBar(),
-  );
-}
-
-
+                            )
+                          : data.isEmpty
+                              ? const Center(
+                                  child: Text(
+                                    'No Data Available',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                )
+                              : ListView(
+                                  children: [
+                                    ...data
+                                        .map((item) =>
+                                            buildListTile(context, item))
+                                        .toList(),
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: prevLink != null
+                                              ? _loadPrevPage
+                                              : null,
+                                          child: const Text('Previous'),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: nextLink != null
+                                              ? _loadNextPage
+                                              : null,
+                                          child: const Text('Next'),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      bottomNavigationBar: BottomBar(),
+    );
+  }
 }
