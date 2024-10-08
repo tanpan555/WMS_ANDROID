@@ -1888,7 +1888,7 @@ class DateInputFormatter extends TextInputFormatter {
     } else if (text.length == 8) {
       noDate = false;
     } else {
-      noDate = false;
+      noDate = true;
     }
 
     // ตรวจสอบว่าค่าใน day ไม่เกิน 31

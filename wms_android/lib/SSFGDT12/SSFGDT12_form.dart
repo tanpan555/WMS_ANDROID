@@ -349,9 +349,15 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                         labelText: 'วันที่ตรวจนับ',
                         hintText: 'DD/MM/YYYY',
                         hintStyle: TextStyle(color: Colors.grey),
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
-                        ),
+                        labelStyle: chkDate == false && noDate == false
+                            ? const TextStyle(
+                                color: Colors.black87,
+                                fontSize: 16,
+                              )
+                            : const TextStyle(
+                                color: Colors.red,
+                                fontSize: 16,
+                              ),
                         suffixIcon: IconButton(
                           icon:
                               Icon(Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
@@ -682,11 +688,11 @@ class DateInputFormatter extends TextInputFormatter {
     if (text.length == 1) {
       noDate = true;
     } else if (text.length == 2) {
-      noDate = false;
+      noDate = true;
     } else if (text.length == 3) {
       noDate = true;
     } else if (text.length == 4) {
-      noDate = false;
+      noDate = true;
     } else if (text.length == 5) {
       noDate = true;
     } else if (text.length == 6) {
@@ -696,7 +702,7 @@ class DateInputFormatter extends TextInputFormatter {
     } else if (text.length == 8) {
       noDate = false;
     } else {
-      noDate = false;
+      noDate = true;
     }
 
     // ตรวจสอบว่าค่าใน day ไม่เกิน 31

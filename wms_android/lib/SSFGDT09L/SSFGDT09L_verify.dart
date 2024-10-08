@@ -597,7 +597,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
           ),
           content: SingleChildScrollView(
             child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(3.0),
                 child: Column(children: [
                   const SizedBox(height: 10),
                   Text(
