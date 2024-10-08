@@ -87,11 +87,24 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
       initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
 
+    // if (pickedDate != null) {
+    //   // Format the date as dd/MM/yyyy
+    //   String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
+    //   if (mounted) {
+    //     setState(() {
+    //       noDate = false;
+    //       chkDate = false;
+    //       _dateController.text = formattedDate;
+    //       selectedDate = _dateController.text;
+    //     });
+    //   }
+    // }
     if (pickedDate != null) {
-      // Format the date as dd/MM/yyyy
-      String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
+      String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
       if (mounted) {
         setState(() {
+          noDate = false;
+          chkDate = false;
           _dateController.text = formattedDate;
           selectedDate = _dateController.text;
         });
@@ -168,7 +181,6 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
                   onPressed: () async {
-                    // กดไอคอนเพื่อเปิด date picker
                     _selectDate(context);
                   },
                 ),
@@ -192,22 +204,27 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                   dateColorCheck = formatter.dateColorCheck;
                   monthColorCheck = formatter.monthColorCheck;
                   noDate = formatter.noDate; // เพิ่มการตรวจสอบ noDate
-                });
-                setState(() {
+
                   RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                  // String messageAlertValueDate =
-                  //     'กรุณากรองวันที่ให้ถูกต้อง';
-                  if (!dateRegExp.hasMatch(selectedDate)) {
-                    // setState(() {
-                    //   chkDate == true;
-                    // });
-                    // showDialogAlert(context, messageAlertValueDate);
-                  } else {
+                  if (dateRegExp.hasMatch(selectedDate)) {
                     setState(() {
                       chkDate = false;
+                      noDate = false;
+                      print('case PPP');
                     });
                   }
                 });
+                // setState(() {
+                //   RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                //   // String messageAlertValueDate =
+                //   //     'กรุณากรองวันที่ให้ถูกต้อง';
+                //   if (!dateRegExp.hasMatch(selectedDate)) {
+                //     // setState(() {
+                //     //   chkDate == true;
+                //     // });
+                //     // showDialogAlert(context, messageAlertValueDate);
+                //   }
+                // });
               },
             ),
             chkDate == true || noDate == true
@@ -557,6 +574,8 @@ class DateInputFormatter extends TextInputFormatter {
     monthColorCheck = false;
 
     // ตรวจสอบและตั้งค่า noDate ตามกรณีที่ต่างกัน
+    print('text.length : ${text.length}');
+    print('text.length : ${text.length}');
     if (text.length == 1) {
       noDate = true;
     } else if (text.length == 2) {

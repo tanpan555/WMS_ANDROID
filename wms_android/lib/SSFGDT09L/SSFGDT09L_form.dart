@@ -625,6 +625,8 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
       String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
       if (mounted) {
         setState(() {
+          noDate = false;
+          chkDate = false;
           crDateController.text = formattedDate;
           crDate = crDateController.text;
         });

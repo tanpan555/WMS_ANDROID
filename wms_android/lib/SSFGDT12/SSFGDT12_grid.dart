@@ -738,7 +738,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                           SizedBox(
                                             child: Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   'ลำดับ : ',
                                                   style: TextStyle(
                                                       fontWeight:
@@ -766,7 +766,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                           SizedBox(
                                             child: Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   'ชื่อสินค้า : ',
                                                   style: TextStyle(
                                                       fontWeight:
@@ -800,7 +800,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                               // mainAxisAlignment:
                                               //     MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Text(
+                                                const Text(
                                                   'คลังสินค้า : ',
                                                   style: TextStyle(
                                                       fontWeight:
@@ -828,7 +828,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                               // mainAxisAlignment:
                                               // MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Text(
+                                                const Text(
                                                   'ตำแหน่งจัดเก็บ : ',
                                                   style: TextStyle(
                                                       fontWeight:
@@ -855,7 +855,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                           SizedBox(
                                             child: Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   'จำนวนคงเหลือในระบบ : ',
                                                   style: TextStyle(
                                                       fontWeight:
@@ -890,7 +890,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                           SizedBox(
                                             child: Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   'ผลต่างการตรวจนับ : ',
                                                   style: TextStyle(
                                                       fontWeight:
@@ -920,7 +920,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                           SizedBox(
                                             child: Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   'จำนวนที่ตรวจนับได้ได้รับ : ',
                                                   style: TextStyle(
                                                       fontWeight:
@@ -953,7 +953,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                           SizedBox(
                                             child: Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   'หมายเหตุสินค้า : ',
                                                   style: TextStyle(
                                                       fontWeight:
