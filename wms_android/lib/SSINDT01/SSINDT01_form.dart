@@ -116,6 +116,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     final url =
         'http://172.16.0.82:8888/apex/wms/c/chk_valid_inhead/${widget.poReceiveNo}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}';
     try {
+      print(url);
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
@@ -521,7 +522,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                                       Text('แจ้งเตือน'), // Title text
                                     ],
                                   ),
-                                  content: Text('$pomsg'),
+                                  content: Text(
+                                      'ต้องระบุเลขที่ใบกำกับ (invoice) และวันที่ตามใบกำกับ-แจ้งหนี้ ของผู้ขายให้ครบถ้วน'),
                                   actions: <Widget>[
                                     TextButton(
                                       child: Text('ตกลง'),
@@ -726,7 +728,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                 Text('แจ้งเตือน'), // Title text
               ],
             ),
-            content: Text('ต้องระบุข้อมูลที่จำเป็น * ให้ครบถ้วน !!!'),
+            content: Text(
+                'ต้องระบุเลขที่ใบกำกับ (invoice) และวันที่ตามใบกำกับ-แจ้งหนี้ ของผู้ขายให้ครบถ้วน'),
             actions: <Widget>[
               TextButton(
                 child: Text('OK'),
@@ -1330,9 +1333,12 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               filled: true,
               fillColor: Colors.grey[300],
               labelText: 'เลขที่ใบรับคลัง',
+              hintText: 'เลขที่ใบรับคลัง',
               labelStyle: const TextStyle(
                 color: Colors.black87,
               ),
+              floatingLabelBehavior: FloatingLabelBehavior
+                  .always, // Prevents the label from shrinking
               border: InputBorder.none,
             ),
             readOnly: true,

@@ -1957,115 +1957,131 @@ class _LotDialogState extends State<LotDialog> {
             ),
             child: Container(
               padding: EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    SizedBox(height: 16.0),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: TextFormField(
-                            initialValue: lotSeq ?? '',
-                            decoration: InputDecoration(
-                              label: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'Seq',
-                                  style: TextStyle(color: Colors.black),
+              child: Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        SizedBox(height: 30.0),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: TextFormField(
+                                initialValue: lotSeq ?? '',
+                                decoration: InputDecoration(
+                                  label: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Seq',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                  labelStyle: TextStyle(color: Colors.black),
+                                  filled: true,
+                                  fillColor: Colors.grey[300],
+                                  border: InputBorder.none,
                                 ),
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                readOnly: true,
+                                textAlign: TextAlign.left,
                               ),
-                              labelStyle: TextStyle(color: Colors.black),
-                              filled: true,
-                              fillColor: Colors.grey[300],
-                              border: InputBorder.none,
                             ),
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
+                            SizedBox(width: 8.0),
+                            Expanded(
+                              flex: 2,
+                              child: TextFormField(
+                                initialValue: item['lot_product_no'] ?? '',
+                                decoration: InputDecoration(
+                                  labelText: 'Lot No',
+                                  labelStyle: TextStyle(color: Colors.black),
+                                  filled: true,
+                                  fillColor: Colors.grey[300],
+                                  border: InputBorder.none,
+                                ),
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                readOnly: true,
+                              ),
                             ),
-                            readOnly: true,
-                            textAlign: TextAlign.left, //<<<<<<<<<<,
-                          ),
+                          ],
                         ),
-                        SizedBox(width: 8.0),
-                        Expanded(
-                          flex: 2,
-                          child: TextFormField(
-                            initialValue: item['lot_product_no'] ?? '',
-                            decoration: InputDecoration(
-                              labelText: 'Lot No',
-                              labelStyle: TextStyle(color: Colors.black),
-                              filled: true,
-                              fillColor: Colors.grey[300],
-                              border: InputBorder.none,
-                            ),
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            readOnly: true,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 12.0),
-                    _buildTextField(
-                      controller: lotQtyController,
-                      labelText: 'LOT QTY',
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
-                        item['lot_qty'] = value;
-                      },
-                    ),
-                    _buildTextField(
-                      controller: lotSupplierController,
-                      labelText: 'Lot ผู้ผลิต',
-                      onChanged: (value) {
-                        item['lot_supplier'] = value;
-                      },
-                    ),
-                    _buildDateField(
-                      controller: mfgDateController,
-                      labelText: 'MFG Date',
-                      context: context,
-                      onChanged: (value) {
-                        item['mfg_date'] = value;
-                      },
-                    ),
-                    SizedBox(height: 16.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          style: AppStyles.ConfirmChecRecievekButtonStyle(),
-                          onPressed: () async {
-                            await updateLot(
-                              lotQtyController.text,
-                              lotSupplierController.text,
-                              mfgDateController.text,
-                              ou_code,
-                              recNo,
-                              recSeq,
-                              lotSeq,
-                            );
-                            sendGetRequestlineWMS();
-                            Navigator.of(context).pop();
-                            if (refreshCallback != null) {
-                              await refreshCallback();
-                            }
+                        SizedBox(height: 12.0),
+                        _buildTextField(
+                          controller: lotQtyController,
+                          labelText: 'LOT QTY',
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            item['lot_qty'] = value;
                           },
-                          child: Image.asset(
-                            'assets/images/check-mark.png',
-                            width: 45.0,
-                            height: 45.0,
-                          ),
+                        ),
+                        _buildTextField(
+                          controller: lotSupplierController,
+                          labelText: 'Lot ผู้ผลิต',
+                          onChanged: (value) {
+                            item['lot_supplier'] = value;
+                          },
+                        ),
+                        _buildDateField(
+                          controller: mfgDateController,
+                          labelText: 'MFG Date',
+                          context: context,
+                          onChanged: (value) {
+                            item['mfg_date'] = value;
+                          },
+                        ),
+                        SizedBox(height: 16.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              style: AppStyles.ConfirmChecRecievekButtonStyle(),
+                              onPressed: () async {
+                                await updateLot(
+                                  lotQtyController.text,
+                                  lotSupplierController.text,
+                                  mfgDateController.text,
+                                  ou_code,
+                                  recNo,
+                                  recSeq,
+                                  lotSeq,
+                                );
+                                sendGetRequestlineWMS();
+                                Navigator.of(context).pop();
+                                if (refreshCallback != null) {
+                                  await refreshCallback();
+                                }
+                              },
+                              child: Image.asset(
+                                'assets/images/check-mark.png',
+                                width: 45.0,
+                                height: 45.0,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+
+                  // Close Button Positioned at the top right corner
+                  Positioned(
+                    right: 0.0,
+                    top: -15.0,
+                    child: IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

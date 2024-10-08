@@ -31,8 +31,8 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
 
   List<String> statusItems = [
     'ทั้งหมด',
-    'รายการใบสั่งซื้อ',
-    'รายการรอรับดำเนินการ'
+    'รายการรอรับดำเนินการ',
+    'รายการใบสั่งซื้อ'
   ];
 
   String currentSessionID = '';
