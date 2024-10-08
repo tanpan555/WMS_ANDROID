@@ -519,7 +519,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                                     item['d'],
                                     style: const TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                      // fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),

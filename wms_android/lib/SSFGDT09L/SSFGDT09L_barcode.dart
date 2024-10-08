@@ -1085,8 +1085,9 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             ),
             content: SingleChildScrollView(
               child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(children: [
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
                     const SizedBox(height: 10),
                     TextFormField(
                       controller: locatorFormChkController,
@@ -1107,41 +1108,42 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       },
                     ),
                     const SizedBox(height: 10),
-                  ])),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            locatorFormChkController.clear();
+                            locatorFormChk = '';
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.grey),
+                          ),
+                          child: const Text('Cancel'),
+                        ),
+                        //---------------------------------------------------
+                        ElevatedButton(
+                          onPressed: () {
+                            String textForm = 'F';
+                            if (locatorFormChk != '') {
+                              chkLocatorForm(locatorFormChk, textForm);
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.grey),
+                          ),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      locatorFormChkController.clear();
-                      locatorFormChk = '';
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('Cancel'),
-                  ),
-                  //---------------------------------------------------
-                  ElevatedButton(
-                    onPressed: () {
-                      String textForm = 'F';
-                      if (locatorFormChk != '') {
-                        chkLocatorForm(locatorFormChk, textForm);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('OK'),
-                  ),
-                ],
-              )
-            ]);
+            actions: []);
       },
     );
   }
@@ -1169,8 +1171,9 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             ),
             content: SingleChildScrollView(
               child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(children: [
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
                     const SizedBox(height: 10),
                     TextFormField(
                       controller: locatorToChkController,
@@ -1191,42 +1194,43 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       },
                     ),
                     const SizedBox(height: 10),
-                  ])),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            locatorToChkController.clear();
+                            locatorToChk = '';
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.grey),
+                          ),
+                          child: const Text('Cancel'),
+                        ),
+                        //---------------------------------------------------
+                        ElevatedButton(
+                          onPressed: () {
+                            String textForm = 'T';
+                            if (locatorToChk != '') {
+                              chkLocatorForm(locatorToChk, textForm);
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.grey),
+                          ),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                // mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      locatorToChkController.clear();
-                      locatorToChk = '';
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('Cancel'),
-                  ),
-                  //---------------------------------------------------
-                  ElevatedButton(
-                    onPressed: () {
-                      String textForm = 'T';
-                      if (locatorToChk != '') {
-                        chkLocatorForm(locatorToChk, textForm);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('OK'),
-                  ),
-                ],
-              )
-            ]);
+            actions: []);
       },
     );
   }

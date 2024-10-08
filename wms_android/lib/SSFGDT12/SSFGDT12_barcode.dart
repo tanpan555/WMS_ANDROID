@@ -674,7 +674,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                                     item['location_code'],
                                     style: const TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                      // fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
@@ -794,7 +794,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                                     item['d'],
                                     style: const TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                      // fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
