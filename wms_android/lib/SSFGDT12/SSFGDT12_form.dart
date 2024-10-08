@@ -214,6 +214,8 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
       String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
       if (mounted) {
         setState(() {
+          noDate = false;
+          chkDate = false;
           nbCountDateController.text = formattedDate;
           nbCountDate = nbCountDateController.text;
         });
