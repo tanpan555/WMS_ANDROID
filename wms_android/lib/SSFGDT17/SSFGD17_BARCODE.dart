@@ -81,9 +81,11 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
 
   void _onQRViewCreated(QRViewController controller) {
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        BARCODE.text = scanData.code!;
-      });
+      if (mounted) {
+        setState(() {
+          BARCODE.text = scanData.code!;
+        });
+      }
       controller.dispose();
       Navigator.of(context).pop();
     });
@@ -116,13 +118,14 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
         final jsonData = json.decode(responseBody);
 
         print('Fetched Loc data: $jsonData');
-
-        setState(() {
-          locCode = jsonData['items'];
-          if (locCode.isNotEmpty) {
-            selectedLocCode = widget.LocCode;
-          }
-        });
+        if (mounted) {
+          setState(() {
+            locCode = jsonData['items'];
+            if (locCode.isNotEmpty) {
+              selectedLocCode = widget.LocCode;
+            }
+          });
+        }
 
         for (var item in locCode) {
           print('r value: ${item['r']}');
@@ -159,27 +162,28 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        if (mounted) {
+          setState(() {
+            p_lot_number = data['p_lot_number'];
+            p_quantity = data['p_quantity'];
+            p_curr_ware = data['p_curr_ware'];
+            p_curr_loc = data['p_curr_loc'];
+            p_bal_lot = data['p_bal_lot'];
+            p_bal_qty = data['p_bal_qty'];
+            p_item_code = data['p_item_code'];
+            p_control_lot = data['p_control_lot'];
+            po_status = data['po_status'];
+            po_message = data['po_message'];
 
-        setState(() {
-          p_lot_number = data['p_lot_number'];
-          p_quantity = data['p_quantity'];
-          p_curr_ware = data['p_curr_ware'];
-          p_curr_loc = data['p_curr_loc'];
-          p_bal_lot = data['p_bal_lot'];
-          p_bal_qty = data['p_bal_qty'];
-          p_item_code = data['p_item_code'];
-          p_control_lot = data['p_control_lot'];
-          po_status = data['po_status'];
-          po_message = data['po_message'];
-
-          // Update text fields with fetched data
-          LOT_NUMBER.text = p_lot_number ?? '';
-          QUANTITY.text = p_quantity ?? '';
-          LOCATOR_TO.text = p_curr_ware ?? '';
-          BAL_LOT.text = p_bal_lot ?? '';
-          BAL_QTY.text = p_bal_qty ?? '';
-          ITEM_CODE.text = p_item_code ?? '';
-        });
+            // Update text fields with fetched data
+            LOT_NUMBER.text = p_lot_number ?? '';
+            QUANTITY.text = p_quantity ?? '';
+            LOCATOR_TO.text = p_curr_ware ?? '';
+            BAL_LOT.text = p_bal_lot ?? '';
+            BAL_QTY.text = p_bal_qty ?? '';
+            ITEM_CODE.text = p_item_code ?? '';
+          });
+        }
       } else {
         print('Failed to load data, status code: ${response.statusCode}');
       }
@@ -275,14 +279,16 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
-        setState(() {
-          poStatus = jsonData['po_status'];
-          poMessage = jsonData['po_message'];
-          print(response.statusCode);
-          print(jsonData);
-          print(poStatus);
-          print(poMessage);
-        });
+        if (mounted) {
+          setState(() {
+            poStatus = jsonData['po_status'];
+            poMessage = jsonData['po_message'];
+            print(response.statusCode);
+            print(jsonData);
+            print(poStatus);
+            print(poMessage);
+          });
+        }
       } else {
         throw Exception('Failed to load data');
       }

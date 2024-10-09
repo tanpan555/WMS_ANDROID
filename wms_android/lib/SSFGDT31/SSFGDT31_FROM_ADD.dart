@@ -57,19 +57,20 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
       print('Fetched data: $data');
+      if (mounted) {
+        setState(() {
+          statusItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+          print('dataMenu: $statusItems');
 
-      setState(() {
-        statusItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-        print('dataMenu: $statusItems');
+          final docType = widget.po_doc_type;
+          final docDesc = statusItems
+              .where((item) => item['doc_type'] == docType)
+              .map((item) => item['doc_desc'])
+              .firstWhere((desc) => desc != null, orElse: () => '');
 
-        final docType = widget.po_doc_type;
-        final docDesc = statusItems
-            .where((item) => item['doc_type'] == docType)
-            .map((item) => item['doc_desc'])
-            .firstWhere((desc) => desc != null, orElse: () => '');
-
-        DOC_TYPE.text = docDesc;
-      });
+          DOC_TYPE.text = docDesc;
+        });
+      }
     } else {
       throw Exception('Failed to load status items');
     }
@@ -90,16 +91,17 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
 
         if (items.isNotEmpty) {
           final Map<String, dynamic> item = items[0];
-
-          setState(() {
-            DOC_NO.text = item['doc_no'] ?? '';
-            DOC_TYPE.text = item['doc_type'] ?? '';
-            DOC_DATE.text = _formatDate(DateTime.parse(
-                item['doc_date'] ?? DateTime.now().toIso8601String()));
-            REF_NO.text = item['ref_no'] ?? 'null';
-            NOTE.text = item['note'] ?? '';
-            ERP_DOC_NO.text = item['erp_doc_no'] ?? '';
-          });
+          if (mounted) {
+            setState(() {
+              DOC_NO.text = item['doc_no'] ?? '';
+              DOC_TYPE.text = item['doc_type'] ?? '';
+              DOC_DATE.text = _formatDate(DateTime.parse(
+                  item['doc_date'] ?? DateTime.now().toIso8601String()));
+              REF_NO.text = item['ref_no'] ?? 'null';
+              NOTE.text = item['note'] ?? '';
+              ERP_DOC_NO.text = item['erp_doc_no'] ?? '';
+            });
+          }
         } else {
           print('No items found.');
         }
@@ -125,13 +127,15 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
       lastDate: DateTime(2101),
     );
     if (picked != null) {
-      setState(() {
-        selectedDate = picked;
-        DOC_DATE.text = displayFormat
-            .format(selectedDate); // Update DOC_DATE with the selected date
-        isDateValid =
-            true; // Set isDateValid to true as we know this is a valid date
-      });
+      if (mounted) {
+        setState(() {
+          selectedDate = picked;
+          DOC_DATE.text = displayFormat
+              .format(selectedDate); // Update DOC_DATE with the selected date
+          isDateValid =
+              true; // Set isDateValid to true as we know this is a valid date
+        });
+      }
     }
   }
 
@@ -148,12 +152,14 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         print(items);
 
         if (items.isNotEmpty) {
-          setState(() {
-            moDoNoItems = List<Map<String, dynamic>>.from(items);
-            if (moDoNoItems.isNotEmpty) {
-              selectedMoDoNo = moDoNoItems[0]['mo_do_no'];
-            }
-          });
+          if (mounted) {
+            setState(() {
+              moDoNoItems = List<Map<String, dynamic>>.from(items);
+              if (moDoNoItems.isNotEmpty) {
+                selectedMoDoNo = moDoNoItems[0]['mo_do_no'];
+              }
+            });
+          }
         } else {
           print('No items found.');
         }
@@ -180,21 +186,25 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         print(items);
 
         if (items.isNotEmpty) {
-          setState(() {
-            custCodeItems = List<Map<String, dynamic>>.from(items);
-            if (custCodeItems.isNotEmpty) {
-              csValue = custCodeItems[0]['cs'];
-              print('CS Value: $csValue');
-            } else {
-              print('No items found.');
-              custCodeItems = [];
-            }
-          });
+          if (mounted) {
+            setState(() {
+              custCodeItems = List<Map<String, dynamic>>.from(items);
+              if (custCodeItems.isNotEmpty) {
+                csValue = custCodeItems[0]['cs'];
+                print('CS Value: $csValue');
+              } else {
+                print('No items found.');
+                custCodeItems = [];
+              }
+            });
+          }
         } else {
           print('No items found.');
-          setState(() {
-            custCodeItems = [];
-          });
+          if (mounted) {
+            setState(() {
+              custCodeItems = [];
+            });
+          }
         }
       } else {
         print('Failed to load data. Status code: ${response.statusCode}');
@@ -219,21 +229,25 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         print(items);
 
         if (items.isNotEmpty) {
-          setState(() {
-            REF_NOItems = List<Map<String, dynamic>>.from(items);
-            if (REF_NOItems.isNotEmpty) {
-              csValue = REF_NOItems[0]['doc_no'] ?? 'null';
-              print('doc_no: $doc_no');
-            } else {
-              print('No items found.');
-              custCodeItems = [];
-            }
-          });
+          if (mounted) {
+            setState(() {
+              REF_NOItems = List<Map<String, dynamic>>.from(items);
+              if (REF_NOItems.isNotEmpty) {
+                csValue = REF_NOItems[0]['doc_no'] ?? 'null';
+                print('doc_no: $doc_no');
+              } else {
+                print('No items found.');
+                custCodeItems = [];
+              }
+            });
+          }
         } else {
           print('No items found.');
-          setState(() {
-            custCodeItems = [];
-          });
+          if (mounted) {
+            setState(() {
+              custCodeItems = [];
+            });
+          }
         }
       } else {
         print('Failed to load data. Status code: ${response.statusCode}');
@@ -281,12 +295,14 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
 
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        setState(() {
-          v_ref_type = responseBody['v_ref_type'];
-          v_ref_doc_no = responseBody['v_ref_doc_no'];
-          print('v_ref_type: $v_ref_type');
-          print('v_ref_doc_no: $v_ref_doc_no');
-        });
+        if (mounted) {
+          setState(() {
+            v_ref_type = responseBody['v_ref_type'];
+            v_ref_doc_no = responseBody['v_ref_doc_no'];
+            print('v_ref_type: $v_ref_type');
+            print('v_ref_doc_no: $v_ref_doc_no');
+          });
+        }
       } else {
         print(
             'Failed to update: ${response.statusCode} - ${response.reasonPhrase}');
@@ -306,20 +322,24 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        setState(() {
-          poStatus = responseBody['po_status'];
-          poMessage = responseBody['po_message'];
-          print('po_status: $poStatus');
-          print('po_message: $poMessage');
-        });
+        if (mounted) {
+          setState(() {
+            poStatus = responseBody['po_status'];
+            poMessage = responseBody['po_message'];
+            print('po_status: $poStatus');
+            print('po_message: $poMessage');
+          });
+        }
       } else {
         throw Exception('Failed to load PO status');
       }
     } catch (e) {
-      setState(() {
-        poStatus = 'Error';
-        poMessage = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          poStatus = 'Error';
+          poMessage = e.toString();
+        });
+      }
     }
   }
 
@@ -336,21 +356,25 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
-        setState(() {
-          cCode = (jsonData['items'] as List)
-              .map((item) => item as Map<String, dynamic>)
-              .toList();
-          selectedcCode = cCode.isNotEmpty ? '' : null;
-          isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            cCode = (jsonData['items'] as List)
+                .map((item) => item as Map<String, dynamic>)
+                .toList();
+            selectedcCode = cCode.isNotEmpty ? '' : null;
+            isLoading = false;
+          });
+        }
       } else {
         throw Exception('Failed to load data');
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-        errorMessage = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          errorMessage = e.toString();
+        });
+      }
     }
   }
 

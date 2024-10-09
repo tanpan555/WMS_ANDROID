@@ -47,18 +47,19 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
         final responseBody = utf8.decode(response.bodyBytes);
         final data = jsonDecode(responseBody);
         print('Fetched data: $data');
-
-        setState(() {
-          statusItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-          if (statusItems.isNotEmpty) {
-            selectedValue = statusItems[0]['doc_type'];
-            dataLovDocTypeController.text = statusItems[0]['doc_desc'];
-          } else {
-            dataLovDocTypeController.clear(); // Clear if no items found
-          }
-          print('dataMenu: $statusItems');
-          print('Initial selectedValue: $selectedValue');
-        });
+        if (mounted) {
+          setState(() {
+            statusItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+            if (statusItems.isNotEmpty) {
+              selectedValue = statusItems[0]['doc_type'];
+              dataLovDocTypeController.text = statusItems[0]['doc_desc'];
+            } else {
+              dataLovDocTypeController.clear(); // Clear if no items found
+            }
+            print('dataMenu: $statusItems');
+            print('Initial selectedValue: $selectedValue');
+          });
+        }
       } else {
         // Handle error
         showDialogAlert(
@@ -93,12 +94,14 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
-          po_doc_no = responseData['po_doc_no'];
-          po_doc_type = responseData['po_doc_type'];
-          po_status = responseData['po_status'];
-          po_message = responseData['po_message'];
-        });
+        if (mounted) {
+          setState(() {
+            po_doc_no = responseData['po_doc_no'];
+            po_doc_type = responseData['po_doc_type'];
+            po_status = responseData['po_status'];
+            po_message = responseData['po_message'];
+          });
+        }
         print('Document Number: $po_doc_no');
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');

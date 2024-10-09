@@ -65,29 +65,33 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        setState(() {
-          doc_no = responseBody['doc_no'];
-          doc_type = responseBody['doc_type'];
-          erp_doc_no = responseBody['erp_doc_no'];
-          po_status = responseBody['po_status'];
-          po_message = responseBody['po_message'];
+        if (mounted) {
+          setState(() {
+            doc_no = responseBody['doc_no'];
+            doc_type = responseBody['doc_type'];
+            erp_doc_no = responseBody['erp_doc_no'];
+            po_status = responseBody['po_status'];
+            po_message = responseBody['po_message'];
 
-          print('p_doc_no: $doc_no');
-          print('p_doc_type: $doc_type');
-          print('erp_doc_no: $erp_doc_no');
-          print('po_status: $po_status');
-          print('po_message: $po_message');
-        });
+            print('p_doc_no: $doc_no');
+            print('p_doc_type: $doc_type');
+            print('erp_doc_no: $erp_doc_no');
+            print('po_status: $po_status');
+            print('po_message: $po_message');
+          });
+        }
 
         fetchPDFData(v_erp_doc_type, v_erp_doc_type);
       } else {
         throw Exception('Failed to load PO status');
       }
     } catch (e) {
-      setState(() {
-        po_status = 'Error';
-        po_message = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          po_status = 'Error';
+          po_message = e.toString();
+        });
+      }
     }
   }
 
@@ -336,18 +340,22 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
 
   void _loadNextPage() {
     if (nextLink != null) {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       fetchData(nextLink);
     }
   }
 
   void _loadPrevPage() {
     if (prevLink != null) {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       fetchData(prevLink);
     }
   }

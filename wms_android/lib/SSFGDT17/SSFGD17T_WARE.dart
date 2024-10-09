@@ -39,19 +39,22 @@ class _SSFGDT17_WAREState extends State<SSFGDT17_WARE> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $responseData');
-
-        setState(() {
-          data = List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            data = List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+            isLoading = false;
+          });
+        }
         print('dataMenu : $data');
       } else {
         throw Exception('Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
       print('ERROR IN Fetch Data : $e');
     }
   }

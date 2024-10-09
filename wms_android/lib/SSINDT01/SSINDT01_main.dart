@@ -98,9 +98,11 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   };
 
   Future<void> fetchWareCodes([String? url]) async {
-    setState(() {
-      isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
 
     final String requestUrl = url ??
         'http://172.16.0.82:8888/apex/wms/SSINDT01/SSINDT01_Card_list/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue';
@@ -111,35 +113,40 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final parsedResponse = json.decode(responseBody);
+        if (mounted) {
+          setState(() {
+            if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+              data = parsedResponse['items'];
+            } else {
+              data = [];
+            }
 
-        setState(() {
-          if (parsedResponse is Map && parsedResponse.containsKey('items')) {
-            data = parsedResponse['items'];
-          } else {
-            data = [];
-          }
-
-          List<dynamic> links = parsedResponse['links'] ?? [];
-          nextLink = getLink(links, 'next');
-          prevLink = getLink(links, 'prev');
-          isLoading = false;
-          print(
-              'http://172.16.0.82:8888/apex/wms/SSINDT01/SSINDT01_Card_list/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue');
-        });
+            List<dynamic> links = parsedResponse['links'] ?? [];
+            nextLink = getLink(links, 'next');
+            prevLink = getLink(links, 'prev');
+            isLoading = false;
+            print(
+                'http://172.16.0.82:8888/apex/wms/SSINDT01/SSINDT01_Card_list/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue');
+          });
+        }
       } else {
         // Handle HTTP error responses
-        setState(() {
-          isLoading = false;
-          errorMessage = 'Failed to load data: ${response.statusCode}';
-        });
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+            errorMessage = 'Failed to load data: ${response.statusCode}';
+          });
+        }
         print('HTTP Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
       // Handle exceptions that may occur
-      setState(() {
-        isLoading = false;
-        errorMessage = 'Error occurred: $e';
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          errorMessage = 'Error occurred: $e';
+        });
+      }
       print('Exception: $e');
     }
   }
@@ -152,19 +159,23 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
 
   void _loadNextPage() {
     if (nextLink != null) {
-      setState(() {
-        print('nextLink $nextLink');
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          print('nextLink $nextLink');
+          isLoading = true;
+        });
+      }
       fetchWareCodes(nextLink);
     }
   }
 
   void _loadPrevPage() {
     if (prevLink != null) {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       fetchWareCodes(prevLink);
     }
   }
@@ -196,26 +207,30 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        setState(() {
-          poStatus = responseBody['po_status'];
-          poMessage = responseBody['po_message'];
-          poStep = responseBody['po_goto_step'];
+        if (mounted) {
+          setState(() {
+            poStatus = responseBody['po_status'];
+            poMessage = responseBody['po_message'];
+            poStep = responseBody['po_goto_step'];
 
-          print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
-          print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
-          print('poStep : $poStep Type : ${poStep.runtimeType}');
-        });
+            print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
+            print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
+            print('poStep : $poStep Type : ${poStep.runtimeType}');
+          });
+        }
       } else {
         throw Exception('Failed to load PO status');
       }
     } catch (e) {
-      setState(() {
-        poStatus = 'Error';
-        poMessage = e.toString();
+      if (mounted) {
+        setState(() {
+          poStatus = 'Error';
+          poMessage = e.toString();
 
-        print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
-        print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
-      });
+          print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
+          print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
+        });
+      }
     }
   }
 
@@ -251,15 +266,18 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
-          poReceiveNo = responseData['po_receive_no'];
-          poStatus = responseData['po_status'];
-          poMessage = responseData['po_message'];
+        if (mounted) {
+          setState(() {
+            poReceiveNo = responseData['po_receive_no'];
+            poStatus = responseData['po_status'];
+            poMessage = responseData['po_message'];
 
-          print('poReceiveNo : $poReceiveNo Type : ${poReceiveNo.runtimeType}');
-          print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
-          print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
-        });
+            print(
+                'poReceiveNo : $poReceiveNo Type : ${poReceiveNo.runtimeType}');
+            print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
+            print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
+          });
+        }
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
       }

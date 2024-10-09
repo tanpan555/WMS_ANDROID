@@ -28,17 +28,21 @@ class _SSFGDT31_MAINState extends State<SSFGDT31_MAIN> {
         final responseBody = utf8.decode(response.bodyBytes);
         final data = jsonDecode(responseBody);
         print('Fetched data: $jsonDecode'); // Debug: Print the entire response
-
-        setState(() {
-          warehouseCodes = List<Map<String, dynamic>>.from(data['items'] ?? []);
-          print('dataMenu: $warehouseCodes'); // Debug: Print parsed codes
-          isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            warehouseCodes =
+                List<Map<String, dynamic>>.from(data['items'] ?? []);
+            print('dataMenu: $warehouseCodes'); // Debug: Print parsed codes
+            isLoading = false;
+          });
+        }
       } else {
         throw Exception('Failed to load warehouse codes');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('Error: $e');
     }
   }

@@ -114,12 +114,14 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
       lastDate: DateTime(2101),
     );
     if (picked != null) {
-      setState(() {
-        isDateValid = true;
-        selectedDate = picked;
-        CR_DATE.text = DateFormat('dd/MM/yyyy').format(selectedDate);
-        // Update CR_DATE with the selected date
-      });
+      if (mounted) {
+        setState(() {
+          isDateValid = true;
+          selectedDate = picked;
+          CR_DATE.text = DateFormat('dd/MM/yyyy').format(selectedDate);
+          // Update CR_DATE with the selected date
+        });
+      }
     }
   }
 
@@ -145,13 +147,15 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
-          poStatus = responseData['po_status'];
-          poMessage = responseData['po_message'];
+        if (mounted) {
+          setState(() {
+            poStatus = responseData['po_status'];
+            poMessage = responseData['po_message'];
 
-          print('poStatus: $poStatus');
-          print('poMessage: $poMessage');
-        });
+            print('poStatus: $poStatus');
+            print('poMessage: $poMessage');
+          });
+        }
       } else {
         print('Failed to fetch data. Status code: ${response.statusCode}');
       }
@@ -184,22 +188,26 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
-        setState(() {
-          cCode = (jsonData['items'] as List)
-              .map((item) => item as Map<String, dynamic>)
-              .toList();
-          selectedcCode = '';
-          print('selectedcCode $selectedcCode');
-          isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            cCode = (jsonData['items'] as List)
+                .map((item) => item as Map<String, dynamic>)
+                .toList();
+            selectedcCode = '';
+            print('selectedcCode $selectedcCode');
+            isLoading = false;
+          });
+        }
       } else {
         throw Exception('Failed to load data');
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-        errorMessage = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          errorMessage = e.toString();
+        });
+      }
     }
   }
 

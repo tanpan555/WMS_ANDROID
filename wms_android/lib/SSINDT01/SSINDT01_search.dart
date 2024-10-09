@@ -67,30 +67,36 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
-        setState(() {
-          apCodes = jsonData['items'] ?? [];
-          apCodes.insert(0, {'ap_code': 'ทั้งหมด', 'ap_name': 'ทั้งหมด'});
-        });
+        if (mounted) {
+          setState(() {
+            apCodes = jsonData['items'] ?? [];
+            apCodes.insert(0, {'ap_code': 'ทั้งหมด', 'ap_name': 'ทั้งหมด'});
+          });
+        }
       } else {
         throw Exception('Failed to load AP codes');
       }
     } catch (e) {
-      setState(() {
-        errorMessage = e.toString();
-        print(
-            'errorMessage : $errorMessage Type : ${errorMessage.runtimeType}');
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = e.toString();
+          print(
+              'errorMessage : $errorMessage Type : ${errorMessage.runtimeType}');
+        });
+      }
     }
   }
 
   void _resetForm() {
-    setState(() {
-      _selectedValue = 'ทั้งหมด';
-      selectedApCode = 'ทั้งหมด';
-      _documentNumberController.clear();
-      _selectedApCodeController.clear();
-      errorMessage = '';
-    });
+    if (mounted) {
+      setState(() {
+        _selectedValue = 'ทั้งหมด';
+        selectedApCode = 'ทั้งหมด';
+        _documentNumberController.clear();
+        _selectedApCodeController.clear();
+        errorMessage = '';
+      });
+    }
   }
 
   void _showProductTypeDialog() {

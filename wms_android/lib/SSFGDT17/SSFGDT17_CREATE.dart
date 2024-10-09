@@ -56,13 +56,14 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
 
         print('Fetched data: $jsonData');
         fetchLocationCodes();
-
-        setState(() {
-          whCodes = jsonData['items'];
-          if (whCodes.isNotEmpty) {
-            selectedwhCode = widget.pWareCode;
-          }
-        });
+        if (mounted) {
+          setState(() {
+            whCodes = jsonData['items'];
+            if (whCodes.isNotEmpty) {
+              selectedwhCode = widget.pWareCode;
+            }
+          });
+        }
       } else {
         throw Exception('Failed to load data');
       }
@@ -83,13 +84,14 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
         final jsonData = json.decode(responseBody);
 
         print('Fetched Loc data: $jsonData');
-
-        setState(() {
-          locCode = jsonData['items'];
-          if (locCode.isNotEmpty) {
-            selectedLocCode = locCode[0]['location_code'];
-          }
-        });
+        if (mounted) {
+          setState(() {
+            locCode = jsonData['items'];
+            if (locCode.isNotEmpty) {
+              selectedLocCode = locCode[0]['location_code'];
+            }
+          });
+        }
       } else {
         throw Exception('Failed to load data');
       }
@@ -110,13 +112,14 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
         final jsonData = json.decode(responseBody);
 
         print('Fetched data: $jsonData');
-
-        setState(() {
-          whOUTCode = jsonData['items'];
-          if (whOUTCode.isNotEmpty) {
-            selectedwhOUTCode = whOUTCode[0]['ware_code'];
-          }
-        });
+        if (mounted) {
+          setState(() {
+            whOUTCode = jsonData['items'];
+            if (whOUTCode.isNotEmpty) {
+              selectedwhOUTCode = whOUTCode[0]['ware_code'];
+            }
+          });
+        }
       } else {
         throw Exception('Failed to load data');
       }
@@ -137,13 +140,14 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
         final jsonData = json.decode(responseBody);
 
         print('Fetched Loc data: $jsonData');
-
-        setState(() {
-          locOUTCode = jsonData['items'];
-          if (locOUTCode.isNotEmpty) {
-            selectedLocOUTCode = locOUTCode[0]['location_code'];
-          }
-        });
+        if (mounted) {
+          setState(() {
+            locOUTCode = jsonData['items'];
+            if (locOUTCode.isNotEmpty) {
+              selectedLocOUTCode = locOUTCode[0]['location_code'];
+            }
+          });
+        }
       } else {
         throw Exception('Failed to load data');
       }
@@ -164,9 +168,11 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         print(jsonData);
-        setState(() {
-          docData = jsonData['DOC_TYPE'];
-        });
+        if (mounted) {
+          setState(() {
+            docData = jsonData['DOC_TYPE'];
+          });
+        }
       } else {
         throw Exception('Failed to load DOC_TYPE');
       }
@@ -210,17 +216,20 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
-          po_doc_no = responseData['po_doc_no'];
-          po_doc_type = responseData['po_doc_type'];
-          poStatus = responseData['po_status'];
-          poMessage = responseData['po_message'];
+        if (mounted) {
+          setState(() {
+            po_doc_no = responseData['po_doc_no'];
+            po_doc_type = responseData['po_doc_type'];
+            poStatus = responseData['po_status'];
+            poMessage = responseData['po_message'];
 
-          print('po_doc_no : $po_doc_no Type : ${po_doc_no.runtimeType}');
-          print('po_doc_type : $po_doc_type Type : ${po_doc_type.runtimeType}');
-          print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
-          print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
-        });
+            print('po_doc_no : $po_doc_no Type : ${po_doc_no.runtimeType}');
+            print(
+                'po_doc_type : $po_doc_type Type : ${po_doc_type.runtimeType}');
+            print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
+            print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
+          });
+        }
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
       }

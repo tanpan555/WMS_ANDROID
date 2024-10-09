@@ -99,51 +99,55 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        setState(() {
-          poBarcodeStatus = responseBody['po_status'];
-          poBarcodeMessage = responseBody['po_message'];
+        if (mounted) {
+          setState(() {
+            poBarcodeStatus = responseBody['po_status'];
+            poBarcodeMessage = responseBody['po_message'];
 
-          po_valid = responseBody['po_valid'];
-          po_item_code = responseBody['po_item_code'];
-          po_comb = responseBody['po_comb'];
-          po_control_lot = responseBody['po_control_lot'];
+            po_valid = responseBody['po_valid'];
+            po_item_code = responseBody['po_item_code'];
+            po_comb = responseBody['po_comb'];
+            po_control_lot = responseBody['po_control_lot'];
 
-          po_lot_number = responseBody['po_lot_number'];
-          po_quantity = responseBody['po_quantity'];
-          po_curr_ware = responseBody['po_curr_ware'];
-          po_curr_loc = responseBody['po_curr_loc'];
-          po_bal_lot = responseBody['po_bal_lot'];
-          po_bal_qty = responseBody['po_bal_qty'];
+            po_lot_number = responseBody['po_lot_number'];
+            po_quantity = responseBody['po_quantity'];
+            po_curr_ware = responseBody['po_curr_ware'];
+            po_curr_loc = responseBody['po_curr_loc'];
+            po_bal_lot = responseBody['po_bal_lot'];
+            po_bal_qty = responseBody['po_bal_qty'];
 
-          ITEM_CODE.text = po_item_code ?? ''; // Item Code
-          LOT_NUMBER.text = po_lot_number ?? ''; // Lot Number
-          // Quantity.text = po_quantity ?? '';  // Quantity
+            ITEM_CODE.text = po_item_code ?? ''; // Item Code
+            LOT_NUMBER.text = po_lot_number ?? ''; // Lot Number
+            // Quantity.text = po_quantity ?? '';  // Quantity
 
-          CUR_LOC.text = po_curr_loc ?? ''; // Current Locator
+            CUR_LOC.text = po_curr_loc ?? ''; // Current Locator
 
-          LOT_QTY.text = po_bal_lot ?? ''; // รวมรายการจ่าย
-          LOT_UNIT.text = po_bal_qty ?? ''; // รวมจำนวนจ่าย
+            LOT_QTY.text = po_bal_lot ?? ''; // รวมรายการจ่าย
+            LOT_UNIT.text = po_bal_qty ?? ''; // รวมจำนวนจ่าย
 
-          print('po_status: $poBarcodeStatus');
-          print('po_message: $poBarcodeMessage');
-          print('po_item_code: $po_item_code');
-          print('po_lot_number: $po_lot_number');
-          print('po_quantity: $po_quantity');
-          print('po_curr_loc: $po_curr_loc');
-          print('po_bal_lot: $po_bal_lot');
-          print('po_bal_qty: $po_bal_qty');
-          // Cur_loc_code.text = LCBARCODE ?? '';
-          get_LCBARCODE();
-          // fetchLocCurrStatus();
-        });
+            print('po_status: $poBarcodeStatus');
+            print('po_message: $poBarcodeMessage');
+            print('po_item_code: $po_item_code');
+            print('po_lot_number: $po_lot_number');
+            print('po_quantity: $po_quantity');
+            print('po_curr_loc: $po_curr_loc');
+            print('po_bal_lot: $po_bal_lot');
+            print('po_bal_qty: $po_bal_qty');
+            // Cur_loc_code.text = LCBARCODE ?? '';
+            get_LCBARCODE();
+            // fetchLocCurrStatus();
+          });
+        }
       } else {
         throw Exception('Failed to load PO status');
       }
     } catch (e) {
-      setState(() {
-        poBarcodeStatus = 'Error';
-        poBarcodeMessage = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          poBarcodeStatus = 'Error';
+          poBarcodeMessage = e.toString();
+        });
+      }
     }
   }
 
@@ -194,37 +198,41 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
-          p_erp_ou_code = responseData['p_erp_ou_code'];
-          p_doc_no_post = responseData['p_doc_no'];
-          p_barcode = responseData['p_barcode'];
+        if (mounted) {
+          setState(() {
+            p_erp_ou_code = responseData['p_erp_ou_code'];
+            p_doc_no_post = responseData['p_doc_no'];
+            p_barcode = responseData['p_barcode'];
 
-          p_item_code = responseData['p_item_code'];
-          p_lot_no = responseData['p_lot_no'];
-          p_qty = responseData['p_qty'];
+            p_item_code = responseData['p_item_code'];
+            p_lot_no = responseData['p_lot_no'];
+            p_qty = responseData['p_qty'];
 
-          p_warehouse = responseData['p_warehouse'];
-          p_locator = responseData['p_locator'];
+            p_warehouse = responseData['p_warehouse'];
+            p_locator = responseData['p_locator'];
 
-          poStatus = responseData['po_status'];
-          poMessage = responseData['po_message'];
+            poStatus = responseData['po_status'];
+            poMessage = responseData['po_message'];
 
-          print(
-              'p_erp_ou_code : $p_erp_ou_code Type : ${p_erp_ou_code.runtimeType}');
-          print(
-              'p_doc_no_post : $p_doc_no_post Type : ${p_doc_no_post.runtimeType}');
-          print('p_barcode : $p_barcode Type : ${p_barcode.runtimeType}');
+            print(
+                'p_erp_ou_code : $p_erp_ou_code Type : ${p_erp_ou_code.runtimeType}');
+            print(
+                'p_doc_no_post : $p_doc_no_post Type : ${p_doc_no_post.runtimeType}');
+            print('p_barcode : $p_barcode Type : ${p_barcode.runtimeType}');
 
-          print('p_item_code : $p_item_code Type : ${p_item_code.runtimeType}');
-          print('p_lot_no : $p_lot_no Type : ${p_lot_no.runtimeType}');
-          print('p_qty : $p_qty Type : ${p_qty.runtimeType}');
+            print(
+                'p_item_code : $p_item_code Type : ${p_item_code.runtimeType}');
+            print('p_lot_no : $p_lot_no Type : ${p_lot_no.runtimeType}');
+            print('p_qty : $p_qty Type : ${p_qty.runtimeType}');
 
-          print('p_warehouse : $p_warehouse Type : ${p_warehouse.runtimeType}');
-          print('p_locator : $p_locator Type : ${p_locator.runtimeType}');
+            print(
+                'p_warehouse : $p_warehouse Type : ${p_warehouse.runtimeType}');
+            print('p_locator : $p_locator Type : ${p_locator.runtimeType}');
 
-          print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
-          print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
-        });
+            print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
+            print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
+          });
+        }
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
       }
@@ -248,31 +256,35 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        setState(() {
-          p_doc_no = responseBody['p_doc_no'];
-          p_loc = responseBody['p_loc'];
-          po_loc_status = responseBody['po_status'];
-          po__loc_message = responseBody['po_message'];
-          ret = responseBody['ret'];
+        if (mounted) {
+          setState(() {
+            p_doc_no = responseBody['p_doc_no'];
+            p_loc = responseBody['p_loc'];
+            po_loc_status = responseBody['po_status'];
+            po__loc_message = responseBody['po_message'];
+            ret = responseBody['ret'];
 
-          print('p_doc_no: $p_doc_no');
-          print('p_loc: $p_loc');
-          print('po_loc_status: $po_loc_status');
-          print('po__loc_message: $po__loc_message');
-          print('ret: $ret');
+            print('p_doc_no: $p_doc_no');
+            print('p_loc: $p_loc');
+            print('po_loc_status: $po_loc_status');
+            print('po__loc_message: $po__loc_message');
+            print('ret: $ret');
 
-          if (po_loc_status == '0') {
-            LOC_IN.text = ret ?? '';
-          }
-        });
+            if (po_loc_status == '0') {
+              LOC_IN.text = ret ?? '';
+            }
+          });
+        }
       } else {
         throw Exception('Failed to load PO status');
       }
     } catch (e) {
-      setState(() {
-        poBarcodeStatus = 'Error';
-        poBarcodeMessage = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          poBarcodeStatus = 'Error';
+          poBarcodeMessage = e.toString();
+        });
+      }
     }
   }
 
@@ -290,21 +302,25 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        setState(() {
-          xfer_status = responseBody['po_status'];
-          xfer_message = responseBody['po_message'];
+        if (mounted) {
+          setState(() {
+            xfer_status = responseBody['po_status'];
+            xfer_message = responseBody['po_message'];
 
-          print('xfer_status: $xfer_status');
-          print('xfer_message: $xfer_message');
-        });
+            print('xfer_status: $xfer_status');
+            print('xfer_message: $xfer_message');
+          });
+        }
       } else {
         throw Exception('Failed to load PO status');
       }
     } catch (e) {
-      setState(() {
-        xfer_status = 'Error';
-        xfer_message = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          xfer_status = 'Error';
+          xfer_message = e.toString();
+        });
+      }
     }
   }
 
@@ -323,31 +339,35 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        setState(() {
-          p_doc_no_curr = responseBody['p_doc_no'];
-          p_loc_curr = responseBody['p_loc'];
-          po_loc_status_curr = responseBody['po_status'];
-          po__loc_message_curr = responseBody['po_message'];
-          ret_curr = responseBody['ret'];
+        if (mounted) {
+          setState(() {
+            p_doc_no_curr = responseBody['p_doc_no'];
+            p_loc_curr = responseBody['p_loc'];
+            po_loc_status_curr = responseBody['po_status'];
+            po__loc_message_curr = responseBody['po_message'];
+            ret_curr = responseBody['ret'];
 
-          print('p_doc_no_curr: $p_doc_no_curr');
-          print('p_loc_curr: $p_loc_curr');
-          print('po_loc_status_curr: $po_loc_status_curr');
-          print('po__loc_message_curr: $po__loc_message_curr');
-          print('ret_curr: $ret_curr');
+            print('p_doc_no_curr: $p_doc_no_curr');
+            print('p_loc_curr: $p_loc_curr');
+            print('po_loc_status_curr: $po_loc_status_curr');
+            print('po__loc_message_curr: $po__loc_message_curr');
+            print('ret_curr: $ret_curr');
 
-          // if(po_loc_status_curr == '0'){
-          CUR_LOC.text = ret_curr ?? '';
-          // }
-        });
+            // if(po_loc_status_curr == '0'){
+            CUR_LOC.text = ret_curr ?? '';
+            // }
+          });
+        }
       } else {
         throw Exception('Failed to load PO status');
       }
     } catch (e) {
-      setState(() {
-        poBarcodeStatus = 'Error';
-        poBarcodeMessage = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          poBarcodeStatus = 'Error';
+          poBarcodeMessage = e.toString();
+        });
+      }
     }
   }
 
@@ -366,16 +386,20 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
         print(items);
 
         if (items.isNotEmpty) {
-          setState(() {
-            // Assign the first item's lcbarcode value to LCBARCODE
-            LCBARCODE = items[0]['lcbarcode'] ?? 'null';
-            print('LCBARCODE: $LCBARCODE');
-          });
+          if (mounted) {
+            setState(() {
+              // Assign the first item's lcbarcode value to LCBARCODE
+              LCBARCODE = items[0]['lcbarcode'] ?? 'null';
+              print('LCBARCODE: $LCBARCODE');
+            });
+          }
         } else {
           print('No items found.');
-          setState(() {
-            LCBARCODE = '';
-          });
+          if (mounted) {
+            setState(() {
+              LCBARCODE = '';
+            });
+          }
         }
       } else {
         print('Failed to load data. Status code: ${response.statusCode}');

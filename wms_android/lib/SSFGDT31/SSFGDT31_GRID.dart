@@ -68,27 +68,31 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        setState(() {
-          po_doc_type = responseBody['po_doc_type'];
-          po_doc_no = responseBody['po_doc_no'];
-          p_ware_code = responseBody['p_ware_code'];
-          po_status = responseBody['po_status'];
-          po_message = responseBody['po_message'];
+        if (mounted) {
+          setState(() {
+            po_doc_type = responseBody['po_doc_type'];
+            po_doc_no = responseBody['po_doc_no'];
+            p_ware_code = responseBody['p_ware_code'];
+            po_status = responseBody['po_status'];
+            po_message = responseBody['po_message'];
 
-          print('po_doc_type: $po_doc_type');
-          print('po_doc_no: $po_doc_no');
-          print('p_ware_code: $p_ware_code');
-          print('po_status: $po_status');
-          print('po_message: $po_message');
-        });
+            print('po_doc_type: $po_doc_type');
+            print('po_doc_no: $po_doc_no');
+            print('p_ware_code: $p_ware_code');
+            print('po_status: $po_status');
+            print('po_message: $po_message');
+          });
+        }
       } else {
         throw Exception('Failed to load PO status');
       }
     } catch (e) {
-      setState(() {
-        po_status = 'Error';
-        po_message = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          po_status = 'Error';
+          po_message = e.toString();
+        });
+      }
     }
   }
 
@@ -106,30 +110,32 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
         print(fetchedItems);
 
         if (fetchedItems.isNotEmpty) {
-          setState(() {
-            items = fetchedItems;
+          if (mounted) {
+            setState(() {
+              items = fetchedItems;
 
-            double vPackQty, vOldPackQty;
-            vChkCol = '0';
-            for (var item in items) {
-              vPackQty = double.tryParse(
-                      item['pack_qty'].toString().replaceAll(',', '')) ??
-                  0;
-              vOldPackQty = double.tryParse(
-                      item['old_pack_qty']?.toString().replaceAll(',', '') ??
-                          '0') ??
-                  0;
+              double vPackQty, vOldPackQty;
+              vChkCol = '0';
+              for (var item in items) {
+                vPackQty = double.tryParse(
+                        item['pack_qty'].toString().replaceAll(',', '')) ??
+                    0;
+                vOldPackQty = double.tryParse(
+                        item['old_pack_qty']?.toString().replaceAll(',', '') ??
+                            '0') ??
+                    0;
 
-              print('v_PACK_QTY: $vPackQty');
-              print('v_OLD_PACK_QTY: $vOldPackQty');
+                print('v_PACK_QTY: $vPackQty');
+                print('v_OLD_PACK_QTY: $vOldPackQty');
 
-              if (vPackQty > vOldPackQty) {
-                vChkCol = '1';
+                if (vPackQty > vOldPackQty) {
+                  vChkCol = '1';
+                }
               }
-            }
 
-            print('v_chk_col: $vChkCol');
-          });
+              print('v_chk_col: $vChkCol');
+            });
+          }
         } else {
           print('No items found.');
         }
@@ -210,31 +216,32 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
       final poMessage = responseBody['po_message'];
       print('Status: $poStatus');
       print('Message: $poMessage');
+      if (mounted) {
+        setState(() {
+          items.removeWhere((item) =>
+              item['seq'] == p_seq && item['item_code'] == p_item_code);
 
-      setState(() {
-        items.removeWhere(
-            (item) => item['seq'] == p_seq && item['item_code'] == p_item_code);
+          if (items.isEmpty) {
+            vChkCol = '0';
+          } else {
+            vChkCol = '0';
+            for (var item in items) {
+              double vPackQty = double.tryParse(
+                      item['pack_qty'].toString().replaceAll(',', '')) ??
+                  0;
+              double vOldPackQty = double.tryParse(
+                      item['old_pack_qty']?.toString().replaceAll(',', '') ??
+                          '0') ??
+                  0;
 
-        if (items.isEmpty) {
-          vChkCol = '0';
-        } else {
-          vChkCol = '0';
-          for (var item in items) {
-            double vPackQty = double.tryParse(
-                    item['pack_qty'].toString().replaceAll(',', '')) ??
-                0;
-            double vOldPackQty = double.tryParse(
-                    item['old_pack_qty']?.toString().replaceAll(',', '') ??
-                        '0') ??
-                0;
-
-            if (vPackQty > vOldPackQty) {
-              vChkCol = '1';
-              break;
+              if (vPackQty > vOldPackQty) {
+                vChkCol = '1';
+                break;
+              }
             }
           }
-        }
-      });
+        });
+      }
 
       print('vChkCol after deletion: $vChkCol');
     } else {
@@ -264,12 +271,12 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
       final poMessage = responseBody['po_message'];
       print('Status: $poStatus');
       print('Message: $poMessage');
-
-      setState(() {
-        items.clear();
-        vChkCol = '0';
-      });
-
+      if (mounted) {
+        setState(() {
+          items.clear();
+          vChkCol = '0';
+        });
+      }
       await get_grid_data();
     } else {
       print('Request failed with status: ${response.statusCode}.');

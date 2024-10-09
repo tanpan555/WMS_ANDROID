@@ -61,9 +61,11 @@ class _SSFGDT31_VERIFYState extends State<SSFGDT31_VERIFY> {
         print(fetchedItems);
 
         if (fetchedItems.isNotEmpty) {
-          setState(() {
-            items = fetchedItems;
-          });
+          if (mounted) {
+            setState(() {
+              items = fetchedItems;
+            });
+          }
         } else {
           print('No items found.');
         }
@@ -89,27 +91,31 @@ class _SSFGDT31_VERIFYState extends State<SSFGDT31_VERIFY> {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        setState(() {
-          p_doc_no = responseBody['p_doc_no'];
-          p_doc_type = responseBody['p_doc_type'];
-          erp_doc_no = responseBody['erp_doc_no'];
-          po_status = responseBody['po_status'];
-          po_message = responseBody['po_message'];
+        if (mounted) {
+          setState(() {
+            p_doc_no = responseBody['p_doc_no'];
+            p_doc_type = responseBody['p_doc_type'];
+            erp_doc_no = responseBody['erp_doc_no'];
+            po_status = responseBody['po_status'];
+            po_message = responseBody['po_message'];
 
-          print('p_doc_no: $p_doc_no');
-          print('p_doc_type: $p_doc_type');
-          print('erp_doc_no: $erp_doc_no');
-          print('po_status: $po_status');
-          print('po_message: $po_message');
-        });
+            print('p_doc_no: $p_doc_no');
+            print('p_doc_type: $p_doc_type');
+            print('erp_doc_no: $erp_doc_no');
+            print('po_status: $po_status');
+            print('po_message: $po_message');
+          });
+        }
       } else {
         throw Exception('Failed to load PO status');
       }
     } catch (e) {
-      setState(() {
-        po_status = 'Error';
-        po_message = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          po_status = 'Error';
+          po_message = e.toString();
+        });
+      }
     }
   }
 

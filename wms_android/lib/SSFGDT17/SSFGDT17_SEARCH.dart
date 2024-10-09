@@ -54,11 +54,13 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
     _documentNumberController.clear();
     _dateController.clear();
     _selectedProductTypeController.text = 'ทั้งหมด';
-    setState(() {
-      isDateValid = true;
-      selectedValue = 'ทั้งหมด';
-      _selectedDate = null;
-    });
+    if (mounted) {
+      setState(() {
+        isDateValid = true;
+        selectedValue = 'ทั้งหมด';
+        _selectedDate = null;
+      });
+    }
   }
 
   String formatDate(String input) {
@@ -84,9 +86,11 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
-      setState(() {
-        docData1 = data['DOC_TYPE'];
-      });
+      if (mounted) {
+        setState(() {
+          docData1 = data['DOC_TYPE'];
+        });
+      }
       print('Fetched docData1: $docData1');
     } else {
       throw Exception('Failed to load data');

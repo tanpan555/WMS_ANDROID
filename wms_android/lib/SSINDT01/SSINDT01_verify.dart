@@ -246,11 +246,12 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
-
-        setState(() {
-          dataList =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
+        if (mounted) {
+          setState(() {
+            dataList =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('Success: $dataList');
       } else {
         print('Failed to get data. Status code: ${response.statusCode}');
@@ -268,15 +269,17 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
-        setState(() {
-          poStatus = jsonData['po_status'];
-          poMessage = jsonData['po_message'];
-          erp_doc_no = jsonData['v_erp_doc_no'];
-          print(response.statusCode);
-          print(jsonData);
-          print(poStatus);
-          print(poMessage);
-        });
+        if (mounted) {
+          setState(() {
+            poStatus = jsonData['po_status'];
+            poMessage = jsonData['po_message'];
+            erp_doc_no = jsonData['v_erp_doc_no'];
+            print(response.statusCode);
+            print(jsonData);
+            print(poStatus);
+            print(poMessage);
+          });
+        }
       } else {
         throw Exception('Failed to load data');
       }

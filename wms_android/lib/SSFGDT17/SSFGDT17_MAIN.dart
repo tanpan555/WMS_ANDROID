@@ -88,28 +88,34 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     );
 
     if (pickedDate != null && pickedDate != selectedDate) {
-      setState(() {
-        selectedDate = pickedDate;
-        _dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
-      });
+      if (mounted) {
+        setState(() {
+          selectedDate = pickedDate;
+          _dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
+        });
+      }
     }
   }
 
   void _loadNextPage() {
     if (nextLink != null) {
-      setState(() {
-        print('nextLink $nextLink');
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          print('nextLink $nextLink');
+          isLoading = true;
+        });
+      }
       data_card_list(nextLink);
     }
   }
 
   void _loadPrevPage() {
     if (prevLink != null) {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       data_card_list(prevLink);
     }
   }
@@ -118,10 +124,12 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
   String? fixedValue;
 
   void _handleSelected(String? value) {
-    setState(() {
-      _selectedStatusValue = value;
-      print('Selected value in handle: $_selectedStatusValue');
-    });
+    if (mounted) {
+      setState(() {
+        _selectedStatusValue = value;
+        print('Selected value in handle: $_selectedStatusValue');
+      });
+    }
   }
 
   final Map<String, String> valueMapping = {
@@ -146,27 +154,30 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
         print(uri);
         final responseBody = utf8.decode(response.bodyBytes);
         final parsedResponse = json.decode(responseBody);
+        if (mounted) {
+          setState(() {
+            if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+              data = parsedResponse['items'];
+            } else {
+              data = [];
+            }
 
-        setState(() {
-          if (parsedResponse is Map && parsedResponse.containsKey('items')) {
-            data = parsedResponse['items'];
-          } else {
-            data = [];
-          }
-
-          List<dynamic> links = parsedResponse['links'] ?? [];
-          nextLink = getLink(links, 'next');
-          prevLink = getLink(links, 'prev');
-          isLoading = false;
-        });
+            List<dynamic> links = parsedResponse['links'] ?? [];
+            nextLink = getLink(links, 'next');
+            prevLink = getLink(links, 'prev');
+            isLoading = false;
+          });
+        }
       } else {
         throw Exception('Failed to load data');
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-        errorMessage = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          errorMessage = e.toString();
+        });
+      }
     }
   }
 
@@ -370,16 +381,18 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
-        setState(() {
-          poStatus = jsonData['po_status'];
-          poMessage = jsonData['po_message'];
-          goToStep = jsonData['po_goto_step'];
-          print(response.statusCode);
-          print(jsonData);
-          print(poStatus);
-          print(poMessage);
-          print(goToStep);
-        });
+        if (mounted) {
+          setState(() {
+            poStatus = jsonData['po_status'];
+            poMessage = jsonData['po_message'];
+            goToStep = jsonData['po_goto_step'];
+            print(response.statusCode);
+            print(jsonData);
+            print(poStatus);
+            print(poMessage);
+            print(goToStep);
+          });
+        }
       } else {
         throw Exception('Failed to load data');
       }
@@ -397,11 +410,13 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
-        setState(() {
-          poStatusinhead = jsonData['po_status'];
+        if (mounted) {
+          setState(() {
+            poStatusinhead = jsonData['po_status'];
 
-          print('poStatusinhead: $poStatusinhead');
-        });
+            print('poStatusinhead: $poStatusinhead');
+          });
+        }
       } else {
         throw Exception('Failed to load data');
       }

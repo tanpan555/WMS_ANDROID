@@ -120,23 +120,27 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        setState(() {
-          poStatus = responseBody['po_status'];
-          poMessage = responseBody['po_message'];
-          print('po_status: $poStatus');
-          print('po_message: $poMessage');
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   SnackBar(content: Text('$poMessage')),
-          // );
-        });
+        if (mounted) {
+          setState(() {
+            poStatus = responseBody['po_status'];
+            poMessage = responseBody['po_message'];
+            print('po_status: $poStatus');
+            print('po_message: $poMessage');
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(content: Text('$poMessage')),
+            // );
+          });
+        }
       } else {
         throw Exception('Failed to load PO status');
       }
     } catch (e) {
-      setState(() {
-        poStatus = 'Error';
-        poMessage = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          poStatus = 'Error';
+          poMessage = e.toString();
+        });
+      }
     }
   }
 
@@ -148,10 +152,11 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
-
-        setState(() {
-          poType = jsonData['items'];
-        });
+        if (mounted) {
+          setState(() {
+            poType = jsonData['items'];
+          });
+        }
         print(poType);
       } else {
         throw Exception('Failed to load data');
@@ -198,51 +203,52 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
         print(items);
         if (items.isNotEmpty) {
           final Map<String, dynamic> item = items[0];
+          if (mounted) {
+            setState(() {
+              poNo = item['po_no'] ?? '';
+              receiveNo = item['receive_no'] ?? '';
+              erpReceiveNo = item['erp_receive_no'] ?? '';
+              pkWareCode = item['pk_ware_code'] ?? '';
+              crDate = item['cr_date'] ?? '';
+              poTypeCode = item['po_type_code'] ?? '';
+              receiveDate = item['receive_date'] ?? '';
+              wareCode = item['ware_code'] ?? '';
+              crBy = item['cr_by'] ?? '';
+              invoiceNo = item['invoice_no'] ?? '';
+              invoiceDate = item['invoice_date'] ?? '';
+              seller = item['seller'] ?? '';
+              poRemark = item['po_remark'] ?? '';
+              ouCode = item['ou_code'] ?? '';
+              updBy = item['upd_by'] ?? '';
+              updDate = item['upd_date'] ?? '';
 
-          setState(() {
-            poNo = item['po_no'] ?? '';
-            receiveNo = item['receive_no'] ?? '';
-            erpReceiveNo = item['erp_receive_no'] ?? '';
-            pkWareCode = item['pk_ware_code'] ?? '';
-            crDate = item['cr_date'] ?? '';
-            poTypeCode = item['po_type_code'] ?? '';
-            receiveDate = item['receive_date'] ?? '';
-            wareCode = item['ware_code'] ?? '';
-            crBy = item['cr_by'] ?? '';
-            invoiceNo = item['invoice_no'] ?? '';
-            invoiceDate = item['invoice_date'] ?? '';
-            seller = item['seller'] ?? '';
-            poRemark = item['po_remark'] ?? '';
-            ouCode = item['ou_code'] ?? '';
-            updBy = item['upd_by'] ?? '';
-            updDate = item['upd_date'] ?? '';
+              poNoController.text = poNo;
+              receiveNoController.text = receiveNo;
+              erpReceiveNoController.text = erpReceiveNo;
+              pkWareCodeController.text = pkWareCode;
+              crDateController.text = crDate.isNotEmpty
+                  ? displayFormat.format(apiFormat.parse(crDate))
+                  : '';
+              poTypeCodeController.text = poTypeCode;
 
-            poNoController.text = poNo;
-            receiveNoController.text = receiveNo;
-            erpReceiveNoController.text = erpReceiveNo;
-            pkWareCodeController.text = pkWareCode;
-            crDateController.text = crDate.isNotEmpty
-                ? displayFormat.format(apiFormat.parse(crDate))
-                : '';
-            poTypeCodeController.text = poTypeCode;
+              wareCodeController.text = wareCode;
+              crByController.text = crBy;
+              invoiceNoController.text = invoiceNo;
+              receiveDateController.text = receiveDate.isNotEmpty
+                  ? displayFormat.format(apiFormat.parse(receiveDate))
+                  : '';
+              invoiceDateController.text = invoiceDate.isNotEmpty
+                  ? displayFormat.format(apiFormat.parse(invoiceDate))
+                  : '';
+              sellerController.text = seller;
+              poRemarkController.text = poRemark;
+              ouCodeController.text = ouCode;
+              updByController.text = updBy;
+              updDateController.text = updDate;
 
-            wareCodeController.text = wareCode;
-            crByController.text = crBy;
-            invoiceNoController.text = invoiceNo;
-            receiveDateController.text = receiveDate.isNotEmpty
-                ? displayFormat.format(apiFormat.parse(receiveDate))
-                : '';
-            invoiceDateController.text = invoiceDate.isNotEmpty
-                ? displayFormat.format(apiFormat.parse(invoiceDate))
-                : '';
-            sellerController.text = seller;
-            poRemarkController.text = poRemark;
-            ouCodeController.text = ouCode;
-            updByController.text = updBy;
-            updDateController.text = updDate;
-
-            selectedPoType = poTypeCode;
-          });
+              selectedPoType = poTypeCode;
+            });
+          }
         } else {
           print('No items found.');
         }
@@ -268,23 +274,27 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
-        setState(() {
-          cCode = (jsonData['items'] as List)
-              .map((item) => item as Map<String, dynamic>)
-              .toList();
+        if (mounted) {
+          setState(() {
+            cCode = (jsonData['items'] as List)
+                .map((item) => item as Map<String, dynamic>)
+                .toList();
 
-          // selectedcCode = cCode.isNotEmpty ? cCode[0]['r'] : null;
-          print('selectedcCode $selectedcCode');
-          isLoading = false;
-        });
+            // selectedcCode = cCode.isNotEmpty ? cCode[0]['r'] : null;
+            print('selectedcCode $selectedcCode');
+            isLoading = false;
+          });
+        }
       } else {
         throw Exception('Failed to load data');
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-        errorMessage = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          errorMessage = e.toString();
+        });
+      }
     }
   }
 
@@ -667,11 +677,13 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
     if (picked != null) {
-      setState(() {
-        invoiceDate = apiFormat.format(picked);
-        invoiceDateController.text = DateFormat('dd/MM/yyyy').format(picked);
-        isInvoiceDateValid = true;
-      });
+      if (mounted) {
+        setState(() {
+          invoiceDate = apiFormat.format(picked);
+          invoiceDateController.text = DateFormat('dd/MM/yyyy').format(picked);
+          isInvoiceDateValid = true;
+        });
+      }
     }
   }
 
@@ -693,11 +705,13 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
     if (picked != null) {
-      setState(() {
-        receiveDate = apiFormat.format(picked);
-        receiveDateController.text = DateFormat('dd/MM/yyyy').format(picked);
-        isDateValid = true; // Add this line to set isDateValid to true
-      });
+      if (mounted) {
+        setState(() {
+          receiveDate = apiFormat.format(picked);
+          receiveDateController.text = DateFormat('dd/MM/yyyy').format(picked);
+          isDateValid = true; // Add this line to set isDateValid to true
+        });
+      }
     }
   }
 

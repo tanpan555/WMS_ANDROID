@@ -63,14 +63,16 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
-        setState(() {
-          poStatusGrid = jsonData['po_status'];
-          poMessageGrid = jsonData['po_message'];
-          print(response.statusCode);
-          print(jsonData);
-          print(poStatusGrid);
-          print(poMessageGrid);
-        });
+        if (mounted) {
+          setState(() {
+            poStatusGrid = jsonData['po_status'];
+            poMessageGrid = jsonData['po_message'];
+            print(response.statusCode);
+            print(jsonData);
+            print(poStatusGrid);
+            print(poMessageGrid);
+          });
+        }
       } else {
         throw Exception('Failed to load data');
       }
@@ -94,10 +96,12 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
         throw Exception('Failed to load vResult status');
       }
     } catch (e) {
-      setState(() {
-        poStatus = 'Error';
-        poMessage = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          poStatus = 'Error';
+          poMessage = e.toString();
+        });
+      }
       return null;
     }
   }
@@ -124,11 +128,13 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
-          poStatus = responseData['po_status'];
-          poMessage = responseData['po_message'];
-          // sendGetRequestlineWMS();
-        });
+        if (mounted) {
+          setState(() {
+            poStatus = responseData['po_status'];
+            poMessage = responseData['po_message'];
+            // sendGetRequestlineWMS();
+          });
+        }
         print('Success: $responseData');
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
@@ -161,11 +167,13 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
-          poStatus = responseData['po_status'];
-          poMessage = responseData['po_message'];
-          sendGetRequestlineWMS();
-        });
+        if (mounted) {
+          setState(() {
+            poStatus = responseData['po_status'];
+            poMessage = responseData['po_message'];
+            sendGetRequestlineWMS();
+          });
+        }
         print('Success: $responseData');
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
@@ -203,13 +211,14 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
+        if (mounted) {
+          setState(() {
+            poStatus = responseData['po_status'];
+            poMessage = responseData['po_message'];
 
-        setState(() {
-          poStatus = responseData['po_status'];
-          poMessage = responseData['po_message'];
-
-          sendGetRequestlineWMS();
-        });
+            sendGetRequestlineWMS();
+          });
+        }
 
         if (poMessage != null && poMessage!.isNotEmpty) {
           // ScaffoldMessenger.of(context).showSnackBar(
@@ -272,11 +281,12 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
-
-        setState(() {
-          dataList =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
+        if (mounted) {
+          setState(() {
+            dataList =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('RUN sendGetRequestlineWMS ********************');
         print('Success: $dataList');
       } else {
@@ -360,11 +370,12 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
-
-        setState(() {
-          dataLotList =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
+        if (mounted) {
+          setState(() {
+            dataLotList =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('Success: $dataLotList');
       } else {
         print('Failed to get data. Status code: ${response.statusCode}');
@@ -1266,22 +1277,26 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
-        setState(() {
-          poStatus = responseBody['po_status'];
-          poMessage = responseBody['po_message'];
-          poreject = responseBody['v_type_reject'];
-          print('po_status: $poStatus');
-          print('po_message: $poMessage');
-          print('v_type_reject: $poreject');
-        });
+        if (mounted) {
+          setState(() {
+            poStatus = responseBody['po_status'];
+            poMessage = responseBody['po_message'];
+            poreject = responseBody['v_type_reject'];
+            print('po_status: $poStatus');
+            print('po_message: $poMessage');
+            print('v_type_reject: $poreject');
+          });
+        }
       } else {
         throw Exception('Failed to load PO status');
       }
     } catch (e) {
-      setState(() {
-        poStatus = 'Error';
-        poMessage = e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          poStatus = 'Error';
+          poMessage = e.toString();
+        });
+      }
     }
   }
 

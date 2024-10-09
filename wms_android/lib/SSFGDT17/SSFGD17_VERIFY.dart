@@ -66,9 +66,11 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
   final ScrollController _scrollController = ScrollController();
 
   void _loadMoreItems() {
-    setState(() {
-      _displayLimit += 15;
-    });
+    if (mounted) {
+      setState(() {
+        _displayLimit += 15;
+      });
+    }
   }
 
   Future<void> getList() async {
@@ -85,21 +87,23 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
         final List<dynamic> fetchedItems = data['items'];
 
         if (fetchedItems.isNotEmpty) {
-          setState(() {
-            items = fetchedItems.map((item) {
-              return {
-                'item_code': item['item_code'] ?? '',
-                'lots_no': item['lots_no'] ?? '',
-                'location_code': item['location_code'] ?? '',
-                'pack_qty': item['pack_qty'] ?? '',
-                'to_loc': item['to_loc'] ?? '',
-                'rowid': item['rowid'] ?? '',
-                'doc_type': item['doc_type'] ?? '',
-                'seq': item['seq'] ?? '',
-                'doc_no': item['doc_no'] ?? '',
-              };
-            }).toList();
-          });
+          if (mounted) {
+            setState(() {
+              items = fetchedItems.map((item) {
+                return {
+                  'item_code': item['item_code'] ?? '',
+                  'lots_no': item['lots_no'] ?? '',
+                  'location_code': item['location_code'] ?? '',
+                  'pack_qty': item['pack_qty'] ?? '',
+                  'to_loc': item['to_loc'] ?? '',
+                  'rowid': item['rowid'] ?? '',
+                  'doc_type': item['doc_type'] ?? '',
+                  'seq': item['seq'] ?? '',
+                  'doc_no': item['doc_no'] ?? '',
+                };
+              }).toList();
+            });
+          }
 
           print(items);
         } else {
@@ -127,16 +131,17 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
         print(items);
         if (items.isNotEmpty) {
           final Map<String, dynamic> item = items[0];
+          if (mounted) {
+            setState(() {
+              nb_ware_code = item['nb_ware_code'] ?? '';
+              nb_to_wh = item['nb_to_wh'] ?? '';
+              cr_date = item['cr_date'] ?? '';
 
-          setState(() {
-            nb_ware_code = item['nb_ware_code'] ?? '';
-            nb_to_wh = item['nb_to_wh'] ?? '';
-            cr_date = item['cr_date'] ?? '';
-
-            NB_WARE_CODEController.text = nb_ware_code;
-            NB_TO_WHController.text = nb_to_wh;
-            CR_DATEController.text = cr_date;
-          });
+              NB_WARE_CODEController.text = nb_ware_code;
+              NB_TO_WHController.text = nb_to_wh;
+              CR_DATEController.text = cr_date;
+            });
+          }
         } else {
           print('No items found.');
         }
@@ -233,14 +238,16 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
-        setState(() {
-          poStatus = jsonData['po_status'];
-          poMessage = jsonData['po_message'];
-          print(response.statusCode);
-          print(jsonData);
-          print(poStatus);
-          print(poMessage);
-        });
+        if (mounted) {
+          setState(() {
+            poStatus = jsonData['po_status'];
+            poMessage = jsonData['po_message'];
+            print(response.statusCode);
+            print(jsonData);
+            print(poStatus);
+            print(poMessage);
+          });
+        }
       } else {
         throw Exception('Failed to load data');
       }
