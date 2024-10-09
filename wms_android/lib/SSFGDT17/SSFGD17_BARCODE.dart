@@ -300,40 +300,40 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
         children: [
           Row(
             children: [
-          ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: const Size(10, 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'ย้อนกลับ',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
-                  const Spacer(),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minimumSize: const Size(10, 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                    ),
-                    onPressed: () {
-                      chk_validateSave();
+                  minimumSize: const Size(10, 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  'ย้อนกลับ',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 103, 58, 183),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  minimumSize: const Size(10, 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                ),
+                onPressed: () {
+                  chk_validateSave();
                   if (poStatus == '0') {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -344,13 +344,13 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
                       ),
                     );
                   }
-                    },
-                    child: const Icon(
-                      Icons.arrow_forward,
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      size: 24,
-                    ),
-                  ),
+                },
+                child: const Icon(
+                  Icons.arrow_forward,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  size: 24,
+                ),
+              ),
             ],
           ),
           Expanded(
@@ -423,7 +423,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 

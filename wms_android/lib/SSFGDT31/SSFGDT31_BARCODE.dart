@@ -797,7 +797,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 

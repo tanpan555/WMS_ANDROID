@@ -71,22 +71,22 @@ class _SSFGDT17_WAREState extends State<SSFGDT17_WARE> {
         child: Column(
           children: [
             Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    margin: const EdgeInsets.only(
-                        bottom: 8.0), // Add some space below the container
-                    color: Colors
-                        .greenAccent, // Customize the background color of the container
-                    child: Center(
-                      child: Text(
-                        'เลือกคลังปฏิบัติงาน',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                        ),
-                      ),
-                    ),
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              margin: const EdgeInsets.only(
+                  bottom: 8.0), // Add some space below the container
+              color: Colors
+                  .greenAccent, // Customize the background color of the container
+              child: Center(
+                child: Text(
+                  'เลือกคลังปฏิบัติงาน',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 0, 0, 0),
                   ),
+                ),
+              ),
+            ),
             // const SizedBox(height: 20), // Spacing above the grid
             Expanded(
               child: SingleChildScrollView(
@@ -198,7 +198,7 @@ class _SSFGDT17_WAREState extends State<SSFGDT17_WARE> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }

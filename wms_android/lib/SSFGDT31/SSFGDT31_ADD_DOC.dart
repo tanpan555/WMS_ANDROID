@@ -223,7 +223,7 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 

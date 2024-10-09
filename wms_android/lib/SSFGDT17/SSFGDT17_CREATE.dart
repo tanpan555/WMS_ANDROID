@@ -397,7 +397,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 

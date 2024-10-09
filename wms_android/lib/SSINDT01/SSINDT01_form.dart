@@ -831,7 +831,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 

@@ -371,7 +371,8 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomBar(), // Ensure you have a BottomBar widget
+      bottomNavigationBar: BottomBar(
+          currentPage: 'not_show'), // Ensure you have a BottomBar widget
     );
   }
 }

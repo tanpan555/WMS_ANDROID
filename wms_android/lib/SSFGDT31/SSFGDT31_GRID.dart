@@ -695,7 +695,7 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 }

@@ -474,7 +474,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
           );
         },
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }

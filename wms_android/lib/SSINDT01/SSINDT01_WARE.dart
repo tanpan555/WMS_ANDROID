@@ -16,7 +16,7 @@ class SSFGDT01_WARE extends StatefulWidget {
     required this.p_attr1,
     required this.p_ou_code,
   }) : super(key: key);
-  
+
   @override
   _SSFGDT01_WAREState createState() => _SSFGDT01_WAREState();
 }
@@ -86,7 +86,8 @@ class _SSFGDT01_WAREState extends State<SSFGDT01_WARE> {
                   Expanded(
                     child: data.isNotEmpty
                         ? GridView.builder(
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
                               crossAxisSpacing: 5,
                               mainAxisSpacing: 5,
@@ -100,7 +101,8 @@ class _SSFGDT01_WAREState extends State<SSFGDT01_WARE> {
                                 child: InkWell(
                                   onTap: () {
                                     gb.P_WARE_CODE = item['ware_code'];
-                                    print('Selected Global Ware Code: ${gb.P_WARE_CODE}');
+                                    print(
+                                        'Selected Global Ware Code: ${gb.P_WARE_CODE}');
                                     log('Selected Global Ware Code: ${gb.P_WARE_CODE}');
 
                                     Navigator.push(
@@ -149,7 +151,7 @@ class _SSFGDT01_WAREState extends State<SSFGDT01_WARE> {
                 ],
               ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }

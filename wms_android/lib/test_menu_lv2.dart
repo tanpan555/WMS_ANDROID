@@ -285,7 +285,7 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }

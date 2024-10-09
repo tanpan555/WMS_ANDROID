@@ -541,7 +541,7 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
           );
         },
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }

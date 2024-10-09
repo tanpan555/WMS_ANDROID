@@ -17,12 +17,11 @@ class SSFGDT31_SCREEN2 extends StatefulWidget {
 }
 
 class _SSFGDT31_SCREEN2State extends State<SSFGDT31_SCREEN2> {
-@override
+  @override
   void initState() {
     super.initState();
-  print('pWareCode: ${widget.pWareCode}');
+    print('pWareCode: ${widget.pWareCode}');
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +46,8 @@ class _SSFGDT31_SCREEN2State extends State<SSFGDT31_SCREEN2> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => SSFGDT31_SEARCH_DOC(
-                          pWareCode: widget.pWareCode
-                        )),
+                        builder: (context) =>
+                            SSFGDT31_SEARCH_DOC(pWareCode: widget.pWareCode)),
                   );
                 },
               ),
@@ -68,9 +66,8 @@ class _SSFGDT31_SCREEN2State extends State<SSFGDT31_SCREEN2> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => SSFGDT31_ADD_DOC(
-                          pWareCode : widget.pWareCode
-                        )),
+                        builder: (context) =>
+                            SSFGDT31_ADD_DOC(pWareCode: widget.pWareCode)),
                   );
                 },
               ),
@@ -78,7 +75,7 @@ class _SSFGDT31_SCREEN2State extends State<SSFGDT31_SCREEN2> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }

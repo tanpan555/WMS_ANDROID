@@ -827,7 +827,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 

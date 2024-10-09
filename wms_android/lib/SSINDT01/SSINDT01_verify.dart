@@ -462,7 +462,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 

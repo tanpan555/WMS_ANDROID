@@ -460,7 +460,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }

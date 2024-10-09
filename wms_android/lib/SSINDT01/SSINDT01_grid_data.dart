@@ -1692,7 +1692,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 }
@@ -2966,7 +2966,7 @@ class _LotDialogState extends State<LotDialog> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 }

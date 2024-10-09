@@ -58,8 +58,8 @@ class _SSFGDT31_MAINState extends State<SSFGDT31_MAIN> {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     margin: const EdgeInsets.only(
                         bottom: 8.0), // Add some space below the container
-                    color: Colors
-                        .grey[300], // Customize the background color of the container
+                    color: Colors.grey[
+                        300], // Customize the background color of the container
                     child: Center(
                       child: Text(
                         'เลือกคลังปฏิบัติงาน',
@@ -93,8 +93,8 @@ class _SSFGDT31_MAINState extends State<SSFGDT31_MAIN> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               SSFGDT31_SCREEN2(
-                                                pWareCode: item['ware_code']
-                                              )),
+                                                  pWareCode:
+                                                      item['ware_code'])),
                                     );
                                   },
                                   child: Column(
@@ -132,7 +132,7 @@ class _SSFGDT31_MAINState extends State<SSFGDT31_MAIN> {
                 ],
               ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }

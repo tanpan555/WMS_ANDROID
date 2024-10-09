@@ -256,7 +256,7 @@ class _SSFGDT31_PICKINGSLIPState extends State<SSFGDT31_PICKINGSLIP> {
               ),
             ],
           )),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 }

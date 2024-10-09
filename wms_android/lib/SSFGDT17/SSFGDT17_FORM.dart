@@ -636,7 +636,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 

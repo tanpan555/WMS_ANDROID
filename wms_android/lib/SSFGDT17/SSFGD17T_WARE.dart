@@ -15,7 +15,7 @@ class SSFGDT17_WARE extends StatefulWidget {
     required this.p_attr1,
     required this.p_ou_code,
   }) : super(key: key);
-  
+
   @override
   _SSFGDT17_WAREState createState() => _SSFGDT17_WAREState();
 }
@@ -85,7 +85,8 @@ class _SSFGDT17_WAREState extends State<SSFGDT17_WARE> {
                   Expanded(
                     child: data.isNotEmpty
                         ? GridView.builder(
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
                               crossAxisSpacing: 5,
                               mainAxisSpacing: 5,
@@ -144,7 +145,7 @@ class _SSFGDT17_WAREState extends State<SSFGDT17_WARE> {
                 ],
               ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }

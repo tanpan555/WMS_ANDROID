@@ -395,7 +395,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }

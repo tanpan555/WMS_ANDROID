@@ -582,7 +582,7 @@ class _SSFGDT31_VERIFYState extends State<SSFGDT31_VERIFY> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 }

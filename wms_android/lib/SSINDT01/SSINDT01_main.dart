@@ -586,7 +586,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
           );
         },
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }
