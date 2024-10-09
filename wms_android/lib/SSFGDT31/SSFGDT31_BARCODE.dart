@@ -398,7 +398,16 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
             // height: 200,
             child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    'Locator ปลายทาง',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.left, // Aligns the text to the left
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
                   TextField(
                     controller: Cur_loc_code,
                     style: TextStyle(color: Colors.black),
@@ -483,29 +492,40 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
       context: dialogContext,
       builder: (BuildContext context) {
         return AlertDialog(
-          // title: Text('Select Locator'),
           content: Container(
-            // height: 200,
             child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start, // Aligns content to the left
                 children: [
+                  Text(
+                    'Current Locator',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.left, // Aligns the text to the left
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
                   TextField(
                     controller: P_LOC,
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
                     decoration: InputDecoration(
                       labelText: 'Current Locator',
-                      labelStyle: TextStyle(color: Colors.black),
+                      labelStyle: TextStyle(
+                        color: const Color.fromARGB(255, 56, 43, 43),
+                      ),
                       filled: true,
                       fillColor: Colors.white,
                       border: InputBorder.none,
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color:
-                                Colors.black), // Border color when not focused
+                          color: Colors.black, // Border color when not focused
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.black), // Border color when focused
+                          color: Colors.black, // Border color when focused
+                        ),
                       ),
                     ),
                   ),
@@ -538,9 +558,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                                 Icons.notifications, // Use the bell icon
                                 color: Colors.red, // Set the color to red
                               ),
-                              SizedBox(
-                                  width:
-                                      8), // Add some space between the icon and the text
+                              SizedBox(width: 8), // Space between icon and text
                               Text('แจ้งเตือน'), // Title text
                             ],
                           ),
