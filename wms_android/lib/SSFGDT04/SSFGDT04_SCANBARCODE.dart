@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import '../custom_appbar.dart';
 import '../bottombar.dart';
 import 'SSFGDT04_VERIFY.dart';
-// import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -11,7 +10,6 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:wms_android/main.dart';
 import '../styles.dart';
 import 'package:intl/intl.dart';
-// import 'package:wms_android/custom_drawer.dart';
 
 class SSFGDT04_SCANBARCODE extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจาก lov
@@ -32,9 +30,6 @@ class SSFGDT04_SCANBARCODE extends StatefulWidget {
 }
 
 class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
-  final FocusNode barcodeFocusNode = FocusNode();
-  // bool _isPointerAbsorbed = false;
-
   String currentSessionID = '';
   String? selectedLocator;
   List<Map<String, dynamic>> locatorBarcodeItems =
@@ -49,9 +44,10 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
   TextEditingController _balLotController = TextEditingController();
   TextEditingController _balQtyController = TextEditingController();
 
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   final NumberFormat numberFormat = NumberFormat('#,###');
-  // เพิ่ม Controller สำหรับการค้นหา
+
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  final FocusNode barcodeFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -73,34 +69,38 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
-      setState(() {
-        locatorBarcodeItems =
-            List<Map<String, dynamic>>.from(data['items'] ?? []);
-      });
+      if (mounted) {
+        setState(() {
+          locatorBarcodeItems =
+              List<Map<String, dynamic>>.from(data['items'] ?? []);
+        });
+      }
     } else {
       throw Exception('Failed to load STAFF_CODE items');
     }
   }
 
   void _scanQRCode() async {
-    await Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => QRView(
-        key: qrKey,
-        onQRViewCreated: _onQRViewCreated,
-      ),
-    ));
-  }
+  await Navigator.of(context).push(MaterialPageRoute(
+    builder: (context) => QRView(
+      key: qrKey,
+      onQRViewCreated: _onQRViewCreated,
+    ),
+  ));
+}
 
-  void _onQRViewCreated(QRViewController controller) {
-    controller.scannedDataStream.listen((scanData) {
+void _onQRViewCreated(QRViewController controller) {
+  controller.scannedDataStream.listen((scanData) {
+    if (mounted) {
       setState(() {
         _barCodeCotroller.text = scanData.code!;
         fetchBarcodeData();
       });
-      controller.dispose();
-      Navigator.of(context).pop();
-    });
-  }
+    }
+    controller.dispose();
+    Navigator.of(context).pop();
+  });
+}
 
   String? pBarcode;
   String? lotNumber; // po_lot_number,
@@ -122,20 +122,21 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
             jsonDecode(utf8.decode(response.bodyBytes));
 
         print('API Response: $barCodeItems');
-
-        setState(() {
-          po_status = barCodeItems['po_status'] ?? '';
-          po_message = barCodeItems['po_message'] ?? '';
-          _lotNumberController.text = barCodeItems['po_lot_number'] ?? '';
-          double quantity =
-              double.tryParse(barCodeItems['po_quantity'] ?? '0') ?? 0;
-          _quantityController.text = numberFormat.format(quantity);
-          _currLotController.text = barCodeItems['po_curr_loc'] ?? '';
-          _balLotController.text = barCodeItems['po_bal_lot'] ?? '';
-          double balQty =
-              double.tryParse(barCodeItems['po_bal_qty'] ?? '0') ?? 0;
-          _balQtyController.text = numberFormat.format(balQty);
-        });
+        if (mounted) {
+          setState(() {
+            po_status = barCodeItems['po_status'] ?? '';
+            po_message = barCodeItems['po_message'] ?? '';
+            _lotNumberController.text = barCodeItems['po_lot_number'] ?? '';
+            double quantity =
+                double.tryParse(barCodeItems['po_quantity'] ?? '0') ?? 0;
+            _quantityController.text = numberFormat.format(quantity);
+            _currLotController.text = barCodeItems['po_curr_loc'] ?? '';
+            _balLotController.text = barCodeItems['po_bal_lot'] ?? '';
+            double balQty =
+                double.tryParse(barCodeItems['po_bal_qty'] ?? '0') ?? 0;
+            _balQtyController.text = numberFormat.format(balQty);
+          });
+        }
       } else {
         throw Exception('${response.statusCode}');
       }
@@ -175,11 +176,13 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
-          p_dest_location = responseData['p_dest_location'];
-          poStatus = responseData['po_status'];
-          poMessage = responseData['po_message'];
-        });
+        if (mounted) {
+          setState(() {
+            p_dest_location = responseData['p_dest_location'];
+            poStatus = responseData['po_status'];
+            poMessage = responseData['po_message'];
+          });
+        }
 
         // print('po_last_move: $po_last_move');
         print('po_doc_no : ${widget.po_doc_no}');
@@ -194,11 +197,30 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                // title: Text('Success'),
+                title: Row(
+                  children: [
+                    Icon(
+                      Icons.notification_important, // ไอคอนแจ้งเตือน
+                      color: Colors.red, // สีแดง
+                      size: 30,
+                    ),
+                    SizedBox(width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                    Text('แจ้งเตือน'),
+                  ],
+                ),
                 content: Text('Update Locator Complete. $poMessage'),
                 actions: [
                   TextButton(
-                    child: const Text('OK'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ตกลง',
+                        style: TextStyle(
+                          fontSize: 16, // ปรับขนาดตัวหนังสือตามต้องการ
+                          color: Colors
+                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                        )),
                     onPressed: () {
                       Navigator.of(context).pop();
                       clearScreen(); // ฟังก์ชันสำหรับเคลียร์ค่าที่หน้าจอ
@@ -214,11 +236,30 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                // title: Text('Error'),
+                title: Row(
+                  children: [
+                    Icon(
+                      Icons.notification_important, // ไอคอนแจ้งเตือน
+                      color: Colors.red, // สีแดง
+                      size: 30,
+                    ),
+                    SizedBox(width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                    Text('แจ้งเตือน'),
+                  ],
+                ),
                 content: Text('$poMessage'),
                 actions: [
                   TextButton(
-                    child: const Text('OK'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ตกลง',
+                        style: TextStyle(
+                          fontSize: 16, // ปรับขนาดตัวหนังสือตามต้องการ
+                          color: Colors
+                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                        )),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -238,7 +279,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
   void clearScreen() {
     setState(() {
-      barcodeFocusNode.dispose();
+      _barCodeCotroller.clear();
       // ถ้าจำเป็นต้องรีเซ็ต selectedLocator ด้วย
       _locatorBarcodeController.clear();
       selectedLocator = null;
@@ -305,7 +346,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 
@@ -357,52 +398,74 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
           // Barcode //
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: TextField(
-              decoration: const InputDecoration(
-                labelText: 'Barcode',
-                filled: true,
-                fillColor: Colors.white,
-                labelStyle: TextStyle(color: Colors.black),
-                border: InputBorder.none,
+  padding: const EdgeInsets.symmetric(vertical: 8),
+  child: TextField(
+    decoration: const InputDecoration(
+      labelText: 'Barcode',
+      filled: true,
+      fillColor: Colors.white,
+      labelStyle: TextStyle(color: Colors.black),
+      border: InputBorder.none,
+    ),
+    controller: _barCodeCotroller,
+    focusNode: barcodeFocusNode, // Attach the focus node
+    autofocus: true, // Automatically focus on the TextField when the screen loads.
+    onSubmitted: (value) async {
+      setState(() {
+        pBarcode = value; // Assign the entered barcode to pBarcode
+      });
+
+      await fetchBarcodeData(); // Wait for the data fetching process
+
+      if (po_status == '1') {
+        // Show a popup if the status is '1'
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Row(
+                children: [
+                  Icon(
+                    Icons.notification_important,
+                    color: Colors.red,
+                    size: 30,
+                  ),
+                  SizedBox(width: 8),
+                  Text('แจ้งเตือน'),
+                ],
               ),
-              controller: _barCodeCotroller,
-              focusNode: barcodeFocusNode,
-              onSubmitted: (value) async {
-                setState(() {
-                  pBarcode = value; // Assign the entered barcode to pBarcode
-                });
-                // Wait for the data fetching process to complete
-                await fetchBarcodeData();
-                if (po_status == '1') {
-                  // Show popup if status is not 0
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('คำเตือน'),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('$po_message'),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            child: const Text('OK'),
-                            onPressed: () {
-                              Navigator.of(context).pop(); // Close the dialog
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              },
-            ),
-          ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('$po_message'),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    side: const BorderSide(color: Colors.grey),
+                  ),
+                  child: Text(
+                    'ตกลง',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    },
+  ),
+),
 
           // const SizedBox(height: 5),
           Padding(
@@ -625,18 +688,18 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: AbsorbPointer(
-            child: TextField(
-              readOnly: true,
-              decoration: InputDecoration(
-                labelText: 'Lot Number',
-                filled: true,
-                fillColor: Colors.grey[300],
-                labelStyle: const TextStyle(color: Colors.black),
-                border: InputBorder.none,
+              child: TextField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'Lot Number',
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  labelStyle: const TextStyle(color: Colors.black),
+                  border: InputBorder.none,
+                ),
+                controller: _lotNumberController,
+                textAlign: TextAlign.center,
               ),
-              controller: _lotNumberController,
-              textAlign: TextAlign.center,
-            ),
             ),
           ),
 
@@ -645,18 +708,18 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 0),
             child: AbsorbPointer(
-            child: TextField(
-              readOnly: true,
-              decoration: InputDecoration(
-                labelText: 'Quantity',
-                filled: true,
-                fillColor: Colors.grey[300],
-                labelStyle: const TextStyle(color: Colors.black),
-                border: InputBorder.none,
+              child: TextField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'Quantity',
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  labelStyle: const TextStyle(color: Colors.black),
+                  border: InputBorder.none,
+                ),
+                controller: _quantityController,
+                textAlign: TextAlign.center,
               ),
-              controller: _quantityController,
-              textAlign: TextAlign.center,
-            ),
             ),
           ),
 
@@ -664,18 +727,18 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: AbsorbPointer(
-            child: TextField(
-              readOnly: true,
-              decoration: InputDecoration(
-                labelText: 'Current Locator',
-                filled: true,
-                fillColor: Colors.grey[300],
-                labelStyle: const TextStyle(color: Colors.black),
-                border: InputBorder.none,
+              child: TextField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'Current Locator',
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  labelStyle: const TextStyle(color: Colors.black),
+                  border: InputBorder.none,
+                ),
+                controller: _currLotController,
+                textAlign: TextAlign.center,
               ),
-              controller: _currLotController,
-              textAlign: TextAlign.center,
-            ),
             ),
           ),
 
@@ -683,18 +746,18 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 0),
             child: AbsorbPointer(
-            child: TextField(
-              readOnly: true,
-              decoration: InputDecoration(
-                labelText: 'จำนวนล็อต/รายการรอจัดเก็บ',
-                filled: true,
-                fillColor: Colors.yellow[200],
-                labelStyle: const TextStyle(color: Colors.black),
-                border: InputBorder.none,
+              child: TextField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'จำนวนล็อต/รายการรอจัดเก็บ',
+                  filled: true,
+                  fillColor: Colors.yellow[200],
+                  labelStyle: const TextStyle(color: Colors.black),
+                  border: InputBorder.none,
+                ),
+                controller: _balLotController,
+                textAlign: TextAlign.center,
               ),
-              controller: _balLotController,
-              textAlign: TextAlign.center,
-            ),
             ),
           ),
 
@@ -702,18 +765,18 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: AbsorbPointer(
-            child: TextField(
-              readOnly: true,
-              decoration: InputDecoration(
-                labelText: 'จำนวน (หน่วยสต๊อก) รอจัดเก็บ',
-                filled: true,
-                fillColor: Colors.yellow[200],
-                labelStyle: const TextStyle(color: Colors.black),
-                border: InputBorder.none,
+              child: TextField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'จำนวน (หน่วยสต๊อก) รอจัดเก็บ',
+                  filled: true,
+                  fillColor: Colors.yellow[200],
+                  labelStyle: const TextStyle(color: Colors.black),
+                  border: InputBorder.none,
+                ),
+                controller: _balQtyController,
+                textAlign: TextAlign.center,
               ),
-              controller: _balQtyController,
-              textAlign: TextAlign.center,
-            ),
             ),
           ),
         ],

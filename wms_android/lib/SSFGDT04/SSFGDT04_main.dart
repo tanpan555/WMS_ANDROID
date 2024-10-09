@@ -153,7 +153,7 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
                 ],
               ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }

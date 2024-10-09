@@ -165,28 +165,30 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                                   ),
                                 ),
                                 onTap: () {
-                    setState(() {
-                      selectedItem = item; // Set the selected item
-                      // Update status based on selection
-                      switch (item) {
-                        case 'ทั้งหมด':
-                          status = '0';
-                          break;
-                        case 'ระหว่างบันทึก':
-                          status = '1';
-                          break;
-                        case 'ยืนยันการรับ':
-                          status = '2';
-                          break;
-                        case 'ยกเลิก':
-                          status = '3';
-                          break;
-                        default:
-                          status = '0'; // Default status
-                      }
-                    });
-                    Navigator.of(context).pop(); // Close the popup
-                  },
+                                  setState(() {
+                                    selectedItem =
+                                        item; // Set the selected item
+                                    // Update status based on selection
+                                    switch (item) {
+                                      case 'ทั้งหมด':
+                                        status = '0';
+                                        break;
+                                      case 'ระหว่างบันทึก':
+                                        status = '1';
+                                        break;
+                                      case 'ยืนยันการรับ':
+                                        status = '2';
+                                        break;
+                                      case 'ยกเลิก':
+                                        status = '3';
+                                        break;
+                                      default:
+                                        status = '0'; // Default status
+                                    }
+                                  });
+                                  Navigator.of(context)
+                                      .pop(); // Close the popup
+                                },
                               );
                             },
                           ),
@@ -438,7 +440,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }
