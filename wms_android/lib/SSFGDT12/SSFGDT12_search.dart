@@ -242,7 +242,7 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                       style: TextStyle(
                         color: Colors.red,
                         fontWeight: FontWeight.bold,
-                        fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                        fontSize: 12, // ปรับขนาดตัวอักษรตามที่ต้องการ
                       ),
                     ))
                 : const SizedBox.shrink(),
