@@ -33,19 +33,22 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   String selectedDate = 'null'; // Allow null for the date
   String appUser = gb.APP_USER;
   TextEditingController _dateController = TextEditingController();
-  final TextEditingController _soNoController = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
   final String sDateFormat = "dd-MM-yyyy";
-  final List<String> dropdownItems = [
+  final List<dynamic> dropdownItems = [
     'ทั้งหมด',
     'ระหว่างบันทึก',
     'ยืนยันการรับ',
     'ยกเลิก',
   ];
   String? _dateError;
-  bool chkDate = false;
+  final dateRegExp =
+      RegExp(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$");
+
   bool dateColorCheck = false;
   bool monthColorCheck = false;
   bool noDate = false;
+  bool chkDate = false;
 
   @override
   void initState() {
@@ -86,28 +89,82 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   void _showDropdownPopup() {
     showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'เลือกประเภทรายการ',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the popup
-                },
-              ),
-            ],
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: dropdownItems.map((item) {
-                return GestureDetector(
-                  onTap: () {
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey, // สีของเส้น
+                            width: 1.0, // ความหนาของเส้น
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'ประเภทรายการ',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics:
+                                const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
+                            itemCount: dropdownItems.length,
+                            itemBuilder: (context, index) {
+                              // ดึงข้อมูลรายการจาก dataCard
+                              var item = dropdownItems[index];
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
+                                      width: 2.0, // ความหนาของขอบ
+                                    ),
+                                    borderRadius: BorderRadius.circular(
+                                        10.0), // ทำให้ขอบมีความโค้ง
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                      vertical:
+                                          8.0), // เพิ่ม padding ด้านซ้าย-ขวา และ ด้านบน-ล่าง
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
                     setState(() {
                       selectedItem = item; // Set the selected item
                       // Update status based on selection
@@ -130,30 +187,18 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     });
                     Navigator.of(context).pop(); // Close the popup
                   },
-                  child: Container(
-                    // padding: const EdgeInsets.all(8.0),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
-                    margin: const EdgeInsets.symmetric(vertical: 4.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
-                        width: 2.0, // ความหนาของขอบ
-                      ), // Gray border
-                      borderRadius:
-                          BorderRadius.circular(10.0), // ทำให้ขอบมีความโค้ง
-                    ),
-                    child: Text(
-                      item,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
+                    )
+
+                    // ช่องค้นหา
+                  ],
+                ),
+              );
+            },
           ),
         );
       },
@@ -166,7 +211,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
       backgroundColor: const Color(0xFF17153B),
       appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(10),
+        // padding: const EdgeInsets.all(10),
         child: Form(
           key: _formKey,
           child: Padding(
@@ -174,7 +219,6 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                //ประเภทรายการ//
                 const SizedBox(height: 16),
                 TextFormField(
                   readOnly: true, // Make it read-only to prevent keyboard popup
@@ -193,10 +237,8 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   controller: TextEditingController(text: selectedItem),
                 ),
                 const SizedBox(height: 8),
-
-                //เลขที่เอกสาร//
                 TextFormField(
-                  controller: _soNoController,
+                  controller: _controller,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     labelText: 'เลขที่เอกสาร',
@@ -212,8 +254,6 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   },
                 ),
                 const SizedBox(height: 8),
-
-                //วันที่ส่งสินค้า//
                 TextFormField(
                   controller: _dateController,
                   keyboardType: TextInputType.number,
@@ -301,61 +341,67 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    //ปุ่มeraser//
                     ElevatedButton(
                       onPressed: () {
-                        _soNoController.clear();
+                        _controller.clear();
                         _dateController.clear();
                         setState(() {
                           selectedDate = 'null'; // Set selectedDate to null
                           selectedItem =
                               dropdownItems.first; // Reset to a valid value
                           status = '0'; // Reset status to default
-                          chkDate = false; // เคลียร์ข้อผิดพลาดวันที่
-                          noDate = false; // เคลียร์ข้อผิดพลาดวันที่ไม่มี
                         });
                       },
                       style: AppStyles.EraserButtonStyle(),
                       child: Image.asset('assets/images/eraser_red.png',
                           width: 50, height: 25),
                     ),
-
                     const SizedBox(width: 20),
-
-                    //ปุ่มsearch//
                     ElevatedButton(
-                      onPressed: () {
-                        if (selectedDate.isNotEmpty &&
-                            noDate != true &&
-                            chkDate != true) {
-                          RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                          if (!dateRegExp.hasMatch(selectedDate)) {
-                            setState(() {
-                              chkDate = true;
-                            });
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SSFGDT04_CARD(
+                      onPressed: selectedItem.isNotEmpty
+                          ? () {
+                              if (_dateController.text.isNotEmpty) {
+                                try {
+                                  DateTime parsedDate = DateFormat('dd/MM/yyyy')
+                                      .parse(_dateController.text);
+                                  String formattedDateForSearch =
+                                      DateFormat('dd-MM-yyyy')
+                                          .format(parsedDate);
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SSFGDT04_CARD(
                                         pErpOuCode: widget.pErpOuCode,
                                         pWareCode: widget.pWareCode,
                                         pAppUser: appUser,
                                         pFlag: pFlag,
                                         soNo: pSoNo.isEmpty ? 'null' : pSoNo,
-                                        date: 'null',
+                                        date: formattedDateForSearch,
                                         status: status,
-                                      )),
-                            ).then((value) async {
-                              // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                              setState(() {});
-                            });
-                          }
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SSFGDT04_CARD(
+                                      ),
+                                    ),
+                                  ).then((value) {
+                                    setState(() {
+                                      pSoNo = '';
+                                      selectedDate = 'null';
+                                      selectedItem = dropdownItems.first;
+                                      status = '0';
+                                      // _dateController.clear();
+                                      // _controller.clear();
+                                    });
+                                  });
+                                } catch (e) {
+                                  setState(() {
+                                    _dateError =
+                                        'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024';
+                                  });
+                                }
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SSFGDT04_CARD(
                                       pErpOuCode: widget.pErpOuCode,
                                       pWareCode: widget.pWareCode,
                                       pAppUser: appUser,
@@ -363,17 +409,25 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                                       soNo: pSoNo.isEmpty ? 'null' : pSoNo,
                                       date: 'null',
                                       status: status,
-                                    )),
-                          ).then((value) async {
-                            // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                            setState(() {});
-                          });
-                        }
-                      },
+                                    ),
+                                  ),
+                                ).then((value) {
+                                  setState(() {
+                                    pSoNo = '';
+                                    selectedDate = 'null';
+                                    selectedItem = 'ระหว่างบันทึก';
+                                    status = '1';
+                                    _dateController.clear();
+                                    _controller.clear();
+                                  });
+                                });
+                              }
+                            }
+                          : null,
                       style: AppStyles.SearchButtonStyle(),
                       child: Image.asset(
-                        'assets/images/search_color.png', // ใส่ภาพจากไฟล์ asset
-                        width: 50, // กำหนดขนาดภาพ
+                        'assets/images/search_color.png',
+                        width: 50,
                         height: 25,
                       ),
                     ),
@@ -406,6 +460,10 @@ class DateInputFormatter extends TextInputFormatter {
     String month = '';
     String year = '';
 
+    // เก็บตำแหน่งของเคอร์เซอร์ปัจจุบันก่อนจัดรูปแบบข้อความ
+    int cursorPosition = newValue.selection.baseOffset;
+    int additionalOffset = 0;
+
     // แยกค่า day, month, year
     if (text.length >= 2) {
       day = text.substring(0, 2);
@@ -426,11 +484,11 @@ class DateInputFormatter extends TextInputFormatter {
     if (text.length == 1) {
       noDate = true;
     } else if (text.length == 2) {
-      noDate = false;
+      noDate = true;
     } else if (text.length == 3) {
       noDate = true;
     } else if (text.length == 4) {
-      noDate = false;
+      noDate = true;
     } else if (text.length == 5) {
       noDate = true;
     } else if (text.length == 6) {
@@ -445,40 +503,47 @@ class DateInputFormatter extends TextInputFormatter {
 
     // ตรวจสอบว่าค่าใน day ไม่เกิน 31
     if (day.isNotEmpty && !noDate) {
-      // เช็คเฉพาะเมื่อ noDate ยังไม่เป็น true
       int dayInt = int.parse(day);
       if (dayInt < 1 || dayInt > 31) {
-        dateColorCheck = true; // ตั้งค่าให้ dateColorCheck เป็น true
-        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
+        dateColorCheck = true;
+        noDate = true;
       }
     }
 
     // ตรวจสอบว่าค่าใน month ไม่เกิน 12
     if (month.isNotEmpty && !noDate) {
-      // เช็คเฉพาะเมื่อ noDate ยังไม่เป็น true
       int monthInt = int.parse(month);
       if (monthInt < 1 || monthInt > 12) {
-        monthColorCheck = true; // ตั้งค่าให้ monthColorCheck เป็น true
-        noDate = true; // บอกว่าไม่มีเดือนที่ถูกต้อง
+        monthColorCheck = true;
+        noDate = true;
       }
     }
 
     // ตรวจสอบวันที่เฉพาะเมื่อพิมพ์ปีครบถ้วน
     if (day.isNotEmpty && month.isNotEmpty && year.length == 4 && !noDate) {
       if (!isValidDate(day, month, year)) {
-        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
+        noDate = true;
       }
     }
 
     // จัดรูปแบบเป็น DD/MM/YYYY
     if (text.length > 2 && text.length <= 4) {
       text = text.substring(0, 2) + '/' + text.substring(2);
+      if (cursorPosition > 2) {
+        additionalOffset++;
+      }
     } else if (text.length > 4 && text.length <= 8) {
       text = text.substring(0, 2) +
           '/' +
           text.substring(2, 4) +
           '/' +
           text.substring(4);
+      if (cursorPosition > 2) {
+        additionalOffset++;
+      }
+      if (cursorPosition > 4) {
+        additionalOffset++;
+      }
     }
 
     // จำกัดความยาวไม่เกิน 10 ตัว (รวม /)
@@ -486,9 +551,16 @@ class DateInputFormatter extends TextInputFormatter {
       text = text.substring(0, 10);
     }
 
+    // คำนวณตำแหน่งของเคอร์เซอร์หลังจากจัดรูปแบบ
+    cursorPosition += additionalOffset;
+
+    if (cursorPosition > text.length) {
+      cursorPosition = text.length;
+    }
+
     return TextEditingValue(
       text: text,
-      selection: TextSelection.collapsed(offset: text.length),
+      selection: TextSelection.collapsed(offset: cursorPosition),
     );
   }
 
