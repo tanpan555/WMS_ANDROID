@@ -231,7 +231,12 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                     labelText: 'วันที่โอน',
                     hintText: 'DD/MM/YYYY',
                     hintStyle: TextStyle(color: Colors.grey),
-                    labelStyle: TextStyle(color: Colors.black),
+                    labelStyle: TextStyle(
+                      color: isDateValid == false
+                          ? Colors.red
+                          : Colors
+                              .black, // Change label color based on validity
+                    ),
                     filled: true,
                     fillColor: Colors.white,
                     suffixIcon: IconButton(
@@ -250,7 +255,8 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                             _selectedDate = selectedDate;
                             _dateController.text =
                                 DateFormat('dd/MM/yyyy').format(selectedDate);
-                            isDateValid = true;
+                            isDateValid =
+                                true; // Reset validity when a date is picked
                           });
                         }
                       },
@@ -259,7 +265,8 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                   keyboardType: TextInputType.number,
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(10),
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9/]')),
+                    FilteringTextInputFormatter.allow(
+                        RegExp(r'[0-9/]')), // Allow only numbers and slashes
                   ],
                   onChanged: (value) {
                     // Remove all slashes for processing
@@ -274,7 +281,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                     String formattedValue = '';
                     for (int i = 0; i < numbersOnly.length; i++) {
                       if (i == 2 || i == 4) {
-                        formattedValue += '/';
+                        formattedValue += '/'; // Add slashes after DD and MM
                       }
                       formattedValue += numbersOnly[i];
                     }
@@ -301,26 +308,27 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                             date.month == month &&
                             date.year == year) {
                           setState(() {
-                            isDateValid = true;
-                            _selectedDate = date;
+                            isDateValid = true; // Valid date
+                            _selectedDate = date; // Update selected date
                           });
                         } else {
                           throw Exception('Invalid date');
                         }
                       } catch (e) {
                         setState(() {
-                          isDateValid = false;
+                          isDateValid = false; // Invalid date
                         });
                       }
                     } else {
                       setState(() {
-                        isDateValid = false;
+                        isDateValid =
+                            false; // Invalid length (not 8 digits yet)
                       });
                     }
                   },
                 ),
 
-// Update the validation message display logic as needed
+// Validation message display logic
                 isDateValid == false
                     ? const Padding(
                         padding: EdgeInsets.only(top: 4.0),

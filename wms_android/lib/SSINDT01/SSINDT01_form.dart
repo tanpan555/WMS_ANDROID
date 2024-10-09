@@ -512,7 +512,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                                     children: [
                                       Icon(
                                         Icons
-                                            .notifications, // Use the bell icon
+                                            .notification_important, // Use the bell icon
                                         color:
                                             Colors.red, // Set the color to red
                                       ),
@@ -544,7 +544,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                                     children: [
                                       Icon(
                                         Icons
-                                            .notifications, // Use the bell icon
+                                            .notification_important, // Use the bell icon
                                         color:
                                             Colors.red, // Set the color to red
                                       ),
@@ -719,7 +719,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             title: Row(
               children: [
                 Icon(
-                  Icons.notifications, // Use the bell icon
+                  Icons.notification_important, // Use the bell icon
                   color: Colors.red, // Set the color to red
                 ),
                 SizedBox(

@@ -315,7 +315,8 @@ class _SSFGDT31_VERIFYState extends State<SSFGDT31_VERIFY> {
                           title: Row(
                             children: [
                               Icon(
-                                Icons.notifications, // Use the bell icon
+                                Icons
+                                    .notification_important, // Use the bell icon
                                 color: Colors.red, // Set the color to red
                               ),
                               SizedBox(
@@ -344,7 +345,8 @@ class _SSFGDT31_VERIFYState extends State<SSFGDT31_VERIFY> {
                           title: Row(
                             children: [
                               Icon(
-                                Icons.notifications, // Use the bell icon
+                                Icons
+                                    .notification_important, // Use the bell icon
                                 color: Colors.red, // Set the color to red
                               ),
                               SizedBox(

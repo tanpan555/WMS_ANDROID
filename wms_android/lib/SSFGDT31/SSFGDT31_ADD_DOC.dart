@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:http/http.dart' as http;
 import 'package:wms_android/styles.dart';
 import 'dart:convert';
 import '../custom_appbar.dart';
 import '../bottombar.dart';
-import 'SSFGDT31_FROM_ADD.dart'; // เพิ่มการนำเข้าไฟล์ FROM.dart
+import 'SSFGDT31_FROM_ADD.dart'; // Import FROM.dart
 import 'package:wms_android/Global_Parameter.dart' as gb;
 
 class SSFGDT31_ADD_DOC extends StatefulWidget {
@@ -23,8 +22,14 @@ class SSFGDT31_ADD_DOC extends StatefulWidget {
 class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
   List<dynamic> statusItems = [];
   String? selectedValue;
-
+  final TextEditingController dataLovDocTypeController =
+      TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  String? po_doc_no;
+  String? po_doc_type;
+  String? po_status;
+  String? po_message;
 
   @override
   void initState() {
@@ -33,36 +38,39 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
     print(widget.pWareCode);
   }
 
-  String? po_doc_no;
-  String? po_doc_type;
-  String? po_status;
-  String? po_message;
-
   Future<void> fetchStatusItems() async {
-    final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT31/DOC_TYPE/${gb.ATTR1}'));
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT31/DOC_TYPE/${gb.ATTR1}'));
 
-    if (response.statusCode == 200) {
-      final responseBody = utf8.decode(response.bodyBytes);
-      final data = jsonDecode(responseBody);
-      print('Fetched data: $data');
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final data = jsonDecode(responseBody);
+        print('Fetched data: $data');
 
-      setState(() {
-        statusItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-        if (statusItems.isNotEmpty) {
-          selectedValue = statusItems[0]['doc_type'];
-        }
-        print('dataMenu: $statusItems');
-        print('Initial selectedValue: $selectedValue');
-      });
-    } else {
-      throw Exception('Failed to load status items');
+        setState(() {
+          statusItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+          if (statusItems.isNotEmpty) {
+            selectedValue = statusItems[0]['doc_type'];
+            dataLovDocTypeController.text = statusItems[0]['doc_desc'];
+          } else {
+            dataLovDocTypeController.clear(); // Clear if no items found
+          }
+          print('dataMenu: $statusItems');
+          print('Initial selectedValue: $selectedValue');
+        });
+      } else {
+        // Handle error
+        showDialogAlert(
+            context, 'Failed to load status items: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      showDialogAlert(context, 'An error occurred: $e');
     }
   }
 
   Future<void> create_NewINXfer_WMS() async {
     final url = 'http://172.16.0.82:8888/apex/wms/SSFGDT31/Creacte_NewINHead';
-
     final headers = {
       'Content-Type': 'application/json',
     };
@@ -75,9 +83,6 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
       'p_doc_type': selectedValue,
       'P_OU_CODE': gb.P_OU_CODE,
     });
-
-    print('headers : $headers Type : ${headers.runtimeType}');
-    print('body : $body Type : ${body.runtimeType}');
 
     try {
       final response = await http.post(
@@ -94,11 +99,7 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
           po_status = responseData['po_status'];
           po_message = responseData['po_message'];
         });
-        print('===============================');
-        print(po_doc_no);
-        print(po_doc_type);
-        print(po_status);
-        print(po_message);
+        print('Document Number: $po_doc_no');
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
       }
@@ -107,8 +108,12 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
     }
   }
 
-  // Method to show the document type selection dialog
   void _showDocumentTypeDialog() {
+    if (statusItems.isEmpty) {
+      showDialogAlert(context, 'No document types available.');
+      return;
+    }
+
     showDialog(
       context: context,
       builder: (context) {
@@ -118,15 +123,11 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
             children: [
               Text(
                 'เลือกประเภทเอกสาร',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               IconButton(
                 icon: Icon(Icons.close),
-                onPressed: () =>
-                    Navigator.of(context).pop(), // Close the dialog
+                onPressed: () => Navigator.of(context).pop(),
               ),
             ],
           ),
@@ -135,23 +136,18 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
               children: statusItems.map((item) {
                 return Container(
                   margin:
-                      const EdgeInsets.only(bottom: 8), // Margin between items
+                      const EdgeInsets.only(bottom: 8), // Space between items
                   decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Colors.black, width: 1.0), // Black border
+                    border:
+                        Border.all(color: Colors.black, width: 1.0), // Border
                     borderRadius: BorderRadius.circular(5.0), // Rounded corners
                   ),
                   child: ListTile(
-                    title: Text(
-                      item['doc_desc'] ?? '',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    title: Text(item['doc_desc'] ?? ''),
                     onTap: () {
                       setState(() {
                         selectedValue = item['doc_type'];
+                        dataLovDocTypeController.text = item['doc_desc'] ?? '';
                       });
                       Navigator.of(context).pop();
                     },
@@ -168,85 +164,114 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF110038),
       appBar: CustomAppBar(title: 'รับคืนจากการเบิกผลิต'),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(10),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                // Replace DropdownButton with a button to open dialog
-                GestureDetector(
-                  onTap: _showDocumentTypeDialog,
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      // borderRadius: BorderRadius.circular(5),
-                      color: Colors.white,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          selectedValue != null
-                              ? statusItems.firstWhere((item) =>
-                                      item['doc_type'] ==
-                                      selectedValue)['doc_desc'] ??
-                                  ''
-                              : 'ประเภทเอกสาร',
-                          style: TextStyle(fontSize: 16, color: Colors.black),
-                        ),
-                        Icon(Icons.arrow_drop_down, color: Colors.black),
-                      ],
-                    ),
+          child: Column(
+            children: [
+              TextFormField(
+                controller: dataLovDocTypeController,
+                readOnly: true,
+                onTap: _showDocumentTypeDialog,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  filled: true,
+                  fillColor: Colors.white,
+                  labelText: 'ประเภทเอกสาร',
+                  labelStyle: const TextStyle(color: Colors.black87),
+                  suffixIcon: Icon(
+                    Icons.arrow_drop_down,
+                    color: Color.fromARGB(255, 113, 113, 113),
                   ),
                 ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          await create_NewINXfer_WMS();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SSFGDT31_FROM(
-                                      po_doc_no: po_doc_no ?? '',
-                                      po_doc_type: selectedValue ?? '',
-                                      pWareCode: widget.pWareCode,
-                                    )),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('กรุณาเลือกข้อมูลก่อนกด CONFIRM'),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        await create_NewINXfer_WMS();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SSFGDT31_FROM(
+                              po_doc_no: po_doc_no ?? '',
+                              po_doc_type: selectedValue ?? '',
+                              pWareCode: widget.pWareCode,
                             ),
-                          );
-                        }
-                      },
-                      child: Text(
-                        'CONFIRM',
-                        style: AppStyles.ConfirmbuttonTextStyle(),
-                      ),
-                      style: AppStyles.ConfirmbuttonStyle(),
+                          ),
+                        );
+                      } else {
+                        showDialogAlert(
+                            context, 'กรุณาเลือกข้อมูลก่อนกด CONFIRM');
+                      }
+                    },
+                    style: AppStyles.ConfirmbuttonStyle(),
+                    child: Text(
+                      'CONFIRM',
+                      style: AppStyles.ConfirmbuttonTextStyle(),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
       bottomNavigationBar: BottomBar(),
+    );
+  }
+
+  void showDialogAlert(BuildContext context, String messageAlert) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Row(
+            children: [
+              Icon(
+                Icons.notification_important,
+                color: Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'แจ้งเตือน',
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  Text(messageAlert, style: const TextStyle(color: Colors.red)),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text('ตกลง'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

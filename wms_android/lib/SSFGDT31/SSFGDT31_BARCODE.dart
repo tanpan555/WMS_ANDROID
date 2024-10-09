@@ -452,7 +452,8 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                           title: Row(
                             children: [
                               Icon(
-                                Icons.notifications, // Use the bell icon
+                                Icons
+                                    .notification_important, // Use the bell icon
                                 color: Colors.red, // Set the color to red
                               ),
                               SizedBox(
@@ -555,7 +556,8 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                           title: Row(
                             children: [
                               Icon(
-                                Icons.notifications, // Use the bell icon
+                                Icons
+                                    .notification_important, // Use the bell icon
                                 color: Colors.red, // Set the color to red
                               ),
                               SizedBox(width: 8), // Space between icon and text
@@ -639,7 +641,26 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                           readOnly: false),
                     ),
                   ),
-                  _buildTextField(ITEM_CODE, 'Item Code', readOnly: true),
+                  GestureDetector(
+                    child: AbsorbPointer(
+                      child: TextFormField(
+                        controller: ITEM_CODE,
+                        readOnly: true,
+                        minLines: 1,
+                        maxLines: 3,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          filled: true,
+                          fillColor: Colors.grey[300],
+                          labelText: 'Item Code',
+                          labelStyle: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   _buildTextField(LOT_NUMBER, 'Lot Number', readOnly: false),
                   _buildQuantityTextField(
                     Quantity,
@@ -655,7 +676,8 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                               title: Row(
                                 children: [
                                   Icon(
-                                    Icons.notifications, // Use the bell icon
+                                    Icons
+                                        .notification_important, // Use the bell icon
                                     color: Colors.red, // Set the color to red
                                   ),
                                   SizedBox(
@@ -688,7 +710,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                                               children: [
                                                 Icon(
                                                   Icons
-                                                      .notifications, // Use the bell icon
+                                                      .notification_important, // Use the bell icon
                                                   color: Colors
                                                       .red, // Set the color to red
                                                 ),
@@ -729,8 +751,46 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                           readOnly: false),
                     ),
                   ),
-                  _buildTextField(LOT_QTY, 'รวมรายการับ', readOnly: true),
-                  _buildTextField(LOT_UNIT, 'รวมจำนวนรับ', readOnly: true),
+                  GestureDetector(
+                    child: AbsorbPointer(
+                      child: TextFormField(
+                        controller: LOT_QTY,
+                        readOnly: true,
+                        minLines: 1,
+                        maxLines: 3,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          filled: true,
+                          fillColor: Colors.grey[300],
+                          labelText: 'รวมรายการับ',
+                          labelStyle: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  GestureDetector(
+                    child: AbsorbPointer(
+                      child: TextFormField(
+                        controller: LOT_UNIT,
+                        readOnly: true,
+                        minLines: 1,
+                        maxLines: 3,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          filled: true,
+                          fillColor: Colors.grey[300],
+                          labelText: 'รวมจำนวนรับ',
+                          labelStyle: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                 ],
               ),
             ),

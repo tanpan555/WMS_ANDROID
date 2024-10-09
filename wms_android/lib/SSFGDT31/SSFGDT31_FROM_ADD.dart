@@ -481,36 +481,31 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16.0), // Add horizontal padding
-                  child: GestureDetector(
+
+                  child: TextField(
                     onTap: _showDialog,
-                    child: AbsorbPointer(
-                      child: TextField(
-                        controller: _CcodeController,
-                        decoration: InputDecoration(
-                          labelText: 'สาเหตุยกเลิก',
-                          filled: true,
-                          fillColor: Colors.white,
-                          // Add black border to TextField
-                          border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black), // Black border
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color:
-                                    Colors.black), // Black border when focused
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color:
-                                    Colors.black), // Black border when enabled
-                          ),
-                          labelStyle: TextStyle(color: Colors.black),
-                          suffixIcon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Color.fromARGB(255, 113, 113, 113),
-                          ),
-                        ),
+                    controller: _CcodeController,
+                    decoration: InputDecoration(
+                      labelText: 'สาเหตุยกเลิก',
+                      filled: true,
+                      fillColor: Colors.white,
+                      // Add black border to TextField
+                      border: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.black), // Black border
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.black), // Black border when focused
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.black), // Black border when enabled
+                      ),
+                      labelStyle: TextStyle(color: Colors.black),
+                      suffixIcon: Icon(
+                        Icons.arrow_drop_down,
+                        color: Color.fromARGB(255, 113, 113, 113),
                       ),
                     ),
                   ),
@@ -540,7 +535,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                     children: [
                                       Icon(
                                         Icons
-                                            .notifications, // Use the bell icon
+                                            .notification_important, // Use the bell icon
                                         color:
                                             Colors.red, // Set the color to red
                                       ),
@@ -572,7 +567,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                     children: [
                                       Icon(
                                         Icons
-                                            .notifications, // Use the bell icon
+                                            .notification_important, // Use the bell icon
                                         color:
                                             Colors.red, // Set the color to red
                                       ),
@@ -782,10 +777,46 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                           _buildDateTextField(DOC_DATE, 'วันที่บันทึก'),
                           _buildDropdownForRefNo(),
                           _buildDropdownSearch(),
-                          _buildTextField(CUST, 'ลูกค้า', readOnly: true),
+                          GestureDetector(
+                            child: AbsorbPointer(
+                              child: TextFormField(
+                                controller: CUST,
+                                readOnly: true,
+                                minLines: 1,
+                                maxLines: 3,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  filled: true,
+                                  fillColor: Colors.grey[300],
+                                  labelText: 'ลูกค้า',
+                                  labelStyle: const TextStyle(
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
                           _buildTextField(NOTE, 'หมายเหตุ'),
-                          _buildTextField(ERP_DOC_NO, 'เลขที่เอกสาร ERP',
-                              readOnly: true),
+                          GestureDetector(
+                            child: AbsorbPointer(
+                              child: TextFormField(
+                                controller: ERP_DOC_NO,
+                                readOnly: true,
+                                minLines: 1,
+                                maxLines: 3,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  filled: true,
+                                  fillColor: Colors.grey[300],
+                                  labelText: 'เลขที่เอกสาร ERP',
+                                  labelStyle: const TextStyle(
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -1192,7 +1223,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'เลือกประเภทเอกสาร',
+                          'เลือกประเภทเอกสาร*',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -1296,7 +1327,18 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         onTap: _showDocTypeDialog,
         child: InputDecorator(
           decoration: InputDecoration(
-            labelText: "ประเภทเอกสาร", // Changed to "Document Type"
+            label: RichText(
+              text: TextSpan(
+                text: 'ประเภทการจ่าย',
+                style: const TextStyle(color: Colors.black),
+                children: const [
+                  TextSpan(
+                    text: ' *',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ],
+              ),
+            ), // Changed to "Document Type"
             filled: true,
             fillColor: Colors.white,
             border: InputBorder.none,

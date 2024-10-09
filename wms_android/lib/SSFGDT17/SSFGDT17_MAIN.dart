@@ -273,7 +273,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
                         title: Row(
                           children: [
                             Icon(
-                              Icons.notifications, // Use the bell icon
+                              Icons.notification_important, // Use the bell icon
                               color: Colors.red, // Set the color to red
                             ),
                             SizedBox(

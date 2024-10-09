@@ -205,7 +205,12 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     labelText: 'วันที่รับคืน',
-                    labelStyle: TextStyle(color: Colors.black),
+                    labelStyle: TextStyle(
+                      color: isDateValid == false
+                          ? Colors.red
+                          : Colors
+                              .black, // Change label color based on validity
+                    ),
                     hintText: 'DD/MM/YYYY',
                     hintStyle: TextStyle(color: Colors.grey),
                     filled: true,

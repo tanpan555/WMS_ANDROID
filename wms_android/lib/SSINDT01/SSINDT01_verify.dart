@@ -326,7 +326,8 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                             title: Row(
                               children: [
                                 Icon(
-                                  Icons.notifications, // Use the bell icon
+                                  Icons
+                                      .notification_important, // Use the bell icon
                                   color: Colors.red, // Set the color to red
                                 ),
                                 SizedBox(

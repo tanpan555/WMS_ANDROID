@@ -387,7 +387,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                                     children: [
                                       Icon(
                                         Icons
-                                            .notifications, // Use the bell icon
+                                            .notification_important, // Use the bell icon
                                         color:
                                             Colors.red, // Set the color to red
                                       ),
@@ -419,7 +419,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                                     children: [
                                       Icon(
                                         Icons
-                                            .notifications, // Use the bell icon
+                                            .notification_important, // Use the bell icon
                                         color:
                                             Colors.red, // Set the color to red
                                       ),
@@ -553,7 +553,8 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                           title: Row(
                             children: [
                               Icon(
-                                Icons.notifications, // Use the bell icon
+                                Icons
+                                    .notification_important, // Use the bell icon
                                 color: Colors.red, // Set the color to red
                               ),
                               SizedBox(

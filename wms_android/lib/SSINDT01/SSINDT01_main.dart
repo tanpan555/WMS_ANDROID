@@ -303,7 +303,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
         title: Row(
           children: [
             Icon(
-              Icons.notifications, // Use the bell icon
+              Icons.notification_important, // Use the bell icon
               color: Colors.red, // Set the color to red
             ),
             SizedBox(width: 8), // Add some space between the icon and the text
@@ -352,7 +352,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
             title: Row(
               children: [
                 Icon(
-                  Icons.notifications, // Use the bell icon
+                  Icons.notification_important, // Use the bell icon
                   color: Colors.red, // Set the color to red
                 ),
                 SizedBox(
@@ -396,7 +396,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
             title: Row(
               children: [
                 Icon(
-                  Icons.notifications, // Use the bell icon
+                  Icons.notification_important, // Use the bell icon
                   color: Colors.red, // Set the color to red
                 ),
                 SizedBox(

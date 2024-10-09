@@ -1407,7 +1407,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                               title: Row(
                                 children: [
                                   Icon(
-                                    Icons.notifications, // Use the bell icon
+                                    Icons
+                                        .notification_important, // Use the bell icon
                                     color: Colors.red, // Set the color to red
                                   ),
                                   SizedBox(
@@ -1563,7 +1564,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                                 children: [
                                                   Icon(
                                                     Icons
-                                                        .notifications, // Use the bell icon
+                                                        .notification_important, // Use the bell icon
                                                     color: Colors
                                                         .red, // Set the color to red
                                                   ),
@@ -1768,7 +1769,7 @@ class _LotDialogState extends State<LotDialog> {
           title: Row(
             children: [
               Icon(
-                Icons.notifications, // Use the bell icon
+                Icons.notification_important, // Use the bell icon
                 color: Colors.red, // Set the color to red
               ),
               SizedBox(
@@ -2573,7 +2574,7 @@ class _LotDialogState extends State<LotDialog> {
           title: Row(
             children: [
               Icon(
-                Icons.notifications, // Use the bell icon
+                Icons.notification_important, // Use the bell icon
                 color: Colors.red, // Set the color to red
               ),
               SizedBox(
@@ -2804,7 +2805,7 @@ class _LotDialogState extends State<LotDialog> {
                                                     children: [
                                                       Icon(
                                                         Icons
-                                                            .notifications, // Use the bell icon
+                                                            .notification_important, // Use the bell icon
                                                         color: Colors
                                                             .red, // Set the color to red
                                                       ),
