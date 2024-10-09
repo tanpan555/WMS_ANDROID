@@ -25,6 +25,18 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/home': (context) => const MyHomePage(),
       },
+      builder: (context, child) {
+        final mediaQueryData = MediaQuery.of(context);
+        final scale = mediaQueryData.textScaler.clamp(
+          maxScaleFactor: 1.0, // Maximum scale factor allowed.
+        );
+        return MediaQuery(
+          data: mediaQueryData.copyWith(
+            textScaler: scale,
+          ),
+          child: child!,
+        );
+      },
     );
   }
 }
