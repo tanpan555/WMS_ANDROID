@@ -143,7 +143,8 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
                       },
                       child: Card(
                         elevation: 4.0,
-                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 5),
                         color: cardColor, // Set card color
                         shape: RoundedRectangleBorder(
                           borderRadius:
@@ -189,7 +190,9 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(
+        currentPage: 'not_show',
+      ),
     );
   }
 }

@@ -570,7 +570,9 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
           ),
         ]),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(
+        currentPage: 'not_show',
+      ),
     );
   }
 

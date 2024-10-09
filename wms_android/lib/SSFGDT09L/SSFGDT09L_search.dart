@@ -430,7 +430,9 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(
+        currentPage: 'not_show',
+      ),
     );
   }
 

@@ -381,7 +381,9 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
             const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
           ]))),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(
+        currentPage: 'not_show',
+      ),
     );
   }
 

@@ -141,7 +141,9 @@ class _Ssfgdt09lMenuState extends State<Ssfgdt09lMenu> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(
+        currentPage: 'not_show',
+      ),
     );
   }
 }

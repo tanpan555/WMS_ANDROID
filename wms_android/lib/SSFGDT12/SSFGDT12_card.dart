@@ -379,7 +379,9 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(
+        currentPage: 'not_show',
+      ),
     );
   }
 }

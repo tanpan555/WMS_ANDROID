@@ -1365,7 +1365,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(
+        currentPage: 'not_show',
+      ),
     );
   }
 

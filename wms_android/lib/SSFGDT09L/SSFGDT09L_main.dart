@@ -184,7 +184,9 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(
+        currentPage: 'not_show',
+      ),
     );
   }
 }

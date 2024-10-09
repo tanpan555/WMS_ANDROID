@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final bool showExitWarning;
 
   const CustomAppBar({
     super.key,
     this.title = 'WMS',
+    this.showExitWarning = false,
   });
 
   @override
@@ -25,17 +26,24 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       leading: isHomePage
-        // padding: const EdgeInsets.symmetric(horizontal: 0),
-          ? null//SizedBox()
+          // padding: const EdgeInsets.symmetric(horizontal: 0),
+          ? null //SizedBox()
           : IconButton(
-        icon: Icon(
-          Icons.arrow_back_outlined,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
+              icon: Icon(
+                Icons.arrow_back_outlined,
+                color: Colors.white,
+              ),
+              onPressed: () async {
+                if (showExitWarning) {
+                  bool shouldLeave = await showExitWarningDialog(context);
+                  if (shouldLeave) {
+                    Navigator.pop(context);
+                  }
+                } else {
+                  Navigator.pop(context);
+                }
+              },
+            ),
       title: GestureDetector(
         onTap: () {
           // Navigate back to the main page
@@ -61,6 +69,36 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
     );
+  }
+
+  Future<bool> showExitWarningDialog(BuildContext context) async {
+    return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Row(
+              children: [
+                Icon(
+                  Icons.notification_important,
+                  color: Colors.red,
+                ),
+                SizedBox(width: 8),
+                Text('แจ้งเตือน'),
+              ],
+            ),
+            content: Text('คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('ยกเลิก'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text('ออก'),
+              ),
+            ],
+          ),
+        ) ??
+        false; // กรณีผู้ใช้ปิด dialog โดยไม่เลือก จะคืนค่า false
   }
 
   @override

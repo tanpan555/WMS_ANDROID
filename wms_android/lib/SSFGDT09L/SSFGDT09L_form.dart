@@ -638,7 +638,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'เบิกจ่าย'),
+      appBar: CustomAppBar(
+        title: 'เบิกจ่าย',
+        showExitWarning: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -1154,7 +1157,9 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(
+        currentPage: 'show',
+      ),
     );
   }
 

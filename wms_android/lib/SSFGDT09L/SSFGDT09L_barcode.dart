@@ -724,7 +724,9 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
           ]))),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(
+        currentPage: 'not_show',
+      ),
     );
   }
 

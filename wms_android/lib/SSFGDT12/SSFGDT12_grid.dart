@@ -1042,7 +1042,9 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(
+        currentPage: 'not_show',
+      ),
     );
   }
 

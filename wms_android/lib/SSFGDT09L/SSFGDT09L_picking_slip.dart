@@ -379,7 +379,9 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
               ),
             ),
           ])),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(
+        currentPage: 'not_show',
+      ),
     );
   }
 }
