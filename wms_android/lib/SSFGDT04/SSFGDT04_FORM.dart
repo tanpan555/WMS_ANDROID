@@ -924,7 +924,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             ),
                           ),
 
-                          //ประเภทการจ่าย*//
+                          //ประเภทการรับ*//
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 0),
                             child: GestureDetector(

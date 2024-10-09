@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../custom_appbar.dart';
@@ -33,8 +32,19 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
 
   @override
   void initState() {
+    setData();
     super.initState();
     fetchStatusItems();
+  }
+
+  void setData() {
+    if (mounted) {
+      setState(() {
+        selectedDocType = 'รับจากการผลิต';
+        selectedDocDesc = 'RMI16';
+        docTypeController.text = 'รับจากการผลิต';
+      });
+    }
   }
 
   Future<void> fetchStatusItems() async {
@@ -45,16 +55,17 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
       print('Fetched data: $data');
+      if (mounted) {
+        setState(() {
+          statusItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
 
-      setState(() {
-        statusItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-
-        // ตั้งค่า selectedDocType ให้เป็นค่าแรกของ statusItems
-        if (statusItems.isNotEmpty) {
-          selectedDocType = statusItems[0]['doc_type'];
-        }
-        print('dataMenu: $statusItems');
-      });
+          // ตั้งค่า selectedDocType ให้เป็นค่าแรกของ statusItems
+          if (statusItems.isNotEmpty) {
+            selectedDocType = statusItems[0]['doc_type'];
+          }
+          print('dataMenu: $statusItems');
+        });
+      }
     } else {
       throw Exception('Failed to load status items');
     }
@@ -118,62 +129,107 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
     }
   }
 
+
   void _showDocumentTypePopup() {
     showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'เลือกประเภทรายการ',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the popup
-                },
-              ),
-            ],
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: statusItems.map((item) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedDocType = item['doc_type'];
-                      docTypeController.text =
-                          item['doc_desc']; 
-                    });
-                    Navigator.of(context).pop(); // Close the popup
-                  },
-                  child: Container(
-                    // padding: const EdgeInsets.all(8.0),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
-                    margin: const EdgeInsets.symmetric(vertical: 4.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
-                        width: 2.0, // ความหนาของขอบ
-                      ), // Gray border
-                      borderRadius:
-                          BorderRadius.circular(10.0), // ทำให้ขอบมีความโค้ง
-                    ),
-                    child: Text(
-                      item['doc_desc'] ?? 'doc_desc = null',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey, // สีของเส้น
+                            width: 1.0, // ความหนาของเส้น
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'ประเภทเอกสาร',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                );
-              }).toList(),
-            ),
+
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics:
+                                const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
+                            itemCount: statusItems.length,
+                            itemBuilder: (context, index) {
+                              // ดึงข้อมูลรายการจาก dataCard
+                              var item = statusItems[index];
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
+                                      width: 2.0, // ความหนาของขอบ
+                                    ),
+                                    borderRadius: BorderRadius.circular(
+                                        10.0), // ทำให้ขอบมีความโค้ง
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                      vertical:
+                                          8.0), // เพิ่ม padding ด้านซ้าย-ขวา และ ด้านบน-ล่าง
+                                  child: Text(
+                                    item['doc_desc'],
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    selectedDocType = item['doc_type'];
+                                    selectedDocDesc = item['doc_desc'];
+                                    // docTypeController.text = selectedDocDesc;
+                                    // -----------------------------------------
+                                    
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+
+                    // ช่องค้นหา
+                  ],
+                ),
+              );
+            },
           ),
         );
       },
@@ -194,77 +250,21 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // DropdownButtonFormField2<String>(
-                //   isExpanded: true,
-                //   decoration: const InputDecoration(
-                //     border: InputBorder.none,
-                //     filled: true,
-                //     fillColor: Colors.white,
-                //     labelText: 'ประเภทเอกสาร',
-                //     labelStyle: TextStyle(
-                //       fontSize: 14,
-                //       color: Colors.black,
-                //     ),
-                //   ),
-                //   items: statusItems
-                //       .map((item) => DropdownMenuItem<String>(
-                //             value: item['doc_type'],
-                //             child: Text(
-                //               item['doc_desc'] ?? 'doc_desc = null',
-                //               style: const TextStyle(
-                //                 fontSize: 14,
-                //                 color: Colors.black,
-                //               ),
-                //             ),
-                //           ))
-                //       .toList(),
-                //   validator: (value) {
-                //     if (value == null) {
-                //       return 'Please select a status.';
-                //     }
-                //     return null;
-                //   },
-                //   onChanged: (value) {
-                //     setState(() {
-                //       selectedDocType = value.toString();
-                //     });
-                //   },
-                //   onSaved: (value) {
-                //     selectedDocType = value.toString();
-                //   },
-                //   value: selectedDocType,
-                //   buttonStyleData: const ButtonStyleData(
-                //     padding: EdgeInsets.only(right: 8),
-                //   ),
-                //   iconStyleData: const IconStyleData(
-                //     icon: Icon(
-                //       Icons.arrow_drop_down,
-                //       color: Color.fromARGB(255, 113, 113, 113),
-                //     ),
-                //     iconSize: 24,
-                //   ),
-                //   dropdownStyleData: DropdownStyleData(
-                //     decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.circular(15),
-                //       color: Colors.white,
-                //     ),
-                //     maxHeight: 150,
-                //   ),
-                //   menuItemStyleData: const MenuItemStyleData(
-                //     padding: EdgeInsets.symmetric(horizontal: 16),
-                //   ),
-                // ),
                 TextFormField(
                   readOnly: true, // Make it read-only to prevent keyboard popup
                   onTap: _showDocumentTypePopup, // Show the popup on tap
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     labelText: 'ประเภทเอกสาร',
+                    suffixIcon: Icon(
+                      Icons.arrow_drop_down,
+                      color: Color.fromARGB(255, 113, 113, 113),
+                    ),
                     filled: true,
                     fillColor: Colors.white,
                     labelStyle: const TextStyle(
-                color: Colors.black87,
-              ),
+                      color: Colors.black87,
+                    ),
                   ),
                   controller: docTypeController,
                   // controller: TextEditingController(
