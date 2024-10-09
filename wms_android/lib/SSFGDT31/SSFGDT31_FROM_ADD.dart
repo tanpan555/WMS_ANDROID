@@ -893,7 +893,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         children: [
           TextField(
             controller: controller,
-            style: TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black),
             keyboardType: TextInputType.number,
             inputFormatters: [
               // Allow only digits (numbers)
@@ -932,9 +932,9 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                   final month = int.parse(numbersOnly.substring(2, 4));
                   final year = int.parse(numbersOnly.substring(4, 8));
 
-                  final date = DateTime(year, month, day);
-
                   if (isValidDate(day, month, year)) {
+                    final date = DateTime(year, month, day);
+
                     setState(() {
                       isDateValid = true;
 
@@ -961,12 +961,12 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
             decoration: InputDecoration(
               labelText: null,
               hintText: 'DD/MM/YYYY',
-              hintStyle: TextStyle(color: Colors.grey),
+              hintStyle: const TextStyle(color: Colors.grey),
               label: RichText(
                 text: TextSpan(
                   text: label,
-                  style: TextStyle(color: Colors.black),
-                  children: [
+                  style: const TextStyle(color: Colors.black),
+                  children: const [
                     TextSpan(
                       text: ' *',
                       style: TextStyle(color: Colors.red),
@@ -978,13 +978,16 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
               fillColor: Colors.white,
               border: InputBorder.none,
               suffixIcon: IconButton(
-                icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
+                icon: const Icon(Icons.calendar_today_outlined,
+                    color: Colors.black),
                 onPressed: () async {
-                  _selectDate(context);
+                  _selectDate(context); // Open date picker
                 },
               ),
             ),
           ),
+
+// Show error message if the date is invalid
           isDateValid == false
               ? const Padding(
                   padding: EdgeInsets.only(top: 4.0),

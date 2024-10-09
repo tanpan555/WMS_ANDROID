@@ -1071,7 +1071,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
         children: [
           TextField(
             controller: controller,
-            style: TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black),
             keyboardType: TextInputType.number,
             inputFormatters: [
               // Allow only digits (numbers)
@@ -1110,13 +1110,21 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                     final month = int.parse(numbersOnly.substring(2, 4));
                     final year = int.parse(numbersOnly.substring(4, 8));
 
+                    // Create a DateTime object
                     final date = DateTime(year, month, day);
-                    setState(() {
-                      isDateValid = true; // Valid date
-                      selectedDate = date; // Store the selected date
-                      CR_DATE.text = DateFormat('dd/MM/yyyy').format(
-                          date); // Assuming CR_DATE is your date variable
-                    });
+
+                    // Check if the date is valid
+                    if (date.day == day &&
+                        date.month == month &&
+                        date.year == year) {
+                      setState(() {
+                        isDateValid = true; // Valid date
+                        selectedDate = date; // Store the selected date
+                        CR_DATE.text = DateFormat('dd/MM/yyyy').format(date);
+                      });
+                    } else {
+                      throw Exception('Invalid date');
+                    }
                   } catch (e) {
                     print('Error parsing date: $e');
                     setState(() {
@@ -1136,12 +1144,12 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
             },
             decoration: InputDecoration(
               hintText: 'DD/MM/YYYY',
-              hintStyle: TextStyle(color: Colors.grey),
+              hintStyle: const TextStyle(color: Colors.grey),
               label: RichText(
                 text: TextSpan(
                   text: label,
-                  style: TextStyle(color: Colors.black),
-                  children: [
+                  style: const TextStyle(color: Colors.black),
+                  children: const [
                     TextSpan(
                       text: ' *',
                       style: TextStyle(color: Colors.red),
@@ -1153,14 +1161,16 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
               fillColor: Colors.white,
               border: InputBorder.none,
               suffixIcon: IconButton(
-                icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
+                icon: const Icon(Icons.calendar_today_outlined,
+                    color: Colors.black),
                 onPressed: () async {
-                  _selectDate(
-                      context); // Assume this method opens the date picker
+                  _selectDate(context); // Opens the date picker
                 },
               ),
             ),
           ),
+
+// Show error message if the date is invalid
           isDateValid == false
               ? const Padding(
                   padding: EdgeInsets.only(top: 4.0),

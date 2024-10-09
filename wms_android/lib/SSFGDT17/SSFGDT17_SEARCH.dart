@@ -295,10 +295,18 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                         final year = int.parse(numbersOnly.substring(4, 8));
 
                         final date = DateTime(year, month, day);
-                        setState(() {
-                          isDateValid = true;
-                          _selectedDate = date;
-                        });
+
+                        // Check if the day, month, and year are valid
+                        if (date.day == day &&
+                            date.month == month &&
+                            date.year == year) {
+                          setState(() {
+                            isDateValid = true;
+                            _selectedDate = date;
+                          });
+                        } else {
+                          throw Exception('Invalid date');
+                        }
                       } catch (e) {
                         setState(() {
                           isDateValid = false;
@@ -311,6 +319,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                     }
                   },
                 ),
+
 // Update the validation message display logic as needed
                 isDateValid == false
                     ? const Padding(
@@ -320,11 +329,12 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                           style: TextStyle(
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                            fontSize: 11,
                           ),
                         ),
                       )
                     : const SizedBox.shrink(),
+
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
