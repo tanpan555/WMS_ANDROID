@@ -807,12 +807,17 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         filled: true,
                         fillColor: Colors.white,
                         label: RichText(
-                          text: const TextSpan(
+                          text: TextSpan(
                             text: 'วันที่บันทึก', // ชื่อ label
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: 16,
-                            ),
+                            style: chkDate == false && noDate == false
+                                ? const TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 16,
+                                  )
+                                : const TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 16,
+                                  ),
                             children: [
                               TextSpan(
                                 text: ' *', // เพิ่มเครื่องหมาย *
@@ -1424,7 +1429,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
                               final doc =
-                                  '${item['schid'] ?? ''} ${item['fg_code'] ?? ''} ${item['cust_name'] ?? ''}';
+                                  '${item['schid'] ?? ''} ${item['fg_code'] ?? ''}';
                               final returnCode = '${item['schid']}';
 
                               return ListTile(
@@ -1436,6 +1441,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle: Text('${item['cust_name'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -1563,12 +1569,13 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  doc,
+                                  '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                // subtitle: Text('${item['cust_name'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -1679,12 +1686,13 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['doc_type']} ${item['doc_desc']}',
+                                  '${item['doc_type']}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle: Text('${item['doc_desc'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -1868,11 +1876,11 @@ class DateInputFormatter extends TextInputFormatter {
     if (text.length == 1) {
       noDate = true;
     } else if (text.length == 2) {
-      noDate = false;
+      noDate = true;
     } else if (text.length == 3) {
       noDate = true;
     } else if (text.length == 4) {
-      noDate = false;
+      noDate = true;
     } else if (text.length == 5) {
       noDate = true;
     } else if (text.length == 6) {
@@ -1882,7 +1890,7 @@ class DateInputFormatter extends TextInputFormatter {
     } else if (text.length == 8) {
       noDate = false;
     } else {
-      noDate = false;
+      noDate = true;
     }
 
     // ตรวจสอบว่าค่าใน day ไม่เกิน 31

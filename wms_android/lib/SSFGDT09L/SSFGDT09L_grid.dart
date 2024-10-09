@@ -480,87 +480,204 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Item : ${item['item_code'] ?? ''}',
-                                    style: TextStyle(color: Colors.black),
+                                  SizedBox(
+                                    child: Row(
+                                      // mainAxisAlignment:
+                                      // MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          'Item : ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14.0),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            padding: EdgeInsets.all(5.0),
+                                            color: Colors.white,
+                                            child: Text(
+                                              item['item_code'] ?? '',
+                                              style: const TextStyle(
+                                                  fontSize: 14.0),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
-
-                                  SizedBox(height: 4.0),
-                                  Text(
-                                    'Lot No : ${item['lots_no'] ?? ''}',
-                                    style: TextStyle(color: Colors.black),
+                                  const SizedBox(height: 4.0),
+                                  SizedBox(
+                                    child: Row(
+                                      // mainAxisAlignment:
+                                      // MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          'Lot No : ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14.0),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            padding: EdgeInsets.all(5.0),
+                                            color: Colors.white,
+                                            child: Text(
+                                              item['lots_no'] ?? '',
+                                              style: const TextStyle(
+                                                  fontSize: 14.0),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
-
-                                  SizedBox(height: 4.0),
-                                  // -------------------------------------------------------------
+                                  const SizedBox(height: 4.0),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          'จำนวนที่จ่าย : ${NumberFormat('#,###,###,###,###,###').format(item['pack_qty'] ?? '')}',
-                                          style: TextStyle(color: Colors.black),
+                                        child: SizedBox(
+                                          child: Row(
+                                            // mainAxisAlignment:
+                                            // MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'จำนวนที่จ่าย : ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  color: Colors.white,
+                                                  child: Text(
+                                                    '${NumberFormat('#,###,###,###,###,###').format(item['pack_qty'] ?? '')}',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
+                                      const SizedBox(width: 4.0),
                                       Expanded(
-                                        child: Text(
-                                          'Pack : ${item['pack_code'] ?? ''}',
-                                          style: TextStyle(color: Colors.black),
+                                        child: SizedBox(
+                                          child: Row(
+                                            // mainAxisAlignment:
+                                            // MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'Pack : ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  color: Colors.white,
+                                                  child: Text(
+                                                    item['pack_code'] ?? '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 4.0),
-                                  // -------------------------------------------------------------
+                                  const SizedBox(height: 4.0),
+                                  SizedBox(
+                                    child: Row(
+                                      // mainAxisAlignment:
+                                      // MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          'Reason : ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14.0),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            padding: EdgeInsets.all(5.0),
+                                            color: Colors.white,
+                                            child: Text(
+                                              item['reason_mismatch'] ?? '',
+                                              style: const TextStyle(
+                                                  fontSize: 14.0),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4.0),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          'Locator : ${item['location_code'] ?? ''}',
-                                          style: TextStyle(color: Colors.black),
+                                        child: SizedBox(
+                                          child: Row(
+                                            // mainAxisAlignment:
+                                            // MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'ใช้แทนจุด : ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  color: Colors.white,
+                                                  child: Text(
+                                                    item['attribute3'] ?? '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
+                                      const SizedBox(width: 4.0),
                                       Expanded(
-                                        child: Text(
-                                          'PD Location : ${item['pd_location'] ?? ''}',
-                                          style: TextStyle(color: Colors.black),
+                                        child: SizedBox(
+                                          child: Row(
+                                            // mainAxisAlignment:
+                                            // MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'Replace Lot# : ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  color: Colors.white,
+                                                  child: Text(
+                                                    item['attribute4'] ?? '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 4.0),
-                                  // -------------------------------------------------------------
-                                  Text(
-                                    'Reason : ${item['reason_mismatch'] ?? ''}',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  SizedBox(height: 4.0),
-                                  // -------------------------------------------------------------
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          'ใช้แทนจุด : ${item['attribute3'] ?? ''}',
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Text(
-                                          'Replace Lot# : ${item['attribute4'] ?? ''} ',
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 4.0),
-                                  // -------------------------------------------------------------
-
-                                  SizedBox(height: 20.0),
+                                  const SizedBox(height: 20.0),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -593,12 +710,13 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                         onTap: () {
                                           showDetailsDialog(
                                             context,
+                                            item['seq'],
                                             item['pack_qty'],
                                             item['nb_item_name'] ?? '',
-                                            item['nb_pack_name'] ?? '',
+                                            item['rowid'] ?? '',
+                                            // item['nb_pack_name'] ?? '',
                                             item['item_code'] ?? '',
                                             item['pack_code'] ?? '',
-                                            item['rowid'] ?? '',
                                           );
                                         },
                                         child: Container(
@@ -633,141 +751,6 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
     );
   }
 
-  void showDetailsDialog(BuildContext context, int packQty, String nbItemName,
-      String nbPackName, String itemCode, String packCode, String rowID) {
-    String formattedSysQty =
-        NumberFormat('#,###,###,###,###,###').format(packQty);
-    TextEditingController packQtyController =
-        TextEditingController(text: formattedSysQty.toString());
-    TextEditingController nbItemNameController =
-        TextEditingController(text: nbItemName.toString());
-    TextEditingController nbPackNameController =
-        TextEditingController(text: nbPackName.toString());
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('รายละเอียด'), // หัวเรื่องของ Dialog
-          content: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start, // จัดชิดซ้าย
-                children: [
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    controller: packQtyController,
-                    // readOnly: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: 'จำนวนที่จ่าย',
-                      labelStyle: TextStyle(
-                        color: Colors.black87,
-                      ),
-                    ),
-                    textAlign: TextAlign.right,
-                  ),
-                  const SizedBox(height: 8.0),
-                  TextFormField(
-                    controller: nbItemNameController,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: Colors.grey[300],
-                      labelText: 'Item Desc',
-                      labelStyle: const TextStyle(
-                        color: Colors.black87,
-                      ),
-                    ),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.right,
-                  ),
-                  const SizedBox(height: 8.0),
-                  TextFormField(
-                    controller: nbPackNameController,
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: Colors.grey[300],
-                      labelText: 'Pack Desc',
-                      labelStyle: const TextStyle(
-                        color: Colors.black87,
-                      ),
-                    ),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.right,
-                  ),
-                  const SizedBox(height: 8.0),
-                ],
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(); // ปิด Dialog เมื่อกดปุ่มนี้
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('Cancel')),
-                ElevatedButton(
-                  onPressed: () async {
-                    int updatedPackQty =
-                        int.tryParse(packQtyController.text) ?? packQty;
-
-                    Navigator.of(context).pop();
-                    await updatePackQty(
-                        updatedPackQty, itemCode, packCode, rowID);
-                    await fetchData();
-                    setState(() {});
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.grey),
-                  ),
-                  child: const Text('OK'),
-                ),
-              ],
-            )
-            // TextButton(
-            //   child: const Text('ย้อนกลับ'),
-            //   onPressed: () {
-            //     Navigator.of(context).pop(); // ปิด Dialog เมื่อกดปุ่มนี้
-            //   },
-            // ),
-            // TextButton(
-            //   child: const Text('ยืนยัน'),
-            //   onPressed: () async {
-            //     int updatedPackQty =
-            //         int.tryParse(packQtyController.text) ?? packQty;
-
-            //     Navigator.of(context).pop();
-            //     await updatePackQty(updatedPackQty, itemCode, packCode, rowID);
-            //     await fetchData();
-            //     setState(() {});
-            //   },
-            // ),
-          ],
-        );
-      },
-    );
-  }
-
   void showDialogComfirmDelete(BuildContext context, String pSeq,
       String pItemCode, String messageDelete) {
     showDialog(
@@ -795,7 +778,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                     const SizedBox(height: 10),
                     Text(
                       messageDelete,
-                      style: const TextStyle(color: Colors.red),
+                      style: const TextStyle(color: Colors.black),
                     ),
                     const SizedBox(height: 10),
                   ],
@@ -870,7 +853,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                   const SizedBox(height: 10),
                   Text(
                     messageDelete,
-                    style: const TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.black),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -893,6 +876,170 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                 ],
               ),
             ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showDetailsDialog(
+    BuildContext context,
+    int seq,
+    int packQty,
+    String nbItemName,
+    String rowID,
+    String itemCode,
+    String packCode,
+  ) {
+    String formattedSysQty =
+        NumberFormat('#,###,###,###,###,###').format(packQty);
+    TextEditingController packQtyController =
+        TextEditingController(text: formattedSysQty.toString());
+    String formattedSeq = NumberFormat('#,###,###,###,###,###').format(seq);
+    TextEditingController seqController =
+        TextEditingController(text: formattedSeq);
+    TextEditingController nbItemNameController =
+        TextEditingController(text: nbItemName);
+
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black54, // Background color with some transparency
+      transitionDuration: const Duration(milliseconds: 200),
+      // title: T,
+      pageBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
+        return Center(
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: Container(
+              padding: EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8.0),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: GestureDetector(
+                            child: AbsorbPointer(
+                              child: TextFormField(
+                                controller: seqController,
+                                readOnly: true,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  filled: true,
+                                  fillColor: Colors.grey[300],
+                                  labelText: 'Seq',
+                                  labelStyle: const TextStyle(
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                keyboardType: TextInputType.number,
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8.0),
+                        Expanded(
+                          flex: 7,
+                          child: GestureDetector(
+                            child: AbsorbPointer(
+                              child: TextFormField(
+                                controller: nbItemNameController,
+                                readOnly: true,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  filled: true,
+                                  fillColor: Colors.grey[300],
+                                  labelText: 'Item Desc',
+                                  labelStyle: const TextStyle(
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                keyboardType: TextInputType.number,
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 8.0),
+                    TextFormField(
+                      controller: packQtyController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'จำนวนที่จ่าย',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                      ),
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.right,
+                    ),
+                    const SizedBox(height: 8.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          style: AppStyles.ConfirmChecRecievekButtonStyle(),
+                          onPressed: () async {
+                            int updatedPackQty =
+                                int.tryParse(packQtyController.text) ?? packQty;
+
+                            Navigator.of(context).pop();
+                            await updatePackQty(
+                                updatedPackQty, itemCode, packCode, rowID);
+                            await fetchData();
+                            setState(() {});
+                          },
+                          child: Image.asset(
+                            'assets/images/check-mark.png',
+                            width: 25.0,
+                            height: 25.0,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation, Widget child) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0.0, 1.0),
+            end: Offset.zero,
+          ).animate(animation),
+          child: FadeTransition(
+            opacity: animation,
+            child: child,
           ),
         );
       },

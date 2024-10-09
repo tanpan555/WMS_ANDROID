@@ -55,9 +55,15 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   String conditionNull = 'null';
   String statusSubmit = '';
   String messageSubmit = '';
-  final List<String> dropdownStatusSubmit = [
-    'ให้จำนวนนับเป็นศูนย์',
-    'ให้จำนวนนับเท่ากับในระบบ',
+  List<dynamic> dropdownStatusSubmit = [
+    {
+      'd': 'ให้จำนวนนับเป็นศูนย์',
+      'r': '1',
+    },
+    {
+      'd': 'ให้จำนวนนับเท่ากับในระบบ',
+      'r': '2',
+    },
   ];
   String statusCancel = '';
   String messageCancel = '';
@@ -67,6 +73,9 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   bool isLoading = true;
   String? nextLink = '';
   String? prevLink = '';
+
+  TextEditingController dataLovStatusConfirmSubmitController =
+      TextEditingController();
 
   @override
   void initState() {
@@ -1588,96 +1597,72 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
           ),
           content: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(3.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
                     'ตรวจพบสินค้าที่ไม่ระบุจำนวนนับ',
-                    style: TextStyle(fontSize: 12),
+                    // style: TextStyle(fontSize: 12),
                   ),
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField2<String>(
-                    value: selectedStatusSubmit,
-                    isExpanded: true, // Ensures the dropdown takes full width
-                    style: const TextStyle(
-                      overflow: TextOverflow.ellipsis,
-                      color: Colors.black87,
-                    ),
-                    items: dropdownStatusSubmit
-                        .map((item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ))
-                        .toList(),
+                  const SizedBox(height: 10),
+                  ////////////////////////////////////
+                  TextFormField(
+                    controller: dataLovStatusConfirmSubmitController,
+                    readOnly: true,
+                    onTap: () => showDialogSelectDataStatusConfirmSubmit(),
                     decoration: InputDecoration(
-                      border: InputBorder.none,
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black)),
                       filled: true,
-                      fillColor: Colors.grey[300],
-                      labelText: 'สถานะ',
+                      fillColor: Colors.white,
+                      labelText: 'ประเภทรายการ',
                       labelStyle: const TextStyle(
-                        overflow: TextOverflow.ellipsis,
                         color: Colors.black87,
                       ),
+                      suffixIcon: Icon(
+                        Icons.arrow_drop_down,
+                        color: Color.fromARGB(255, 113, 113, 113),
+                      ),
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedStatusSubmit = value ?? '';
-                        switch (selectedStatusSubmit) {
-                          case 'ให้จำนวนนับเป็นศูนย์':
-                            statusCondition = '1';
-                            break;
-                          case 'ให้จำนวนนับเท่ากับในระบบ':
-                            statusCondition = '2';
-                            break;
-                          default:
-                            statusCondition = 'Unknown';
-                        }
-                      });
-                    },
                   ),
                   const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text(
+                          'Cancel',
+                        ),
+                      ),
+                      const SizedBox(
+                          width: 8), // Add some spacing between buttons
+                      ElevatedButton(
+                        onPressed: () {
+                          submitData(statusCondition);
+                          // Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text(
+                          'OK',
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
           ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.grey),
-                  ),
-                  child: const Text(
-                    'Cancel',
-                  ),
-                ),
-                const SizedBox(width: 8), // Add some spacing between buttons
-                ElevatedButton(
-                  onPressed: () {
-                    submitData(statusCondition);
-                    // Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.grey),
-                  ),
-                  child: const Text(
-                    'OK',
-                  ),
-                ),
-              ],
-            ),
-          ],
         );
       },
     );
@@ -1903,5 +1888,128 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
             ],
           );
         });
+  }
+
+  void showDialogSelectDataStatusConfirmSubmit() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey, // สีของเส้น
+                            width: 1.0, // ความหนาของเส้น
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'สถานะ',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics:
+                                const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
+                            itemCount: dropdownStatusSubmit.length,
+                            itemBuilder: (context, index) {
+                              // ดึงข้อมูลรายการจาก dataCard
+                              var item = dropdownStatusSubmit[index];
+
+                              // return GestureDetector(
+                              //   onTap: () {
+                              //     setState(() {
+                              //       dataLocator = item['location_code'];
+                              //     });
+                              //   },
+                              //   child: SizedBox(
+                              //     child: Text('${item['location_code']}'),
+                              //   ),
+                              // );
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
+                                      width: 2.0, // ความหนาของขอบ
+                                    ),
+                                    borderRadius: BorderRadius.circular(
+                                        10.0), // ทำให้ขอบมีความโค้ง
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                      vertical:
+                                          8.0), // เพิ่ม padding ด้านซ้าย-ขวา และ ด้านบน-ล่าง
+                                  child: Text(
+                                    item['d'].toString(),
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    selectedStatusSubmit = item['d'];
+                                    statusCondition = item['r'];
+                                    dataLovStatusConfirmSubmitController.text =
+                                        selectedStatusSubmit;
+                                    // -----------------------------------------
+                                    print(
+                                        'dataLovStatusConfirmSubmitController New: $dataLovStatusConfirmSubmitController Type : ${dataLovStatusConfirmSubmitController.runtimeType}');
+                                    print(
+                                        'selectedStatusSubmit New: $selectedStatusSubmit Type : ${selectedStatusSubmit.runtimeType}');
+                                    print(
+                                        'statusCondition New: $statusCondition Type : ${statusCondition.runtimeType}');
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+
+                    // ช่องค้นหา
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }

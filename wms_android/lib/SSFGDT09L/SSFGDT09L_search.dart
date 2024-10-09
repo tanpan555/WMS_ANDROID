@@ -598,11 +598,11 @@ class DateInputFormatter extends TextInputFormatter {
     if (text.length == 1) {
       noDate = true;
     } else if (text.length == 2) {
-      noDate = false;
+      noDate = true;
     } else if (text.length == 3) {
       noDate = true;
     } else if (text.length == 4) {
-      noDate = false;
+      noDate = true;
     } else if (text.length == 5) {
       noDate = true;
     } else if (text.length == 6) {

@@ -207,45 +207,171 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                              'Item : ${item['material_code'] ?? ''}'),
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                              'Lot : ${item['lot_no'] ?? ''}'),
-                                        ),
-                                      ],
+                                    SizedBox(
+                                      child: Row(
+                                        // mainAxisAlignment:
+                                        // MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text(
+                                            'Item : ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14.0),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              padding: EdgeInsets.all(5.0),
+                                              color: Colors.white,
+                                              child: Text(
+                                                item['material_code'] ?? '',
+                                                style: const TextStyle(
+                                                    fontSize: 14.0),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                    SizedBox(height: 4.0),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                              'Comb : ${item['comb'] ?? ''}'),
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                              'ความต้องการใช้ : ${NumberFormat('#,###,###,###,###,###').format(item['usage_qty'] ?? '')}'),
-                                        ),
-                                      ],
+                                    const SizedBox(height: 4.0),
+                                    // ---------------------------------------------------- \\
+                                    SizedBox(
+                                      child: Row(
+                                        // mainAxisAlignment:
+                                        // MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text(
+                                            'Lot : ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14.0),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              padding: EdgeInsets.all(5.0),
+                                              color: Colors.white,
+                                              child: Text(
+                                                item['lot_no'] ?? '',
+                                                style: const TextStyle(
+                                                    fontSize: 14.0),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                    SizedBox(height: 4.0),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                              'Warehouse : ${item['ware_code'] ?? ''}'),
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                              'Locator : ${item['location_code'] ?? ''}'),
-                                        ),
-                                      ],
+                                    const SizedBox(height: 4.0),
+                                    // ---------------------------------------------------- \\
+                                    SizedBox(
+                                      child: Row(
+                                        // mainAxisAlignment:
+                                        // MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text(
+                                            'Comb : ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14.0),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              padding: EdgeInsets.all(5.0),
+                                              color: Colors.white,
+                                              child: Text(
+                                                item['comb'] ?? '',
+                                                style: const TextStyle(
+                                                    fontSize: 14.0),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                    SizedBox(height: 4.0),
+                                    const SizedBox(height: 4.0),
+                                    // ---------------------------------------------------- \\
+                                    SizedBox(
+                                      child: Row(
+                                        // mainAxisAlignment:
+                                        // MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text(
+                                            'ความต้องการใช้ : ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14.0),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              padding: EdgeInsets.all(5.0),
+                                              color: Colors.white,
+                                              child: Text(
+                                                NumberFormat(
+                                                        '#,###,###,###,###,###')
+                                                    .format(item['usage_qty'] ??
+                                                        ''),
+                                                style: const TextStyle(
+                                                    fontSize: 14.0),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4.0),
+                                    // ---------------------------------------------------- \\
+                                    SizedBox(
+                                      child: Row(
+                                        // mainAxisAlignment:
+                                        // MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text(
+                                            'Warehouse : ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14.0),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              padding: EdgeInsets.all(5.0),
+                                              color: Colors.white,
+                                              child: Text(
+                                                item['ware_code'] ?? '',
+                                                style: const TextStyle(
+                                                    fontSize: 14.0),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4.0),
+                                    // ---------------------------------------------------- \\
+                                    SizedBox(
+                                      child: Row(
+                                        // mainAxisAlignment:
+                                        // MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text(
+                                            'Locator : ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14.0),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              padding: EdgeInsets.all(5.0),
+                                              color: Colors.white,
+                                              child: Text(
+                                                item['location_code'] ?? '',
+                                                style: const TextStyle(
+                                                    fontSize: 14.0),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4.0),
+                                    // ---------------------------------------------------- \\
                                   ]))
                         ])),
                   );

@@ -757,7 +757,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   const SizedBox(height: 10),
                   Text(
                     messageDelete,
-                    style: const TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.black),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -836,7 +836,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   const SizedBox(height: 10),
                   Text(
                     messageAlert,
-                    style: const TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.black),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -1142,8 +1142,8 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   ],
                 ),
               ),
-            ),
-            actions: []);
+            ));
+        // actions: []);
       },
     );
   }
@@ -1156,81 +1156,81 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-            title: const Row(
-              children: [
-                // Icon(
-                //   Icons.notification_important,
-                //   color: Colors.red,
-                // ),
-                // SizedBox(width: 10),
-                Text(
-                  'Locator',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ],
-            ),
-            content: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: locatorToChkController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'Locator ปลายทาง',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                        ),
+          title: const Row(
+            children: [
+              // Icon(
+              //   Icons.notification_important,
+              //   color: Colors.red,
+              // ),
+              // SizedBox(width: 10),
+              Text(
+                'Locator',
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: locatorToChkController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black)),
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: 'Locator ปลายทาง',
+                      labelStyle: TextStyle(
+                        color: Colors.black87,
                       ),
-                      onChanged: (value) {
-                        setState(() {
-                          locatorToChk = value;
-                        });
-                      },
                     ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      // mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            locatorToChkController.clear();
-                            locatorToChk = '';
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.grey),
-                          ),
-                          child: const Text('Cancel'),
+                    onChanged: (value) {
+                      setState(() {
+                        locatorToChk = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          locatorToChkController.clear();
+                          locatorToChk = '';
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
                         ),
-                        //---------------------------------------------------
-                        ElevatedButton(
-                          onPressed: () {
-                            String textForm = 'T';
-                            if (locatorToChk != '') {
-                              chkLocatorForm(locatorToChk, textForm);
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.grey),
-                          ),
-                          child: const Text('OK'),
+                        child: const Text('Cancel'),
+                      ),
+                      //---------------------------------------------------
+                      ElevatedButton(
+                        onPressed: () {
+                          String textForm = 'T';
+                          if (locatorToChk != '') {
+                            chkLocatorForm(locatorToChk, textForm);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
                         ),
-                      ],
-                    )
-                  ],
-                ),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  )
+                ],
               ),
             ),
-            actions: []);
+          ),
+        );
       },
     );
   }

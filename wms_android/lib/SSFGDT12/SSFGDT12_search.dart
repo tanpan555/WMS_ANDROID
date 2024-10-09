@@ -171,7 +171,7 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 labelText: 'วันที่เตรียมข้อมูลตรวจนับ',
                 hintText: 'DD/MM/YYYY',
                 hintStyle: TextStyle(color: Colors.grey),
-                labelStyle: chkDate == false
+                labelStyle: chkDate == false && noDate == false
                     ? const TextStyle(
                         color: Colors.black87,
                       )
@@ -204,16 +204,23 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                   dateColorCheck = formatter.dateColorCheck;
                   monthColorCheck = formatter.monthColorCheck;
                   noDate = formatter.noDate; // เพิ่มการตรวจสอบ noDate
-
+                });
+                setState(() {
                   RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                  if (dateRegExp.hasMatch(selectedDate)) {
+                  // String messageAlertValueDate =
+                  //     'กรุณากรองวันที่ให้ถูกต้อง';
+                  if (!dateRegExp.hasMatch(selectedDate)) {
+                    // setState(() {
+                    //   chkDate == true;
+                    // });
+                    // showDialogAlert(context, messageAlertValueDate);
+                  } else {
                     setState(() {
                       chkDate = false;
-                      noDate = false;
-                      print('case PPP');
                     });
                   }
                 });
+
                 // setState(() {
                 //   RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
                 //   // String messageAlertValueDate =
@@ -269,6 +276,8 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                     _controller.clear();
                     _dateController.clear();
                     setState(() {
+                      noDate = false;
+                      chkDate = false;
                       pDocNo = '';
                       selectedDate = '';
                       selectedItem = 'รอตรวจนับ';
@@ -573,16 +582,14 @@ class DateInputFormatter extends TextInputFormatter {
     monthColorCheck = false;
 
     // ตรวจสอบและตั้งค่า noDate ตามกรณีที่ต่างกัน
-    print('text.length : ${text.length}');
-    print('text.length : ${text.length}');
     if (text.length == 1) {
       noDate = true;
     } else if (text.length == 2) {
-      noDate = false;
+      noDate = true;
     } else if (text.length == 3) {
       noDate = true;
     } else if (text.length == 4) {
-      noDate = false;
+      noDate = true;
     } else if (text.length == 5) {
       noDate = true;
     } else if (text.length == 6) {
