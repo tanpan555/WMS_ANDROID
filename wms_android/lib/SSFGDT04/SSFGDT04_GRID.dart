@@ -367,12 +367,20 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                 'ระบบมีการบันทึกรายการทิ้งไว้ หากดึง ใบผลิต จะเคลียร์รายการทั้งหมดทิ้ง, ต้องการดึงใบผลิตใหม่หรือไม่'),
                             actions: <Widget>[
                               TextButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  side: const BorderSide(color: Colors.grey),
+                                ),
                                 child: const Text('ยกเลิก'),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
                               ),
                               TextButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  side: const BorderSide(color: Colors.grey),
+                                ),
                                 child: const Text('ตกลง',
                                     style: TextStyle(
                                       fontSize:
@@ -414,6 +422,10 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                               content: Text(poMessage ?? ''),
                               actions: [
                                 TextButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    side: const BorderSide(color: Colors.grey),
+                                  ),
                                   child: const Text('ตกลง',
                                       style: TextStyle(
                                         fontSize:
@@ -453,6 +465,10 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                               content: Text(poMessage ?? ''),
                               actions: [
                                 TextButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    side: const BorderSide(color: Colors.grey),
+                                  ),
                                   child: const Text('ตกลง',
                                       style: TextStyle(
                                         fontSize:
@@ -518,7 +534,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 
@@ -741,12 +757,22 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                         const Text('ต้องการลบรายการหรือไม่?'),
                                     actions: <Widget>[
                                       TextButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                          side: const BorderSide(
+                                              color: Colors.grey),
+                                        ),
                                         child: const Text('ยกเลิก'),
                                         onPressed: () {
                                           Navigator.of(context).pop(false);
                                         },
                                       ),
                                       TextButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                          side: const BorderSide(
+                                              color: Colors.grey),
+                                        ),
                                         child: const Text('ลบ'),
                                         onPressed: () async {
                                           final poItemCode = item['item_code'];

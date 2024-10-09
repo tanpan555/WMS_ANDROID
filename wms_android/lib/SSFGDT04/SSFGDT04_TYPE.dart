@@ -129,7 +129,6 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
     }
   }
 
-
   void _showDocumentTypePopup() {
     showDialog(
       context: context,
@@ -215,7 +214,6 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                                     selectedDocDesc = item['doc_desc'];
                                     // docTypeController.text = selectedDocDesc;
                                     // -----------------------------------------
-                                    
                                   });
                                 },
                               );
@@ -303,22 +301,42 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: const Text('คำเตือน'),
+                                  title: Row(
+                                    children: [
+                                      Icon(
+                                        Icons
+                                            .notification_important, // ไอคอนแจ้งเตือน
+                                        color: Colors.red, // สีแดง
+                                        size: 30,
+                                      ),
+                                      SizedBox(
+                                          width:
+                                              8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                                      Text('แจ้งเตือน'),
+                                    ],
+                                  ),
                                   content: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      // Text('Status: ${poStatus ?? 'No status available'}'),
-                                      // SizedBox(height: 8.0),
                                       Text('$poMessage'),
-                                      // SizedBox(height: 8.0),
-                                      // Text('Step: ${poStep ?? 'No message available'}'),
                                     ],
                                   ),
                                   actions: [
                                     TextButton(
-                                      child: const Text('OK'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        side: const BorderSide(
+                                            color: Colors.grey),
+                                      ),
+                                      child: const Text('ตกลง',
+                                          style: TextStyle(
+                                            fontSize:
+                                                16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                            color: Colors
+                                                .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                          )),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
@@ -330,10 +348,46 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                           }
                         } else {
                           // แสดงข้อความแจ้งเตือนหากไม่ได้เลือกข้อมูล
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('กรุณาเลือกข้อมูลก่อนกด CONFIRM'),
-                            ),
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Row(
+                                  children: [
+                                    Icon(
+                                      Icons
+                                          .notification_important, // ไอคอนแจ้งเตือน
+                                      color: Colors.red, // สีแดง
+                                      size: 30,
+                                    ),
+                                    SizedBox(
+                                        width:
+                                            8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                                    Text('แจ้งเตือน'),
+                                  ],
+                                ),
+                                content: Text('$poMessage'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      side:
+                                          const BorderSide(color: Colors.grey),
+                                    ),
+                                    child: Text('ตกลง',
+                                        style: TextStyle(
+                                          fontSize:
+                                              16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                          color: Colors
+                                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                        )),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
                           );
                         }
                       },
@@ -355,7 +409,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }

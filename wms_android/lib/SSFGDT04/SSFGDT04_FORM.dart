@@ -147,9 +147,11 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
-      setState(() {
-        saffCodeItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-      });
+      if (mounted) {
+        setState(() {
+          saffCodeItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+        });
+      }
     } else {
       throw Exception('Failed to load STAFF_CODE items');
     }
@@ -663,10 +665,26 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                         // Close popup
                                         Navigator.of(context).pop();
                                       },
-                                      child: const Text('Cancel'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        side: const BorderSide(
+                                            color: Colors.grey),
+                                      ),
+                                      child: const Text(
+                                        'ยกเลิก',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
                                     ),
                                     TextButton(
-                                      child: Text('OK'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        side: const BorderSide(
+                                            color: Colors.grey),
+                                      ),
+                                      child: Text(
+                                        'ตกลง',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
                                       onPressed: () async {
                                         await cancel_INHeadNonePO_WMS(
                                             selectedCancelCode ?? '');
@@ -682,7 +700,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                           .notification_important, // ไอคอนแจ้งเตือน
                                                       color:
                                                           Colors.red, // สีแดง
-                                                          size: 30,
+                                                      size: 30,
                                                     ),
                                                     SizedBox(
                                                         width:
@@ -693,12 +711,20 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                 content: Text('$po_message'),
                                                 actions: <Widget>[
                                                   TextButton(
-                                                    child: Text('ตกลง',style: TextStyle(
-                                                  fontSize:
-                                                      16, // ปรับขนาดตัวหนังสือตามต้องการ
-                                                  color: Colors
-                                                      .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                                )),
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      side: const BorderSide(
+                                                          color: Colors.grey),
+                                                    ),
+                                                    child: Text('ตกลง',
+                                                        style: TextStyle(
+                                                          fontSize:
+                                                              16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                                          color: Colors
+                                                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                                        )),
                                                     onPressed: () {
                                                       Navigator.of(context)
                                                           .pop();
@@ -721,7 +747,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                           .notification_important, // ไอคอนแจ้งเตือน
                                                       color:
                                                           Colors.red, // สีแดง
-                                                          size: 30,
+                                                      size: 30,
                                                     ),
                                                     SizedBox(
                                                         width:
@@ -733,8 +759,18 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                     'ยกเลิกรายการเสร็จสมบูรณ์'),
                                                 actions: <Widget>[
                                                   TextButton(
-                                                    child: Text('ตกลง',style: TextStyle(fontSize: 16,color: Colors
-                                                      .black)),
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      side: const BorderSide(
+                                                          color: Colors.grey),
+                                                    ),
+                                                    child: Text('ตกลง',
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            color:
+                                                                Colors.black)),
                                                     onPressed: () {
                                                       cancel_INHeadNonePO_WMS(
                                                               selectedCancelCode!)
@@ -856,11 +892,32 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text('Warning'),
+                                    title: Row(
+                                      children: [
+                                        Icon(
+                                          Icons
+                                              .notification_important, // ไอคอนแจ้งเตือน
+                                          color: Colors.red, // สีแดง
+                                          size: 30,
+                                        ),
+                                        SizedBox(
+                                            width:
+                                                8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                                        Text('แจ้งเตือน'),
+                                      ],
+                                    ),
                                     content: Text('$poMessage'),
                                     actions: [
                                       TextButton(
-                                        child: Text('OK'),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                          side: const BorderSide(
+                                              color: Colors.grey),
+                                        ),
+                                        child: Text(
+                                          'ตกลง',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
@@ -952,7 +1009,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                           .spaceBetween,
                                                   children: [
                                                     Text(
-                                                      'ประเภทการรับ',
+                                                      'ประเภทการรับ *',
                                                       style: TextStyle(
                                                         fontSize: 18,
                                                         fontWeight:
@@ -1129,7 +1186,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 TextFormField(
                                   controller: _docDateController,
@@ -1145,7 +1202,28 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                     border: InputBorder.none,
                                     filled: true,
                                     fillColor: Colors.white,
-                                    labelText: 'วันที่ส่งสินค้า',
+                                    // labelText: 'วันที่ส่งสินค้า',
+                                    label: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: 'วันที่บันทึก',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize:
+                                                    16), // Color for the label
+                                          ),
+                                          TextSpan(
+                                            text: ' *',
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight
+                                                    .bold), // Color for the asterisk
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                     hintText: 'DD/MM/YYYY',
                                     hintStyle: TextStyle(
                                       color: Colors
@@ -1767,7 +1845,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                           .spaceBetween,
                                                   children: [
                                                     Text(
-                                                      'ผู้รับมอบสินค้า',
+                                                      'ผู้รับมอบสินค้า *',
                                                       style: TextStyle(
                                                           fontSize: 18,
                                                           fontWeight:
@@ -1805,10 +1883,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                           saffCodeItems
                                                               .where((item) {
                                                         final empIdString =
-                                                            item['emp_id']
+                                                            '${item['emp_id'] ?? ''}' //${item['schid'] ?? ''}
                                                                 .toString();
                                                         final empName =
-                                                            item['emp_name']
+                                                            '${item['emp_name'] ?? ''}'
                                                                 .toString();
                                                         final searchQuery =
                                                             _searchController
@@ -1853,10 +1931,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                               filteredItems[
                                                                   index];
                                                           final empId =
-                                                              item['emp_id']
+                                                              '${item['emp_id'] ?? ''}'
                                                                   .toString();
                                                           final empName =
-                                                              item['emp_name']
+                                                              '${item['emp_name'] ?? ''}'
                                                                   .toString();
 
                                                           return ListTile(
@@ -2011,7 +2089,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                 ],
               ),
             ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }
@@ -2033,6 +2111,10 @@ class DateInputFormatter extends TextInputFormatter {
     String month = '';
     String year = '';
 
+    // เก็บตำแหน่งของเคอร์เซอร์ปัจจุบันก่อนจัดรูปแบบข้อความ
+    int cursorPosition = newValue.selection.baseOffset;
+    int additionalOffset = 0;
+
     // แยกค่า day, month, year
     if (text.length >= 2) {
       day = text.substring(0, 2);
@@ -2053,11 +2135,11 @@ class DateInputFormatter extends TextInputFormatter {
     if (text.length == 1) {
       noDate = true;
     } else if (text.length == 2) {
-      noDate = false;
+      noDate = true;
     } else if (text.length == 3) {
       noDate = true;
     } else if (text.length == 4) {
-      noDate = false;
+      noDate = true;
     } else if (text.length == 5) {
       noDate = true;
     } else if (text.length == 6) {
@@ -2072,40 +2154,47 @@ class DateInputFormatter extends TextInputFormatter {
 
     // ตรวจสอบว่าค่าใน day ไม่เกิน 31
     if (day.isNotEmpty && !noDate) {
-      // เช็คเฉพาะเมื่อ noDate ยังไม่เป็น true
       int dayInt = int.parse(day);
       if (dayInt < 1 || dayInt > 31) {
-        dateColorCheck = true; // ตั้งค่าให้ dateColorCheck เป็น true
-        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
+        dateColorCheck = true;
+        noDate = true;
       }
     }
 
     // ตรวจสอบว่าค่าใน month ไม่เกิน 12
     if (month.isNotEmpty && !noDate) {
-      // เช็คเฉพาะเมื่อ noDate ยังไม่เป็น true
       int monthInt = int.parse(month);
       if (monthInt < 1 || monthInt > 12) {
-        monthColorCheck = true; // ตั้งค่าให้ monthColorCheck เป็น true
-        noDate = true; // บอกว่าไม่มีเดือนที่ถูกต้อง
+        monthColorCheck = true;
+        noDate = true;
       }
     }
 
     // ตรวจสอบวันที่เฉพาะเมื่อพิมพ์ปีครบถ้วน
     if (day.isNotEmpty && month.isNotEmpty && year.length == 4 && !noDate) {
       if (!isValidDate(day, month, year)) {
-        noDate = true; // บอกว่าไม่มีวันที่ที่ถูกต้อง
+        noDate = true;
       }
     }
 
     // จัดรูปแบบเป็น DD/MM/YYYY
     if (text.length > 2 && text.length <= 4) {
       text = text.substring(0, 2) + '/' + text.substring(2);
+      if (cursorPosition > 2) {
+        additionalOffset++;
+      }
     } else if (text.length > 4 && text.length <= 8) {
       text = text.substring(0, 2) +
           '/' +
           text.substring(2, 4) +
           '/' +
           text.substring(4);
+      if (cursorPosition > 2) {
+        additionalOffset++;
+      }
+      if (cursorPosition > 4) {
+        additionalOffset++;
+      }
     }
 
     // จำกัดความยาวไม่เกิน 10 ตัว (รวม /)
@@ -2113,9 +2202,16 @@ class DateInputFormatter extends TextInputFormatter {
       text = text.substring(0, 10);
     }
 
+    // คำนวณตำแหน่งของเคอร์เซอร์หลังจากจัดรูปแบบ
+    cursorPosition += additionalOffset;
+
+    if (cursorPosition > text.length) {
+      cursorPosition = text.length;
+    }
+
     return TextEditingValue(
       text: text,
-      selection: TextSelection.collapsed(offset: text.length),
+      selection: TextSelection.collapsed(offset: cursorPosition),
     );
   }
 

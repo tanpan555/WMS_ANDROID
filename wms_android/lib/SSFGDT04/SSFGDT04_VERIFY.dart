@@ -87,9 +87,11 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
-      setState(() {
-        gridItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-      });
+      if (mounted) {
+        setState(() {
+          gridItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+        });
+      }
     } else {
       throw Exception('Failed to load DOC_TYPE items');
     }
@@ -309,9 +311,26 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
+                            title: Row(
+                              children: [
+                                Icon(
+                                  Icons
+                                      .notification_important, // ไอคอนแจ้งเตือน
+                                  color: Colors.red, // สีแดง
+                                  size: 30,
+                                ),
+                                SizedBox(
+                                    width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                                Text('แจ้งเตือน'),
+                              ],
+                            ),
                             content: Text('$poErpDocNo'),
                             actions: <Widget>[
                               TextButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  side: const BorderSide(color: Colors.grey),
+                                ),
                                 onPressed: () {
                                   Navigator.of(context).pop(); // ปิด popup แรก
                                   // เปิด popup ที่สอง
@@ -319,10 +338,29 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
+                                        title: Row(
+                                          children: [
+                                            Icon(
+                                              Icons
+                                                  .notification_important, // ไอคอนแจ้งเตือน
+                                              color: Colors.red, // สีแดง
+                                              size: 30,
+                                            ),
+                                            SizedBox(
+                                                width:
+                                                    8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                                            Text('แจ้งเตือน'),
+                                          ],
+                                        ),
                                         content: const Text(
                                             'ต้องการพิมพ์เอกสารใบรับหรือไม่ ?'),
                                         actions: <Widget>[
                                           TextButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.white,
+                                              side: const BorderSide(
+                                                  color: Colors.grey),
+                                            ),
                                             onPressed: () {
                                               Navigator.of(context)
                                                   .pop(); // ปิด popup ที่สอง
@@ -331,6 +369,11 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                             child: const Text('Cancel'),
                                           ),
                                           TextButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.white,
+                                              side: const BorderSide(
+                                                  color: Colors.grey),
+                                            ),
                                             onPressed: () {
                                               Navigator.of(context)
                                                   .pop(); // ปิด popup ที่สอง
@@ -344,25 +387,36 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                                   MaterialPageRoute(
                                                     builder: (context) =>
                                                         SSFGDT04_MENU(
-                                                              pWareCode: gb
-                                                                  .P_WARE_CODE,
-                                                              pErpOuCode: gb
-                                                                  .P_ERP_OU_CODE,
-                                                            ),
+                                                      pWareCode: gb.P_WARE_CODE,
+                                                      pErpOuCode:
+                                                          gb.P_ERP_OU_CODE,
+                                                    ),
                                                   ),
                                                   (Route<dynamic> route) =>
                                                       false, // ลบหน้าอื่นๆ ออกจาก stack
                                                 );
                                               });
                                             },
-                                            child: const Text('OK'),
+                                            child: const Text('OK',
+                                                style: TextStyle(
+                                                  fontSize:
+                                                      16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                                  color: Colors
+                                                      .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                                )),
                                           ),
                                         ],
                                       );
                                     },
                                   );
                                 },
-                                child: const Text('OK'),
+                                child: const Text('OK',
+                                    style: TextStyle(
+                                      fontSize:
+                                          16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                      color: Colors
+                                          .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                    )),
                               ),
                             ],
                           );
@@ -373,10 +427,33 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
+                            title: Row(
+                              children: [
+                                Icon(
+                                  Icons
+                                      .notification_important, // ไอคอนแจ้งเตือน
+                                  color: Colors.red, // สีแดง
+                                  size: 30,
+                                ),
+                                SizedBox(
+                                    width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                                Text('แจ้งเตือน'),
+                              ],
+                            ),
                             content: Text(poMessage ?? ''),
                             actions: [
                               TextButton(
-                                child: const Text('OK'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  side: const BorderSide(color: Colors.grey),
+                                ),
+                                child: const Text('OK',
+                                    style: TextStyle(
+                                      fontSize:
+                                          16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                      color: Colors
+                                          .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                    )),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
@@ -408,7 +485,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 

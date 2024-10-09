@@ -151,56 +151,55 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   // }
 
   Future<void> fetchData([String? url]) async {
-  if (!mounted) return; // ตรวจสอบว่าตัว component ยังถูก mount อยู่หรือไม่
+    if (!mounted) return; // ตรวจสอบว่าตัว component ยังถูก mount อยู่หรือไม่
 
-  setState(() {
-    isLoading = true;
-  });
+    setState(() {
+      isLoading = true;
+    });
 
-  final String requestUrl = url ?? 
-      'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}';
+    final String requestUrl = url ??
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}';
 
-  try {
-    final response = await http.get(Uri.parse(requestUrl));
+    try {
+      final response = await http.get(Uri.parse(requestUrl));
 
-    if (response.statusCode == 200) {
-      final responseBody = utf8.decode(response.bodyBytes);
-      final parsedResponse = json.decode(responseBody);
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final parsedResponse = json.decode(responseBody);
 
+        if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
+
+        setState(() {
+          if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+            dataCard = parsedResponse['items'];
+          } else {
+            dataCard = [];
+          }
+
+          List<dynamic> links = parsedResponse['links'] ?? [];
+          next = getLink(links, 'next');
+          previous = getLink(links, 'prev');
+          isLoading = false;
+        });
+      } else {
+        if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
+
+        // Handle HTTP error responses
+        setState(() {
+          isLoading = false;
+          errorMessage = 'Failed to load data: ${response.statusCode}';
+        });
+      }
+    } catch (e) {
       if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
 
-      setState(() {
-        if (parsedResponse is Map && parsedResponse.containsKey('items')) {
-          dataCard = parsedResponse['items'];
-        } else {
-          dataCard = [];
-        }
-
-        List<dynamic> links = parsedResponse['links'] ?? [];
-        next = getLink(links, 'next');
-        previous = getLink(links, 'prev');
-        isLoading = false;
-      });
-    } else {
-      if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
-
-      // Handle HTTP error responses
+      // Handle exceptions that may occur
       setState(() {
         isLoading = false;
-        errorMessage = 'Failed to load data: ${response.statusCode}';
+        errorMessage = 'Error occurred: $e';
       });
     }
-  } catch (e) {
-    if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
-
-    // Handle exceptions that may occur
-    setState(() {
-      isLoading = false;
-      errorMessage = 'Error occurred: $e';
-    });
   }
-}
-
 
   String? getLink(List<dynamic> links, String rel) {
     final link =
@@ -773,7 +772,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                     },
                   ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 
@@ -783,29 +782,28 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Row(
-                                children: [
-                                  Icon(
-                                    Icons
-                                        .notification_important, // ไอคอนแจ้งเตือน
-                                    color: Colors.red, // สีแดง
-                                    size: 30,
-                                  ),
-                                  SizedBox(
-                                      width:
-                                          8), // ระยะห่างระหว่างไอคอนกับข้อความ
-                                  Text('แจ้งเตือน'),
-                                ],
-                              ),
+            children: [
+              Icon(
+                Icons.notification_important, // ไอคอนแจ้งเตือน
+                color: Colors.red, // สีแดง
+                size: 30,
+              ),
+              SizedBox(width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
+              Text('แจ้งเตือน'),
+            ],
+          ),
           content: Text(messageCard),
           actions: <Widget>[
             TextButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
               child: const Text('ตกลง',
-                                      style: TextStyle(
-                                        fontSize:
-                                            16, // ปรับขนาดตัวหนังสือตามต้องการ
-                                        color: Colors
-                                            .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                      )),
+                  style: TextStyle(
+                    fontSize: 16, // ปรับขนาดตัวหนังสือตามต้องการ
+                    color: Colors.black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                  )),
               onPressed: () {
                 Navigator.of(context).pop();
               },
