@@ -1569,12 +1569,13 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  doc,
+                                  '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                // subtitle: Text('${item['cust_name'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -1685,12 +1686,13 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['doc_type']} ${item['doc_desc']}',
+                                  '${item['doc_type']}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle: Text('${item['doc_desc'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
