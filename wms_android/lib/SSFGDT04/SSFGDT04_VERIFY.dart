@@ -366,7 +366,12 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                                   .pop(); // ปิด popup ที่สอง
                                               // ทำงานเมื่อผู้ใช้กด "Cancel"
                                             },
-                                            child: const Text('Cancel'),
+                                            child: const Text('Cancel',style: TextStyle(
+                                                  fontSize:
+                                                      16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                                  color: Colors
+                                                      .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                                )),
                                           ),
                                           TextButton(
                                             style: ElevatedButton.styleFrom(

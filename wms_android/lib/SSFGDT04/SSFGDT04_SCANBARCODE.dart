@@ -30,8 +30,6 @@ class SSFGDT04_SCANBARCODE extends StatefulWidget {
 }
 
 class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
-  final FocusNode barcodeFocusNode = FocusNode();
-
   String currentSessionID = '';
   String? selectedLocator;
   List<Map<String, dynamic>> locatorBarcodeItems =
@@ -46,9 +44,10 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
   TextEditingController _balLotController = TextEditingController();
   TextEditingController _balQtyController = TextEditingController();
 
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   final NumberFormat numberFormat = NumberFormat('#,###');
-  // เพิ่ม Controller สำหรับการค้นหา
+
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  final FocusNode barcodeFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -82,27 +81,26 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
   }
 
   void _scanQRCode() async {
-    await Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => QRView(
-        key: qrKey,
-        onQRViewCreated: _onQRViewCreated,
-      ),
-    ));
-  }
+  await Navigator.of(context).push(MaterialPageRoute(
+    builder: (context) => QRView(
+      key: qrKey,
+      onQRViewCreated: _onQRViewCreated,
+    ),
+  ));
+}
 
-  void _onQRViewCreated(QRViewController controller) {
-    controller.scannedDataStream.listen((scanData) {
-      if (mounted) {
-        setState(() {
-          _barCodeCotroller.text = scanData.code!;
-          fetchBarcodeData();
-        });
-      }
-
-      controller.dispose();
-      Navigator.of(context).pop();
-    });
-  }
+void _onQRViewCreated(QRViewController controller) {
+  controller.scannedDataStream.listen((scanData) {
+    if (mounted) {
+      setState(() {
+        _barCodeCotroller.text = scanData.code!;
+        fetchBarcodeData();
+      });
+    }
+    controller.dispose();
+    Navigator.of(context).pop();
+  });
+}
 
   String? pBarcode;
   String? lotNumber; // po_lot_number,
@@ -281,7 +279,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
   void clearScreen() {
     setState(() {
-      barcodeFocusNode.dispose();
+      _barCodeCotroller.clear();
       // ถ้าจำเป็นต้องรีเซ็ต selectedLocator ด้วย
       _locatorBarcodeController.clear();
       selectedLocator = null;
@@ -400,72 +398,74 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
           // Barcode //
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: TextField(
-              decoration: const InputDecoration(
-                labelText: 'Barcode',
-                filled: true,
-                fillColor: Colors.white,
-                labelStyle: TextStyle(color: Colors.black),
-                border: InputBorder.none,
+  padding: const EdgeInsets.symmetric(vertical: 8),
+  child: TextField(
+    decoration: const InputDecoration(
+      labelText: 'Barcode',
+      filled: true,
+      fillColor: Colors.white,
+      labelStyle: TextStyle(color: Colors.black),
+      border: InputBorder.none,
+    ),
+    controller: _barCodeCotroller,
+    focusNode: barcodeFocusNode, // Attach the focus node
+    autofocus: true, // Automatically focus on the TextField when the screen loads.
+    onSubmitted: (value) async {
+      setState(() {
+        pBarcode = value; // Assign the entered barcode to pBarcode
+      });
+
+      await fetchBarcodeData(); // Wait for the data fetching process
+
+      if (po_status == '1') {
+        // Show a popup if the status is '1'
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Row(
+                children: [
+                  Icon(
+                    Icons.notification_important,
+                    color: Colors.red,
+                    size: 30,
+                  ),
+                  SizedBox(width: 8),
+                  Text('แจ้งเตือน'),
+                ],
               ),
-              controller: _barCodeCotroller,
-              focusNode: barcodeFocusNode,
-              onSubmitted: (value) async {
-                setState(() {
-                  pBarcode = value; // Assign the entered barcode to pBarcode
-                });
-                // Wait for the data fetching process to complete
-                await fetchBarcodeData();
-                if (po_status == '1') {
-                  // Show popup if status is not 0
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Row(
-                          children: [
-                            Icon(
-                              Icons.notification_important, // ไอคอนแจ้งเตือน
-                              color: Colors.red, // สีแดง
-                              size: 30,
-                            ),
-                            SizedBox(
-                                width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
-                            Text('แจ้งเตือน'),
-                          ],
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('$po_message'),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: const BorderSide(color: Colors.grey),
-                            ),
-                            child: Text('ตกลง',
-                                style: TextStyle(
-                                  fontSize: 16, // ปรับขนาดตัวหนังสือตามต้องการ
-                                  color: Colors
-                                      .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                )),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              },
-            ),
-          ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('$po_message'),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    side: const BorderSide(color: Colors.grey),
+                  ),
+                  child: Text(
+                    'ตกลง',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    },
+  ),
+),
 
           // const SizedBox(height: 5),
           Padding(
