@@ -83,6 +83,8 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
   String statusSubmit = '';
   String messageSubmit = '';
 
+  bool isLoading = false;
+
   Map<String, dynamic>? selectedReasonItem;
   Map<String, dynamic>? selectedLotItem;
 
@@ -96,6 +98,9 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
   @override
   void dispose() {
     remarkController.dispose();
+    dataLovReasonController.dispose();
+    dataLovReplaceLocationController.dispose();
+    dataLovReplaceLotController.dispose();
     super.dispose();
   }
 
@@ -108,9 +113,11 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
 
   @override
   void initState() {
+    // isLoading = true;
     setData();
     selectLovReason();
     selectLovLot();
+    // isLoading = false;
     super.initState();
   }
 
@@ -256,7 +263,10 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: const CustomAppBar(title: 'Reason'),
+      appBar: const CustomAppBar(
+        title: 'Reason',
+        showExitWarning: true,
+      ),
       body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
@@ -297,24 +307,26 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
             ),
             const SizedBox(height: 20),
             // --------------------------------------------------------------------------------------------------
-            TextFormField(
-              controller: dataLovReasonController,
-              readOnly: true,
-              onTap: () => showDialogSelectLovReason(),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                filled: true,
-                fillColor: Colors.white,
-                labelText: 'Reason',
-                labelStyle: const TextStyle(
-                  color: Colors.black87,
-                ),
-                suffixIcon: Icon(
-                  Icons.arrow_drop_down,
-                  color: Color.fromARGB(255, 113, 113, 113),
-                ),
-              ),
-            ),
+            isLoading
+                ? Center(child: CircularProgressIndicator())
+                : TextFormField(
+                    controller: dataLovReasonController,
+                    readOnly: true,
+                    onTap: () => showDialogSelectLovReason(),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: 'Reason',
+                      labelStyle: const TextStyle(
+                        color: Colors.black87,
+                      ),
+                      suffixIcon: Icon(
+                        Icons.arrow_drop_down,
+                        color: Color.fromARGB(255, 113, 113, 113),
+                      ),
+                    ),
+                  ),
             const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
             TextFormField(
@@ -382,7 +394,7 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
             // --------------------------------------------------------------------------------------------------
           ]))),
       bottomNavigationBar: BottomBar(
-        currentPage: 'not_show',
+        currentPage: 'show',
       ),
     );
   }

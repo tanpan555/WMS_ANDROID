@@ -22,6 +22,8 @@ class SSFGDT12_MAIN extends StatefulWidget {
 class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
   List<dynamic> data = [];
 
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +40,7 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
   }
 
   Future<void> fetchData() async {
+    isLoading = true;
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_1_SelectWareCode/${widget.pErpOuCode}/${widget.p_attr1}'));
@@ -49,6 +52,8 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
         if (mounted) {
           setState(() {
             data = List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            isLoading = false;
           });
         }
         print('dataMenu : $data');
@@ -88,104 +93,119 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 5,
-                    mainAxisSpacing: 5,
-                    childAspectRatio: 1.0,
-                  ),
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    final item = data[index];
-                    Color cardColor;
-                    String imagePath;
-
-                    switch (item['ware_code']) {
-                      case 'WH000-1':
-                        imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.white;
-                        break;
-                      case 'WH000':
-                        imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.white;
-                        break;
-                      case 'WH001':
-                        imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.white;
-                        break;
-                      // case 'ตรวจนับประจำงวด':
-                      //   imagePath = 'assets/images/warehouse_blue.png';
-                      //   cardColor = Colors.orangeAccent;
-                      //   break;
-                      // Add more cases as needed
-                      default:
-                        imagePath = 'assets/images/warehouse2.png';
-                        cardColor = Colors.red;
-                    }
-
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Ssfgdt12Search(
-                              pWareCode: item['ware_code'],
-                              pWareName: item['ware_name'],
-                              pErpOuCode: widget.pErpOuCode,
-                              p_attr1: widget.p_attr1,
+              child: isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : data.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No data found',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
+                      : SingleChildScrollView(
+                          child: GridView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 5,
+                              mainAxisSpacing: 5,
+                              childAspectRatio: 1.0,
                             ),
-                          ),
-                        );
-                      },
-                      child: Card(
-                        elevation: 4.0,
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 5),
-                        color: cardColor, // Set card color
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(10), // Adjust border radius
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0), // Add padding
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                imagePath, // ใช้ imagePath ที่กำหนดไว้ใน switch
-                                width: 60, // กำหนดขนาดของภาพ
-                                height: 60,
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                item['ware_code'] ?? 'null!!!!!!',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
+                            itemCount: data.length,
+                            itemBuilder: (context, index) {
+                              final item = data[index];
+                              Color cardColor;
+                              String imagePath;
+
+                              switch (item['ware_code']) {
+                                case 'WH000-1':
+                                  imagePath =
+                                      'assets/images/warehouse_blue.png';
+                                  cardColor = Colors.white;
+                                  break;
+                                case 'WH000':
+                                  imagePath =
+                                      'assets/images/warehouse_blue.png';
+                                  cardColor = Colors.white;
+                                  break;
+                                case 'WH001':
+                                  imagePath =
+                                      'assets/images/warehouse_blue.png';
+                                  cardColor = Colors.white;
+                                  break;
+                                // case 'ตรวจนับประจำงวด':
+                                //   imagePath = 'assets/images/warehouse_blue.png';
+                                //   cardColor = Colors.orangeAccent;
+                                //   break;
+                                // Add more cases as needed
+                                default:
+                                  imagePath = 'assets/images/warehouse2.png';
+                                  cardColor = Colors.red;
+                              }
+
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Ssfgdt12Search(
+                                        pWareCode: item['ware_code'],
+                                        pWareName: item['ware_name'],
+                                        pErpOuCode: widget.pErpOuCode,
+                                        p_attr1: widget.p_attr1,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Card(
+                                  elevation: 4.0,
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 5),
+                                  color: cardColor, // Set card color
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        10), // Adjust border radius
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(
+                                        15.0), // Add padding
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          imagePath, // ใช้ imagePath ที่กำหนดไว้ใน switch
+                                          width: 60, // กำหนดขนาดของภาพ
+                                          height: 60,
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          item['ware_code'] ?? 'null!!!!!!',
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        // const SizedBox(height: 10),
+                                        // Text(
+                                        //   item['ware_name'] ?? 'null!!!!!!',
+                                        //   style: const TextStyle(
+                                        //     fontSize: 12,
+                                        //     color: Colors.black,
+                                        //     fontWeight: FontWeight.bold,
+                                        //   ),
+                                        // ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              // const SizedBox(height: 10),
-                              // Text(
-                              //   item['ware_name'] ?? 'null!!!!!!',
-                              //   style: const TextStyle(
-                              //     fontSize: 12,
-                              //     color: Colors.black,
-                              //     fontWeight: FontWeight.bold,
-                              //   ),
-                              // ),
-                            ],
+                              );
+                            },
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              ),
             ),
           ],
         ),

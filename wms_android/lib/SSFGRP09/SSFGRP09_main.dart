@@ -1425,7 +1425,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                         builder: (context) {
                           final filteredItems = dataLovDate.where((item) {
                             final docString =
-                                '${item['prepare_date']}'.toLowerCase();
+                                '${item['prepare_date'] ?? ''}'.toLowerCase();
                             final searchQuery =
                                 searchController1.text.trim().toLowerCase();
                             return docString.contains(searchQuery);
@@ -1443,8 +1443,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['prepare_date']}';
-                              final returnCode = '${item['prepare_date']}';
+                              final doc = '${item['prepare_date'] ?? ''}';
+                              final returnCode =
+                                  '${item['prepare_date'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
@@ -1550,7 +1551,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                         builder: (context) {
                           final filteredItems = dataLovDocNo.where((item) {
                             final docString =
-                                '${item['doc_no']} ${item['prepare_date']}'
+                                '${item['doc_no'] ?? ''} ${item['prepare_date'] ?? ''}'
                                     .toLowerCase();
                             final searchQuery =
                                 searchController2.text.trim().toLowerCase();
@@ -1569,18 +1570,19 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['doc_no']}';
-                              final returnCode = '${item['doc_no']}';
+                              final doc = '${item['doc_no'] ?? ''}';
+                              final returnCode = '${item['doc_no'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['doc_no']} ${item['prepare_date']}',
+                                  '${item['doc_no'] ?? ''}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle: Text('${item['prepare_date'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -1671,7 +1673,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           final filteredItems =
                               dataLovStartWareCode.where((item) {
                             final docString =
-                                '${item['ware_code']} ${item['ware_name']}'
+                                '${item['ware_code'] ?? ''} ${item['ware_name'] ?? ''}'
                                     .toLowerCase();
                             final searchQuery =
                                 searchController3.text.trim().toLowerCase();
@@ -1690,18 +1692,19 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['ware_code']}';
-                              final returnCode = '${item['ware_code']}';
+                              final doc = '${item['ware_code'] ?? ''}';
+                              final returnCode = '${item['ware_code'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['ware_code']} ${item['ware_name']}',
+                                  '${item['ware_code'] ?? ''}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle: Text('${item['ware_name'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -1806,7 +1809,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           final filteredItems =
                               dataLovEndWareCode.where((item) {
                             final docString =
-                                '${item['ware_code']} ${item['ware_name']}'
+                                '${item['ware_code'] ?? ''} ${item['ware_name'] ?? ''}'
                                     .toLowerCase();
                             final searchQuery =
                                 searchController4.text.trim().toLowerCase();
@@ -1825,18 +1828,19 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['ware_code']}';
-                              final returnCode = '${item['ware_code']}';
+                              final doc = '${item['ware_code'] ?? ''}';
+                              final returnCode = '${item['ware_code'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['ware_code']} ${item['ware_name']}',
+                                  '${item['ware_code'] ?? ''}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle: Text('${item['ware_name'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -1936,7 +1940,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                         builder: (context) {
                           final filteredItems = dataLovStartLoc.where((item) {
                             final docString =
-                                '${item['location_code']} ${item['location_name']}'
+                                '${item['location_code'] ?? ''} ${item['location_name'] ?? ''}'
                                     .toLowerCase();
                             final searchQuery =
                                 searchController5.text.trim().toLowerCase();
@@ -1955,18 +1959,21 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['location_code']}';
-                              final returnCode = '${item['location_code']}';
+                              final doc = '${item['location_code'] ?? ''}';
+                              final returnCode =
+                                  '${item['location_code'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['location_code']} ${item['location_name']}',
+                                  '${item['location_code'] ?? ''}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle:
+                                    Text('${item['location_name'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -2062,7 +2069,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                         builder: (context) {
                           final filteredItems = dataLovEndLoc.where((item) {
                             final docString =
-                                '${item['location_code']} ${item['location_name']}'
+                                '${item['location_code'] ?? ''} ${item['location_name'] ?? ''}'
                                     .toLowerCase();
                             final searchQuery =
                                 searchController6.text.trim().toLowerCase();
@@ -2081,18 +2088,21 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['location_code']}';
-                              final returnCode = '${item['location_code']}';
+                              final doc = '${item['location_code'] ?? ''}';
+                              final returnCode =
+                                  '${item['location_code'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['location_code']} ${item['location_name']}',
+                                  '${item['location_code'] ?? ''}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle:
+                                    Text('${item['location_name'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -2182,7 +2192,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                         builder: (context) {
                           final filteredItems = dataLovStartGroup.where((item) {
                             final docString =
-                                '${item['group_code']} ${item['group_name']}'
+                                '${item['group_code'] ?? ''} ${item['group_name'] ?? ''}'
                                     .toLowerCase();
                             final searchQuery =
                                 searchController7.text.trim().toLowerCase();
@@ -2201,18 +2211,19 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['group_code']}';
-                              final returnCode = '${item['group_code']}';
+                              final doc = '${item['group_code'] ?? ''}';
+                              final returnCode = '${item['group_code'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['group_code']} ${item['group_name']}',
+                                  '${item['group_code'] ?? ''}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle: Text('${item['group_name'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -2332,7 +2343,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                         builder: (context) {
                           final filteredItems = dataLovEndGroup.where((item) {
                             final docString =
-                                '${item['group_code']} ${item['group_name']}'
+                                '${item['group_code'] ?? ''} ${item['group_name'] ?? ''}'
                                     .toLowerCase();
                             final searchQuery =
                                 searchController8.text.trim().toLowerCase();
@@ -2351,18 +2362,19 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['group_code']}';
-                              final returnCode = '${item['group_code']}';
+                              final doc = '${item['group_code'] ?? ''}';
+                              final returnCode = '${item['group_code'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['group_code']} ${item['group_name']}',
+                                  '${item['group_code'] ?? ''}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle: Text('${item['group_name'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -2479,7 +2491,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           final filteredItems =
                               dataLovStartCategory.where((item) {
                             final docString =
-                                '${item['category_code']} ${item['category_desc']}'
+                                '${item['category_code'] ?? ''} ${item['category_desc'] ?? ''}'
                                     .toLowerCase();
                             final searchQuery =
                                 searchController9.text.trim().toLowerCase();
@@ -2498,18 +2510,21 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['category_code']}';
-                              final returnCode = '${item['category_code']}';
+                              final doc = '${item['category_code'] ?? ''}';
+                              final returnCode =
+                                  '${item['category_code'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['category_code']} ${item['category_desc']}',
+                                  '${item['category_code'] ?? ''}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle:
+                                    Text('${item['category_desc'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -2622,7 +2637,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           final filteredItems =
                               dataLovEndCategory.where((item) {
                             final docString =
-                                '${item['category_code']} ${item['category_desc']}'
+                                '${item['category_code'] ?? ''} ${item['category_desc'] ?? ''}'
                                     .toLowerCase();
                             final searchQuery =
                                 searchController10.text.trim().toLowerCase();
@@ -2641,18 +2656,21 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['category_code']}';
-                              final returnCode = '${item['category_code']}';
+                              final doc = '${item['category_code'] ?? ''}';
+                              final returnCode =
+                                  '${item['category_code'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['category_code']} ${item['category_desc']}',
+                                  '${item['category_code'] ?? ''}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle:
+                                    Text('${item['category_desc'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -2761,7 +2779,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           final filteredItems =
                               dataLovStartSubCategory.where((item) {
                             final docString =
-                                '${item['sub_cat_code']} ${item['sub_cat_desc']}'
+                                '${item['sub_cat_code'] ?? ''} ${item['sub_cat_desc'] ?? ''}'
                                     .toLowerCase();
                             final searchQuery =
                                 searchController11.text.trim().toLowerCase();
@@ -2780,18 +2798,20 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['sub_cat_code']}';
-                              final returnCode = '${item['sub_cat_code']}';
+                              final doc = '${item['sub_cat_code'] ?? ''}';
+                              final returnCode =
+                                  '${item['sub_cat_code'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['sub_cat_code']} ${item['sub_cat_desc']}',
+                                  '${item['sub_cat_code'] ?? ''}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle: Text('${item['sub_cat_desc'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -2896,7 +2916,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           final filteredItems =
                               dataLovEndSubCategory.where((item) {
                             final docString =
-                                '${item['sub_cat_code']} ${item['sub_cat_desc']}'
+                                '${item['sub_cat_code'] ?? ''} ${item['sub_cat_desc'] ?? ''}'
                                     .toLowerCase();
                             final searchQuery =
                                 searchController12.text.trim().toLowerCase();
@@ -2915,18 +2935,20 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['sub_cat_code']}';
-                              final returnCode = '${item['sub_cat_code']}';
+                              final doc = '${item['sub_cat_code'] ?? ''}';
+                              final returnCode =
+                                  '${item['sub_cat_code'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['sub_cat_code']} ${item['sub_cat_desc']}',
+                                  '${item['sub_cat_code'] ?? ''}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle: Text('${item['sub_cat_desc'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
@@ -3026,7 +3048,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                         builder: (context) {
                           final filteredItems = dataLovStartItem.where((item) {
                             final docString =
-                                '${item['item_code']} ${item['name']}'
+                                '${item['item_code'] ?? ''} ${item['name'] ?? ''}'
                                     .toLowerCase();
                             final searchQuery =
                                 searchController13.text.trim().toLowerCase();
@@ -3045,25 +3067,26 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['item_code']}';
-                              final returnCode = '${item['item_code']}';
+                              final doc = '${item['item_code'] ?? ''}';
+                              final returnCode = '${item['item_code'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['item_code']} ${item['name']}',
+                                  '${item['item_code'] ?? ''}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle: Text('${item['name'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
                                     returnStartItem = returnCode;
                                     displayStartItem = doc;
                                     startItemController.text =
-                                        displayEndSubCategory.toString();
+                                        displayStartItem.toString();
                                     if (returnStartItem.isNotEmpty) {
                                       selectLovEndItem();
                                       displayEndItem = '';
@@ -3152,7 +3175,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                         builder: (context) {
                           final filteredItems = dataLovEndItem.where((item) {
                             final docString =
-                                '${item['item_code']} ${item['name']}'
+                                '${item['item_code'] ?? ''} ${item['name'] ?? ''}'
                                     .toLowerCase();
                             final searchQuery =
                                 searchController14.text.trim().toLowerCase();
@@ -3171,18 +3194,19 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['item_code']}';
-                              final returnCode = '${item['item_code']}';
+                              final doc = '${item['item_code'] ?? ''}';
+                              final returnCode = '${item['item_code'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
-                                  '${item['item_code']} ${item['name']}',
+                                  '${item['item_code'] ?? ''}',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                subtitle: Text('${item['name'] ?? ''}'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {

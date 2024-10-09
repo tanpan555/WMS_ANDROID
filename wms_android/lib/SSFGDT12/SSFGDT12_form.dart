@@ -54,6 +54,8 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   bool monthColorCheck = false;
   bool noDate = false;
 
+  bool isLoading = false;
+
   final FocusNode _focusNode = FocusNode();
   final TextEditingController staffCodeController = TextEditingController();
   final TextEditingController docDateController = TextEditingController();
@@ -103,6 +105,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   }
 
   Future<void> fetchData() async {
+    isLoading = true;
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_2_SelectDataForm/${widget.pErpOuCode}/${widget.docNo}/${widget.browser_language}'));
@@ -148,6 +151,8 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
               updBy1Controller.text = updBy1;
               nbCountDateController.text = nbCountDate;
               docNoController.text = docNo;
+
+              isLoading = false;
 
               print('statuForCHK : $statuForCHK');
             });
@@ -289,26 +294,28 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    GestureDetector(
-                      child: AbsorbPointer(
-                        child: TextFormField(
-                          style: const TextStyle(
-                            color: Colors.black87,
-                          ),
-                          controller: docNoController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            filled: true,
-                            fillColor: Colors.grey[300],
-                            labelText: 'เลขที่เอกสาร',
-                            labelStyle: const TextStyle(
-                              color: Colors.black87,
+                    isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : GestureDetector(
+                            child: AbsorbPointer(
+                              child: TextFormField(
+                                style: const TextStyle(
+                                  color: Colors.black87,
+                                ),
+                                controller: docNoController,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  filled: true,
+                                  fillColor: Colors.grey[300],
+                                  labelText: 'เลขที่เอกสาร',
+                                  labelStyle: const TextStyle(
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                readOnly: true,
+                              ),
                             ),
                           ),
-                          readOnly: true,
-                        ),
-                      ),
-                    ),
 
                     const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////

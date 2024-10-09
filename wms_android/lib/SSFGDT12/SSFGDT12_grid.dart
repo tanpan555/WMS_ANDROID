@@ -439,605 +439,634 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
             Expanded(
               child: isLoading
                   ? Center(child: CircularProgressIndicator())
-                  : ListView(
-                      //
-                      // children: dataCard.map((item) {
-                      //   return Card(
-                      //     elevation: 8.0,
-                      //     margin: EdgeInsets.symmetric(vertical: 8.0),
-                      //     shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(
-                      //           15.0), // กำหนดมุมโค้งของ Card
-                      //     ),
-                      //     color: Color.fromRGBO(204, 235, 252, 1.0),
-                      //     child: InkWell(
-                      //       onTap: () {},
-                      //       borderRadius: BorderRadius.circular(
-                      //           15.0), // กำหนดมุมโค้งให้ InkWell เช่นกัน
-                      //       child: Stack(
-                      //         children: [
-                      //           Padding(
-                      //             padding: const EdgeInsets.all(
-                      //                 16.0), // เพิ่ม padding เพื่อให้ content ไม่ชิดขอบ
-                      //             child: Column(
-                      //               crossAxisAlignment:
-                      //                   CrossAxisAlignment.start,
-                      //               children: [
-                      //                 Container(
-                      //                   decoration: const BoxDecoration(
-                      //                     border: Border(
-                      //                       bottom: BorderSide(
-                      //                         color: Colors.grey, // สีของเส้น
-                      //                         width: 1.0, // ความหนาของเส้น
-                      //                       ),
-                      //                     ),
-                      //                   ),
-                      //                   child: Row(
-                      //                     mainAxisAlignment:
-                      //                         MainAxisAlignment.center,
-                      //                     children: [
-                      //                       Text(
-                      //                         'รหัสสินค้า : ${item['item_code']}',
-                      //                         style: const TextStyle(
-                      //                             fontSize: 18,
-                      //                             fontWeight: FontWeight.bold),
-                      //                       ),
-                      //                       // IconButton(
-                      //                       //   icon: const Icon(Icons.close),
-                      //                       //   onPressed: () {
-                      //                       //     Navigator.of(context).pop();
-                      //                       //   },
-                      //                       // ),
-                      //                     ],
-                      //                   ),
-                      //                 ),
-                      //                 const SizedBox(height: 8),
-                      //                 // Text(
-                      //                 //   'รหัสสินค้า : ${item['item_code']}',
-                      //                 //   style: const TextStyle(
-                      //                 //       fontWeight: FontWeight.bold,
-                      //                 //       fontSize: 18.0),
-                      //                 // ),
-                      //                 SizedBox(
-                      //                   child: Row(
-                      //                     children: [
-                      //                       Text(
-                      //                         'ชื่อสินค้า : ',
-                      //                         style: TextStyle(
-                      //                             fontWeight: FontWeight.bold,
-                      //                             fontSize: 14.0),
-                      //                       ),
-                      //                       Container(
-                      //                         padding: EdgeInsets.all(3.0),
-                      //                         color: Colors.white,
-                      //                         child: Text(
-                      //                           item['get_item_name'],
-                      //                           style: const TextStyle(
-                      //                               fontSize: 14.0),
-                      //                         ),
-                      //                       ),
-                      //                       // Text(
-                      //                       //   item['get_item_name'],
-                      //                       //   style: TextStyle(fontSize: 14.0),
-                      //                       // ),
-                      //                     ],
-                      //                   ),
-                      //                 ),
-                      //                 const SizedBox(height: 4),
-                      //                 SizedBox(
-                      //                   child: Row(
-                      //                     children: [
-                      //                       Text(
-                      //                         'จำนวนคงเหลือในระบบ : ',
-                      //                         style: TextStyle(
-                      //                             fontWeight: FontWeight.bold,
-                      //                             fontSize: 14.0),
-                      //                       ),
-                      //                       Container(
-                      //                         padding: EdgeInsets.all(5.0),
-                      //                         color: Colors.white,
-                      //                         child: Text(
-                      //                           NumberFormat(
-                      //                                   '#,###,###,###,###,###.##')
-                      //                               .format(item['sys_qty']),
-                      //                           style: const TextStyle(
-                      //                               fontSize: 14.0),
-                      //                         ),
-                      //                       ),
-                      //                     ],
-                      //                   ),
-                      //                 ),
-                      //                 const SizedBox(height: 4),
-                      //                 SizedBox(
-                      //                   child: Row(
-                      //                     children: [
-                      //                       Text(
-                      //                         'ผลต่างการตรวจนับ : ',
-                      //                         style: TextStyle(
-                      //                             fontWeight: FontWeight.bold,
-                      //                             fontSize: 14.0),
-                      //                       ),
-                      //                       Container(
-                      //                         padding: EdgeInsets.all(5.0),
-                      //                         color: Colors.white,
-                      //                         child: Text(
-                      //                           NumberFormat(
-                      //                                   '#,###,###,###,###,###.##')
-                      //                               .format(item['diff_qty']),
-                      //                           style: const TextStyle(
-                      //                               fontSize: 14.0),
-                      //                         ),
-                      //                       ),
-                      //                     ],
-                      //                   ),
-                      //                 ),
-                      //                 const SizedBox(height: 4),
-                      //                 SizedBox(
-                      //                   child: Row(
-                      //                     // mainAxisAlignment:
-                      //                     //     MainAxisAlignment.spaceBetween,
-                      //                     children: [
-                      //                       Text(
-                      //                         'คลังสินค้า : ',
-                      //                         style: TextStyle(
-                      //                             fontWeight: FontWeight.bold,
-                      //                             fontSize: 14.0),
-                      //                       ),
-                      //                       Container(
-                      //                         padding: EdgeInsets.all(5.0),
-                      //                         color: Colors.white,
-                      //                         child: Text(
-                      //                           item['ware_code'],
-                      //                           style: const TextStyle(
-                      //                               fontSize: 14.0),
-                      //                         ),
-                      //                       ),
-                      //                     ],
-                      //                   ),
-                      //                 ),
-                      //                 const SizedBox(height: 4),
-                      //                 SizedBox(
-                      //                   child: Row(
-                      //                     // mainAxisAlignment:
-                      //                     // MainAxisAlignment.spaceBetween,
-                      //                     children: [
-                      //                       Text(
-                      //                         'ตำแหน่งจัดเก็บ : ',
-                      //                         style: TextStyle(
-                      //                             fontWeight: FontWeight.bold,
-                      //                             fontSize: 14.0),
-                      //                       ),
-                      //                       Container(
-                      //                         padding: EdgeInsets.all(5.0),
-                      //                         color: Colors.white,
-                      //                         child: Text(
-                      //                           item['location_code'],
-                      //                           style: const TextStyle(
-                      //                               fontSize: 14.0),
-                      //                         ),
-                      //                       ),
-                      //                     ],
-                      //                   ),
-                      //                 ),
-                      //                 // const SizedBox(height: 4),
-                      //                 Row(
-                      //                   mainAxisAlignment:
-                      //                       MainAxisAlignment.end,
-                      //                   children: [
-                      //                     IconButton(
-                      //                       iconSize: 10.0,
-                      //                       icon: Image.asset(
-                      //                         'assets/images/edit.png',
-                      //                         width: 20.0,
-                      //                         height: 20.0,
-                      //                       ),
-                      //                       onPressed: () {
-                      //                         showDetailsDialog(
-                      //                           context,
-                      //                           item['sys_qty'].toDouble(),
-                      //                           item['diff_qty'].toDouble(),
-                      //                           // double.parse(item['diff_qty']),
-                      //                           item['rowid'],
-                      //                           item['count_qty'] ?? 0,
-                      //                           item['remark'] ?? '',
-                      //                           widget.docNo,
-                      //                           widget.pErpOuCode,
-                      //                           item['seq'],
-                      //                           item['item_code'],
-                      //                         );
-                      //                       },
-                      //                     ),
-                      //                   ],
-                      //                 )
-                      //               ],
-                      //             ),
-                      //           ),
-                      //           // Positioned(
-                      //           //   bottom: 0.4,
-                      //           //   right: 8.0,
-                      //           //   child: GestureDetector(
-                      //           //     onTap: () {},
-                      //           //     child: IconButton(
-                      //           //       iconSize: 20.0,
-                      //           //       icon: Image.asset(
-                      //           //         'assets/images/edit.png',
-                      //           //         width: 20.0,
-                      //           //         height: 20.0,
-                      //           //       ),
-                      //           //       onPressed: () {
-                      //           //         showDetailsDialog(
-                      //           //           context,
-                      //           //           item['sys_qty'].toDouble(),
-                      //           //           item['diff_qty'].toDouble(),
-                      //           //           // double.parse(item['diff_qty']),
-                      //           //           item['rowid'],
-                      //           //           item['count_qty'] ?? 0,
-                      //           //           item['remark'] ?? '',
-                      //           //           widget.docNo,
-                      //           //           widget.pErpOuCode,
-                      //           //           item['seq'],
-                      //           //           item['item_code'],
-                      //           //         );
-                      //           //       },
-                      //           //     ),
-                      //           //   ),
-                      //           // ),
-                      //         ],
-                      //       ),
-                      //     ),
-                      //   );
-                      // }).toList(),
+                  : dataCard.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No data found',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
+                      : ListView(
+                          //
+                          // children: dataCard.map((item) {
+                          //   return Card(
+                          //     elevation: 8.0,
+                          //     margin: EdgeInsets.symmetric(vertical: 8.0),
+                          //     shape: RoundedRectangleBorder(
+                          //       borderRadius: BorderRadius.circular(
+                          //           15.0), // กำหนดมุมโค้งของ Card
+                          //     ),
+                          //     color: Color.fromRGBO(204, 235, 252, 1.0),
+                          //     child: InkWell(
+                          //       onTap: () {},
+                          //       borderRadius: BorderRadius.circular(
+                          //           15.0), // กำหนดมุมโค้งให้ InkWell เช่นกัน
+                          //       child: Stack(
+                          //         children: [
+                          //           Padding(
+                          //             padding: const EdgeInsets.all(
+                          //                 16.0), // เพิ่ม padding เพื่อให้ content ไม่ชิดขอบ
+                          //             child: Column(
+                          //               crossAxisAlignment:
+                          //                   CrossAxisAlignment.start,
+                          //               children: [
+                          //                 Container(
+                          //                   decoration: const BoxDecoration(
+                          //                     border: Border(
+                          //                       bottom: BorderSide(
+                          //                         color: Colors.grey, // สีของเส้น
+                          //                         width: 1.0, // ความหนาของเส้น
+                          //                       ),
+                          //                     ),
+                          //                   ),
+                          //                   child: Row(
+                          //                     mainAxisAlignment:
+                          //                         MainAxisAlignment.center,
+                          //                     children: [
+                          //                       Text(
+                          //                         'รหัสสินค้า : ${item['item_code']}',
+                          //                         style: const TextStyle(
+                          //                             fontSize: 18,
+                          //                             fontWeight: FontWeight.bold),
+                          //                       ),
+                          //                       // IconButton(
+                          //                       //   icon: const Icon(Icons.close),
+                          //                       //   onPressed: () {
+                          //                       //     Navigator.of(context).pop();
+                          //                       //   },
+                          //                       // ),
+                          //                     ],
+                          //                   ),
+                          //                 ),
+                          //                 const SizedBox(height: 8),
+                          //                 // Text(
+                          //                 //   'รหัสสินค้า : ${item['item_code']}',
+                          //                 //   style: const TextStyle(
+                          //                 //       fontWeight: FontWeight.bold,
+                          //                 //       fontSize: 18.0),
+                          //                 // ),
+                          //                 SizedBox(
+                          //                   child: Row(
+                          //                     children: [
+                          //                       Text(
+                          //                         'ชื่อสินค้า : ',
+                          //                         style: TextStyle(
+                          //                             fontWeight: FontWeight.bold,
+                          //                             fontSize: 14.0),
+                          //                       ),
+                          //                       Container(
+                          //                         padding: EdgeInsets.all(3.0),
+                          //                         color: Colors.white,
+                          //                         child: Text(
+                          //                           item['get_item_name'],
+                          //                           style: const TextStyle(
+                          //                               fontSize: 14.0),
+                          //                         ),
+                          //                       ),
+                          //                       // Text(
+                          //                       //   item['get_item_name'],
+                          //                       //   style: TextStyle(fontSize: 14.0),
+                          //                       // ),
+                          //                     ],
+                          //                   ),
+                          //                 ),
+                          //                 const SizedBox(height: 4),
+                          //                 SizedBox(
+                          //                   child: Row(
+                          //                     children: [
+                          //                       Text(
+                          //                         'จำนวนคงเหลือในระบบ : ',
+                          //                         style: TextStyle(
+                          //                             fontWeight: FontWeight.bold,
+                          //                             fontSize: 14.0),
+                          //                       ),
+                          //                       Container(
+                          //                         padding: EdgeInsets.all(5.0),
+                          //                         color: Colors.white,
+                          //                         child: Text(
+                          //                           NumberFormat(
+                          //                                   '#,###,###,###,###,###.##')
+                          //                               .format(item['sys_qty']),
+                          //                           style: const TextStyle(
+                          //                               fontSize: 14.0),
+                          //                         ),
+                          //                       ),
+                          //                     ],
+                          //                   ),
+                          //                 ),
+                          //                 const SizedBox(height: 4),
+                          //                 SizedBox(
+                          //                   child: Row(
+                          //                     children: [
+                          //                       Text(
+                          //                         'ผลต่างการตรวจนับ : ',
+                          //                         style: TextStyle(
+                          //                             fontWeight: FontWeight.bold,
+                          //                             fontSize: 14.0),
+                          //                       ),
+                          //                       Container(
+                          //                         padding: EdgeInsets.all(5.0),
+                          //                         color: Colors.white,
+                          //                         child: Text(
+                          //                           NumberFormat(
+                          //                                   '#,###,###,###,###,###.##')
+                          //                               .format(item['diff_qty']),
+                          //                           style: const TextStyle(
+                          //                               fontSize: 14.0),
+                          //                         ),
+                          //                       ),
+                          //                     ],
+                          //                   ),
+                          //                 ),
+                          //                 const SizedBox(height: 4),
+                          //                 SizedBox(
+                          //                   child: Row(
+                          //                     // mainAxisAlignment:
+                          //                     //     MainAxisAlignment.spaceBetween,
+                          //                     children: [
+                          //                       Text(
+                          //                         'คลังสินค้า : ',
+                          //                         style: TextStyle(
+                          //                             fontWeight: FontWeight.bold,
+                          //                             fontSize: 14.0),
+                          //                       ),
+                          //                       Container(
+                          //                         padding: EdgeInsets.all(5.0),
+                          //                         color: Colors.white,
+                          //                         child: Text(
+                          //                           item['ware_code'],
+                          //                           style: const TextStyle(
+                          //                               fontSize: 14.0),
+                          //                         ),
+                          //                       ),
+                          //                     ],
+                          //                   ),
+                          //                 ),
+                          //                 const SizedBox(height: 4),
+                          //                 SizedBox(
+                          //                   child: Row(
+                          //                     // mainAxisAlignment:
+                          //                     // MainAxisAlignment.spaceBetween,
+                          //                     children: [
+                          //                       Text(
+                          //                         'ตำแหน่งจัดเก็บ : ',
+                          //                         style: TextStyle(
+                          //                             fontWeight: FontWeight.bold,
+                          //                             fontSize: 14.0),
+                          //                       ),
+                          //                       Container(
+                          //                         padding: EdgeInsets.all(5.0),
+                          //                         color: Colors.white,
+                          //                         child: Text(
+                          //                           item['location_code'],
+                          //                           style: const TextStyle(
+                          //                               fontSize: 14.0),
+                          //                         ),
+                          //                       ),
+                          //                     ],
+                          //                   ),
+                          //                 ),
+                          //                 // const SizedBox(height: 4),
+                          //                 Row(
+                          //                   mainAxisAlignment:
+                          //                       MainAxisAlignment.end,
+                          //                   children: [
+                          //                     IconButton(
+                          //                       iconSize: 10.0,
+                          //                       icon: Image.asset(
+                          //                         'assets/images/edit.png',
+                          //                         width: 20.0,
+                          //                         height: 20.0,
+                          //                       ),
+                          //                       onPressed: () {
+                          //                         showDetailsDialog(
+                          //                           context,
+                          //                           item['sys_qty'].toDouble(),
+                          //                           item['diff_qty'].toDouble(),
+                          //                           // double.parse(item['diff_qty']),
+                          //                           item['rowid'],
+                          //                           item['count_qty'] ?? 0,
+                          //                           item['remark'] ?? '',
+                          //                           widget.docNo,
+                          //                           widget.pErpOuCode,
+                          //                           item['seq'],
+                          //                           item['item_code'],
+                          //                         );
+                          //                       },
+                          //                     ),
+                          //                   ],
+                          //                 )
+                          //               ],
+                          //             ),
+                          //           ),
+                          //           // Positioned(
+                          //           //   bottom: 0.4,
+                          //           //   right: 8.0,
+                          //           //   child: GestureDetector(
+                          //           //     onTap: () {},
+                          //           //     child: IconButton(
+                          //           //       iconSize: 20.0,
+                          //           //       icon: Image.asset(
+                          //           //         'assets/images/edit.png',
+                          //           //         width: 20.0,
+                          //           //         height: 20.0,
+                          //           //       ),
+                          //           //       onPressed: () {
+                          //           //         showDetailsDialog(
+                          //           //           context,
+                          //           //           item['sys_qty'].toDouble(),
+                          //           //           item['diff_qty'].toDouble(),
+                          //           //           // double.parse(item['diff_qty']),
+                          //           //           item['rowid'],
+                          //           //           item['count_qty'] ?? 0,
+                          //           //           item['remark'] ?? '',
+                          //           //           widget.docNo,
+                          //           //           widget.pErpOuCode,
+                          //           //           item['seq'],
+                          //           //           item['item_code'],
+                          //           //         );
+                          //           //       },
+                          //           //     ),
+                          //           //   ),
+                          //           // ),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //   );
+                          // }).toList(),
 
-                      ///////////////////////////////////////////////////
-                      children: [
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics:
-                              const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
-                          itemCount: dataCard.length,
-                          itemBuilder: (context, index) {
-                            // ดึงข้อมูลรายการจาก dataCard
-                            var item = dataCard[index];
-                            return Card(
-                              elevation: 8.0,
-                              margin: EdgeInsets.symmetric(vertical: 8.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    15.0), // กำหนดมุมโค้งของ Card
-                              ),
-                              color: Color.fromRGBO(204, 235, 252, 1.0),
-                              child: InkWell(
-                                onTap: () {},
-                                borderRadius: BorderRadius.circular(
-                                    15.0), // กำหนดมุมโค้งให้ InkWell เช่นกัน
-                                child: Stack(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(
-                                          16.0), // เพิ่ม padding เพื่อให้ content ไม่ชิดขอบ
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            decoration: const BoxDecoration(
-                                              border: Border(
-                                                bottom: BorderSide(
-                                                  color:
-                                                      Colors.grey, // สีของเส้น
-                                                  width: 1.0, // ความหนาของเส้น
-                                                ),
-                                              ),
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  'รหัสสินค้า : ${item['item_code']}',
-                                                  style: const TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          SizedBox(
-                                            child: Row(
-                                              children: [
-                                                const Text(
-                                                  'ลำดับ : ',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14.0),
-                                                ),
-                                                Container(
-                                                  padding: EdgeInsets.all(3.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    item['seq'].toString() ??
-                                                        '',
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                    softWrap:
-                                                        true, // เปิดให้ตัดบรรทัด
-                                                    overflow: TextOverflow
-                                                        .visible, // กำหนดการแสดงผลเมื่อข้อความยาวเกิน
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          SizedBox(
-                                            child: Row(
-                                              children: [
-                                                const Text(
-                                                  'ชื่อสินค้า : ',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14.0),
-                                                ),
-                                                Expanded(
-                                                  // หรือใช้ Flexible ก็ได้
-                                                  child: Container(
-                                                    padding:
-                                                        EdgeInsets.all(3.0),
-                                                    color: Colors.white,
-                                                    child: Text(
-                                                      item['get_item_name'] ??
-                                                          '',
-                                                      style: const TextStyle(
-                                                          fontSize: 14.0),
-                                                      softWrap:
-                                                          true, // เปิดให้ตัดบรรทัด
-                                                      overflow: TextOverflow
-                                                          .visible, // กำหนดการแสดงผลเมื่อข้อความยาวเกิน
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          SizedBox(
-                                            child: Row(
-                                              // mainAxisAlignment:
-                                              //     MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                const Text(
-                                                  'คลังสินค้า : ',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14.0),
-                                                ),
-                                                Expanded(
-                                                  child: Container(
-                                                    padding:
-                                                        EdgeInsets.all(5.0),
-                                                    color: Colors.white,
-                                                    child: Text(
-                                                      item['ware_code'] ?? '',
-                                                      style: const TextStyle(
-                                                          fontSize: 14.0),
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          SizedBox(
-                                            child: Row(
-                                              // mainAxisAlignment:
-                                              // MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                const Text(
-                                                  'ตำแหน่งจัดเก็บ : ',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14.0),
-                                                ),
-                                                Expanded(
-                                                  child: Container(
-                                                    padding:
-                                                        EdgeInsets.all(5.0),
-                                                    color: Colors.white,
-                                                    child: Text(
-                                                      item['location_code'] ??
-                                                          '',
-                                                      style: const TextStyle(
-                                                          fontSize: 14.0),
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          SizedBox(
-                                            child: Row(
-                                              children: [
-                                                const Text(
-                                                  'จำนวนคงเหลือในระบบ : ',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14.0),
-                                                ),
-                                                Expanded(
-                                                  // หรือใช้ Flexible ก็ได้
-                                                  child: Container(
-                                                    padding:
-                                                        EdgeInsets.all(3.0),
-                                                    color: Colors.white,
-                                                    child: Text(
-                                                      NumberFormat(
-                                                              '#,###,###,###,###,###.##')
-                                                          .format(
-                                                              item['sys_qty'] ??
-                                                                  ''),
-                                                      style: const TextStyle(
-                                                          fontSize: 14.0),
-                                                      softWrap:
-                                                          true, // เปิดให้ตัดบรรทัด
-                                                      overflow: TextOverflow
-                                                          .visible, // กำหนดการแสดงผลเมื่อข้อความยาวเกิน
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          SizedBox(
-                                            child: Row(
-                                              children: [
-                                                const Text(
-                                                  'ผลต่างการตรวจนับ : ',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14.0),
-                                                ),
-                                                Expanded(
-                                                  child: Container(
-                                                    padding:
-                                                        EdgeInsets.all(5.0),
-                                                    color: Colors.white,
-                                                    child: Text(
-                                                      NumberFormat(
-                                                              '#,###,###,###,###,###.##')
-                                                          .format(item[
-                                                                  'diff_qty'] ??
-                                                              ''),
-                                                      style: const TextStyle(
-                                                          fontSize: 14.0),
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          SizedBox(
-                                            child: Row(
-                                              children: [
-                                                const Text(
-                                                  'จำนวนที่ตรวจนับได้ได้รับ : ',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14.0),
-                                                ),
-                                                Expanded(
-                                                  child: Container(
-                                                    padding:
-                                                        EdgeInsets.all(5.0),
-                                                    color: Colors.white,
-                                                    child: Text(
-                                                      NumberFormat(
-                                                              '#,###,###,###,###,###.##')
-                                                          .format(item[
-                                                                  'count_qty'] ??
-                                                              0),
-                                                      // item['count_qty']
-                                                      //         .toString() ??
-                                                      //     '',
-                                                      style: const TextStyle(
-                                                          fontSize: 14.0),
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          SizedBox(
-                                            child: Row(
-                                              children: [
-                                                const Text(
-                                                  'หมายเหตุสินค้า : ',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14.0),
-                                                ),
-                                                Expanded(
-                                                  child: Container(
-                                                    padding:
-                                                        EdgeInsets.all(5.0),
-                                                    color: Colors.white,
-                                                    child: Text(
-                                                      item['remark'] ?? '',
-                                                      style: const TextStyle(
-                                                          fontSize: 14.0),
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              IconButton(
-                                                iconSize: 10.0,
-                                                icon: Image.asset(
-                                                  'assets/images/edit.png',
-                                                  width: 40.0,
-                                                  height: 40.0,
-                                                ),
-                                                onPressed: () {
-                                                  showDetailsDialog(
-                                                    context,
-                                                    item['sys_qty'].toDouble(),
-                                                    item['diff_qty'].toDouble(),
-                                                    // double.parse(item['diff_qty']),
-                                                    item['rowid'],
-                                                    item['count_qty'] ?? 0,
-                                                    item['remark'] ?? '',
-                                                    widget.docNo,
-                                                    widget.pErpOuCode,
-                                                    item['seq'],
-                                                    item['item_code'],
-                                                  );
-                                                },
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          ///////////////////////////////////////////////////
                           children: [
-                            ElevatedButton(
-                              onPressed: prevLink != null ? loadPrevPage : null,
-                              child: const Text('Previous'),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics:
+                                  const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
+                              itemCount: dataCard.length,
+                              itemBuilder: (context, index) {
+                                // ดึงข้อมูลรายการจาก dataCard
+                                var item = dataCard[index];
+                                return Card(
+                                  elevation: 8.0,
+                                  margin: EdgeInsets.symmetric(vertical: 8.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        15.0), // กำหนดมุมโค้งของ Card
+                                  ),
+                                  color: Color.fromRGBO(204, 235, 252, 1.0),
+                                  child: InkWell(
+                                    onTap: () {},
+                                    borderRadius: BorderRadius.circular(
+                                        15.0), // กำหนดมุมโค้งให้ InkWell เช่นกัน
+                                    child: Stack(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(
+                                              16.0), // เพิ่ม padding เพื่อให้ content ไม่ชิดขอบ
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                decoration: const BoxDecoration(
+                                                  border: Border(
+                                                    bottom: BorderSide(
+                                                      color: Colors
+                                                          .grey, // สีของเส้น
+                                                      width:
+                                                          1.0, // ความหนาของเส้น
+                                                    ),
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      'รหัสสินค้า : ${item['item_code']}',
+                                                      style: const TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 8),
+                                              SizedBox(
+                                                child: Row(
+                                                  children: [
+                                                    const Text(
+                                                      'ลำดับ : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                    Container(
+                                                      padding:
+                                                          EdgeInsets.all(3.0),
+                                                      color: Colors.white,
+                                                      child: Text(
+                                                        item['seq']
+                                                                .toString() ??
+                                                            '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
+                                                        softWrap:
+                                                            true, // เปิดให้ตัดบรรทัด
+                                                        overflow: TextOverflow
+                                                            .visible, // กำหนดการแสดงผลเมื่อข้อความยาวเกิน
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              SizedBox(
+                                                child: Row(
+                                                  children: [
+                                                    const Text(
+                                                      'ชื่อสินค้า : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                    Expanded(
+                                                      // หรือใช้ Flexible ก็ได้
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.all(3.0),
+                                                        color: Colors.white,
+                                                        child: Text(
+                                                          item['get_item_name'] ??
+                                                              '',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                          softWrap:
+                                                              true, // เปิดให้ตัดบรรทัด
+                                                          overflow: TextOverflow
+                                                              .visible, // กำหนดการแสดงผลเมื่อข้อความยาวเกิน
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              SizedBox(
+                                                child: Row(
+                                                  // mainAxisAlignment:
+                                                  //     MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    const Text(
+                                                      'คลังสินค้า : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.all(5.0),
+                                                        color: Colors.white,
+                                                        child: Text(
+                                                          item['ware_code'] ??
+                                                              '',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              SizedBox(
+                                                child: Row(
+                                                  // mainAxisAlignment:
+                                                  // MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    const Text(
+                                                      'ตำแหน่งจัดเก็บ : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.all(5.0),
+                                                        color: Colors.white,
+                                                        child: Text(
+                                                          item['location_code'] ??
+                                                              '',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              SizedBox(
+                                                child: Row(
+                                                  children: [
+                                                    const Text(
+                                                      'จำนวนคงเหลือในระบบ : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                    Expanded(
+                                                      // หรือใช้ Flexible ก็ได้
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.all(3.0),
+                                                        color: Colors.white,
+                                                        child: Text(
+                                                          NumberFormat(
+                                                                  '#,###,###,###,###,###.##')
+                                                              .format(item[
+                                                                      'sys_qty'] ??
+                                                                  ''),
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                          softWrap:
+                                                              true, // เปิดให้ตัดบรรทัด
+                                                          overflow: TextOverflow
+                                                              .visible, // กำหนดการแสดงผลเมื่อข้อความยาวเกิน
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              SizedBox(
+                                                child: Row(
+                                                  children: [
+                                                    const Text(
+                                                      'ผลต่างการตรวจนับ : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.all(5.0),
+                                                        color: Colors.white,
+                                                        child: Text(
+                                                          NumberFormat(
+                                                                  '#,###,###,###,###,###.##')
+                                                              .format(item[
+                                                                      'diff_qty'] ??
+                                                                  ''),
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              SizedBox(
+                                                child: Row(
+                                                  children: [
+                                                    const Text(
+                                                      'จำนวนที่ตรวจนับได้ได้รับ : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.all(5.0),
+                                                        color: Colors.white,
+                                                        child: Text(
+                                                          NumberFormat(
+                                                                  '#,###,###,###,###,###.##')
+                                                              .format(item[
+                                                                      'count_qty'] ??
+                                                                  0),
+                                                          // item['count_qty']
+                                                          //         .toString() ??
+                                                          //     '',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              SizedBox(
+                                                child: Row(
+                                                  children: [
+                                                    const Text(
+                                                      'หมายเหตุสินค้า : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.all(5.0),
+                                                        color: Colors.white,
+                                                        child: Text(
+                                                          item['remark'] ?? '',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  IconButton(
+                                                    iconSize: 10.0,
+                                                    icon: Image.asset(
+                                                      'assets/images/edit.png',
+                                                      width: 40.0,
+                                                      height: 40.0,
+                                                    ),
+                                                    onPressed: () {
+                                                      showDetailsDialog(
+                                                        context,
+                                                        item['sys_qty']
+                                                            .toDouble(),
+                                                        item['diff_qty']
+                                                            .toDouble(),
+                                                        // double.parse(item['diff_qty']),
+                                                        item['rowid'],
+                                                        item['count_qty'] ?? 0,
+                                                        item['remark'] ?? '',
+                                                        widget.docNo,
+                                                        widget.pErpOuCode,
+                                                        item['seq'],
+                                                        item['item_code'],
+                                                      );
+                                                    },
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                            ElevatedButton(
-                              onPressed: nextLink != null ? loadNextPage : null,
-                              child: const Text('Next'),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                  onPressed:
+                                      prevLink != null ? loadPrevPage : null,
+                                  child: const Text('Previous'),
+                                ),
+                                ElevatedButton(
+                                  onPressed:
+                                      nextLink != null ? loadNextPage : null,
+                                  child: const Text('Next'),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
             ),
           ],
         ),
