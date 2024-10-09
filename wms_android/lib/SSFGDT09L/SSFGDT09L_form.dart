@@ -895,7 +895,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                               style: TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                                fontSize: 12, // ปรับขนาดตัวอักษรตามที่ต้องการ
                               ),
                             ))
                         : const SizedBox.shrink(),
