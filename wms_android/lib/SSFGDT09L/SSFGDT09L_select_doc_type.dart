@@ -38,6 +38,8 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
   String poDocType = '';
   String poDocNo = '';
 
+  bool isLoading = false;
+
   final TextEditingController dataLovDocTypeController =
       TextEditingController();
 
@@ -55,6 +57,7 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
   }
 
   Future<void> selectLovDocType() async {
+    isLoading = true;
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SelectLovDocType/${widget.pAttr1}'));
@@ -72,6 +75,8 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
             docTypeLovD = selectedDocTypeItem?['d'] ?? '';
             docTypeLovR = selectedDocTypeItem?['r'] ?? '';
             dataLovDocTypeController.text = docTypeLovD;
+
+            isLoading = false;
           });
         }
         print('dataLovDocType : $dataLovDocType');
@@ -163,24 +168,26 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(children: [
-          TextFormField(
-            controller: dataLovDocTypeController,
-            readOnly: true,
-            onTap: () => showDialogSelectDocType(),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              filled: true,
-              fillColor: Colors.white,
-              labelText: 'ประเภทเอกสาร',
-              labelStyle: const TextStyle(
-                color: Colors.black87,
-              ),
-              suffixIcon: Icon(
-                Icons.arrow_drop_down,
-                color: Color.fromARGB(255, 113, 113, 113),
-              ),
-            ),
-          ),
+          isLoading
+              ? Center(child: CircularProgressIndicator())
+              : TextFormField(
+                  controller: dataLovDocTypeController,
+                  readOnly: true,
+                  onTap: () => showDialogSelectDocType(),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelText: 'ประเภทเอกสาร',
+                    labelStyle: const TextStyle(
+                      color: Colors.black87,
+                    ),
+                    suffixIcon: Icon(
+                      Icons.arrow_drop_down,
+                      color: Color.fromARGB(255, 113, 113, 113),
+                    ),
+                  ),
+                ),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

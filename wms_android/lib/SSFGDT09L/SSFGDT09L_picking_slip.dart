@@ -27,6 +27,9 @@ class Ssfgdt09lPickingSlip extends StatefulWidget {
 
 class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
   List<dynamic> dataCard = [];
+
+  bool isLoading = false;
+
 //  -----------------------------  p  -----------------------------  \\
   String? P_LIN_ID;
   String? V_DS_PDF;
@@ -51,6 +54,7 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
   }
 
   Future<void> fetchData() async {
+    isLoading = true;
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO}'));
@@ -63,6 +67,8 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
           setState(() {
             dataCard =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            isLoading = false;
           });
         }
         print('dataCard : $dataCard');
@@ -189,194 +195,232 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: ListView(
-                children: dataCard.map((item) {
-                  return Card(
-                    elevation: 8.0,
-                    margin: EdgeInsets.symmetric(vertical: 8.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    color: Color.fromRGBO(204, 235, 252, 1.0),
-                    child: InkWell(
-                        onTap: () {},
-                        borderRadius: BorderRadius.circular(15.0),
-                        child: Stack(children: [
-                          Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      child: Row(
-                                        // mainAxisAlignment:
-                                        // MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text(
-                                            'Item : ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14.0),
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              padding: EdgeInsets.all(5.0),
-                                              color: Colors.white,
-                                              child: Text(
-                                                item['material_code'] ?? '',
-                                                style: const TextStyle(
-                                                    fontSize: 14.0),
+              child: isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : dataCard.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No data found',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
+                      : ListView(
+                          children: dataCard.map((item) {
+                            return Card(
+                              elevation: 8.0,
+                              margin: EdgeInsets.symmetric(vertical: 8.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              color: Color.fromRGBO(204, 235, 252, 1.0),
+                              child: InkWell(
+                                  onTap: () {},
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  child: Stack(children: [
+                                    Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                child: Row(
+                                                  // mainAxisAlignment:
+                                                  // MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    const Text(
+                                                      'Item : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.all(5.0),
+                                                        color: Colors.white,
+                                                        child: Text(
+                                                          item['material_code'] ??
+                                                              '',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4.0),
-                                    // ---------------------------------------------------- \\
-                                    SizedBox(
-                                      child: Row(
-                                        // mainAxisAlignment:
-                                        // MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text(
-                                            'Lot : ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14.0),
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              padding: EdgeInsets.all(5.0),
-                                              color: Colors.white,
-                                              child: Text(
-                                                item['lot_no'] ?? '',
-                                                style: const TextStyle(
-                                                    fontSize: 14.0),
+                                              const SizedBox(height: 4.0),
+                                              // ---------------------------------------------------- \\
+                                              SizedBox(
+                                                child: Row(
+                                                  // mainAxisAlignment:
+                                                  // MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    const Text(
+                                                      'Lot : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.all(5.0),
+                                                        color: Colors.white,
+                                                        child: Text(
+                                                          item['lot_no'] ?? '',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4.0),
-                                    // ---------------------------------------------------- \\
-                                    SizedBox(
-                                      child: Row(
-                                        // mainAxisAlignment:
-                                        // MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text(
-                                            'Comb : ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14.0),
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              padding: EdgeInsets.all(5.0),
-                                              color: Colors.white,
-                                              child: Text(
-                                                item['comb'] ?? '',
-                                                style: const TextStyle(
-                                                    fontSize: 14.0),
+                                              const SizedBox(height: 4.0),
+                                              // ---------------------------------------------------- \\
+                                              SizedBox(
+                                                child: Row(
+                                                  // mainAxisAlignment:
+                                                  // MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    const Text(
+                                                      'Comb : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.all(5.0),
+                                                        color: Colors.white,
+                                                        child: Text(
+                                                          item['comb'] ?? '',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4.0),
-                                    // ---------------------------------------------------- \\
-                                    SizedBox(
-                                      child: Row(
-                                        // mainAxisAlignment:
-                                        // MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text(
-                                            'ความต้องการใช้ : ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14.0),
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              padding: EdgeInsets.all(5.0),
-                                              color: Colors.white,
-                                              child: Text(
-                                                NumberFormat(
-                                                        '#,###,###,###,###,###')
-                                                    .format(item['usage_qty'] ??
-                                                        ''),
-                                                style: const TextStyle(
-                                                    fontSize: 14.0),
+                                              const SizedBox(height: 4.0),
+                                              // ---------------------------------------------------- \\
+                                              SizedBox(
+                                                child: Row(
+                                                  // mainAxisAlignment:
+                                                  // MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    const Text(
+                                                      'ความต้องการใช้ : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.all(5.0),
+                                                        color: Colors.white,
+                                                        child: Text(
+                                                          NumberFormat(
+                                                                  '#,###,###,###,###,###')
+                                                              .format(item[
+                                                                      'usage_qty'] ??
+                                                                  ''),
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4.0),
-                                    // ---------------------------------------------------- \\
-                                    SizedBox(
-                                      child: Row(
-                                        // mainAxisAlignment:
-                                        // MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text(
-                                            'Warehouse : ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14.0),
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              padding: EdgeInsets.all(5.0),
-                                              color: Colors.white,
-                                              child: Text(
-                                                item['ware_code'] ?? '',
-                                                style: const TextStyle(
-                                                    fontSize: 14.0),
+                                              const SizedBox(height: 4.0),
+                                              // ---------------------------------------------------- \\
+                                              SizedBox(
+                                                child: Row(
+                                                  // mainAxisAlignment:
+                                                  // MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    const Text(
+                                                      'Warehouse : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.all(5.0),
+                                                        color: Colors.white,
+                                                        child: Text(
+                                                          item['ware_code'] ??
+                                                              '',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4.0),
-                                    // ---------------------------------------------------- \\
-                                    SizedBox(
-                                      child: Row(
-                                        // mainAxisAlignment:
-                                        // MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text(
-                                            'Locator : ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14.0),
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              padding: EdgeInsets.all(5.0),
-                                              color: Colors.white,
-                                              child: Text(
-                                                item['location_code'] ?? '',
-                                                style: const TextStyle(
-                                                    fontSize: 14.0),
+                                              const SizedBox(height: 4.0),
+                                              // ---------------------------------------------------- \\
+                                              SizedBox(
+                                                child: Row(
+                                                  // mainAxisAlignment:
+                                                  // MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    const Text(
+                                                      'Locator : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.all(5.0),
+                                                        color: Colors.white,
+                                                        child: Text(
+                                                          item['location_code'] ??
+                                                              '',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4.0),
-                                    // ---------------------------------------------------- \\
-                                  ]))
-                        ])),
-                  );
-                }).toList(),
-              ),
+                                              const SizedBox(height: 4.0),
+                                              // ---------------------------------------------------- \\
+                                            ]))
+                                  ])),
+                            );
+                          }).toList(),
+                        ),
             ),
           ])),
       bottomNavigationBar: BottomBar(

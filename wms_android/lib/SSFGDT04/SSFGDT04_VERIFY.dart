@@ -111,12 +111,12 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final data = json.decode(responseBody);
-        setState(() {
+        if (mounted) {setState(() {
           poStatus = data['po_status'];
           poMessage = data['po_message'];
           poErpDocNo = data['po_erp_doc_no'];
           vTypeComplete = data['v_type_complete'];
-        });
+        });}
       } else {
         throw Exception('Failed to load data');
       }
@@ -139,7 +139,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
         final Map<String, dynamic> dataPDF = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
-        setState(() {
+        if (mounted) {setState(() {
           V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
           LIN_ID = dataPDF['LIN_ID'] ?? '';
           OU_CODE = dataPDF['OU_CODE'] ?? '';
@@ -183,7 +183,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
           LH_MO_DO_NO = dataPDF['LH_MO_DO_NO'] ?? '';
 
           _launchUrl(poDocNo);
-        });
+        });}
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
@@ -292,7 +292,8 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)',
+      showExitWarning: true,),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer:CustomDrawer(),
       body: Padding(
@@ -490,7 +491,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 

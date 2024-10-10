@@ -87,14 +87,38 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             content: Text('คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?'),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text('ยกเลิก'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: Text('ออก'),
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('Cancel'),
+                  ),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('OK'),
+                  ),
+                ],
+              )
+              // TextButton(
+              //   onPressed: () => Navigator.of(context).pop(false),
+              //   child: Text('Cancel'),
+              // ),
+              // TextButton(
+              //   onPressed: () => Navigator.of(context).pop(true),
+              //   child: Text('OK'),
+              // ),
             ],
           ),
         ) ??

@@ -50,6 +50,8 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
   String poMessageSubmit = '';
   String flag = '1';
 
+  bool isLoading = false;
+
 // ---------------------------- P ---------------------------- \\
   String? V_DS_PDF;
   String? LIN_ID;
@@ -115,6 +117,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
   }
 
   Future<void> fetchData() async {
+    isLoading = true;
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docNo}/${widget.docType}'));
@@ -127,6 +130,8 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
           setState(() {
             dataCard =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            isLoading = false;
           });
         }
         print('dataCard : $dataCard');
@@ -455,118 +460,133 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
           const SizedBox(height: 20),
           // --------------------------------------------------------------------
           Expanded(
-            child: ListView(
-              children: dataCard.map((item) {
-                return Card(
-                  elevation: 8.0,
-                  margin: EdgeInsets.symmetric(vertical: 8.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  color: Color.fromRGBO(204, 235, 252, 1.0),
-                  child: InkWell(
-                    onTap: () {},
-                    borderRadius: BorderRadius.circular(15.0),
-                    child: Stack(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Item : ${item['item_code'] ?? ''}',
-                                style: TextStyle(color: Colors.black),
-                              ),
-
-                              SizedBox(height: 4.0),
-                              Text(
-                                'Lot No. : ${item['lots_no'] ?? ''}',
-                                style: TextStyle(color: Colors.black),
-                              ),
-
-                              SizedBox(height: 4.0),
-                              // -------------------------------------------------------------
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      'Locator : ${item['location_code'] ?? ''}',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      'จำนวนที่จ่าย : ${NumberFormat('#,###,###,###,###,###').format(item['pack_qty'] ?? '')}',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ),
-                                  // Expanded(
-                                  //   child: Text(
-                                  //     'Pack : ${item['pack_code'] ?? ''}',
-                                  //     style: TextStyle(color: Colors.black),
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
-                              SizedBox(height: 4.0),
-                              // -------------------------------------------------------------
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  // Expanded(
-                                  //   child: Text(
-                                  //     'Locator : ${item['location_code'] ?? ''}',
-                                  //     style: TextStyle(color: Colors.black),
-                                  //   ),
-                                  // ),
-                                  Expanded(
-                                    child: Text(
-                                      'PD Location : ${item['pd_location'] ?? ''}',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 4.0),
-                              // -------------------------------------------------------------
-                              Text(
-                                'Reason : ${item['reason_mismatch'] ?? ''}',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              SizedBox(height: 4.0),
-                              // -------------------------------------------------------------
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      'ใช้แทนจุด : ${item['attribute3'] ?? ''}',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      'Replace Lot# : ${item['attribute4'] ?? ''} ',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 4.0),
-                            ],
-                          ),
+            child: isLoading
+                ? Center(child: CircularProgressIndicator())
+                : dataCard.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'No data found',
+                          style: TextStyle(color: Colors.white),
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
+                      )
+                    : ListView(
+                        children: dataCard.map((item) {
+                          return Card(
+                            elevation: 8.0,
+                            margin: EdgeInsets.symmetric(vertical: 8.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            color: Color.fromRGBO(204, 235, 252, 1.0),
+                            child: InkWell(
+                              onTap: () {},
+                              borderRadius: BorderRadius.circular(15.0),
+                              child: Stack(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Item : ${item['item_code'] ?? ''}',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+
+                                        SizedBox(height: 4.0),
+                                        Text(
+                                          'Lot No. : ${item['lots_no'] ?? ''}',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+
+                                        SizedBox(height: 4.0),
+                                        // -------------------------------------------------------------
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                'Locator : ${item['location_code'] ?? ''}',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                'จำนวนที่จ่าย : ${NumberFormat('#,###,###,###,###,###').format(item['pack_qty'] ?? '')}',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                            // Expanded(
+                                            //   child: Text(
+                                            //     'Pack : ${item['pack_code'] ?? ''}',
+                                            //     style: TextStyle(color: Colors.black),
+                                            //   ),
+                                            // ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 4.0),
+                                        // -------------------------------------------------------------
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            // Expanded(
+                                            //   child: Text(
+                                            //     'Locator : ${item['location_code'] ?? ''}',
+                                            //     style: TextStyle(color: Colors.black),
+                                            //   ),
+                                            // ),
+                                            Expanded(
+                                              child: Text(
+                                                'PD Location : ${item['pd_location'] ?? ''}',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 4.0),
+                                        // -------------------------------------------------------------
+                                        Text(
+                                          'Reason : ${item['reason_mismatch'] ?? ''}',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                        SizedBox(height: 4.0),
+                                        // -------------------------------------------------------------
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                'ใช้แทนจุด : ${item['attribute3'] ?? ''}',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                'Replace Lot# : ${item['attribute4'] ?? ''} ',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 4.0),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
           ),
         ]),
       ),

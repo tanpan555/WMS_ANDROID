@@ -24,6 +24,8 @@ class SSFGDT09L_MAIN extends StatefulWidget {
 class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
   List<dynamic> dataWareCode = [];
 
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +46,7 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
   }
 
   Future<void> fetchData() async {
+    isLoading = true;
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SelectWareCode/${widget.pAttr1}/${widget.pErpOuCode}'));
@@ -56,6 +59,8 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
           setState(() {
             dataWareCode =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            isLoading = false;
           });
         }
         print('dataWareCode : $dataWareCode');
@@ -73,8 +78,8 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'เบิกจ่าย'),
+      backgroundColor: const Color(0xFF17153B),
+      appBar: const CustomAppBar(title: 'เบิกจ่าย'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -84,7 +89,7 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
               margin: const EdgeInsets.only(
                   bottom: 8.0), // Add some space below the container
               color: Colors.grey[300],
-              child: Center(
+              child: const Center(
                 child: Text(
                   'เลือกคลังปฏิบัติงาน',
                   style: TextStyle(
@@ -96,95 +101,113 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Number of columns
-                    crossAxisSpacing: 5, // Horizontal spacing between cards
-                    mainAxisSpacing: 5, // Vertical spacing between cards
-                    childAspectRatio: 1.0, // Aspect ratio for each card
-                  ),
-                  itemCount: dataWareCode.length,
-                  itemBuilder: (context, index) {
-                    final item = dataWareCode[index];
-                    Color cardColor;
-                    String imagePath;
-
-                    switch (item['ware_code']) {
-                      case 'WH000-1':
-                        imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.white;
-                        break;
-                      case 'WH000':
-                        imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.white;
-                        break;
-                      case 'WH001':
-                        imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.white;
-                        break;
-                      default:
-                        imagePath = 'assets/images/warehouse_blue.png';
-                        cardColor = Colors.white;
-                    }
-
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Ssfgdt09lMenu(
-                              pWareCode: item['ware_code'],
-                              pWareName: item['ware_name'],
-                              pErpOuCode: widget.pErpOuCode,
-                              pOuCode: widget.pOuCode,
-                              pAttr1: widget.pAttr1,
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : dataWareCode.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No data found',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
+                      : SingleChildScrollView(
+                          child: GridView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2, // Number of columns
+                              crossAxisSpacing:
+                                  5, // Horizontal spacing between cards
+                              mainAxisSpacing:
+                                  5, // Vertical spacing between cards
+                              childAspectRatio:
+                                  1.0, // Aspect ratio for each card
                             ),
-                          ),
-                        );
-                      },
-                      child: Card(
-                        elevation: 4.0,
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 5),
-                        color: cardColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                imagePath,
-                                width: 60,
-                                height: 60,
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                item['ware_code'] ?? 'null!!!!!!',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
+                            itemCount: dataWareCode.length,
+                            itemBuilder: (context, index) {
+                              final item = dataWareCode[index];
+                              Color cardColor;
+                              String imagePath;
+
+                              switch (item['ware_code']) {
+                                case 'WH000-1':
+                                  imagePath =
+                                      'assets/images/warehouse_blue.png';
+                                  cardColor = Colors.white;
+                                  break;
+                                case 'WH000':
+                                  imagePath =
+                                      'assets/images/warehouse_blue.png';
+                                  cardColor = Colors.white;
+                                  break;
+                                case 'WH001':
+                                  imagePath =
+                                      'assets/images/warehouse_blue.png';
+                                  cardColor = Colors.white;
+                                  break;
+                                default:
+                                  imagePath =
+                                      'assets/images/warehouse_blue.png';
+                                  cardColor = Colors.white;
+                              }
+
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Ssfgdt09lMenu(
+                                        pWareCode: item['ware_code'],
+                                        pWareName: item['ware_name'],
+                                        pErpOuCode: widget.pErpOuCode,
+                                        pOuCode: widget.pOuCode,
+                                        pAttr1: widget.pAttr1,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Card(
+                                  elevation: 4.0,
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 5),
+                                  color: cardColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          imagePath,
+                                          width: 60,
+                                          height: 60,
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          item['ware_code'] ?? 'null!!!!!!',
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(
+      bottomNavigationBar: const BottomBar(
         currentPage: 'not_show',
       ),
     );

@@ -70,6 +70,8 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
   bool noDate = false;
   int _cursorPosition = 0;
 
+  bool isLoading = false;
+
   @override
   void initState() {
     setData();
@@ -91,9 +93,11 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
   }
 
   void setData() {
+    isLoading = true;
     if (mounted) {
       setState(() {
         dataLovStatusController.text = 'ระหว่างบันทึก';
+        isLoading = false;
       });
     }
   }
@@ -134,301 +138,307 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
       appBar: CustomAppBar(title: 'เบิกจ่าย'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              //////////////////////////////////////////////////////////////
-              // TextFormField(
-              //   readOnly: true,
-              //   decoration: InputDecoration(
-              //     border: InputBorder.none,
-              //     filled: true,
-              //     fillColor: Colors.grey[300],
-              //     labelText: '${widget.pWareCode}  ${widget.pWareName}',
-              //     labelStyle: const TextStyle(
-              //       color: Colors.black87,
-              //     ),
-              //   ),
-              // ),
-              // const SizedBox(height: 20),
-              //////////////////////////////////////////////////////////////
-              TextFormField(
-                controller: dataLovStatusController,
-                readOnly: true,
-                onTap: () => showDialogSelectDataStatus(),
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelText: 'ประเภทรายการ',
-                  labelStyle: const TextStyle(
-                    color: Colors.black87,
-                  ),
-                  suffixIcon: Icon(
-                    Icons.arrow_drop_down,
-                    color: Color.fromARGB(255, 113, 113, 113),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              //////////////////////////////////////////////////////////////
-              TextFormField(
-                controller: pSoNoController,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelText: 'เลขที่เอกสาร',
-                  labelStyle: const TextStyle(
-                    color: Colors.black87,
-                  ),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    pSoNo = value;
-                  });
-                },
-              ),
-              //////////////////////////////////////////////////////////////
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: dateController,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
-                  LengthLimitingTextInputFormatter(
-                      8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
-                  DateInputFormatter(), // กำหนดรูปแบบ __/__/____
-                ],
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelText: 'วันที่เบิกจ่าย',
-                  hintText: 'DD/MM/YYYY',
-                  hintStyle: TextStyle(color: Colors.grey),
-                  labelStyle: chkDate == false && noDate == false
-                      ? const TextStyle(
+        child: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                child: Column(
+                  children: [
+                    //////////////////////////////////////////////////////////////
+                    // TextFormField(
+                    //   readOnly: true,
+                    //   decoration: InputDecoration(
+                    //     border: InputBorder.none,
+                    //     filled: true,
+                    //     fillColor: Colors.grey[300],
+                    //     labelText: '${widget.pWareCode}  ${widget.pWareName}',
+                    //     labelStyle: const TextStyle(
+                    //       color: Colors.black87,
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 20),
+                    //////////////////////////////////////////////////////////////
+                    TextFormField(
+                      controller: dataLovStatusController,
+                      readOnly: true,
+                      onTap: () => showDialogSelectDataStatus(),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'ประเภทรายการ',
+                        labelStyle: const TextStyle(
                           color: Colors.black87,
-                        )
-                      : const TextStyle(
-                          color: Colors.red,
                         ),
-                  suffixIcon: IconButton(
-                    icon:
-                        const Icon(Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
-                    onPressed: () async {
-                      // กดไอคอนเพื่อเปิด date picker
-                      _selectDate(context);
-                    },
-                  ),
-                ),
-                onChanged: (value) {
-                  selectedDate = value;
-                  print('selectedDate : $selectedDate');
-                  setState(() {
-                    _cursorPosition = dateController.selection.baseOffset;
-                    dateController.value = dateController.value.copyWith(
-                      text: value,
-                      selection: TextSelection.fromPosition(
-                        TextPosition(offset: _cursorPosition),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
                       ),
-                    );
-                  });
-
-                  setState(() {
-                    // สร้าง instance ของ DateInputFormatter
-                    DateInputFormatter formatter = DateInputFormatter();
-
-                    // ตรวจสอบการเปลี่ยนแปลงของข้อความ
-                    TextEditingValue oldValue =
-                        TextEditingValue(text: dateController.text);
-                    TextEditingValue newValue = TextEditingValue(text: value);
-
-                    // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
-                    formatter.formatEditUpdate(oldValue, newValue);
-
-                    // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
-                    dateColorCheck = formatter.dateColorCheck;
-                    monthColorCheck = formatter.monthColorCheck;
-                    noDate = formatter.noDate; // เพิ่มการตรวจสอบ noDate
-                  });
-                  setState(() {
-                    RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                    // String messageAlertValueDate =
-                    //     'กรุณากรองวันที่ให้ถูกต้อง';
-                    if (!dateRegExp.hasMatch(selectedDate)) {
-                      // setState(() {
-                      //   chkDate == true;
-                      // });
-                      // showDialogAlert(context, messageAlertValueDate);
-                    } else {
-                      setState(() {
-                        chkDate = false;
-                      });
-                    }
-                  });
-                },
-              ),
-              // noDate
-              //     ? const Text(
-              //         'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-              //         style: TextStyle(color: Colors.red),
-              //       )
-              //     : const SizedBox.shrink(),
-              chkDate == true || noDate == true
-                  ? const Padding(
-                      padding: EdgeInsets.only(top: 4.0),
-                      child: Text(
-                        'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                    ),
+                    const SizedBox(height: 8),
+                    //////////////////////////////////////////////////////////////
+                    TextFormField(
+                      controller: pSoNoController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'เลขที่เอกสาร',
+                        labelStyle: const TextStyle(
+                          color: Colors.black87,
                         ),
-                      ))
-                  : const SizedBox.shrink(),
-              // TextFormField(
-              //   controller: dateController,
-              //   readOnly: true,
-              //   onTap: () => _selectDate(context),
-              //   decoration: InputDecoration(
-              //     border: InputBorder.none,
-              //     filled: true,
-              //     fillColor: Colors.white,
-              //     labelText: 'วันที่เบิกจ่าย',
-              //     labelStyle: const TextStyle(
-              //       color: Colors.black87,
-              //     ),
-              //     suffixIcon: Icon(
-              //       Icons.calendar_today,
-              //       color: Colors.black87,
-              //     ),
-              //   ),
-              // ),
-              const SizedBox(height: 20),
-              //////////////////////////////////////////////////////////////
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Container(
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.grey[300],
-                  //     borderRadius: BorderRadius.circular(8.0),
-                  //   ),
-                  //   child: IconButton(
-                  //     iconSize: 20.0,
-                  //     icon: Image.asset(
-                  //       'assets/images/eraser_red.png',
-                  //       width: 50.0,
-                  //       height: 25.0,
-                  //     ),
-                  //     onPressed: () {
-                  //       setState(() {
-                  //         pSoNo = '';
-                  //         selectedDate = '';
-                  //         selectedItem = 'ทั้งหมด';
-                  //         statusDESC = 'ทั้งหมด';
-                  //         dateController.clear();
-                  //         pSoNoController.clear();
-                  //       });
-                  //     },
-                  //   ),
-                  // ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        pSoNo = '';
-                        selectedDate = '';
-                        selectedItem = 'ทั้งหมด';
-                        statusDESC = 'ทั้งหมด';
-                        dataLovStatusController.text = 'ทั้งหมด';
-                        noDate = false;
-                        chkDate = false;
-                        dateController.clear();
-                        pSoNoController.clear();
-
-                        print('selectedItem : $selectedItem');
-                        print('statusDESC : $statusDESC');
-                        print(
-                            'dataLovStatusController : $dataLovStatusController');
-                      });
-                    },
-                    style: AppStyles.EraserButtonStyle(),
-                    child: Image.asset(
-                      'assets/images/eraser_red.png', // ใส่ภาพจากไฟล์ asset
-                      width: 50, // กำหนดขนาดภาพ
-                      height: 25,
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          pSoNo = value;
+                        });
+                      },
                     ),
-                  ),
-                  const SizedBox(width: 20),
-                  //////////////////////////////////////////////////////
-                  ElevatedButton(
-                    onPressed: () {
-                      if (noDate != true && chkDate != true) {
-                        if (selectedDate.isNotEmpty) {
+                    //////////////////////////////////////////////////////////////
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: dateController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter
+                            .digitsOnly, // ยอมรับเฉพาะตัวเลข
+                        LengthLimitingTextInputFormatter(
+                            8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
+                        DateInputFormatter(), // กำหนดรูปแบบ __/__/____
+                      ],
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'วันที่เบิกจ่าย',
+                        hintText: 'DD/MM/YYYY',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        labelStyle: chkDate == false && noDate == false
+                            ? const TextStyle(
+                                color: Colors.black87,
+                              )
+                            : const TextStyle(
+                                color: Colors.red,
+                              ),
+                        suffixIcon: IconButton(
+                          icon: const Icon(
+                              Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
+                          onPressed: () async {
+                            // กดไอคอนเพื่อเปิด date picker
+                            _selectDate(context);
+                          },
+                        ),
+                      ),
+                      onChanged: (value) {
+                        selectedDate = value;
+                        print('selectedDate : $selectedDate');
+                        setState(() {
+                          _cursorPosition = dateController.selection.baseOffset;
+                          dateController.value = dateController.value.copyWith(
+                            text: value,
+                            selection: TextSelection.fromPosition(
+                              TextPosition(offset: _cursorPosition),
+                            ),
+                          );
+                        });
+
+                        setState(() {
+                          // สร้าง instance ของ DateInputFormatter
+                          DateInputFormatter formatter = DateInputFormatter();
+
+                          // ตรวจสอบการเปลี่ยนแปลงของข้อความ
+                          TextEditingValue oldValue =
+                              TextEditingValue(text: dateController.text);
+                          TextEditingValue newValue =
+                              TextEditingValue(text: value);
+
+                          // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
+                          formatter.formatEditUpdate(oldValue, newValue);
+
+                          // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
+                          dateColorCheck = formatter.dateColorCheck;
+                          monthColorCheck = formatter.monthColorCheck;
+                          noDate = formatter.noDate; // เพิ่มการตรวจสอบ noDate
+                        });
+                        setState(() {
                           RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                          // String messageAlertValueDate =
+                          //     'กรุณากรองวันที่ให้ถูกต้อง';
                           if (!dateRegExp.hasMatch(selectedDate)) {
+                            // setState(() {
+                            //   chkDate == true;
+                            // });
+                            // showDialogAlert(context, messageAlertValueDate);
+                          } else {
                             setState(() {
-                              chkDate = true;
+                              chkDate = false;
                             });
-                          } else if (selectedDate != '') {
-                            DateTime parsedDate =
-                                DateFormat('dd/MM/yyyy').parse(selectedDate);
-                            String formattedDate =
-                                DateFormat('dd-MM-yyyy').format(parsedDate);
-
-                            setState(() {
-                              selectedDate = formattedDate;
-                            });
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Ssfgdt09lCard(
-                                      pErpOuCode: widget.pErpOuCode,
-                                      pWareCode: widget.pWareCode,
-                                      pOuCode: widget.pOuCode,
-                                      pAttr1: widget.pAttr1,
-                                      pAppUser: appUser,
-                                      pFlag: pFlag,
-                                      pStatusDESC: statusDESC,
-                                      pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                                      pDocDate: formattedDate == ''
-                                          ? 'null'
-                                          : formattedDate)),
-                            ).then((value) async {});
                           }
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Ssfgdt09lCard(
-                                    pErpOuCode: widget.pErpOuCode,
-                                    pWareCode: widget.pWareCode,
-                                    pOuCode: widget.pOuCode,
-                                    pAttr1: widget.pAttr1,
-                                    pAppUser: appUser,
-                                    pFlag: pFlag,
-                                    pStatusDESC: statusDESC,
-                                    pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                                    pDocDate: 'null')),
-                          ).then((value) async {});
-                        }
-                      }
-                    },
-                    style: AppStyles.SearchButtonStyle(),
-                    child: Image.asset(
-                      'assets/images/search_color.png', // ใส่ภาพจากไฟล์ asset
-                      width: 50, // กำหนดขนาดภาพ
-                      height: 25,
+                        });
+                      },
                     ),
-                  ),
-                ],
+                    // noDate
+                    //     ? const Text(
+                    //         'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
+                    //         style: TextStyle(color: Colors.red),
+                    //       )
+                    //     : const SizedBox.shrink(),
+                    chkDate == true || noDate == true
+                        ? const Padding(
+                            padding: EdgeInsets.only(top: 4.0),
+                            child: Text(
+                              'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                              ),
+                            ))
+                        : const SizedBox.shrink(),
+                    // TextFormField(
+                    //   controller: dateController,
+                    //   readOnly: true,
+                    //   onTap: () => _selectDate(context),
+                    //   decoration: InputDecoration(
+                    //     border: InputBorder.none,
+                    //     filled: true,
+                    //     fillColor: Colors.white,
+                    //     labelText: 'วันที่เบิกจ่าย',
+                    //     labelStyle: const TextStyle(
+                    //       color: Colors.black87,
+                    //     ),
+                    //     suffixIcon: Icon(
+                    //       Icons.calendar_today,
+                    //       color: Colors.black87,
+                    //     ),
+                    //   ),
+                    // ),
+                    const SizedBox(height: 20),
+                    //////////////////////////////////////////////////////////////
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Container(
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.grey[300],
+                        //     borderRadius: BorderRadius.circular(8.0),
+                        //   ),
+                        //   child: IconButton(
+                        //     iconSize: 20.0,
+                        //     icon: Image.asset(
+                        //       'assets/images/eraser_red.png',
+                        //       width: 50.0,
+                        //       height: 25.0,
+                        //     ),
+                        //     onPressed: () {
+                        //       setState(() {
+                        //         pSoNo = '';
+                        //         selectedDate = '';
+                        //         selectedItem = 'ทั้งหมด';
+                        //         statusDESC = 'ทั้งหมด';
+                        //         dateController.clear();
+                        //         pSoNoController.clear();
+                        //       });
+                        //     },
+                        //   ),
+                        // ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              pSoNo = '';
+                              selectedDate = '';
+                              selectedItem = 'ทั้งหมด';
+                              statusDESC = 'ทั้งหมด';
+                              dataLovStatusController.text = 'ทั้งหมด';
+                              noDate = false;
+                              chkDate = false;
+                              dateController.clear();
+                              pSoNoController.clear();
+
+                              print('selectedItem : $selectedItem');
+                              print('statusDESC : $statusDESC');
+                              print(
+                                  'dataLovStatusController : $dataLovStatusController');
+                            });
+                          },
+                          style: AppStyles.EraserButtonStyle(),
+                          child: Image.asset(
+                            'assets/images/eraser_red.png', // ใส่ภาพจากไฟล์ asset
+                            width: 50, // กำหนดขนาดภาพ
+                            height: 25,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        //////////////////////////////////////////////////////
+                        ElevatedButton(
+                          onPressed: () {
+                            if (noDate != true && chkDate != true) {
+                              if (selectedDate.isNotEmpty) {
+                                RegExp dateRegExp =
+                                    RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                                if (!dateRegExp.hasMatch(selectedDate)) {
+                                  setState(() {
+                                    chkDate = true;
+                                  });
+                                } else if (selectedDate != '') {
+                                  DateTime parsedDate = DateFormat('dd/MM/yyyy')
+                                      .parse(selectedDate);
+                                  String formattedDate =
+                                      DateFormat('dd-MM-yyyy')
+                                          .format(parsedDate);
+
+                                  setState(() {
+                                    selectedDate = formattedDate;
+                                  });
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Ssfgdt09lCard(
+                                            pErpOuCode: widget.pErpOuCode,
+                                            pWareCode: widget.pWareCode,
+                                            pOuCode: widget.pOuCode,
+                                            pAttr1: widget.pAttr1,
+                                            pAppUser: appUser,
+                                            pFlag: pFlag,
+                                            pStatusDESC: statusDESC,
+                                            pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                                            pDocDate: formattedDate == ''
+                                                ? 'null'
+                                                : formattedDate)),
+                                  ).then((value) async {});
+                                }
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Ssfgdt09lCard(
+                                          pErpOuCode: widget.pErpOuCode,
+                                          pWareCode: widget.pWareCode,
+                                          pOuCode: widget.pOuCode,
+                                          pAttr1: widget.pAttr1,
+                                          pAppUser: appUser,
+                                          pFlag: pFlag,
+                                          pStatusDESC: statusDESC,
+                                          pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                                          pDocDate: 'null')),
+                                ).then((value) async {});
+                              }
+                            }
+                          },
+                          style: AppStyles.SearchButtonStyle(),
+                          child: Image.asset(
+                            'assets/images/search_color.png', // ใส่ภาพจากไฟล์ asset
+                            width: 50, // กำหนดขนาดภาพ
+                            height: 25,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
       ),
       bottomNavigationBar: BottomBar(
         currentPage: 'not_show',

@@ -153,9 +153,9 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   Future<void> fetchData([String? url]) async {
     if (!mounted) return; // ตรวจสอบว่าตัว component ยังถูก mount อยู่หรือไม่
 
-    setState(() {
+    if (mounted) {setState(() {
       isLoading = true;
-    });
+    });}
 
     final String requestUrl = url ??
         'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}';
@@ -169,7 +169,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
 
         if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
 
-        setState(() {
+        if (mounted) {setState(() {
           if (parsedResponse is Map && parsedResponse.containsKey('items')) {
             dataCard = parsedResponse['items'];
           } else {
@@ -180,24 +180,24 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
           next = getLink(links, 'next');
           previous = getLink(links, 'prev');
           isLoading = false;
-        });
+        });}
       } else {
         if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
 
         // Handle HTTP error responses
-        setState(() {
+        if (mounted) {setState(() {
           isLoading = false;
           errorMessage = 'Failed to load data: ${response.statusCode}';
-        });
+        });}
       }
     } catch (e) {
       if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
 
       // Handle exceptions that may occur
-      setState(() {
+      if (mounted) {setState(() {
         isLoading = false;
         errorMessage = 'Error occurred: $e';
-      });
+      });}
     }
   }
 
@@ -209,19 +209,19 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
 
   void _loadNextPage() {
     if (next != null) {
-      setState(() {
+      if (mounted) {setState(() {
         print('next $next');
         isLoading = true;
-      });
+      });}
       fetchData(next);
     }
   }
 
   void _loadPrevPage() {
     if (previous != null) {
-      setState(() {
+      if (mounted) {setState(() {
         isLoading = true;
-      });
+      });}
       fetchData(previous);
     }
   }
@@ -253,7 +253,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
         // print('Response body: ${response.body}');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {setState(() {});}
       print('checkStatusCard ERROR IN Fetch Data : $e');
     }
   }
@@ -298,7 +298,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
         //
         print('Fetched data: $jsonDecode');
 
-        setState(() {
+        if (mounted) {setState(() {
           pDocNoGetInHead = dataGetInHead['po_doc_no'] ?? '';
           pDocTypeGetInHead = dataGetInHead['po_doc_type'] ?? '';
           getInheadStpe(
@@ -317,7 +317,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
               'po_status : ${dataGetInHead['po_status']} Type: ${dataGetInHead['po_status'.runtimeType]}');
           print(
               'po_message : ${dataGetInHead['po_message']} Type: ${dataGetInHead['po_message'.runtimeType]}');
-        });
+        });}
         // } else {
         //   print('No items found.');
         // }
@@ -326,13 +326,13 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
             'getInhead Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {setState(() {});}
       print('getInhead ERROR IN Fetch Data : $e');
     }
   }
 
   void filterData() {
-    setState(() {
+    if (mounted) {setState(() {
       displayedData = dataCard.where((item) {
         final date = item['po_date'] ?? '';
         if (widget.date.isEmpty) {
@@ -345,7 +345,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
       }).toList();
       print(
           'displayedData : $displayedData Type : ${displayedData.runtimeType}');
-    });
+    });}
   }
 
   void getInheadStpe(String pDocNoGetInHead, String pDocTypeGetInHead,
@@ -384,7 +384,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
         final Map<String, dynamic> dataPDF = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
-        setState(() {
+        if (mounted) {setState(() {
           V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
           LIN_ID = dataPDF['LIN_ID'] ?? '';
           OU_CODE = dataPDF['OU_CODE'] ?? '';
@@ -430,7 +430,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
           LH_MO_DO_NO = dataPDF['LH_MO_DO_NO'] ?? '';
 
           _launchUrl(poDocNo);
-        });
+        });}
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
@@ -534,24 +534,6 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
         '&LH_MO_DO_NO=$LH_MO_DO_NO');
   }
 
-  // void _loadNextPage() {
-  //   if (nextLink != null) {
-  //     setState(() {
-  //       print('nextLink $nextLink');
-  //       isLoading = true;
-  //     });
-  //     fetchWareCodes(nextLink);
-  //   }
-  // }
-
-  // void _loadPrevPage() {
-  //   if (prevLink != null) {
-  //     setState(() {
-  //       isLoading = true;
-  //     });
-  //     fetchWareCodes(prevLink);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -568,7 +550,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
             : dataCard.isEmpty
                 ? const Center(
                     child: Text(
-                      'No Data Available',
+                      'No data found',
                       style: TextStyle(color: Colors.white),
                     ),
                   )

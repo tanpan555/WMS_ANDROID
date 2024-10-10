@@ -714,7 +714,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                   : dataCard.isEmpty
                       ? const Center(
                           child: Text(
-                            'No Data Available',
+                            'No data found',
                             style: TextStyle(color: Colors.white),
                           ),
                         )

@@ -39,6 +39,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   String? poStatus;
   String? poMessage;
   String? setqc;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -182,11 +183,11 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
+        if (mounted) {setState(() {
           poStatus = responseData['po_status'];
           poMessage = responseData['po_message'];
           fetchGridItems();
-        });
+        });}
         print('Success: $responseData');
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
@@ -202,15 +203,16 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
-      setState(() {
+      if (mounted) {setState(() {
         // Update gridItems with new data
         gridItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+        isLoading = false;
 
         // Filter out deleted items
         gridItems = gridItems
             .where((item) => !deletedItemCodes.contains(item['item_code']))
             .toList();
-      });
+      });}
     } else {
       throw Exception('Failed to load DOC_TYPE items');
     }
@@ -244,11 +246,11 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
+        if (mounted) {setState(() {
           poStatus = responseData['po_status'];
           poMessage = responseData['po_message'];
           fetchGridItems();
-        });
+        });}
         print('Success: $responseData');
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
@@ -289,12 +291,12 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
       print('po_message: $poMessage');
       if (poStatus == 'success') {
         // Only update UI if deletion was successful
-        setState(() {
+        if (mounted) {setState(() {
           // Remove the item from the list
           gridItems.removeWhere((item) =>
               item['item_code'] == poItemCode && item['po_seq'] == poSeq);
           deletedItemCodes.add(poItemCode!);
-        });
+        });}
       }
     } else {
       print('Request failed with status: ${response.statusCode}.');
@@ -310,15 +312,15 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> setQC =
             jsonDecode(utf8.decode(response.bodyBytes));
-        setState(() {
+        if (mounted) {setState(() {
           setqc = setQC['v_qc_pass']; // อัปเดตค่าภายใน setState
-        });
+        });}
         print('setQC : $setQC type : ${setQC.runtimeType}');
       } else {
         print('setQC Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {setState(() {});}
       print('setQC ERROR IN Fetch Data : $e');
     }
   }
@@ -332,7 +334,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)',
+      showExitWarning: true,),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer: CustomDrawer(),
       body: Padding(
@@ -534,7 +537,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 
