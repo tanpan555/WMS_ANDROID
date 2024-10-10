@@ -2224,6 +2224,10 @@ class _LotDialogState extends State<LotDialog> {
                         child: IconButton(
                           icon: Icon(Icons.close),
                           onPressed: () {
+                            lotQtyController.clear();
+                            lotSupplierController.clear();
+                            mfgDateController.clear();
+
                             Navigator.of(context).pop();
                           },
                         ),
