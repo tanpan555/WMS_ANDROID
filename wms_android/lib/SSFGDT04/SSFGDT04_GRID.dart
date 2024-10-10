@@ -335,7 +335,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)',
-      showExitWarning: true,),
+      // showExitWarning: true,
+      ),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer: CustomDrawer(),
       body: Padding(
@@ -354,18 +355,34 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Row(
-                              children: [
-                                Icon(
-                                  Icons
-                                      .notification_important, // ไอคอนแจ้งเตือน
-                                  color: Colors.red, // สีแดง
-                                  size: 30,
-                                ),
-                                SizedBox(
-                                    width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
-                                Text('แจ้งเตือน'),
-                              ],
-                            ),
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Icon(
+                                              Icons
+                                                  .notification_important, // ไอคอนแจ้งเตือน
+                                              color: Colors.red, // สีแดง
+                                              size: 30,
+                                            ),
+                                            SizedBox(
+                                              width:
+                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                            ),
+                                            Text('แจ้งเตือน'),
+                                          ],
+                                        ),
+                                        // Close icon
+                                        IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                        ),
+                                      ],
+                                    ),
                             content: const Text(
                                 'ระบบมีการบันทึกรายการทิ้งไว้ หากดึง ใบผลิต จะเคลียร์รายการทั้งหมดทิ้ง, ต้องการดึงใบผลิตใหม่หรือไม่'),
                             actions: <Widget>[
@@ -374,7 +391,12 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                   backgroundColor: Colors.white,
                                   side: const BorderSide(color: Colors.grey),
                                 ),
-                                child: const Text('ยกเลิก'),
+                                child: const Text('ยกเลิก',style: TextStyle(
+                                      fontSize:
+                                          16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                      color: Colors
+                                          .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                    )),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
@@ -409,19 +431,34 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Row(
-                                children: [
-                                  Icon(
-                                    Icons
-                                        .notification_important, // ไอคอนแจ้งเตือน
-                                    color: Colors.red, // สีแดง
-                                    size: 30,
-                                  ),
-                                  SizedBox(
-                                      width:
-                                          8), // ระยะห่างระหว่างไอคอนกับข้อความ
-                                  Text('แจ้งเตือน'),
-                                ],
-                              ),
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Icon(
+                                              Icons
+                                                  .notification_important, // ไอคอนแจ้งเตือน
+                                              color: Colors.red, // สีแดง
+                                              size: 30,
+                                            ),
+                                            SizedBox(
+                                              width:
+                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                            ),
+                                            Text('แจ้งเตือน'),
+                                          ],
+                                        ),
+                                        // Close icon
+                                        IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                        ),
+                                      ],
+                                    ),
                               content: Text(poMessage ?? ''),
                               actions: [
                                 TextButton(
@@ -452,19 +489,34 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Row(
-                                children: [
-                                  Icon(
-                                    Icons
-                                        .notification_important, // ไอคอนแจ้งเตือน
-                                    color: Colors.red, // สีแดง
-                                    size: 30,
-                                  ),
-                                  SizedBox(
-                                      width:
-                                          8), // ระยะห่างระหว่างไอคอนกับข้อความ
-                                  Text('แจ้งเตือน'),
-                                ],
-                              ),
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Icon(
+                                              Icons
+                                                  .notification_important, // ไอคอนแจ้งเตือน
+                                              color: Colors.red, // สีแดง
+                                              size: 30,
+                                            ),
+                                            SizedBox(
+                                              width:
+                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                            ),
+                                            Text('แจ้งเตือน'),
+                                          ],
+                                        ),
+                                        // Close icon
+                                        IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                        ),
+                                      ],
+                                    ),
                               content: Text(poMessage ?? ''),
                               actions: [
                                 TextButton(

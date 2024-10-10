@@ -4,7 +4,6 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'SSFGDT04_CARD.dart';
 import 'dart:ui';
-// import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import '../styles.dart';
 import 'package:flutter/services.dart';
@@ -58,11 +57,10 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
     super.initState();
     print(
         'selectedItem in search page : $selectedItem Type : ${selectedItem.runtimeType}');
-    print(
-        'statusDESC in search page : $status Type : ${status.runtimeType}');
+    print('statusDESC in search page : $status Type : ${status.runtimeType}');
     print(
         'selectedDate in search page : $selectedDate Type : ${selectedDate.runtimeType}');
-}
+  }
 
   @override
   void dispose() {
@@ -228,21 +226,21 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
               children: [
                 const SizedBox(height: 16),
                 TextFormField(
-              readOnly: true,
-              onTap: _showDropdownPopup,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                labelText: 'ประเภทรายการ',
-                labelStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                filled: true,
-                fillColor: Colors.white,
-                suffixIcon: Icon(
-                  Icons.arrow_drop_down,
-                  color: Color.fromARGB(255, 113, 113, 113),
+                  readOnly: true,
+                  onTap: _showDropdownPopup,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    labelText: 'ประเภทรายการ',
+                    labelStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                    filled: true,
+                    fillColor: Colors.white,
+                    suffixIcon: Icon(
+                      Icons.arrow_drop_down,
+                      color: Color.fromARGB(255, 113, 113, 113),
+                    ),
+                  ),
+                  controller: _statusController,
                 ),
-              ),
-              controller: _statusController,
-            ),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _controller,
@@ -267,8 +265,8 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
                     LengthLimitingTextInputFormatter(
-                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
-                    DateInputFormatter(), // กำหนดรูปแบบ __/__/____
+                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 8 ตัว
+                    DateInputFormatter(), // กำหนดรูปแบบ DD/MM/YYYY
                   ],
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -276,21 +274,22 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     fillColor: Colors.white,
                     labelText: 'วันที่ส่งสินค้า',
                     hintText: 'DD/MM/YYYY',
-                    hintStyle: TextStyle(
-                      color: Colors.grey, // Change to a darker color
+                    hintStyle: const TextStyle(
+                      color: Colors.grey, // เปลี่ยนสี hint
                     ),
-                    labelStyle: chkDate == false
+                    labelStyle: chkDate
                         ? const TextStyle(
-                            color: Colors.black87,
+                            color: Colors
+                                .red, // เปลี่ยนเป็นสีแดงเมื่อวันที่ไม่ถูกต้อง
                           )
                         : const TextStyle(
-                            color: Colors.red,
+                            color: Colors.black87, // สีปกติเมื่อวันที่ถูกต้อง
                           ),
                     suffixIcon: IconButton(
                       icon: const Icon(
                           Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
                       onPressed: () async {
-                        // กดไอคอนเพื่อเปิด date picker
+                        // เปิด date picker เมื่อกดไอคอน
                         _selectDate(context);
                       },
                     ),
@@ -298,36 +297,21 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   onChanged: (value) {
                     selectedDate = value;
                     print('selectedDate : $selectedDate');
+
                     setState(() {
-                      // สร้าง instance ของ DateInputFormatter
-                      DateInputFormatter formatter = DateInputFormatter();
+                      // ถ้าค่าว่างไม่ต้องแสดงอะไร
+                      if (selectedDate.isEmpty) {
+                        chkDate = false;
+                        return;
+                      }
 
-                      // ตรวจสอบการเปลี่ยนแปลงของข้อความ
-                      TextEditingValue oldValue =
-                          TextEditingValue(text: _dateController.text);
-                      TextEditingValue newValue = TextEditingValue(text: value);
-
-                      // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
-                      formatter.formatEditUpdate(oldValue, newValue);
-
-                      // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
-                      dateColorCheck = formatter.dateColorCheck;
-                      monthColorCheck = formatter.monthColorCheck;
-                      noDate = formatter.noDate; // เพิ่มการตรวจสอบ noDate
-                    });
-                    setState(() {
+                      // ตรวจสอบรูปแบบวันที่
                       RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                      // String messageAlertValueDate =
-                      //     'กรุณากรองวันที่ให้ถูกต้อง';
                       if (!dateRegExp.hasMatch(selectedDate)) {
-                        // setState(() {
-                        //   chkDate == true;
-                        // });
-                        // showDialogAlert(context, messageAlertValueDate);
+                        chkDate =
+                            true; // ถ้ารูปแบบไม่ถูกต้องให้ตั้งค่าเป็น true
                       } else {
-                        setState(() {
-                          chkDate = false;
-                        });
+                        chkDate = false; // ถ้ารูปแบบถูกต้องให้ตั้งค่าเป็น false
                       }
                     });
                   },
@@ -340,7 +324,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                           style: TextStyle(
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
-                            fontSize: 12, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                            fontSize: 12, // ขนาดตัวอักษร
                           ),
                         ))
                     : const SizedBox.shrink(),
@@ -351,14 +335,15 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
-                        _controller.clear();
-                        _dateController.clear();
-                        _statusController.text = 'ทั้งหมด'; // กำหนดค่าเริ่มต้นให้กับ DropdownButtonFormField
-                        selectedDate = 'null'; // Set selectedDate to null
-                        selectedItem = 'ทั้งหมด'; // Reset to a valid value
-                        status = '0';
-                        noDate = false;
-                        chkDate = false; // Reset status to default
+                          _controller.clear();
+                          _dateController.clear();
+                          _statusController.text =
+                              'ทั้งหมด'; // กำหนดค่าเริ่มต้นให้กับ DropdownButtonFormField
+                          selectedDate = 'null'; // Set selectedDate to null
+                          selectedItem = 'ทั้งหมด'; // Reset to a valid value
+                          status = '0';
+                          noDate = false;
+                          chkDate = false; // Reset status to default
                         });
                       },
                       style: AppStyles.EraserButtonStyle(),
@@ -367,76 +352,61 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     ),
                     const SizedBox(width: 20),
                     ElevatedButton(
-                      onPressed: selectedItem.isNotEmpty
-                          ? () {
-                              if (_dateController.text.isNotEmpty) {
-                                try {
-                                  DateTime parsedDate = DateFormat('dd/MM/yyyy')
-                                      .parse(_dateController.text);
-                                  String formattedDateForSearch =
-                                      DateFormat('dd-MM-yyyy')
-                                          .format(parsedDate);
+                      onPressed: () {
+                        if (noDate != true && chkDate != true) {
+                          if (selectedDate.isNotEmpty) {
+                            RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                            if (!dateRegExp.hasMatch(selectedDate)) {
+                              setState(() {
+                                chkDate = true;
+                              });
+                            } else if (selectedDate != '') {
+                              DateTime parsedDate =
+                                  DateFormat('dd/MM/yyyy').parse(selectedDate);
+                              String formattedDate =
+                                  DateFormat('dd-MM-yyyy').format(parsedDate);
 
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SSFGDT04_CARD(
+                              setState(() {
+                                selectedDate = formattedDate;
+                              });
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SSFGDT04_CARD(
+                                          pErpOuCode: widget.pErpOuCode,
+                                          pWareCode: widget.pWareCode,
+                                          pAppUser: appUser,
+                                          pFlag: pFlag,
+                                          soNo: pSoNo.isEmpty ? 'null' : pSoNo,
+                                          date: formattedDate == ''
+                                              ? 'null'
+                                              : formattedDate,
+                                          status: status,
+                                        )),
+                              ).then((value) async {});
+                            }
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SSFGDT04_CARD(
                                         pErpOuCode: widget.pErpOuCode,
                                         pWareCode: widget.pWareCode,
                                         pAppUser: appUser,
                                         pFlag: pFlag,
                                         soNo: pSoNo.isEmpty ? 'null' : pSoNo,
-                                        date: formattedDateForSearch,
+                                        date: 'null',
                                         status: status,
-                                      ),
-                                    ),
-                                  ).then((value) {
-                                    setState(() {
-                                      pSoNo = '';
-                                      selectedDate = 'null';
-                                      selectedItem = dropdownItems.first;
-                                      status = '0';
-                                      // _dateController.clear();
-                                      // _controller.clear();
-                                    });
-                                  });
-                                } catch (e) {
-                                  setState(() {
-                                    _dateError =
-                                        'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024';
-                                  });
-                                }
-                              } else {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SSFGDT04_CARD(
-                                      pErpOuCode: widget.pErpOuCode,
-                                      pWareCode: widget.pWareCode,
-                                      pAppUser: appUser,
-                                      pFlag: pFlag,
-                                      soNo: pSoNo.isEmpty ? 'null' : pSoNo,
-                                      date: 'null',
-                                      status: status,
-                                    ),
-                                  ),
-                                ).then((value) {
-                                  setState(() {
-                                    pSoNo = '';
-                                    selectedDate = 'null';
-                                    // selectedItem = 'ระหว่างบันทึก';
-                                    // status = '1';
-                                    _dateController.clear();
-                                    _controller.clear();
-                                  });
-                                });
-                              }
-                            }
-                          : null,
+                                      )),
+                            ).then((value) async {});
+                          }
+                        }
+                      },
                       style: AppStyles.SearchButtonStyle(),
                       child: Image.asset(
-                        'assets/images/search_color.png',
-                        width: 50,
+                        'assets/images/search_color.png', // ใส่ภาพจากไฟล์ asset
+                        width: 50, // กำหนดขนาดภาพ
                         height: 25,
                       ),
                     ),

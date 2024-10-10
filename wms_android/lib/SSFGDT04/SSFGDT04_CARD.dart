@@ -772,6 +772,13 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
               ),
               SizedBox(width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
               Text('แจ้งเตือน'),
+              Spacer(),
+              IconButton(
+              icon: Icon(Icons.close, color: Colors.black), // ไอคอนปิด
+              onPressed: () {
+                Navigator.of(context).pop(); // ปิด popup
+              },
+            ),
             ],
           ),
           content: Text(messageCard),
