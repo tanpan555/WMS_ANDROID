@@ -98,7 +98,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
-      setState(() {
+      if (mounted) {setState(() {
         fromItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
         if (fromItems.isNotEmpty) {
           _docNoController.text = fromItems[0]['doc_no'] ?? '';
@@ -116,7 +116,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
           _noteController.text = fromItems[0]['note'] ?? '';
           _erpDocNoController.text = fromItems[0]['erp_doc_no'] ?? '';
         }
-      });
+      });}
     } else {
       throw Exception('Failed to load from items');
     }
@@ -129,12 +129,12 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
-      setState(() {
+      if (mounted) {setState(() {
         docTypeItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
         if (docTypeItems.isNotEmpty) {
           selectedDocType = docTypeItems[0]['doc_desc']; // Default selection
         }
-      });
+      });}
     } else {
       throw Exception('Failed to load DOC_TYPE items');
     }
@@ -189,9 +189,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
-      setState(() {
+      if (mounted) {setState(() {
         refNoItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-      });
+      });}
     } else {
       throw Exception('Failed to load REFNO items');
     }
@@ -204,9 +204,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
-      setState(() {
+      if (mounted) {setState(() {
         cancelItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-      });
+      });}
     } else {
       throw Exception('Failed to load CANCEL items');
     }
@@ -247,7 +247,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
+        if (mounted) {setState(() {
           po_doc_no = responseData['po_doc_no'];
           // po_doc_type = responseData['po_doc_type'];
           poStatus = responseData['po_status'];
@@ -257,7 +257,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
           // print('po_doc_type : $po_doc_type Type : ${po_doc_type.runtimeType}');
           print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
           print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
-        });
+        });}
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
       }
@@ -369,10 +369,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
       String formattedDateForDisplay =
           DateFormat('dd/MM/yyyy').format(pickedDate);
 
-      setState(() {
+      if (mounted) {setState(() {
         _docDateController.text = formattedDateForDisplay;
         selectedDate = formattedDateForSearch;
-      });
+      });}
     }
   }
 

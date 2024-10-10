@@ -110,7 +110,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
+        if (mounted) {setState(() {
           po_doc_no = responseData['po_doc_no'];
           po_doc_type = responseData['po_doc_type'];
           poStatus = responseData['po_status'];
@@ -120,7 +120,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
           print('po_doc_type : $po_doc_type Type : ${po_doc_type.runtimeType}');
           print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
           print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
-        });
+        });}
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
       }

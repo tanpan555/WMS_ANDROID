@@ -33,7 +33,8 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   String selectedDate = 'null'; // Allow null for the date
   String appUser = gb.APP_USER;
   TextEditingController _dateController = TextEditingController();
-  final TextEditingController _controller = TextEditingController();
+  TextEditingController _controller = TextEditingController();
+  TextEditingController _statusController = TextEditingController();
   final String sDateFormat = "dd-MM-yyyy";
   final List<dynamic> dropdownItems = [
     'ทั้งหมด',
@@ -56,6 +57,20 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
     // Ensure selectedItem has a valid initial value
     if (!dropdownItems.contains(selectedItem)) {
       selectedItem = dropdownItems.first;
+    }
+    // Set default selectedItem and corresponding status
+    selectedItem = 'ระหว่างบันทึก'; // Preselect 'ทั้งหมด'
+    _statusController.text = selectedItem;
+
+    // Set the corresponding status for the default selected item
+    status = '1'; // Assuming 'ทั้งหมด' corresponds to status '0'
+  }
+
+  void setData() {
+    if (mounted) {
+      setState(() {
+        _statusController.text = 'ระหว่างบันทึก';
+      });
     }
   }
 
@@ -98,7 +113,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
             builder: (context, setState) {
               return Container(
                 padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                height: 300,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -106,8 +121,8 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                       decoration: const BoxDecoration(
                         border: Border(
                           bottom: BorderSide(
-                            color: Colors.grey, // สีของเส้น
-                            width: 1.0, // ความหนาของเส้น
+                            color: Colors.grey,
+                            width: 1.0,
                           ),
                         ),
                       ),
@@ -128,75 +143,57 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 10),
                     Expanded(
-                      child: ListView(
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics:
-                                const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
-                            itemCount: dropdownItems.length,
-                            itemBuilder: (context, index) {
-                              // ดึงข้อมูลรายการจาก dataCard
-                              var item = dropdownItems[index];
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
-                                      width: 2.0, // ความหนาของขอบ
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                        10.0), // ทำให้ขอบมีความโค้ง
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                      vertical:
-                                          8.0), // เพิ่ม padding ด้านซ้าย-ขวา และ ด้านบน-ล่าง
-                                  child: Text(
-                                    item,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      // fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                      child: ListView.builder(
+                        itemCount: dropdownItems.length,
+                        itemBuilder: (context, index) {
+                          var item = dropdownItems[index];
+                          return ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                  width: 2.0,
                                 ),
-                                onTap: () {
-                                  setState(() {
-                                    selectedItem =
-                                        item; // Set the selected item
-                                    // Update status based on selection
-                                    switch (item) {
-                                      case 'ทั้งหมด':
-                                        status = '0';
-                                        break;
-                                      case 'ระหว่างบันทึก':
-                                        status = '1';
-                                        break;
-                                      case 'ยืนยันการรับ':
-                                        status = '2';
-                                        break;
-                                      case 'ยกเลิก':
-                                        status = '3';
-                                        break;
-                                      default:
-                                        status = '0'; // Default status
-                                    }
-                                  });
-                                  Navigator.of(context)
-                                      .pop(); // Close the popup
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    )
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: Text(
+                                item,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                selectedItem = item;
+                                _statusController.text = selectedItem;
 
-                    // ช่องค้นหา
+                                switch (item) {
+                                  case 'ทั้งหมด':
+                                    status = '0';
+                                    break;
+                                  case 'ระหว่างบันทึก':
+                                    status = '1';
+                                    break;
+                                  case 'ยืนยันการรับ':
+                                    status = '2';
+                                    break;
+                                  case 'ยกเลิก':
+                                    status = '3';
+                                    break;
+                                  default:
+                                    status = '0';
+                                }
+                              });
+                              Navigator.of(context).pop();
+                            },
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               );
@@ -223,21 +220,21 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
               children: [
                 const SizedBox(height: 16),
                 TextFormField(
-                  readOnly: true, // Make it read-only to prevent keyboard popup
-                  onTap: _showDropdownPopup, // Show the dropdown popup on tap
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    labelText: 'ประเภทรายการ',
-                    labelStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                    filled: true,
-                    fillColor: Colors.white,
-                    suffixIcon: Icon(
-                      Icons.arrow_drop_down,
-                      color: Color.fromARGB(255, 113, 113, 113),
-                    ),
-                  ),
-                  controller: TextEditingController(text: selectedItem),
+              readOnly: true,
+              onTap: _showDropdownPopup,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                labelText: 'ประเภทรายการ',
+                labelStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                filled: true,
+                fillColor: Colors.white,
+                suffixIcon: Icon(
+                  Icons.arrow_drop_down,
+                  color: Color.fromARGB(255, 113, 113, 113),
                 ),
+              ),
+              controller: _statusController,
+            ),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _controller,
