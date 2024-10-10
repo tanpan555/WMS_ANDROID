@@ -293,7 +293,8 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)',
-      showExitWarning: true,),
+      // showExitWarning: true,
+      ),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer:CustomDrawer(),
       body: Padding(
@@ -313,18 +314,34 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Row(
-                              children: [
-                                Icon(
-                                  Icons
-                                      .notification_important, // ไอคอนแจ้งเตือน
-                                  color: Colors.red, // สีแดง
-                                  size: 30,
-                                ),
-                                SizedBox(
-                                    width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
-                                Text('แจ้งเตือน'),
-                              ],
-                            ),
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Icon(
+                                              Icons
+                                                  .notification_important, // ไอคอนแจ้งเตือน
+                                              color: Colors.red, // สีแดง
+                                              size: 30,
+                                            ),
+                                            SizedBox(
+                                              width:
+                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                            ),
+                                            Text('แจ้งเตือน'),
+                                          ],
+                                        ),
+                                        // Close icon
+                                        IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                        ),
+                                      ],
+                                    ),
                             content: Text('$poErpDocNo'),
                             actions: <Widget>[
                               TextButton(
@@ -340,7 +357,11 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                     builder: (BuildContext context) {
                                       return AlertDialog(
                                         title: Row(
-                                          children: [
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: const [
                                             Icon(
                                               Icons
                                                   .notification_important, // ไอคอนแจ้งเตือน
@@ -348,11 +369,22 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                               size: 30,
                                             ),
                                             SizedBox(
-                                                width:
-                                                    8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                                              width:
+                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                            ),
                                             Text('แจ้งเตือน'),
                                           ],
                                         ),
+                                        // Close icon
+                                        IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                        ),
+                                      ],
+                                    ),
                                         content: const Text(
                                             'ต้องการพิมพ์เอกสารใบรับหรือไม่ ?'),
                                         actions: <Widget>[
@@ -434,18 +466,34 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Row(
-                              children: [
-                                Icon(
-                                  Icons
-                                      .notification_important, // ไอคอนแจ้งเตือน
-                                  color: Colors.red, // สีแดง
-                                  size: 30,
-                                ),
-                                SizedBox(
-                                    width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
-                                Text('แจ้งเตือน'),
-                              ],
-                            ),
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Icon(
+                                              Icons
+                                                  .notification_important, // ไอคอนแจ้งเตือน
+                                              color: Colors.red, // สีแดง
+                                              size: 30,
+                                            ),
+                                            SizedBox(
+                                              width:
+                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                            ),
+                                            Text('แจ้งเตือน'),
+                                          ],
+                                        ),
+                                        // Close icon
+                                        IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                        ),
+                                      ],
+                                    ),
                             content: Text(poMessage ?? ''),
                             actions: [
                               TextButton(
@@ -491,7 +539,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(currentPage: 'show'),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 

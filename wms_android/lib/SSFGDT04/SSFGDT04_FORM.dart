@@ -98,25 +98,27 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
-      if (mounted) {setState(() {
-        fromItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-        if (fromItems.isNotEmpty) {
-          _docNoController.text = fromItems[0]['doc_no'] ?? '';
-          if (fromItems[0]['cr_date'] != null &&
-              fromItems[0]['cr_date'].isNotEmpty) {
-            // แปลงค่าจาก String เป็น DateTime แล้วฟอร์แมตใหม่
-            DateTime parsedDate = DateTime.parse(fromItems[0]['cr_date']);
-            _docDateController.text = _dateTimeFormatter.format(parsedDate);
+      if (mounted) {
+        setState(() {
+          fromItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+          if (fromItems.isNotEmpty) {
+            _docNoController.text = fromItems[0]['doc_no'] ?? '';
+            if (fromItems[0]['cr_date'] != null &&
+                fromItems[0]['cr_date'].isNotEmpty) {
+              // แปลงค่าจาก String เป็น DateTime แล้วฟอร์แมตใหม่
+              DateTime parsedDate = DateTime.parse(fromItems[0]['cr_date']);
+              _docDateController.text = _dateTimeFormatter.format(parsedDate);
+            }
+            _refNoController.text = fromItems[0]['ref_no'] ?? ''; // REF_RECEIVE
+            _oderNoController.text = fromItems[0]['order_no'] ?? ''; // order_no
+            _moDoNoController.text = fromItems[0]['mo_do_no'] ?? ''; // mo_do_no
+            _staffCodeController.text =
+                fromItems[0]['staff_code'] ?? ''; // staff_code
+            _noteController.text = fromItems[0]['note'] ?? '';
+            _erpDocNoController.text = fromItems[0]['erp_doc_no'] ?? '';
           }
-          _refNoController.text = fromItems[0]['ref_no'] ?? ''; // REF_RECEIVE
-          _oderNoController.text = fromItems[0]['order_no'] ?? ''; // order_no
-          _moDoNoController.text = fromItems[0]['mo_do_no'] ?? ''; // mo_do_no
-          _staffCodeController.text =
-              fromItems[0]['staff_code'] ?? ''; // staff_code
-          _noteController.text = fromItems[0]['note'] ?? '';
-          _erpDocNoController.text = fromItems[0]['erp_doc_no'] ?? '';
-        }
-      });}
+        });
+      }
     } else {
       throw Exception('Failed to load from items');
     }
@@ -129,12 +131,14 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
-      if (mounted) {setState(() {
-        docTypeItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-        if (docTypeItems.isNotEmpty) {
-          selectedDocType = docTypeItems[0]['doc_desc']; // Default selection
-        }
-      });}
+      if (mounted) {
+        setState(() {
+          docTypeItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+          if (docTypeItems.isNotEmpty) {
+            selectedDocType = docTypeItems[0]['doc_desc']; // Default selection
+          }
+        });
+      }
     } else {
       throw Exception('Failed to load DOC_TYPE items');
     }
@@ -189,9 +193,11 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
-      if (mounted) {setState(() {
-        refNoItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-      });}
+      if (mounted) {
+        setState(() {
+          refNoItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+        });
+      }
     } else {
       throw Exception('Failed to load REFNO items');
     }
@@ -204,9 +210,11 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
-      if (mounted) {setState(() {
-        cancelItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-      });}
+      if (mounted) {
+        setState(() {
+          cancelItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+        });
+      }
     } else {
       throw Exception('Failed to load CANCEL items');
     }
@@ -247,17 +255,19 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        if (mounted) {setState(() {
-          po_doc_no = responseData['po_doc_no'];
-          // po_doc_type = responseData['po_doc_type'];
-          poStatus = responseData['po_status'];
-          poMessage = responseData['po_message'];
+        if (mounted) {
+          setState(() {
+            po_doc_no = responseData['po_doc_no'];
+            // po_doc_type = responseData['po_doc_type'];
+            poStatus = responseData['po_status'];
+            poMessage = responseData['po_message'];
 
-          print('po_doc_no : $po_doc_no Type : ${po_doc_no.runtimeType}');
-          // print('po_doc_type : $po_doc_type Type : ${po_doc_type.runtimeType}');
-          print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
-          print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
-        });}
+            print('po_doc_no : $po_doc_no Type : ${po_doc_no.runtimeType}');
+            // print('po_doc_type : $po_doc_type Type : ${po_doc_type.runtimeType}');
+            print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
+            print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
+          });
+        }
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
       }
@@ -369,10 +379,12 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
       String formattedDateForDisplay =
           DateFormat('dd/MM/yyyy').format(pickedDate);
 
-      if (mounted) {setState(() {
-        _docDateController.text = formattedDateForDisplay;
-        selectedDate = formattedDateForSearch;
-      });}
+      if (mounted) {
+        setState(() {
+          _docDateController.text = formattedDateForDisplay;
+          selectedDate = formattedDateForSearch;
+        });
+      }
     }
   }
 
@@ -402,8 +414,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)',
-      showExitWarning: true,
+      appBar: CustomAppBar(
+        title: 'รับตรง (ไม่อ้าง PO)',
+        showExitWarning: true,
       ),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: fromItems.isEmpty
@@ -696,18 +709,35 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                             builder: (BuildContext context) {
                                               return AlertDialog(
                                                 title: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
-                                                    Icon(
-                                                      Icons
-                                                          .notification_important, // ไอคอนแจ้งเตือน
-                                                      color:
-                                                          Colors.red, // สีแดง
-                                                      size: 30,
+                                                    Row(
+                                                      children: const [
+                                                        Icon(
+                                                          Icons
+                                                              .notification_important, // ไอคอนแจ้งเตือน
+                                                          color: Colors
+                                                              .red, // สีแดง
+                                                          size: 30,
+                                                        ),
+                                                        SizedBox(
+                                                          width:
+                                                              8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                                        ),
+                                                        Text('แจ้งเตือน'),
+                                                      ],
                                                     ),
-                                                    SizedBox(
-                                                        width:
-                                                            8), // ระยะห่างระหว่างไอคอนกับข้อความ
-                                                    Text('แจ้งเตือน'),
+                                                    // Close icon
+                                                    IconButton(
+                                                      icon: const Icon(
+                                                          Icons.close),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop(); // Close the dialog
+                                                      },
+                                                    ),
                                                   ],
                                                 ),
                                                 content: Text('$po_message'),
@@ -743,18 +773,35 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                             builder: (BuildContext context) {
                                               return AlertDialog(
                                                 title: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
-                                                    Icon(
-                                                      Icons
-                                                          .notification_important, // ไอคอนแจ้งเตือน
-                                                      color:
-                                                          Colors.red, // สีแดง
-                                                      size: 30,
+                                                    Row(
+                                                      children: const [
+                                                        Icon(
+                                                          Icons
+                                                              .notification_important, // ไอคอนแจ้งเตือน
+                                                          color: Colors
+                                                              .red, // สีแดง
+                                                          size: 30,
+                                                        ),
+                                                        SizedBox(
+                                                          width:
+                                                              8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                                        ),
+                                                        Text('แจ้งเตือน'),
+                                                      ],
                                                     ),
-                                                    SizedBox(
-                                                        width:
-                                                            8), // ระยะห่างระหว่างไอคอนกับข้อความ
-                                                    Text('แจ้งเตือน'),
+                                                    // Close icon
+                                                    IconButton(
+                                                      icon: const Icon(
+                                                          Icons.close),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop(); // Close the dialog
+                                                      },
+                                                    ),
                                                   ],
                                                 ),
                                                 content: Text(
@@ -833,61 +880,56 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                         // ปุ่ม ถัดไป //
                         ElevatedButton(
                           onPressed: () async {
-                            // Check if the date field is filled and valid
                             if (_docDateController.text.isEmpty) {
                               setState(() {
-                                _dateError =
-                                    'กรุณาระบุข้อมูลวันที่บันทึก.'; // Set error message for empty input
+                                chkDate = true;
                               });
-                              return; // Stop further execution if the date is empty
+                              return;
                             }
-
-                            // Check if the date format is valid
                             if (!dateRegExp.hasMatch(_docDateController.text)) {
                               setState(() {
-                                _dateError =
-                                    'กรุณากรอกวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY'; // Set error message for invalid format
+                                chkDate = true;
                               });
-                              return; // Stop further execution if the date format is invalid
+                              return;
+                            }
+
+                            DateInputFormatter formatter = DateInputFormatter();
+                            TextEditingValue oldValue =
+                                TextEditingValue(text: _docDateController.text);
+                            TextEditingValue newValue =
+                                TextEditingValue(text: _docDateController.text);
+                            formatter.formatEditUpdate(oldValue, newValue);
+
+                            if (formatter.noDate) {
+                              setState(() {
+                                chkDate = true;
+                              });
+                              return;
                             } else {
                               setState(() {
-                                _dateError =
-                                    null; // Clear the error message if the date is valid
+                                chkDate = false;
                               });
                             }
 
-                            // Call functions to update and save data
                             await update(widget.po_doc_type, widget.po_doc_no);
                             await save_INHeadNonePO_WMS(selectedValue ?? '');
 
-                            // Check poStatus and navigate or show warning
                             if (poStatus == '0') {
-                              // Navigate to the next screen
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => SSFGDT04_GRID(
                                     po_doc_no:
-                                        widget.po_doc_no, // pass po_doc_no
+                                        widget.po_doc_no, // Pass po_doc_no
                                     po_doc_type: widget.po_doc_type ??
-                                        '', // pass po_doc_type
+                                        '', // Pass po_doc_type
                                     pWareCode: widget.pWareCode,
                                     p_ref_no: _refNoController.text,
                                     mo_do_no: _moDoNoController.text,
                                   ),
                                 ),
                               ).then((_) {
-                                // Clear the screen or reset values after returning
-                                // _refNoController.clear();
-                                // _moDoNoController.clear();
-                                // _noteController.clear();
-                                // _erpDocNoController.clear();
-                                setState(() {
-                                  // selectedRefReceive = null;
-                                  // selectedRefNo =
-                                  //     null; // Clear selectedRefReceive
-                                });
-                                // Any additional reset logic can go here
+                                setState(() {});
                               });
                             } else if (poStatus == '1') {
                               showDialog(
@@ -895,17 +937,26 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Icon(
-                                          Icons
-                                              .notification_important, // ไอคอนแจ้งเตือน
-                                          color: Colors.red, // สีแดง
-                                          size: 30,
+                                        Row(
+                                          children: const [
+                                            Icon(
+                                              Icons.notification_important,
+                                              color: Colors.red,
+                                              size: 30,
+                                            ),
+                                            SizedBox(width: 8),
+                                            Text('แจ้งเตือน'),
+                                          ],
                                         ),
-                                        SizedBox(
-                                            width:
-                                                8), // ระยะห่างระหว่างไอคอนกับข้อความ
-                                        Text('แจ้งเตือน'),
+                                        IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
                                       ],
                                     ),
                                     content: Text('$poMessage'),
@@ -916,12 +967,13 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                           side: const BorderSide(
                                               color: Colors.grey),
                                         ),
-                                        child: Text(
+                                        child: const Text(
                                           'ตกลง',
                                           style: TextStyle(color: Colors.black),
                                         ),
                                         onPressed: () {
-                                          Navigator.of(context).pop();
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog on button press
                                         },
                                       ),
                                     ],
@@ -932,8 +984,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                           },
                           child: Image.asset(
                             'assets/images/right.png', // change to the path of your image
-                            width: 20, // adjust size as needed
-                            height: 20, // adjust size as needed
+                            width: 20,
+                            height: 20,
                           ),
                           style: AppStyles.NextButtonStyle(),
                         ),
@@ -1186,127 +1238,100 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
                           // วันที่บันทึก //
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                TextFormField(
-                                  controller: _docDateController,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter
-                                        .digitsOnly, // ยอมรับเฉพาะตัวเลข
-                                    LengthLimitingTextInputFormatter(
-                                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
-                                    DateInputFormatter(), // กำหนดรูปแบบ __/__/____
-                                  ],
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    // labelText: 'วันที่ส่งสินค้า',
-                                    label: RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: 'วันที่บันทึก',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize:
-                                                    16), // Color for the label
-                                          ),
-                                          TextSpan(
-                                            text: ' *',
-                                            style: TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight
-                                                    .bold), // Color for the asterisk
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    hintText: 'DD/MM/YYYY',
-                                    hintStyle: TextStyle(
-                                      color: Colors
-                                          .grey, // Change to a darker color
-                                    ),
-                                    labelStyle: chkDate == false
-                                        ? const TextStyle(
-                                            color: Colors.black87,
-                                          )
-                                        : const TextStyle(
-                                            color: Colors.red,
-                                          ),
-                                    suffixIcon: IconButton(
-                                      icon: const Icon(Icons
-                                          .calendar_today), // ไอคอนที่อยู่ขวาสุด
-                                      onPressed: () async {
-                                        // กดไอคอนเพื่อเปิด date picker
-                                        _selectDate(context);
-                                      },
-                                    ),
-                                  ),
-                                  onChanged: (value) {
-                                    selectedDate = value;
-                                    print('selectedDate : $selectedDate');
-                                    setState(() {
-                                      // สร้าง instance ของ DateInputFormatter
-                                      DateInputFormatter formatter =
-                                          DateInputFormatter();
+  padding: const EdgeInsets.symmetric(vertical: 8),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      TextFormField(
+        controller: _docDateController,
+        keyboardType: TextInputType.number,
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
+          LengthLimitingTextInputFormatter(8), // จำกัดจำนวนตัวอักษรไม่เกิน 8 ตัว
+          DateInputFormatter(), // กำหนดรูปแบบ DD/MM/YYYY
+        ],
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          filled: true,
+          fillColor: Colors.white,
+          // labelText: 'วันที่บันทึก',
+          label: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: 'วันที่บันทึก',
+                  style: TextStyle(
+                    color: chkDate == false ? Colors.black : Colors.red, // ตรวจสอบและเปลี่ยนสี label
+                    fontSize: 16,
+                  ),
+                ),
+                TextSpan(
+                  text: ' *',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          hintText: 'DD/MM/YYYY',
+          hintStyle: TextStyle(
+            color: Colors.grey,
+          ),
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.calendar_today),
+            onPressed: () async {
+              // กดไอคอนเพื่อเปิด date picker
+              _selectDate(context);
+            },
+          ),
+        ),
+        onChanged: (value) {
+          selectedDate = value;
+          setState(() {
+            // สร้าง instance ของ DateInputFormatter
+            DateInputFormatter formatter = DateInputFormatter();
+            TextEditingValue oldValue = TextEditingValue(text: _docDateController.text);
+            TextEditingValue newValue = TextEditingValue(text: value);
 
-                                      // ตรวจสอบการเปลี่ยนแปลงของข้อความ
-                                      TextEditingValue oldValue =
-                                          TextEditingValue(
-                                              text: _docDateController.text);
-                                      TextEditingValue newValue =
-                                          TextEditingValue(text: value);
+            // ตรวจสอบการเปลี่ยนแปลงของข้อความ
+            formatter.formatEditUpdate(oldValue, newValue);
 
-                                      // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
-                                      formatter.formatEditUpdate(
-                                          oldValue, newValue);
+            dateColorCheck = formatter.dateColorCheck;
+            monthColorCheck = formatter.monthColorCheck;
+            noDate = formatter.noDate;
+          });
 
-                                      // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
-                                      dateColorCheck = formatter.dateColorCheck;
-                                      monthColorCheck =
-                                          formatter.monthColorCheck;
-                                      noDate = formatter
-                                          .noDate; // เพิ่มการตรวจสอบ noDate
-                                    });
-                                    setState(() {
-                                      RegExp dateRegExp =
-                                          RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                                      // String messageAlertValueDate =
-                                      //     'กรุณากรองวันที่ให้ถูกต้อง';
-                                      if (!dateRegExp.hasMatch(selectedDate)) {
-                                        // setState(() {
-                                        //   chkDate == true;
-                                        // });
-                                        // showDialogAlert(context, messageAlertValueDate);
-                                      } else {
-                                        setState(() {
-                                          chkDate = false;
-                                        });
-                                      }
-                                    });
-                                  },
-                                ),
-                                chkDate == true || noDate == true
-                                    ? const Padding(
-                                        padding: EdgeInsets.only(top: 4.0),
-                                        child: Text(
-                                          'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize:
-                                                12, // ปรับขนาดตัวอักษรตามที่ต้องการ
-                                          ),
-                                        ))
-                                    : const SizedBox.shrink(),
-                              ],
-                            ),
-                          ),
+          // ตรวจสอบรูปแบบวันที่
+          setState(() {
+            RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+            if (!dateRegExp.hasMatch(selectedDate)) {
+              chkDate = true;
+            } else {
+              chkDate = false;
+            }
+          });
+        },
+      ),
+      chkDate == true || noDate == true
+          ? const Padding(
+              padding: EdgeInsets.only(top: 4.0),
+              child: Text(
+                'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                ),
+              ),
+            )
+          : const SizedBox.shrink(),
+    ],
+  ),
+),
+
 
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 0),
@@ -2091,9 +2116,12 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                 ],
               ),
             ),
-      bottomNavigationBar: BottomBar(currentPage: 'show',),
+      bottomNavigationBar: BottomBar(
+        currentPage: 'show',
+      ),
     );
   }
+
   void showDialogAlert(
     BuildContext context,
     String messageAlert,
@@ -2102,23 +2130,37 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Row(
+          title: Row(
+            mainAxisAlignment:
+                MainAxisAlignment.spaceBetween, // Align title and close icon
             children: [
-              Icon(
-                Icons.notification_important,
-                color: Colors.red,
+              Row(
+                children: const [
+                  Icon(
+                    Icons.notification_important,
+                    color: Colors.red,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    'แจ้งเตือน',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ],
               ),
-              SizedBox(width: 10),
-              Text(
-                'แจ้งเตือน',
-                style: TextStyle(color: Colors.black),
+              // Close icon
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
               ),
             ],
           ),
           content: SingleChildScrollView(
             child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
                   const SizedBox(height: 10),
                   Text(
                     messageAlert,
@@ -2126,12 +2168,12 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                   ),
                   const SizedBox(height: 10),
                   Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context)
+                              .pop(); // Close the dialog on button press
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
@@ -2140,8 +2182,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                         child: const Text('ตกลง'),
                       ),
                     ],
-                  )
-                ])),
+                  ),
+                ],
+              ),
+            ),
           ),
         );
       },

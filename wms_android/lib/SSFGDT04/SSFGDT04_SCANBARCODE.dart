@@ -198,16 +198,34 @@ void _onQRViewCreated(QRViewController controller) {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Row(
-                  children: [
-                    Icon(
-                      Icons.notification_important, // ไอคอนแจ้งเตือน
-                      color: Colors.red, // สีแดง
-                      size: 30,
-                    ),
-                    SizedBox(width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
-                    Text('แจ้งเตือน'),
-                  ],
-                ),
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Icon(
+                                              Icons
+                                                  .notification_important, // ไอคอนแจ้งเตือน
+                                              color: Colors.red, // สีแดง
+                                              size: 30,
+                                            ),
+                                            SizedBox(
+                                              width:
+                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                            ),
+                                            Text('แจ้งเตือน'),
+                                          ],
+                                        ),
+                                        // Close icon
+                                        IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                        ),
+                                      ],
+                                    ),
                 content: Text('Update Locator Complete. $poMessage'),
                 actions: [
                   TextButton(
@@ -237,16 +255,34 @@ void _onQRViewCreated(QRViewController controller) {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Row(
-                  children: [
-                    Icon(
-                      Icons.notification_important, // ไอคอนแจ้งเตือน
-                      color: Colors.red, // สีแดง
-                      size: 30,
-                    ),
-                    SizedBox(width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
-                    Text('แจ้งเตือน'),
-                  ],
-                ),
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Icon(
+                                              Icons
+                                                  .notification_important, // ไอคอนแจ้งเตือน
+                                              color: Colors.red, // สีแดง
+                                              size: 30,
+                                            ),
+                                            SizedBox(
+                                              width:
+                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                            ),
+                                            Text('แจ้งเตือน'),
+                                          ],
+                                        ),
+                                        // Close icon
+                                        IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                        ),
+                                      ],
+                                    ),
                 content: Text('$poMessage'),
                 actions: [
                   TextButton(
@@ -424,16 +460,34 @@ void _onQRViewCreated(QRViewController controller) {
           builder: (BuildContext context) {
             return AlertDialog(
               title: Row(
-                children: [
-                  Icon(
-                    Icons.notification_important,
-                    color: Colors.red,
-                    size: 30,
-                  ),
-                  SizedBox(width: 8),
-                  Text('แจ้งเตือน'),
-                ],
-              ),
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Icon(
+                                              Icons
+                                                  .notification_important, // ไอคอนแจ้งเตือน
+                                              color: Colors.red, // สีแดง
+                                              size: 30,
+                                            ),
+                                            SizedBox(
+                                              width:
+                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                            ),
+                                            Text('แจ้งเตือน'),
+                                          ],
+                                        ),
+                                        // Close icon
+                                        IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                        ),
+                                      ],
+                                    ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,

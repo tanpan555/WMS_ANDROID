@@ -307,19 +307,34 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Row(
-                                    children: [
-                                      Icon(
-                                        Icons
-                                            .notification_important, // ไอคอนแจ้งเตือน
-                                        color: Colors.red, // สีแดง
-                                        size: 30,
-                                      ),
-                                      SizedBox(
-                                          width:
-                                              8), // ระยะห่างระหว่างไอคอนกับข้อความ
-                                      Text('แจ้งเตือน'),
-                                    ],
-                                  ),
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Icon(
+                                              Icons
+                                                  .notification_important, // ไอคอนแจ้งเตือน
+                                              color: Colors.red, // สีแดง
+                                              size: 30,
+                                            ),
+                                            SizedBox(
+                                              width:
+                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                            ),
+                                            Text('แจ้งเตือน'),
+                                          ],
+                                        ),
+                                        // Close icon
+                                        IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                        ),
+                                      ],
+                                    ),
                                   content: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
@@ -358,19 +373,34 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: Row(
-                                  children: [
-                                    Icon(
-                                      Icons
-                                          .notification_important, // ไอคอนแจ้งเตือน
-                                      color: Colors.red, // สีแดง
-                                      size: 30,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Icon(
+                                              Icons
+                                                  .notification_important, // ไอคอนแจ้งเตือน
+                                              color: Colors.red, // สีแดง
+                                              size: 30,
+                                            ),
+                                            SizedBox(
+                                              width:
+                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                            ),
+                                            Text('แจ้งเตือน'),
+                                          ],
+                                        ),
+                                        // Close icon
+                                        IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(
-                                        width:
-                                            8), // ระยะห่างระหว่างไอคอนกับข้อความ
-                                    Text('แจ้งเตือน'),
-                                  ],
-                                ),
                                 content: Text('$poMessage'),
                                 actions: <Widget>[
                                   TextButton(
