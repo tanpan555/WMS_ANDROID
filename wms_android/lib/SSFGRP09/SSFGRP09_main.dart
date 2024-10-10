@@ -97,6 +97,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   // ----------------------------- Radio
   String selectedRadio = '1';
 
+  bool isLoading = false;
+  bool isFirstLoad = true;
+
   TextEditingController searchController1 = TextEditingController();
   TextEditingController searchController2 = TextEditingController();
   TextEditingController searchController3 = TextEditingController();
@@ -176,20 +179,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
 
   @override
   void initState() {
-    selectLovDate();
-    selectLovDocNo();
-    selectLovStartWareCode();
-    selectLovEndWareCode();
-    selectLovStartLoc();
-    selectLovEndLoc();
-    selectLovStartGroup();
-    selectLovEndGroup();
-    selectLovStartCategory();
-    selectLovEndCategory();
-    selectLovStartSubCategory();
-    selectLovEndSubCategory();
-    selectLovStartItem();
-    selectLovEndItem();
+    firstLoadData();
     super.initState();
   }
 
@@ -220,6 +210,23 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     super.dispose();
   }
 
+  void firstLoadData() async {
+    await selectLovDate();
+    await selectLovDocNo();
+    await selectLovStartWareCode();
+    await selectLovEndWareCode();
+    await selectLovStartLoc();
+    await selectLovEndLoc();
+    await selectLovStartGroup();
+    await selectLovEndGroup();
+    await selectLovStartCategory();
+    await selectLovEndCategory();
+    await selectLovStartSubCategory();
+    await selectLovEndSubCategory();
+    await selectLovStartItem();
+    await selectLovEndItem();
+  }
+
   void _navigateToPage(BuildContext context, Widget page) {
     Navigator.push(
       context,
@@ -228,6 +235,17 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> selectLovDate() async {
+    if (isFirstLoad == true) {
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
+    } else if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovDate/${globals.P_ERP_OU_CODE}'));
@@ -240,6 +258,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovDate =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
         print('dataLovDate : $dataLovDate');
@@ -252,6 +276,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> selectLovDocNo() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     if (returnLovDate.isNotEmpty) {
       updatedStringLovDate = replaceSlashWithDash(returnLovDate);
     }
@@ -267,6 +296,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovDocNo =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
         print('dataLovDocNo : $dataLovDocNo');
@@ -280,6 +315,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> selectLovStartWareCode() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartWareCode/${globals.APP_USER}'));
@@ -292,6 +332,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovStartWareCode =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
         print('dataLovStartWareCode : $dataLovStartWareCode');
@@ -305,6 +351,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> selectLovEndWareCode() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovEndWareCode/${globals.APP_USER}/${returnStartWareCode.isNotEmpty ? returnStartWareCode : 'null'}'));
@@ -317,6 +368,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovEndWareCode =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
         print('dataLovEndWareCode : $dataLovEndWareCode');
@@ -330,6 +387,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> selectLovStartLoc() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartLoc/${globals.P_ERP_OU_CODE}'
@@ -344,6 +406,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovStartLoc =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
         print('dataLovStartLoc : $dataLovStartLoc');
@@ -357,6 +425,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> selectLovEndLoc() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SeletLovEndLoc'
@@ -373,6 +446,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovEndLoc =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
         print('dataLovEndLoc : $dataLovEndLoc');
@@ -386,6 +465,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> selectLovStartGroup() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartGroup'));
@@ -398,6 +482,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovStartGroup =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
         print('dataLovEndLoc : $dataLovEndLoc');
@@ -411,6 +501,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> selectLovEndGroup() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovEndGroup/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'));
@@ -423,6 +518,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovEndGroup =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
         print('dataLovEndLoc : $dataLovEndLoc');
@@ -436,6 +537,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> selectLovStartCategory() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartCategory'
@@ -450,6 +556,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovStartCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
         print('dataLovStartCategory : $dataLovStartCategory');
@@ -463,6 +575,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> selectLovEndCategory() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovEndCategory'
@@ -478,6 +595,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovEndCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
         print('dataLovEndCategory : $dataLovEndCategory');
@@ -491,6 +614,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> selectLovStartSubCategory() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartSubCategory'
@@ -507,6 +635,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovStartSubCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
         print('dataLovEndCategory : $dataLovEndCategory');
@@ -520,6 +654,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> selectLovEndSubCategory() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovEndSubCategory'
@@ -537,6 +676,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovEndSubCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
         print('dataLovEndCategory : $dataLovEndCategory');
@@ -550,6 +695,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> selectLovStartItem() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartItem'
@@ -569,6 +719,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovStartItem =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
         print('dataLovStartItem : $dataLovStartItem');
@@ -582,6 +738,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> selectLovEndItem() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovEndItem'
@@ -602,6 +763,15 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovEndItem =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+            if (isFirstLoad == true) {
+              isFirstLoad = false;
+              isLoading = false;
+            }
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
         print('dataLovStartItem : $dataLovStartItem');
@@ -622,6 +792,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> getPDF() async {
+    isLoading = true;
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_GET_PDF'
@@ -714,6 +885,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             // ==============================
             V_SYSDATE = dataPDF['V_SYSDATE'] ?? '';
 
+            isLoading = false;
             _launchUrl();
           });
         }
@@ -758,23 +930,24 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
         '&P_S_LOC=$returnStartLoc'
         '&P_S_SUB_CAT=$returnStartSubCategory'
         '&P_S_WARE=$returnStartWareCode'
-        // '&P_E_CAT=${returnEndCategory.isNotEmpty ? returnEndCategory : 'สิ้นสุด'}'
-        // '&P_E_GRP=${returnEndGroup.isNotEmpty ? returnEndGroup : 'สิ้นสุด'}'
-        // '&P_E_ITEM=${returnEndItem.isNotEmpty ? returnEndItem : 'สิ้นสุด'}'
-        // '&P_E_LOC=${returnEndLoc.isNotEmpty ? returnEndLoc : 'สิ้นสุด'}'
-        // '&P_E_SUB_CAT=${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'สิ้นสุด'}'
-        // '&P_E_WARE=${returnEndWareCode.isNotEmpty ? returnEndWareCode : 'สิ้นสุด'}'
-        // '&P_F_DOC_NO=$returnLovDocNo'
-        // '&P_F_P_DATE=$returnLovDate'
-        // '&P_I_E_WARE=$P_I_E_WARE'
-        // '&P_I_S_WARE=$P_I_S_WARE'
-        // '&P_SHOW_MODE=$P_SHOW_MODE'
-        // '&P_S_CAT=${returnStartCategory.isNotEmpty ? returnStartCategory : 'เริ่มต้น'}'
-        // '&P_S_GRP=${returnStartGroup.isNotEmpty ? returnStartGroup : 'เริ่มต้น'}'
-        // '&P_S_ITEM=${returnStartItem.isNotEmpty ? returnStartItem : 'เริ่มต้น'}'
-        // '&P_S_LOC=${returnStartLoc.isNotEmpty ? returnStartLoc : 'เริ่มต้น'}'
-        // '&P_S_SUB_CAT=${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'เริ่มต้น'}'
-        // '&P_S_WARE=${returnStartWareCode.isNotEmpty ? returnStartWareCode : 'เริ่มต้น'}'
+        //
+        '&P_E_CAT=${returnEndCategory}'
+        '&P_E_GRP=${returnEndGroup}'
+        '&P_E_ITEM=${returnEndItem}'
+        '&P_E_LOC=${returnEndLoc}'
+        '&P_E_SUB_CAT=${returnEndSubCategory}'
+        '&P_E_WARE=${returnEndWareCode}'
+        '&P_F_DOC_NO=$returnLovDocNo'
+        '&P_F_P_DATE=$returnLovDate'
+        '&P_I_E_WARE=$P_I_E_WARE'
+        '&P_I_S_WARE=$P_I_S_WARE'
+        '&P_SHOW_MODE=$P_SHOW_MODE'
+        '&P_S_CAT=${returnStartCategory}'
+        '&P_S_GRP=${returnStartGroup}'
+        '&P_S_ITEM=${returnStartItem}'
+        '&P_S_LOC=${returnStartLoc}'
+        '&P_S_SUB_CAT=$returnStartSubCategory'
+        '&P_S_WARE=${returnStartWareCode}'
         //
         '&LH_PROGRAM_ID=$LH_PROGRAM_ID'
         '&LH_WARE=$LH_WARE'
@@ -883,490 +1056,513 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
         '&H_CAT=$H_CAT'
         '&H_SEB=$H_SEB'
         '&H_ITEM=$H_ITEM');
+
+    // isLoading = false;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'รายงานผลการตรวจนับสินค้า'),
+      appBar: CustomAppBar(
+        title: 'รายงานผลการตรวจนับสินค้า',
+        showExitWarning: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextFormField(
-                controller: dateController,
-                readOnly: true,
-                onTap: () => showDialogDropdownSearchDate(),
-                minLines: 1,
-                maxLines: 3,
-                // overflow: TextOverflow.ellipsis,
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelText: 'วันที่เตรียมการตรวจนับ',
-                  labelStyle: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 12,
-                  ),
-                  suffixIcon: Icon(
-                    Icons.arrow_drop_down,
-                    color: Color.fromARGB(255, 113, 113, 113),
-                  ),
-                ),
-              ),
-              // -------------------------------------------------------------------------------------------------------------//
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: docNoController,
-                readOnly: true,
-                onTap: () => showDialogDropdownSearchDocNo(),
-                minLines: 1,
-                maxLines: 3,
-                // overflow: TextOverflow.ellipsis,
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelText: 'เลขที่ตรวจนับ',
-                  labelStyle: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 12,
-                  ),
-                  suffixIcon: Icon(
-                    Icons.arrow_drop_down,
-                    color: Color.fromARGB(255, 113, 113, 113),
-                  ),
-                ),
-              ),
-
-              // -------------------------------------------------------------------------------------------------------------//
-              const SizedBox(height: 8),
-              Row(
+        child: isLoading
+            ? const Column(
                 children: [
                   Expanded(
-                    child: TextFormField(
-                      controller: startWareCodeController,
-                      readOnly: true,
-                      onTap: () => showDialogDropdownSearchStartWareCode(),
-                      minLines: 1,
-                      maxLines: 3,
-                      // overflow: TextOverflow.ellipsis,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'จาก คลังสินค้า',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 12,
-                        ),
-                        suffixIcon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
-                        ),
-                      ),
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextFormField(
-                      controller: endWareCodeController,
-                      readOnly: true,
-                      onTap: () => showDialogDropdownSearchEndWareCode(),
-                      minLines: 1,
-                      maxLines: 3,
-                      // overflow: TextOverflow.ellipsis,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'ถึง คลังสินค้า',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 12,
-                        ),
-                        suffixIcon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
-                        ),
-                      ),
-                    ),
-                  )
                 ],
-              ),
-
-              // -------------------------------------------------------------------------------------------------------------//
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: startLocController,
-                      readOnly: true,
-                      onTap: () => showDialogDropdownSearchStartLoc(),
-                      minLines: 1,
-                      maxLines: 3,
-                      // overflow: TextOverflow.ellipsis,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'จาก ตำแหน่งจัดเก็บ',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 12,
-                        ),
-                        suffixIcon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextFormField(
-                      controller: endLocController,
-                      readOnly: true,
-                      onTap: () => showDialogDropdownSearchEndLoc(),
-                      minLines: 1,
-                      maxLines: 3,
-                      // overflow: TextOverflow.ellipsis,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'ถึง ตำแหน่งจัดเก็บ',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 12,
-                        ),
-                        suffixIcon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-
-              // -------------------------------------------------------------------------------------------------------------//
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: startGroupController,
-                      readOnly: true,
-                      onTap: () => showDialogDropdownSearchStartGroup(),
-                      minLines: 1,
-                      maxLines: 3,
-                      // overflow: TextOverflow.ellipsis,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'จาก กลุ่มสินค้า',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 12,
-                        ),
-                        suffixIcon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextFormField(
-                      controller: endGroupController,
-                      readOnly: true,
-                      onTap: () => showDialogDropdownSearchEndGroup(),
-                      minLines: 1,
-                      maxLines: 3,
-                      // overflow: TextOverflow.ellipsis,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'ถึง กลุ่มสินค้า',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 12,
-                        ),
-                        suffixIcon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              // -------------------------------------------------------------------------------------------------------------//
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: startCategoryController,
-                      readOnly: true,
-                      onTap: () => showDialogDropdownSearchStartCategory(),
-                      minLines: 1,
-                      maxLines: 3,
-                      // overflow: TextOverflow.ellipsis,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'จาก Category',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 12,
-                        ),
-                        suffixIcon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextFormField(
-                      controller: endCategoryController,
-                      readOnly: true,
-                      onTap: () => showDialogDropdownSearchEndCategory(),
-                      minLines: 1,
-                      maxLines: 3,
-                      // overflow: TextOverflow.ellipsis,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'ถึง Category',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 12,
-                        ),
-                        suffixIcon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-
-              // -------------------------------------------------------------------------------------------------------------//
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: startSubCategoryController,
-                      readOnly: true,
-                      onTap: () => showDialogDropdownSearchStartSubCategory(),
-                      minLines: 1,
-                      maxLines: 3,
-                      // overflow: TextOverflow.ellipsis,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'จาก Sub Category',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 12,
-                        ),
-                        suffixIcon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextFormField(
-                      controller: endSubCategoryController,
-                      readOnly: true,
-                      onTap: () => showDialogDropdownSearchEndSubCategory(),
-                      minLines: 1,
-                      maxLines: 3,
-                      // overflow: TextOverflow.ellipsis,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'ถึง Sub Category',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 12,
-                        ),
-                        suffixIcon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              // -------------------------------------------------------------------------------------------------------------//
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: startItemController,
-                      readOnly: true,
-                      onTap: () => showDialogDropdownSearchStartItem(),
-                      minLines: 1,
-                      maxLines: 3,
-                      // overflow: TextOverflow.ellipsis,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'จาก รหัสสินค้า',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 12,
-                        ),
-                        suffixIcon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextFormField(
-                      controller: endItemController,
-                      readOnly: true,
-                      onTap: () => showDialogDropdownSearchEndItem(),
-                      minLines: 1,
-                      maxLines: 3,
-                      // overflow: TextOverflow.ellipsis,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'ถึง รหัสสินค้า',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 12,
-                        ),
-                        suffixIcon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              // -------------------------------------------------------------------------------------------------------------//
-              const SizedBox(height: 8),
-
-              Container(
-                color: Colors.white, // กำหนดสีพื้นหลังของ Container
+              )
+            : SingleChildScrollView(
                 child: Column(
-                  children: <Widget>[
-                    ListTile(
-                      title: const Text(
-                        'แสดงข้อมูลทั้งหมด',
-                        style: TextStyle(color: Colors.black, fontSize: 12),
-                      ),
-                      leading: Radio<String>(
-                        value: '1',
-                        groupValue: selectedRadio, // ค่าที่เลือก
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectedRadio = value.toString();
-                            P_SHOW_MODE = value;
-                            print('selectedRadio : $selectedRadio');
-                          });
-                        },
-                      ),
-                    ),
-                    ListTile(
-                      title: const Text(
-                        'แสดงข้อมูลเฉพาะข้อมูลที่มีผลต่าง',
-                        style: TextStyle(color: Colors.black, fontSize: 12),
-                      ),
-                      leading: Radio<String>(
-                        value: '0',
-                        groupValue: selectedRadio, // ค่าที่เลือก
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectedRadio = value.toString();
-                            P_SHOW_MODE = value;
-                            print('selectedRadio : $selectedRadio');
-                          });
-                        },
+                  children: [
+                    TextFormField(
+                      controller: dateController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchDate(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'วันที่เตรียมการตรวจนับ',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (selectedRadio.isNotEmpty && P_SHOW_MODE != '') {
-                        if (returnLovDate.isEmpty && returnLovDocNo.isEmpty) {
-                          String message =
-                              'กรุณาระบุ วันที่เตรียมการตรวจนับ และ เลขที่ตรวจนับ';
-                          showDialogAlert(context, message);
-                        } else if (returnLovDate.isEmpty) {
-                          String message = 'กรุณาระบุ วันที่เตรียมการตรวจนับ';
-                          showDialogAlert(context, message);
-                        } else if (returnLovDocNo.isEmpty) {
-                          String message = 'กรุณาระบุ เลขที่ตรวจนับ';
-                          showDialogAlert(context, message);
-                        } else {
-                          getPDF();
-                        }
-                      }
-                    },
-                    style: AppStyles.ConfirmbuttonStyle(),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                    // -------------------------------------------------------------------------------------------------------------//
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: docNoController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchDocNo(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'เลขที่ตรวจนับ',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
+                    ),
+
+                    // -------------------------------------------------------------------------------------------------------------//
+                    const SizedBox(height: 8),
+                    Row(
                       children: [
-                        const Icon(
-                          Icons.print,
-                          color: Colors.black,
+                        Expanded(
+                          child: TextFormField(
+                            controller: startWareCodeController,
+                            readOnly: true,
+                            onTap: () =>
+                                showDialogDropdownSearchStartWareCode(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'จาก คลังสินค้า',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 8),
-                        Text(
-                          'Print',
-                          style: AppStyles.ConfirmbuttonTextStyle(),
+                        Expanded(
+                          child: TextFormField(
+                            controller: endWareCodeController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchEndWareCode(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'ถึง คลังสินค้า',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+
+                    // -------------------------------------------------------------------------------------------------------------//
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: startLocController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchStartLoc(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'จาก ตำแหน่งจัดเก็บ',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: endLocController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchEndLoc(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'ถึง ตำแหน่งจัดเก็บ',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+
+                    // -------------------------------------------------------------------------------------------------------------//
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: startGroupController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchStartGroup(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'จาก กลุ่มสินค้า',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: endGroupController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchEndGroup(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'ถึง กลุ่มสินค้า',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    // -------------------------------------------------------------------------------------------------------------//
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: startCategoryController,
+                            readOnly: true,
+                            onTap: () =>
+                                showDialogDropdownSearchStartCategory(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'จาก Category',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: endCategoryController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchEndCategory(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'ถึง Category',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+
+                    // -------------------------------------------------------------------------------------------------------------//
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: startSubCategoryController,
+                            readOnly: true,
+                            onTap: () =>
+                                showDialogDropdownSearchStartSubCategory(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'จาก Sub Category',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: endSubCategoryController,
+                            readOnly: true,
+                            onTap: () =>
+                                showDialogDropdownSearchEndSubCategory(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'ถึง Sub Category',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    // -------------------------------------------------------------------------------------------------------------//
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: startItemController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchStartItem(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'จาก รหัสสินค้า',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: endItemController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchEndItem(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'ถึง รหัสสินค้า',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    // -------------------------------------------------------------------------------------------------------------//
+                    const SizedBox(height: 8),
+
+                    Container(
+                      color: Colors.white, // กำหนดสีพื้นหลังของ Container
+                      child: Column(
+                        children: <Widget>[
+                          ListTile(
+                            title: const Text(
+                              'แสดงข้อมูลทั้งหมด',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 12),
+                            ),
+                            leading: Radio<String>(
+                              value: '1',
+                              groupValue: selectedRadio, // ค่าที่เลือก
+                              onChanged: (String? value) {
+                                setState(() {
+                                  selectedRadio = value.toString();
+                                  P_SHOW_MODE = value;
+                                  print('selectedRadio : $selectedRadio');
+                                });
+                              },
+                            ),
+                          ),
+                          ListTile(
+                            title: const Text(
+                              'แสดงข้อมูลเฉพาะข้อมูลที่มีผลต่าง',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 12),
+                            ),
+                            leading: Radio<String>(
+                              value: '0',
+                              groupValue: selectedRadio, // ค่าที่เลือก
+                              onChanged: (String? value) {
+                                setState(() {
+                                  selectedRadio = value.toString();
+                                  P_SHOW_MODE = value;
+                                  print('selectedRadio : $selectedRadio');
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (selectedRadio.isNotEmpty && P_SHOW_MODE != '') {
+                              if (returnLovDate.isEmpty &&
+                                  returnLovDocNo.isEmpty) {
+                                String message =
+                                    'กรุณาระบุ วันที่เตรียมการตรวจนับ และ เลขที่ตรวจนับ';
+                                showDialogAlert(context, message);
+                              } else if (returnLovDate.isEmpty) {
+                                String message =
+                                    'กรุณาระบุ วันที่เตรียมการตรวจนับ';
+                                showDialogAlert(context, message);
+                              } else if (returnLovDocNo.isEmpty) {
+                                String message = 'กรุณาระบุ เลขที่ตรวจนับ';
+                                showDialogAlert(context, message);
+                              } else {
+                                getPDF();
+                              }
+                            }
+                          },
+                          style: AppStyles.ConfirmbuttonStyle(),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.print,
+                                color: Colors.black,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Print',
+                                style: AppStyles.ConfirmbuttonTextStyle(),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 8),
+                  ],
+                ),
               ),
-              const SizedBox(width: 8),
-            ],
-          ),
-        ),
       ),
       bottomNavigationBar: BottomBar(
-        currentPage: 'not_show',
+        currentPage: 'show',
       ),
     );
   }
@@ -1458,6 +1654,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 ),
                                 onTap: () {
                                   Navigator.of(context).pop();
+                                  isLoading = true;
                                   setState(() {
                                     returnLovDate = returnCode;
                                     displayLovDate = doc;
@@ -1468,6 +1665,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       displayLovDocNo = '';
                                       returnLovDocNo = '';
                                       docNoController.clear();
+                                      isLoading = false;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -1706,6 +1904,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 ),
                                 subtitle: Text('${item['ware_name'] ?? ''}'),
                                 onTap: () {
+                                  isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
                                     returnStartWareCode = returnCode;
@@ -1725,6 +1924,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       displayEndLoc = '';
                                       returnEndLoc = '';
                                       endLocController.clear();
+                                      isLoading = false;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -1842,6 +2042,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 ),
                                 subtitle: Text('${item['ware_name'] ?? ''}'),
                                 onTap: () {
+                                  isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
                                     returnEndWareCode = returnCode;
@@ -1857,6 +2058,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       displayEndLoc = '';
                                       returnEndLoc = '';
                                       endLocController.clear();
+                                      isLoading = false;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -1975,6 +2177,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 subtitle:
                                     Text('${item['location_name'] ?? ''}'),
                                 onTap: () {
+                                  isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
                                     returnStartLoc = returnCode;
@@ -1986,6 +2189,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       displayEndLoc = '';
                                       returnEndLoc = '';
                                       endLocController.clear();
+                                      isLoading = false;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2225,6 +2429,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 ),
                                 subtitle: Text('${item['group_name'] ?? ''}'),
                                 onTap: () {
+                                  isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
                                     returnStartGroup = returnCode;
@@ -2260,6 +2465,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       displayEndItem = '';
                                       returnEndItem = '';
                                       endItemController.clear();
+                                      isLoading = false;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2376,6 +2582,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 ),
                                 subtitle: Text('${item['group_name'] ?? ''}'),
                                 onTap: () {
+                                  isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
                                     returnEndGroup = returnCode;
@@ -2407,6 +2614,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       displayEndItem = '';
                                       returnEndItem = '';
                                       endItemController.clear();
+                                      isLoading = false;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2526,6 +2734,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 subtitle:
                                     Text('${item['category_desc'] ?? ''}'),
                                 onTap: () {
+                                  isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
                                     returnStartCategory = returnCode;
@@ -2553,6 +2762,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       displayEndItem = '';
                                       returnEndItem = '';
                                       endItemController.clear();
+                                      isLoading = false;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2672,6 +2882,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 subtitle:
                                     Text('${item['category_desc'] ?? ''}'),
                                 onTap: () {
+                                  isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
                                     returnEndCategory = returnCode;
@@ -2695,6 +2906,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       displayEndItem = '';
                                       returnEndItem = '';
                                       endItemController.clear();
+                                      isLoading = false;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2813,6 +3025,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 ),
                                 subtitle: Text('${item['sub_cat_desc'] ?? ''}'),
                                 onTap: () {
+                                  isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
                                     returnStartSubCategory = returnCode;
@@ -2832,6 +3045,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       displayEndItem = '';
                                       returnEndItem = '';
                                       endItemController.clear();
+                                      isLoading = false;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2950,6 +3164,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 ),
                                 subtitle: Text('${item['sub_cat_desc'] ?? ''}'),
                                 onTap: () {
+                                  isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
                                     returnEndSubCategory = returnCode;
@@ -2965,6 +3180,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       displayEndItem = '';
                                       returnEndItem = '';
                                       endItemController.clear();
+                                      isLoading = false;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -3081,6 +3297,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 ),
                                 subtitle: Text('${item['name'] ?? ''}'),
                                 onTap: () {
+                                  isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
                                     returnStartItem = returnCode;
@@ -3092,6 +3309,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       displayEndItem = '';
                                       returnEndItem = '';
                                       endItemController.clear();
+                                      isLoading = false;
                                     }
                                     // -----------------------------------------
                                     print(
