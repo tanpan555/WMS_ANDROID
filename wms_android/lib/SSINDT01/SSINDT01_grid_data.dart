@@ -420,16 +420,16 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                     ),
                   ),
                 ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close the dialog
-                    },
-                  ),
-                ),
+                // Positioned(
+                //   top: 0,
+                //   right: 0,
+                //   child: IconButton(
+                //     icon: Icon(Icons.close),
+                //     onPressed: () {
+                //       Navigator.of(context).pop(); // Close the dialog
+                //     },
+                //   ),
+                // ),
               ],
             ),
             contentPadding:
@@ -1961,16 +1961,23 @@ class _LotDialogState extends State<LotDialog> {
       String recSeq, String ou_code, Function refreshCallback) {
     String recNo = widget.poReceiveNo;
     String lotSeq = item['lot_seq']?.toString() ?? '';
-    String poSeq = item['po_seq']?.toString() ?? '';
+    bool isMfgDateValid = true;
 
     TextEditingController lotQtyController = TextEditingController(
       text: item['lot_qty']?.toString() ?? '',
     );
-    TextEditingController mfgDateController = TextEditingController(
-      text: item['mfg_date'] != null
-          ? displayFormat.format(displayFormat.parse(item['mfg_date']))
-          : '',
-    );
+    TextEditingController mfgDateController = TextEditingController();
+
+// Safely initialize the mfgDateController
+    try {
+      if (item['mfg_date'] != null && item['mfg_date'].toString().isNotEmpty) {
+        final date = displayFormat.parse(item['mfg_date'].toString());
+        mfgDateController.text = displayFormat.format(date);
+      }
+    } catch (e) {
+      print('Error parsing initial date: $e');
+      mfgDateController.text = '';
+    }
     TextEditingController lotSupplierController = TextEditingController(
       text: item['lot_supplier']?.toString() ?? '',
     );
@@ -1983,154 +1990,250 @@ class _LotDialogState extends State<LotDialog> {
       transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (BuildContext context, Animation<double> animation,
           Animation<double> secondaryAnimation) {
-        return Center(
-          child: Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: Container(
-              padding: EdgeInsets.all(16.0),
-              child: Stack(
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            Widget buildMfgDateField() {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        SizedBox(height: 30.0),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: TextFormField(
-                                initialValue: lotSeq ?? '',
-                                decoration: InputDecoration(
-                                  label: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Seq',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ),
-                                  labelStyle: TextStyle(color: Colors.black),
-                                  filled: true,
-                                  fillColor: Colors.grey[300],
-                                  border: InputBorder.none,
-                                ),
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                readOnly: true,
-                                textAlign: TextAlign.left,
-                              ),
-                            ),
-                            SizedBox(width: 8.0),
-                            Expanded(
-                              flex: 2,
-                              child: TextFormField(
-                                initialValue: item['lot_product_no'] ?? '',
-                                decoration: InputDecoration(
-                                  labelText: 'Lot No',
-                                  labelStyle: TextStyle(color: Colors.black),
-                                  filled: true,
-                                  fillColor: Colors.grey[300],
-                                  border: InputBorder.none,
-                                ),
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                readOnly: true,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 12.0),
-                        _buildTextField(
-                          controller: lotQtyController,
-                          labelText: 'LOT QTY',
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            item['lot_qty'] = value;
-                          },
-                        ),
-                        _buildTextField(
-                          controller: lotSupplierController,
-                          labelText: 'Lot ผู้ผลิต',
-                          onChanged: (value) {
-                            item['lot_supplier'] = value;
-                          },
-                        ),
-                        _buildDateField(
-                          controller: mfgDateController,
-                          labelText: 'MFG Date',
-                          context: context,
-                          onChanged: (value) {
-                            item['mfg_date'] = value;
-                          },
-                        ),
-                        SizedBox(height: 16.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton(
-                              style: AppStyles.ConfirmChecRecievekButtonStyle(),
-                              onPressed: () async {
-                                await updateLot(
-                                  lotQtyController.text,
-                                  lotSupplierController.text,
-                                  mfgDateController.text,
-                                  ou_code,
-                                  recNo,
-                                  recSeq,
-                                  lotSeq,
-                                );
-                                sendGetRequestlineWMS();
-                                Navigator.of(context).pop();
-                                if (refreshCallback != null) {
-                                  await refreshCallback();
+                  TextFormField(
+                    controller: mfgDateController,
+                    decoration: InputDecoration(
+                      labelText: 'MFG Date',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(1.0),
+                      ),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                      suffixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.calendar_today_outlined,
+                                color: Colors.black),
+                            onPressed: () async {
+                              FocusScope.of(context).unfocus();
+                              DateTime initialDate = DateTime.now();
+                              if (mfgDateController.text.isNotEmpty) {
+                                try {
+                                  initialDate = displayFormat
+                                      .parse(mfgDateController.text);
+                                } catch (e) {
+                                  print('Error parsing date: $e');
                                 }
-                              },
-                              child: Image.asset(
-                                'assets/images/check-mark.png',
-                                width: 45.0,
-                                height: 45.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              }
+                              final DateTime? picked = await showDatePicker(
+                                context: context,
+                                initialDate: initialDate,
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2101),
+                                initialEntryMode:
+                                    DatePickerEntryMode.calendarOnly,
+                              );
+                              if (picked != null) {
+                                String formattedDate =
+                                    displayFormat.format(picked);
+                                setState(() {
+                                  mfgDateController.text = formattedDate;
+                                  isMfgDateValid = true;
+                                  item['mfg_date'] = formattedDate;
+                                });
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                      errorText: !isMfgDateValid
+                          ? 'กรุณากรอกวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY'
+                          : null,
                     ),
-                  ),
+                    onChanged: (value) {
+                      String numbersOnly = value.replaceAll('/', '');
 
-                  // Close Button Positioned at the top right corner
-                  Positioned(
-                    right: 0.0,
-                    top: -15.0,
-                    child: IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Close the dialog
-                      },
-                    ),
+                      if (numbersOnly.length > 8) {
+                        numbersOnly = numbersOnly.substring(0, 8);
+                      }
+
+                      String formattedDate = '';
+                      for (int i = 0; i < numbersOnly.length; i++) {
+                        if (i == 2 || i == 4) {
+                          formattedDate += '/';
+                        }
+                        formattedDate += numbersOnly[i];
+                      }
+
+                      bool isValidDate = false;
+                      if (numbersOnly.length == 8) {
+                        try {
+                          final day = int.parse(numbersOnly.substring(0, 2));
+                          final month = int.parse(numbersOnly.substring(2, 4));
+                          final year = int.parse(numbersOnly.substring(4, 8));
+
+                          final date = DateTime(year, month, day);
+
+                          if (date.year == year &&
+                              date.month == month &&
+                              date.day == day) {
+                            isValidDate = true;
+                          }
+                        } catch (e) {
+                          isValidDate = false;
+                        }
+                      }
+
+                      setState(() {
+                        mfgDateController.value = TextEditingValue(
+                          text: formattedDate,
+                          selection: TextSelection.collapsed(
+                              offset: formattedDate.length),
+                        );
+                        isMfgDateValid = numbersOnly.isEmpty || isValidDate;
+                        item['mfg_date'] = formattedDate;
+                      });
+                    },
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(8),
+                    ],
                   ),
                 ],
+              );
+            }
+
+            return Center(
+              child: Dialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(16.0),
+                  child: Stack(
+                    children: [
+                      SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            SizedBox(height: 30.0),
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: TextFormField(
+                                    initialValue: lotSeq,
+                                    decoration: InputDecoration(
+                                      label: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          'Seq',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                      labelStyle:
+                                          TextStyle(color: Colors.black),
+                                      filled: true,
+                                      fillColor: Colors.grey[300],
+                                      border: InputBorder.none,
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    readOnly: true,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                                SizedBox(width: 8.0),
+                                Expanded(
+                                  flex: 2,
+                                  child: TextFormField(
+                                    initialValue: item['lot_product_no'] ?? '',
+                                    decoration: InputDecoration(
+                                      labelText: 'Lot No',
+                                      labelStyle:
+                                          TextStyle(color: Colors.black),
+                                      filled: true,
+                                      fillColor: Colors.grey[300],
+                                      border: InputBorder.none,
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    readOnly: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 12.0),
+                            _buildTextField(
+                              controller: lotQtyController,
+                              labelText: 'LOT QTY',
+                              keyboardType: TextInputType.number,
+                              onChanged: (value) {
+                                item['lot_qty'] = value;
+                              },
+                            ),
+                            _buildTextField(
+                              controller: lotSupplierController,
+                              labelText: 'Lot ผู้ผลิต',
+                              onChanged: (value) {
+                                item['lot_supplier'] = value;
+                              },
+                            ),
+                            buildMfgDateField(),
+                            SizedBox(height: 16.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  style: AppStyles
+                                      .ConfirmChecRecievekButtonStyle(),
+                                  onPressed: isMfgDateValid
+                                      ? () async {
+                                          await updateLot(
+                                            lotQtyController.text,
+                                            lotSupplierController.text,
+                                            mfgDateController.text,
+                                            ou_code,
+                                            recNo,
+                                            recSeq,
+                                            lotSeq,
+                                          );
+                                          sendGetRequestlineWMS();
+                                          Navigator.of(context).pop();
+                                          if (refreshCallback != null) {
+                                            await refreshCallback();
+                                          }
+                                        }
+                                      : null,
+                                  child: Image.asset(
+                                    'assets/images/check-mark.png',
+                                    width: 45.0,
+                                    height: 45.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                        right: 0.0,
+                        top: -15.0,
+                        child: IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
-        );
-      },
-      transitionBuilder: (BuildContext context, Animation<double> animation,
-          Animation<double> secondaryAnimation, Widget child) {
-        return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0.0, 1.0),
-            end: Offset.zero,
-          ).animate(animation),
-          child: FadeTransition(
-            opacity: animation,
-            child: child,
-          ),
+            );
+          },
         );
       },
     );
@@ -2289,16 +2392,14 @@ class _LotDialogState extends State<LotDialog> {
     );
   }
 
-  bool isDateValid = false;
+  bool isInvoiceDateValid = true;
+
   Widget _buildDateField({
     required TextEditingController controller,
     required String labelText,
     required BuildContext context,
     ValueChanged<String>? onChanged,
   }) {
-    // Variable to track date validity
-    bool isDateValid = true;
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
@@ -2306,35 +2407,76 @@ class _LotDialogState extends State<LotDialog> {
         children: [
           TextFormField(
             controller: controller,
-            readOnly: false, // Make it read-only to enforce date selection
+            readOnly: false,
             onChanged: (value) {
-              if (value.length == 8) {
+              String numbersOnly = value.replaceAll('/', '');
+
+              if (numbersOnly.length > 8) {
+                numbersOnly = numbersOnly.substring(0, 8);
+              }
+
+              String formattedDate = '';
+              for (int i = 0; i < numbersOnly.length; i++) {
+                if (i == 2 || i == 4) {
+                  formattedDate += '/';
+                }
+                formattedDate += numbersOnly[i];
+              }
+
+              controller.value = TextEditingValue(
+                text: formattedDate,
+                selection:
+                    TextSelection.collapsed(offset: formattedDate.length),
+              );
+
+              // Validate the date for any input length
+              bool isValidDate = false;
+              if (numbersOnly.length == 8) {
                 try {
-                  // Parsing input format (ddMMyyyy) to DateTime
-                  DateTime parsedDate = DateTime.parse(
-                    "${value.substring(4, 8)}-${value.substring(2, 4)}-${value.substring(0, 2)}",
-                  );
+                  final day = int.parse(numbersOnly.substring(0, 2));
+                  final month = int.parse(numbersOnly.substring(2, 4));
+                  final year = int.parse(numbersOnly.substring(4, 8));
 
-                  // Formatting it to the desired format (dd/MM/yyyy)
-                  String formattedDate = displayFormat.format(parsedDate);
-                  controller.text = formattedDate;
-                  controller.selection = TextSelection.fromPosition(
-                    TextPosition(offset: formattedDate.length),
-                  );
+                  final date = DateTime(year, month, day);
 
-                  // Update the date validity
-                  isDateValid = true;
-                  if (onChanged != null) {
-                    onChanged(formattedDate); // Notify the parent widget
+                  if (date.year == year &&
+                      date.month == month &&
+                      date.day == day) {
+                    isValidDate = true;
                   }
                 } catch (e) {
-                  print('Error parsing date: $e');
-                  // Update the date validity
-                  isDateValid = false;
+                  isValidDate = false;
                 }
-              } else {
-                // Update the date validity for incorrect length
-                isDateValid = false;
+
+                // Show alert dialog if date is invalid
+                if (!isValidDate) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('วันที่ไม่ถูกต้อง'),
+                        content: Text(
+                            'กรุณากรอกวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('ตกลง'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              }
+
+              setState(() {
+                isInvoiceDateValid = numbersOnly.isEmpty || isValidDate;
+              });
+
+              if (onChanged != null) {
+                onChanged(formattedDate);
               }
             },
             decoration: InputDecoration(
@@ -2343,61 +2485,55 @@ class _LotDialogState extends State<LotDialog> {
                 borderRadius: BorderRadius.circular(1.0),
               ),
               contentPadding:
-                  EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-              suffixIcon: IconButton(
-                icon: Icon(Icons.calendar_today_outlined, color: Colors.black),
-                onPressed: () async {
-                  FocusScope.of(context).unfocus(); // Hide keyboard
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.calendar_today_outlined,
+                        color: Colors.black),
+                    onPressed: () async {
+                      FocusScope.of(context).unfocus();
 
-                  DateTime initialDate = DateTime.now();
-                  if (controller.text.isNotEmpty) {
-                    try {
-                      // Attempt to parse the current text in the field
-                      initialDate = displayFormat.parse(controller.text);
-                    } catch (e) {
-                      print('Error parsing date: $e');
-                    }
-                  }
-                  final DateTime? picked = await showDatePicker(
-                    context: context,
-                    initialDate: initialDate,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2101),
-                    initialEntryMode: DatePickerEntryMode.calendarOnly,
-                  );
-                  if (picked != null) {
-                    String formattedDate = displayFormat.format(picked);
-                    controller.text =
-                        formattedDate; // Show the selected date in the field
-
-                    // Notify the parent widget
-                    if (onChanged != null) {
-                      onChanged(formattedDate);
-                    }
-                  }
-                },
+                      DateTime initialDate = DateTime.now();
+                      if (controller.text.isNotEmpty) {
+                        try {
+                          initialDate = displayFormat.parse(controller.text);
+                        } catch (e) {
+                          print('Error parsing date: $e');
+                        }
+                      }
+                      final DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: initialDate,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                        initialEntryMode: DatePickerEntryMode.calendarOnly,
+                      );
+                      if (picked != null) {
+                        String formattedDate = displayFormat.format(picked);
+                        controller.text = formattedDate;
+                        setState(() {
+                          isInvoiceDateValid = true;
+                        });
+                        if (onChanged != null) {
+                          onChanged(formattedDate);
+                        }
+                      }
+                    },
+                  ),
+                ],
               ),
+              errorText: !isInvoiceDateValid && controller.text.isNotEmpty
+                  ? 'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY'
+                  : null,
             ),
             keyboardType: TextInputType.number,
             inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly, // Allow only digits
-              LengthLimitingTextInputFormatter(8), // Limit to 8 digits
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(8),
             ],
           ),
-          // Display error message if date is invalid
-          isDateValid == false
-              ? const Padding(
-                  padding: EdgeInsets.only(top: 4.0),
-                  child: Text(
-                    'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                )
-              : const SizedBox.shrink(),
         ],
       ),
     );
