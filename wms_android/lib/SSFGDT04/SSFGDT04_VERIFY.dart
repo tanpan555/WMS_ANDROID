@@ -401,7 +401,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                             },
                                             child: const Text('Cancel',style: TextStyle(
                                                   fontSize:
-                                                      16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                                      14, // ปรับขนาดตัวหนังสือตามต้องการ
                                                   color: Colors
                                                       .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
                                                 )),
@@ -438,7 +438,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                             child: const Text('OK',
                                                 style: TextStyle(
                                                   fontSize:
-                                                      16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                                      14, // ปรับขนาดตัวหนังสือตามต้องการ
                                                   color: Colors
                                                       .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
                                                 )),
@@ -451,7 +451,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                 child: const Text('OK',
                                     style: TextStyle(
                                       fontSize:
-                                          16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                          14, // ปรับขนาดตัวหนังสือตามต้องการ
                                       color: Colors
                                           .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
                                     )),
@@ -504,7 +504,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                 child: const Text('OK',
                                     style: TextStyle(
                                       fontSize:
-                                          16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                          14, // ปรับขนาดตัวหนังสือตามต้องการ
                                       color: Colors
                                           .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
                                     )),

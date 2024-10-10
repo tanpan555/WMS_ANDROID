@@ -687,7 +687,11 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                       ),
                                       child: const Text(
                                         'ยกเลิก',
-                                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(
+                          fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
+                          color: Colors
+                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                        )
                                       ),
                                     ),
                                     TextButton(
@@ -698,7 +702,11 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                       ),
                                       child: Text(
                                         'ตกลง',
-                                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(
+                          fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
+                          color: Colors
+                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                        )
                                       ),
                                       onPressed: () async {
                                         await cancel_INHeadNonePO_WMS(
@@ -753,7 +761,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                     child: Text('ตกลง',
                                                         style: TextStyle(
                                                           fontSize:
-                                                              16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                                              14, // ปรับขนาดตัวหนังสือตามต้องการ
                                                           color: Colors
                                                               .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
                                                         )),
@@ -817,7 +825,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                     ),
                                                     child: Text('ตกลง',
                                                         style: TextStyle(
-                                                            fontSize: 16,
+                                                            fontSize: 14,
                                                             color:
                                                                 Colors.black)),
                                                     onPressed: () {
@@ -969,7 +977,11 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                         ),
                                         child: const Text(
                                           'ตกลง',
-                                          style: TextStyle(color: Colors.black),
+                        style: TextStyle(
+                          fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
+                          color: Colors
+                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                        )
                                         ),
                                         onPressed: () {
                                           Navigator.of(context)
