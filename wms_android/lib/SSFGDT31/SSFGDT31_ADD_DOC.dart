@@ -49,10 +49,14 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
         print('Fetched data: $data');
         if (mounted) {
           setState(() {
+            // Ensure you're parsing it correctly
             statusItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
             if (statusItems.isNotEmpty) {
-              selectedValue = statusItems[0]['doc_type'];
-              dataLovDocTypeController.text = statusItems[0]['doc_desc'];
+              // Accessing values correctly from the first item
+              selectedValue = statusItems[0]['doc_type']
+                  as String; // Ensure this is a String
+              dataLovDocTypeController.text = statusItems[0]['doc_desc']
+                  as String; // Ensure this is a String
             } else {
               dataLovDocTypeController.clear(); // Clear if no items found
             }
@@ -61,7 +65,6 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
           });
         }
       } else {
-        // Handle error
         showDialogAlert(
             context, 'Failed to load status items: ${response.reasonPhrase}');
       }
@@ -112,51 +115,88 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
   }
 
   void _showDocumentTypeDialog() {
-    if (statusItems.isEmpty) {
-      showDialogAlert(context, 'No document types available.');
-      return;
-    }
-
     showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'เลือกประเภทเอกสาร',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: statusItems.map((item) {
-                return Container(
-                  margin:
-                      const EdgeInsets.only(bottom: 8), // Space between items
-                  decoration: BoxDecoration(
-                    border:
-                        Border.all(color: Colors.black, width: 1.0), // Border
-                    borderRadius: BorderRadius.circular(5.0), // Rounded corners
+          child: Container(
+            height: 300,
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title and Close Button with bottom line
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.grey, // Color of the line
+                        width: 1.0, // Thickness of the line
+                      ),
+                    ),
                   ),
-                  child: ListTile(
-                    title: Text(item['doc_desc'] ?? ''),
-                    onTap: () {
-                      setState(() {
-                        selectedValue = item['doc_type'];
-                        dataLovDocTypeController.text = item['doc_desc'] ?? '';
-                      });
-                      Navigator.of(context).pop();
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'เลือกประเภทรายการ',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16), // Space between title and list
+
+                // ListView with items having a black frame
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: statusItems.length,
+                    itemBuilder: (context, index) {
+                      final item =
+                          statusItems[index]; // This is a Map<String, dynamic>
+
+                      return Container(
+                        height: 55,
+                        margin: const EdgeInsets.only(bottom: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        child: ListTile(
+                          title: Text(item['doc_desc'] ?? '',
+                              style: TextStyle(
+                                  fontSize: 14)), // Accessing a String
+                          onTap: () {
+                            setState(() {
+                              selectedValue = item['doc_type']
+                                  as String?; // Ensure this is a String
+                              dataLovDocTypeController.text =
+                                  item['doc_desc'] ?? ''; // Set text safely
+                            });
+                            Navigator.of(context).pop(); // Close the dialog
+                          },
+                        ),
+                      );
                     },
                   ),
-                );
-              }).toList(),
+                ),
+              ],
             ),
           ),
         );

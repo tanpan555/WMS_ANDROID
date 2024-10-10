@@ -403,17 +403,34 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
             ),
-            title: Container(
-              padding: EdgeInsets.all(16.0),
-              color: Colors.grey[300], // Add your desired background color here
-              child: Text(
-                data['item'],
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+            titlePadding: EdgeInsets.zero, // Remove default padding
+            title: Stack(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(16.0),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      data['item'],
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                  ),
+                ),
+              ],
             ),
             contentPadding:
                 EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
