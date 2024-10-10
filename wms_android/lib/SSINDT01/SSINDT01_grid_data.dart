@@ -1963,24 +1963,48 @@ class _LotDialogState extends State<LotDialog> {
     String lotSeq = item['lot_seq']?.toString() ?? '';
     bool isMfgDateValid = true;
 
-    TextEditingController lotQtyController = TextEditingController(
-      text: item['lot_qty']?.toString() ?? '',
-    );
-    TextEditingController mfgDateController = TextEditingController();
+    // Create a copy of the item map to work with
+    Map<String, dynamic> workingItem = Map.from(item);
 
-// Safely initialize the mfgDateController
+    TextEditingController lotQtyController =
+        TextEditingController(text: workingItem['lot_qty']?.toString() ?? '');
+    TextEditingController mfgDateController = TextEditingController();
+    TextEditingController lotSupplierController = TextEditingController(
+      text: workingItem['lot_supplier']?.toString() ?? '',
+    );
+
+    // Safely initialize the mfgDateController
     try {
-      if (item['mfg_date'] != null && item['mfg_date'].toString().isNotEmpty) {
-        final date = displayFormat.parse(item['mfg_date'].toString());
+      if (workingItem['mfg_date'] != null &&
+          workingItem['mfg_date'].toString().isNotEmpty) {
+        final date = displayFormat.parse(workingItem['mfg_date'].toString());
         mfgDateController.text = displayFormat.format(date);
       }
     } catch (e) {
       print('Error parsing initial date: $e');
       mfgDateController.text = '';
     }
-    TextEditingController lotSupplierController = TextEditingController(
-      text: item['lot_supplier']?.toString() ?? '',
-    );
+
+    void clearFields() {
+      workingItem['lot_qty'] = item['lot_qty'];
+      workingItem['lot_supplier'] = item['lot_supplier'];
+      workingItem['mfg_date'] = item['mfg_date'];
+
+      lotQtyController.text = item['lot_qty']?.toString() ?? '';
+      lotSupplierController.text = item['lot_supplier']?.toString() ?? '';
+      try {
+        if (item['mfg_date'] != null &&
+            item['mfg_date'].toString().isNotEmpty) {
+          final date = displayFormat.parse(item['mfg_date'].toString());
+          mfgDateController.text = displayFormat.format(date);
+        } else {
+          mfgDateController.text = '';
+        }
+      } catch (e) {
+        print('Error resetting date: $e');
+        mfgDateController.text = '';
+      }
+    }
 
     showGeneralDialog(
       context: context,
@@ -1999,6 +2023,8 @@ class _LotDialogState extends State<LotDialog> {
                   TextFormField(
                     controller: mfgDateController,
                     decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
                       labelText: 'MFG Date',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(1.0),
@@ -2166,21 +2192,44 @@ class _LotDialogState extends State<LotDialog> {
                               ],
                             ),
                             SizedBox(height: 12.0),
-                            _buildTextField(
+                            TextFormField(
                               controller: lotQtyController,
-                              labelText: 'LOT QTY',
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
+                                filled: true,
+                                fillColor: Colors.white,
+                                labelText: 'LOT QTY',
+                                labelStyle: TextStyle(
+                                  color: Colors.black87,
+                                ),
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 16.0),
+                              ),
                               keyboardType: TextInputType.number,
-                              onChanged: (value) {
-                                item['lot_qty'] = value;
-                              },
+                              textAlign: TextAlign.right,
                             ),
-                            _buildTextField(
+                            SizedBox(height: 16.0),
+                            TextFormField(
                               controller: lotSupplierController,
-                              labelText: 'Lot ผู้ผลิต',
-                              onChanged: (value) {
-                                item['lot_supplier'] = value;
-                              },
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
+                                filled: true,
+                                fillColor: Colors.white,
+                                labelText: 'Lot ผู้ผลิต',
+                                labelStyle: TextStyle(
+                                  color: Colors.black87,
+                                ),
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 16.0),
+                              ),
+                              // keyboardType: TextInputType.number,
+                              textAlign: TextAlign.left,
                             ),
+                            SizedBox(height: 16.0),
                             buildMfgDateField(),
                             SizedBox(height: 16.0),
                             Row(
@@ -2224,11 +2273,10 @@ class _LotDialogState extends State<LotDialog> {
                         child: IconButton(
                           icon: Icon(Icons.close),
                           onPressed: () {
+                            Navigator.of(context).pop();
                             lotQtyController.clear();
                             lotSupplierController.clear();
                             mfgDateController.clear();
-
-                            Navigator.of(context).pop();
                           },
                         ),
                       ),
