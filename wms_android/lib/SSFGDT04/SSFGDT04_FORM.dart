@@ -402,7 +402,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)',
+      showExitWarning: true,
+      ),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: fromItems.isEmpty
           ? Center(child: CircularProgressIndicator())
@@ -2089,7 +2091,60 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                 ],
               ),
             ),
-      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
+      bottomNavigationBar: BottomBar(currentPage: 'show',),
+    );
+  }
+  void showDialogAlert(
+    BuildContext context,
+    String messageAlert,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Row(
+            children: [
+              Icon(
+                Icons.notification_important,
+                color: Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'แจ้งเตือน',
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    messageAlert,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text('ตกลง'),
+                      ),
+                    ],
+                  )
+                ])),
+          ),
+        );
+      },
     );
   }
 }

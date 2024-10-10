@@ -32,20 +32,20 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
 
   @override
   void initState() {
-    setData();
+    // setData();
     super.initState();
     fetchStatusItems();
   }
 
-  void setData() {
-    if (mounted) {
-      setState(() {
-        selectedDocType = 'รับจากการผลิต';
-        selectedDocDesc = 'RMI16';
-        docTypeController.text = 'รับจากการผลิต';
-      });
-    }
-  }
+  // void setData() {
+  //   if (mounted) {
+  //     setState(() {
+  //       selectedDocType = 'รับจากการผลิต';
+  //       selectedDocDesc = 'RMI16';
+  //       docTypeController.text = 'รับจากการผลิต';
+  //     });
+  //   }
+  // }
 
   Future<void> fetchStatusItems() async {
     final response = await http.get(Uri.parse(
@@ -62,6 +62,8 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
           // ตั้งค่า selectedDocType ให้เป็นค่าแรกของ statusItems
           if (statusItems.isNotEmpty) {
             selectedDocType = statusItems[0]['doc_type'];
+            selectedDocDesc = statusItems[0]['doc_desc'];
+            docTypeController.text = selectedDocDesc ?? '';
           }
           print('dataMenu: $statusItems');
         });
@@ -110,17 +112,20 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        if (mounted) {setState(() {
-          po_doc_no = responseData['po_doc_no'];
-          po_doc_type = responseData['po_doc_type'];
-          poStatus = responseData['po_status'];
-          poMessage = responseData['po_message'];
+        if (mounted) {
+          setState(() {
+            po_doc_no = responseData['po_doc_no'];
+            po_doc_type = responseData['po_doc_type'];
+            poStatus = responseData['po_status'];
+            poMessage = responseData['po_message'];
 
-          print('po_doc_no : $po_doc_no Type : ${po_doc_no.runtimeType}');
-          print('po_doc_type : $po_doc_type Type : ${po_doc_type.runtimeType}');
-          print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
-          print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
-        });}
+            print('po_doc_no : $po_doc_no Type : ${po_doc_no.runtimeType}');
+            print(
+                'po_doc_type : $po_doc_type Type : ${po_doc_type.runtimeType}');
+            print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
+            print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
+          });
+        }
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
       }
@@ -210,9 +215,9 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    selectedDocType = item['doc_type'];
+                                    // selectedDocType = item['doc_type'];
                                     selectedDocDesc = item['doc_desc'];
-                                    // docTypeController.text = selectedDocDesc;
+                                    docTypeController.text = selectedDocDesc ?? '';
                                     // -----------------------------------------
                                   });
                                 },
@@ -249,25 +254,25 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 TextFormField(
-                  readOnly: true, // Make it read-only to prevent keyboard popup
-                  onTap: _showDocumentTypePopup, // Show the popup on tap
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    labelText: 'ประเภทเอกสาร',
-                    suffixIcon: Icon(
-                      Icons.arrow_drop_down,
-                      color: Color.fromARGB(255, 113, 113, 113),
+                    readOnly:
+                        true, // Make it read-only to prevent keyboard popup
+                    onTap: _showDocumentTypePopup, // Show the popup on tap
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelText: 'ประเภทเอกสาร',
+                      suffixIcon: Icon(
+                        Icons.arrow_drop_down,
+                        color: Color.fromARGB(255, 113, 113, 113),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelStyle: const TextStyle(
+                        color: Colors.black87,
+                      ),
                     ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelStyle: const TextStyle(
-                      color: Colors.black87,
+                    controller: docTypeController,
+                    // controller: TextEditingController(text: selectedDocType)
                     ),
-                  ),
-                  controller: docTypeController,
-                  // controller: TextEditingController(
-                  //                     text: selectedDocType)
-                ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -346,7 +346,7 @@ void _onQRViewCreated(QRViewController controller) {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 

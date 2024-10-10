@@ -50,26 +50,34 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   bool monthColorCheck = false;
   bool noDate = false;
   bool chkDate = false;
+  bool isLoading = false;
 
   @override
   void initState() {
+    setData();
     super.initState();
-    // Ensure selectedItem has a valid initial value
-    if (!dropdownItems.contains(selectedItem)) {
-      selectedItem = dropdownItems.first;
-    }
-    // Set default selectedItem and corresponding status
-    selectedItem = 'ระหว่างบันทึก'; // Preselect 'ทั้งหมด'
-    _statusController.text = selectedItem;
+    print(
+        'selectedItem in search page : $selectedItem Type : ${selectedItem.runtimeType}');
+    print(
+        'statusDESC in search page : $status Type : ${status.runtimeType}');
+    print(
+        'selectedDate in search page : $selectedDate Type : ${selectedDate.runtimeType}');
+}
 
-    // Set the corresponding status for the default selected item
-    status = '1'; // Assuming 'ทั้งหมด' corresponds to status '0'
+  @override
+  void dispose() {
+    _dateController.dispose();
+    _controller.dispose();
+    _statusController.dispose();
+    super.dispose();
   }
 
   void setData() {
+    isLoading = true;
     if (mounted) {
       setState(() {
         _statusController.text = 'ระหว่างบันทึก';
+        isLoading = false;
       });
     }
   }
@@ -342,13 +350,15 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
+                        setState(() {
                         _controller.clear();
                         _dateController.clear();
-                        setState(() {
-                          selectedDate = 'null'; // Set selectedDate to null
-                          selectedItem =
-                              dropdownItems.first; // Reset to a valid value
-                          status = '0'; // Reset status to default
+                        _statusController.text = 'ทั้งหมด'; // กำหนดค่าเริ่มต้นให้กับ DropdownButtonFormField
+                        selectedDate = 'null'; // Set selectedDate to null
+                        selectedItem = 'ทั้งหมด'; // Reset to a valid value
+                        status = '0';
+                        noDate = false;
+                        chkDate = false; // Reset status to default
                         });
                       },
                       style: AppStyles.EraserButtonStyle(),
@@ -414,8 +424,8 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                                   setState(() {
                                     pSoNo = '';
                                     selectedDate = 'null';
-                                    selectedItem = 'ระหว่างบันทึก';
-                                    status = '1';
+                                    // selectedItem = 'ระหว่างบันทึก';
+                                    // status = '1';
                                     _dateController.clear();
                                     _controller.clear();
                                   });

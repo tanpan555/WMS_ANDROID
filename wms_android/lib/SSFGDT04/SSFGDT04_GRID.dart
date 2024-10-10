@@ -334,7 +334,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)',
+      showExitWarning: true,),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer: CustomDrawer(),
       body: Padding(
@@ -536,7 +537,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 
