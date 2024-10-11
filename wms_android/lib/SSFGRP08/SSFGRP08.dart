@@ -1223,7 +1223,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
   }
 }
