@@ -1753,7 +1753,7 @@ class LotDialog extends StatefulWidget {
 }
 
 class _LotDialogState extends State<LotDialog> {
-  final TextEditingController lotCountController =
+  late TextEditingController lotCountController =
       TextEditingController(text: '0');
   String? poStatus;
   String? poMessage;
@@ -1918,6 +1918,8 @@ class _LotDialogState extends State<LotDialog> {
         setState(() {
           dataLotList =
               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+          print('dataLotList.length ${dataLotList.length}');
         });
       } else {
         print('Failed to get data. Status code: ${response.statusCode}');
@@ -1946,6 +1948,7 @@ class _LotDialogState extends State<LotDialog> {
               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
         });
         print('Success: $dataList');
+        lotCountController.text = dataLotList.length.toString();
       } else {
         print('Failed to get data. Status code: ${response.statusCode}');
       }
