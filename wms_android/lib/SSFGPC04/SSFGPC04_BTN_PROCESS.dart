@@ -16,7 +16,7 @@ class SSFGPC04_BTN_PROCESS extends StatefulWidget {
 
 class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   List<dynamic> dataStartGroup = [];
-  List<dynamic> dataEndtGroup = [];
+  List<dynamic> dataEndGroup = [];
   String? selectStartGroup;
   String? selectEndGroup;
 
@@ -26,7 +26,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   TextEditingController searchController2 = TextEditingController();
 //----------------------------------------------------------------------------//
   List<dynamic> dataStartCat = [];
-  List<dynamic> dataEndtCat = [];
+  List<dynamic> dataEndCat = [];
   String? selectStartCat;
   String? selectEndCat;
 
@@ -141,11 +141,11 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
         print('Fetched data: $jsonDecode');
         if (mounted) {
           setState(() {
-            dataEndtGroup =
+            dataEndGroup =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
           });
         }
-        print('dataLovEndLoc : $dataEndtGroup');
+        print('dataLovEndLoc : $dataEndGroup');
       } else {
         throw Exception(
             'dataLovEndLoc Failed to load fetchData ||  Status Code: ${response.statusCode}');
@@ -194,11 +194,11 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
         print('Fetched data: $jsonDecode');
         if (mounted) {
           setState(() {
-            dataEndtCat =
+            dataEndCat =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
           });
         }
-        print('dataEndtCat : $dataEndtCat');
+        print('dataEndtCat : $dataEndCat');
       } else {
         throw Exception(
             'dataEndtCat Failed to load fetchData ||  Status Code: ${response.statusCode}');
@@ -350,17 +350,17 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
         print('Fetched data: $jsonDecode');
         if (mounted) {
           setState(() {
-            dataStartItems =
+            dataEndItems =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
           });
         }
-        print('dataStartItems : $dataStartItems');
+        print('dataEndItems : $dataEndItems');
       } else {
         throw Exception(
-            'dataStartItems Failed to load fetchData ||  Status Code: ${response.statusCode}');
+            'dataEndItems Failed to load fetchData ||  Status Code: ${response.statusCode}');
       }
     } catch (e) {
-      print('dataStartItems ERROR IN Fetch Data : $e');
+      print('dataEndItems ERROR IN Fetch Data : $e');
     }
   }
 
@@ -631,7 +631,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                             child: Builder(
                                               builder: (context) {
                                                 final filteredItems =
-                                                    dataEndtGroup.where((item) {
+                                                    dataEndGroup.where((item) {
                                                   final codeString =
                                                       '${item['group_code'] ?? ''}'
                                                           .toString();
@@ -1022,7 +1022,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                             child: Builder(
                                               builder: (context) {
                                                 final filteredItems =
-                                                    dataEndtCat.where((item) {
+                                                    dataEndCat.where((item) {
                                                   final codeString =
                                                       '${item['category_code'] ?? ''}'
                                                           .toString();
@@ -1222,10 +1222,10 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                     dataStartSubCat
                                                         .where((item) {
                                                   final codeString =
-                                                      '${item['category_code'] ?? ''}'
+                                                      '${item['sub_cat_code'] ?? ''}'
                                                           .toString();
                                                   final nameString =
-                                                      '${item['category_desc'] ?? ''}'
+                                                      '${item['sub_cat_desc'] ?? ''}'
                                                           .toString();
                                                   final searchQuery =
                                                       searchController5.text
@@ -1264,11 +1264,11 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                       (context, index) {
                                                     final item =
                                                         filteredItems[index];
-                                                    final gCode =
-                                                        '${item['category_code'] ?? ''}'
+                                                    final sCode =
+                                                        '${item['sub_cat_code'] ?? ''}'
                                                             .toString();
-                                                    final gName =
-                                                        '${item['category_code'] ?? ''}'
+                                                    final sName =
+                                                        '${item['sub_cat_desc'] ?? ''}'
                                                             .toString();
                                                     return ListTile(
                                                       contentPadding:
@@ -1277,7 +1277,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                         text: TextSpan(
                                                           children: [
                                                             TextSpan(
-                                                              text: '$gCode\n',
+                                                              text: '$sCode\n',
                                                               style: TextStyle(
                                                                 fontSize: 14,
                                                                 color: Colors
@@ -1294,7 +1294,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                                   fontSize: 14),
                                                             ),
                                                             TextSpan(
-                                                              text: '$gName',
+                                                              text: '$sName',
                                                               style: TextStyle(
                                                                 fontSize: 14,
                                                                 color: Colors
@@ -1309,7 +1309,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                             .pop();
                                                         setState(() {
                                                           selectStarSubtCat =
-                                                              gCode;
+                                                              sCode;
                                                           startSubCatController
                                                                   .text =
                                                               selectStarSubtCat!;
@@ -1414,10 +1414,10 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                 final filteredItems =
                                                     dataEndSubCat.where((item) {
                                                   final codeString =
-                                                      '${item['category_code'] ?? ''}'
+                                                      '${item['sub_cat_code'] ?? ''}'
                                                           .toString();
                                                   final nameString =
-                                                      '${item['category_desc'] ?? ''}'
+                                                      '${item['sub_cat_desc'] ?? ''}'
                                                           .toString();
                                                   final searchQuery =
                                                       searchController6.text
@@ -1456,11 +1456,11 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                       (context, index) {
                                                     final item =
                                                         filteredItems[index];
-                                                    final cCode =
-                                                        '${item['category_code'] ?? ''}'
+                                                    final sCode =
+                                                        '${item['sub_cat_code'] ?? ''}'
                                                             .toString();
-                                                    final cName =
-                                                        '${item['category_desc'] ?? ''}'
+                                                    final sName =
+                                                        '${item['sub_cat_desc'] ?? ''}'
                                                             .toString();
                                                     return ListTile(
                                                       contentPadding:
@@ -1469,7 +1469,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                         text: TextSpan(
                                                           children: [
                                                             TextSpan(
-                                                              text: '$cCode\n',
+                                                              text: '$sCode\n',
                                                               style: TextStyle(
                                                                 fontSize: 14,
                                                                 color: Colors
@@ -1486,7 +1486,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                                   fontSize: 14),
                                                             ),
                                                             TextSpan(
-                                                              text: '$cName',
+                                                              text: '$sName',
                                                               style: TextStyle(
                                                                 fontSize: 14,
                                                                 color: Colors
@@ -1501,7 +1501,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                             .pop();
                                                         setState(() {
                                                           selectEndSubCat =
-                                                              cCode;
+                                                              sCode;
                                                           endSubCatController
                                                                   .text =
                                                               selectEndSubCat!;
@@ -2005,10 +2005,10 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                     dataStartItems
                                                         .where((item) {
                                                   final codeString =
-                                                      '${item['category_code'] ?? ''}'
+                                                      '${item['item_code'] ?? ''}'
                                                           .toString();
                                                   final nameString =
-                                                      '${item['category_code'] ?? ''}'
+                                                      '${item['itm_name'] ?? ''}'
                                                           .toString();
                                                   final searchQuery =
                                                       searchController9.text
@@ -2047,11 +2047,11 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                       (context, index) {
                                                     final item =
                                                         filteredItems[index];
-                                                    final gCode =
-                                                        '${item['category_code'] ?? ''}'
+                                                    final iCode =
+                                                        '${item['item_code'] ?? ''}'
                                                             .toString();
-                                                    final gName =
-                                                        '${item['category_code'] ?? ''}'
+                                                    final iName =
+                                                        '${item['itm_name'] ?? ''}'
                                                             .toString();
                                                     return ListTile(
                                                       contentPadding:
@@ -2060,7 +2060,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                         text: TextSpan(
                                                           children: [
                                                             TextSpan(
-                                                              text: '$gCode\n',
+                                                              text: '$iCode\n',
                                                               style: TextStyle(
                                                                 fontSize: 14,
                                                                 color: Colors
@@ -2077,7 +2077,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                                   fontSize: 14),
                                                             ),
                                                             TextSpan(
-                                                              text: '$gName',
+                                                              text: '$iName',
                                                               style: TextStyle(
                                                                 fontSize: 14,
                                                                 color: Colors
@@ -2092,7 +2092,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                             .pop();
                                                         setState(() {
                                                           selectStartItems =
-                                                              gCode;
+                                                              iCode;
                                                           startItemsController
                                                                   .text =
                                                               selectStartItems!;
@@ -2173,7 +2173,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                 onPressed: () {
                                                   Navigator.of(context)
                                                       .pop(); // Close Popup
-                                                  searchController2
+                                                  searchController10
                                                       .clear(); // Clear search value on close
                                                 },
                                               ),
@@ -2182,7 +2182,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                           const SizedBox(height: 10),
                                           // Search box
                                           TextField(
-                                            controller: searchController2,
+                                            controller: searchController10,
                                             decoration: InputDecoration(
                                               hintText: 'ค้นหา',
                                               border: OutlineInputBorder(),
@@ -2196,15 +2196,15 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                             child: Builder(
                                               builder: (context) {
                                                 final filteredItems =
-                                                    dataEndtGroup.where((item) {
+                                                    dataEndItems.where((item) {
                                                   final codeString =
-                                                      '${item['category_code'] ?? ''}'
+                                                      '${item['item_code'] ?? ''}'
                                                           .toString();
                                                   final nameString =
-                                                      '${item['category_code'] ?? ''}'
+                                                      '${item['itm_name'] ?? ''}'
                                                           .toString();
                                                   final searchQuery =
-                                                      searchController2.text
+                                                      searchController10.text
                                                           .trim()
                                                           .toLowerCase();
                                                   final searchQueryInt =
@@ -2240,11 +2240,11 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                       (context, index) {
                                                     final item =
                                                         filteredItems[index];
-                                                    final gCode =
-                                                        '${item['category_code'] ?? ''}'
+                                                    final iCode =
+                                                        '${item['item_code'] ?? ''}'
                                                             .toString();
-                                                    final gName =
-                                                        '${item['category_code'] ?? ''}'
+                                                    final iName =
+                                                        '${item['itm_name'] ?? ''}'
                                                             .toString();
                                                     return ListTile(
                                                       contentPadding:
@@ -2253,7 +2253,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                         text: TextSpan(
                                                           children: [
                                                             TextSpan(
-                                                              text: '$gCode\n',
+                                                              text: '$iCode\n',
                                                               style: TextStyle(
                                                                 fontSize: 14,
                                                                 color: Colors
@@ -2270,7 +2270,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                                   fontSize: 14),
                                                             ),
                                                             TextSpan(
-                                                              text: '$gName',
+                                                              text: '$iName',
                                                               style: TextStyle(
                                                                 fontSize: 14,
                                                                 color: Colors
@@ -2284,12 +2284,12 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                                         Navigator.of(context)
                                                             .pop();
                                                         setState(() {
-                                                          selectEndGroup =
-                                                              gCode;
-                                                          endGroupController
+                                                          selectEndItems =
+                                                              iCode;
+                                                          endItemsController
                                                                   .text =
-                                                              selectEndGroup!;
-                                                          selectLovStartGroup();
+                                                              selectEndItems!;
+                                                          selectLovEndItems();
                                                         });
                                                       },
                                                     );
@@ -2306,7 +2306,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                               );
                             },
                           ).then((_) {
-                            searchController2.clear();
+                            searchController10.clear();
                           });
                         },
                         child: AbsorbPointer(
@@ -2322,7 +2322,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                 color: Color.fromARGB(255, 113, 113, 113),
                               ),
                             ),
-                            controller: endGroupController,
+                            controller: endItemsController,
                           ),
                         ),
                       ),

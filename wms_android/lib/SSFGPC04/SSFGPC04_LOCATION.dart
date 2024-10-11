@@ -14,87 +14,92 @@ class SSFGPC04_LOCATION extends StatefulWidget {
 }
 
 class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
+  List<Map<String, dynamic>> filteredLocItems = [];
   List<Map<String, dynamic>> locItems = [];
   bool isLoading = true;
+  TextEditingController searchController = TextEditingController();
 
   void _selectAll(bool value) {
-    if (mounted) {setState(() {
-      for (var row in locItems) {
-        row["selected"] = value;
-      }
-    });}
+    if (mounted) {
+      setState(() {
+        for (var row in filteredLocItems) {
+          row["selected"] = value;
+        }
+      });
+    }
   }
 
   void _deselectAll() {
-    if (mounted) {setState(() {
-      for (var row in locItems) {
-        row["selected"] = false;
-      }
-    });}
+    if (mounted) {
+      setState(() {
+        for (var row in filteredLocItems) {
+          row["selected"] = false;
+        }
+      });
+    }
   }
-
 
   void _navigateBackWithSelectedData() async {
-  List<Map<String, dynamic>> selectedItems =
-      locItems.where((item) => item['selected'] == true).toList();
+    List<Map<String, dynamic>> selectedItems =
+        locItems.where((item) => item['selected'] == true).toList();
 
-  // ส่งค่า WARE_CODE ที่เลือกไปที่ API
-  String nbSelValue = selectedItems.isNotEmpty ? 'Y' : 'N';
-  gb.P_WARE_CODE = selectedItems.map((item) => item['ware_code']).join(',');
+    // ส่งค่า WARE_CODE ที่เลือกไปที่ API
+    String nbSelValue = selectedItems.isNotEmpty ? 'Y' : 'N';
+    String locValue = selectedItems.map((item) => item['location_code']).join(',');
+    gb.P_WARE_CODE = selectedItems.map((item) => item['ware_code']).join(',');
 
-  // เรียกใช้ API เพื่อเช็คข้อมูลตามค่า NB_SEL ที่ได้
-  await fetchCheck(nbSelValue);
+    // เรียกใช้ API เพื่อเช็คข้อมูลตามค่า NB_SEL ที่ได้
+    await fetchCheck(nbSelValue,locValue);
 
-  // เช็คว่า widget ยังอยู่หรือไม่ก่อนทำการ pop
-  if (mounted) {
-    Navigator.pop(context, selectedItems);
+    // เช็คว่า widget ยังอยู่หรือไม่ก่อนทำการ pop
+    if (mounted) {
+      Navigator.pop(context, selectedItems);
+    }
   }
-}
-
 
   @override
   void initState() {
     super.initState();
     fetchData();
+    searchController.addListener(_filterItems);
   }
 
   Future<void> fetchData() async {
-  try {
-    final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_IN_LOCATION/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}'));
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_IN_LOCATION/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}'));
 
-    if (response.statusCode == 200) {
-      final responseBody = utf8.decode(response.bodyBytes);
-      final responseData = jsonDecode(responseBody);
-      print('Fetched data: $responseData');
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        print('Fetched data: $responseData');
 
-      // เก็บรหัสคลังที่เลือกไว้ใน Global Parameter
-      List<String> selectedWareCodes = gb.P_WARE_CODE.split(',');
-
-      if (mounted) {setState(() {
-        locItems = List<Map<String, dynamic>>.from(responseData['items'] ?? [])
-          ..forEach((row) {
-            // ตรวจสอบว่า ware_code ในรายการอยู่ใน selectedWareCodes หรือไม่
-            row["selected"] = selectedWareCodes.contains(row['ware_code']);
+        if (mounted) {
+          setState(() {
+            locItems =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+            filteredLocItems = locItems;
+            isLoading = false;
           });
-        isLoading = false;
-      });}
-      print('dataTable : $locItems');
-    } else {
-      throw Exception('Failed to load fetchData');
+        }
+        print('locItems: $locItems');
+      } else {
+        throw Exception('Failed to load fetchData');
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      print('ERROR IN Fetch Data : $e');
     }
-  } catch (e) {
-    if (mounted) {setState(() {
-      isLoading = false;
-    });}
-    print('ERROR IN Fetch Data : $e');
   }
-}
+  
 
-
-  Future<void> fetchCheck(String? nbSel) async {
+  Future<void> fetchCheck(String? nbSel, String? loc) async {
     const url =
-        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_PU_DEL_TMP_LOC';
+        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_PU_INS_TMP_LOC_SEL';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -102,9 +107,9 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
 
     final body = jsonEncode({
       'APP_SESSION': gb.APP_SESSION,
-      // 'WARE_CODE': gb.P_WARE_CODE, // ส่งรหัสคลังที่เลือกไปด้วย
-      // 'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
-      // 'NB_SEL': nbSel, // ส่งค่า NB_SEL เป็น 'Y' หรือ 'N'
+      'WARE_CODE': gb.P_WARE_CODE, // ส่งรหัสคลังที่เลือกไปด้วย
+      'LOCATION_CODE': loc,
+      'NB_SEL': nbSel, // ส่งค่า NB_SEL เป็น 'Y' หรือ 'N'
     });
 
     print('Request body: $body');
@@ -118,9 +123,11 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        if (mounted) {setState(() {
-          // ดำเนินการอื่นๆ เมื่อเช็คสำเร็จ เช่นการอัปเดตตารางหรือแสดงข้อความ
-        });}
+        if (mounted) {
+          setState(() {
+            // ดำเนินการอื่นๆ เมื่อเช็คสำเร็จ เช่นการอัปเดตตารางหรือแสดงข้อความ
+          });
+        }
         print('Success: $responseData');
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
@@ -130,71 +137,118 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
     }
   }
 
+  void _filterItems() {
+    String query = searchController.text.toLowerCase();
+    if (mounted) {
+      setState(() {
+        filteredLocItems = locItems.where((item) {
+          final wareCode = item['ware_code']?.toLowerCase() ?? '';
+          final locCode = item['location_code']?.toLowerCase() ?? '';
+          final locName = item['nb_location_name']?.toLowerCase() ?? '';
+          return wareCode.contains(query) || locCode.contains(query)|| locName.contains(query);
+        }).toList();
+      });
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(title: 'เลือกคลังสินค้า'),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                ElevatedButton(
-                  onPressed: () => _selectAll(true),
-                  child: const Text(
-                    'Select All',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  style: AppStyles.cancelButtonStyle(),
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: _deselectAll,
-                  child: const Text(
-                    'Deselect All',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  style: AppStyles.cancelButtonStyle(),
-                ),
-              ],
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: const CustomAppBar(title: 'เลือกคลังสินค้า'),
+    backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+    body: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          TextField(
+            controller: searchController,
+            decoration: const InputDecoration(
+              hintText: 'ค้นหาคลังสินค้า',
+              suffixIcon: Icon(Icons.search), // Place the search icon at the end
+              border: OutlineInputBorder(),
+              filled: true,
+              fillColor: Colors.white, // Set the background color to white
             ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: SingleChildScrollView(
-                child: _buildDataTable(),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              ElevatedButton(
+                onPressed: () => _selectAll(true),
+                child: const Text(
+                  'Select All',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: AppStyles.cancelButtonStyle(),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: _deselectAll,
+                child: const Text(
+                  'Deselect All',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: AppStyles.cancelButtonStyle(),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Expanded(
+            child: SingleChildScrollView(
+              child: _buildDataTable(),
+            ),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _navigateBackWithSelectedData,
+            child: const Text(
+              'กลับสู่หน้าจอหลัก',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _navigateBackWithSelectedData,
-              child: const Text(
-                'กลับสู่หน้าจอหลัก',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              style: AppStyles.cancelButtonStyle(),
-            ),
-          ],
+            style: AppStyles.cancelButtonStyle(),
+          ),
+        ],
+      ),
+    ),
+    bottomNavigationBar: BottomBar(currentPage: 'show'),
+  );
+}
+
+Widget _buildDataTable() {
+  if (locItems.isEmpty) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 100), // Adjust the top padding as needed
+      child: const Center(
+        child: Text(
+          'No data found', // Show message when no data is available
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.white,
+            // fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 
-  Widget _buildDataTable() {
   return Container(
-    color: Colors.white, // Set the background color of the table to white
+    color: Colors.white,
     child: Column(
       children: locItems.map((row) {
         return Padding(
@@ -203,7 +257,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Checkbox(
-                value: row["selected"] ?? false, // Ensure 'selected' has a default value
+                value: row["selected"] ?? false,
                 onChanged: (bool? value) {
                   setState(() {
                     row["selected"] = value!;
@@ -211,24 +265,29 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
                 },
               ),
               const SizedBox(width: 10),
-              Text(
-                row['ware_code'] ?? '', // Display the 'WAREHOUSE_CODE' field
-                style: const TextStyle(fontSize: 14),
-                textAlign: TextAlign.right,
-                overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: Text(
+                  row['ware_code'] ?? '',
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.right,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              const SizedBox(width: 10),Text(
-                row['location_code'] ?? '', // Display the 'WAREHOUSE_CODE' field
-                style: const TextStyle(fontSize: 14),
-                textAlign: TextAlign.right,
-                overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: Text(
+                  row['location_code'] ?? '',
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.right,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              const SizedBox(width: 10),
-              Text(
-                row['location_name'] ?? '', // Display the 'WAREHOUSE_NAME' field
-                style: const TextStyle(fontSize: 14),
-                textAlign: TextAlign.right,
-                overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: Text(
+                  row['nb_location_name'] ?? '',
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.right,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),

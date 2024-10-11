@@ -15,84 +15,98 @@ class SSFGPC04_WAREHOUSE extends StatefulWidget {
 
 class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
   List<Map<String, dynamic>> whItems = [];
+  List<Map<String, dynamic>> filteredWhItems = []; // Add a filtered list
   bool isLoading = true;
+  TextEditingController searchController = TextEditingController();
 
   void _selectAll(bool value) {
-    if (mounted) {setState(() {
-      for (var row in whItems) {
-        row["selected"] = value;
-      }
-    });}
+    if (mounted) {
+      setState(() {
+        for (var row in filteredWhItems) {
+          row["selected"] = value;
+        }
+      });
+    }
   }
 
   void _deselectAll() {
-    if (mounted) {setState(() {
-      for (var row in whItems) {
-        row["selected"] = false;
-      }
-    });}
+    if (mounted) {
+      setState(() {
+        for (var row in filteredWhItems) {
+          row["selected"] = false;
+        }
+      });
+    }
   }
-
 
   void _navigateBackWithSelectedData() async {
-  List<Map<String, dynamic>> selectedItems =
-      whItems.where((item) => item['selected'] == true).toList();
+    List<Map<String, dynamic>> selectedItems =
+        whItems.where((item) => item['selected'] == true).toList();
 
-  // ส่งค่า WARE_CODE ที่เลือกไปที่ API
-  String nbSelValue = selectedItems.isNotEmpty ? 'Y' : 'N';
-  gb.P_WARE_CODE = selectedItems.map((item) => item['ware_code']).join(',');
+    String nbSelValue = selectedItems.isNotEmpty ? 'Y' : 'N';
+    gb.P_WARE_CODE = selectedItems.map((item) => item['ware_code']).join(',');
 
-  // เรียกใช้ API เพื่อเช็คข้อมูลตามค่า NB_SEL ที่ได้
-  await fetchCheck(nbSelValue);
+    await fetchCheck(nbSelValue);
 
-  // เช็คว่า widget ยังอยู่หรือไม่ก่อนทำการ pop
-  if (mounted) {
-    Navigator.pop(context, selectedItems);
+    if (mounted) {
+      Navigator.pop(context, selectedItems);
+    }
   }
-}
-
 
   @override
   void initState() {
     super.initState();
     fetchData();
+    searchController.addListener(_filterItems); // Add search listener
   }
 
   Future<void> fetchData() async {
-  try {
-    final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_1_IN_WAREHOUSE/${gb.APP_SESSION}/${gb.P_ERP_OU_CODE}'));
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_1_IN_WAREHOUSE/${gb.APP_SESSION}/${gb.P_ERP_OU_CODE}'));
 
-    if (response.statusCode == 200) {
-      final responseBody = utf8.decode(response.bodyBytes);
-      final responseData = jsonDecode(responseBody);
-      print('Fetched data: $responseData');
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        List<String> selectedWareCodes = gb.P_WARE_CODE.split(',');
 
-      // เก็บรหัสคลังที่เลือกไว้ใน Global Parameter
-      List<String> selectedWareCodes = gb.P_WARE_CODE.split(',');
-
-      if (mounted) {setState(() {
-        whItems = List<Map<String, dynamic>>.from(responseData['items'] ?? [])
-          ..forEach((row) {
-            // ตรวจสอบว่า ware_code ในรายการอยู่ใน selectedWareCodes หรือไม่
-            row["selected"] = selectedWareCodes.contains(row['ware_code']);
+        if (mounted) {
+          setState(() {
+            whItems = List<Map<String, dynamic>>.from(responseData['items'] ?? [])
+              ..forEach((row) {
+                row["selected"] = selectedWareCodes.contains(row['ware_code']);
+              });
+            filteredWhItems = whItems; // Initialize filtered list with all items
+            isLoading = false;
           });
-        isLoading = false;
-      });}
-      print('dataTable : $whItems');
-    } else {
-      throw Exception('Failed to load fetchData');
+        }
+      } else {
+        throw Exception('Failed to load fetchData');
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      print('ERROR IN Fetch Data : $e');
     }
-  } catch (e) {
-    if (mounted) {setState(() {
-      isLoading = false;
-    });}
-    print('ERROR IN Fetch Data : $e');
   }
-}
 
+  void _filterItems() {
+    String query = searchController.text.toLowerCase();
+    if (mounted) {
+      setState(() {
+        filteredWhItems = whItems.where((item) {
+          final wareCode = item['ware_code']?.toLowerCase() ?? '';
+          final wareName = item['ware_name']?.toLowerCase() ?? '';
+          return wareCode.contains(query) || wareName.contains(query);
+        }).toList();
+      });
+    }
+  }
 
-  Future<void> fetchCheck(String? nbSel) async {
+    Future<void> fetchCheck(String? nbSel) async {
     const url =
         'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
 
@@ -131,105 +145,141 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(title: 'เลือกคลังสินค้า'),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                ElevatedButton(
-                  onPressed: () => _selectAll(true),
-                  child: const Text(
-                    'Select All',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  style: AppStyles.cancelButtonStyle(),
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: _deselectAll,
-                  child: const Text(
-                    'Deselect All',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  style: AppStyles.cancelButtonStyle(),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: SingleChildScrollView(
-                child: _buildDataTable(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _navigateBackWithSelectedData,
-              child: const Text(
-                'กลับสู่หน้าจอหลัก',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              style: AppStyles.cancelButtonStyle(),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomBar(currentPage: 'show'),
-    );
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
-  Widget _buildDataTable() {
-  return Container(
-    color: Colors.white, // Set the background color of the table to white
-    child: Column(
-      children: whItems.map((row) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Row(
+  @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: const CustomAppBar(title: 'เลือกคลังสินค้า'),
+    backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+    body: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          // Add search TextField
+          TextField(
+            controller: searchController,
+            decoration: const InputDecoration(
+              hintText: 'ค้นหาคลังสินค้า',
+              suffixIcon: Icon(Icons.search), // Place the search icon at the end
+              border: OutlineInputBorder(),
+              filled: true,
+              fillColor: Colors.white, // Set the background color to white
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Checkbox(
-                value: row["selected"] ?? false, // Ensure 'selected' has a default value
-                onChanged: (bool? value) {
-                  setState(() {
-                    row["selected"] = value!;
-                  });
-                },
+              ElevatedButton(
+                onPressed: () => _selectAll(true),
+                child: const Text(
+                  'Select All',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: AppStyles.cancelButtonStyle(),
               ),
               const SizedBox(width: 10),
-              Text(
-                row['ware_code'] ?? '', // Display the 'WAREHOUSE_CODE' field
-                style: const TextStyle(fontSize: 14),
-                textAlign: TextAlign.right,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(width: 10),
-              Text(
-                row['ware_name'] ?? '', // Display the 'WAREHOUSE_NAME' field
-                style: const TextStyle(fontSize: 14),
-                textAlign: TextAlign.right,
-                overflow: TextOverflow.ellipsis,
+              ElevatedButton(
+                onPressed: _deselectAll,
+                child: const Text(
+                  'Deselect All',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: AppStyles.cancelButtonStyle(),
               ),
             ],
           ),
-        );
-      }).toList(),
+          const SizedBox(height: 20),
+          Expanded(
+            child: SingleChildScrollView(
+              child: _buildDataTable(),
+            ),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _navigateBackWithSelectedData,
+            child: const Text(
+              'กลับสู่หน้าจอหลัก',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            style: AppStyles.cancelButtonStyle(),
+          ),
+        ],
+      ),
     ),
+    bottomNavigationBar: BottomBar(currentPage: 'show'),
   );
 }
 
+Widget _buildDataTable() {
+  if (filteredWhItems.isEmpty) {
+    // Show 'No data found' when filtered items are empty
+    return Padding(
+      padding: const EdgeInsets.only(top: 100), // Adjust the top padding as needed
+      child: const Center(
+        child: Text(
+          'No data found', // Show message when no data is available
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.white,
+            // fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  } else {
+    // Show the filtered data table when data is found
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: filteredWhItems.map((row) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Checkbox(
+                  value: row["selected"] ?? false,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      row["selected"] = value!;
+                    });
+                  },
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  row['ware_code'] ?? '',
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.right,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  row['ware_name'] ?? '',
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.right,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
 }
+}
+

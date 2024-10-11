@@ -62,81 +62,93 @@ class _SSFGPC04_CARDState extends State<SSFGPC04_CARD> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ'),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    final selectedItems = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SSFGPC04_WAREHOUSE(),
-                      ),
-                    );
-                    if (selectedItems != null) {
-                      setState(() {
-                        widget.selectedItems.clear();
-                        widget.selectedItems.addAll(selectedItems);
-                      });
-                    }
-                  },
-                  child: const Text(
-                    'เลือกคลังสินค้า',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: const CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ'),
+    backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+    body: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  final selectedItems = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SSFGPC04_WAREHOUSE(),
                     ),
+                  );
+                  if (selectedItems != null) {
+                    setState(() {
+                      widget.selectedItems.clear();
+                      widget.selectedItems.addAll(selectedItems);
+                    });
+                  }
+                },
+                child: const Text(
+                  'เลือกคลังสินค้า',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
                   ),
-                  style: AppStyles.cancelButtonStyle(),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SSFGPC04_LOC(
-                          selectedItems:
-                                    widget.selectedItems.map((item) => Map<String, dynamic>.from(item)).toList(),
-                        ),
+                style: AppStyles.cancelButtonStyle(),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SSFGPC04_LOC(
+                        selectedItems: widget.selectedItems
+                            .map((item) => Map<String, dynamic>.from(item))
+                            .toList(),
                       ),
-                    );
-                  },
-                  style: AppStyles.NextButtonStyle(),
-                  child: Image.asset(
-                    'assets/images/right.png', // เปลี่ยนเป็นเส้นทางของรูปภาพของคุณ
-                    width: 20, // ปรับขนาดตามที่ต้องการ
-                    height: 20, // ปรับขนาดตามที่ต้องการ
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: widget.selectedItems.length,
-                itemBuilder: (context, index) {
-                  final item = widget.selectedItems[index];
-                  return Card(
-                    child: ListTile(
-                      title: Text(item['ware_code'] ?? ''),
-                      subtitle: Text(item['ware_name'] ?? ''),
                     ),
                   );
                 },
+                style: AppStyles.NextButtonStyle(),
+                child: Image.asset(
+                  'assets/images/right.png',
+                  width: 20,
+                  height: 20,
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: widget.selectedItems.isEmpty
+                ? Center(
+                    child: Text(
+                      'No data found',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white, // Change to your preferred color
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: widget.selectedItems.length,
+                    itemBuilder: (context, index) {
+                      final item = widget.selectedItems[index];
+                      return Card(
+                        child: ListTile(
+                          title: Text(item['ware_code'] ?? ''),
+                          subtitle: Text(item['ware_name'] ?? ''),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
       ),
-      bottomNavigationBar: BottomBar(currentPage: 'show'),
-    );
-  }
+    ),
+    bottomNavigationBar: BottomBar(currentPage: 'show'),
+  );
+}
+
 }

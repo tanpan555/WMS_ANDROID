@@ -25,7 +25,7 @@ class SSFGPC04_LOC extends StatefulWidget {
 }
 
 class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
-  List<Map<String, dynamic>> tmpWhItems = []; 
+  List<Map<String, dynamic>> tmpWhItems = [];
   bool isLoading = true;
 
   @override
@@ -44,19 +44,23 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $responseData');
 
-        if (mounted) {setState(() {
-          tmpWhItems =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          isLoading = false;
-        });}
+        if (mounted) {
+          setState(() {
+            tmpWhItems =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+            isLoading = false;
+          });
+        }
         print('dataTable : $tmpWhItems');
       } else {
         throw Exception('Failed to load fetchData');
       }
     } catch (e) {
-      if (mounted) {setState(() {
-        isLoading = false;
-      });}
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
       print('ERROR IN Fetch Data : $e');
     }
   }
@@ -103,11 +107,11 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => SSFGPC04_BTN_PROCESS(
-                          // po_doc_no: widget.po_doc_no, // ส่งค่า po_doc_no
-                          // po_doc_type: widget.po_doc_type, // ส่งค่า po_doc_type
-                          // pWareCode: widget.pWareCode,
-                          // setqc: setqc ?? '',
-                        ),
+                            // po_doc_no: widget.po_doc_no, // ส่งค่า po_doc_no
+                            // po_doc_type: widget.po_doc_type, // ส่งค่า po_doc_type
+                            // pWareCode: widget.pWareCode,
+                            // setqc: setqc ?? '',
+                            ),
                       ),
                     );
                   },
@@ -122,15 +126,26 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: ListView.builder(
+              child: widget.selectedItems.isEmpty
+                ? Center(
+                    child: Text(
+                      'No data found',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white, // Change to your preferred color
+                      ),
+                    ),
+                  )
+                : ListView.builder(
                 itemCount: widget.selectedItems.length,
                 itemBuilder: (context, index) {
                   final item = widget.selectedItems[index];
                   return Card(
                     child: ListTile(
                       title: Text(item['ware_code'] ?? ''),
-                      subtitle: Text(item['location_code'] ?? ''),
-                        // Text(item['location_name'] ?? 'null'),
+                      subtitle: Text(item['ware_name'] ?? ''),
+                      // subtitle: Text(item['location_code'] ?? ''),
+                      // Text(item['location_name'] ?? 'null'),
                     ),
                   );
                 },
