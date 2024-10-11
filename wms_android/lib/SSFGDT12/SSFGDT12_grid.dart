@@ -74,6 +74,10 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   String? nextLink = '';
   String? prevLink = '';
 
+  // --------------------------------------\\
+  bool checkUpdateData = false;
+  // --------------------------------------\\
+
   TextEditingController dataLovStatusConfirmSubmitController =
       TextEditingController();
 
@@ -81,16 +85,6 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   void initState() {
     super.initState();
     fetchData();
-    print(
-        'nbCountStaff : ${widget.nbCountStaff} Type : ${widget.nbCountStaff.runtimeType}');
-    print(
-        'nbCountDate : ${widget.nbCountDate} Type : ${widget.nbCountDate.runtimeType}');
-    print('docNo : ${widget.docNo} Type : ${widget.docNo.runtimeType}');
-    print('status : ${widget.status} Type : ${widget.status.runtimeType}');
-    print(
-        'wareCode : ${widget.wareCode} Type : ${widget.wareCode.runtimeType}');
-    print(
-        'pErpOuCode : ${widget.pErpOuCode} Type : ${widget.pErpOuCode.runtimeType}');
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -1077,176 +1071,6 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     );
   }
 
-  void showDetailsDialog2(
-    BuildContext context,
-    double sys_qty,
-    double diff_qty,
-    String row_ID,
-    int count_qty,
-    String remark,
-    String doc_no,
-    String ou_code,
-    int seq,
-    String item_code,
-  ) {
-    String formattedSysQty =
-        NumberFormat('#,###,###,###,###,###.##').format(sys_qty);
-    String formattedDiffQty =
-        NumberFormat('#,###,###,###,###,###.##').format(diff_qty);
-    String formattedCountQty =
-        NumberFormat('#,###,###,###,###,###').format(count_qty);
-    TextEditingController sysQtyController =
-        TextEditingController(text: formattedSysQty);
-    TextEditingController diffQtyController =
-        TextEditingController(text: formattedDiffQty);
-    TextEditingController countQtyController =
-        TextEditingController(text: formattedCountQty.toString());
-    // TextEditingController countQtyController =
-    //     TextEditingController(text: count_qty.toString());
-    TextEditingController remarkController =
-        TextEditingController(text: remark.toString());
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('รหัสสินค้า $item_code'), // หัวเรื่องของ Dialog
-          content: SingleChildScrollView(
-            child: Padding(
-              // padding: const EdgeInsets.all(16.0),
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start, // จัดชิดซ้าย
-                children: [
-                  GestureDetector(
-                    child: AbsorbPointer(
-                      child: TextFormField(
-                        controller: sysQtyController,
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          filled: true,
-                          fillColor: Colors.grey[300],
-                          labelText: 'จำนวนคงเหลือในระบบ',
-                          labelStyle: const TextStyle(
-                            color: Colors.black87,
-                          ),
-                        ),
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.right,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  GestureDetector(
-                    child: AbsorbPointer(
-                      child: TextFormField(
-                        controller: diffQtyController,
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          filled: true,
-                          fillColor: Colors.grey[300],
-                          labelText: 'ผลต่างการตรวจนับ',
-                          labelStyle: const TextStyle(
-                            color: Colors.black87,
-                          ),
-                        ),
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.right,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  TextFormField(
-                    controller: countQtyController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: 'จำนวนที่ตรวจได้',
-                      labelStyle: TextStyle(
-                        color: Colors.black87,
-                      ),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-                    ),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.right,
-                  ),
-                  const SizedBox(height: 8.0),
-                  TextFormField(
-                    controller: remarkController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: 'หมายเหตุสินค้า',
-                      labelStyle: TextStyle(
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text(
-                          'ย้อนกลับ',
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          int updatedCountQty = int.tryParse(countQtyController
-                                  .text
-                                  .replaceAll(',', '')) ??
-                              count_qty;
-                          String updatedRemark =
-                              remarkController.text.isNotEmpty
-                                  ? remarkController.text
-                                  : remark;
-
-                          Navigator.of(context).pop();
-                          await updateDataGridDetail(
-                            updatedCountQty,
-                            updatedRemark,
-                            ou_code,
-                            doc_no,
-                            seq,
-                          );
-                          await fetchData();
-                          setState(() {});
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text(
-                          'บันทึก',
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [],
-        );
-      },
-    );
-  }
-
   void showDetailsDialog(
     BuildContext context,
     double sys_qty,
@@ -1258,7 +1082,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     String ou_code,
     int seq,
     String item_code,
-  ) {
+  ) async {
     String formattedSysQty =
         NumberFormat('#,###,###,###,###,###.##').format(sys_qty);
     String formattedDiffQty =
@@ -1281,9 +1105,12 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     TextEditingController remarkController =
         TextEditingController(text: remark.toString());
 
-    showGeneralDialog(
+    String checkCountQTY = count_qty.toString();
+    String checkRemake = remark;
+
+    bool? result = await showGeneralDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       barrierColor: Colors.black54, // Background color with some transparency
       transitionDuration: const Duration(milliseconds: 200),
@@ -1307,7 +1134,14 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                         IconButton(
                           icon: const Icon(Icons.close),
                           onPressed: () {
-                            Navigator.of(context).pop();
+                            if (checkCountQTY.toString() !=
+                                    count_qty.toString() ||
+                                checkRemake != remark) {
+                              showExitWarningDialog();
+                            } else {
+                              Navigator.of(context).pop(false);
+                              fetchData();
+                            }
                           },
                         ),
                       ],
@@ -1426,6 +1260,9 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       ),
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.right,
+                      onChanged: (value) {
+                        checkCountQTY = value;
+                      },
                     ),
                     const SizedBox(height: 8.0),
                     TextFormField(
@@ -1440,6 +1277,9 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                           color: Colors.black87,
                         ),
                       ),
+                      onChanged: (value) {
+                        checkRemake = value;
+                      },
                     ),
                     const SizedBox(height: 8.0),
                     // Row(
@@ -1504,7 +1344,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                     ? remarkController.text
                                     : remark;
 
-                            Navigator.of(context).pop();
+                            Navigator.of(context).pop(true);
                             await updateDataGridDetail(
                               updatedCountQty,
                               updatedRemark,
@@ -1543,7 +1383,16 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
           ),
         );
       },
-    );
+    ).then((value) {
+      // เช็คเมื่อ dialog ถูกปิดจากการกดด้านนอก
+      if (value == null) {
+        if (checkCountQTY.toString() != count_qty.toString() ||
+            checkRemake != remark) {
+          showExitWarningDialog();
+          print('result : กดออกจากข้างนอก');
+        }
+      }
+    });
   }
 
   void showDialogconfirm() {
@@ -1551,14 +1400,34 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Row(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  Icons.notification_important, // ใช้ไอคอนแจ้งเตือน
-                  color: Colors.red, // สีของไอคอน
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.notification_important,
+                      color: Colors.red,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'แจ้งเตือน',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 8), // ระยะห่างระหว่างไอคอนและข้อความ
-                Text('แจ้งเตือน'), // ข้อความแจ้งเตือน
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
             content: const SingleChildScrollView(
@@ -1616,14 +1485,34 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Row(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                Icons.notification_important,
-                color: Colors.red,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.notification_important,
+                    color: Colors.red,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    'แจ้งเตือน',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ],
               ),
-              SizedBox(width: 8),
-              Text('แจ้งเตือน'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
             ],
           ),
           content: SingleChildScrollView(
@@ -1704,41 +1593,61 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     String statusSubmit,
     String messageSubmit,
   ) {
-    IconData iconData;
-    Color textColor;
-    String statusText;
+    // IconData iconData;
+    // Color textColor;
+    // String statusText;
 
-    switch (statusSubmit) {
-      case '0':
-        iconData = Icons.check_circle;
-        textColor = Colors.black;
-        statusText = 'Success';
-        break;
-      case '1':
-        iconData = Icons.notification_important;
-        textColor = Colors.red;
-        statusText = 'Error';
-        break;
-      default:
-        iconData = Icons.help;
-        textColor = Colors.grey;
-        statusText = 'Unknown';
-    }
+    // switch (statusSubmit) {
+    //   case '0':
+    //     iconData = '';
+    //     // iconData = Icons.check_circle;
+    //     textColor = Colors.black;
+    //     statusText = 'Success';
+    //     break;
+    //   case '1':
+    //     iconData = Icons.notification_important;
+    //     textColor = Colors.red;
+    //     statusText = 'Error';
+    //     break;
+    //   default:
+    //     iconData = Icons.help;
+    //     textColor = Colors.grey;
+    //     statusText = 'Unknown';
+    // }
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                iconData,
-                color: textColor,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  if (statusSubmit == '1') ...[
+                    Icon(
+                      Icons.notification_important,
+                      color: Colors.red,
+                    ),
+                    SizedBox(width: 10),
+                  ],
+                  Text(
+                    'แจ้งเตือน',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ],
               ),
-              const SizedBox(width: 10),
-              Text(
-                statusText,
-                style: TextStyle(color: textColor),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -1750,7 +1659,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                   const SizedBox(height: 10),
                   Text(
                     messageSubmit,
-                    style: TextStyle(color: textColor),
+                    // style: TextStyle(color: textColor),
                   ),
                   const SizedBox(height: 10),
                 ],
@@ -1803,14 +1712,34 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Row(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  Icons.notification_important,
-                  color: Colors.red,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.notification_important,
+                      color: Colors.red,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'แจ้งเตือน',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 8),
-                Text('แจ้งเตือน'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
             content: const SingleChildScrollView(
@@ -1868,14 +1797,34 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Row(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Icon(
-                //   Icons.notification_important,
-                //   color: Colors.red,
-                // ),
-                SizedBox(width: 8),
-                Text('แจ้งเตือน'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // Icon(
+                    //   Icons.notification_important,
+                    //   color: Colors.red,
+                    // ),
+                    // SizedBox(width: 10),
+                    Text(
+                      'แจ้งเตือน',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
             content: SingleChildScrollView(
@@ -2040,6 +1989,88 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
             },
           ),
         );
+      },
+    );
+  }
+
+  void showExitWarningDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.notification_important,
+                      color: Colors.red,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'แจ้งเตือน',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Text(
+                      'คุณต้องการออกจากหน้านี้โดยไม่อบันทึกหรือไม่',
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('Cancel'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                      Navigator.of(context).pop(true);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('OK'),
+                  ),
+                ],
+              )
+            ]);
       },
     );
   }

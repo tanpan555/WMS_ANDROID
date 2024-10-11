@@ -106,19 +106,8 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
 
   @override
   void initState() {
-    print(
-        'pErpOuCode : ${widget.pErpOuCode} Type : ${widget.pErpOuCode.runtimeType}');
-    print('pAttr1 : ${widget.pAttr1} Type : ${widget.pAttr1.runtimeType}');
-    print(
-        'pAppUser : ${widget.pAppUser} Type : ${widget.pAppUser.runtimeType}');
-    print('pFlag : ${widget.pFlag} Type : ${widget.pFlag.runtimeType}');
-    print(
-        'pStatusDESC : ${widget.pStatusDESC} Type : ${widget.pStatusDESC.runtimeType}');
-    print('pSoNo : ${widget.pSoNo} Type : ${widget.pSoNo.runtimeType}');
-    print(
-        'pDocDate : ${widget.pDocDate} Type : ${widget.pDocDate.runtimeType}');
-    super.initState();
     fetchData();
+    super.initState();
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -935,14 +924,29 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
         return AlertDialog(
           title: Row(
             children: [
-              Icon(
-                Icons.notification_important,
-                color: Colors.red,
+              Row(
+                children: [
+                  Icon(
+                    Icons.notification_important,
+                    color: Colors.red,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    'Error',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ],
               ),
-              SizedBox(width: 10),
-              Text(
-                'Error',
-                style: TextStyle(color: Colors.red),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
               ),
             ],
           ),

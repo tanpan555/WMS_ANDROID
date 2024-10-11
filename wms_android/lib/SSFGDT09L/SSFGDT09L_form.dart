@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
-import 'package:wms_android/bottombar.dart';
-import 'package:wms_android/custom_appbar.dart';
+import 'package:flutter/services.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
-import 'package:wms_android/styles.dart';
+//-----------
+import 'package:wms_android/bottombar.dart';
+import 'package:wms_android/custom_appbar.dart';
 import 'SSFGDT09L_grid.dart';
 import 'SSFGDT09L_main.dart';
-import 'package:flutter/services.dart';
+import 'package:wms_android/styles.dart';
 
 class Ssfgdt09lForm extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจากเลือ lov
@@ -65,6 +66,28 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   String docDate = '';
   int testChk = 0; //
 
+  //---------------------------------------\\
+  String custNameForCheck = ''; // cust_code + cust_name
+  String ouCodeForCheck = '';
+  String docNoForCheck = '';
+  String docTypeForCheck = '';
+  String crDateForCheck = '';
+  String refNoForCheck = '';
+  String moDoNoForCheck = '';
+  String staffCodeForCheck = '';
+  String noteForCheck = '';
+  String erpDocNoForCheck = '';
+  String updByForCheck = '';
+  String updDateForCheck = '';
+  String updProgIDForCheck = '';
+  String docDateForCheck = '';
+
+  String returnStatusLovDocTypeForCheck = '';
+  String returnStatusLovMoDoNoForCheck = '';
+  String returnStatusLovRefNoForCheck = '';
+  String returnStatusLovCancelForCheck = '';
+  //---------------------------------------\\
+
   String soNoForChk = ''; // ref_no สำหรับ check
   String shidForChk = ''; // mo_do_no สำหรับ check
   String pMessageErr = ''; // message หลังจาก check    so_no == shid
@@ -81,6 +104,9 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   bool noDate = false;
 
   bool isLoading = false;
+  bool isFirstLoad = true;
+
+  bool checkUpdateData = false;
 
   TextEditingController custNameController = TextEditingController();
   TextEditingController ouCodeController = TextEditingController();
@@ -105,12 +131,8 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
   @override
   void initState() {
+    firstLoadData();
     super.initState();
-    fetchData();
-    lovDocType();
-    lovMoDoNo();
-    lovRefNo();
-    lovCancel();
   }
 
   @override
@@ -136,6 +158,14 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     super.dispose();
   }
 
+  void firstLoadData() async {
+    await fetchData();
+    await lovDocType();
+    await lovMoDoNo();
+    await lovRefNo();
+    await lovCancel();
+  }
+
   void _navigateToPage(BuildContext context, Widget page) {
     Navigator.push(
       context,
@@ -144,7 +174,13 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   }
 
   Future<void> fetchData() async {
-    isLoading = true;
+    if (isFirstLoad == true) {
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectDataForm/${widget.pErpOuCode}/${widget.pDocType}/${widget.pDocNo}/${widget.pAttr1}'));
@@ -160,32 +196,56 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
           print('data $data');
           if (mounted) {
             setState(() {
+              // -----------------------------
               ouCode = item['ou_code'] ?? '';
+              ouCodeForCheck = item['ou_code'] ?? '';
+              // -----------------------------
               docNo = item['doc_no'] ?? '';
+              docNoForCheck = item['doc_no'] ?? '';
+              // -----------------------------
               // docType = item['doc_type'] ?? '';
+              // -----------------------------
               crDate = item['cr_date'] ?? '';
+              crDateForCheck = item['cr_date'] ?? '';
+              // -----------------------------
               staffCode = item['staff_code"'] ?? '';
+              staffCodeForCheck = item['staff_code"'] ?? '';
+              // -----------------------------
               note = item['note'] ?? '';
+              noteForCheck = item['note'] ?? '';
+              // -----------------------------
               erpDocNo = item['erp_doc_no'] ?? '';
+              erpDocNoForCheck = item['erp_doc_no'] ?? '';
+              // -----------------------------
               updBy = item['upd_by'] ?? '';
+              updByForCheck = item['upd_by'] ?? '';
+              // -----------------------------
               updDate = item['upd_date'] ?? '';
+              updDateForCheck = item['upd_date'] ?? '';
+              // -----------------------------
               updProgID = item['upd_prog_id'] ?? '';
+              updProgIDForCheck = item['upd_prog_id'] ?? '';
+              // -----------------------------
               docDate = item['doc_date'] ?? '';
+              docDateForCheck = item['doc_date'] ?? '';
               // -----------------------------
               selectLovDocType = item['doc_type_d'] ?? '';
               returnStatusLovDocType = item['doc_type_r'] ?? '';
+              returnStatusLovDocTypeForCheck = item['doc_type_r'] ?? '';
               // -----------------------------
               selectLovRefNo = item['ref_no'] ?? '';
               returnStatusLovRefNo = item['ref_no'] ?? '';
+              returnStatusLovRefNoForCheck = item['ref_no'] ?? '';
               // -----------------------------
               selectLovMoDoNo = item['mo_do_no'] ?? '';
               returnStatusLovMoDoNo = item['mo_do_no'].toString();
+              returnStatusLovMoDoNoForCheck = item['mo_do_no'].toString();
               // -----------------------------
               ouCodeController.text = ouCode;
               docNoController.text = docNo;
               crDateController.text = crDate;
-              refNoController.text = refNo;
-              moDoNoController.text = refNo;
+              // refNoController.text = refNo;
+              // moDoNoController.text = refNo;
               staffCodeController.text = staffCode;
               noteController.text = note;
               erpDocNoController.text = erpDocNo;
@@ -197,8 +257,6 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
               docTypeController.text = selectLovDocType.toString();
               moDoNoController.text = selectLovMoDoNo.toString();
               refNoController.text = selectLovRefNo.toString();
-
-              isLoading = false;
             });
           }
         } else {
@@ -308,6 +366,11 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
           setState(() {
             dataLovCancel =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == true) {
+              isFirstLoad = false;
+              isLoading = false;
+            }
           });
         }
         print('dataLovCancel : $dataLovCancel');
@@ -517,6 +580,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
               showDialogErrorCHK(messageSubmit);
             }
             if (statusSubmit == '0') {
+              checkUpdateData = false;
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -536,6 +600,11 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
               ).then((value) async {
                 // Navigator.of(context).pop();
                 await fetchData();
+                await lovDocType();
+                await lovMoDoNo();
+                await lovRefNo();
+                await lovCancel();
+                checkUpdateData = false;
               });
             }
 
@@ -645,7 +714,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
       backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(
         title: 'เบิกจ่าย',
-        showExitWarning: true,
+        showExitWarning: checkUpdateData,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -856,6 +925,9 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             onChanged: (value) {
                               crDate = value;
                               print('crDate : $crDate');
+                              if (crDate != crDateForCheck) {
+                                checkUpdateData = true;
+                              }
                               setState(() {
                                 //----------------------------------------------\\
                                 // สร้าง instance ของ DateInputFormatter
@@ -1114,6 +1186,11 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                     color: Colors.black87,
                                   ),
                                 ),
+                                onChanged: (value) {
+                                  if (custName != custNameForCheck) {
+                                    checkUpdateData = true;
+                                  }
+                                },
                               ),
                             ),
                           ),
@@ -1136,6 +1213,9 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             onChanged: (value) => {
                               setState(() {
                                 note = value;
+                                if (note != noteForCheck) {
+                                  checkUpdateData = true;
+                                }
                               }),
                             },
                           ),
@@ -1157,6 +1237,11 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                     color: Colors.black87,
                                   ),
                                 ),
+                                onChanged: (value) {
+                                  if (erpDocNo != erpDocNoForCheck) {
+                                    checkUpdateData = true;
+                                  }
+                                },
                               ),
                             ),
                           ),
@@ -1169,7 +1254,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         ),
       ),
       bottomNavigationBar: BottomBar(
-        currentPage: 'show',
+        currentPage: checkUpdateData == true ? 'show' : 'not_show',
       ),
     );
   }
@@ -1180,6 +1265,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // Icon(
                 //   Icons.notification_important,
@@ -1187,6 +1273,22 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                 // ),
                 // SizedBox(width: 8),
                 Text('สาเหตุการยกเลิก'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          selectLovCancel = '';
+                          returnStatusLovCancel = '';
+                          cancelController.text = '';
+                        });
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
             // content: Expanded(
@@ -1281,6 +1383,11 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pop();
+                            setState(() {
+                              selectLovCancel = '';
+                              returnStatusLovCancel = '';
+                              cancelController.text = '';
+                            });
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
@@ -1321,13 +1428,33 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  Icons.notification_important,
-                  color: Colors.red,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.notification_important,
+                      color: Colors.red,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'แจ้งเตือน',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 8),
-                Text('แจ้งเตือน'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
             // content: Expanded(
@@ -1461,17 +1588,35 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCHK = doc;
+                                    selectLovMoDoNo = doc;
                                     returnStatusLovMoDoNo = returnCode;
-                                    moDoNoController.text = returnCode;
+                                    moDoNoController.text =
+                                        selectLovMoDoNo.toString();
+
+                                    if (dataCHK !=
+                                        returnStatusLovRefNoForCheck) {
+                                      checkUpdateData = true;
+                                    } else {
+                                      print('returnStatusLovRefNo : '
+                                          '$returnStatusLovRefNo'
+                                          'returnStatusLovRefNoForCheck'
+                                          '$returnStatusLovRefNoForCheck');
+                                    }
+
                                     print(
                                         'returnStatusLovMoDoNo New: $returnStatusLovMoDoNo Type : ${returnStatusLovMoDoNo.runtimeType}');
                                     print(
-                                        'doc New: $doc Type : ${doc.runtimeType}');
+                                        'selectLovMoDoNo New: $selectLovMoDoNo Type : ${selectLovMoDoNo.runtimeType}');
                                     print(
                                         'moDoNoController New: $moDoNoController Type : ${moDoNoController.runtimeType}');
                                     shidForChk = returnCode;
                                     selectCust(returnStatusLovMoDoNo);
                                     print('shidForChk : $shidForChk');
+                                    print(
+                                        'returnStatusLovRefNoForCheck : $returnStatusLovRefNoForCheck');
+                                    print(
+                                        ' checkUpdateData : $checkUpdateData');
                                     chkCust(
                                       shidForChk,
                                       soNoForChk.isNotEmpty
@@ -1595,14 +1740,22 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCHK = doc;
+                                    selectLovRefNo = doc;
                                     returnStatusLovRefNo = returnCode;
-                                    refNoController.text = returnCode;
+                                    refNoController.text =
+                                        selectLovRefNo.toString();
+
+                                    if (dataCHK !=
+                                        returnStatusLovRefNoForCheck) {
+                                      checkUpdateData = true;
+                                    }
                                     print(
                                         'returnStatusLovRefNo New: $returnStatusLovRefNo Type : ${returnStatusLovRefNo.runtimeType}');
                                     print(
-                                        'doc New: $doc Type : ${doc.runtimeType}');
+                                        'selectLovRefNo New: $selectLovRefNo Type : ${selectLovRefNo.runtimeType}');
                                     print(
-                                        'moDoNoController New: $moDoNoController Type : ${moDoNoController.runtimeType}');
+                                        'refNoController New: $refNoController Type : ${refNoController.runtimeType}');
                                     soNoForChk = returnCode;
                                   });
                                   _searchController2.clear();
@@ -1712,9 +1865,15 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCHK = doc;
                                     selectLovDocType = doc;
                                     docTypeController.text = doc;
                                     returnStatusLovDocType = returnCode;
+
+                                    if (dataCHK !=
+                                        returnStatusLovDocTypeForCheck) {
+                                      checkUpdateData = true;
+                                    }
                                   });
                                   print(
                                       'dataLovDocType in body: $dataLovDocType type: ${dataLovDocType.runtimeType}');
@@ -1826,6 +1985,10 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                     selectLovCancel = doc;
                                     cancelController.text = doc;
                                     returnStatusLovCancel = returnCode;
+
+                                    //  if(returnStatusLovCancel != returnStatusLovCancelForCheck) {
+                                    // checkUpdateData = true;
+                                    // }
                                   });
                                   print(
                                       'dataLovCancel in body: $dataLovCancel type: ${dataLovCancel.runtimeType}');
