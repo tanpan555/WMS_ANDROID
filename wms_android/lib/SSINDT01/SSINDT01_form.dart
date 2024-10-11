@@ -772,12 +772,13 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     );
   }
 
+  bool _isButtonDisabled = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(23, 21, 59, 1),
       appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
-      // drawer: const CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -786,46 +787,41 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             children: [
               Row(
                 children: [
-                  // ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(12.0),
-                  //     ),
-                  //     minimumSize: const Size(10, 20),
-                  //     padding: const EdgeInsets.symmetric(
-                  //         horizontal: 10, vertical: 5),
-                  //   ),
-                  //   onPressed: () {
-                  //     Navigator.pop(context);
-                  //   },
-                  //   child: const Text(
-                  //     'ย้อนกลับ',
-                  //     style: TextStyle(
-                  //       color: Colors.white,
-                  //       fontWeight: FontWeight.bold,
-                  //     ),
-                  //   ),
-                  // ),
                   const SizedBox(width: 5),
                   ElevatedButton(
                     style: AppStyles.cancelButtonStyle(),
-                    onPressed: () {
-                      showCancelDialog(context);
-                    },
+                    onPressed: _isButtonDisabled
+                        ? null // Disable the button when it is pressed
+                        : () {
+                            showCancelDialog(context);
+                          },
                     child: Text('ยกเลิก',
                         style: AppStyles.CancelbuttonTextStyle()),
                   ),
                   const Spacer(),
                   ElevatedButton(
                     style: AppStyles.NextButtonStyle(),
-                    onPressed: () {
-                      if (isDateValid == false) {
-                      } else {
-                        fetchPoStatus();
-                        _updateForm();
-                      }
-                    },
+                    onPressed: _isButtonDisabled
+                        ? null // Disable the button when it is pressed
+                        : () async {
+                            if (isDateValid == false) {
+                              return;
+                            }
+
+                            setState(() {
+                              _isButtonDisabled = true;
+                            });
+
+                            try {
+                              await fetchPoStatus(); // async operation
+                              _updateForm();
+                            } finally {
+                              setState(() {
+                                _isButtonDisabled =
+                                    false; // Re-enable after operation
+                              });
+                            }
+                          },
                     child: Image.asset(
                       'assets/images/right.png',
                       width: 20,
@@ -838,7 +834,6 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               Expanded(
                 child: SingleChildScrollView(
                   child: _buildFormFields(),
-                  // child: _buildFormFields(),
                 ),
               ),
             ],
@@ -986,8 +981,11 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                                               Navigator.of(context).pop();
                                               setState(() {
                                                 selectedPoType = poTypeCode;
+                                                print(selectedPoType);
                                                 poTypeCodeController.text =
                                                     poTypeCode;
+                                                print(
+                                                    poTypeCodeController.text);
                                               });
                                             },
                                           );
@@ -1027,7 +1025,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                       color: Color.fromARGB(255, 113, 113, 113),
                     ),
                   ),
-                  controller: TextEditingController(text: selectedPoType),
+                  controller: poTypeCodeController,
                 ),
               ),
             ),
