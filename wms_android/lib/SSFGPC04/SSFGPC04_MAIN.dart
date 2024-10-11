@@ -5,7 +5,7 @@ import 'package:wms_android/custom_appbar.dart';
 import 'dart:ui';
 import 'package:flutter/services.dart';
 import '../styles.dart';
-import 'SSFGPC04_CARD.dart';
+import 'SSFGPC04_WARE.dart';
 
 class SSFGPC04_MAIN extends StatefulWidget {
   const SSFGPC04_MAIN({
@@ -179,7 +179,8 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
             ),
           ),
         ),
-        bottomNavigationBar: BottomBar());
+        bottomNavigationBar: BottomBar(currentPage: 'show'),
+        );
   }
 }
 

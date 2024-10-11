@@ -218,16 +218,33 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Row(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                Icons.notification_important,
-                color: Colors.red,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.notification_important,
+                    color: Colors.red,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    'แจ้งเตือน',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ],
               ),
-              SizedBox(width: 10),
-              Text(
-                'แจ้งเตือน',
-                style: TextStyle(color: Colors.black),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
               ),
             ],
           ),

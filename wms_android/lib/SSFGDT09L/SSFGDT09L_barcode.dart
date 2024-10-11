@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-// import 'package:intl/intl.dart';
+import 'package:intl/intl.dart';
+import 'package:wms_android/styles.dart';
 import 'package:flutter/services.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
@@ -341,7 +342,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
     print('textForm : $textForm');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ChkLocatorForm/${widget.pErpOuCode}/${widget.pWareCode}/${widget.pDocNo}/$textInput'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ChkLocatorForm/${widget.pErpOuCode}/${widget.pWareCode}/${widget.pDocNo}/${textInput.isNotEmpty ? textInput : 'mull'}'));
 
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
@@ -739,16 +740,58 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Row(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                Icons.notification_important,
-                color: Colors.red,
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.notification_important,
+                    color: Colors.red,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    'แจ้งเตือน',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ],
               ),
-              SizedBox(width: 10),
-              Text(
-                'แจ้งเตือน',
-                style: TextStyle(color: Colors.black),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () async {
+                      // ปิด popup
+                      Navigator.of(context).pop();
+
+                      barCode = '';
+                      locatorForm = '';
+                      itemCode = '';
+                      lotNo = '';
+                      quantity = '';
+                      locatorTo = '';
+                      lotQty = '';
+                      lotUnit = '';
+
+                      statusFetchDataBarcode = '';
+                      messageFetchDataBarcode = '';
+                      valIDFetchDataBarcode = '';
+
+                      barcodeController.clear();
+                      locatorFormController.clear();
+                      itemCodeController.clear();
+                      lotNoController.clear();
+                      quantityController.clear();
+                      locatorToController.clear();
+                      lotQtyController.clear();
+                      lotUnitController.clear();
+
+                      _barcodeFocusNode.requestFocus();
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -818,16 +861,32 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Row(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                Icons.notification_important,
-                color: Colors.red,
+              Row(
+                children: [
+                  Icon(
+                    Icons.notification_important,
+                    color: Colors.red,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    'แจ้งเตือน',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ],
               ),
-              SizedBox(width: 10),
-              Text(
-                'แจ้งเตือน',
-                style: TextStyle(color: Colors.black),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -877,7 +936,8 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              title: const Row(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Icon(
                   //   Icons.notification_important,
@@ -887,6 +947,43 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   Text(
                     'แจ้งเตือน',
                     style: TextStyle(color: Colors.black),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () {
+                          // Navigator.of(context).pop();
+                          chkShowDialogcomfirmMessage = false;
+                          Navigator.of(context).pop();
+
+                          barCode = '';
+                          locatorForm = '';
+                          itemCode = '';
+                          lotNo = '';
+                          quantity = '';
+                          locatorTo = '';
+                          lotQty = '';
+                          lotUnit = '';
+
+                          statusFetchDataBarcode = '';
+                          messageFetchDataBarcode = '';
+                          valIDFetchDataBarcode = '';
+
+                          barcodeController.clear();
+                          locatorFormController.clear();
+                          itemCodeController.clear();
+                          lotNoController.clear();
+                          quantityController.clear();
+                          locatorToController.clear();
+                          lotQtyController.clear();
+                          lotUnitController.clear();
+
+                          _barcodeFocusNode.requestFocus();
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -1008,7 +1105,8 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-            title: const Row(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // Icon(
                 //   Icons.notification_important,
@@ -1018,6 +1116,17 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                 Text(
                   'แจ้งเตือน',
                   style: TextStyle(color: Colors.black),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -1072,16 +1181,34 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-            title: const Row(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // Icon(
                 //   Icons.notification_important,
                 //   color: Colors.red,
                 // ),
                 // SizedBox(width: 10),
-                Text(
-                  'Locator',
-                  style: TextStyle(color: Colors.black),
+                Row(
+                  children: [
+                    Text(
+                      'Locator',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        locatorFormChkController.clear();
+                        locatorFormChk = '';
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -1129,9 +1256,9 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                         ElevatedButton(
                           onPressed: () {
                             String textForm = 'F';
-                            if (locatorFormChk != '') {
-                              chkLocatorForm(locatorFormChk, textForm);
-                            }
+                            chkLocatorForm(locatorFormChk, textForm);
+                            // if (locatorFormChk != '') {
+                            // }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
@@ -1158,7 +1285,8 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Row(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Icon(
               //   Icons.notification_important,
@@ -1168,6 +1296,19 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
               Text(
                 'Locator',
                 style: TextStyle(color: Colors.black),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      locatorToChkController.clear();
+                      locatorToChk = '';
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -1216,9 +1357,9 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       ElevatedButton(
                         onPressed: () {
                           String textForm = 'T';
-                          if (locatorToChk != '') {
-                            chkLocatorForm(locatorToChk, textForm);
-                          }
+                          chkLocatorForm(locatorToChk, textForm);
+                          // if (locatorToChk != '') {
+                          // }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,

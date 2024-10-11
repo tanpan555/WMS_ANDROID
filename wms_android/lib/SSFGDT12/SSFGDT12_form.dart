@@ -56,6 +56,25 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
 
   bool isLoading = false;
 
+  // ------------------------------------\\
+  String staffCodeForCheck = '';
+  String docDateForCheck = '';
+  String nbStaffNameForCheck = '';
+  String nbStaffCountNameForCheck = '';
+  String countStaffForCheck = '';
+  String nbCountStaffForCheck = '';
+  String updByForCheck = '';
+  String updDateForCheck = '';
+  String remarkForCheck = '';
+  String statusForCheck = '';
+  String updBy1ForCheck = '';
+  String nbCountDateForCheck = '';
+  String docNoForCheck = '';
+  String statuForCHKForCheck = '';
+
+  bool checkUpdateData = false;
+  // ------------------------------------\\
+
   final FocusNode _focusNode = FocusNode();
   final TextEditingController staffCodeController = TextEditingController();
   final TextEditingController docDateController = TextEditingController();
@@ -234,7 +253,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
       backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(
         title: 'ผลการตรวจนับ',
-        showExitWarning: true,
+        showExitWarning: checkUpdateData,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -380,6 +399,9 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                       onChanged: (value) {
                         nbCountDate = value;
                         print('nbCountDate : $nbCountDate');
+                        if (nbCountDate != nbCountDateForCheck) {
+                          checkUpdateData = true;
+                        }
                         setState(() {
                           // สร้าง instance ของ DateInputFormatter
                           DateInputFormatter formatter = DateInputFormatter();
@@ -599,7 +621,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
         ),
       ),
       bottomNavigationBar: BottomBar(
-        currentPage: 'show',
+        currentPage: checkUpdateData == true ? 'show' : 'not_show',
       ),
     );
   }
@@ -612,16 +634,33 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Row(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                Icons.notification_important,
-                color: Colors.red,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.notification_important,
+                    color: Colors.red,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    'แจ้งเตือน',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ],
               ),
-              SizedBox(width: 10),
-              Text(
-                'แจ้งเตือน',
-                style: TextStyle(color: Colors.black),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
               ),
             ],
           ),
