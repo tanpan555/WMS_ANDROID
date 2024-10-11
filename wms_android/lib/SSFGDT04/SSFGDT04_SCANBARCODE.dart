@@ -235,7 +235,7 @@ void _onQRViewCreated(QRViewController controller) {
                     ),
                     child: const Text('ตกลง',
                         style: TextStyle(
-                          fontSize: 16, // ปรับขนาดตัวหนังสือตามต้องการ
+                          fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
                           color: Colors
                               .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
                         )),
@@ -292,7 +292,7 @@ void _onQRViewCreated(QRViewController controller) {
                     ),
                     child: const Text('ตกลง',
                         style: TextStyle(
-                          fontSize: 16, // ปรับขนาดตัวหนังสือตามต้องการ
+                          fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
                           color: Colors
                               .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
                         )),
@@ -504,7 +504,7 @@ void _onQRViewCreated(QRViewController controller) {
                   child: Text(
                     'ตกลง',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       color: Colors.black,
                     ),
                   ),

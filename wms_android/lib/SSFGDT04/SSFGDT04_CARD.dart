@@ -790,7 +790,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
               ),
               child: const Text('ตกลง',
                   style: TextStyle(
-                    fontSize: 16, // ปรับขนาดตัวหนังสือตามต้องการ
+                    fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
                     color: Colors.black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
                   )),
               onPressed: () {

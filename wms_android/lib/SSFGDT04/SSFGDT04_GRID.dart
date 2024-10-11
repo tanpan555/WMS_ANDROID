@@ -96,15 +96,6 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                             labelText: 'จำนวนรับ',
                             border: OutlineInputBorder(),
                           ),
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) {
-                          //     return 'Please enter a quantity';
-                          //   }
-                          //   if (int.tryParse(value) == null) {
-                          //     return 'Please enter a valid number';
-                          //   }
-                          //   return null;
-                          // },
                         ),
                       ],
                     ),
@@ -129,21 +120,36 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                   padding: const EdgeInsets.all(0),
                 ),
                 onPressed: () async {
-                  if (formKey.currentState?.validate() ?? false) {
-                    final newQuantity = NumberFormat('#,###')
-                        .parse(quantityController.text)
-                        .toString();
+  // Check if the text field is empty
+  if (quantityController.text.isEmpty) {
+    // Close the dialog if no input is provided
+    Navigator.of(context).pop();
+    return; // Exit the function early
+  }
 
-                    // Update the item in the gridItems list
-                    await fetchUpdate(newQuantity, item['seq']);
-                    setState(() {
-                      fetchGridItems();
-                    });
+  if (formKey.currentState?.validate() ?? false) {
+    // Remove commas and parse the text as a number
+    final String cleanedText = quantityController.text.replaceAll(',', '');
 
-                    // Close the popup
-                    Navigator.of(context).pop();
-                  }
-                },
+    // Attempt to parse the cleaned string as a double or int, depending on your needs
+    try {
+      final newQuantity = double.parse(cleanedText).toString();
+
+      // Update the item in the gridItems list
+      await fetchUpdate(newQuantity, item['seq']);
+      setState(() {
+        fetchGridItems();
+      });
+
+      // Close the popup
+      Navigator.of(context).pop();
+    } catch (e) {
+      print('Error parsing quantity: $e');
+      // Handle the error (you could show a message to the user)
+    }
+  }
+},
+
                 child: Image.asset(
                   'assets/images/check-mark.png',
                   width: 30,
@@ -393,7 +399,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                 ),
                                 child: const Text('ยกเลิก',style: TextStyle(
                                       fontSize:
-                                          16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                          14, // ปรับขนาดตัวหนังสือตามต้องการ
                                       color: Colors
                                           .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
                                     )),
@@ -409,7 +415,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                 child: const Text('ตกลง',
                                     style: TextStyle(
                                       fontSize:
-                                          16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                          14, // ปรับขนาดตัวหนังสือตามต้องการ
                                       color: Colors
                                           .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
                                     )),
@@ -469,7 +475,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                   child: const Text('ตกลง',
                                       style: TextStyle(
                                         fontSize:
-                                            16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                            14, // ปรับขนาดตัวหนังสือตามต้องการ
                                         color: Colors
                                             .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
                                       )),
@@ -527,7 +533,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                   child: const Text('ตกลง',
                                       style: TextStyle(
                                         fontSize:
-                                            16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                            14, // ปรับขนาดตัวหนังสือตามต้องการ
                                         color: Colors
                                             .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
                                       )),
@@ -807,7 +813,35 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    // title: Text('ยืนยันการลบรายการ'),
+                                    title: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: const [
+                                            Icon(
+                                              Icons
+                                                  .notification_important, // ไอคอนแจ้งเตือน
+                                              color: Colors.red, // สีแดง
+                                              size: 30,
+                                            ),
+                                            SizedBox(
+                                              width:
+                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                            ),
+                                            Text('แจ้งเตือน'),
+                                          ],
+                                        ),
+                                        // Close icon
+                                        IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                        ),
+                                      ],
+                                    ),
                                     content:
                                         const Text('ต้องการลบรายการหรือไม่?'),
                                     actions: <Widget>[
@@ -817,7 +851,12 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                           side: const BorderSide(
                                               color: Colors.grey),
                                         ),
-                                        child: const Text('ยกเลิก'),
+                                        child: const Text('ยกเลิก',
+                        style: TextStyle(
+                          fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
+                          color: Colors
+                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                        )),
                                         onPressed: () {
                                           Navigator.of(context).pop(false);
                                         },
@@ -828,7 +867,12 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                           side: const BorderSide(
                                               color: Colors.grey),
                                         ),
-                                        child: const Text('ลบ'),
+                                        child: const Text('ตกลง',
+                        style: TextStyle(
+                          fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
+                          color: Colors
+                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                        )),
                                         onPressed: () async {
                                           final poItemCode = item['item_code'];
                                           final poSeq = item['seq'];

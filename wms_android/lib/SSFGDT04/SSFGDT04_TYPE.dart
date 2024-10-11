@@ -353,7 +353,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                                       child: const Text('ตกลง',
                                           style: TextStyle(
                                             fontSize:
-                                                16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                                14, // ปรับขนาดตัวหนังสือตามต้องการ
                                             color: Colors
                                                 .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
                                           )),
@@ -412,7 +412,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                                     child: Text('ตกลง',
                                         style: TextStyle(
                                           fontSize:
-                                              16, // ปรับขนาดตัวหนังสือตามต้องการ
+                                              14, // ปรับขนาดตัวหนังสือตามต้องการ
                                           color: Colors
                                               .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
                                         )),
