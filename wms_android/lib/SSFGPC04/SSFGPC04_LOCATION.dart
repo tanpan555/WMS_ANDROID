@@ -6,20 +6,20 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 
-class SSFGPC04_WAREHOUSE extends StatefulWidget {
-  const SSFGPC04_WAREHOUSE({super.key});
+class SSFGPC04_LOCATION extends StatefulWidget {
+  const SSFGPC04_LOCATION({super.key});
 
   @override
-  _SSFGPC04_WAREHOUSEState createState() => _SSFGPC04_WAREHOUSEState();
+  _SSFGPC04_LOCATIONState createState() => _SSFGPC04_LOCATIONState();
 }
 
-class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
-  List<Map<String, dynamic>> whItems = [];
+class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
+  List<Map<String, dynamic>> locItems = [];
   bool isLoading = true;
 
   void _selectAll(bool value) {
     if (mounted) {setState(() {
-      for (var row in whItems) {
+      for (var row in locItems) {
         row["selected"] = value;
       }
     });}
@@ -27,7 +27,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
 
   void _deselectAll() {
     if (mounted) {setState(() {
-      for (var row in whItems) {
+      for (var row in locItems) {
         row["selected"] = false;
       }
     });}
@@ -36,7 +36,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
 
   void _navigateBackWithSelectedData() async {
   List<Map<String, dynamic>> selectedItems =
-      whItems.where((item) => item['selected'] == true).toList();
+      locItems.where((item) => item['selected'] == true).toList();
 
   // ส่งค่า WARE_CODE ที่เลือกไปที่ API
   String nbSelValue = selectedItems.isNotEmpty ? 'Y' : 'N';
@@ -61,7 +61,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
   Future<void> fetchData() async {
   try {
     final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_1_IN_WAREHOUSE/${gb.APP_SESSION}/${gb.P_ERP_OU_CODE}'));
+        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_IN_LOCATION/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -72,14 +72,14 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
       List<String> selectedWareCodes = gb.P_WARE_CODE.split(',');
 
       if (mounted) {setState(() {
-        whItems = List<Map<String, dynamic>>.from(responseData['items'] ?? [])
+        locItems = List<Map<String, dynamic>>.from(responseData['items'] ?? [])
           ..forEach((row) {
             // ตรวจสอบว่า ware_code ในรายการอยู่ใน selectedWareCodes หรือไม่
             row["selected"] = selectedWareCodes.contains(row['ware_code']);
           });
         isLoading = false;
       });}
-      print('dataTable : $whItems');
+      print('dataTable : $locItems');
     } else {
       throw Exception('Failed to load fetchData');
     }
@@ -94,7 +94,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
 
   Future<void> fetchCheck(String? nbSel) async {
     const url =
-        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
+        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_PU_DEL_TMP_LOC';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -102,9 +102,9 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
 
     final body = jsonEncode({
       'APP_SESSION': gb.APP_SESSION,
-      'WARE_CODE': gb.P_WARE_CODE, // ส่งรหัสคลังที่เลือกไปด้วย
-      'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
-      'NB_SEL': nbSel, // ส่งค่า NB_SEL เป็น 'Y' หรือ 'N'
+      // 'WARE_CODE': gb.P_WARE_CODE, // ส่งรหัสคลังที่เลือกไปด้วย
+      // 'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
+      // 'NB_SEL': nbSel, // ส่งค่า NB_SEL เป็น 'Y' หรือ 'N'
     });
 
     print('Request body: $body');
@@ -196,7 +196,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
   return Container(
     color: Colors.white, // Set the background color of the table to white
     child: Column(
-      children: whItems.map((row) {
+      children: locItems.map((row) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: Row(
@@ -217,9 +217,15 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
                 textAlign: TextAlign.right,
                 overflow: TextOverflow.ellipsis,
               ),
+              const SizedBox(width: 10),Text(
+                row['location_code'] ?? '', // Display the 'WAREHOUSE_CODE' field
+                style: const TextStyle(fontSize: 14),
+                textAlign: TextAlign.right,
+                overflow: TextOverflow.ellipsis,
+              ),
               const SizedBox(width: 10),
               Text(
-                row['ware_name'] ?? '', // Display the 'WAREHOUSE_NAME' field
+                row['location_name'] ?? '', // Display the 'WAREHOUSE_NAME' field
                 style: const TextStyle(fontSize: 14),
                 textAlign: TextAlign.right,
                 overflow: TextOverflow.ellipsis,
