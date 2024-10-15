@@ -81,17 +81,22 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
       print('Fetched data: $data');
+
       if (mounted) {
         setState(() {
           statusItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
           print('dataMenu: $statusItems');
 
           final docType = widget.po_doc_type;
-          final docDesc = statusItems
-              .where((item) => item['doc_type'] == docType)
-              .map((item) => item['doc_desc'])
-              .firstWhere((desc) => desc != null, orElse: () => '');
+          // Find the matching item in statusItems
+          final selectedItem = statusItems.firstWhere(
+              (item) => item['doc_type'] == docType,
+              orElse: () => {'doc_desc': ''});
 
+          final docDesc = selectedItem['doc_desc'] as String;
+
+          // Update displayDocType and the text field
+          displayDocType = docDesc;
           DOC_TYPE.text = docDesc;
         });
       }
@@ -1366,10 +1371,12 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     if (selectedValue != null) {
       setState(() {
         selectedDocType = selectedValue;
-        DOC_TYPE.text = statusItems.firstWhere(
+        final selectedItem = statusItems.firstWhere(
           (item) => item['doc_type'] == selectedValue,
           orElse: () => {'doc_desc': ''},
-        )['doc_desc'] as String;
+        );
+        displayDocType = selectedItem['doc_desc'] as String;
+        print(displayDocType); // Fixing this part
       });
     }
   }
@@ -1401,7 +1408,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                DOC_TYPE.text.isNotEmpty ? DOC_TYPE.text : 'เลือกประเภทเอกสาร',
+                displayDocType ?? '',
                 style: TextStyle(fontSize: 16),
               ),
               Icon(
