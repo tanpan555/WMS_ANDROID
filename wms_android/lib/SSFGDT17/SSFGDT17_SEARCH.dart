@@ -384,19 +384,21 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                         print('date ${_dateController.text}');
                         print(
                             'docData1: $docData1'); // Ensure docData1 is correctly fetched
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SSFGDT17_MAIN(
-                                pWareCode: widget.pWareCode,
-                                selectedValue: selectedValue,
-                                documentNumber: documentNumber,
-                                dateController: selectedDate,
-                                docData1: docData1 ?? '' // Handle null case
-                                ),
-                          ),
-                        );
+                        if (isDateValid == false) {
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SSFGDT17_MAIN(
+                                  pWareCode: widget.pWareCode,
+                                  selectedValue: selectedValue,
+                                  documentNumber: documentNumber,
+                                  dateController: selectedDate,
+                                  docData1: docData1 ?? '' // Handle null case
+                                  ),
+                            ),
+                          );
+                        }
                       },
                       child: Image.asset('assets/images/search_color.png',
                           width: 50, height: 25),
