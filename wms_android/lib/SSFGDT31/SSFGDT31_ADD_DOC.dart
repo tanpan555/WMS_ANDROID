@@ -209,7 +209,7 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
     return Scaffold(
       backgroundColor: const Color(0xFF110038),
       appBar:
-          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: true),
+          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

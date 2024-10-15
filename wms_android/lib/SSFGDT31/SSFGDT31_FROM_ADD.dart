@@ -34,7 +34,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
       TextEditingController(text: widget.po_doc_no);
   late final TextEditingController DOC_TYPE = TextEditingController();
   late final TextEditingController DOC_DATE = TextEditingController();
-  late final TextEditingController REF_NO = TextEditingController();
+  late final TextEditingController REF_NO = TextEditingController(text: '');
   late final TextEditingController CUST = TextEditingController();
   late final TextEditingController NOTE = TextEditingController();
   late final TextEditingController ERP_DOC_NO = TextEditingController();
@@ -121,7 +121,9 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
               DOC_TYPE.text = item['doc_type'] ?? '';
               DOC_DATE.text = _formatDate(DateTime.parse(
                   item['doc_date'] ?? DateTime.now().toIso8601String()));
-              REF_NO.text = item['ref_no'] ?? 'null';
+              REF_NO.text = (item['ref_no'] == 'null' || item['ref_no'] == null)
+                  ? ''
+                  : item['ref_no'];
               NOTE.text = item['note'] ?? '';
               ERP_DOC_NO.text = item['erp_doc_no'] ?? '';
             });
@@ -1462,13 +1464,16 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                     Expanded(
                       child: Builder(
                         builder: (context) {
-                          // Filter statusItems based on the search query
+                          // Filter REF_NOItems based on the search query
                           final filteredItems = REF_NOItems.where((item) {
                             final docNo = item['doc_no']?.toLowerCase() ?? '';
                             final searchQuery =
                                 _searchController3.text.toLowerCase();
                             return docNo.contains(searchQuery);
                           }).toList();
+
+                          // Add the "No Value Set" option
+                          filteredItems.add({'doc_no': '-- No Value Set --'});
 
                           // Show "No data found" if the filtered list is empty
                           if (filteredItems.isEmpty) {
@@ -1495,7 +1500,10 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(color: Colors.black),
                                 ),
-                                onTap: () => Navigator.of(context).pop(docNo),
+                                onTap: () {
+                                  // Pop the dialog and return the selected value
+                                  Navigator.of(context).pop(docNo);
+                                },
                               );
                             },
                           );
@@ -1511,20 +1519,29 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
       },
     );
 
-    // Ensure that selectedValue is not null and not empty
-    if (selectedValue != null && selectedValue.isNotEmpty) {
+    // Ensure that selectedValue is not null
+    if (selectedValue != null) {
       setState(() {
-        selectedDocType = selectedValue;
+        if (selectedValue == '-- No Value Set --') {
+          REF_NO.text = selectedValue;
+          // Reset selected value and text field if No Value Set is selected
+          selectedrRefNo = ''; // Reset the selected reference number
+        } else {
+          // Use a safe way to get the document type
+          selectedrRefNo = selectedValue;
 
-        // Use a safe way to get the document type
-        var foundItem = statusItems.firstWhere(
-          (item) => item['doc_no'] == selectedValue,
-          orElse: () => null, // Return null if not found
-        );
+          var foundItem = statusItems.firstWhere(
+            (item) => item['doc_no'] == selectedValue,
+            orElse: () => null, // Return null if not found
+          );
 
-        // Check if foundItem is not null before accessing its properties
-        DOC_TYPE.text = foundItem != null ? foundItem['doc_no'] as String : '';
+          // Check if foundItem is not null before accessing its properties
+          REF_NO.text = foundItem != null ? foundItem['doc_no'] as String : '';
+        }
       });
+
+      // Print the selected reference number
+      print(selectedrRefNo);
     }
   }
 
@@ -1538,7 +1555,6 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         child: InputDecorator(
           decoration: InputDecoration(
             labelText: "ประเภทเอกสาร",
-            // hintText: "Select Item",
             hintStyle: TextStyle(fontSize: 12.0),
             filled: true,
             fillColor: Colors.white,
@@ -1549,7 +1565,9 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                 MainAxisAlignment.spaceBetween, // Align text and arrow
             children: [
               Text(
-                selectedrRefNo ?? '', // Default placeholder text
+                REF_NO.text.isNotEmpty
+                    ? REF_NO.text
+                    : '', // Display empty string if null or empty
                 style: TextStyle(fontSize: 16),
               ),
               Icon(

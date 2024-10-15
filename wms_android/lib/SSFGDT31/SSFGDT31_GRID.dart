@@ -287,7 +287,7 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:
-          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: true),
+          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Column(
         children: [
@@ -526,22 +526,251 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Lots No: ${item['lots_no'] ?? ''}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            Text(
-                                'จำนวนรับ: ${item['pack_qty'] != null ? numberFormat.format(item['pack_qty']) : ''}'),
-                            Text('Item: ${item['item_code'] ?? ''}'),
-                            Text('จำนวนจ่าย: ${item['old_pack_qty'] ?? ''}'),
-                            Text('Pack: ${item['pack_code'] ?? ''}'),
-                            Text('Locator: ${item['location_code'] ?? ''}'),
-                            Text('PD Location: ${item['attribute1'] ?? ''}'),
-                            Text('Reason: ${item['attribute2'] ?? ''}'),
-                            Text('ใช้แทนจุด: ${item['attribute3'] ?? ''}'),
-                            Text('Replace Lot: ${item['attribute4'] ?? ''}'),
-                            Text('Item Desc: ${item['nb_item_name'] ?? ''}'),
-                            Text('Pack Desc: ${item['nb_pack_name'] ?? ''}'),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: 'Lots No: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black)),
+                                  WidgetSpan(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 2),
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
+                                      child: Text('${item['lots_no'] ?? ''}',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: 'จำนวนรับ: ',
+                                      style: TextStyle(color: Colors.black)),
+                                  WidgetSpan(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 2),
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
+                                      child: Text(
+                                          '${item['pack_qty'] != null ? numberFormat.format(item['pack_qty']) : ''}',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: 'Item: ',
+                                      style: TextStyle(color: Colors.black)),
+                                  WidgetSpan(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 2),
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
+                                      child: Text('${item['item_code'] ?? ''}',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: 'จำนวนจ่าย: ',
+                                      style: TextStyle(color: Colors.black)),
+                                  WidgetSpan(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 2),
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
+                                      child: Text(
+                                          '${item['old_pack_qty'] ?? ''}',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: 'Pack: ',
+                                      style: TextStyle(color: Colors.black)),
+                                  WidgetSpan(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 2),
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
+                                      child: Text('${item['pack_code'] ?? ''}',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: 'Locator: ',
+                                      style: TextStyle(color: Colors.black)),
+                                  WidgetSpan(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 2),
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
+                                      child: Text(
+                                          '${item['location_code'] ?? ''}',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: 'PD Location: ',
+                                      style: TextStyle(color: Colors.black)),
+                                  WidgetSpan(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 2),
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
+                                      child: Text('${item['attribute1'] ?? ''}',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: 'Reason: ',
+                                      style: TextStyle(color: Colors.black)),
+                                  WidgetSpan(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 2),
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
+                                      child: Text('${item['attribute2'] ?? ''}',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: 'ใช้แทนจุด: ',
+                                      style: TextStyle(color: Colors.black)),
+                                  WidgetSpan(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 2),
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
+                                      child: Text('${item['attribute3'] ?? ''}',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: 'Replace Lot: ',
+                                      style: TextStyle(color: Colors.black)),
+                                  WidgetSpan(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 2),
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
+                                      child: Text('${item['attribute4'] ?? ''}',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: 'Item Desc: ',
+                                      style: TextStyle(color: Colors.black)),
+                                  WidgetSpan(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 2),
+                                      color: Colors.cyan[100],
+                                      child: Text(
+                                          '${item['nb_item_name'] ?? ''}',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: 'Pack Desc: ',
+                                      style: TextStyle(color: Colors.black)),
+                                  WidgetSpan(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 2),
+                                      color: Colors.amber[100],
+                                      child: Text(
+                                          '${item['nb_pack_name'] ?? ''}',
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [

@@ -36,7 +36,7 @@ class _SSFGDT31_PICKINGSLIPState extends State<SSFGDT31_PICKINGSLIP> {
   void initState() {
     super.initState();
     // get_slip_data();
-    getPDF();
+    // getPDF();
   }
 
 //  -----------------------------  p  -----------------------------  \\
@@ -57,6 +57,31 @@ class _SSFGDT31_PICKINGSLIPState extends State<SSFGDT31_PICKINGSLIP> {
   String? LB_LOCATION_CODE;
 
   List<dynamic> items = [];
+
+  Future<void> getSlipData() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT31/picking_slip_data/${gb.P_ERP_OU_CODE}/${gb.P_OU_CODE}/${widget.SCHID}'));
+
+      print('Response body: ${response.body}'); // Debugging line
+
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+
+        // Update the items state
+        if (mounted) {
+          setState(() {
+            items = data;
+          });
+        }
+      } else {
+        print('Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching slip data: $e');
+    }
+  }
 
   Future<void> getPDF() async {
     try {
@@ -150,14 +175,14 @@ class _SSFGDT31_PICKINGSLIPState extends State<SSFGDT31_PICKINGSLIP> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Picking Slip', showExitWarning: true),
+      appBar: CustomAppBar(title: 'Picking Slip', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Row(
                     children: [
@@ -180,7 +205,7 @@ class _SSFGDT31_PICKINGSLIPState extends State<SSFGDT31_PICKINGSLIP> {
                 child: items.isEmpty
                     ? Center(
                         child: Text(
-                          'No Data',
+                          'No Data Found',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
