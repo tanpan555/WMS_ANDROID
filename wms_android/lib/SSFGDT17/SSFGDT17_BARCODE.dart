@@ -208,7 +208,21 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('เปลี่ยน Locator'),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'เปลี่ยน Locator',
+                style: TextStyle(fontSize: 20),
+              ), // Dialog title
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog when pressed
+                },
+              ),
+            ],
+          ),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
