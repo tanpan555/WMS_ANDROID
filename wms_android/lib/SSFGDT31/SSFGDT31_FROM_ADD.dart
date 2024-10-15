@@ -184,6 +184,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
               }
             });
           }
+          print(moDoNoItems);
         } else {
           print('No items found.');
         }
@@ -740,6 +741,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     super.dispose();
   }
 
+  String? selectedschid = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -839,7 +841,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                   border: InputBorder.none,
                                   filled: true,
                                   fillColor: Colors.grey[300],
-                                  labelText: 'ลูกค้า',
+                                  labelText: 'ลูกค้า ${selectedschid}',
                                   labelStyle: const TextStyle(
                                     color: Colors.black87,
                                   ),
@@ -1185,8 +1187,9 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                 ),
                                 onTap: () {
                                   setState(() {
-                                    selectedMoDoNo =
-                                        schid; // Update the selected item
+                                    selectedMoDoNo = schid;
+                                    selectedschid = item[
+                                        'fg_code']; // Update the selected item
                                     CUST.text =
                                         custName; // Update the text controller
                                     print('Selected SCHID: $schid');
@@ -1436,7 +1439,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'เลือกประเภทเอกสาร',
+                          'เลือกเอกสารอ้างอิง',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,

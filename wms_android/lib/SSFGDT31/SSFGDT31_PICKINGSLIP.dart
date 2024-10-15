@@ -37,6 +37,7 @@ class _SSFGDT31_PICKINGSLIPState extends State<SSFGDT31_PICKINGSLIP> {
     super.initState();
     // get_slip_data();
     // getPDF();
+    getSlipData();
   }
 
 //  -----------------------------  p  -----------------------------  \\
@@ -67,7 +68,11 @@ class _SSFGDT31_PICKINGSLIPState extends State<SSFGDT31_PICKINGSLIP> {
 
       if (response.statusCode == 200) {
         // Parse the JSON response
-        final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
+        final Map<String, dynamic> jsonResponse =
+            jsonDecode(utf8.decode(response.bodyBytes));
+
+        // Extract the "items" array from the JSON
+        final List<dynamic> data = jsonResponse['items'] ?? [];
 
         // Update the items state
         if (mounted) {

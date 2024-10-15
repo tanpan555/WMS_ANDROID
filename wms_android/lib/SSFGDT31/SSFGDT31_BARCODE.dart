@@ -613,7 +613,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Scan รับ', showExitWarning: true),
+      appBar: CustomAppBar(title: 'Scan รับ', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: SingleChildScrollView(
         child: Column(
@@ -724,7 +724,6 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                                     Navigator.of(context).pop();
                                     await sendPostRequest();
                                     if (poStatus == '0') {
-                                      Navigator.of(context).pop(true);
                                     } else {
                                       showDialog(
                                         context: context,

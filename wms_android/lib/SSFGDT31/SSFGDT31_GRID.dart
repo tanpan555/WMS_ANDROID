@@ -454,9 +454,8 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                                   ),
                                 ),
                               );
-                              if (result == true) {
-                                await get_grid_data();
-                              }
+                              await get_grid_data();
+                              print('+Create and refreshed');
                               print('+Create');
                             },
                             style: AppStyles.createButtonStyle(),
