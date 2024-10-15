@@ -234,6 +234,48 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     }
   }
 
+  String? poStatusconform;
+  String? poMessageconform;
+
+  Future<void> fetchPoStatusconform(String? receiveNo) async {
+    final String receiveNoParam = receiveNo ?? 'null';
+    final String apiUrl =
+        'http://172.16.0.82:8888/apex/wms/c/conform_reciveIN_refPO/${receiveNo}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}';
+
+    try {
+      print(apiUrl);
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+        if (mounted) {
+          setState(() {
+            poStatusconform = responseBody['po_status'];
+            poMessageconform = responseBody['po_message'];
+
+            print(
+                'poStatus : $poStatusconform Type : ${poStatusconform.runtimeType}');
+            print(
+                'poMessage : $poMessageconform Type : ${poMessageconform.runtimeType}');
+          });
+        }
+      } else {
+        throw Exception('Failed to load PO status');
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          poStatus = 'Error';
+          poMessage = e.toString();
+
+          print(
+              'poStatus : $poStatusconform Type : ${poStatusconform.runtimeType}');
+          print(
+              'poMessage : $poMessageconform Type : ${poMessageconform.runtimeType}');
+        });
+      }
+    }
+  }
+
   String? poReceiveNo;
 
   Future<void> sendPostRequest(
@@ -349,7 +391,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     //                     ),
     //                   );
     await fetchPoStatus(pPoNo, vReceiveNo);
-
+    await fetchPoStatusconform(vReceiveNo);
     if (poStatus == '0') {
       await sendPostRequest(pPoNo, vReceiveNo, selectedwhCode ?? '');
       Navigator.of(context).push(
@@ -391,15 +433,58 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
             ),
             actions: [
               TextButton(
-                child: Text('Cancel'),
+                child: Text('ยกเลิก'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               TextButton(
-                child: Text('OK'),
-                onPressed: () {
+                child: Text('ตกลง'),
+                onPressed: () async {
                   Navigator.of(context).pop();
+                  if (poStatusconform == '1') {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Row(
+                            children: [
+                              Icon(
+                                Icons
+                                    .notification_important, // Use the bell icon
+                                color: Colors.red, // Set the color to red
+                              ),
+                              SizedBox(
+                                  width:
+                                      8), // Add some space between the icon and the text
+                              Text('แจ้งเตือน'), // Title text
+                            ],
+                          ),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Text('Status: ${poStatus ?? 'No status available'}'),
+                              // SizedBox(height: 8.0),
+                              Text(
+                                  '${poMessageconform ?? 'No message available'}'),
+                              // SizedBox(height: 8.0),
+                              // Text('Step: ${poStep ?? 'No message available'}'),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              child: Text('ตกลง'),
+                              onPressed: () async {
+                                await fetchPoStatusconform(vReceiveNo);
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ],
