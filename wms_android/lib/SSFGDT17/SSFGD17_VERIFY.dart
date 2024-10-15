@@ -407,7 +407,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'Move Locator', showExitWarning: true),
+      appBar: CustomAppBar(title: 'Move Locator', showExitWarning: false),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
