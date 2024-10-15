@@ -120,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'Home'),
+      appBar: CustomAppBar(title: 'Home', showExitWarning: false),
       // endDrawer: CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(10.0),

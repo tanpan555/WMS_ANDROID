@@ -164,7 +164,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'ผลการตรวจนับ'),
+      appBar: CustomAppBar(title: 'ผลการตรวจนับ', showExitWarning: false),
       body: Padding(
         padding: EdgeInsets.all(10.0),
         child: Column(

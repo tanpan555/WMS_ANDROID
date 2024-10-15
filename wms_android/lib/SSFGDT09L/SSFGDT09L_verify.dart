@@ -380,7 +380,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'เบิกจ่าย'),
+      appBar: CustomAppBar(title: 'เบิกจ่าย', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(children: [

@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
-import 'package:wms_android/Global_Parameter.dart' as globals;
 
 class Ssfgdt09lReason extends StatefulWidget {
   // final String pWareCode;
@@ -263,7 +262,7 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Reason',
         showExitWarning: true,
       ),

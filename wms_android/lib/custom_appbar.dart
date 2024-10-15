@@ -4,11 +4,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showExitWarning;
 
-  const CustomAppBar({
-    super.key,
-    this.title = 'WMS',
-    this.showExitWarning = false,
-  });
+  CustomAppBar({
+    Key? key,
+    required this.title,
+    required this.showExitWarning,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
       title: GestureDetector(
         onTap: () {
-          // Navigate back to the main page
           // Navigator.popUntil(context, (route) => route.isFirst);
         },
         child: Row(
@@ -86,7 +85,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Text('แจ้งเตือน'),
               ],
             ),
-            content: Text('คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?'),
+            content: const Text('คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?'),
             actions: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -112,18 +111,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ],
               )
-              // TextButton(
-              //   onPressed: () => Navigator.of(context).pop(false),
-              //   child: Text('Cancel'),
-              // ),
-              // TextButton(
-              //   onPressed: () => Navigator.of(context).pop(true),
-              //   child: Text('OK'),
-              // ),
             ],
           ),
         ) ??
-        false; // กรณีผู้ใช้ปิด dialog โดยไม่เลือก จะคืนค่า false
+        false;
   }
 
   @override
