@@ -45,6 +45,30 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
   final TextEditingController _searchController3 = TextEditingController();
   final TextEditingController _CcodeController = TextEditingController();
 
+  String ifHasData = 'not_show';
+
+  void checkIfHasData() {
+    setState(() {
+      if (DOC_TYPE.text.isNotEmpty ||
+          DOC_DATE.text.isNotEmpty ||
+          REF_NO.text.isNotEmpty ||
+          CUST.text.isNotEmpty ||
+          NOTE.text.isNotEmpty ||
+          ERP_DOC_NO.text.isNotEmpty ||
+          _dateController.text.isNotEmpty ||
+          _searchController.text.isNotEmpty ||
+          _searchController2.text.isNotEmpty ||
+          _searchController3.text.isNotEmpty ||
+          _CcodeController.text.isNotEmpty) {
+        ifHasData = 'show';
+        print(ifHasData);
+      } else {
+        ifHasData = 'not_show';
+        print(ifHasData);
+      }
+    });
+  }
+
   DateTime selectedDate = DateTime.now();
   List<dynamic> statusItems = [];
   List<Map<String, dynamic>> moDoNoItems = [];
@@ -784,7 +808,9 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                 const SizedBox(width: 8.0),
               ],
             ),
-
+            const SizedBox(
+              height: 8,
+            ),
             // Space between buttons and scrollable content
             Expanded(
               child: SingleChildScrollView(

@@ -925,15 +925,14 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     TextEditingController lotQtyController = TextEditingController(
       text: item['lot_qty']?.toString() ?? '',
     );
-    TextEditingController mfgDateController = TextEditingController(
-      text: item['mfg_date'] != null
-          ? displayFormat.format(displayFormat.parse(item['mfg_date']))
-          : '',
-    );
+    TextEditingController mfgDateController = TextEditingController();
+
     TextEditingController lotSupplierController = TextEditingController(
       text: item['lot_supplier']?.toString() ?? '',
     );
-
+    lotQtyController.clear();
+    lotSupplierController.clear();
+    mfgDateController.clear();
     showGeneralDialog(
       context: context,
       barrierDismissible: false,
@@ -1982,12 +1981,13 @@ class _LotDialogState extends State<LotDialog> {
           workingItem['mfg_date'].toString().isNotEmpty) {
         final date = displayFormat.parse(workingItem['mfg_date'].toString());
         mfgDateController.text = displayFormat.format(date);
+      } else {
+        item['mfg_date'] = '';
       }
     } catch (e) {
       print('Error parsing initial date: $e');
       mfgDateController.text = '';
     }
-
     void clearFields() {
       workingItem['lot_qty'] = item['lot_qty'];
       workingItem['lot_supplier'] = item['lot_supplier'];
@@ -2065,7 +2065,7 @@ class _LotDialogState extends State<LotDialog> {
                                 setState(() {
                                   mfgDateController.text = formattedDate;
                                   isMfgDateValid = true;
-                                  item['mfg_date'] = formattedDate;
+                                  // item['mfg_date'] = formattedDate;
                                 });
                               }
                             },
@@ -2073,8 +2073,13 @@ class _LotDialogState extends State<LotDialog> {
                         ],
                       ),
                       errorText: !isMfgDateValid
-                          ? 'กรุณากรอกวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY'
+                          ? 'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024'
                           : null,
+                      errorStyle: TextStyle(
+                        // Add the errorStyle property here
+                        fontSize: 8.0, // Set your desired font size
+                        color: Colors.red, // Customize the error color
+                      ),
                     ),
                     onChanged: (value) {
                       String numbersOnly = value.replaceAll('/', '');
@@ -2243,6 +2248,8 @@ class _LotDialogState extends State<LotDialog> {
                                       .ConfirmChecRecievekButtonStyle(),
                                   onPressed: isMfgDateValid
                                       ? () async {
+                                          item['mfg_date'] =
+                                              mfgDateController.text;
                                           await updateLot(
                                             lotQtyController.text,
                                             lotSupplierController.text,
@@ -2276,10 +2283,12 @@ class _LotDialogState extends State<LotDialog> {
                         child: IconButton(
                           icon: Icon(Icons.close),
                           onPressed: () {
-                            Navigator.of(context).pop();
                             lotQtyController.clear();
                             lotSupplierController.clear();
-                            mfgDateController.clear();
+                            mfgDateController
+                                .clear(); // This clears the text field
+                            Navigator.of(context)
+                                .pop(); // This closes the dialog
                           },
                         ),
                       ),
