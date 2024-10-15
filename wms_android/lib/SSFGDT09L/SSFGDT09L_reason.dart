@@ -305,7 +305,7 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             // --------------------------------------------------------------------------------------------------
             isLoading
                 ? Center(child: CircularProgressIndicator())

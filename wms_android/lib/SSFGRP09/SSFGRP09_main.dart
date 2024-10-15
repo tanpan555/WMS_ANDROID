@@ -10,6 +10,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
+import 'SSFGRP09_.dart';
 
 class SSFGRP09_MAIN extends StatefulWidget {
 //////
@@ -1105,6 +1106,18 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             : SingleChildScrollView(
                 child: Column(
                   children: [
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SSFGRP09_MAINRRR()),
+                          ).then((value) async {});
+                        },
+                        child: Text('LLL'),
+                      ),
+                    ),
                     TextFormField(
                       controller: dateController,
                       readOnly: true,
