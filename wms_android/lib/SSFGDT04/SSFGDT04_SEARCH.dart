@@ -50,6 +50,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   bool noDate = false;
   bool chkDate = false;
   bool isLoading = false;
+  int _cursorPosition = 0;
 
   @override
   void initState() {
@@ -265,8 +266,8 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
                     LengthLimitingTextInputFormatter(
-                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 8 ตัว
-                    DateInputFormatter(), // กำหนดรูปแบบ DD/MM/YYYY
+                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
+                    DateInputFormatter(), // กำหนดรูปแบบ __/__/____
                   ],
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -274,22 +275,19 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     fillColor: Colors.white,
                     labelText: 'วันที่ส่งสินค้า',
                     hintText: 'DD/MM/YYYY',
-                    hintStyle: const TextStyle(
-                      color: Colors.grey, // เปลี่ยนสี hint
-                    ),
-                    labelStyle: chkDate
+                    hintStyle: TextStyle(color: Colors.grey),
+                    labelStyle: chkDate == false && noDate == false
                         ? const TextStyle(
-                            color: Colors
-                                .red, // เปลี่ยนเป็นสีแดงเมื่อวันที่ไม่ถูกต้อง
+                            color: Colors.black87,
                           )
                         : const TextStyle(
-                            color: Colors.black87, // สีปกติเมื่อวันที่ถูกต้อง
+                            color: Colors.red,
                           ),
                     suffixIcon: IconButton(
                       icon: const Icon(
                           Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
                       onPressed: () async {
-                        // เปิด date picker เมื่อกดไอคอน
+                        // กดไอคอนเพื่อเปิด date picker
                         _selectDate(context);
                       },
                     ),
@@ -297,21 +295,40 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   onChanged: (value) {
                     selectedDate = value;
                     print('selectedDate : $selectedDate');
+                    setState(() {
+                      _cursorPosition = _dateController.selection.baseOffset;
+                      _dateController.value = _dateController.value.copyWith(
+                        text: value,
+                        selection: TextSelection.fromPosition(
+                          TextPosition(offset: _cursorPosition),
+                        ),
+                      );
+                    });
 
                     setState(() {
-                      // ถ้าค่าว่างไม่ต้องแสดงอะไร
-                      if (selectedDate.isEmpty) {
-                        chkDate = false;
-                        return;
-                      }
+                      // สร้าง instance ของ DateInputFormatter
+                      DateInputFormatter formatter = DateInputFormatter();
 
-                      // ตรวจสอบรูปแบบวันที่
+                      // ตรวจสอบการเปลี่ยนแปลงของข้อความ
+                      TextEditingValue oldValue =
+                          TextEditingValue(text: _dateController.text);
+                      TextEditingValue newValue = TextEditingValue(text: value);
+
+                      // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
+                      formatter.formatEditUpdate(oldValue, newValue);
+
+                      // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
+                      dateColorCheck = formatter.dateColorCheck;
+                      monthColorCheck = formatter.monthColorCheck;
+                      noDate = formatter.noDate; // เพิ่มการตรวจสอบ noDate
+                    });
+                    setState(() {
                       RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
                       if (!dateRegExp.hasMatch(selectedDate)) {
-                        chkDate =
-                            true; // ถ้ารูปแบบไม่ถูกต้องให้ตั้งค่าเป็น true
                       } else {
-                        chkDate = false; // ถ้ารูปแบบถูกต้องให้ตั้งค่าเป็น false
+                        setState(() {
+                          chkDate = false;
+                        });
                       }
                     });
                   },
@@ -324,7 +341,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                           style: TextStyle(
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
-                            fontSize: 12, // ขนาดตัวอักษร
+                            fontSize: 12, // ปรับขนาดตัวอักษรตามที่ต้องการ
                           ),
                         ))
                     : const SizedBox.shrink(),
@@ -352,65 +369,70 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     ),
                     const SizedBox(width: 20),
                     ElevatedButton(
-  onPressed: () {
-    if (noDate != true && chkDate != true) {
-      // ตรวจสอบว่าค่า selectedDate ว่างหรือเป็น null
-      if (selectedDate.isNotEmpty && selectedDate != 'null') {
-        RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-        if (!dateRegExp.hasMatch(selectedDate)) {
-          setState(() {
-            chkDate = true;
-          });
-        } else {
-          DateTime parsedDate = DateFormat('dd/MM/yyyy').parse(selectedDate);
-          String formattedDate = DateFormat('dd-MM-yyyy').format(parsedDate);
+                      onPressed: () {
+                        if (noDate != true && chkDate != true) {
+                          // ตรวจสอบว่าค่า selectedDate ว่างหรือเป็น null
+                          if (selectedDate.isNotEmpty &&
+                              selectedDate != 'null') {
+                            RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                            if (!dateRegExp.hasMatch(selectedDate)) {
+                              setState(() {
+                                chkDate = true;
+                              });
+                            } else {
+                              DateTime parsedDate =
+                                  DateFormat('dd/MM/yyyy').parse(selectedDate);
+                              String formattedDate =
+                                  DateFormat('dd-MM-yyyy').format(parsedDate);
 
-          setState(() {
-            selectedDate = formattedDate;
-          });
+                              setState(() {
+                                selectedDate = formattedDate;
+                              });
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SSFGDT04_CARD(
-                pErpOuCode: widget.pErpOuCode,
-                pWareCode: widget.pWareCode,
-                pAppUser: appUser,
-                pFlag: pFlag,
-                soNo: pSoNo.isEmpty ? 'null' : pSoNo,
-                date: formattedDate.isEmpty ? 'null' : formattedDate,  // เช็คค่าของ selectedDate
-                status: status,
-              ),
-            ),
-          );
-        }
-      } else {
-        // ถ้าไม่มีการกรอกวันที่ ส่งค่า 'null'
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SSFGDT04_CARD(
-              pErpOuCode: widget.pErpOuCode,
-              pWareCode: widget.pWareCode,
-              pAppUser: appUser,
-              pFlag: pFlag,
-              soNo: pSoNo.isEmpty ? 'null' : pSoNo,
-              date: 'null',  // ส่งค่า 'null' เมื่อ selectedDate เป็นค่าว่างหรือ null
-              status: status,
-            ),
-          ),
-        );
-      }
-    }
-  },
-  style: AppStyles.SearchButtonStyle(),
-  child: Image.asset(
-    'assets/images/search_color.png',
-    width: 50,
-    height: 25,
-  ),
-),
-
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SSFGDT04_CARD(
+                                    pErpOuCode: widget.pErpOuCode,
+                                    pWareCode: widget.pWareCode,
+                                    pAppUser: appUser,
+                                    pFlag: pFlag,
+                                    soNo: pSoNo.isEmpty ? 'null' : pSoNo,
+                                    date: formattedDate.isEmpty
+                                        ? 'null'
+                                        : formattedDate, // เช็คค่าของ selectedDate
+                                    status: status,
+                                  ),
+                                ),
+                              );
+                            }
+                          } else {
+                            // ถ้าไม่มีการกรอกวันที่ ส่งค่า 'null'
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SSFGDT04_CARD(
+                                  pErpOuCode: widget.pErpOuCode,
+                                  pWareCode: widget.pWareCode,
+                                  pAppUser: appUser,
+                                  pFlag: pFlag,
+                                  soNo: pSoNo.isEmpty ? 'null' : pSoNo,
+                                  date:
+                                      'null', // ส่งค่า 'null' เมื่อ selectedDate เป็นค่าว่างหรือ null
+                                  status: status,
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      style: AppStyles.SearchButtonStyle(),
+                      child: Image.asset(
+                        'assets/images/search_color.png',
+                        width: 50,
+                        height: 25,
+                      ),
+                    ),
                   ],
                 ),
               ],
