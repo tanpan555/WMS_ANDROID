@@ -400,7 +400,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
               // --------------------------------------------------------------------
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           Row(
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -457,7 +457,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
             ],
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           // --------------------------------------------------------------------
           Expanded(
             child: isLoading

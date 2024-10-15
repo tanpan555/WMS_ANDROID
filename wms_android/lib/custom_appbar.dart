@@ -12,6 +12,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('showExitWarning : $showExitWarning');
     // return AppBar(
     //   centerTitle: false,
     //   backgroundColor: const Color.fromARGB(255, 17, 0, 56),
@@ -47,7 +48,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: GestureDetector(
         onTap: () {
           // Navigate back to the main page
-          Navigator.popUntil(context, (route) => route.isFirst);
+          // Navigator.popUntil(context, (route) => route.isFirst);
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,

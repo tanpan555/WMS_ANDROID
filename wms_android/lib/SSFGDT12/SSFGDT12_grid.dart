@@ -429,7 +429,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Expanded(
               child: isLoading
                   ? Center(child: CircularProgressIndicator())

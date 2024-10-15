@@ -785,7 +785,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             // -----------------------------
             Expanded(
               child: isLoading

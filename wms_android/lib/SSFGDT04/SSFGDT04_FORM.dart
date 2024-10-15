@@ -75,6 +75,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   bool monthColorCheck = false;
   bool noDate = false;
   bool chkDate = false;
+  int _cursorPosition = 0;
 
   @override
   void initState() {
@@ -685,14 +686,13 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                         side: const BorderSide(
                                             color: Colors.grey),
                                       ),
-                                      child: const Text(
-                                        'ยกเลิก',
-                        style: TextStyle(
-                          fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
-                          color: Colors
-                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                        )
-                                      ),
+                                      child: const Text('ยกเลิก',
+                                          style: TextStyle(
+                                            fontSize:
+                                                14, // ปรับขนาดตัวหนังสือตามต้องการ
+                                            color: Colors
+                                                .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                          )),
                                     ),
                                     TextButton(
                                       style: ElevatedButton.styleFrom(
@@ -700,14 +700,13 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                         side: const BorderSide(
                                             color: Colors.grey),
                                       ),
-                                      child: Text(
-                                        'ตกลง',
-                        style: TextStyle(
-                          fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
-                          color: Colors
-                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                        )
-                                      ),
+                                      child: Text('ตกลง',
+                                          style: TextStyle(
+                                            fontSize:
+                                                14, // ปรับขนาดตัวหนังสือตามต้องการ
+                                            color: Colors
+                                                .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                          )),
                                       onPressed: () async {
                                         await cancel_INHeadNonePO_WMS(
                                             selectedCancelCode ?? '');
@@ -975,14 +974,13 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                           side: const BorderSide(
                                               color: Colors.grey),
                                         ),
-                                        child: const Text(
-                                          'ตกลง',
-                        style: TextStyle(
-                          fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
-                          color: Colors
-                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                        )
-                                        ),
+                                        child: const Text('ตกลง',
+                                            style: TextStyle(
+                                              fontSize:
+                                                  14, // ปรับขนาดตัวหนังสือตามต้องการ
+                                              color: Colors
+                                                  .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                            )),
                                         onPressed: () {
                                           Navigator.of(context)
                                               .pop(); // Close the dialog on button press
@@ -1250,100 +1248,135 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
                           // วันที่บันทึก //
                           Padding(
-  padding: const EdgeInsets.symmetric(vertical: 8),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      TextFormField(
-        controller: _docDateController,
-        keyboardType: TextInputType.number,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
-          LengthLimitingTextInputFormatter(8), // จำกัดจำนวนตัวอักษรไม่เกิน 8 ตัว
-          DateInputFormatter(), // กำหนดรูปแบบ DD/MM/YYYY
-        ],
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          filled: true,
-          fillColor: Colors.white,
-          // labelText: 'วันที่บันทึก',
-          label: RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: 'วันที่บันทึก',
-                  style: TextStyle(
-                    color: chkDate == false ? Colors.black : Colors.red, // ตรวจสอบและเปลี่ยนสี label
-                    fontSize: 16,
-                  ),
-                ),
-                TextSpan(
-                  text: ' *',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          hintText: 'DD/MM/YYYY',
-          hintStyle: TextStyle(
-            color: Colors.grey,
-          ),
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.calendar_today),
-            onPressed: () async {
-              // กดไอคอนเพื่อเปิด date picker
-              _selectDate(context);
-            },
-          ),
-        ),
-        onChanged: (value) {
-          selectedDate = value;
-          setState(() {
-            // สร้าง instance ของ DateInputFormatter
-            DateInputFormatter formatter = DateInputFormatter();
-            TextEditingValue oldValue = TextEditingValue(text: _docDateController.text);
-            TextEditingValue newValue = TextEditingValue(text: value);
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                TextFormField(
+                                  controller: _docDateController,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter
+                                        .digitsOnly, // ยอมรับเฉพาะตัวเลข
+                                    LengthLimitingTextInputFormatter(
+                                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
+                                    DateInputFormatter(), // กำหนดรูปแบบ __/__/____
+                                  ],
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    // labelText: 'วันที่บันทึก',
+                                    label: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: 'วันที่บันทึก',
+                                            style: chkDate == false &&
+                                                    noDate == false
+                                                ? const TextStyle(
+                                                    color: Colors.black87,
+                                                  )
+                                                : const TextStyle(
+                                                    color: Colors.red,
+                                                  ),
+                                          ),
+                                          TextSpan(
+                                            text: ' *',
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    hintText: 'DD/MM/YYYY',
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    labelStyle:
+                                        chkDate == false && noDate == false
+                                            ? const TextStyle(
+                                                color: Colors.black87,
+                                              )
+                                            : const TextStyle(
+                                                color: Colors.red,
+                                              ),
+                                    suffixIcon: IconButton(
+                                      icon: const Icon(Icons
+                                          .calendar_today), // ไอคอนที่อยู่ขวาสุด
+                                      onPressed: () async {
+                                        // กดไอคอนเพื่อเปิด date picker
+                                        _selectDate(context);
+                                      },
+                                    ),
+                                  ),
+                                  onChanged: (value) {
+                                    selectedDate = value;
+                                    print('selectedDate : $selectedDate');
+                                    setState(() {
+                                      _cursorPosition = _docDateController
+                                          .selection.baseOffset;
+                                      _docDateController.value =
+                                          _docDateController.value.copyWith(
+                                        text: value,
+                                        selection: TextSelection.fromPosition(
+                                          TextPosition(offset: _cursorPosition),
+                                        ),
+                                      );
+                                    });
 
-            // ตรวจสอบการเปลี่ยนแปลงของข้อความ
-            formatter.formatEditUpdate(oldValue, newValue);
+                                    setState(() {
+                                      // สร้าง instance ของ DateInputFormatter
+                                      DateInputFormatter formatter =
+                                          DateInputFormatter();
 
-            dateColorCheck = formatter.dateColorCheck;
-            monthColorCheck = formatter.monthColorCheck;
-            noDate = formatter.noDate;
-          });
+                                      // ตรวจสอบการเปลี่ยนแปลงของข้อความ
+                                      TextEditingValue oldValue =
+                                          TextEditingValue(
+                                              text: _docDateController.text);
+                                      TextEditingValue newValue =
+                                          TextEditingValue(text: value);
 
-          // ตรวจสอบรูปแบบวันที่
-          setState(() {
-            RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-            if (!dateRegExp.hasMatch(selectedDate)) {
-              chkDate = true;
-            } else {
-              chkDate = false;
-            }
-          });
-        },
-      ),
-      chkDate == true || noDate == true
-          ? const Padding(
-              padding: EdgeInsets.only(top: 4.0),
-              child: Text(
-                'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12, // ปรับขนาดตัวอักษรตามที่ต้องการ
-                ),
-              ),
-            )
-          : const SizedBox.shrink(),
-    ],
-  ),
-),
+                                      // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
+                                      formatter.formatEditUpdate(
+                                          oldValue, newValue);
 
+                                      // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
+                                      dateColorCheck = formatter.dateColorCheck;
+                                      monthColorCheck =
+                                          formatter.monthColorCheck;
+                                      noDate = formatter
+                                          .noDate; // เพิ่มการตรวจสอบ noDate
+                                    });
+                                    setState(() {
+                                      RegExp dateRegExp =
+                                          RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                                      if (!dateRegExp.hasMatch(selectedDate)) {
+                                      } else {
+                                        setState(() {
+                                          chkDate = false;
+                                        });
+                                      }
+                                    });
+                                  },
+                                ),
+                                chkDate == true || noDate == true
+                                    ? const Padding(
+                                        padding: EdgeInsets.only(top: 4.0),
+                                        child: Text(
+                                          'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize:
+                                                12, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                                          ),
+                                        ))
+                                    : const SizedBox.shrink(),
+                              ],
+                            ),
+                          ),
 
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 0),

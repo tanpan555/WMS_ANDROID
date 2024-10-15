@@ -549,7 +549,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             // --------------------------------------------------------------------------------------------------
             TextFormField(
               controller: barcodeController,
