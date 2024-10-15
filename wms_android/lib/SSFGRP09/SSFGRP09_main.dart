@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:wms_android/styles.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -99,6 +100,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
 
   bool isLoading = false;
   bool isFirstLoad = true;
+
+  // --------------------------------------\\
+  bool checkUpdateData = false;
+  // --------------------------------------\\
 
   TextEditingController searchController1 = TextEditingController();
   TextEditingController searchController2 = TextEditingController();
@@ -1065,9 +1070,26 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(
-        title: 'รายงานผลการตรวจนับสินค้า',
-        showExitWarning: true,
-      ),
+          title: 'รายงานผลการตรวจนับสินค้า', showExitWarning: checkUpdateData
+
+          // returnLovDate.isNotEmpty ||
+          //         returnLovDocNo.isNotEmpty ||
+          //         returnStartWareCode.isNotEmpty ||
+          //         returnEndWareCode.isNotEmpty ||
+          //         returnStartLoc.isNotEmpty ||
+          //         returnEndLoc.isNotEmpty ||
+          //         returnStartGroup.isNotEmpty ||
+          //         returnEndGroup.isNotEmpty ||
+          //         returnStartCategory.isNotEmpty ||
+          //         returnEndCategory.isNotEmpty ||
+          //         returnStartSubCategory.isNotEmpty ||
+          //         returnEndSubCategory.isNotEmpty ||
+          //         returnStartItem.isNotEmpty ||
+          //         returnEndItem.isNotEmpty
+          //     ? true
+          //     : false
+
+          ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: isLoading
@@ -1567,10 +1589,17 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     );
   }
 
+  // --------------------------------- ||
+  var maskFormatter = MaskTextInputFormatter(
+    mask: '##/##/####',
+    filter: {"#": RegExp(r'[0-9]')}, // อนุญาตเฉพาะตัวเลข
+  );
+  // --------------------------------- ||
+
   void showDialogDropdownSearchDate() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1603,18 +1632,32 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     ),
                     const SizedBox(height: 10),
                     // ช่องค้นหา
+                    // TextField(
+                    //   controller: searchController1,
+                    //   decoration: const InputDecoration(
+                    //     hintText: 'ค้นหา',
+                    //     border: OutlineInputBorder(),
+                    //   ),
+                    //   onChanged: (query) {
+                    //     if (mounted) {
+                    //       setState(() {});
+                    //     }
+                    //   },
+                    // ),
+                    // ========================================================================= ||
                     TextField(
                       controller: searchController1,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [maskFormatter],
                       decoration: const InputDecoration(
-                        hintText: 'ค้นหา',
+                        hintText: 'DD/MM/YYYY',
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (query) {
-                        if (mounted) {
-                          setState(() {});
-                        }
+                        setState(() {});
                       },
                     ),
+
                     const SizedBox(height: 10),
                     Expanded(
                       child: Builder(
@@ -1656,6 +1699,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   Navigator.of(context).pop();
                                   isLoading = true;
                                   setState(() {
+                                    String dataCheck = returnCode;
                                     returnLovDate = returnCode;
                                     displayLovDate = doc;
                                     dateController.text =
@@ -1666,6 +1710,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       returnLovDocNo = '';
                                       docNoController.clear();
                                       isLoading = false;
+                                    }
+
+                                    if (dataCheck != '') {
+                                      checkUpdateData = true;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -1698,7 +1746,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchDocNo() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1769,7 +1817,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
                               final doc = '${item['doc_no'] ?? ''}';
-                              final returnCode = '${item['doc_no'] ?? ''}';
+                              final returnCode =
+                                  '${item['doc_no'] ?? 'ไมมีค่า'}';
+                              // print('item $item');
+                              // print('doc $doc');
+                              // print('returnCode $returnCode');
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
@@ -1784,11 +1836,15 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCheck = returnCode;
                                     returnLovDocNo = returnCode;
                                     displayLovDocNo = doc;
                                     docNoController.text =
                                         displayLovDocNo.toString();
                                     // -----------------------------------------
+                                    if (dataCheck != '') {
+                                      checkUpdateData = true;
+                                    }
                                     print(
                                         'docNoController New: $docNoController Type : ${docNoController.runtimeType}');
                                     print(
@@ -1819,7 +1875,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchStartWareCode() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -1907,6 +1963,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCheck = returnCode;
                                     returnStartWareCode = returnCode;
                                     displayStartWareCode = doc;
                                     startWareCodeController.text =
@@ -1925,6 +1982,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       returnEndLoc = '';
                                       endLocController.clear();
                                       isLoading = false;
+                                    }
+
+                                    if (dataCheck != '') {
+                                      checkUpdateData = true;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -1957,7 +2018,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchEndWareCode() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -2045,6 +2106,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCheck = returnCode;
                                     returnEndWareCode = returnCode;
                                     displayEndWareCode = doc;
                                     endWareCodeController.text =
@@ -2059,6 +2121,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       returnEndLoc = '';
                                       endLocController.clear();
                                       isLoading = false;
+                                    }
+                                    if (dataCheck != '') {
+                                      checkUpdateData = true;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2091,7 +2156,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchStartLoc() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -2180,6 +2245,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCheck = returnCode;
                                     returnStartLoc = returnCode;
                                     displayStartLoc = doc;
                                     startLocController.text =
@@ -2190,6 +2256,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       returnEndLoc = '';
                                       endLocController.clear();
                                       isLoading = false;
+                                    }
+                                    if (dataCheck != '') {
+                                      checkUpdateData = true;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2222,7 +2291,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchEndLoc() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -2310,11 +2379,15 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCheck = returnCode;
                                     returnEndLoc = returnCode;
                                     displayEndLoc = doc;
                                     endLocController.text =
                                         displayEndLoc.toString();
                                     // -----------------------------------------
+                                    if (dataCheck != '') {
+                                      checkUpdateData = true;
+                                    }
                                     print(
                                         'endLocController New: $endLocController Type : ${endLocController.runtimeType}');
                                     print(
@@ -2345,7 +2418,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchStartGroup() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -2432,6 +2505,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCheck = returnCode;
                                     returnStartGroup = returnCode;
                                     displayStartGroup = doc;
                                     startGroupController.text =
@@ -2467,6 +2541,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endItemController.clear();
                                       isLoading = false;
                                     }
+                                    if (dataCheck != '') {
+                                      checkUpdateData = true;
+                                    }
                                     // -----------------------------------------
                                     print(
                                         'startGroupController New: $startGroupController Type : ${startGroupController.runtimeType}');
@@ -2498,7 +2575,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchEndGroup() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -2585,6 +2662,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCheck = returnCode;
                                     returnEndGroup = returnCode;
                                     displayEndGroup = doc;
                                     endGroupController.text =
@@ -2615,6 +2693,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       returnEndItem = '';
                                       endItemController.clear();
                                       isLoading = false;
+                                    }
+                                    if (dataCheck != '') {
+                                      checkUpdateData = true;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2647,7 +2728,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchStartCategory() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -2737,6 +2818,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCheck = returnCode;
                                     returnStartCategory = returnCode;
                                     displayStartCategory = doc;
                                     startCategoryController.text =
@@ -2763,6 +2845,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       returnEndItem = '';
                                       endItemController.clear();
                                       isLoading = false;
+                                    }
+                                    if (dataCheck != '') {
+                                      checkUpdateData = true;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2795,7 +2880,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchEndCategory() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -2885,6 +2970,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCheck = returnCode;
                                     returnEndCategory = returnCode;
                                     displayEndCategory = doc;
                                     endCategoryController.text =
@@ -2907,6 +2993,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       returnEndItem = '';
                                       endItemController.clear();
                                       isLoading = false;
+                                    }
+                                    if (dataCheck != '') {
+                                      checkUpdateData = true;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -2939,7 +3028,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchStartSubCategory() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -3028,6 +3117,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCheck = returnCode;
                                     returnStartSubCategory = returnCode;
                                     displayStartSubCategory = doc;
                                     startSubCategoryController.text =
@@ -3046,6 +3136,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       returnEndItem = '';
                                       endItemController.clear();
                                       isLoading = false;
+                                    }
+                                    if (dataCheck != '') {
+                                      checkUpdateData = true;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -3078,7 +3171,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchEndSubCategory() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -3167,6 +3260,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCheck = returnCode;
                                     returnEndSubCategory = returnCode;
                                     displayEndSubCategory = doc;
                                     endSubCategoryController.text =
@@ -3181,6 +3275,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       returnEndItem = '';
                                       endItemController.clear();
                                       isLoading = false;
+                                    }
+                                    if (dataCheck != '') {
+                                      checkUpdateData = true;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -3213,7 +3310,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchStartItem() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -3300,6 +3397,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCheck = returnCode;
                                     returnStartItem = returnCode;
                                     displayStartItem = doc;
                                     startItemController.text =
@@ -3310,6 +3408,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       returnEndItem = '';
                                       endItemController.clear();
                                       isLoading = false;
+                                    }
+                                    if (dataCheck != '') {
+                                      checkUpdateData = true;
                                     }
                                     // -----------------------------------------
                                     print(
@@ -3342,7 +3443,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   void showDialogDropdownSearchEndItem() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -3428,10 +3529,14 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
+                                    String dataCheck = returnCode;
                                     returnEndItem = returnCode;
                                     displayEndItem = doc;
                                     endItemController.text =
                                         displayEndItem.toString();
+                                    if (dataCheck != '') {
+                                      checkUpdateData = true;
+                                    }
                                     // -----------------------------------------
                                     print(
                                         'endItemController New: $endItemController Type : ${endItemController.runtimeType}');
@@ -3466,7 +3571,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   ) {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Row(
