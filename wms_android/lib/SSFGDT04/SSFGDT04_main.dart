@@ -44,18 +44,22 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $responseData');
 
-        if (mounted) {setState(() {
-          data = List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          isLoading = false;
-        });}
+        if (mounted) {
+          setState(() {
+            data = List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+            isLoading = false;
+          });
+        }
         print('dataMenu : $data');
       } else {
         throw Exception('Failed to load fetchData');
       }
     } catch (e) {
-      if (mounted) {setState(() {
-        isLoading = false;
-      });}
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
       print('ERROR IN Fetch Data : $e');
     }
   }
@@ -63,7 +67,7 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer:CustomDrawer(),
       body: Padding(

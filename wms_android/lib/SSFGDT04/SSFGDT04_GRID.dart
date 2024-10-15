@@ -120,36 +120,36 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                   padding: const EdgeInsets.all(0),
                 ),
                 onPressed: () async {
-  // Check if the text field is empty
-  if (quantityController.text.isEmpty) {
-    // Close the dialog if no input is provided
-    Navigator.of(context).pop();
-    return; // Exit the function early
-  }
+                  // Check if the text field is empty
+                  if (quantityController.text.isEmpty) {
+                    // Close the dialog if no input is provided
+                    Navigator.of(context).pop();
+                    return; // Exit the function early
+                  }
 
-  if (formKey.currentState?.validate() ?? false) {
-    // Remove commas and parse the text as a number
-    final String cleanedText = quantityController.text.replaceAll(',', '');
+                  if (formKey.currentState?.validate() ?? false) {
+                    // Remove commas and parse the text as a number
+                    final String cleanedText =
+                        quantityController.text.replaceAll(',', '');
 
-    // Attempt to parse the cleaned string as a double or int, depending on your needs
-    try {
-      final newQuantity = double.parse(cleanedText).toString();
+                    // Attempt to parse the cleaned string as a double or int, depending on your needs
+                    try {
+                      final newQuantity = double.parse(cleanedText).toString();
 
-      // Update the item in the gridItems list
-      await fetchUpdate(newQuantity, item['seq']);
-      setState(() {
-        fetchGridItems();
-      });
+                      // Update the item in the gridItems list
+                      await fetchUpdate(newQuantity, item['seq']);
+                      setState(() {
+                        fetchGridItems();
+                      });
 
-      // Close the popup
-      Navigator.of(context).pop();
-    } catch (e) {
-      print('Error parsing quantity: $e');
-      // Handle the error (you could show a message to the user)
-    }
-  }
-},
-
+                      // Close the popup
+                      Navigator.of(context).pop();
+                    } catch (e) {
+                      print('Error parsing quantity: $e');
+                      // Handle the error (you could show a message to the user)
+                    }
+                  }
+                },
                 child: Image.asset(
                   'assets/images/check-mark.png',
                   width: 30,
@@ -189,11 +189,13 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        if (mounted) {setState(() {
-          poStatus = responseData['po_status'];
-          poMessage = responseData['po_message'];
-          fetchGridItems();
-        });}
+        if (mounted) {
+          setState(() {
+            poStatus = responseData['po_status'];
+            poMessage = responseData['po_message'];
+            fetchGridItems();
+          });
+        }
         print('Success: $responseData');
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
@@ -209,16 +211,18 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
-      if (mounted) {setState(() {
-        // Update gridItems with new data
-        gridItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-        isLoading = false;
+      if (mounted) {
+        setState(() {
+          // Update gridItems with new data
+          gridItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
+          isLoading = false;
 
-        // Filter out deleted items
-        gridItems = gridItems
-            .where((item) => !deletedItemCodes.contains(item['item_code']))
-            .toList();
-      });}
+          // Filter out deleted items
+          gridItems = gridItems
+              .where((item) => !deletedItemCodes.contains(item['item_code']))
+              .toList();
+        });
+      }
     } else {
       throw Exception('Failed to load DOC_TYPE items');
     }
@@ -252,11 +256,13 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        if (mounted) {setState(() {
-          poStatus = responseData['po_status'];
-          poMessage = responseData['po_message'];
-          fetchGridItems();
-        });}
+        if (mounted) {
+          setState(() {
+            poStatus = responseData['po_status'];
+            poMessage = responseData['po_message'];
+            fetchGridItems();
+          });
+        }
         print('Success: $responseData');
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
@@ -297,12 +303,14 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
       print('po_message: $poMessage');
       if (poStatus == 'success') {
         // Only update UI if deletion was successful
-        if (mounted) {setState(() {
-          // Remove the item from the list
-          gridItems.removeWhere((item) =>
-              item['item_code'] == poItemCode && item['po_seq'] == poSeq);
-          deletedItemCodes.add(poItemCode!);
-        });}
+        if (mounted) {
+          setState(() {
+            // Remove the item from the list
+            gridItems.removeWhere((item) =>
+                item['item_code'] == poItemCode && item['po_seq'] == poSeq);
+            deletedItemCodes.add(poItemCode!);
+          });
+        }
       }
     } else {
       print('Request failed with status: ${response.statusCode}.');
@@ -318,15 +326,19 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> setQC =
             jsonDecode(utf8.decode(response.bodyBytes));
-        if (mounted) {setState(() {
-          setqc = setQC['v_qc_pass']; // อัปเดตค่าภายใน setState
-        });}
+        if (mounted) {
+          setState(() {
+            setqc = setQC['v_qc_pass']; // อัปเดตค่าภายใน setState
+          });
+        }
         print('setQC : $setQC type : ${setQC.runtimeType}');
       } else {
         print('setQC Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      if (mounted) {setState(() {});}
+      if (mounted) {
+        setState(() {});
+      }
       print('setQC ERROR IN Fetch Data : $e');
     }
   }
@@ -340,8 +352,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)',
-      // showExitWarning: true,
+      appBar: CustomAppBar(
+        title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false
       ),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer: CustomDrawer(),
@@ -361,34 +373,33 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: const [
-                                            Icon(
-                                              Icons
-                                                  .notification_important, // ไอคอนแจ้งเตือน
-                                              color: Colors.red, // สีแดง
-                                              size: 30,
-                                            ),
-                                            SizedBox(
-                                              width:
-                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                            ),
-                                            Text('แจ้งเตือน'),
-                                          ],
-                                        ),
-                                        // Close icon
-                                        IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                        ),
-                                      ],
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: const [
+                                    Icon(
+                                      Icons
+                                          .notification_important, // ไอคอนแจ้งเตือน
+                                      color: Colors.red, // สีแดง
+                                      size: 30,
                                     ),
+                                    SizedBox(
+                                      width:
+                                          8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                    ),
+                                    Text('แจ้งเตือน'),
+                                  ],
+                                ),
+                                // Close icon
+                                IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
+                                ),
+                              ],
+                            ),
                             content: const Text(
                                 'ระบบมีการบันทึกรายการทิ้งไว้ หากดึง ใบผลิต จะเคลียร์รายการทั้งหมดทิ้ง, ต้องการดึงใบผลิตใหม่หรือไม่'),
                             actions: <Widget>[
@@ -397,7 +408,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                   backgroundColor: Colors.white,
                                   side: const BorderSide(color: Colors.grey),
                                 ),
-                                child: const Text('ยกเลิก',style: TextStyle(
+                                child: const Text('ยกเลิก',
+                                    style: TextStyle(
                                       fontSize:
                                           14, // ปรับขนาดตัวหนังสือตามต้องการ
                                       color: Colors
@@ -437,34 +449,34 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: const [
-                                            Icon(
-                                              Icons
-                                                  .notification_important, // ไอคอนแจ้งเตือน
-                                              color: Colors.red, // สีแดง
-                                              size: 30,
-                                            ),
-                                            SizedBox(
-                                              width:
-                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                            ),
-                                            Text('แจ้งเตือน'),
-                                          ],
-                                        ),
-                                        // Close icon
-                                        IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                        ),
-                                      ],
-                                    ),
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: const [
+                                      Icon(
+                                        Icons
+                                            .notification_important, // ไอคอนแจ้งเตือน
+                                        color: Colors.red, // สีแดง
+                                        size: 30,
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                      ),
+                                      Text('แจ้งเตือน'),
+                                    ],
+                                  ),
+                                  // Close icon
+                                  IconButton(
+                                    icon: const Icon(Icons.close),
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                    },
+                                  ),
+                                ],
+                              ),
                               content: Text(poMessage ?? ''),
                               actions: [
                                 TextButton(
@@ -495,34 +507,34 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: const [
-                                            Icon(
-                                              Icons
-                                                  .notification_important, // ไอคอนแจ้งเตือน
-                                              color: Colors.red, // สีแดง
-                                              size: 30,
-                                            ),
-                                            SizedBox(
-                                              width:
-                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                            ),
-                                            Text('แจ้งเตือน'),
-                                          ],
-                                        ),
-                                        // Close icon
-                                        IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                        ),
-                                      ],
-                                    ),
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: const [
+                                      Icon(
+                                        Icons
+                                            .notification_important, // ไอคอนแจ้งเตือน
+                                        color: Colors.red, // สีแดง
+                                        size: 30,
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                      ),
+                                      Text('แจ้งเตือน'),
+                                    ],
+                                  ),
+                                  // Close icon
+                                  IconButton(
+                                    icon: const Icon(Icons.close),
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                    },
+                                  ),
+                                ],
+                              ),
                               content: Text(poMessage ?? ''),
                               actions: [
                                 TextButton(
@@ -852,11 +864,12 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                               color: Colors.grey),
                                         ),
                                         child: const Text('ยกเลิก',
-                        style: TextStyle(
-                          fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
-                          color: Colors
-                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                        )),
+                                            style: TextStyle(
+                                              fontSize:
+                                                  14, // ปรับขนาดตัวหนังสือตามต้องการ
+                                              color: Colors
+                                                  .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                            )),
                                         onPressed: () {
                                           Navigator.of(context).pop(false);
                                         },
@@ -868,11 +881,12 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                               color: Colors.grey),
                                         ),
                                         child: const Text('ตกลง',
-                        style: TextStyle(
-                          fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
-                          color: Colors
-                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                        )),
+                                            style: TextStyle(
+                                              fontSize:
+                                                  14, // ปรับขนาดตัวหนังสือตามต้องการ
+                                              color: Colors
+                                                  .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
+                                            )),
                                         onPressed: () async {
                                           final poItemCode = item['item_code'];
                                           final poSeq = item['seq'];

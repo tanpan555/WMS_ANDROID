@@ -368,7 +368,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ'),
+      appBar: CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

@@ -77,6 +77,30 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   bool chkDate = false;
   int _cursorPosition = 0;
 
+  bool check = false;
+  void checkIfHasData() {
+    setState(() {
+      if (_docNoController.text.isNotEmpty ||
+          _docDateController.text.isNotEmpty ||
+          _refNoController.text.isNotEmpty ||
+          _refReceiveController.text.isNotEmpty ||
+          _oderNoController.text.isNotEmpty ||
+          _moDoNoController.text.isNotEmpty ||
+          _staffCodeController.text.isNotEmpty ||
+          _noteController.text.isNotEmpty ||
+          _erpDocNoController.text.isNotEmpty ||
+          _custController.text.isNotEmpty ||
+          _searchController.text.isNotEmpty||
+          _canCelController.text.isNotEmpty) {
+        check = true;
+        print(check);
+      } else {
+        check = false;
+        print(check);
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -1002,7 +1026,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(

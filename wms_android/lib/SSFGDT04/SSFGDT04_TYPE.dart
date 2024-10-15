@@ -217,7 +217,8 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                                   setState(() {
                                     // selectedDocType = item['doc_type'];
                                     selectedDocDesc = item['doc_desc'];
-                                    docTypeController.text = selectedDocDesc ?? '';
+                                    docTypeController.text =
+                                        selectedDocDesc ?? '';
                                     // -----------------------------------------
                                   });
                                 },
@@ -242,7 +243,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),
@@ -254,25 +255,24 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 TextFormField(
-                    readOnly:
-                        true, // Make it read-only to prevent keyboard popup
-                    onTap: _showDocumentTypePopup, // Show the popup on tap
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      labelText: 'ประเภทเอกสาร',
-                      suffixIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelStyle: const TextStyle(
-                        color: Colors.black87,
-                      ),
+                  readOnly: true, // Make it read-only to prevent keyboard popup
+                  onTap: _showDocumentTypePopup, // Show the popup on tap
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    labelText: 'ประเภทเอกสาร',
+                    suffixIcon: Icon(
+                      Icons.arrow_drop_down,
+                      color: Color.fromARGB(255, 113, 113, 113),
                     ),
-                    controller: docTypeController,
-                    // controller: TextEditingController(text: selectedDocType)
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelStyle: const TextStyle(
+                      color: Colors.black87,
                     ),
+                  ),
+                  controller: docTypeController,
+                  // controller: TextEditingController(text: selectedDocType)
+                ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -307,34 +307,34 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: const [
-                                            Icon(
-                                              Icons
-                                                  .notification_important, // ไอคอนแจ้งเตือน
-                                              color: Colors.red, // สีแดง
-                                              size: 30,
-                                            ),
-                                            SizedBox(
-                                              width:
-                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                            ),
-                                            Text('แจ้งเตือน'),
-                                          ],
-                                        ),
-                                        // Close icon
-                                        IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                        ),
-                                      ],
-                                    ),
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: const [
+                                          Icon(
+                                            Icons
+                                                .notification_important, // ไอคอนแจ้งเตือน
+                                            color: Colors.red, // สีแดง
+                                            size: 30,
+                                          ),
+                                          SizedBox(
+                                            width:
+                                                8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                          ),
+                                          Text('แจ้งเตือน'),
+                                        ],
+                                      ),
+                                      // Close icon
+                                      IconButton(
+                                        icon: const Icon(Icons.close),
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                   content: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
@@ -373,34 +373,34 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: const [
-                                            Icon(
-                                              Icons
-                                                  .notification_important, // ไอคอนแจ้งเตือน
-                                              color: Colors.red, // สีแดง
-                                              size: 30,
-                                            ),
-                                            SizedBox(
-                                              width:
-                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                            ),
-                                            Text('แจ้งเตือน'),
-                                          ],
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: const [
+                                        Icon(
+                                          Icons
+                                              .notification_important, // ไอคอนแจ้งเตือน
+                                          color: Colors.red, // สีแดง
+                                          size: 30,
                                         ),
-                                        // Close icon
-                                        IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
+                                        SizedBox(
+                                          width:
+                                              8, // ระยะห่างระหว่างไอคอนกับข้อความ
                                         ),
+                                        Text('แจ้งเตือน'),
                                       ],
                                     ),
+                                    // Close icon
+                                    IconButton(
+                                      icon: const Icon(Icons.close),
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                      },
+                                    ),
+                                  ],
+                                ),
                                 content: Text('$poMessage'),
                                 actions: <Widget>[
                                   TextButton(

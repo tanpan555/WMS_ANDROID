@@ -5,7 +5,6 @@ import 'SSFGDT04_SEARCH.dart';
 import 'SSFGDT04_TYPE.dart';
 // import 'package:wms_android/custom_drawer.dart';
 
-
 class SSFGDT04_MENU extends StatelessWidget {
   final String pWareCode;
   final String pErpOuCode;
@@ -18,11 +17,10 @@ class SSFGDT04_MENU extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
 
     return Scaffold(
-      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer:CustomDrawer(),
       body: Padding(
@@ -38,7 +36,8 @@ class SSFGDT04_MENU extends StatelessWidget {
                   width: 40,
                   height: 40,
                 ),
-                title: const Text('ค้นหาเอกสาร', style: TextStyle(fontSize: 18)),
+                title:
+                    const Text('ค้นหาเอกสาร', style: TextStyle(fontSize: 18)),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -61,12 +60,16 @@ class SSFGDT04_MENU extends StatelessWidget {
                   width: 40,
                   height: 40,
                 ),
-                title: const Text('สร้างเอกสาร', style: TextStyle(fontSize: 18)),
+                title:
+                    const Text('สร้างเอกสาร', style: TextStyle(fontSize: 18)),
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SSFGDT04_TYPE(pWareCode: pWareCode,
-                        pErpOuCode: pErpOuCode,)),
+                    MaterialPageRoute(
+                        builder: (context) => SSFGDT04_TYPE(
+                              pWareCode: pWareCode,
+                              pErpOuCode: pErpOuCode,
+                            )),
                   );
                   // Action for "สร้างเอกสาร"
                 },

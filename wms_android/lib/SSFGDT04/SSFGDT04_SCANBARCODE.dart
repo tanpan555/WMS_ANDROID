@@ -81,26 +81,26 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
   }
 
   void _scanQRCode() async {
-  await Navigator.of(context).push(MaterialPageRoute(
-    builder: (context) => QRView(
-      key: qrKey,
-      onQRViewCreated: _onQRViewCreated,
-    ),
-  ));
-}
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => QRView(
+        key: qrKey,
+        onQRViewCreated: _onQRViewCreated,
+      ),
+    ));
+  }
 
-void _onQRViewCreated(QRViewController controller) {
-  controller.scannedDataStream.listen((scanData) {
-    if (mounted) {
-      setState(() {
-        _barCodeCotroller.text = scanData.code!;
-        fetchBarcodeData();
-      });
-    }
-    controller.dispose();
-    Navigator.of(context).pop();
-  });
-}
+  void _onQRViewCreated(QRViewController controller) {
+    controller.scannedDataStream.listen((scanData) {
+      if (mounted) {
+        setState(() {
+          _barCodeCotroller.text = scanData.code!;
+          fetchBarcodeData();
+        });
+      }
+      controller.dispose();
+      Navigator.of(context).pop();
+    });
+  }
 
   String? pBarcode;
   String? lotNumber; // po_lot_number,
@@ -198,34 +198,30 @@ void _onQRViewCreated(QRViewController controller) {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: const [
-                                            Icon(
-                                              Icons
-                                                  .notification_important, // ไอคอนแจ้งเตือน
-                                              color: Colors.red, // สีแดง
-                                              size: 30,
-                                            ),
-                                            SizedBox(
-                                              width:
-                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                            ),
-                                            Text('แจ้งเตือน'),
-                                          ],
-                                        ),
-                                        // Close icon
-                                        IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                        ),
-                                      ],
-                                    ),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: const [
+                        Icon(
+                          Icons.notification_important, // ไอคอนแจ้งเตือน
+                          color: Colors.red, // สีแดง
+                          size: 30,
+                        ),
+                        SizedBox(
+                          width: 8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                        ),
+                        Text('แจ้งเตือน'),
+                      ],
+                    ),
+                    // Close icon
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                    ),
+                  ],
+                ),
                 content: Text('Update Locator Complete. $poMessage'),
                 actions: [
                   TextButton(
@@ -255,34 +251,30 @@ void _onQRViewCreated(QRViewController controller) {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: const [
-                                            Icon(
-                                              Icons
-                                                  .notification_important, // ไอคอนแจ้งเตือน
-                                              color: Colors.red, // สีแดง
-                                              size: 30,
-                                            ),
-                                            SizedBox(
-                                              width:
-                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                            ),
-                                            Text('แจ้งเตือน'),
-                                          ],
-                                        ),
-                                        // Close icon
-                                        IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                        ),
-                                      ],
-                                    ),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: const [
+                        Icon(
+                          Icons.notification_important, // ไอคอนแจ้งเตือน
+                          color: Colors.red, // สีแดง
+                          size: 30,
+                        ),
+                        SizedBox(
+                          width: 8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                        ),
+                        Text('แจ้งเตือน'),
+                      ],
+                    ),
+                    // Close icon
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                    ),
+                  ],
+                ),
                 content: Text('$poMessage'),
                 actions: [
                   TextButton(
@@ -334,7 +326,7 @@ void _onQRViewCreated(QRViewController controller) {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer:CustomDrawer(),
       body: Padding(
@@ -434,92 +426,90 @@ void _onQRViewCreated(QRViewController controller) {
 
           // Barcode //
           Padding(
-  padding: const EdgeInsets.symmetric(vertical: 8),
-  child: TextField(
-    decoration: const InputDecoration(
-      labelText: 'Barcode',
-      filled: true,
-      fillColor: Colors.white,
-      labelStyle: TextStyle(color: Colors.black),
-      border: InputBorder.none,
-    ),
-    controller: _barCodeCotroller,
-    focusNode: barcodeFocusNode, // Attach the focus node
-    autofocus: true, // Automatically focus on the TextField when the screen loads.
-    onSubmitted: (value) async {
-      setState(() {
-        pBarcode = value; // Assign the entered barcode to pBarcode
-      });
-
-      await fetchBarcodeData(); // Wait for the data fetching process
-
-      if (po_status == '1') {
-        // Show a popup if the status is '1'
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: const [
-                                            Icon(
-                                              Icons
-                                                  .notification_important, // ไอคอนแจ้งเตือน
-                                              color: Colors.red, // สีแดง
-                                              size: 30,
-                                            ),
-                                            SizedBox(
-                                              width:
-                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                            ),
-                                            Text('แจ้งเตือน'),
-                                          ],
-                                        ),
-                                        // Close icon
-                                        IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                        ),
-                                      ],
-                                    ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('$po_message'),
-                ],
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: TextField(
+              decoration: const InputDecoration(
+                labelText: 'Barcode',
+                filled: true,
+                fillColor: Colors.white,
+                labelStyle: TextStyle(color: Colors.black),
+                border: InputBorder.none,
               ),
-              actions: [
-                TextButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.grey),
-                  ),
-                  child: Text(
-                    'ตกลง',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }
-    },
-  ),
-),
+              controller: _barCodeCotroller,
+              focusNode: barcodeFocusNode, // Attach the focus node
+              autofocus:
+                  true, // Automatically focus on the TextField when the screen loads.
+              onSubmitted: (value) async {
+                setState(() {
+                  pBarcode = value; // Assign the entered barcode to pBarcode
+                });
+
+                await fetchBarcodeData(); // Wait for the data fetching process
+
+                if (po_status == '1') {
+                  // Show a popup if the status is '1'
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: const [
+                                Icon(
+                                  Icons
+                                      .notification_important, // ไอคอนแจ้งเตือน
+                                  color: Colors.red, // สีแดง
+                                  size: 30,
+                                ),
+                                SizedBox(
+                                  width: 8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                ),
+                                Text('แจ้งเตือน'),
+                              ],
+                            ),
+                            // Close icon
+                            IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Close the dialog
+                              },
+                            ),
+                          ],
+                        ),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('$po_message'),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              side: const BorderSide(color: Colors.grey),
+                            ),
+                            child: Text(
+                              'ตกลง',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ),
 
           // const SizedBox(height: 5),
           Padding(

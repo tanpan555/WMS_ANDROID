@@ -215,7 +215,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       body: SingleChildScrollView(
         // padding: const EdgeInsets.all(10),
         child: Form(
@@ -255,7 +255,9 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   ),
                   onChanged: (value) {
                     setState(() {
-                      pSoNo = value;
+                      // Normalize the value to lowercase to handle case-insensitive search
+                      // Keep Thai characters as they are
+                      pSoNo = value.toLowerCase();
                     });
                   },
                 ),

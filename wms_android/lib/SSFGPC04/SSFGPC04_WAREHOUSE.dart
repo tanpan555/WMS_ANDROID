@@ -153,7 +153,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
   @override
 Widget build(BuildContext context) {
   return Scaffold(
-    appBar: const CustomAppBar(title: 'เลือกคลังสินค้า'),
+    appBar: CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
     backgroundColor: const Color.fromARGB(255, 17, 0, 56),
     body: Padding(
       padding: const EdgeInsets.all(16),

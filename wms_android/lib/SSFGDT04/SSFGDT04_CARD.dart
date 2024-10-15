@@ -55,6 +55,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   // String pAppUser = gb.APP_USER;
   String broeserLanguage = gb.BROWSER_LANGUAGE;
   String pDsPdf = gb.P_DS_PDF;
+  final ScrollController _scrollController = ScrollController();
 
   // PDF
   String? V_DS_PDF;
@@ -121,41 +122,15 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     );
   }
 
-  // Future<void> fetchData() async {
-  //   try {
-  //     final response = await http.get(Uri.parse(
-  //         'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}'));
-
-  //     if (response.statusCode == 200) {
-  //       final responseBody = utf8.decode(response.bodyBytes);
-  //       final responseData = jsonDecode(responseBody);
-  //       print('Fetched data: $responseData');
-
-  //       setState(() {
-  //         // isLoading = false;
-  //         dataCard =
-  //             List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-  //         isLoading = false;
-  //         filterData();
-  //       });
-  //       print('dataCard: $dataCard');
-  //     } else {
-  //       print('Failed to load data. Status code: ${response.statusCode}');
-  //       throw Exception(
-  //           'Failed to load data. Status code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     // setState(() {});
-  //     print('ERROR IN Fetch Data: $e');
-  //   }
-  // }
 
   Future<void> fetchData([String? url]) async {
     if (!mounted) return; // ตรวจสอบว่าตัว component ยังถูก mount อยู่หรือไม่
 
-    if (mounted) {setState(() {
-      isLoading = true;
-    });}
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
 
     final String requestUrl = url ??
         'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}';
@@ -169,35 +144,41 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
 
         if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
 
-        if (mounted) {setState(() {
-          if (parsedResponse is Map && parsedResponse.containsKey('items')) {
-            dataCard = parsedResponse['items'];
-          } else {
-            dataCard = [];
-          }
+        if (mounted) {
+          setState(() {
+            if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+              dataCard = parsedResponse['items'];
+            } else {
+              dataCard = [];
+            }
 
-          List<dynamic> links = parsedResponse['links'] ?? [];
-          next = getLink(links, 'next');
-          previous = getLink(links, 'prev');
-          isLoading = false;
-        });}
+            List<dynamic> links = parsedResponse['links'] ?? [];
+            next = getLink(links, 'next');
+            previous = getLink(links, 'prev');
+            isLoading = false;
+          });
+        }
       } else {
         if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
 
         // Handle HTTP error responses
-        if (mounted) {setState(() {
-          isLoading = false;
-          errorMessage = 'Failed to load data: ${response.statusCode}';
-        });}
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+            errorMessage = 'Failed to load data: ${response.statusCode}';
+          });
+        }
       }
     } catch (e) {
       if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
 
       // Handle exceptions that may occur
-      if (mounted) {setState(() {
-        isLoading = false;
-        errorMessage = 'Error occurred: $e';
-      });}
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          errorMessage = 'Error occurred: $e';
+        });
+      }
     }
   }
 
@@ -209,19 +190,23 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
 
   void _loadNextPage() {
     if (next != null) {
-      if (mounted) {setState(() {
-        print('next $next');
-        isLoading = true;
-      });}
+      if (mounted) {
+        setState(() {
+          print('next $next');
+          isLoading = true;
+        });
+      }
       fetchData(next);
     }
   }
 
   void _loadPrevPage() {
     if (previous != null) {
-      if (mounted) {setState(() {
-        isLoading = true;
-      });}
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       fetchData(previous);
     }
   }
@@ -253,7 +238,9 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
         // print('Response body: ${response.body}');
       }
     } catch (e) {
-      if (mounted) {setState(() {});}
+      if (mounted) {
+        setState(() {});
+      }
       print('checkStatusCard ERROR IN Fetch Data : $e');
     }
   }
@@ -298,26 +285,28 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
         //
         print('Fetched data: $jsonDecode');
 
-        if (mounted) {setState(() {
-          pDocNoGetInHead = dataGetInHead['po_doc_no'] ?? '';
-          pDocTypeGetInHead = dataGetInHead['po_doc_type'] ?? '';
-          getInheadStpe(
-            dataGetInHead['po_doc_no'] ?? '',
-            dataGetInHead['po_doc_type'] ?? '',
-            dataGetInHead['po_status'],
-            dataGetInHead['po_message'],
-            goToStep,
-          );
+        if (mounted) {
+          setState(() {
+            pDocNoGetInHead = dataGetInHead['po_doc_no'] ?? '';
+            pDocTypeGetInHead = dataGetInHead['po_doc_type'] ?? '';
+            getInheadStpe(
+              dataGetInHead['po_doc_no'] ?? '',
+              dataGetInHead['po_doc_type'] ?? '',
+              dataGetInHead['po_status'],
+              dataGetInHead['po_message'],
+              goToStep,
+            );
 
-          print(
-              'po_doc_type : ${dataGetInHead['po_doc_type']} Type: ${dataGetInHead['po_doc_type'.runtimeType]}');
-          print(
-              'po_doc_no : ${dataGetInHead['po_doc_no']} Type: ${dataGetInHead['po_doc_no'.runtimeType]}');
-          print(
-              'po_status : ${dataGetInHead['po_status']} Type: ${dataGetInHead['po_status'.runtimeType]}');
-          print(
-              'po_message : ${dataGetInHead['po_message']} Type: ${dataGetInHead['po_message'.runtimeType]}');
-        });}
+            print(
+                'po_doc_type : ${dataGetInHead['po_doc_type']} Type: ${dataGetInHead['po_doc_type'.runtimeType]}');
+            print(
+                'po_doc_no : ${dataGetInHead['po_doc_no']} Type: ${dataGetInHead['po_doc_no'.runtimeType]}');
+            print(
+                'po_status : ${dataGetInHead['po_status']} Type: ${dataGetInHead['po_status'.runtimeType]}');
+            print(
+                'po_message : ${dataGetInHead['po_message']} Type: ${dataGetInHead['po_message'.runtimeType]}');
+          });
+        }
         // } else {
         //   print('No items found.');
         // }
@@ -326,26 +315,30 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
             'getInhead Failed to load data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      if (mounted) {setState(() {});}
+      if (mounted) {
+        setState(() {});
+      }
       print('getInhead ERROR IN Fetch Data : $e');
     }
   }
 
   void filterData() {
-    if (mounted) {setState(() {
-      displayedData = dataCard.where((item) {
-        final date = item['po_date'] ?? '';
-        if (widget.date.isEmpty) {
-          final matchesSearchQuery = date == date;
-          return matchesSearchQuery;
-        } else {
-          final matchesSearchQuery = date == widget.date;
-          return matchesSearchQuery;
-        }
-      }).toList();
-      print(
-          'displayedData : $displayedData Type : ${displayedData.runtimeType}');
-    });}
+    if (mounted) {
+      setState(() {
+        displayedData = dataCard.where((item) {
+          final date = item['po_date'] ?? '';
+          if (widget.date.isEmpty) {
+            final matchesSearchQuery = date == date;
+            return matchesSearchQuery;
+          } else {
+            final matchesSearchQuery = date == widget.date;
+            return matchesSearchQuery;
+          }
+        }).toList();
+        print(
+            'displayedData : $displayedData Type : ${displayedData.runtimeType}');
+      });
+    }
   }
 
   void getInheadStpe(String pDocNoGetInHead, String pDocTypeGetInHead,
@@ -384,53 +377,55 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
         final Map<String, dynamic> dataPDF = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
-        if (mounted) {setState(() {
-          V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
-          LIN_ID = dataPDF['LIN_ID'] ?? '';
-          OU_CODE = dataPDF['OU_CODE'] ?? '';
-          USER_ID = dataPDF['USER_ID'] ?? '';
-          PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
-          PROGRAM_NAME = dataPDF['PROGRAM_NAME'] ?? '';
-          CURRENT_DATE = dataPDF['CURRENT_DATE'] ?? '';
-          P_SESSION = dataPDF['P_SESSION'] ?? '';
+        if (mounted) {
+          setState(() {
+            V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
+            LIN_ID = dataPDF['LIN_ID'] ?? '';
+            OU_CODE = dataPDF['OU_CODE'] ?? '';
+            USER_ID = dataPDF['USER_ID'] ?? '';
+            PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
+            PROGRAM_NAME = dataPDF['PROGRAM_NAME'] ?? '';
+            CURRENT_DATE = dataPDF['CURRENT_DATE'] ?? '';
+            P_SESSION = dataPDF['P_SESSION'] ?? '';
 
-          S_DOC_TYPE = dataPDF['S_DOC_TYPE'] ?? '';
-          S_DOC_NO = dataPDF['S_DOC_NO'] ?? '';
-          E_DOC_TYPE = dataPDF['E_DOC_TYPE'] ?? '';
-          E_DOC_NO = dataPDF['E_DOC_NO'] ?? '';
-          FLAG = dataPDF['FLAG'] ?? '';
+            S_DOC_TYPE = dataPDF['S_DOC_TYPE'] ?? '';
+            S_DOC_NO = dataPDF['S_DOC_NO'] ?? '';
+            E_DOC_TYPE = dataPDF['E_DOC_TYPE'] ?? '';
+            E_DOC_NO = dataPDF['E_DOC_NO'] ?? '';
+            FLAG = dataPDF['FLAG'] ?? '';
 
-          LH_PAGE = dataPDF['LH_PAGE'] ?? '';
-          LH_DATE = dataPDF['LH_DATE'] ?? '';
-          LH_WARE = dataPDF['LH_WARE'] ?? '';
-          LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
-          LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
-          LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
-          LH_DOC_TYPE = dataPDF['LH_DOC_TYPE'] ?? '';
-          LH_PROGRAM_NAME = dataPDF['LH_PROGRAM_NAME'] ?? '';
-          LH_REF_NO1 = dataPDF['LH_REF_NO1'] ?? '';
-          LH_REF_NO2 = dataPDF['LH_REF_NO2'] ?? '';
+            LH_PAGE = dataPDF['LH_PAGE'] ?? '';
+            LH_DATE = dataPDF['LH_DATE'] ?? '';
+            LH_WARE = dataPDF['LH_WARE'] ?? '';
+            LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
+            LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
+            LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
+            LH_DOC_TYPE = dataPDF['LH_DOC_TYPE'] ?? '';
+            LH_PROGRAM_NAME = dataPDF['LH_PROGRAM_NAME'] ?? '';
+            LH_REF_NO1 = dataPDF['LH_REF_NO1'] ?? '';
+            LH_REF_NO2 = dataPDF['LH_REF_NO2'] ?? '';
 
-          LB_ITEM_CODE = dataPDF['LB_ITEM_CODE'] ?? '';
-          LB_ITEM_NAME = dataPDF['LB_ITEM_NAME'] ?? '';
-          LB_LOCATION = dataPDF['LB_LOCATION'] ?? '';
-          LB_UMS = dataPDF['LB_UMS'] ?? '';
-          LB_TRAN_QTY = dataPDF['LB_TRAN_QTY'] ?? '';
-          LB_TRAN_UCOST = dataPDF['LB_TRAN_UCOST'] ?? '';
-          LB_TRAN_AMT = dataPDF['LB_TRAN_AMT'] ?? '';
+            LB_ITEM_CODE = dataPDF['LB_ITEM_CODE'] ?? '';
+            LB_ITEM_NAME = dataPDF['LB_ITEM_NAME'] ?? '';
+            LB_LOCATION = dataPDF['LB_LOCATION'] ?? '';
+            LB_UMS = dataPDF['LB_UMS'] ?? '';
+            LB_TRAN_QTY = dataPDF['LB_TRAN_QTY'] ?? '';
+            LB_TRAN_UCOST = dataPDF['LB_TRAN_UCOST'] ?? '';
+            LB_TRAN_AMT = dataPDF['LB_TRAN_AMT'] ?? '';
 
-          LT_NOTE = dataPDF['LT_NOTE'] ?? '';
-          LT_TOTAL = dataPDF['LT_TOTAL'] ?? '';
-          LT_INPUT = dataPDF['LT_INPUT'] ?? '';
-          LT_RECEIVE = dataPDF['LT_RECEIVE'] ?? '';
-          LT_CHECK = dataPDF['LT_CHECK'] ?? '';
+            LT_NOTE = dataPDF['LT_NOTE'] ?? '';
+            LT_TOTAL = dataPDF['LT_TOTAL'] ?? '';
+            LT_INPUT = dataPDF['LT_INPUT'] ?? '';
+            LT_RECEIVE = dataPDF['LT_RECEIVE'] ?? '';
+            LT_CHECK = dataPDF['LT_CHECK'] ?? '';
 
-          LB_PALLET_NO = dataPDF['LB_PALLET_NO'] ?? '';
-          LB_PALLET_QTY = dataPDF['LB_PALLET_QTY'] ?? '';
-          LH_MO_DO_NO = dataPDF['LH_MO_DO_NO'] ?? '';
+            LB_PALLET_NO = dataPDF['LB_PALLET_NO'] ?? '';
+            LB_PALLET_QTY = dataPDF['LB_PALLET_QTY'] ?? '';
+            LH_MO_DO_NO = dataPDF['LH_MO_DO_NO'] ?? '';
 
-          _launchUrl(poDocNo);
-        });}
+            _launchUrl(poDocNo);
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
@@ -534,6 +529,11 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
         '&LH_MO_DO_NO=$LH_MO_DO_NO');
   }
 
+  void _scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0); // เลื่อนไปยังตำแหน่งเริ่มต้น (index 0)
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -542,7 +542,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)'),
+      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: isLoading
@@ -555,6 +555,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                     ),
                   )
                 : ListView.builder(
+                  controller: _scrollController,
                     itemCount: itemsPerPage + 1, // +1 for the buttons
                     itemBuilder: (context, index) {
                       if (index < itemsPerPage) {
@@ -737,19 +738,36 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                       } else {
                         // Render the buttons when index reaches itemsPerPage
                         return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ElevatedButton(
-                              onPressed:
-                                  previous != null ? _loadPrevPage : null,
-                              child: const Text('Previous'),
-                            ),
-                            ElevatedButton(
-                              onPressed: next != null ? _loadNextPage : null,
-                              child: const Text('Next'),
-                            ),
-                          ],
-                        );
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevatedButton(
+                                onPressed: currentPage > 0
+                                    ? () {
+                                        setState(() {
+                                          currentPage--;
+                                          _scrollToTop(); // เลื่อนไปยังจุดเริ่มต้นเมื่อกดย้อนกลับ
+                                        });
+                                      }
+                                    : null,
+                                child: const Text('Previous'),
+                              ),
+                              Text(
+                                'Page ${currentPage + 1} of $totalPages',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              ElevatedButton(
+                                onPressed: currentPage < totalPages - 1
+                                    ? () {
+                                        setState(() {
+                                          currentPage++;
+                                          _scrollToTop(); // เลื่อนไปยังจุดเริ่มต้นเมื่อกดถัดไป
+                                        });
+                                      }
+                                    : null,
+                                child: const Text('Next'),
+                              ),
+                            ],
+                          );
                       }
                     },
                   ),
@@ -774,11 +792,11 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
               Text('แจ้งเตือน'),
               Spacer(),
               IconButton(
-              icon: Icon(Icons.close, color: Colors.black), // ไอคอนปิด
-              onPressed: () {
-                Navigator.of(context).pop(); // ปิด popup
-              },
-            ),
+                icon: Icon(Icons.close, color: Colors.black), // ไอคอนปิด
+                onPressed: () {
+                  Navigator.of(context).pop(); // ปิด popup
+                },
+              ),
             ],
           ),
           content: Text(messageCard),

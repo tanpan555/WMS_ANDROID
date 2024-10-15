@@ -292,8 +292,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)',
-      // showExitWarning: true,
+      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false
       ),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer:CustomDrawer(),
@@ -539,7 +538,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
 

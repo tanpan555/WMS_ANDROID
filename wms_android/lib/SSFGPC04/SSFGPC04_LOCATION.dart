@@ -160,7 +160,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
   @override
 Widget build(BuildContext context) {
   return Scaffold(
-    appBar: const CustomAppBar(title: 'เลือกคลังสินค้า'),
+    appBar: CustomAppBar(title: 'เลือกคลังสินค้า', showExitWarning: false),
     backgroundColor: const Color.fromARGB(255, 17, 0, 56),
     body: Padding(
       padding: const EdgeInsets.all(16),

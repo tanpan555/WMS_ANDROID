@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import '../styles.dart';
 import 'SSFGPC04_WARE.dart';
 
+
 class SSFGPC04_MAIN extends StatefulWidget {
   const SSFGPC04_MAIN({
     Key? key,
@@ -33,6 +34,13 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
   final String sDateFormat = "dd-MM-yyyy";
 
   String? _dateError;
+  final dateRegExp =
+      RegExp(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$");
+
+  bool dateColorCheck = false;
+  bool monthColorCheck = false;
+  bool noDate = false;
+  bool chkDate = false;
 
   @override
   void initState() {
@@ -63,7 +71,7 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: const Color(0xFF17153B),
-        appBar: const CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ'),
+        appBar: CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: Form(
@@ -75,43 +83,74 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
                 children: [
                   const SizedBox(height: 16),
                   TextFormField(
-                    controller: _dateController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter
-                          .digitsOnly, // ยอมรับเฉพาะตัวเลข
-                      LengthLimitingTextInputFormatter(
-                          8), // จำกัดจำนวนตัวอักษรไม่เกิน 8 ตัว
-                      DateInputFormatter(), // กำหนดรูปแบบ __/__/____
-                    ],
-                    onTap: () {
-                      // อนุญาตให้ผู้ใช้กรอกวันที่เอง
-                      _dateController.selection = TextSelection(
-                        baseOffset: 0,
-                        extentOffset: _dateController.text.length,
-                      );
-                    },
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      labelText: 'ณ วันที่',
-                      labelStyle: TextStyle(color: Colors.black),
-                      hintStyle:
-                          const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.calendar_today,
-                            color: Color.fromARGB(255, 64, 64, 64)),
-                        onPressed: () => _selectDate(context),
-                      ),
-                      errorText: _dateError, // แสดงข้อผิดพลาดที่นี่
+                  controller: _dateController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
+                    LengthLimitingTextInputFormatter(
+                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 8 ตัว
+                    DateInputFormatter(), // กำหนดรูปแบบ DD/MM/YYYY
+                  ],
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelText: 'ณ วันที่',
+                    hintText: 'DD/MM/YYYY',
+                    hintStyle: const TextStyle(
+                      color: Colors.grey, // เปลี่ยนสี hint
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        _dateController.text = value;
-                      });
-                    },
+                    labelStyle: chkDate
+                        ? const TextStyle(
+                            color: Colors
+                                .red, // เปลี่ยนเป็นสีแดงเมื่อวันที่ไม่ถูกต้อง
+                          )
+                        : const TextStyle(
+                            color: Colors.black87, // สีปกติเมื่อวันที่ถูกต้อง
+                          ),
+                    suffixIcon: IconButton(
+                      icon: const Icon(
+                          Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
+                      onPressed: () async {
+                        // เปิด date picker เมื่อกดไอคอน
+                        _selectDate(context);
+                      },
+                    ),
                   ),
+                  onChanged: (value) {
+                    selectedDate = value;
+                    print('selectedDate : $selectedDate');
+
+                    setState(() {
+                      // ถ้าค่าว่างไม่ต้องแสดงอะไร
+                      if (selectedDate.isEmpty) {
+                        chkDate = false;
+                        return;
+                      }
+
+                      // ตรวจสอบรูปแบบวันที่
+                      RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                      if (!dateRegExp.hasMatch(selectedDate)) {
+                        chkDate =
+                            true; // ถ้ารูปแบบไม่ถูกต้องให้ตั้งค่าเป็น true
+                      } else {
+                        chkDate = false; // ถ้ารูปแบบถูกต้องให้ตั้งค่าเป็น false
+                      }
+                    });
+                  },
+                ),
+                chkDate == true || noDate == true
+                    ? const Padding(
+                        padding: EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12, // ขนาดตัวอักษร
+                          ),
+                        ))
+                    : const SizedBox.shrink(),
                   const SizedBox(height: 8),
                   TextField(
                     readOnly: true,
@@ -185,6 +224,10 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
 }
 
 class DateInputFormatter extends TextInputFormatter {
+  bool dateColorCheck = false;
+  bool monthColorCheck = false;
+  bool noDate = false; // ตัวแปรเพื่อตรวจสอบว่ามีวันที่ไม่ถูกต้อง
+
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
@@ -193,12 +236,94 @@ class DateInputFormatter extends TextInputFormatter {
     // กรองเฉพาะตัวเลข
     text = text.replaceAll(RegExp(r'[^0-9]'), '');
 
+    String day = '';
+    String month = '';
+    String year = '';
+
+    // เก็บตำแหน่งของเคอร์เซอร์ปัจจุบันก่อนจัดรูปแบบข้อความ
+    int cursorPosition = newValue.selection.baseOffset;
+    int additionalOffset = 0;
+
+    // แยกค่า day, month, year
+    if (text.length >= 2) {
+      day = text.substring(0, 2);
+    }
+
+    if (text.length >= 4) {
+      month = text.substring(2, 4);
+    }
+
+    if (text.length > 4) {
+      year = text.substring(4);
+    }
+
+    dateColorCheck = false;
+    monthColorCheck = false;
+
+    // ตรวจสอบและตั้งค่า noDate ตามกรณีที่ต่างกัน
+    if (text.length == 1) {
+      noDate = true;
+    } else if (text.length == 2) {
+      noDate = true;
+    } else if (text.length == 3) {
+      noDate = true;
+    } else if (text.length == 4) {
+      noDate = true;
+    } else if (text.length == 5) {
+      noDate = true;
+    } else if (text.length == 6) {
+      noDate = true;
+    } else if (text.length == 7) {
+      noDate = true;
+    } else if (text.length == 8) {
+      noDate = false;
+    } else {
+      noDate = false;
+    }
+
+    // ตรวจสอบว่าค่าใน day ไม่เกิน 31
+    if (day.isNotEmpty && !noDate) {
+      int dayInt = int.parse(day);
+      if (dayInt < 1 || dayInt > 31) {
+        dateColorCheck = true;
+        noDate = true;
+      }
+    }
+
+    // ตรวจสอบว่าค่าใน month ไม่เกิน 12
+    if (month.isNotEmpty && !noDate) {
+      int monthInt = int.parse(month);
+      if (monthInt < 1 || monthInt > 12) {
+        monthColorCheck = true;
+        noDate = true;
+      }
+    }
+
+    // ตรวจสอบวันที่เฉพาะเมื่อพิมพ์ปีครบถ้วน
+    if (day.isNotEmpty && month.isNotEmpty && year.length == 4 && !noDate) {
+      if (!isValidDate(day, month, year)) {
+        noDate = true;
+      }
+    }
+
     // จัดรูปแบบเป็น DD/MM/YYYY
     if (text.length > 2 && text.length <= 4) {
-      text = '${text.substring(0, 2)}/${text.substring(2)}';
+      text = text.substring(0, 2) + '/' + text.substring(2);
+      if (cursorPosition > 2) {
+        additionalOffset++;
+      }
     } else if (text.length > 4 && text.length <= 8) {
-      text =
-          '${text.substring(0, 2)}/${text.substring(2, 4)}/${text.substring(4)}';
+      text = text.substring(0, 2) +
+          '/' +
+          text.substring(2, 4) +
+          '/' +
+          text.substring(4);
+      if (cursorPosition > 2) {
+        additionalOffset++;
+      }
+      if (cursorPosition > 4) {
+        additionalOffset++;
+      }
     }
 
     // จำกัดความยาวไม่เกิน 10 ตัว (รวม /)
@@ -206,9 +331,73 @@ class DateInputFormatter extends TextInputFormatter {
       text = text.substring(0, 10);
     }
 
+    // คำนวณตำแหน่งของเคอร์เซอร์หลังจากจัดรูปแบบ
+    cursorPosition += additionalOffset;
+
+    if (cursorPosition > text.length) {
+      cursorPosition = text.length;
+    }
+
     return TextEditingValue(
       text: text,
-      selection: TextSelection.collapsed(offset: text.length),
+      selection: TextSelection.collapsed(offset: cursorPosition),
     );
+  }
+
+  // ฟังก์ชันตรวจสอบว่าวันที่ถูกต้องหรือไม่
+  bool isValidDate(String day, String month, String year) {
+    int dayInt = int.parse(day);
+    int monthInt = int.parse(month);
+    int yearInt = int.parse(year);
+
+    // ตรวจสอบเดือนที่เกินขอบเขต
+    if (monthInt < 1 || monthInt > 12) {
+      monthColorCheck = false;
+      return false;
+    }
+
+    // ตรวจสอบจำนวนวันในแต่ละเดือน
+    List<int> daysInMonth = [
+      31,
+      isLeapYear(yearInt) ? 29 : 28, // ตรวจสอบปีอธิกสุรทินเมื่อปีครบถ้วน
+      31,
+      30,
+      31,
+      30,
+      31,
+      31,
+      30,
+      31,
+      30,
+      31
+    ];
+    int maxDays = daysInMonth[monthInt - 1];
+
+    // ตรวจสอบว่าค่าวันไม่เกินจำนวนวันที่ในเดือนนั้น ๆ
+    if (dayInt < 1 || dayInt > maxDays) {
+      dateColorCheck = false;
+      return false;
+    }
+
+    dateColorCheck = true;
+    monthColorCheck = true;
+    return true;
+  }
+
+  // ฟังก์ชันตรวจสอบปีอธิกสุรทิน (leap year)
+  bool isLeapYear(int year) {
+    if (year % 4 == 0) {
+      if (year % 100 == 0) {
+        if (year % 400 == 0) {
+          return true; // ปีที่หาร 400 ลงตัวเป็นปีอธิกสุรทิน
+        } else {
+          return false; // ปีที่หาร 100 ลงตัวแต่หาร 400 ไม่ลงตัวไม่ใช่ปีอธิกสุรทิน
+        }
+      } else {
+        return true; // ปีที่หาร 4 ลงตัวแต่หาร 100 ไม่ลงตัวเป็นปีอธิกสุรทิน
+      }
+    } else {
+      return false; // ปีที่หาร 4 ไม่ลงตัวไม่ใช่ปีอธิกสุรทิน
+    }
   }
 }
