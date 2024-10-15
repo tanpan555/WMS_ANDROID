@@ -122,7 +122,6 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     );
   }
 
-
   Future<void> fetchData([String? url]) async {
     if (!mounted) return; // ตรวจสอบว่าตัว component ยังถูก mount อยู่หรือไม่
 
@@ -263,11 +262,6 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     }
   }
 
-  // String? poStatus;
-  // String? poMessage;
-  // String? po_doc_no;
-  // String? po_doc_type;
-
   Future<void> getInhead(
       String poDocNo, String poDocType, String goToStep) async {
     print('po_doc_no $poDocNo Type: ${poDocNo.runtimeType}');
@@ -307,9 +301,6 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                 'po_message : ${dataGetInHead['po_message']} Type: ${dataGetInHead['po_message'.runtimeType]}');
           });
         }
-        // } else {
-        //   print('No items found.');
-        // }
       } else {
         print(
             'getInhead Failed to load data. Status code: ${response.statusCode}');
@@ -353,7 +344,6 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
               context,
               SSFGDT04_FORM(
                 pWareCode: widget.pErpOuCode,
-                // pAttr1: widget.pAttr1,
                 po_doc_no: pDocNoGetInHead,
                 po_doc_type: pDocTypeGetInHead,
               ));
@@ -542,7 +532,8 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
+      appBar:
+          CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: isLoading
@@ -555,7 +546,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                     ),
                   )
                 : ListView.builder(
-                  controller: _scrollController,
+                    controller: _scrollController,
                     itemCount: itemsPerPage + 1, // +1 for the buttons
                     itemBuilder: (context, index) {
                       if (index < itemsPerPage) {
@@ -738,36 +729,38 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                       } else {
                         // Render the buttons when index reaches itemsPerPage
                         return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ElevatedButton(
-                                onPressed: currentPage > 0
-                                    ? () {
-                                        setState(() {
-                                          currentPage--;
-                                          _scrollToTop(); // เลื่อนไปยังจุดเริ่มต้นเมื่อกดย้อนกลับ
-                                        });
-                                      }
-                                    : null,
-                                child: const Text('Previous'),
-                              ),
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                              onPressed: currentPage > 0
+                                  ? () {
+                                      setState(() {
+                                        currentPage--;
+                                        _scrollToTop(); // เลื่อนไปยังจุดเริ่มต้นเมื่อกดย้อนกลับ
+                                      });
+                                    }
+                                  : null,
+                              child: const Text('Previous'),
+                            ),
+                            // ตรวจสอบจำนวน card ก่อนแสดงข้อความ
+                            if (dataCard.length >= 15)
                               Text(
                                 'Page ${currentPage + 1} of $totalPages',
                                 style: const TextStyle(color: Colors.white),
                               ),
-                              ElevatedButton(
-                                onPressed: currentPage < totalPages - 1
-                                    ? () {
-                                        setState(() {
-                                          currentPage++;
-                                          _scrollToTop(); // เลื่อนไปยังจุดเริ่มต้นเมื่อกดถัดไป
-                                        });
-                                      }
-                                    : null,
-                                child: const Text('Next'),
-                              ),
-                            ],
-                          );
+                            ElevatedButton(
+                              onPressed: currentPage < totalPages - 1
+                                  ? () {
+                                      setState(() {
+                                        currentPage++;
+                                        _scrollToTop(); // เลื่อนไปยังจุดเริ่มต้นเมื่อกดถัดไป
+                                      });
+                                    }
+                                  : null,
+                              child: const Text('Next'),
+                            ),
+                          ],
+                        );
                       }
                     },
                   ),
