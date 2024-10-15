@@ -43,7 +43,7 @@ class _SSFGDT17_MENUState extends State<SSFGDT17_MENU> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: const CustomAppBar(title: 'Move Locator', showExitWarning: false),
+      appBar: CustomAppBar(title: 'Move Locator', showExitWarning: false),
       body: OrientationBuilder(
         builder: (context, orientation) {
           final isPortrait = orientation == Orientation.portrait;
