@@ -68,6 +68,29 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _CcodeController = TextEditingController();
 
+  bool check = false;
+  void checkIfHasData() {
+    setState(() {
+      if (poNoController.text.isNotEmpty ||
+          receiveNoController.text.isNotEmpty ||
+          erpReceiveNoController.text.isNotEmpty ||
+          pkWareCodeController.text.isNotEmpty ||
+          poTypeCodeController.text.isNotEmpty ||
+          receiveDateController.text.isNotEmpty ||
+          wareCodeController.text.isNotEmpty ||
+          _searchController.text.isNotEmpty ||
+          crByController.text.isNotEmpty ||
+          invoiceNoController.text.isNotEmpty ||
+          _CcodeController.text.isNotEmpty) {
+        check = true;
+        print(check);
+      } else {
+        check = false;
+        print(check);
+      }
+    });
+  }
+
   final DateFormat displayFormat = DateFormat("dd/MM/yyyy");
   final DateFormat apiFormat = DateFormat("MM/dd/yyyy");
 
@@ -778,7 +801,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(23, 21, 59, 1),
-      appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
+      appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ', showExitWarning: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
