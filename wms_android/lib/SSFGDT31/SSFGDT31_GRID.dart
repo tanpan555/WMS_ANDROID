@@ -740,7 +740,8 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 4, vertical: 2),
-                                      color: Colors.cyan[100],
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
                                       child: Text(
                                           '${item['nb_item_name'] ?? ''}',
                                           style:
@@ -760,7 +761,8 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 4, vertical: 2),
-                                      color: Colors.amber[100],
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
                                       child: Text(
                                           '${item['nb_pack_name'] ?? ''}',
                                           style:

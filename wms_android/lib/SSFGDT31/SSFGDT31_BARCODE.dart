@@ -231,6 +231,20 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
 
             print('poStatus : $poStatus Type : ${poStatus.runtimeType}');
             print('poMessage : $poMessage Type : ${poMessage.runtimeType}');
+
+            BARCODE.clear();
+            LOC_IN.clear();
+            ITEM_CODE.clear();
+            LOT_NUMBER.clear();
+            Quantity.clear();
+            CUR_LOC.clear();
+            LOT_QTY.clear();
+            LOT_UNIT.clear();
+            P_LOC.clear();
+            Cur_loc_code.clear();
+
+            // Set focus on the barcode text field
+            FocusScope.of(context).requestFocus(barcodeFocusNode);
           });
         }
       } else {
@@ -241,6 +255,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
     }
   }
 
+  final barcodeFocusNode = FocusNode();
   String? po_loc_status;
   String? po__loc_message;
   String? ret;
@@ -650,6 +665,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                     BARCODE,
                     'Barcode',
                     readOnly: false,
+                    focusNode: barcodeFocusNode,
                     onSubmitted: (value) {
                       Barcode = value;
                       print('BARCODE changed: $Barcode');
@@ -824,12 +840,18 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
     );
   }
 
-  Widget _buildBarcodeTextField(TextEditingController controller, String label,
-      {bool readOnly = false, void Function(String)? onSubmitted}) {
+  Widget _buildBarcodeTextField(
+    TextEditingController controller,
+    String label, {
+    bool readOnly = false,
+    FocusNode? focusNode, // Add this parameter
+    void Function(String)? onSubmitted,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
         controller: controller,
+        focusNode: focusNode, // Add this line
         style: TextStyle(color: Colors.black),
         readOnly: readOnly,
         decoration: InputDecoration(
@@ -843,43 +865,43 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
       ),
     );
   }
+}
 
-  Widget _buildQuantityTextField(TextEditingController controller, String label,
-      {bool readOnly = false, void Function(String)? onSubmitted}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: TextField(
-        controller: controller,
-        style: TextStyle(color: Colors.black),
-        readOnly: readOnly,
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: TextStyle(color: Colors.black),
-          filled: true,
-          fillColor: readOnly ? Colors.grey[300] : Colors.white,
-          border: InputBorder.none,
-        ),
-        onSubmitted: onSubmitted,
+Widget _buildQuantityTextField(TextEditingController controller, String label,
+    {bool readOnly = false, void Function(String)? onSubmitted}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: TextField(
+      controller: controller,
+      style: TextStyle(color: Colors.black),
+      readOnly: readOnly,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: Colors.black),
+        filled: true,
+        fillColor: readOnly ? Colors.grey[300] : Colors.white,
+        border: InputBorder.none,
       ),
-    );
-  }
+      onSubmitted: onSubmitted,
+    ),
+  );
+}
 
-  Widget _buildTextField(TextEditingController controller, String label,
-      {bool readOnly = false}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: TextField(
-        controller: controller,
-        style: TextStyle(color: Colors.black),
-        readOnly: readOnly,
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: TextStyle(color: Colors.black),
-          filled: true,
-          fillColor: readOnly ? Colors.grey[300] : Colors.white,
-          border: InputBorder.none,
-        ),
+Widget _buildTextField(TextEditingController controller, String label,
+    {bool readOnly = false}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: TextField(
+      controller: controller,
+      style: TextStyle(color: Colors.black),
+      readOnly: readOnly,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: Colors.black),
+        filled: true,
+        fillColor: readOnly ? Colors.grey[300] : Colors.white,
+        border: InputBorder.none,
       ),
-    );
-  }
+    ),
+  );
 }
