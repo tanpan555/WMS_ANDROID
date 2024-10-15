@@ -1070,26 +1070,26 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(
-          title: 'รายงานผลการตรวจนับสินค้า', showExitWarning: checkUpdateData
+          title: 'รายงานผลการตรวจนับสินค้า',
+          showExitWarning:
+              // checkUpdateData
 
-          // returnLovDate.isNotEmpty ||
-          //         returnLovDocNo.isNotEmpty ||
-          //         returnStartWareCode.isNotEmpty ||
-          //         returnEndWareCode.isNotEmpty ||
-          //         returnStartLoc.isNotEmpty ||
-          //         returnEndLoc.isNotEmpty ||
-          //         returnStartGroup.isNotEmpty ||
-          //         returnEndGroup.isNotEmpty ||
-          //         returnStartCategory.isNotEmpty ||
-          //         returnEndCategory.isNotEmpty ||
-          //         returnStartSubCategory.isNotEmpty ||
-          //         returnEndSubCategory.isNotEmpty ||
-          //         returnStartItem.isNotEmpty ||
-          //         returnEndItem.isNotEmpty
-          //     ? true
-          //     : false
-
-          ),
+              returnLovDate.isEmpty &&
+                      returnLovDocNo.isEmpty &&
+                      returnStartWareCode.isEmpty &&
+                      returnEndWareCode.isEmpty &&
+                      returnStartLoc.isEmpty &&
+                      returnEndLoc.isEmpty &&
+                      returnStartGroup.isEmpty &&
+                      returnEndGroup.isEmpty &&
+                      returnStartCategory.isEmpty &&
+                      returnEndCategory.isEmpty &&
+                      returnStartSubCategory.isEmpty &&
+                      returnEndSubCategory.isEmpty &&
+                      returnStartItem.isEmpty &&
+                      returnEndItem.isEmpty
+                  ? false
+                  : true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: isLoading
@@ -1724,9 +1724,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       isLoading = false;
                                     }
 
-                                    if (dataCheck != '') {
-                                      checkUpdateData = true;
-                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
                                     // -----------------------------------------
                                     print(
                                         'dateController New: $dateController Type : ${dateController.runtimeType}');
@@ -1848,15 +1848,15 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
+                                    // String dataCheck = returnCode;
                                     returnLovDocNo = returnCode;
                                     displayLovDocNo = doc;
                                     docNoController.text =
                                         displayLovDocNo.toString();
                                     // -----------------------------------------
-                                    if (dataCheck != '') {
-                                      checkUpdateData = true;
-                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
                                     print(
                                         'docNoController New: $docNoController Type : ${docNoController.runtimeType}');
                                     print(
@@ -1975,7 +1975,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
+                                    // String dataCheck = returnCode;
                                     returnStartWareCode = returnCode;
                                     displayStartWareCode = doc;
                                     startWareCodeController.text =
@@ -1996,9 +1996,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       isLoading = false;
                                     }
 
-                                    if (dataCheck != '') {
-                                      checkUpdateData = true;
-                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
                                     // -----------------------------------------
                                     print(
                                         'startWareCodeController New: $startWareCodeController Type : ${startWareCodeController.runtimeType}');
@@ -2118,7 +2118,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
+                                    // String dataCheck = returnCode;
                                     returnEndWareCode = returnCode;
                                     displayEndWareCode = doc;
                                     endWareCodeController.text =
@@ -2134,9 +2134,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endLocController.clear();
                                       isLoading = false;
                                     }
-                                    if (dataCheck != '') {
-                                      checkUpdateData = true;
-                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
                                     // -----------------------------------------
                                     print(
                                         'endWareCodeController New: $endWareCodeController Type : ${endWareCodeController.runtimeType}');
@@ -2257,7 +2257,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
+                                    // String dataCheck = returnCode;
                                     returnStartLoc = returnCode;
                                     displayStartLoc = doc;
                                     startLocController.text =
@@ -2269,9 +2269,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endLocController.clear();
                                       isLoading = false;
                                     }
-                                    if (dataCheck != '') {
-                                      checkUpdateData = true;
-                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
                                     // -----------------------------------------
                                     print(
                                         'startLocController New: $startLocController Type : ${startLocController.runtimeType}');
@@ -2391,15 +2391,15 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
+                                    // String dataCheck = returnCode;
                                     returnEndLoc = returnCode;
                                     displayEndLoc = doc;
                                     endLocController.text =
                                         displayEndLoc.toString();
                                     // -----------------------------------------
-                                    if (dataCheck != '') {
-                                      checkUpdateData = true;
-                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
                                     print(
                                         'endLocController New: $endLocController Type : ${endLocController.runtimeType}');
                                     print(
@@ -2553,9 +2553,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endItemController.clear();
                                       isLoading = false;
                                     }
-                                    if (dataCheck != '') {
-                                      checkUpdateData = true;
-                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
                                     // -----------------------------------------
                                     print(
                                         'startGroupController New: $startGroupController Type : ${startGroupController.runtimeType}');
@@ -2706,9 +2706,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endItemController.clear();
                                       isLoading = false;
                                     }
-                                    if (dataCheck != '') {
-                                      checkUpdateData = true;
-                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
                                     // -----------------------------------------
                                     print(
                                         'endGroupController New: $endGroupController Type : ${endGroupController.runtimeType}');
@@ -2858,9 +2858,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endItemController.clear();
                                       isLoading = false;
                                     }
-                                    if (dataCheck != '') {
-                                      checkUpdateData = true;
-                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
                                     // -----------------------------------------
                                     print(
                                         'endGroupController New: $endGroupController Type : ${endGroupController.runtimeType}');
@@ -3006,9 +3006,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endItemController.clear();
                                       isLoading = false;
                                     }
-                                    if (dataCheck != '') {
-                                      checkUpdateData = true;
-                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
                                     // -----------------------------------------
                                     print(
                                         'endCategoryController New: $endCategoryController Type : ${endCategoryController.runtimeType}');
@@ -3129,7 +3129,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
+                                    // String dataCheck = returnCode;
                                     returnStartSubCategory = returnCode;
                                     displayStartSubCategory = doc;
                                     startSubCategoryController.text =
@@ -3149,9 +3149,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endItemController.clear();
                                       isLoading = false;
                                     }
-                                    if (dataCheck != '') {
-                                      checkUpdateData = true;
-                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
                                     // -----------------------------------------
                                     print(
                                         'startSubCategoryController New: $startSubCategoryController Type : ${startSubCategoryController.runtimeType}');
@@ -3272,7 +3272,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
+                                    // String dataCheck = returnCode;
                                     returnEndSubCategory = returnCode;
                                     displayEndSubCategory = doc;
                                     endSubCategoryController.text =
@@ -3288,9 +3288,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endItemController.clear();
                                       isLoading = false;
                                     }
-                                    if (dataCheck != '') {
-                                      checkUpdateData = true;
-                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
                                     // -----------------------------------------
                                     print(
                                         'endSubCategoryController New: $endSubCategoryController Type : ${endSubCategoryController.runtimeType}');
@@ -3409,7 +3409,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
+                                    // String dataCheck = returnCode;
                                     returnStartItem = returnCode;
                                     displayStartItem = doc;
                                     startItemController.text =
@@ -3421,9 +3421,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endItemController.clear();
                                       isLoading = false;
                                     }
-                                    if (dataCheck != '') {
-                                      checkUpdateData = true;
-                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
                                     // -----------------------------------------
                                     print(
                                         'startItemController New: $startItemController Type : ${startItemController.runtimeType}');
@@ -3541,14 +3541,14 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
+                                    // String dataCheck = returnCode;
                                     returnEndItem = returnCode;
                                     displayEndItem = doc;
                                     endItemController.text =
                                         displayEndItem.toString();
-                                    if (dataCheck != '') {
-                                      checkUpdateData = true;
-                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
                                     // -----------------------------------------
                                     print(
                                         'endItemController New: $endItemController Type : ${endItemController.runtimeType}');
