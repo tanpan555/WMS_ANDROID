@@ -973,7 +973,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                     Row(
                       children: [
                         Expanded(
-                          flex: 2,
+                          flex: 3,
                           child: GestureDetector(
                             child: AbsorbPointer(
                               child: TextFormField(
@@ -1046,14 +1046,18 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                         ElevatedButton(
                           style: AppStyles.ConfirmChecRecievekButtonStyle(),
                           onPressed: () async {
-                            int updatedPackQty =
-                                int.tryParse(packQtyController.text) ?? packQty;
+                            int updatedPackQty = int.tryParse(packQtyController
+                                    .text
+                                    .replaceAll(',', '')) ??
+                                packQty;
 
                             Navigator.of(context).pop(true);
                             await updatePackQty(
                                 updatedPackQty, itemCode, packCode, rowID);
                             await fetchData();
                             setState(() {});
+                            print('updatedPackQty : $updatedPackQty');
+                            print('packQtyController : $packQtyController');
                           },
                           child: Image.asset(
                             'assets/images/check-mark.png',
@@ -1146,7 +1150,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      'คุณต้องการออกจากหน้านี้โดยไม่อบันทึกหรือไม่',
+                      'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่',
                       style: const TextStyle(color: Colors.black),
                     ),
                     const SizedBox(height: 10),

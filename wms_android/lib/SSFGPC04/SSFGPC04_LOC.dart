@@ -85,7 +85,8 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
     final totalPages = (widget.selectedItems.length / itemsPerPage).ceil();
     final currentPageItems = getCurrentPageItems();
     return Scaffold(
-      appBar: CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
+      appBar:
+          CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -187,6 +188,7 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                           );
                         } else {
                           // แสดงปุ่มถัดไปและย้อนกลับในท้ายรายการ
+                          // แสดงปุ่มถัดไปและย้อนกลับในท้ายรายการ
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -201,10 +203,13 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                                     : null,
                                 child: const Text('Previous'),
                               ),
-                              Text(
-                                'Page ${currentPage + 1} of $totalPages',
-                                style: const TextStyle(color: Colors.white),
-                              ),
+                              // ตรวจสอบว่าจำนวน Card ใน currentPageItems ถึง 15 หรือไม่
+                              if (currentPageItems.length == itemsPerPage) ...[
+                                Text(
+                                  'Page ${currentPage + 1} of $totalPages',
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ],
                               ElevatedButton(
                                 onPressed: currentPage < totalPages - 1
                                     ? () {

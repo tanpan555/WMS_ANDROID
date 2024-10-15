@@ -41,7 +41,6 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
     'ยืนยันการรับ',
     'ยกเลิก',
   ];
-  String? _dateError;
   final dateRegExp =
       RegExp(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$");
 
@@ -260,12 +259,13 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   ),
                   onChanged: (value) {
                     setState(() {
-                      // Normalize the value to lowercase to handle case-insensitive search
-                      // Keep Thai characters as they are
-                      pSoNo = value.toLowerCase();
+                      // Update pSoNo directly with user input without converting it
+                      // pSoNo = value;
+                      pSoNo = value.toUpperCase();
                     });
                   },
                 ),
+
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _dateController,

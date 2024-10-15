@@ -91,7 +91,8 @@ class _SSFGPC04_CARDState extends State<SSFGPC04_CARD> {
     final currentPageItems =
         getCurrentPageItems(); // ดึงรายการของหน้าในปัจจุบัน
     return Scaffold(
-      appBar: CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
+      appBar:
+          CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -206,10 +207,13 @@ class _SSFGPC04_CARDState extends State<SSFGPC04_CARD> {
                                     : null,
                                 child: const Text('Previous'),
                               ),
-                              Text(
-                                'Page ${currentPage + 1} of $totalPages',
-                                style: const TextStyle(color: Colors.white),
-                              ),
+                              // ตรวจสอบว่าจำนวน Card ใน currentPageItems ถึง 15 หรือไม่
+                              if (currentPageItems.length == itemsPerPage) ...[
+                                Text(
+                                  'Page ${currentPage + 1} of $totalPages',
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ],
                               ElevatedButton(
                                 onPressed: currentPage < totalPages - 1
                                     ? () {
