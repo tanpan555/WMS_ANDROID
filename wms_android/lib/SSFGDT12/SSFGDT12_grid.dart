@@ -1150,7 +1150,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     Row(
                       children: [
                         Expanded(
-                          flex: 2,
+                          flex: 3,
                           child: GestureDetector(
                             child: AbsorbPointer(
                               child: TextFormField(

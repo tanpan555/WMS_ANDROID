@@ -973,7 +973,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                     Row(
                       children: [
                         Expanded(
-                          flex: 2,
+                          flex: 3,
                           child: GestureDetector(
                             child: AbsorbPointer(
                               child: TextFormField(
