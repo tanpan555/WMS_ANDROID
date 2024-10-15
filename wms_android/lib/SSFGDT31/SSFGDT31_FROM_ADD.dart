@@ -1463,7 +1463,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                       child: Builder(
                         builder: (context) {
                           // Filter statusItems based on the search query
-                          final filteredItems = statusItems.where((item) {
+                          final filteredItems = REF_NOItems.where((item) {
                             final docNo = item['doc_no']?.toLowerCase() ?? '';
                             final searchQuery =
                                 _searchController3.text.toLowerCase();
