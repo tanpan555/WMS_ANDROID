@@ -352,64 +352,65 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     ),
                     const SizedBox(width: 20),
                     ElevatedButton(
-                      onPressed: () {
-                        if (noDate != true && chkDate != true) {
-                          if (selectedDate.isNotEmpty) {
-                            RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                            if (!dateRegExp.hasMatch(selectedDate)) {
-                              setState(() {
-                                chkDate = true;
-                              });
-                            } else if (selectedDate != '') {
-                              DateTime parsedDate =
-                                  DateFormat('dd/MM/yyyy').parse(selectedDate);
-                              String formattedDate =
-                                  DateFormat('dd-MM-yyyy').format(parsedDate);
+  onPressed: () {
+    if (noDate != true && chkDate != true) {
+      // ตรวจสอบว่าค่า selectedDate ว่างหรือเป็น null
+      if (selectedDate.isNotEmpty && selectedDate != 'null') {
+        RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+        if (!dateRegExp.hasMatch(selectedDate)) {
+          setState(() {
+            chkDate = true;
+          });
+        } else {
+          DateTime parsedDate = DateFormat('dd/MM/yyyy').parse(selectedDate);
+          String formattedDate = DateFormat('dd-MM-yyyy').format(parsedDate);
 
-                              setState(() {
-                                selectedDate = formattedDate;
-                              });
+          setState(() {
+            selectedDate = formattedDate;
+          });
 
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SSFGDT04_CARD(
-                                          pErpOuCode: widget.pErpOuCode,
-                                          pWareCode: widget.pWareCode,
-                                          pAppUser: appUser,
-                                          pFlag: pFlag,
-                                          soNo: pSoNo.isEmpty ? 'null' : pSoNo,
-                                          date: formattedDate == ''
-                                              ? 'null'
-                                              : formattedDate,
-                                          status: status,
-                                        )),
-                              ).then((value) async {});
-                            }
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SSFGDT04_CARD(
-                                        pErpOuCode: widget.pErpOuCode,
-                                        pWareCode: widget.pWareCode,
-                                        pAppUser: appUser,
-                                        pFlag: pFlag,
-                                        soNo: pSoNo.isEmpty ? 'null' : pSoNo,
-                                        date: 'null',
-                                        status: status,
-                                      )),
-                            ).then((value) async {});
-                          }
-                        }
-                      },
-                      style: AppStyles.SearchButtonStyle(),
-                      child: Image.asset(
-                        'assets/images/search_color.png', // ใส่ภาพจากไฟล์ asset
-                        width: 50, // กำหนดขนาดภาพ
-                        height: 25,
-                      ),
-                    ),
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SSFGDT04_CARD(
+                pErpOuCode: widget.pErpOuCode,
+                pWareCode: widget.pWareCode,
+                pAppUser: appUser,
+                pFlag: pFlag,
+                soNo: pSoNo.isEmpty ? 'null' : pSoNo,
+                date: formattedDate.isEmpty ? 'null' : formattedDate,  // เช็คค่าของ selectedDate
+                status: status,
+              ),
+            ),
+          );
+        }
+      } else {
+        // ถ้าไม่มีการกรอกวันที่ ส่งค่า 'null'
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SSFGDT04_CARD(
+              pErpOuCode: widget.pErpOuCode,
+              pWareCode: widget.pWareCode,
+              pAppUser: appUser,
+              pFlag: pFlag,
+              soNo: pSoNo.isEmpty ? 'null' : pSoNo,
+              date: 'null',  // ส่งค่า 'null' เมื่อ selectedDate เป็นค่าว่างหรือ null
+              status: status,
+            ),
+          ),
+        );
+      }
+    }
+  },
+  style: AppStyles.SearchButtonStyle(),
+  child: Image.asset(
+    'assets/images/search_color.png',
+    width: 50,
+    height: 25,
+  ),
+),
+
                   ],
                 ),
               ],
