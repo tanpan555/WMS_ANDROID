@@ -420,16 +420,16 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                     ),
                   ),
                 ),
-                // Positioned(
-                //   top: 0,
-                //   right: 0,
-                //   child: IconButton(
-                //     icon: Icon(Icons.close),
-                //     onPressed: () {
-                //       Navigator.of(context).pop(); // Close the dialog
-                //     },
-                //   ),
-                // ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                  ),
+                ),
               ],
             ),
             contentPadding:
