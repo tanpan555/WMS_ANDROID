@@ -358,7 +358,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: const CustomAppBar(title: 'Move Locator', showExitWarning: true),
+      appBar: CustomAppBar(title: 'Move Locator', showExitWarning: true),
       body: Column(
         children: [
           const SizedBox(height: 8.0),

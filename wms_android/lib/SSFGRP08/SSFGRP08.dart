@@ -918,7 +918,8 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'รายงานเตรียมการตรวจนับ'),
+      appBar:
+          CustomAppBar(title: 'รายงานเตรียมการตรวจนับ', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(

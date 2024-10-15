@@ -626,8 +626,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: const CustomAppBar(
-          title: 'รับจากการสั่งซื้อ', showExitWarning: false),
+      appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ', showExitWarning: false),
       body: OrientationBuilder(
         builder: (context, orientation) {
           final isPortrait = orientation == Orientation.portrait;
