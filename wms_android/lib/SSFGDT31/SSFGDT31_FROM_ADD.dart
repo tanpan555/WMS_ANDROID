@@ -1552,7 +1552,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         },
         child: InputDecorator(
           decoration: InputDecoration(
-            labelText: "ประเภทเอกสาร",
+            labelText: "เลขที่เอกสารอ้างอิง",
             hintStyle: TextStyle(fontSize: 12.0),
             filled: true,
             fillColor: Colors.white,
