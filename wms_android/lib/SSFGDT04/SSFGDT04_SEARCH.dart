@@ -96,6 +96,10 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
         setState(() {
           _dateController.text = formattedDate;
           selectedDate = _dateController.text;
+
+          // Reset error flags since date is selected from the picker
+          chkDate = false;
+          noDate = false;
         });
       }
     }
@@ -215,7 +219,8 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
+      appBar:
+          CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       body: SingleChildScrollView(
         // padding: const EdgeInsets.all(10),
         child: Form(
@@ -266,10 +271,11 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   controller: _dateController,
                   keyboardType: TextInputType.number,
                   inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
+                    FilteringTextInputFormatter
+                        .digitsOnly, // Accept only numbers
                     LengthLimitingTextInputFormatter(
-                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
-                    DateInputFormatter(), // กำหนดรูปแบบ __/__/____
+                        10), // Limit to 10 characters for DD/MM/YYYY
+                    DateInputFormatter(), // Formatter to help format the date
                   ],
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -279,24 +285,18 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     hintText: 'DD/MM/YYYY',
                     hintStyle: TextStyle(color: Colors.grey),
                     labelStyle: chkDate == false && noDate == false
-                        ? const TextStyle(
-                            color: Colors.black87,
-                          )
-                        : const TextStyle(
-                            color: Colors.red,
-                          ),
+                        ? const TextStyle(color: Colors.black87)
+                        : const TextStyle(color: Colors.red),
                     suffixIcon: IconButton(
-                      icon: const Icon(
-                          Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
+                      icon: const Icon(Icons.calendar_today), // Calendar icon
                       onPressed: () async {
-                        // กดไอคอนเพื่อเปิด date picker
+                        // Open date picker when icon is clicked
                         _selectDate(context);
                       },
                     ),
                   ),
                   onChanged: (value) {
                     selectedDate = value;
-                    print('selectedDate : $selectedDate');
                     setState(() {
                       _cursorPosition = _dateController.selection.baseOffset;
                       _dateController.value = _dateController.value.copyWith(
@@ -308,33 +308,38 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     });
 
                     setState(() {
-                      // สร้าง instance ของ DateInputFormatter
+                      // Create instance of DateInputFormatter
                       DateInputFormatter formatter = DateInputFormatter();
 
-                      // ตรวจสอบการเปลี่ยนแปลงของข้อความ
+                      // Check for changes in text
                       TextEditingValue oldValue =
                           TextEditingValue(text: _dateController.text);
                       TextEditingValue newValue = TextEditingValue(text: value);
 
-                      // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
+                      // Validate the date format
                       formatter.formatEditUpdate(oldValue, newValue);
 
-                      // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
+                      // Check the format returned by DateInputFormatter
                       dateColorCheck = formatter.dateColorCheck;
                       monthColorCheck = formatter.monthColorCheck;
-                      noDate = formatter.noDate; // เพิ่มการตรวจสอบ noDate
+                      noDate = formatter.noDate; // Add check for noDate
                     });
-                    setState(() {
-                      RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                      if (!dateRegExp.hasMatch(selectedDate)) {
-                      } else {
-                        setState(() {
-                          chkDate = false;
-                        });
-                      }
-                    });
+
+                    // Check the date format only for manual input
+                    RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                    if (!dateRegExp.hasMatch(selectedDate)) {
+                      setState(() {
+                        chkDate = true;
+                      });
+                    } else {
+                      setState(() {
+                        chkDate = false;
+                      });
+                    }
                   },
                 ),
+
+// Display error message if needed
                 chkDate == true || noDate == true
                     ? const Padding(
                         padding: EdgeInsets.only(top: 4.0),
@@ -343,10 +348,11 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                           style: TextStyle(
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
-                            fontSize: 12, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                            fontSize: 12, // Adjust font size as needed
                           ),
                         ))
                     : const SizedBox.shrink(),
+
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

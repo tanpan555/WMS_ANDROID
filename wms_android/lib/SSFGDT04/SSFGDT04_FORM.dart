@@ -45,22 +45,43 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   String? poStatus;
   String? poMessage;
   String? po_doc_no;
-  String? _dateError;
   String selectedDate = '';
   String selectedCancelDescription = '';
 
   TextEditingController _docNoController = TextEditingController();
+  String docNo = '';
+
+  TextEditingController _docTypeController = TextEditingController();
+  String docType = '';
+
   TextEditingController _docDateController = TextEditingController();
+  String docDate = '';
+
   TextEditingController _refNoController = TextEditingController();
+  String refNo = '';
   TextEditingController _refReceiveController =
       TextEditingController(); // REF_RECEIVE
+  String refReceive = '';
+
   TextEditingController _oderNoController = TextEditingController(); // order_no
+  String oder = '';
+
   TextEditingController _moDoNoController = TextEditingController(); // mo_do_no
+  String moDoNo = '';
+
   TextEditingController _staffCodeController =
       TextEditingController(); // staff_code
+  String staffCode = '';
+
   TextEditingController _noteController = TextEditingController();
+  String note = '';
+
   TextEditingController _erpDocNoController = TextEditingController();
+  String erpDocNo = '';
+
   TextEditingController _custController = TextEditingController();
+  String cust = '';
+
   TextEditingController _searchController =
       TextEditingController(); // เพิ่ม Controller สำหรับการค้นหา
   TextEditingController _canCelController = TextEditingController();
@@ -76,6 +97,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   bool noDate = false;
   bool chkDate = false;
   int _cursorPosition = 0;
+  bool checkUpdateData = false;
 
   bool check = false;
   void checkIfHasData() {
@@ -90,7 +112,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
           _noteController.text.isNotEmpty ||
           _erpDocNoController.text.isNotEmpty ||
           _custController.text.isNotEmpty ||
-          _searchController.text.isNotEmpty||
+          _searchController.text.isNotEmpty ||
           _canCelController.text.isNotEmpty) {
         check = true;
         print(check);
@@ -128,19 +150,26 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
           fromItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
           if (fromItems.isNotEmpty) {
             _docNoController.text = fromItems[0]['doc_no'] ?? '';
+            docNo = fromItems[0]['doc_no'] ?? '';
             if (fromItems[0]['cr_date'] != null &&
                 fromItems[0]['cr_date'].isNotEmpty) {
-              // แปลงค่าจาก String เป็น DateTime แล้วฟอร์แมตใหม่
               DateTime parsedDate = DateTime.parse(fromItems[0]['cr_date']);
               _docDateController.text = _dateTimeFormatter.format(parsedDate);
+              docDate = fromItems[0]['cr_date'] ?? '';
             }
             _refNoController.text = fromItems[0]['ref_no'] ?? ''; // REF_RECEIVE
+            refNo = fromItems[0]['ref_no'] ?? '';
             _oderNoController.text = fromItems[0]['order_no'] ?? ''; // order_no
+            oder = fromItems[0]['order_no'] ?? '';
             _moDoNoController.text = fromItems[0]['mo_do_no'] ?? ''; // mo_do_no
+            moDoNo = fromItems[0]['mo_do_no'] ?? '';
             _staffCodeController.text =
                 fromItems[0]['staff_code'] ?? ''; // staff_code
+            staffCode = fromItems[0]['staff_code'] ?? '';
             _noteController.text = fromItems[0]['note'] ?? '';
+            note = fromItems[0]['note'] ?? '';
             _erpDocNoController.text = fromItems[0]['erp_doc_no'] ?? '';
+            erpDocNo = fromItems[0]['erp_doc_no'] ?? '';
           }
         });
       }
@@ -160,7 +189,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
         setState(() {
           docTypeItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
           if (docTypeItems.isNotEmpty) {
-            selectedDocType = docTypeItems[0]['doc_desc']; // Default selection
+            selectedDocType = docTypeItems[0]['doc_desc'];
+            _docTypeController.text =
+                docTypeItems[0]['doc_desc']; // Default selection
           }
         });
       }
@@ -408,6 +439,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
         setState(() {
           _docDateController.text = formattedDateForDisplay;
           selectedDate = formattedDateForSearch;
+
+          // Set validation flag to false since the date is picked from the calendar
+          chkDate = false;
+          noDate = false; // Also ensure no error flag is set
         });
       }
     }
@@ -441,7 +476,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'รับตรง (ไม่อ้าง PO)',
-        showExitWarning: true,
+        // showExitWarning: true,
+        showExitWarning: checkUpdateData,
       ),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: fromItems.isEmpty
@@ -944,8 +980,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
                             await update(widget.po_doc_type, widget.po_doc_no);
                             await save_INHeadNonePO_WMS(selectedValue ?? '');
+                            checkUpdateData = false;
 
                             if (poStatus == '0') {
+                              checkUpdateData = false;
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -1066,6 +1104,14 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 border: InputBorder.none,
                               ),
                               controller: _docNoController,
+                              onChanged: (value) => {
+                                setState(() {
+                                  docNo = value;
+                                  if (docNo != _docNoController) {
+                                    checkUpdateData = true;
+                                  }
+                                }),
+                              },
                             ),
                           ),
 
@@ -1208,6 +1254,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                               setState(() {
                                                                 selectedDocType =
                                                                     doc;
+                                                                _docTypeController
+                                                                        .text =
+                                                                    selectedDocType!;
                                                                 fetchRefReceiveItems();
                                                               });
                                                             },
@@ -1263,8 +1312,15 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                       color: Color.fromARGB(255, 113, 113, 113),
                                     ),
                                   ),
-                                  controller: TextEditingController(
-                                      text: selectedDocType),
+                                  controller: _docTypeController,
+                                  onChanged: (value) => {
+                                    setState(() {
+                                      docType = value;
+                                      if (docType != _docTypeController) {
+                                        checkUpdateData = true;
+                                      }
+                                    }),
+                                  },
                                 ),
                               ),
                             ),
@@ -1338,6 +1394,12 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                   onChanged: (value) {
                                     selectedDate = value;
                                     print('selectedDate : $selectedDate');
+
+                                    if (selectedDate !=
+                                        _docDateController.text) {
+                                      checkUpdateData = true;
+                                    }
+
                                     setState(() {
                                       _cursorPosition = _docDateController
                                           .selection.baseOffset;
@@ -1350,37 +1412,19 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                       );
                                     });
 
+                                    // Date format validation
                                     setState(() {
-                                      // สร้าง instance ของ DateInputFormatter
-                                      DateInputFormatter formatter =
-                                          DateInputFormatter();
-
-                                      // ตรวจสอบการเปลี่ยนแปลงของข้อความ
-                                      TextEditingValue oldValue =
-                                          TextEditingValue(
-                                              text: _docDateController.text);
-                                      TextEditingValue newValue =
-                                          TextEditingValue(text: value);
-
-                                      // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
-                                      formatter.formatEditUpdate(
-                                          oldValue, newValue);
-
-                                      // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
-                                      dateColorCheck = formatter.dateColorCheck;
-                                      monthColorCheck =
-                                          formatter.monthColorCheck;
-                                      noDate = formatter
-                                          .noDate; // เพิ่มการตรวจสอบ noDate
-                                    });
-                                    setState(() {
+                                      // Regular expression to validate DD/MM/YYYY format
                                       RegExp dateRegExp =
                                           RegExp(r'^\d{2}/\d{2}/\d{4}$');
                                       if (!dateRegExp.hasMatch(selectedDate)) {
+                                        // Show error if the manual input does not match the correct format
+                                        chkDate = true;
+                                        noDate = true;
                                       } else {
-                                        setState(() {
-                                          chkDate = false;
-                                        });
+                                        chkDate =
+                                            false; // If the format is correct, clear the error
+                                        noDate = false;
                                       }
                                     });
                                   },
@@ -1543,7 +1587,15 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                               setState(() {
                                                                 selectedRefReceive =
                                                                     doc;
+                                                                _refReceiveController
+                                                                        .text =
+                                                                    selectedRefReceive!;
                                                                 fetchRefReceiveItems();
+                                                                if (selectedRefReceive !=
+                                                                    _refReceiveController) {
+                                                                  checkUpdateData =
+                                                                      true;
+                                                                }
                                                               });
                                                             },
                                                           );
@@ -1577,8 +1629,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                       color: Color.fromARGB(255, 113, 113, 113),
                                     ),
                                   ),
-                                  controller: TextEditingController(
-                                      text: selectedRefReceive),
+                                  controller: _refReceiveController,
+                                  // controller: TextEditingController(
+                                  //     text: selectedRefReceive),
                                 ),
                               ),
                             ),
@@ -1860,6 +1913,11 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                   selectedRefNo =
                                                                       soNo;
                                                                   fetchRefNoItems();
+                                                                  if (selectedRefNo !=
+                                                                      _refNoController) {
+                                                                    checkUpdateData =
+                                                                        true;
+                                                                  }
                                                                 });
                                                               },
                                                             );
@@ -1880,20 +1938,20 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                               },
                               child: AbsorbPointer(
                                 child: TextField(
-                                  decoration: InputDecoration(
-                                    labelText: 'อ้างอิง SO',
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    labelStyle: TextStyle(color: Colors.black),
-                                    border: InputBorder.none,
-                                    suffixIcon: Icon(
-                                      Icons.arrow_drop_down,
-                                      color: Color.fromARGB(255, 113, 113, 113),
+                                    decoration: InputDecoration(
+                                      labelText: 'อ้างอิง SO',
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      labelStyle:
+                                          TextStyle(color: Colors.black),
+                                      border: InputBorder.none,
+                                      suffixIcon: Icon(
+                                        Icons.arrow_drop_down,
+                                        color:
+                                            Color.fromARGB(255, 113, 113, 113),
+                                      ),
                                     ),
-                                  ),
-                                  controller: TextEditingController(
-                                      text: selectedRefNo),
-                                ),
+                                    controller: _refNoController),
                               ),
                             ),
                           ),
@@ -1910,6 +1968,14 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 border: InputBorder.none,
                               ),
                               controller: _moDoNoController,
+                              onChanged: (value) => {
+                                setState(() {
+                                  moDoNo = value;
+                                  if (moDoNo != _moDoNoController) {
+                                    checkUpdateData = true;
+                                  }
+                                }),
+                              },
                             ),
                           ),
 
@@ -2081,6 +2147,11 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                         .text =
                                                                     empName;
                                                                 fetchSaffCodeItems();
+                                                                if (selectedSaffCode !=
+                                                                    _staffCodeController) {
+                                                                  checkUpdateData =
+                                                                      true;
+                                                                }
                                                               });
                                                             },
                                                           );
@@ -2156,6 +2227,14 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 border: InputBorder.none,
                               ),
                               controller: _noteController,
+                              onChanged: (value) => {
+                                setState(() {
+                                  note = value;
+                                  if (note != _noteController) {
+                                    checkUpdateData = true;
+                                  }
+                                }),
+                              },
                             ),
                           ),
 
@@ -2173,6 +2252,14 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                   border: InputBorder.none,
                                 ),
                                 controller: _erpDocNoController,
+                                onChanged: (value) => {
+                                  setState(() {
+                                    erpDocNo = value;
+                                    if (erpDocNo != _erpDocNoController) {
+                                      checkUpdateData = true;
+                                    }
+                                  }),
+                                },
                               ),
                             ),
                           ),

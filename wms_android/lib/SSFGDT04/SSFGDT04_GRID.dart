@@ -352,9 +352,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false
-      ),
+      appBar:
+          CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer: CustomDrawer(),
       body: Padding(
@@ -448,25 +447,11 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Row(
+                              content: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    children: const [
-                                      Icon(
-                                        Icons
-                                            .notification_important, // ไอคอนแจ้งเตือน
-                                        color: Colors.red, // สีแดง
-                                        size: 30,
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                      ),
-                                      Text('แจ้งเตือน'),
-                                    ],
-                                  ),
+                                  Text(poMessage ?? ''),
                                   // Close icon
                                   IconButton(
                                     icon: const Icon(Icons.close),
@@ -477,7 +462,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                   ),
                                 ],
                               ),
-                              content: Text(poMessage ?? ''),
+                              // content: Text(poMessage ?? ''),
                               actions: [
                                 TextButton(
                                   style: ElevatedButton.styleFrom(
@@ -895,13 +880,16 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                               widget.po_doc_type,
                                               poSeq,
                                               poItemCode);
-                                          setState(() {
-                                            gridItems.removeWhere((item) =>
-                                                item['item_code'] ==
-                                                    poItemCode &&
-                                                item['seq'] == poSeq);
-                                          });
-                                          Navigator.of(context).pop(true);
+                                          if (mounted) {
+                                            setState(() {
+                                              gridItems.removeWhere((item) =>
+                                                  item['item_code'] ==
+                                                      poItemCode &&
+                                                  item['seq'] == poSeq);
+                                            });
+                                          }
+                                          if (mounted) {Navigator.of(context).pop(true);}
+                                          
                                         },
                                       ),
                                     ],
