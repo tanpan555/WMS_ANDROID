@@ -1566,8 +1566,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc =
-                                  '${item['schid'] ?? ''} ${item['fg_code'] ?? ''}';
+                              final doc = '${item['schid'] ?? ''}';
                               final returnCode = '${item['schid']}';
 
                               return ListTile(
