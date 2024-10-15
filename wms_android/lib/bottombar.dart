@@ -81,7 +81,18 @@ class _BottomBarState extends State<BottomBar> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('แจ้งเตือน'),
+                title: Row(
+                  children: [
+                    Icon(
+                      Icons.notification_important, // Use the bell icon
+                      color: Colors.red, // Set the color to red
+                    ),
+                    SizedBox(
+                        width:
+                            8), // Add some space between the icon and the text
+                    Text('แจ้งเตือน'), // Title text
+                  ],
+                ),
                 content: Text('ยืนยันที่จะย้อนกลับไปหน้าแรกหรือไม่'),
                 actions: <Widget>[
                   TextButton(

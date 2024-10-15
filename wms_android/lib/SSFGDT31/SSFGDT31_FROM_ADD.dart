@@ -743,7 +743,8 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับคืนจากการเบิกผลิต'),
+      appBar:
+          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: true),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
         padding: const EdgeInsets.all(8.0), // Adjust padding as needed

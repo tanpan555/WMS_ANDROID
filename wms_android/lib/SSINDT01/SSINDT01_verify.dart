@@ -292,7 +292,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ'),
+      appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ', showExitWarning: true),
       body: Column(
         children: [
           // Row for widget.poPONO and Confirm button

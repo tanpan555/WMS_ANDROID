@@ -362,7 +362,8 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'รับจากการสั่งซื้อ'),
+      appBar: const CustomAppBar(
+          title: 'รับจากการสั่งซื้อ', showExitWarning: false),
       backgroundColor: const Color(0xFF17153B),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),

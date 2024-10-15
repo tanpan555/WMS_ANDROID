@@ -286,7 +286,8 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับคืนจากการเบิกผลิต'),
+      appBar:
+          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: true),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Column(
         children: [

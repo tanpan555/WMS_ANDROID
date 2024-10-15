@@ -178,7 +178,8 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับคืนจากการเบิกผลิต'),
+      appBar:
+          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),

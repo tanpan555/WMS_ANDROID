@@ -613,7 +613,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Scan รับ'),
+      appBar: CustomAppBar(title: 'Scan รับ', showExitWarning: true),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: SingleChildScrollView(
         child: Column(

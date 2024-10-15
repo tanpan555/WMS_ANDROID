@@ -2832,7 +2832,7 @@ class _LotDialogState extends State<LotDialog> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'LOT Details'),
+      appBar: CustomAppBar(title: 'LOT Details', showExitWarning: true),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(

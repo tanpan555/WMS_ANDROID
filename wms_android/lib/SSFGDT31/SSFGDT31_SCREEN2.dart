@@ -26,7 +26,8 @@ class _SSFGDT31_SCREEN2State extends State<SSFGDT31_SCREEN2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับคืนจากการเบิกผลิต'),
+      appBar:
+          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
       backgroundColor: Color.fromARGB(255, 17, 0, 56),
       body: Padding(
         padding: const EdgeInsets.all(20),

@@ -208,7 +208,8 @@ class _SSFGDT31_ADD_DOCState extends State<SSFGDT31_ADD_DOC> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF110038),
-      appBar: CustomAppBar(title: 'รับคืนจากการเบิกผลิต'),
+      appBar:
+          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
