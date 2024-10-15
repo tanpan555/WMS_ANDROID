@@ -937,14 +937,19 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Icon(
-                  //   Icons.notification_important,
-                  //   color: Colors.red,
-                  // ),
-                  // SizedBox(width: 10),
-                  Text(
-                    'แจ้งเตือน',
-                    style: TextStyle(color: Colors.black),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.notification_important,
+                        color: Colors.red,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        'แจ้งเตือน',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -1106,14 +1111,19 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Icon(
-                //   Icons.notification_important,
-                //   color: Colors.red,
-                // ),
-                // SizedBox(width: 10),
-                Text(
-                  'แจ้งเตือน',
-                  style: TextStyle(color: Colors.black),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.notification_important,
+                      color: Colors.red,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'แจ้งเตือน',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
