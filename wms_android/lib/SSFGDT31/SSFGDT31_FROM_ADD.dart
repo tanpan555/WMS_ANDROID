@@ -121,9 +121,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
               DOC_TYPE.text = item['doc_type'] ?? '';
               DOC_DATE.text = _formatDate(DateTime.parse(
                   item['doc_date'] ?? DateTime.now().toIso8601String()));
-              REF_NO.text = (item['ref_no'] == 'null' || item['ref_no'] == null)
-                  ? ''
-                  : item['ref_no'];
+              REF_NO.text = item['ref_no'] ?? 'null';
               NOTE.text = item['note'] ?? '';
               ERP_DOC_NO.text = item['erp_doc_no'] ?? '';
             });
@@ -1550,7 +1548,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: GestureDetector(
         onTap: () {
-          _showRefNoDialog(); // Show dialog on tap
+          _showRefNoDialog();
         },
         child: InputDecorator(
           decoration: InputDecoration(
@@ -1561,17 +1559,14 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
             border: InputBorder.none,
           ),
           child: Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween, // Align text and arrow
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                REF_NO.text.isNotEmpty
-                    ? REF_NO.text
-                    : '', // Display empty string if null or empty
+                REF_NO.text == 'null' ? '' : REF_NO.text,
                 style: TextStyle(fontSize: 16),
               ),
               Icon(
-                Icons.arrow_drop_down, // Dropdown arrow icon
+                Icons.arrow_drop_down,
                 color: Colors.grey,
               ),
             ],
