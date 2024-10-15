@@ -282,77 +282,72 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
 
                     // List of Filtered Items
                     Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          // Filter apCodes based on search query
-                          final filteredApCodes = apCodes.where((item) {
-                            final apCode = item['ap_code'].toLowerCase();
-                            final searchQuery =
-                                _searchController.text.toLowerCase();
-                            return apCode.contains(searchQuery);
-                          }).toList();
+                      child: Builder(builder: (context) {
+                        // Filter apCodes based on search query for both ap_code and ap_name
+                        final filteredApCodes = apCodes.where((item) {
+                          final apCode = item['ap_code'].toLowerCase();
+                          final apName = item['ap_name'].toLowerCase();
+                          final searchQuery =
+                              _searchController.text.toLowerCase();
 
-                          if (filteredApCodes.isEmpty) {
-                            return Center(
-                              child: Text(
-                                'No data found', // Show message when no data is found
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
+                          // Check if searchQuery matches either ap_code or ap_name
+                          return apCode.contains(searchQuery) ||
+                              apName.contains(searchQuery);
+                        }).toList();
+
+                        if (filteredApCodes.isEmpty) {
+                          return Center(
+                            child: Text(
+                              'No data found', // Show message when no data is found
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 16,
+                              ),
+                            ),
+                          );
+                        }
+
+                        return ListView.builder(
+                          itemCount: filteredApCodes.length,
+                          itemBuilder: (context, index) {
+                            final item = filteredApCodes[index];
+                            final apCode = item['ap_code'];
+                            final apName = item['ap_name'];
+
+                            return Container(
+                              margin: const EdgeInsets.only(
+                                  bottom: 8), // Add margin between items
+                              padding: const EdgeInsets.all(
+                                  8), // Padding inside the container
+                              child: ListTile(
+                                title: Text(
+                                  apCode,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Colors.black),
                                 ),
+                                subtitle: Text(
+                                  apName,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    selectedApCode =
+                                        apCode; // Set selected code
+                                    _selectedApCodeController.text =
+                                        selectedApCode ??
+                                            ''; // Update the controller's text
+                                  });
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                },
                               ),
                             );
-                          }
-
-                          return ListView.builder(
-                            itemCount: filteredApCodes.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredApCodes[index];
-                              final apCode = item['ap_code'];
-                              final apName = item['ap_name'];
-
-                              return Container(
-                                margin: const EdgeInsets.only(
-                                    bottom: 8), // Add margin between items
-                                padding: const EdgeInsets.all(
-                                    8), // Padding inside the container
-                                // decoration: BoxDecoration(
-                                //   border: Border.all(
-                                //       color: Colors
-                                //           .grey), // Add border around each item
-                                //   borderRadius: BorderRadius.circular(
-                                //       5), // Optional rounded corners
-                                // ),
-                                child: ListTile(
-                                  title: Text(
-                                    apCode,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  subtitle: Text(
-                                    apName,
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      selectedApCode =
-                                          apCode; // Set selected code
-                                      _selectedApCodeController.text =
-                                          selectedApCode ??
-                                              ''; // Update the controller's text
-                                    });
-                                    Navigator.of(context)
-                                        .pop(); // Close the dialog
-                                  },
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
+                          },
+                        );
+                      }),
                     ),
                   ],
                 ),
