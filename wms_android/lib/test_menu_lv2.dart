@@ -151,8 +151,9 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(
-        title: getTitle(P_MAIN_MENU), // เรียกใช้ฟังก์ชัน getTitle
-      ),
+          title: getTitle(P_MAIN_MENU),
+          showExitWarning: false // เรียกใช้ฟังก์ชัน getTitle
+          ),
       // drawer: const CustomDrawer(),
       body: Padding(
         padding: EdgeInsets.all(10.0),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:intl/intl.dart';
-import 'package:wms_android/styles.dart';
 import 'package:flutter/services.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
@@ -488,7 +486,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'Scan จ่ายสินค้า'),
+      appBar: CustomAppBar(title: 'Scan จ่ายสินค้า', showExitWarning: false),
       body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(

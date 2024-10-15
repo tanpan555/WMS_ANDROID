@@ -254,7 +254,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'เบิกจ่าย'),
+      appBar: CustomAppBar(title: 'เบิกจ่าย', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -967,7 +967,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
         TextEditingController(text: nbItemName);
 
     String CheckDataPackQty = packQty.toString();
-    bool? result = await showGeneralDialog(
+    showGeneralDialog(
       context: context,
       barrierDismissible: false,
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
@@ -1118,18 +1118,19 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
           ),
         );
       },
-    ).then((value) {
-      // เช็คเมื่อ dialog ถูกปิดจากการกดด้านนอก
-      if (value == null) {
-        if (CheckDataPackQty.toString() != packQty.toString()) {
-          showExitWarningDialog();
-          print('result : กดออกจากข้างนอก');
-        }
-      }
-    });
-    print('result : $result');
-    print(
-        'ChECK :  ${CheckDataPackQty.toString()}   !=   ${packQty.toString()} ');
+    );
+    //.then((value) {
+    //   // เช็คเมื่อ dialog ถูกปิดจากการกดด้านนอก
+    //   if (value == null) {
+    //     if (CheckDataPackQty.toString() != packQty.toString()) {
+    //       showExitWarningDialog();
+    //       print('result : กดออกจากข้างนอก');
+    //     }
+    //   }
+    // });
+    // print('result : $result');
+    // print(
+    //     'ChECK :  ${CheckDataPackQty.toString()}   !=   ${packQty.toString()} ');
     // if (result == null) {
     //   if (CheckDataPackQty.toString() != packQty.toString()) {
     //     showExitWarningDialog();

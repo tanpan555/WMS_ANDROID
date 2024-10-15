@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 //-----------
 import 'package:wms_android/bottombar.dart';
@@ -637,7 +636,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
       'pErpOuCode': globals.P_ERP_OU_CODE,
       'pDocType': widget.pDocType,
       'pDocNo': widget.pDocNo,
-      'p_cancel_code': cancelCode ?? '',
+      'p_cancel_code': cancelCode,
       'pAppUser': globals.APP_USER,
     });
     print('Request body: $body');
@@ -747,19 +746,15 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                         } else {
                           if (docNo.isNotEmpty &&
                               docNo != '' &&
-                              docNo != null &&
                               docNo != 'null' &&
                               returnStatusLovDocType.isNotEmpty &&
                               returnStatusLovDocType != '' &&
-                              returnStatusLovDocType != null &&
                               returnStatusLovDocType != 'null' &&
                               crDate.isNotEmpty &&
                               crDate != '' &&
-                              crDate != null &&
                               crDate != 'null' &&
                               returnStatusLovMoDoNo.isNotEmpty &&
                               returnStatusLovMoDoNo != '' &&
-                              returnStatusLovMoDoNo != null &&
                               returnStatusLovMoDoNo != 'null') {
                             chkCust(
                               shidForChk,

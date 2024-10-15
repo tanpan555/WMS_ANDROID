@@ -5,7 +5,6 @@ import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
-import 'package:dropdown_button2/dropdown_button2.dart';
 
 class Ssfgdt12Barcode extends StatefulWidget {
   // final String pOuCode;
@@ -234,7 +233,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'Scan Manual Add'),
+      appBar: CustomAppBar(title: 'Scan Manual Add', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:wms_android/styles.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -135,7 +134,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'เบิกจ่าย'),
+      appBar: CustomAppBar(title: 'เบิกจ่าย', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: isLoading
