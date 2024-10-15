@@ -540,73 +540,56 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                           ),
                                         ),
                                         const SizedBox(height: 4.0),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'จำนวนที่จ่าย : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          '${NumberFormat('#,###,###,###,###,###').format(item['pack_qty'] ?? '')}',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
+                                        SizedBox(
+                                          child: Row(
+                                            // mainAxisAlignment:
+                                            // MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'จำนวนที่จ่าย : ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0),
                                               ),
-                                            ),
-                                            const SizedBox(width: 4.0),
-                                            Expanded(
-                                              child: SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'Pack : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          item['pack_code'] ??
-                                                              '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
+                                              Expanded(
+                                                child: Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  color: Colors.white,
+                                                  child: Text(
+                                                    '${NumberFormat('#,###,###,###,###,###').format(item['pack_qty'] ?? '')}',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
                                                 ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4.0),
+                                        SizedBox(
+                                          child: Row(
+                                            // mainAxisAlignment:
+                                            // MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'Pack : ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0),
                                               ),
-                                            ),
-                                          ],
+                                              Expanded(
+                                                child: Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  color: Colors.white,
+                                                  child: Text(
+                                                    item['pack_code'] ?? '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                         const SizedBox(height: 4.0),
                                         SizedBox(
@@ -636,74 +619,56 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                           ),
                                         ),
                                         const SizedBox(height: 4.0),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'ใช้แทนจุด : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          item['attribute3'] ??
-                                                              '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
+                                        SizedBox(
+                                          child: Row(
+                                            // mainAxisAlignment:
+                                            // MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'ใช้แทนจุด : ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0),
                                               ),
-                                            ),
-                                            const SizedBox(width: 4.0),
-                                            Expanded(
-                                              child: SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'Replace Lot# : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          item['attribute4'] ??
-                                                              '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
+                                              Expanded(
+                                                child: Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  color: Colors.white,
+                                                  child: Text(
+                                                    item['attribute3'] ?? '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
                                                 ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4.0),
+                                        SizedBox(
+                                          child: Row(
+                                            // mainAxisAlignment:
+                                            // MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'Replace Lot# : ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0),
                                               ),
-                                            ),
-                                          ],
+                                              Expanded(
+                                                child: Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  color: Colors.white,
+                                                  child: Text(
+                                                    item['attribute4'] ?? '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                         const SizedBox(height: 20.0),
                                         Row(
