@@ -235,21 +235,17 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          item['material_code'] ??
-                                                              '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item[
+                                                          'material_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                      child: Text(
+                                                        item['material_code'] ??
+                                                            '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -267,20 +263,16 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          item['lot_no'] ?? '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item[
+                                                          'lot_no'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                      child: Text(
+                                                        item['lot_no'] ?? '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -298,20 +290,16 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          item['comb'] ?? '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item[
+                                                          'Comb'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                      child: Text(
+                                                        item['Comb'] ?? '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -329,24 +317,22 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          NumberFormat(
-                                                                  '#,###,###,###,###,###')
-                                                              .format(item[
-                                                                      'usage_qty'] ??
-                                                                  ''),
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item['usage_qty']
+                                                          ?.toString(),
+                                                      child: Text(
+                                                        item['usage_qty'] !=
+                                                                null
+                                                            ? NumberFormat(
+                                                                    '#,###,###,###,###,###.##')
+                                                                .format(item[
+                                                                    'usage_qty'])
+                                                            : '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -364,21 +350,16 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          item['ware_code'] ??
-                                                              '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item[
+                                                          'ware_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                      child: Text(
+                                                        item['ware_code'] ?? '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -396,21 +377,17 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          item['location_code'] ??
-                                                              '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item[
+                                                          'location_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                      child: Text(
+                                                        item['location_code'] ??
+                                                            '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),

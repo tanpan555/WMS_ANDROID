@@ -500,17 +500,16 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 14.0),
                                               ),
-                                              Expanded(
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    '${item['item_code'] ?? ''}',
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                  ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item[
+                                                    'item_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                child: Text(
+                                                  item['item_code'] ?? '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -528,17 +527,16 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 14.0),
                                               ),
-                                              Expanded(
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    '${item['lots_no'] ?? ''}',
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                  ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item[
+                                                    'lots_no'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                child: Text(
+                                                  item['lots_no'] ?? '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -560,20 +558,17 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          '${item['location_code'] ?? ''}',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item[
+                                                          'location_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                      child: Text(
+                                                        item['location_code'] ??
+                                                            '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -594,20 +589,21 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          '${NumberFormat('#,###,###,###,###,###').format(item['pack_qty'] ?? '')}',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item['pack_qty']
+                                                          ?.toString(),
+                                                      child: Text(
+                                                        item['pack_qty'] != null
+                                                            ? NumberFormat(
+                                                                    '#,###,###,###,###,###.##')
+                                                                .format(item[
+                                                                    'pack_qty'])
+                                                            : '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -629,17 +625,16 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 14.0),
                                               ),
-                                              Expanded(
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    '${item['pd_location'] ?? ''}',
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                  ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item[
+                                                    'pd_location'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                child: Text(
+                                                  item['pd_location'] ?? '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -657,17 +652,16 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 14.0),
                                               ),
-                                              Expanded(
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    '${item['reason_mismatch'] ?? ''}',
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                  ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item[
+                                                    'reason_mismatch'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                child: Text(
+                                                  item['reason_mismatch'] ?? '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -689,20 +683,17 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          '${item['attribute3'] ?? ''}',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item[
+                                                          'attribute3'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                      child: Text(
+                                                        item['attribute3'] ??
+                                                            '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -723,20 +714,17 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          '${item['attribute4'] ?? ''}',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item[
+                                                          'attribute4'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                      child: Text(
+                                                        item['attribute4'] ??
+                                                            '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
