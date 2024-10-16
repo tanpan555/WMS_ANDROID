@@ -50,7 +50,7 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
             isLoading = false;
           });
         }
-        print('dataTable : $tmpLocItems');
+        print('dataTable tmpLocItems : $tmpLocItems');
       } else {
         throw Exception('Failed to load fetchData');
       }
@@ -124,12 +124,7 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SSFGPC04_BTN_PROCESS(
-                            // po_doc_no: widget.po_doc_no, // ส่งค่า po_doc_no
-                            // po_doc_type: widget.po_doc_type, // ส่งค่า po_doc_type
-                            // pWareCode: widget.pWareCode,
-                            // setqc: setqc ?? '',
-                            ),
+                        builder: (context) => SSFGPC04_BTN_PROCESS(),
                       ),
                     );
                   },
@@ -156,8 +151,7 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                     )
                   : ListView.builder(
                       controller: _scrollController, // ใช้ scrollController
-                      itemCount: currentPageItems.length +
-                          1, // +1 เพื่อรองรับปุ่มถัดไป/ย้อนกลับ
+                      itemCount: currentPageItems.length + 1, // +1 เพื่อรองรับปุ่มถัดไป/ย้อนกลับ
                       itemBuilder: (context, index) {
                         if (index < currentPageItems.length) {
                           final item = currentPageItems[index];
@@ -180,7 +174,10 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                                       color: Colors.black26,
                                       thickness: 1), // เส้นแบ่ง
                                   Text(
-                                    item['ware_name'] ?? '',
+                                    item['location_code'] ?? '',
+                                  ),
+                                  Text(
+                                    item['location_name'] ?? '',
                                   ),
                                 ],
                               ),

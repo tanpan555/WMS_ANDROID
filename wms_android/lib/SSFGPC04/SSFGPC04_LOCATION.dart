@@ -294,5 +294,4 @@ Widget _buildDataTable() {
     ),
   );
 }
-
 }

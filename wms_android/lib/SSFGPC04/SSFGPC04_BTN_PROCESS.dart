@@ -105,7 +105,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   Future<void> selectLovStartGroup() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_GROUP/${gb.ATTR1}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_GROUP'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -133,7 +133,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   Future<void> selectLovEndGroup() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_GROUP_E/${gb.ATTR1}/$pSGroup'));
+          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_GROUP_E/$pSGroup'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
