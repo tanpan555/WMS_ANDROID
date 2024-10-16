@@ -293,9 +293,9 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
                                                     CustomContainerStyles
                                                         .styledContainer(
                                                       item[
-                                                          'Comb'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                          'comb'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
                                                       child: Text(
-                                                        item['Comb'] ?? '',
+                                                        item['comb'] ?? '',
                                                         style: const TextStyle(
                                                             fontSize: 14.0),
                                                       ),

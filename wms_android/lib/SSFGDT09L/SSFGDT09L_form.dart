@@ -1566,7 +1566,8 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['schid'] ?? ''}';
+                              final doc =
+                                  '${item['schid'] ?? ''} ${item['fg_code'] ?? ''}';
                               final returnCode = '${item['schid']}';
 
                               return ListTile(
@@ -1582,8 +1583,8 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCHK = doc;
-                                    selectLovMoDoNo = doc;
+                                    String dataCHK = returnCode;
+                                    selectLovMoDoNo = returnCode;
                                     returnStatusLovMoDoNo = returnCode;
                                     moDoNoController.text =
                                         selectLovMoDoNo.toString();

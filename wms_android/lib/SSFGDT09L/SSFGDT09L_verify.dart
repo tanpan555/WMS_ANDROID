@@ -543,74 +543,61 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                                         // ------------------------------------------------------------------------\\
                                         const SizedBox(height: 4.0),
                                         // ------------------------------------------------------------------------\\
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'Locator : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item[
-                                                          'location_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                      child: Text(
-                                                        item['location_code'] ??
-                                                            '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
+                                        SizedBox(
+                                          child: Row(
+                                            // mainAxisAlignment:
+                                            // MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'Locator : ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0),
+                                              ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item[
+                                                    'location_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                child: Text(
+                                                  item['location_code'] ?? '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
                                                 ),
                                               ),
-                                            ),
-                                            // ------------------------------------------------------------------------\\
-                                            const SizedBox(width: 4.0),
-                                            // ------------------------------------------------------------------------\\
-                                            Expanded(
-                                              child: SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'จำนวนที่จ่าย : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item['pack_qty']
-                                                          ?.toString(),
-                                                      child: Text(
-                                                        item['pack_qty'] != null
-                                                            ? NumberFormat(
-                                                                    '#,###,###,###,###,###.##')
-                                                                .format(item[
-                                                                    'pack_qty'])
-                                                            : '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-
+                                        // ------------------------------------------------------------------------\\
+                                        const SizedBox(height: 4.0),
+                                        // ------------------------------------------------------------------------\\
+                                        SizedBox(
+                                          child: Row(
+                                            // mainAxisAlignment:
+                                            // MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'จำนวนที่จ่าย : ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0),
+                                              ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item['pack_qty']?.toString(),
+                                                child: Text(
+                                                  item['pack_qty'] != null
+                                                      ? NumberFormat(
+                                                              '#,###,###,###,###,###.##')
+                                                          .format(
+                                                              item['pack_qty'])
+                                                      : '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                         // ------------------------------------------------------------------------\\
                                         const SizedBox(height: 4.0),
                                         // ------------------------------------------------------------------------\\
@@ -643,11 +630,47 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                                         // ------------------------------------------------------------------------\\
                                         SizedBox(
                                           child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(
+                                                child: Text(
+                                                  'Reason : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14.0),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: CustomContainerStyles
+                                                    .styledContainer(
+                                                  item['reason_mismatch'],
+                                                  child: Text(
+                                                    item['reason_mismatch'] ??
+                                                        '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                    softWrap:
+                                                        true, // เปิดให้ตัดบรรทัด
+                                                    overflow: TextOverflow
+                                                        .visible, // แสดงข้อความทั้งหมด
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        // ------------------------------------------------------------------------\\
+                                        const SizedBox(height: 4.0),
+                                        // ------------------------------------------------------------------------\\
+                                        SizedBox(
+                                          child: Row(
                                             // mainAxisAlignment:
                                             // MainAxisAlignment.spaceBetween,
                                             children: [
                                               const Text(
-                                                'Reason : ',
+                                                'ใช้แทนจุด : ',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 14.0),
@@ -655,9 +678,9 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                                               CustomContainerStyles
                                                   .styledContainer(
                                                 item[
-                                                    'reason_mismatch'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                    'attribute3'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
                                                 child: Text(
-                                                  item['reason_mismatch'] ?? '',
+                                                  item['attribute3'] ?? '',
                                                   style: const TextStyle(
                                                       fontSize: 14.0),
                                                 ),
@@ -668,68 +691,29 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                                         // ------------------------------------------------------------------------\\
                                         const SizedBox(height: 4.0),
                                         // ------------------------------------------------------------------------\\
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'ใช้แทนจุด : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item[
-                                                          'attribute3'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                      child: Text(
-                                                        item['attribute3'] ??
-                                                            '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
+                                        SizedBox(
+                                          child: Row(
+                                            // mainAxisAlignment:
+                                            // MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                'Replace Lot# ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0),
+                                              ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item[
+                                                    'attribute4'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                child: Text(
+                                                  item['attribute4'] ?? '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
                                                 ),
                                               ),
-                                            ),
-                                            // ------------------------------------------------------------------------\\
-                                            const SizedBox(width: 4.0),
-                                            // ------------------------------------------------------------------------\\
-                                            Expanded(
-                                              child: SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'Replace Lot# ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item[
-                                                          'attribute4'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                      child: Text(
-                                                        item['attribute4'] ??
-                                                            '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                         // ------------------------------------------------------------------------\\
                                         const SizedBox(height: 4.0),

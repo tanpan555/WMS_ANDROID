@@ -643,21 +643,32 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                         const SizedBox(height: 4.0),
                                         SizedBox(
                                           child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              const Text(
-                                                'Reason : ',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14.0),
-                                              ),
-                                              CustomContainerStyles
-                                                  .styledContainer(
-                                                item[
-                                                    'reason_mismatch'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                              const SizedBox(
                                                 child: Text(
-                                                  item['reason_mismatch'] ?? '',
-                                                  style: const TextStyle(
+                                                  'Reason : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 14.0),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: CustomContainerStyles
+                                                    .styledContainer(
+                                                  item['reason_mismatch'],
+                                                  child: Text(
+                                                    item['reason_mismatch'] ??
+                                                        '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                    softWrap:
+                                                        true, // เปิดให้ตัดบรรทัด
+                                                    overflow: TextOverflow
+                                                        .visible, // แสดงข้อความทั้งหมด
+                                                  ),
                                                 ),
                                               ),
                                             ],
