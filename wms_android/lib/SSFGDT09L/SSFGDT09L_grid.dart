@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -499,17 +501,15 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 14.0),
                                               ),
-                                              Expanded(
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    item['item_code'] ?? '',
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                  ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item['item_code'],
+                                                child: Text(
+                                                  item['item_code'] ?? '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -525,17 +525,16 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 14.0),
                                               ),
-                                              Expanded(
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    item['lots_no'] ?? '',
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                  ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item[
+                                                    'lots_no'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                child: Text(
+                                                  item['lots_no'] ?? '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -551,17 +550,20 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 14.0),
                                               ),
-                                              Expanded(
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    '${NumberFormat('#,###,###,###,###,###').format(item['pack_qty'] ?? '')}',
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                  ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item['pack_qty']
+                                                    .toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                child: Text(
+                                                  NumberFormat(
+                                                          '#,###,###,###,###,###')
+                                                      .format(
+                                                          item['pack_qty'] ??
+                                                              ''),
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -577,17 +579,16 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 14.0),
                                               ),
-                                              Expanded(
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    item['pack_code'] ?? '',
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                  ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item[
+                                                    'pack_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                child: Text(
+                                                  item['pack_code'] ?? '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -598,23 +599,67 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                             // MainAxisAlignment.spaceBetween,
                                             children: [
                                               const Text(
+                                                'Location : ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0),
+                                              ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item[
+                                                    'location_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                child: Text(
+                                                  item['location_code'] ?? '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4.0),
+                                        SizedBox(
+                                          child: Row(
+                                            children: [
+                                              const Text(
+                                                'PD Location : ',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14.0),
+                                              ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item[
+                                                    'pd_location'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                child: Text(
+                                                  item['pd_location'] ?? '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4.0),
+                                        SizedBox(
+                                          child: Row(
+                                            children: [
+                                              const Text(
                                                 'Reason : ',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 14.0),
                                               ),
-                                              Expanded(
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    item['reason_mismatch'] ??
-                                                        '',
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                  ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item[
+                                                    'reason_mismatch'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                child: Text(
+                                                  item['reason_mismatch'] ?? '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -630,17 +675,16 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 14.0),
                                               ),
-                                              Expanded(
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    item['attribute3'] ?? '',
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                  ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item[
+                                                    'attribute3'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                child: Text(
+                                                  item['attribute3'] ?? '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -656,17 +700,16 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 14.0),
                                               ),
-                                              Expanded(
-                                                child: Container(
-                                                  padding: EdgeInsets.all(5.0),
-                                                  color: Colors.white,
-                                                  child: Text(
-                                                    item['attribute4'] ?? '',
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                  ),
+                                              CustomContainerStyles
+                                                  .styledContainer(
+                                                item[
+                                                    'attribute4'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                child: Text(
+                                                  item['attribute4'] ?? '',
+                                                  style: const TextStyle(
+                                                      fontSize: 14.0),
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),

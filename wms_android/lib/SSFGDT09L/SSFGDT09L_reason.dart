@@ -66,8 +66,16 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
       'r': 'BM',
     },
     {
+      'd': 'BL',
+      'r': 'BL',
+    },
+    {
       'd': 'CM',
       'r': 'CM',
+    },
+    {
+      'd': 'CL',
+      'r': 'CL',
     },
   ];
 

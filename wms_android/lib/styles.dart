@@ -1,5 +1,36 @@
 import 'package:flutter/material.dart';
 
+// class CustomContainerStyles {
+//   // สร้าง style สำหรับ Container พร้อม padding
+//   static Container styledContainer(String? itemValue,
+//       {double padding = 5.0, required Widget child}) {
+//     return Container(
+//       padding: EdgeInsets.all(padding), // ใช้ค่าจากพารามิเตอร์ padding
+//       decoration: BoxDecoration(
+//         color: itemValue != null && itemValue.isNotEmpty
+//             ? Colors.white // พื้นหลังสีขาวเมื่อมีข้อมูล
+//             : Colors.transparent, // พื้นหลังโปร่งใสเมื่อไม่มีข้อมูล
+//       ),
+//       child: child, // เนื้อหาภายใน Container
+//     );
+//   }
+// }
+
+class CustomContainerStyles {
+  static Container styledContainer(String? itemValue,
+      {double padding = 5.0, required Widget child}) {
+    return Container(
+      padding: EdgeInsets.all(padding),
+      decoration: BoxDecoration(
+        color: (itemValue != null && itemValue.trim().isNotEmpty)
+            ? Colors.white
+            : Colors.transparent,
+      ),
+      child: child,
+    );
+  }
+}
+
 class AppStyles {
   static ButtonStyle ConfirmbuttonStyle() {
     return ElevatedButton.styleFrom(

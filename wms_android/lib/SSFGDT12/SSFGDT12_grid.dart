@@ -756,20 +756,14 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Container(
-                                                      padding:
-                                                          EdgeInsets.all(3.0),
-                                                      color: Colors.white,
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item['seq']
+                                                          .toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
                                                       child: Text(
-                                                        item['seq']
-                                                                .toString() ??
-                                                            '',
+                                                        item['seq'].toString(),
                                                         style: const TextStyle(
                                                             fontSize: 14.0),
-                                                        softWrap:
-                                                            true, // เปิดให้ตัดบรรทัด
-                                                        overflow: TextOverflow
-                                                            .visible, // กำหนดการแสดงผลเมื่อข้อความยาวเกิน
                                                       ),
                                                     ),
                                                   ],
@@ -778,20 +772,23 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                               const SizedBox(height: 4),
                                               SizedBox(
                                                 child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    const Text(
-                                                      'ชื่อสินค้า : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
+                                                    const SizedBox(
+                                                      child: Text(
+                                                        'ชื่อสินค้า : ',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 14.0),
+                                                      ),
                                                     ),
                                                     Expanded(
-                                                      // หรือใช้ Flexible ก็ได้
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(3.0),
-                                                        color: Colors.white,
+                                                      child:
+                                                          CustomContainerStyles
+                                                              .styledContainer(
+                                                        item['get_item_name'],
                                                         child: Text(
                                                           item['get_item_name'] ??
                                                               '',
@@ -802,7 +799,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                           softWrap:
                                                               true, // เปิดให้ตัดบรรทัด
                                                           overflow: TextOverflow
-                                                              .visible, // กำหนดการแสดงผลเมื่อข้อความยาวเกิน
+                                                              .visible, // แสดงข้อความทั้งหมด
                                                         ),
                                                       ),
                                                     ),
@@ -822,21 +819,16 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          item['ware_code'] ??
-                                                              '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item[
+                                                          'ware_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                      child: Text(
+                                                        item['ware_code'] ?? '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -853,21 +845,17 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          item['location_code'] ??
-                                                              '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item[
+                                                          'location_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                      child: Text(
+                                                        item['location_code'] ??
+                                                            '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -882,27 +870,19 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      // หรือใช้ Flexible ก็ได้
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(3.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          NumberFormat(
-                                                                  '#,###,###,###,###,###.##')
-                                                              .format(item[
-                                                                      'sys_qty'] ??
-                                                                  ''),
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                          softWrap:
-                                                              true, // เปิดให้ตัดบรรทัด
-                                                          overflow: TextOverflow
-                                                              .visible, // กำหนดการแสดงผลเมื่อข้อความยาวเกิน
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item['sys_qty']
+                                                          ?.toString(),
+                                                      child: Text(
+                                                        item['sys_qty'] != null
+                                                            ? NumberFormat(
+                                                                    '#,###,###,###,###,###.##')
+                                                                .format(item[
+                                                                    'sys_qty'])
+                                                            : '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
                                                     ),
                                                   ],
@@ -919,24 +899,21 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          NumberFormat(
-                                                                  '#,###,###,###,###,###.##')
-                                                              .format(item[
-                                                                      'diff_qty'] ??
-                                                                  ''),
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item['diff_qty']
+                                                          ?.toString(),
+                                                      child: Text(
+                                                        item['diff_qty'] != null
+                                                            ? NumberFormat(
+                                                                    '#,###,###,###,###,###.##')
+                                                                .format(item[
+                                                                    'diff_qty'])
+                                                            : '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -951,27 +928,22 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          NumberFormat(
-                                                                  '#,###,###,###,###,###.##')
-                                                              .format(item[
-                                                                      'count_qty'] ??
-                                                                  0),
-                                                          // item['count_qty']
-                                                          //         .toString() ??
-                                                          //     '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item['count_qty']
+                                                          ?.toString(),
+                                                      child: Text(
+                                                        item['count_qty'] !=
+                                                                null
+                                                            ? NumberFormat(
+                                                                    '#,###,###,###,###,###.##')
+                                                                .format(item[
+                                                                    'count_qty'])
+                                                            : '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -986,20 +958,16 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(5.0),
-                                                        color: Colors.white,
-                                                        child: Text(
-                                                          item['remark'] ?? '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item[
+                                                          'remark'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                      child: Text(
+                                                        item['remark'] ?? '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ),
