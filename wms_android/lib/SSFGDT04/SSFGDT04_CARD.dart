@@ -740,7 +740,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                                       });
                                     }
                                   : null,
-                              child: const Text('Previous'),
+                              child: const Text('Previous',style: TextStyle(color: Colors.black)),
                             ),
                             // ตรวจสอบจำนวน card ก่อนแสดงข้อความ
                             if (dataCard.length >= 15)
@@ -757,7 +757,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                                       });
                                     }
                                   : null,
-                              child: const Text('Next'),
+                              child: const Text('Next',style: TextStyle(color: Colors.black)),
                             ),
                           ],
                         );

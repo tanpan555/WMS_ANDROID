@@ -167,6 +167,9 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $jsonDecode');
+        print('testtttttt : $pSCat');
+        print('testtttttt : $pECat');
+        print('Hiiiiiii : ${gb.ATTR1}');
         if (mounted) {
           setState(() {
             dataStartCat =
@@ -368,7 +371,8 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
+      appBar:
+          CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

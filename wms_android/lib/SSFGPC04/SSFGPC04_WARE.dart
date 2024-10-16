@@ -7,25 +7,23 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGPC04_LOC.dart';
-// import 'package:url_launcher/url_launcher.dart';
 
-class SSFGPC04_CARD extends StatefulWidget {
-  final String soNo;
-  final String date;
+class SSFGPC04_WARE extends StatefulWidget {
   final List<Map<String, dynamic>> selectedItems;
-
-  const SSFGPC04_CARD({
+  // final String soNo;
+  // final String date;
+  const SSFGPC04_WARE({
     Key? key,
-    required this.soNo,
-    required this.date,
     required this.selectedItems,
+    // required this.soNo,
+    // required this.date,
   }) : super(key: key);
 
   @override
-  _SSFGPC04_CARDState createState() => _SSFGPC04_CARDState();
+  _SSFGPC04_WAREState createState() => _SSFGPC04_WAREState();
 }
 
-class _SSFGPC04_CARDState extends State<SSFGPC04_CARD> {
+class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
   List<Map<String, dynamic>> tmpWhItems = [];
   bool isLoading = true;
   int currentPage = 0;
@@ -69,6 +67,52 @@ class _SSFGPC04_CARDState extends State<SSFGPC04_CARD> {
     }
   }
 
+  Future<void> nextPage() async {
+    const url =
+        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_next';
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'APP_SESSION': gb.APP_SESSION,
+      'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
+    });
+
+    print('Request body: $body');
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        if (response.body.isNotEmpty) {
+          try {
+            final Map<String, dynamic> responseData = jsonDecode(response.body);
+            if (mounted) {
+              setState(() {
+                // Perform any additional UI updates here
+              });
+            }
+            print('Success: $responseData');
+          } catch (e) {
+            print('Error decoding JSON: $e');
+          }
+        } else {
+          print('เช็คแล้วจ้าาา');
+        }
+      } else {
+        print('Failed to post data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error นะฮ๊าฟฟู๊วววว: $e');
+    }
+  }
+
   List<Map<String, dynamic>> getCurrentPageItems() {
     final startIndex = currentPage * itemsPerPage;
     final endIndex = startIndex + itemsPerPage;
@@ -92,7 +136,7 @@ class _SSFGPC04_CARDState extends State<SSFGPC04_CARD> {
         getCurrentPageItems(); // ดึงรายการของหน้าในปัจจุบัน
     return Scaffold(
       appBar:
-          CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
+          CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: true),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -126,7 +170,8 @@ class _SSFGPC04_CARDState extends State<SSFGPC04_CARD> {
                   style: AppStyles.cancelButtonStyle(),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    await nextPage();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -161,8 +206,7 @@ class _SSFGPC04_CARDState extends State<SSFGPC04_CARD> {
                     )
                   : ListView.builder(
                       controller: _scrollController, // ใช้ scrollController
-                      itemCount: currentPageItems.length +
-                          1, // +1 เพื่อรองรับปุ่มถัดไป/ย้อนกลับ
+                      itemCount: currentPageItems.length + 1,
                       itemBuilder: (context, index) {
                         if (index < currentPageItems.length) {
                           final item = currentPageItems[index];
@@ -192,7 +236,6 @@ class _SSFGPC04_CARDState extends State<SSFGPC04_CARD> {
                             ),
                           );
                         } else {
-                          // แสดงปุ่มถัดไปและย้อนกลับในท้ายรายการ
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -207,7 +250,6 @@ class _SSFGPC04_CARDState extends State<SSFGPC04_CARD> {
                                     : null,
                                 child: const Text('Previous'),
                               ),
-                              // ตรวจสอบว่าจำนวน Card ใน currentPageItems ถึง 15 หรือไม่
                               if (currentPageItems.length == itemsPerPage) ...[
                                 Text(
                                   'Page ${currentPage + 1} of $totalPages',

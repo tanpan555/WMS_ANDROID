@@ -95,7 +95,6 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
       print('ERROR IN Fetch Data : $e');
     }
   }
-  
 
   Future<void> fetchCheck(String? nbSel, String? loc) async {
     const url =
@@ -125,7 +124,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         if (mounted) {
           setState(() {
-            // ดำเนินการอื่นๆ เมื่อเช็คสำเร็จ เช่นการอัปเดตตารางหรือแสดงข้อความ
+            // Perform any additional UI updates here
           });
         }
         print('Success: $responseData');
@@ -160,7 +159,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
   @override
 Widget build(BuildContext context) {
   return Scaffold(
-    appBar: CustomAppBar(title: 'เลือกคลังสินค้า', showExitWarning: false),
+    appBar: CustomAppBar(title: 'เลือกตำแหน่งที่จัดเก็บ', showExitWarning: false),
     backgroundColor: const Color.fromARGB(255, 17, 0, 56),
     body: Padding(
       padding: const EdgeInsets.all(16),
@@ -246,7 +245,6 @@ Widget _buildDataTable() {
       ),
     );
   }
-
   return Container(
     color: Colors.white,
     child: Column(
@@ -269,7 +267,7 @@ Widget _buildDataTable() {
                 child: Text(
                   row['ware_code'] ?? '',
                   style: const TextStyle(fontSize: 14),
-                  textAlign: TextAlign.right,
+                  // textAlign: TextAlign.right,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -277,15 +275,15 @@ Widget _buildDataTable() {
                 child: Text(
                   row['location_code'] ?? '',
                   style: const TextStyle(fontSize: 14),
-                  textAlign: TextAlign.right,
+                  // textAlign: TextAlign.right,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
               Expanded(
                 child: Text(
-                  row['nb_location_name'] ?? '',
+                  row['location_name'] ?? '',
                   style: const TextStyle(fontSize: 14),
-                  textAlign: TextAlign.right,
+                  // textAlign: TextAlign.right,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

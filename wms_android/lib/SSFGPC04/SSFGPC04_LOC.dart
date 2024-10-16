@@ -21,7 +21,7 @@ class SSFGPC04_LOC extends StatefulWidget {
 }
 
 class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
-  List<Map<String, dynamic>> tmpWhItems = [];
+  List<Map<String, dynamic>> tmpLocItems = [];
   bool isLoading = true;
   int currentPage = 0;
   final int itemsPerPage = 15;
@@ -45,12 +45,12 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
 
         if (mounted) {
           setState(() {
-            tmpWhItems =
+            tmpLocItems =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
             isLoading = false;
           });
         }
-        print('dataTable : $tmpWhItems');
+        print('dataTable : $tmpLocItems');
       } else {
         throw Exception('Failed to load fetchData');
       }
@@ -111,7 +111,7 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                     }
                   },
                   child: const Text(
-                    'เลือกตำแหน่งที่จัดเก็บ',
+                    'เลือกสถานที่จัดเก็บ',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,

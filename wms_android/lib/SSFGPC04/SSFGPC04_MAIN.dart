@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import '../styles.dart';
 import 'SSFGPC04_WARE.dart';
 
-
 class SSFGPC04_MAIN extends StatefulWidget {
   const SSFGPC04_MAIN({
     Key? key,
@@ -29,11 +28,9 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
   String selectedDate = 'null'; // Allow null for the date
   String pSoNo = 'null';
   TextEditingController _dateController = TextEditingController();
-  TextEditingController _controller = TextEditingController();
+  // TextEditingController _controller = TextEditingController();
   TextEditingController _noteController = TextEditingController();
   final String sDateFormat = "dd-MM-yyyy";
-
-  String? _dateError;
   final dateRegExp =
       RegExp(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$");
 
@@ -48,41 +45,42 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
+    final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
+    if (picked != null) {
+      final formattedDate = DateFormat('dd/MM/yyyy').format(picked);
+      _dateController.text = formattedDate; // อัปเดตค่าใน TextFormField
 
-    if (pickedDate != null) {
-      String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
-      if (mounted) {
-        setState(() {
-          _dateController.text = formattedDate;
-          selectedDate = _dateController.text;
-        });
-      }
+      // อัปเดต selectedDate และ chkDate
+      setState(() {
+        selectedDate = formattedDate;
+        chkDate =
+            false; // ตั้งค่า chkDate เป็น false เนื่องจากมีการเลือกวันที่แล้ว
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFF17153B),
-        appBar: CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 16),
-                  TextFormField(
+      backgroundColor: const Color(0xFF17153B),
+      appBar:
+          CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                TextFormField(
                   controller: _dateController,
                   keyboardType: TextInputType.number,
                   inputFormatters: [
@@ -129,12 +127,11 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
                       }
 
                       // ตรวจสอบรูปแบบวันที่
-                      RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                      if (!dateRegExp.hasMatch(selectedDate)) {
-                        chkDate =
-                            true; // ถ้ารูปแบบไม่ถูกต้องให้ตั้งค่าเป็น true
+                      if (RegExp(r'^\d{2}/\d{2}/\d{4}$')
+                          .hasMatch(selectedDate)) {
+                        chkDate = false; // วันที่ถูกต้อง
                       } else {
-                        chkDate = false; // ถ้ารูปแบบถูกต้องให้ตั้งค่าเป็น false
+                        chkDate = true; // วันที่ไม่ถูกต้อง
                       }
                     });
                   },
@@ -151,75 +148,74 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
                           ),
                         ))
                     : const SizedBox.shrink(),
-                  const SizedBox(height: 8),
-                  TextField(
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      labelText: 'เลขที่เอกสาร',
-                      filled: true,
-                      fillColor: Colors.grey[300],
-                      labelStyle: TextStyle(color: Colors.black),
-                      hintStyle:
-                          const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                      border: InputBorder.none,
-                    ),
-                    controller: TextEditingController(text: 'AUTO'),
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                const SizedBox(height: 8),
+                TextField(
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: 'เลขที่เอกสาร',
+                    filled: true,
+                    fillColor: Colors.grey[300],
+                    labelStyle: TextStyle(color: Colors.black),
+                    hintStyle:
+                        const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                    border: InputBorder.none,
                   ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'หมายเหตุ',
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelStyle: TextStyle(color: Colors.black),
-                      border: InputBorder.none,
-                    ),
-                    controller: _noteController,
+                  controller: TextEditingController(text: 'AUTO'),
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'หมายเหตุ',
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelStyle: TextStyle(color: Colors.black),
+                    border: InputBorder.none,
                   ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          List<Map<String, dynamic>> selectedItems =
-                              []; // Use your actual list here
+                  controller: _noteController,
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        List<Map<String, dynamic>> selectedItems =
+                            []; // Use your actual list here
 
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SSFGPC04_CARD(
-                                soNo: pSoNo.isEmpty ? 'null' : pSoNo,
-                                date: selectedDate.isEmpty
-                                    ? 'null'
-                                    : selectedDate, // Ensure selectedDate is passed
-                                selectedItems:
-                                    selectedItems, // Pass selectedItems correctly
-                              ),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SSFGPC04_WARE(
+                              // soNo: pSoNo.isEmpty ? 'null' : pSoNo,
+                              // date: selectedDate.isEmpty
+                              //     ? 'null'
+                              //     : selectedDate, // Ensure selectedDate is passed
+                              selectedItems: selectedItems, // Pass selectedItems correctly
                             ),
-                          );
-                        },
-                        style: AppStyles.ConfirmbuttonStyle(),
-                        child: Text(
-                          'CONFIRM',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            letterSpacing: 1.2,
                           ),
+                        );
+                      },
+                      style: AppStyles.ConfirmbuttonStyle(),
+                      child: Text(
+                        'NEXT',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          letterSpacing: 1.2,
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
-        bottomNavigationBar: BottomBar(currentPage: 'show'),
-        );
+      ),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
+    );
   }
 }
 
