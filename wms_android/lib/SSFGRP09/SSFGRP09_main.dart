@@ -1649,7 +1649,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                       keyboardType: TextInputType.number,
                       inputFormatters: [maskFormatter],
                       decoration: const InputDecoration(
-                        hintText: 'DD/MM/YYYY',
+                        hintText: 'ค้นหา',
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (query) {
