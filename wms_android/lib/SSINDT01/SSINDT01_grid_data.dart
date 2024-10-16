@@ -38,6 +38,7 @@ class Ssindt01Grid extends StatefulWidget {
 class _Ssindt01GridState extends State<Ssindt01Grid> {
   List<Map<String, dynamic>> dataList = [];
   List<Map<String, dynamic>> dataLotList = [];
+  List<bool> selectedItems = [];
 
   @override
   void initState() {
@@ -266,34 +267,33 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   Future<void> sendGetRequestlineWMS() async {
     final url =
         'http://172.16.0.82:8888/apex/wms/c/pull_po/${widget.poReceiveNo}';
-    final headers = {
-      'Content-Type': 'application/json; charset=UTF-8',
-    };
-
-    print('Request URL: $url');
+    final headers = {'Content-Type': 'application/json; charset=UTF-8'};
 
     try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: headers,
-      );
+      final response = await http.get(Uri.parse(url), headers: headers);
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
-        if (mounted) {
-          setState(() {
-            dataList =
-                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          });
-        }
-        print('RUN sendGetRequestlineWMS ********************');
+        setState(() {
+          dataList =
+              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          selectedItems = List<bool>.filled(dataList.length, false);
+        });
         print('Success: $dataList');
       } else {
         print('Failed to get data. Status code: ${response.statusCode}');
+        setState(() {
+          dataList = [];
+          selectedItems = [];
+        });
       }
     } catch (e) {
       print('Error: $e');
+      setState(() {
+        dataList = [];
+        selectedItems = [];
+      });
     }
   }
 
@@ -1316,6 +1316,150 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     }
   }
 
+  void _showDeleteDialog() {
+    if (dataList.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('No items to delete')),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('เลือก Item ที่จะลบ'),
+              content: Container(
+                width: double.maxFinite,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: dataList.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      color: Colors
+                          .blue[50], // Set the background color of the card
+                      elevation: 2, // Adds shadow for depth
+                      margin: EdgeInsets.symmetric(
+                          vertical: 6), // Space between cards
+                      child: CheckboxListTile(
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Item: ${dataList[index]['item'] ?? ''}',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              'Item Desc: ${dataList[index]['item_desc'] ?? ''}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              'ค้างรับ: ${dataList[index]['pending_qty'] ?? 0}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        value: selectedItems[index],
+                        onChanged: (bool? value) {
+                          setState(() {
+                            selectedItems[index] = value ?? false;
+                          });
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+              actions: <Widget>[
+                ButtonBar(
+                  alignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    TextButton(
+                      child: Text('ยกเลิก'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text('ยืนยันลบ'),
+                      onPressed: () {
+                        // Count the number of selected items
+                        int selectedCount =
+                            selectedItems.where((item) => item).length;
+
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Row(
+                                children: [
+                                  Icon(
+                                    Icons
+                                        .notification_important, // Use the bell icon
+                                    color: Colors.red, // Set the color to red
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text('แจ้งเตือน'),
+                                ],
+                              ),
+                              // Show the number of selected items in the confirmation message
+                              content: Text(
+                                  'ต้องการลบ $selectedCount รายการหรือไม่ ?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('ยกเลิก'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    _deleteSelectedItems();
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('ตกลง'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _deleteSelectedItems() async {
+    List<Future> deleteFutures = [];
+    for (int i = 0; i < dataList.length; i++) {
+      if (i < selectedItems.length && selectedItems[i]) {
+        deleteFutures.add(deleteReceiveQty(
+          dataList[i]['receive_no'],
+          dataList[i]['rec_seq'].toString(),
+        ));
+      }
+    }
+    await Future.wait(deleteFutures);
+    await sendGetRequestlineWMS();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1413,6 +1557,23 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                     ),
                   ),
                   const SizedBox(width: 8.0),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: IconButton(
+                      iconSize: 20.0,
+                      icon: Image.asset(
+                        'assets/images/bin.png',
+                        width: 25.0,
+                        height: 25.0,
+                      ),
+                      onPressed: () async {
+                        _showDeleteDialog();
+                      },
+                    ),
+                  ),
                   const Spacer(),
                   ElevatedButton(
                     style: AppStyles.NextButtonStyle(),
