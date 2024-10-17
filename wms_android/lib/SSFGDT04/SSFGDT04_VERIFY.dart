@@ -559,7 +559,17 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
             ),
           ),
           const SizedBox(height: 10),
-          ListView.builder(
+          gridItems.isEmpty
+            ? Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 100),
+                  child: Text(
+                    'No data found',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              )
+            :ListView.builder(
             shrinkWrap: true, // ให้ ListView มีขนาดตามข้อมูล
             physics: const NeverScrollableScrollPhysics(), // ปิดการเลื่อน
             itemCount: gridItems.length,

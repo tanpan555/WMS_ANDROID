@@ -45,11 +45,11 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
 
     // ส่งค่า WARE_CODE ที่เลือกไปที่ API
     String nbSelValue = selectedItems.isNotEmpty ? 'Y' : 'N';
-    String locValue = selectedItems.map((item) => item['location_code']).join(',');
+    String locValueCode = selectedItems.map((item) => item['location_code']).join(',');
     gb.P_WARE_CODE = selectedItems.map((item) => item['ware_code']).join(',');
 
     // เรียกใช้ API เพื่อเช็คข้อมูลตามค่า NB_SEL ที่ได้
-    await fetchCheck(nbSelValue,locValue);
+    await fetchCheck(nbSelValue,locValueCode);
 
     // เช็คว่า widget ยังอยู่หรือไม่ก่อนทำการ pop
     if (mounted) {
