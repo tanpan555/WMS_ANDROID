@@ -337,6 +337,8 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                 style: AppStyles.NextButtonStyle(),
                 onPressed: () async {
                   await get_grid_data();
+                  print('vChkCol');
+                  print(vChkCol);
                   if (vChkCol == '1') {
                     print(
                         'Confirmationจำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!');
@@ -481,7 +483,43 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                           ),
                           ElevatedButton(
                             onPressed: () async {
-                              await deleteAll();
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Row(
+                                      children: [
+                                        Icon(
+                                          Icons
+                                              .notification_important, // Use the bell icon
+                                          color: Colors
+                                              .red, // Set the color to red
+                                        ),
+                                        SizedBox(
+                                            width:
+                                                8), // Add some space between the icon and the text
+                                        Text('แจ้งเตือน'), // Title text
+                                      ],
+                                    ),
+                                    content: const Text('ยืนยันที่จะลบหรือไม่'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('ยกเลิก'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          Navigator.of(context).pop();
+                                          await deleteAll();
+                                        },
+                                        child: const Text('ตกลง'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                               print('-Clear All');
                             },
                             style: AppStyles.ClearButtonStyle(),
@@ -773,13 +811,46 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                                           );
 
                                           return AlertDialog(
-                                            title: const Text('แก้ไข'),
+                                            title: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                const Text(
+                                                  'แก้ไขจำนวนรับ',
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                                IconButton(
+                                                  icon: const Icon(Icons.close),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                             content: TextField(
                                               controller: packQtyController,
                                               keyboardType:
                                                   TextInputType.number,
-                                              decoration: const InputDecoration(
+                                              decoration: InputDecoration(
                                                 labelText: 'Pack Quantity',
+                                                border:
+                                                    OutlineInputBorder(), // Adds a border around the TextField
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  // Optional: customize border when focused
+                                                  borderSide: BorderSide(
+                                                      color: Colors.black,
+                                                      width: 2.0),
+                                                ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  // Optional: customize border when not focused
+                                                  borderSide: BorderSide(
+                                                      color: Colors.black,
+                                                      width: 1.0),
+                                                ),
                                               ),
                                             ),
                                             actions: <Widget>[
@@ -787,7 +858,7 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                                                 onPressed: () {
                                                   Navigator.of(context).pop();
                                                 },
-                                                child: const Text('Cancel'),
+                                                child: const Text('ยกเลิก'),
                                               ),
                                               TextButton(
                                                 onPressed: () async {
@@ -799,13 +870,16 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
 
                                                   await updateLot(
                                                     pack_qty: newPackQty,
-                                                    OLD_PACK_QTY:
-                                                        item['pack_qty'],
+                                                    OLD_PACK_QTY: int.tryParse(
+                                                            item['old_pack_qty']
+                                                                    ?.toString() ??
+                                                                '0') ??
+                                                        0,
                                                     item_code:
-                                                        item['item_code'],
+                                                        item['item_code'] ?? '',
                                                     pack_code:
-                                                        item['pack_code'],
-                                                    rowid: item['rowid'],
+                                                        item['pack_code'] ?? '',
+                                                    rowid: item['rowid'] ?? '',
                                                   );
 
                                                   setState(() {
@@ -815,7 +889,7 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
 
                                                   Navigator.of(context).pop();
                                                 },
-                                                child: const Text('Save'),
+                                                child: const Text('ตกลง'),
                                               ),
                                             ],
                                           );

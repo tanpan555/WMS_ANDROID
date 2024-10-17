@@ -299,11 +299,37 @@ class _SSFGDT31_VERIFYState extends State<SSFGDT31_VERIFY> {
     }
   }
 
+  Widget buildStyledRow(String label, dynamic value, {bool isBold = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+          Expanded(
+            flex: 3,
+            child: CustomContainerStyles.styledContainer(
+              value?.toString(),
+              child: Text(
+                value?.toString() ?? '',
+                style: TextStyle(
+                    fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:
-          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: true),
+          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Column(
         children: [
@@ -563,21 +589,23 @@ class _SSFGDT31_VERIFYState extends State<SSFGDT31_VERIFY> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Lots No: ${item['lots_no'] ?? ''}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            Text(
-                                'Pack Qty: ${item['pack_qty'] != null ? numberFormat.format(item['pack_qty']) : ''}'),
-                            Text('Item Code: ${item['item_code'] ?? ''}'),
-                            Text('Old Pack Qty: ${item['old_pack_qty'] ?? ''}'),
-                            Text('Pack Code: ${item['pack_code'] ?? ''}'),
-                            Text(
-                                'Location Code: ${item['location_code'] ?? ''}'),
-                            Text('PD Location: ${item['attribute1'] ?? ''}'),
-                            Text('Reason: ${item['attribute2'] ?? ''}'),
-                            Text('ใช้แทนจุด: ${item['attribute3'] ?? ''}'),
-                            Text('Replace Lot: ${item['attribute4'] ?? ''}'),
+                            buildStyledRow('Item Code:', item['item_code']),
+                            buildStyledRow('Lots No:', item['lots_no'],
+                                isBold: true),
+                            buildStyledRow(
+                                'Location Code:', item['location_code']),
+                            buildStyledRow(
+                                'Pack Qty:',
+                                item['pack_qty'] != null
+                                    ? numberFormat.format(item['pack_qty'])
+                                    : ''),
+                            buildStyledRow(
+                                'Old Pack Qty:', item['old_pack_qty']),
+                            buildStyledRow('Pack Code:', item['pack_code']),
+                            buildStyledRow('PD Location:', item['attribute1']),
+                            buildStyledRow('Reason:', item['attribute2']),
+                            buildStyledRow('ใช้แทนจุด:', item['attribute3']),
+                            buildStyledRow('Replace Lot:', item['attribute4']),
                           ],
                         ),
                       ),
