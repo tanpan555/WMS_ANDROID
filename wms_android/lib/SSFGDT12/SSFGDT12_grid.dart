@@ -6,7 +6,6 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:intl/intl.dart';
 import 'package:wms_android/styles.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'SSFGDT12_main.dart';
 import 'SSFGDT12_barcode.dart';
 
@@ -70,6 +69,8 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   String vRetCancel = '';
   String vChkStatusCancel = '';
 
+  String statusForCheck = '';
+
   bool isLoading = true;
   String? nextLink = '';
   String? prevLink = '';
@@ -85,6 +86,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   void initState() {
     super.initState();
     fetchData();
+    selectStatusForCheck();
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -183,7 +185,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
           if (mounted) {
             setState(() {
               vCouQty = item['v_cou_qty'] ?? '';
-              vCouQty != null || vCouQty != ''
+              vCouQty != ''
                   ? checkVCouQty(context, vCouQty)
                   : print('vCouQty == null ');
               print('vCouQty : $vCouQty type : ${vCouQty.runtimeType}');
@@ -349,6 +351,33 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     }
   }
 
+  Future<void> selectStatusForCheck() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectStatusForCheck/${widget.docNo}'));
+
+      if (response.statusCode == 200) {
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataStatusForCheck = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print(
+            'dataStatusForCheck : $dataStatusForCheck type : ${dataStatusForCheck.runtimeType}');
+        if (mounted) {
+          setState(() {
+            statusForCheck = dataStatusForCheck['status'] ?? '';
+            print(
+                'statusForCheck : $statusForCheck   Type : ${statusForCheck.runtimeType}');
+          });
+        }
+      } else {
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print('ดึงข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -361,16 +390,18 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    showDialogconfirmCancel(
-                      widget.docNo,
-                    );
-                  },
-                  style: AppStyles.cancelButtonStyle(),
-                  child:
-                      Text('ยกเลิก', style: AppStyles.CancelbuttonTextStyle()),
-                ),
+                if (statusForCheck != 'X') ...[
+                  ElevatedButton(
+                    onPressed: () {
+                      showDialogconfirmCancel(
+                        widget.docNo,
+                      );
+                    },
+                    style: AppStyles.cancelButtonStyle(),
+                    child: Text('ยกเลิก',
+                        style: AppStyles.CancelbuttonTextStyle()),
+                  ),
+                ],
                 ElevatedButton(
                   onPressed: () {
                     _navigateToPage(
@@ -394,16 +425,20 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                   child: Text('บันทึกสินค้าเพิ่มเติม',
                       style: AppStyles.CancelbuttonTextStyle()),
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    await checkData();
-                  },
-                  style: AppStyles.ConfirmbuttonStyle(),
-                  child: Text(
-                    'Confirm',
-                    style: AppStyles.ConfirmbuttonTextStyle(),
+                if (statusForCheck == 'N' ||
+                    statusForCheck == 'T' ||
+                    statusForCheck == 'X') ...[
+                  ElevatedButton(
+                    onPressed: () async {
+                      await checkData();
+                    },
+                    style: AppStyles.ConfirmbuttonStyle(),
+                    child: Text(
+                      'Confirm',
+                      style: AppStyles.ConfirmbuttonTextStyle(),
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
             const SizedBox(height: 10),
@@ -774,17 +809,18 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                 child: Row(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
+                                                  mainAxisSize: MainAxisSize
+                                                      .min, // ให้ Row ใช้ขนาดที่จำเป็น
                                                   children: [
-                                                    const SizedBox(
-                                                      child: Text(
-                                                        'ชื่อสินค้า : ',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 14.0),
-                                                      ),
+                                                    const Text(
+                                                      'ชื่อสินค้า : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
                                                     ),
-                                                    Expanded(
+                                                    Flexible(
+                                                      // ใช้ Flexible แทน Expanded เพื่อให้ขยายตามขนาดที่จำเป็น
                                                       child:
                                                           CustomContainerStyles
                                                               .styledContainer(
@@ -797,7 +833,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                                   fontSize:
                                                                       14.0),
                                                           softWrap:
-                                                              true, // เปิดให้ตัดบรรทัด
+                                                              true, // เปิดให้ตัดบรรทัดเมื่อความยาวเกิน
                                                           overflow: TextOverflow
                                                               .visible, // แสดงข้อความทั้งหมด
                                                         ),
@@ -1050,18 +1086,18 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     String ou_code,
     int seq,
     String item_code,
-  ) async {
-    String formattedSysQty =
-        NumberFormat('#,###,###,###,###,###.##').format(sys_qty);
-    String formattedDiffQty =
-        NumberFormat('#,###,###,###,###,###.##').format(diff_qty);
+  ) {
+    // String formattedSysQty =
+    //     NumberFormat('#,###,###,###,###,###.##').format(sys_qty);
+    // String formattedDiffQty =
+    //     NumberFormat('#,###,###,###,###,###.##').format(diff_qty);
     String formattedCountQty =
         NumberFormat('#,###,###,###,###,###').format(count_qty);
     String formattedSeq = NumberFormat('#,###,###,###,###,###').format(seq);
-    TextEditingController sysQtyController =
-        TextEditingController(text: formattedSysQty);
-    TextEditingController diffQtyController =
-        TextEditingController(text: formattedDiffQty);
+    // TextEditingController sysQtyController =
+    //     TextEditingController(text: formattedSysQty);
+    // TextEditingController diffQtyController =
+    //     TextEditingController(text: formattedDiffQty);
     TextEditingController countQtyController =
         TextEditingController(text: formattedCountQty.toString());
     TextEditingController seqController =
@@ -1076,7 +1112,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     String checkCountQTY = count_qty.toString();
     String checkRemake = remark;
 
-    bool? result = await showGeneralDialog(
+    showGeneralDialog(
       context: context,
       barrierDismissible: false,
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
@@ -1351,16 +1387,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
           ),
         );
       },
-    ).then((value) {
-      // เช็คเมื่อ dialog ถูกปิดจากการกดด้านนอก
-      if (value == null) {
-        if (checkCountQTY.toString() != count_qty.toString() ||
-            checkRemake != remark) {
-          showExitWarningDialog();
-          print('result : กดออกจากข้างนอก');
-        }
-      }
-    });
+    );
   }
 
   void showDialogconfirm() {
@@ -1371,7 +1398,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Icon(
