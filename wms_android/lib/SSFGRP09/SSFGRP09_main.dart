@@ -1583,7 +1583,22 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               ),
       ),
       bottomNavigationBar: BottomBar(
-        currentPage: 'show',
+        currentPage: returnLovDate.isEmpty &&
+                returnLovDocNo.isEmpty &&
+                returnStartWareCode.isEmpty &&
+                returnEndWareCode.isEmpty &&
+                returnStartLoc.isEmpty &&
+                returnEndLoc.isEmpty &&
+                returnStartGroup.isEmpty &&
+                returnEndGroup.isEmpty &&
+                returnStartCategory.isEmpty &&
+                returnEndCategory.isEmpty &&
+                returnStartSubCategory.isEmpty &&
+                returnEndSubCategory.isEmpty &&
+                returnStartItem.isEmpty &&
+                returnEndItem.isEmpty
+            ? 'not_show'
+            : 'show',
       ),
     );
   }
@@ -1698,7 +1713,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   Navigator.of(context).pop();
                                   isLoading = true;
                                   setState(() {
-                                    String dataCheck = returnCode;
+                                    // String dataCheck = returnCode;
                                     returnLovDate = returnCode;
                                     displayLovDate = doc;
                                     dateController.text =
@@ -2504,7 +2519,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
+                                    // String dataCheck = returnCode;
                                     returnStartGroup = returnCode;
                                     displayStartGroup = doc;
                                     startGroupController.text =
@@ -2661,7 +2676,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
+                                    // String dataCheck = returnCode;
                                     returnEndGroup = returnCode;
                                     displayEndGroup = doc;
                                     endGroupController.text =
@@ -2817,7 +2832,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
+                                    // String dataCheck = returnCode;
                                     returnStartCategory = returnCode;
                                     displayStartCategory = doc;
                                     startCategoryController.text =
@@ -2969,7 +2984,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
+                                    // String dataCheck = returnCode;
                                     returnEndCategory = returnCode;
                                     displayEndCategory = doc;
                                     endCategoryController.text =

@@ -731,7 +731,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
         ]),
       ),
       bottomNavigationBar: BottomBar(
-        currentPage: 'not_show',
+        currentPage: 'show',
       ),
     );
   }

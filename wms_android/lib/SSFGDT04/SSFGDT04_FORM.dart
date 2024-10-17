@@ -500,7 +500,22 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: const Text('สาเหตุการยกเลิก'),
+                                  // title: const Text('สาเหตุการยกเลิก'),
+                                  title: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('สาเหตุการยกเลิก'),
+                                      // Close icon
+                                      IconButton(
+                                        icon: const Icon(Icons.close),
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                   contentPadding: EdgeInsets.all(
                                       20), // Add padding around content
                                   content: SizedBox(
@@ -735,200 +750,140 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                     ),
                                   ),
                                   actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        _canCelController.clear();
-                                        // Close popup
-                                        Navigator.of(context).pop();
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        side: const BorderSide(
-                                            color: Colors.grey),
-                                      ),
-                                      child: const Text('ยกเลิก',
-                                          style: TextStyle(
-                                            fontSize:
-                                                14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                            color: Colors
-                                                .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                          )),
-                                    ),
-                                    TextButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        side: const BorderSide(
-                                            color: Colors.grey),
-                                      ),
-                                      child: Text('ตกลง',
-                                          style: TextStyle(
-                                            fontSize:
-                                                14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                            color: Colors
-                                                .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                          )),
-                                      onPressed: () async {
-                                        await cancel_INHeadNonePO_WMS(
-                                            selectedCancelCode ?? '');
-                                        if (selectedCancelCode == null) {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Row(
-                                                      children: const [
-                                                        Icon(
-                                                          Icons
-                                                              .notification_important, // ไอคอนแจ้งเตือน
-                                                          color: Colors
-                                                              .red, // สีแดง
-                                                          size: 30,
-                                                        ),
-                                                        SizedBox(
-                                                          width:
-                                                              8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                                        ),
-                                                        Text('แจ้งเตือน'),
-                                                      ],
-                                                    ),
-                                                    // Close icon
-                                                    IconButton(
-                                                      icon: const Icon(
-                                                          Icons.close),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop(); // Close the dialog
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                                content: Text('$po_message'),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      side: const BorderSide(
-                                                          color: Colors.grey),
-                                                    ),
-                                                    child: Text('ตกลง',
-                                                        style: TextStyle(
-                                                          fontSize:
-                                                              14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                                          color: Colors
-                                                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                                        )),
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        } else {
-                                          Navigator.of(context).pop();
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Row(
-                                                      children: const [
-                                                        Icon(
-                                                          Icons
-                                                              .notification_important, // ไอคอนแจ้งเตือน
-                                                          color: Colors
-                                                              .red, // สีแดง
-                                                          size: 30,
-                                                        ),
-                                                        SizedBox(
-                                                          width:
-                                                              8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                                        ),
-                                                        Text('แจ้งเตือน'),
-                                                      ],
-                                                    ),
-                                                    // Close icon
-                                                    IconButton(
-                                                      icon: const Icon(
-                                                          Icons.close),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop(); // Close the dialog
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                                content: Text(
-                                                    'ยกเลิกรายการเสร็จสมบูรณ์'),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      side: const BorderSide(
-                                                          color: Colors.grey),
-                                                    ),
-                                                    child: Text('ตกลง',
-                                                        style: TextStyle(
-                                                            fontSize: 14,
-                                                            color:
-                                                                Colors.black)),
-                                                    onPressed: () {
-                                                      cancel_INHeadNonePO_WMS(
-                                                              selectedCancelCode!)
-                                                          .then((_) {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        Navigator.of(context)
-                                                            .pop(
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                SSFGDT04_MENU(
-                                                              pWareCode: gb
-                                                                  .P_WARE_CODE,
-                                                              pErpOuCode: gb
-                                                                  .P_ERP_OU_CODE,
-                                                            ),
-                                                          ),
-                                                        );
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        // Navigator.of(context)
-                                                        //     .pop();
-                                                      }).catchError((error) {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          SnackBar(
-                                                            content: Text(
-                                                                'An error occurred: $error'),
-                                                          ),
-                                                        );
-                                                      });
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ],
+  Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween, // Spacing between buttons
+    children: [
+      TextButton(
+        onPressed: () {
+          _canCelController.clear();
+          // Close popup
+          Navigator.of(context).pop();
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          side: const BorderSide(color: Colors.grey),
+        ),
+        child: const Text('Cancel'),
+      ),
+      TextButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          side: const BorderSide(color: Colors.grey),
+        ),
+        child: Text('OK'),
+        onPressed: () async {
+          await cancel_INHeadNonePO_WMS(selectedCancelCode ?? '');
+          if (selectedCancelCode == null) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: const [
+                          Icon(
+                            Icons.notification_important,
+                            color: Colors.red,
+                            size: 30,
+                          ),
+                          SizedBox(width: 8),
+                          Text('แจ้งเตือน'),
+                        ],
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                  content: Text('$po_message'),
+                  actions: <Widget>[
+                    TextButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.grey),
+                      ),
+                      child: Text('ตกลง'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          } else {
+            Navigator.of(context).pop();
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: const [
+                          Icon(
+                            Icons.notification_important,
+                            color: Colors.red,
+                            size: 30,
+                          ),
+                          SizedBox(width: 8),
+                          Text('แจ้งเตือน'),
+                        ],
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                  content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
+                  actions: <Widget>[
+                    TextButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.grey),
+                      ),
+                      child: Text('ตกลง'),
+                      onPressed: () {
+                        cancel_INHeadNonePO_WMS(selectedCancelCode!).then((_) {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop(
+                            MaterialPageRoute(
+                              builder: (context) => SSFGDT04_MENU(
+                                pWareCode: gb.P_WARE_CODE,
+                                pErpOuCode: gb.P_ERP_OU_CODE,
+                              ),
+                            ),
+                          );
+                          Navigator.of(context).pop();
+                        }).catchError((error) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('An error occurred: $error'),
+                            ),
+                          );
+                        });
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        },
+      ),
+    ],
+  ),
+],
+
                                 );
                               },
                             );
@@ -1036,13 +991,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                           side: const BorderSide(
                                               color: Colors.grey),
                                         ),
-                                        child: const Text('ตกลง',
-                                            style: TextStyle(
-                                              fontSize:
-                                                  14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                              color: Colors
-                                                  .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                            )),
+                                        child: const Text('ตกลง'),
                                         onPressed: () {
                                           Navigator.of(context)
                                               .pop(); // Close the dialog on button press
@@ -1630,8 +1579,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                     ),
                                   ),
                                   controller: _refReceiveController,
-                                  // controller: TextEditingController(
-                                  //     text: selectedRefReceive),
                                 ),
                               ),
                             ),

@@ -430,10 +430,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     print('arCode  in chkCust  : $arCode');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_ChkCust/$arCode/${custCode ?? 'null'}'));
-
-      print(
-          'URL: http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_ChkCust/$arCode/${custCode ?? 'null'}');
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_ChkCust/$arCode/${custCode}'));
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
         final Map<String, dynamic> dataMessage = jsonDecode(utf8

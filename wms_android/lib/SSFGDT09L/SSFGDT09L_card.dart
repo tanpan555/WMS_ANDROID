@@ -908,7 +908,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
         ),
       ),
       bottomNavigationBar: BottomBar(
-        currentPage: 'not_show',
+        currentPage: 'show',
       ),
     );
   }

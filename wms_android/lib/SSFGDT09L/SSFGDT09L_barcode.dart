@@ -724,7 +724,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             // --------------------------------------------------------------------------------------------------
           ]))),
       bottomNavigationBar: BottomBar(
-        currentPage: 'not_show',
+        currentPage: 'show',
       ),
     );
   }
