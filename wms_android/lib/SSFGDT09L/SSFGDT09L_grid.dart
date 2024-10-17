@@ -793,7 +793,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
         ),
       ),
       bottomNavigationBar: BottomBar(
-        currentPage: 'not_show',
+        currentPage: 'show',
       ),
     );
   }

@@ -380,7 +380,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
         ),
       ),
       bottomNavigationBar: const BottomBar(
-        currentPage: 'not_show',
+        currentPage: 'show',
       ),
     );
   }

@@ -585,7 +585,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
         ),
       ),
       bottomNavigationBar: BottomBar(
-        currentPage: 'not_show',
+        currentPage: 'show',
       ),
     );
   }
