@@ -1176,7 +1176,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                         controller: TextEditingController(text: entry.value),
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: const Color.fromARGB(255, 254, 247, 230),
+                          fillColor: const Color.fromARGB(255, 255, 255, 255),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(
                             vertical: 14,
@@ -1239,7 +1239,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                       controller: TextEditingController(text: entry.value),
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: const Color.fromARGB(255, 254, 247, 230),
+                        fillColor: const Color.fromARGB(255, 255, 255, 255),
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.symmetric(
                           vertical: 14,
@@ -1338,43 +1338,83 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                   itemCount: dataList.length,
                   itemBuilder: (context, index) {
                     return Card(
-                      color: Colors
-                          .blue[50], // Set the background color of the card
-                      elevation: 2, // Adds shadow for depth
-                      margin: EdgeInsets.symmetric(
-                          vertical: 6), // Space between cards
-                      child: CheckboxListTile(
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Item: ${dataList[index]['item'] ?? ''}',
-                              style: TextStyle(fontSize: 12),
+                      color: Colors.blue[50],
+                      elevation: 2,
+                      margin: EdgeInsets.symmetric(vertical: 6),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text('Item: ',
+                                        style: TextStyle(fontSize: 12)),
+                                    CustomContainerStyles.styledContainer(
+                                      dataList[index]['item'],
+                                      child: Text(
+                                        '${dataList[index]['item'] ?? ''}',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    Text('Item Desc: ',
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.black)),
+                                    Expanded(
+                                      child:
+                                          CustomContainerStyles.styledContainer(
+                                        dataList[index]['item_desc'],
+                                        child: Text(
+                                          '${dataList[index]['item_desc'] ?? ''}',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    Text('ค้างรับ: ',
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.black)),
+                                    CustomContainerStyles.styledContainer(
+                                      dataList[index]['pending_qty']
+                                          ?.toString(),
+                                      child: Text(
+                                        '${dataList[index]['pending_qty'] ?? 0}',
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.black),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            SizedBox(height: 4),
-                            Text(
-                              'Item Desc: ${dataList[index]['item_desc'] ?? ''}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.black,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              'ค้างรับ: ${dataList[index]['pending_qty'] ?? 0}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                        value: selectedItems[index],
-                        onChanged: (bool? value) {
-                          setState(() {
-                            selectedItems[index] = value ?? false;
-                          });
-                        },
+                          ),
+                          // Divider(height: 1, color: Colors.black),
+                          CheckboxListTile(
+                            title:
+                                Text('Select', style: TextStyle(fontSize: 12)),
+                            value: selectedItems[index],
+                            onChanged: (bool? value) {
+                              setState(() {
+                                selectedItems[index] = value ?? false;
+                              });
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          ),
+                        ],
                       ),
                     );
                   },

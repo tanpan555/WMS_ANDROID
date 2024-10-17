@@ -525,253 +525,157 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                      text: 'Lots No: ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black)),
-                                  WidgetSpan(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      color: const Color.fromARGB(
-                                          255, 255, 255, 255),
-                                      child: Text('${item['lots_no'] ?? ''}',
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                      text: 'จำนวนรับ: ',
+                            Row(
+                              children: [
+                                Text('Lots No: ',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black)),
+                                CustomContainerStyles.styledContainer(
+                                  item['lots_no'],
+                                  child: Text('${item['lots_no'] ?? ''}',
                                       style: TextStyle(color: Colors.black)),
-                                  WidgetSpan(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      color: const Color.fromARGB(
-                                          255, 255, 255, 255),
-                                      child: Text(
-                                          '${item['pack_qty'] != null ? numberFormat.format(item['pack_qty']) : ''}',
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                      text: 'Item: ',
+                            SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Text('จำนวนรับ: ',
+                                    style: TextStyle(color: Colors.black)),
+                                CustomContainerStyles.styledContainer(
+                                  item['pack_qty']?.toString(),
+                                  child: Text(
+                                    '${item['pack_qty'] != null ? numberFormat.format(item['pack_qty']) : ''}',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Text('Item: ',
+                                    style: TextStyle(color: Colors.black)),
+                                CustomContainerStyles.styledContainer(
+                                  item['item_code'],
+                                  child: Text('${item['item_code'] ?? ''}',
                                       style: TextStyle(color: Colors.black)),
-                                  WidgetSpan(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      color: const Color.fromARGB(
-                                          255, 255, 255, 255),
-                                      child: Text('${item['item_code'] ?? ''}',
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                      text: 'จำนวนจ่าย: ',
+                            SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Text('จำนวนจ่าย: ',
+                                    style: TextStyle(color: Colors.black)),
+                                CustomContainerStyles.styledContainer(
+                                  item['old_pack_qty']?.toString(),
+                                  child: Text('${item['old_pack_qty'] ?? ''}',
                                       style: TextStyle(color: Colors.black)),
-                                  WidgetSpan(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      color: const Color.fromARGB(
-                                          255, 255, 255, 255),
-                                      child: Text(
-                                          '${item['old_pack_qty'] ?? ''}',
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                      text: 'Pack: ',
+                            SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Text('Pack: ',
+                                    style: TextStyle(color: Colors.black)),
+                                CustomContainerStyles.styledContainer(
+                                  item['pack_code'],
+                                  child: Text('${item['pack_code'] ?? ''}',
                                       style: TextStyle(color: Colors.black)),
-                                  WidgetSpan(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      color: const Color.fromARGB(
-                                          255, 255, 255, 255),
-                                      child: Text('${item['pack_code'] ?? ''}',
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                      text: 'Locator: ',
+                            SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Text('Locator: ',
+                                    style: TextStyle(color: Colors.black)),
+                                CustomContainerStyles.styledContainer(
+                                  item['location_code'],
+                                  child: Text('${item['location_code'] ?? ''}',
                                       style: TextStyle(color: Colors.black)),
-                                  WidgetSpan(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      color: const Color.fromARGB(
-                                          255, 255, 255, 255),
-                                      child: Text(
-                                          '${item['location_code'] ?? ''}',
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                      text: 'PD Location: ',
+                            SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Text('PD Location: ',
+                                    style: TextStyle(color: Colors.black)),
+                                CustomContainerStyles.styledContainer(
+                                  item['attribute1'],
+                                  child: Text('${item['attribute1'] ?? ''}',
                                       style: TextStyle(color: Colors.black)),
-                                  WidgetSpan(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      color: const Color.fromARGB(
-                                          255, 255, 255, 255),
-                                      child: Text('${item['attribute1'] ?? ''}',
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                      text: 'Reason: ',
+                            Row(
+                              children: [
+                                Text('Reason: ',
+                                    style: TextStyle(color: Colors.black)),
+                                CustomContainerStyles.styledContainer(
+                                  item['attribute2'],
+                                  child: Text('${item['attribute2'] ?? ''}',
                                       style: TextStyle(color: Colors.black)),
-                                  WidgetSpan(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      color: const Color.fromARGB(
-                                          255, 255, 255, 255),
-                                      child: Text('${item['attribute2'] ?? ''}',
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                      text: 'ใช้แทนจุด: ',
+                            SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Text('ใช้แทนจุด: ',
+                                    style: TextStyle(color: Colors.black)),
+                                CustomContainerStyles.styledContainer(
+                                  item['attribute3'],
+                                  child: Text('${item['attribute3'] ?? ''}',
                                       style: TextStyle(color: Colors.black)),
-                                  WidgetSpan(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      color: const Color.fromARGB(
-                                          255, 255, 255, 255),
-                                      child: Text('${item['attribute3'] ?? ''}',
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                      text: 'Replace Lot: ',
+                            SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Text('Replace Lot: ',
+                                    style: TextStyle(color: Colors.black)),
+                                CustomContainerStyles.styledContainer(
+                                  item['attribute4'],
+                                  child: Text('${item['attribute4'] ?? ''}',
                                       style: TextStyle(color: Colors.black)),
-                                  WidgetSpan(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      color: const Color.fromARGB(
-                                          255, 255, 255, 255),
-                                      child: Text('${item['attribute4'] ?? ''}',
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                      text: 'Item Desc: ',
-                                      style: TextStyle(color: Colors.black)),
-                                  WidgetSpan(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      color: const Color.fromARGB(
-                                          255, 255, 255, 255),
-                                      child: Text(
-                                          '${item['nb_item_name'] ?? ''}',
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
+                            SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Text('Item Desc: ',
+                                    style: TextStyle(color: Colors.black)),
+                                Expanded(
+                                  child: CustomContainerStyles.styledContainer(
+                                    item['nb_item_name'],
+                                    child: Text('${item['nb_item_name'] ?? ''}',
+                                        style: TextStyle(color: Colors.black)),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                      text: 'Pack Desc: ',
-                                      style: TextStyle(color: Colors.black)),
-                                  WidgetSpan(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 2),
-                                      color: const Color.fromARGB(
-                                          255, 255, 255, 255),
-                                      child: Text(
-                                          '${item['nb_pack_name'] ?? ''}',
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    ),
+                            SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Text('Pack Desc: ',
+                                    style: TextStyle(color: Colors.black)),
+                                Expanded(
+                                  child: CustomContainerStyles.styledContainer(
+                                    item['nb_pack_name'],
+                                    child: Text('${item['nb_pack_name'] ?? ''}',
+                                        style: TextStyle(color: Colors.black)),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
+                            SizedBox(height: 4),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
