@@ -740,7 +740,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                                       });
                                     }
                                   : null,
-                              child: const Text('Previous',style: TextStyle(color: Colors.black)),
+                              child: const Text('Previous'),
                             ),
                             // ตรวจสอบจำนวน card ก่อนแสดงข้อความ
                             if (dataCard.length >= 15)
@@ -757,7 +757,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                                       });
                                     }
                                   : null,
-                              child: const Text('Next',style: TextStyle(color: Colors.black)),
+                              child: const Text('Next'),
                             ),
                           ],
                         );
@@ -799,11 +799,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                 backgroundColor: Colors.white,
                 side: const BorderSide(color: Colors.grey),
               ),
-              child: const Text('ตกลง',
-                  style: TextStyle(
-                    fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
-                    color: Colors.black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                  )),
+              child: const Text('ตกลง'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

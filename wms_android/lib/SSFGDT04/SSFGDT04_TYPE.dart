@@ -37,16 +37,6 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
     fetchStatusItems();
   }
 
-  // void setData() {
-  //   if (mounted) {
-  //     setState(() {
-  //       selectedDocType = 'รับจากการผลิต';
-  //       selectedDocDesc = 'RMI16';
-  //       docTypeController.text = 'รับจากการผลิต';
-  //     });
-  //   }
-  // }
-
   Future<void> fetchStatusItems() async {
     final response = await http.get(Uri.parse(
         'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_TYPE/${gb.ATTR1}'));
@@ -350,13 +340,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                                         side: const BorderSide(
                                             color: Colors.grey),
                                       ),
-                                      child: const Text('ตกลง',
-                                          style: TextStyle(
-                                            fontSize:
-                                                14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                            color: Colors
-                                                .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                          )),
+                                      child: const Text('ตกลง'),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
@@ -409,13 +393,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                                       side:
                                           const BorderSide(color: Colors.grey),
                                     ),
-                                    child: Text('ตกลง',
-                                        style: TextStyle(
-                                          fontSize:
-                                              14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                          color: Colors
-                                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                        )),
+                                    child: Text('ตกลง'),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
@@ -429,12 +407,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                       style: AppStyles.ConfirmbuttonStyle(),
                       child: Text(
                         'CONFIRM',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          letterSpacing: 1.2,
-                        ),
+                        style: AppStyles.ConfirmbuttonTextStyle(),
                       ),
                     ),
                   ],

@@ -398,12 +398,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                                   .pop(); // ปิด popup ที่สอง
                                               // ทำงานเมื่อผู้ใช้กด "Cancel"
                                             },
-                                            child: const Text('Cancel',style: TextStyle(
-                                                  fontSize:
-                                                      14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                                  color: Colors
-                                                      .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                                )),
+                                            child: const Text('ยกเลิก'),
                                           ),
                                           TextButton(
                                             style: ElevatedButton.styleFrom(
@@ -434,26 +429,14 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                                 );
                                               });
                                             },
-                                            child: const Text('OK',
-                                                style: TextStyle(
-                                                  fontSize:
-                                                      14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                                  color: Colors
-                                                      .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                                )),
+                                            child: const Text('ตกลง'),
                                           ),
                                         ],
                                       );
                                     },
                                   );
                                 },
-                                child: const Text('OK',
-                                    style: TextStyle(
-                                      fontSize:
-                                          14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                      color: Colors
-                                          .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                    )),
+                                child: const Text('ตกลง'),
                               ),
                             ],
                           );
@@ -500,13 +483,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                   backgroundColor: Colors.white,
                                   side: const BorderSide(color: Colors.grey),
                                 ),
-                                child: const Text('OK',
-                                    style: TextStyle(
-                                      fontSize:
-                                          14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                      color: Colors
-                                          .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                    )),
+                                child: const Text('ตกลง'),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
@@ -519,17 +496,13 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                   },
                   style: AppStyles.ConfirmbuttonStyle(),
                   child: Text(
-                    'Confirm',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
+                    'CONFIRM',
+                    style: AppStyles.ConfirmbuttonTextStyle(),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 10),
             Expanded(
               child: SingleChildScrollView(
                 child: _buildCards(),

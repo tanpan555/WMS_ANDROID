@@ -229,12 +229,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ตกลง',
-                        style: TextStyle(
-                          fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
-                          color: Colors
-                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                        )),
+                    child: const Text('ตกลง'),
                     onPressed: () {
                       Navigator.of(context).pop();
                       clearScreen(); // ฟังก์ชันสำหรับเคลียร์ค่าที่หน้าจอ
@@ -282,12 +277,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ตกลง',
-                        style: TextStyle(
-                          fontSize: 14, // ปรับขนาดตัวหนังสือตามต้องการ
-                          color: Colors
-                              .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                        )),
+                    child: const Text('ตกลง'),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -326,7 +316,8 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
+      appBar:
+          CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer:CustomDrawer(),
       body: Padding(
@@ -492,11 +483,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                               side: const BorderSide(color: Colors.grey),
                             ),
                             child: Text(
-                              'ตกลง',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                              ),
+                              'ตกลง'
                             ),
                             onPressed: () {
                               Navigator.of(context).pop();

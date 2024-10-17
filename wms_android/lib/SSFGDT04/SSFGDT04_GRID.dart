@@ -4,11 +4,9 @@ import '../bottombar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
-// import 'SSFGDT04_SCREEN_5.dart';
 import 'package:intl/intl.dart';
 import 'SSFGDT04_SCANBARCODE.dart';
 import '../styles.dart';
-// import 'package:wms_android/custom_drawer.dart';
 
 class SSFGDT04_GRID extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจาก lov
@@ -32,7 +30,6 @@ class SSFGDT04_GRID extends StatefulWidget {
 
 class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   List<Map<String, dynamic>> gridItems = [];
-  // List<Map<String, dynamic>> setqc = [];
   late TextEditingController _docNoController;
   List<dynamic> data = [];
   List<String> deletedItemCodes = [];
@@ -407,13 +404,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                   backgroundColor: Colors.white,
                                   side: const BorderSide(color: Colors.grey),
                                 ),
-                                child: const Text('ยกเลิก',
-                                    style: TextStyle(
-                                      fontSize:
-                                          14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                      color: Colors
-                                          .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                    )),
+                                child: const Text('ยกเลิก'),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
@@ -423,13 +414,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                   backgroundColor: Colors.white,
                                   side: const BorderSide(color: Colors.grey),
                                 ),
-                                child: const Text('ตกลง',
-                                    style: TextStyle(
-                                      fontSize:
-                                          14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                      color: Colors
-                                          .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                    )),
+                                child: const Text('ตกลง'),
                                 onPressed: () async {
                                   Navigator.of(context).pop();
                                   await fetchGetPo();
@@ -469,13 +454,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                     backgroundColor: Colors.white,
                                     side: const BorderSide(color: Colors.grey),
                                   ),
-                                  child: const Text('ตกลง',
-                                      style: TextStyle(
-                                        fontSize:
-                                            14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                        color: Colors
-                                            .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                      )),
+                                  child: const Text('ตกลง'),
                                   onPressed: () {
                                     Navigator.of(context)
                                         .pop(); // Close the dialog
@@ -527,13 +506,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                     backgroundColor: Colors.white,
                                     side: const BorderSide(color: Colors.grey),
                                   ),
-                                  child: const Text('ตกลง',
-                                      style: TextStyle(
-                                        fontSize:
-                                            14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                        color: Colors
-                                            .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                      )),
+                                  child: const Text('ตกลง'),
                                   onPressed: () {
                                     Navigator.of(context)
                                         .pop(); // Close the dialog
@@ -848,13 +821,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                           side: const BorderSide(
                                               color: Colors.grey),
                                         ),
-                                        child: const Text('ยกเลิก',
-                                            style: TextStyle(
-                                              fontSize:
-                                                  14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                              color: Colors
-                                                  .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                            )),
+                                        child: const Text('ยกเลิก'),
                                         onPressed: () {
                                           Navigator.of(context).pop(false);
                                         },
@@ -865,13 +832,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                           side: const BorderSide(
                                               color: Colors.grey),
                                         ),
-                                        child: const Text('ตกลง',
-                                            style: TextStyle(
-                                              fontSize:
-                                                  14, // ปรับขนาดตัวหนังสือตามต้องการ
-                                              color: Colors
-                                                  .black, // สามารถเปลี่ยนสีตัวหนังสือได้ที่นี่
-                                            )),
+                                        child: const Text('ตกลง'),
                                         onPressed: () async {
                                           final poItemCode = item['item_code'];
                                           final poSeq = item['seq'];
