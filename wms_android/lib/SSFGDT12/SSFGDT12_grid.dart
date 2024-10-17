@@ -1008,37 +1008,41 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                 ),
                                               ),
                                               const SizedBox(height: 4),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  IconButton(
-                                                    iconSize: 10.0,
-                                                    icon: Image.asset(
-                                                      'assets/images/edit.png',
-                                                      width: 40.0,
-                                                      height: 40.0,
+                                              if (statusForCheck == 'T' ||
+                                                  statusForCheck == 'N') ...[
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    IconButton(
+                                                      iconSize: 10.0,
+                                                      icon: Image.asset(
+                                                        'assets/images/edit.png',
+                                                        width: 40.0,
+                                                        height: 40.0,
+                                                      ),
+                                                      onPressed: () {
+                                                        showDetailsDialog(
+                                                          context,
+                                                          item['sys_qty']
+                                                              .toDouble(),
+                                                          item['diff_qty']
+                                                              .toDouble(),
+                                                          // double.parse(item['diff_qty']),
+                                                          item['rowid'],
+                                                          item['count_qty'] ??
+                                                              0,
+                                                          item['remark'] ?? '',
+                                                          widget.docNo,
+                                                          widget.pErpOuCode,
+                                                          item['seq'],
+                                                          item['item_code'],
+                                                        );
+                                                      },
                                                     ),
-                                                    onPressed: () {
-                                                      showDetailsDialog(
-                                                        context,
-                                                        item['sys_qty']
-                                                            .toDouble(),
-                                                        item['diff_qty']
-                                                            .toDouble(),
-                                                        // double.parse(item['diff_qty']),
-                                                        item['rowid'],
-                                                        item['count_qty'] ?? 0,
-                                                        item['remark'] ?? '',
-                                                        widget.docNo,
-                                                        widget.pErpOuCode,
-                                                        item['seq'],
-                                                        item['item_code'],
-                                                      );
-                                                    },
-                                                  ),
-                                                ],
-                                              )
+                                                  ],
+                                                )
+                                              ]
                                             ],
                                           ),
                                         ),
