@@ -2160,12 +2160,14 @@ class _LotDialogState extends State<LotDialog> {
   final DateFormat displayFormat = DateFormat("dd/MM/yyyy");
   final DateFormat apiFormat = DateFormat("MM/dd/yyyy");
 
+  bool check = false;
+
   void showDetailsLotDialog(BuildContext context, Map<String, dynamic> item,
       String recSeq, String ou_code, Function refreshCallback) {
     String recNo = widget.poReceiveNo;
     String lotSeq = item['lot_seq']?.toString() ?? '';
     bool isMfgDateValid = true;
-
+    bool check = false;
     // Create a copy of the item map to work with
     Map<String, dynamic> workingItem = Map.from(item);
 
@@ -2283,6 +2285,9 @@ class _LotDialogState extends State<LotDialog> {
                       ),
                     ),
                     onChanged: (value) {
+                      setState(() {
+                        check = true;
+                      });
                       String numbersOnly = value.replaceAll('/', '');
 
                       if (numbersOnly.length > 8) {
@@ -2382,6 +2387,11 @@ class _LotDialogState extends State<LotDialog> {
                                 Expanded(
                                   flex: 2,
                                   child: TextFormField(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        check = true;
+                                      });
+                                    },
                                     initialValue: item['lot_product_no'] ?? '',
                                     decoration: InputDecoration(
                                       labelText: 'Lot No',
@@ -2402,6 +2412,11 @@ class _LotDialogState extends State<LotDialog> {
                             ),
                             SizedBox(height: 12.0),
                             TextFormField(
+                              onChanged: (value) {
+                                setState(() {
+                                  check = true;
+                                });
+                              },
                               controller: lotQtyController,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(
@@ -2421,6 +2436,11 @@ class _LotDialogState extends State<LotDialog> {
                             ),
                             SizedBox(height: 16.0),
                             TextFormField(
+                              onChanged: (value) {
+                                setState(() {
+                                  check = true;
+                                });
+                              },
                               controller: lotSupplierController,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(
@@ -2484,12 +2504,69 @@ class _LotDialogState extends State<LotDialog> {
                         child: IconButton(
                           icon: Icon(Icons.close),
                           onPressed: () {
-                            lotQtyController.clear();
-                            lotSupplierController.clear();
-                            mfgDateController
-                                .clear(); // This clears the text field
-                            Navigator.of(context)
-                                .pop(); // This closes the dialog
+                            print('fffffffffffff $check');
+                            if (check == true) {
+                              // or simply if (check)
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.notification_important,
+                                              color: Colors
+                                                  .red, // Set the color to red
+                                            ),
+                                            SizedBox(
+                                                width:
+                                                    8), // Add some space between the icon and the text
+                                            Text('แจ้งเตือน'), // Title text
+                                          ],
+                                        ),
+                                        IconButton(
+                                          icon:
+                                              Icon(Icons.close), // Close button
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    content: Text(
+                                        'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text('ยกเลิก'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      Spacer(),
+                                      TextButton(
+                                        child: Text('ตกลง'),
+                                        onPressed: () {
+                                          lotQtyController.clear();
+                                          lotSupplierController.clear();
+                                          mfgDateController
+                                              .clear(); // This clears the text field
+                                          Navigator.of(context)
+                                              .pop(); // This closes the dialog
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            } else {
+                              Navigator.of(context).pop();
+                            }
                           },
                         ),
                       ),
@@ -2940,10 +3017,22 @@ class _LotDialogState extends State<LotDialog> {
             borderRadius: BorderRadius.circular(15.0),
           ),
           title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Icon(Icons.info_outline, color: Colors.blue, size: 24.0),
-              SizedBox(width: 10.0),
-              Text('Save Lot'),
+              Row(
+                children: <Widget>[
+                  Icon(Icons.info_outline, color: Colors.blue, size: 24.0),
+                  SizedBox(width: 10.0),
+                  Text('แจ้งเตือน'),
+                ],
+              ),
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop(); // Close the dialog when the X is pressed
+                },
+              ),
             ],
           ),
           content: Text(
@@ -2957,9 +3046,7 @@ class _LotDialogState extends State<LotDialog> {
               ),
               child: Column(
                 children: <Widget>[
-                  Icon(Icons.cancel, color: Colors.red),
-                  SizedBox(width: 5.0),
-                  Text('Cancel'),
+                  Text('ยกเลิก'),
                 ],
               ),
               onPressed: () {
@@ -2972,9 +3059,7 @@ class _LotDialogState extends State<LotDialog> {
               ),
               child: Column(
                 children: <Widget>[
-                  Icon(Icons.check, color: Colors.blue),
-                  SizedBox(width: 5.0),
-                  Text('OK'),
+                  Text('ตกลง'),
                 ],
               ),
               onPressed: () async {
@@ -3191,28 +3276,23 @@ class _LotDialogState extends State<LotDialog> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  _buildInfoRow3({
-                                    'Seq:':
-                                        item['lot_seq_nb']?.toString() ?? '',
-                                  }),
-                                  _buildInfoRow3({
-                                    'Lot No:':
-                                        item['lot_product_no']?.toString() ??
-                                            '',
-                                  }),
-                                  _buildInfoRow2({
-                                    'Lot QTY:': item['lot_qty'] != null
-                                        ? numberFormat.format(item['lot_qty'])
-                                        : '',
-                                  }),
-                                  _buildInfoRow3({
-                                    'Lot ผู้ผลิต:':
-                                        item['lot_supplier']?.toString() ?? '',
-                                  }),
-                                  _buildInfoRow3({
-                                    'MFG Date:':
-                                        item['mfg_date']?.toString() ?? '',
-                                  }),
+                                  _buildInfoRow('Seq:',
+                                      item['lot_seq_nb']?.toString() ?? ''),
+                                  SizedBox(height: 8),
+                                  _buildInfoRow('Lot No:',
+                                      item['lot_product_no']?.toString() ?? ''),
+                                  SizedBox(height: 8),
+                                  _buildInfoRow(
+                                      'Lot QTY:',
+                                      item['lot_qty'] != null
+                                          ? numberFormat.format(item['lot_qty'])
+                                          : ''),
+                                  SizedBox(height: 8),
+                                  _buildInfoRow('Lot ผู้ผลิต:',
+                                      item['lot_supplier']?.toString() ?? ''),
+                                  SizedBox(height: 8),
+                                  _buildInfoRow('MFG Date:',
+                                      item['mfg_date']?.toString() ?? ''),
                                   SizedBox(height: 16),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
@@ -3328,78 +3408,36 @@ class _LotDialogState extends State<LotDialog> {
                       child: Text('No LOT details available',
                           style: TextStyle(color: Colors.white)),
                     ),
-              // SizedBox(height: 16),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     Expanded(
-              //       child: ElevatedButton(
-              //         style: ElevatedButton.styleFrom(
-              //           backgroundColor: Colors.green,
-              //         ),
-              //         child: Text('ADD', style: TextStyle(color: Colors.white)),
-              //         onPressed: () async {
-              //           await postLot(
-              //               widget.poReceiveNo, widget.recSeq, widget.ouCode);
-              //           await getLotList(
-              //               widget.poReceiveNo, widget.recSeq, widget.ouCode);
-              //           setState(() {});
-              //         },
-              //       ),
-              //     ),
-              //     SizedBox(width: 12),
-              //     Expanded(
-              //       child: ElevatedButton(
-              //           style: ElevatedButton.styleFrom(
-              //             backgroundColor: Colors.greenAccent,
-              //           ),
-              //           child: Text('GENLOT',
-              //               style:
-              //                   TextStyle(color: Colors.white, fontSize: 12)),
-              //           onPressed: () async {
-              //             await genLot(
-              //                 widget.poReceiveNo,
-              //                 widget.poPONO.toString(),
-              //                 widget.recSeq,
-              //                 lotCountController.text,
-              //                 widget.ouCode);
-              //             print(poStatus);
-              //             print(poMessage);
-              //             if (poStatus == '1') {
-              //               _showAlertDialogGenLot(context);
-              //             }
-              //             await getLotList(
-              //                 widget.poReceiveNo, widget.recSeq, widget.ouCode);
-              //             setState(() {});
-              //           }),
-              //     ),
-              //   ],
-              // ),
-              // SizedBox(height: 16),
-              // Center(
-              //   child: ElevatedButton(
-              //     child: Text('OK'),
-              //     onPressed: () async {
-              //       await fetchPoStatus(widget.recSeq);
-              //       if (poreject == '1') {
-              //         showCustomDialog(context, widget.poReceiveNo,
-              //             widget.recSeq, widget.ouCode);
-              //       } else {
-              //         Navigator.pop(context, {
-              //           'status': 'pass',
-              //           'poReceiveNo': widget.poReceiveNo,
-              //           'recSeq': widget.recSeq,
-              //           'ouCode': widget.ouCode,
-              //         });
-              //       }
-              //     },
-              //   ),
-              // ),
             ],
           ),
         ),
       ),
       bottomNavigationBar: BottomBar(currentPage: 'show'),
+    );
+  }
+
+// Helper method to build each info row
+  Widget _buildInfoRow(String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        SizedBox(width: 8),
+        Flexible(
+          child: CustomContainerStyles.styledContainer(
+            value,
+            padding: 8.0,
+            child: Text(
+              value,
+              softWrap: true,
+              overflow: TextOverflow.visible,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
