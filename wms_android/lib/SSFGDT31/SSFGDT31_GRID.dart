@@ -349,16 +349,28 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: Row(
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceBetween, // Space between text and button
                                   children: [
                                     Icon(
                                       Icons
                                           .notification_important, // Use the bell icon
                                       color: Colors.red, // Set the color to red
                                     ),
-                                    SizedBox(
-                                        width:
-                                            8), // Add some space between the icon and the text
-                                    Text('แจ้งเตือน'), // Title text
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'แจ้งเตือน',
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.close),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
                                   ],
                                 ),
                                 content: const Text(
@@ -470,11 +482,29 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: Row(
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .spaceBetween, // Space between text and button
                                       children: [
-                                        Icon(Icons.notification_important,
-                                            color: Colors.red),
+                                        Icon(
+                                          Icons
+                                              .notification_important, // Use the bell icon
+                                          color: Colors
+                                              .red, // Set the color to red
+                                        ),
                                         SizedBox(width: 8),
-                                        Text('แจ้งเตือน'),
+                                        Text(
+                                          'แจ้งเตือน',
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(Icons.close),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
                                       ],
                                     ),
                                     content: const Text(
@@ -615,10 +645,27 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Row(
+            mainAxisAlignment:
+                MainAxisAlignment.spaceBetween, // Space between text and button
             children: [
-              Icon(Icons.notification_important, color: Colors.red),
+              Icon(
+                Icons.notification_important, // Use the bell icon
+                color: Colors.red, // Set the color to red
+              ),
               SizedBox(width: 8),
-              Text('แจ้งเตือน'),
+              Text(
+                'แจ้งเตือน',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ],
           ),
           content: const Text('ยืนยันที่จะลบหรือไม่'),

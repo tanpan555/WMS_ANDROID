@@ -227,7 +227,30 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
           // );
 
           AlertDialog(
-            title: Center(child: Text('คำเตือน')),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment
+                  .spaceBetween, // Space between text and button
+              children: [
+                Icon(
+                  Icons.notification_important, // Use the bell icon
+                  color: Colors.red, // Set the color to red
+                ),
+                SizedBox(width: 8),
+                Text(
+                  'แจ้งเตือน',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
             content: Text(poMessage!),
             actions: <Widget>[
               TextButton(
@@ -242,11 +265,34 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
         if (poMessage == null && poMessage!.isEmpty) {
           AlertDialog(
-            title: Center(child: Text('คำเตือน')),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment
+                  .spaceBetween, // Space between text and button
+              children: [
+                Icon(
+                  Icons.notification_important, // Use the bell icon
+                  color: Colors.red, // Set the color to red
+                ),
+                SizedBox(width: 8),
+                Text(
+                  'แจ้งเตือน',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
             content: Text("สำเร็จ"),
             actions: <Widget>[
               TextButton(
-                child: Text('OK'),
+                child: Text('ตกลง'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -1330,7 +1376,25 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
-              title: Text('เลือก Item ที่จะลบ'),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment
+                    .spaceBetween, // Space between text and button
+                children: [
+                  Text(
+                    'เลือก Item ที่จะลบ',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
               content: Container(
                 width: double.maxFinite,
                 child: ListView.builder(
@@ -1442,6 +1506,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween, // Space between text and button
                                 children: [
                                   Icon(
                                     Icons
@@ -1449,7 +1515,19 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                     color: Colors.red, // Set the color to red
                                   ),
                                   SizedBox(width: 8),
-                                  Text('แจ้งเตือน'),
+                                  Text(
+                                    'แจ้งเตือน',
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.close),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
                                 ],
                               ),
                               // Show the number of selected items in the confirmation message
@@ -1532,18 +1610,42 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Center(child: Text('คำเตือน')),
+                                title: Row(
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceBetween, // Space between text and button
+                                  children: [
+                                    Icon(
+                                      Icons
+                                          .notification_important, // Use the bell icon
+                                      color: Colors.red, // Set the color to red
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'แจ้งเตือน',
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.close),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                ),
                                 content: Text(
                                     'ระบบมีการบันทึกรายการทิ้งไว้ หากดึง PO จะเคลียร์รายการทั้งหมดทิ้ง, ต้องการดึง PO ใหม่หรือไม่'),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: Text('cancel'),
+                                    child: Text('ยกเลิก'),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
                                   ),
                                   TextButton(
-                                    child: Text('OK'),
+                                    child: Text('ตกลง'),
                                     onPressed: () async {
                                       Navigator.of(context).pop();
                                       await sendPostRequestlineWMS();
@@ -1563,7 +1665,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                 content: Text('Complete.'),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: Text('OK'),
+                                    child: Text('ตกลง'),
                                     onPressed: () async {
                                       Navigator.of(context).pop();
                                       await sendPostRequestlineWMS();
@@ -1637,16 +1739,28 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween, // Space between text and button
                                 children: [
                                   Icon(
                                     Icons
                                         .notification_important, // Use the bell icon
                                     color: Colors.red, // Set the color to red
                                   ),
-                                  SizedBox(
-                                      width:
-                                          8), // Add some space between the icon and the text
-                                  Text('แจ้งเตือน'), // Title text
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'แจ้งเตือน',
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.close),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
                                 ],
                               ),
                               content: Column(
@@ -1793,6 +1907,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                           builder: (BuildContext context) {
                                             return AlertDialog(
                                               title: Row(
+                                                mainAxisAlignment: MainAxisAlignment
+                                                    .spaceBetween, // Space between text and button
                                                 children: [
                                                   Icon(
                                                     Icons
@@ -1800,11 +1916,22 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                                     color: Colors
                                                         .red, // Set the color to red
                                                   ),
-                                                  SizedBox(
-                                                      width:
-                                                          8), // Add some space between the icon and the text
+                                                  SizedBox(width: 8),
                                                   Text(
-                                                      'แจ้งเตือน'), // Title text
+                                                    'แจ้งเตือน',
+                                                    style: TextStyle(
+                                                      fontSize: 20.0,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  IconButton(
+                                                    icon: Icon(Icons.close),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
                                                 ],
                                               ),
                                               content:
@@ -1999,14 +2126,27 @@ class _LotDialogState extends State<LotDialog> {
 
         AlertDialog(
           title: Row(
+            mainAxisAlignment:
+                MainAxisAlignment.spaceBetween, // Space between text and button
             children: [
               Icon(
                 Icons.notification_important, // Use the bell icon
                 color: Colors.red, // Set the color to red
               ),
-              SizedBox(
-                  width: 8), // Add some space between the icon and the text
-              Text('แจ้งเตือน'), // Title text
+              SizedBox(width: 8),
+              Text(
+                'แจ้งเตือน',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ],
           ),
           content: Text(poMessage ?? ''),
@@ -3090,14 +3230,27 @@ class _LotDialogState extends State<LotDialog> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Row(
+            mainAxisAlignment:
+                MainAxisAlignment.spaceBetween, // Space between text and button
             children: [
               Icon(
                 Icons.notification_important, // Use the bell icon
                 color: Colors.red, // Set the color to red
               ),
-              SizedBox(
-                  width: 8), // Add some space between the icon and the text
-              Text('แจ้งเตือน'), // Title text
+              SizedBox(width: 8),
+              Text(
+                'แจ้งเตือน',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ],
           ),
           content: Text('$poMessage'),
@@ -3315,6 +3468,9 @@ class _LotDialogState extends State<LotDialog> {
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
                                                   title: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween, // Space between text and button
                                                     children: [
                                                       Icon(
                                                         Icons
@@ -3322,11 +3478,22 @@ class _LotDialogState extends State<LotDialog> {
                                                         color: Colors
                                                             .red, // Set the color to red
                                                       ),
-                                                      SizedBox(
-                                                          width:
-                                                              8), // Add some space between the icon and the text
+                                                      SizedBox(width: 8),
                                                       Text(
-                                                          'แจ้งเตือน'), // Title text
+                                                        'แจ้งเตือน',
+                                                        style: TextStyle(
+                                                          fontSize: 20.0,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      IconButton(
+                                                        icon: Icon(Icons.close),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                      ),
                                                     ],
                                                   ),
                                                   content: Text(

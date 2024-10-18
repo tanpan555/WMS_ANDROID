@@ -67,7 +67,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _CcodeController = TextEditingController();
-
+  bool checkUpdateData = false;
   bool check = false;
   void checkIfHasData() {
     setState(() {
@@ -471,16 +471,30 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
         return Dialog(
           child: Container(
             // width: 600.0,
-            height: 200.0,
+            height: 250.0,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Cancel',
-                    style:
-                        TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment
+                        .spaceBetween, // Space between text and button
+                    children: [
+                      Text(
+                        'Cancel',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
                   ),
                 ),
                 Padding(
@@ -801,7 +815,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(23, 21, 59, 1),
-      appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ', showExitWarning: true),
+      appBar: CustomAppBar(
+          title: 'รับจากการสั่งซื้อ', showExitWarning: checkUpdateData),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -1177,38 +1192,44 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             children: [
               Expanded(
                 child: TextFormField(
-                  controller: invoiceNoController,
-                  decoration: InputDecoration(
-                    label: Row(
-                      children: [
-                        const Text(
-                          'เลขที่ใบแจ้งหนี้',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        const SizedBox(width: 2), // Add a small space
-                        Text(
-                          '*',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ],
+                    controller: invoiceNoController,
+                    decoration: InputDecoration(
+                      label: Row(
+                        children: [
+                          const Text(
+                            'เลขที่ใบแจ้งหนี้',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          const SizedBox(width: 2), // Add a small space
+                          Text(
+                            '*',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ],
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: InputBorder.none,
+                      hintStyle: TextStyle(
+                        color: Colors.white70,
+                      ),
                     ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: InputBorder.none,
-                    hintStyle: TextStyle(
-                      color: Colors.white70,
+                    style: TextStyle(
+                      color: Colors.black,
                     ),
-                  ),
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'กรุณากรอกเลขที่ใบแจ้งหนี้';
-                    }
-                    return null;
-                  },
-                ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'กรุณากรอกเลขที่ใบแจ้งหนี้';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        checkUpdateData = true;
+                      });
+                      print('=======================');
+                      print(checkUpdateData);
+                    }),
               ),
             ],
           ),
@@ -1251,6 +1272,9 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             ),
             readOnly: false,
             onChanged: (value) {
+              setState(() {
+                checkUpdateData = true;
+              });
               // Remove all non-numeric characters (slashes)
               String numbersOnly = value.replaceAll('/', '');
 
@@ -1321,6 +1345,13 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               : const SizedBox.shrink(),
           const SizedBox(height: 8.0),
           TextFormField(
+            onChanged: (value) {
+              setState(() {
+                checkUpdateData = true;
+              });
+              print('=======================');
+              print(checkUpdateData);
+            },
             controller: poRemarkController,
             decoration: InputDecoration(
                 filled: true,

@@ -445,8 +445,31 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text(
-                                    'การบันทึก และส่งข้อมูลเข้า ERP สมบูรณ์'),
+                                title: Row(
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceBetween, // Space between text and button
+                                  children: [
+                                    Icon(
+                                      Icons
+                                          .notification_important, // Use the bell icon
+                                      color: Colors.red, // Set the color to red
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'การบันทึก และส่งข้อมูลเข้า ERP สมบูรณ์',
+                                      style: TextStyle(
+                                        fontSize: 8.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.close),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                ),
                                 content:
                                     Text('เลขที่เอกสาร : ${widget.po_doc_no}'),
                                 actions: <Widget>[
