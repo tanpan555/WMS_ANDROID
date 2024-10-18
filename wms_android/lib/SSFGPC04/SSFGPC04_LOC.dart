@@ -162,13 +162,15 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
+                                  Center(
+                                    child: Text(
                                     item['ware_code'] ?? '',
                                     style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
                                       color: Color.fromARGB(255, 0, 0, 0),
                                     ),
+                                  ),
                                   ),
                                   const Divider(
                                       color: Colors.black26,
@@ -184,7 +186,6 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                             ),
                           );
                         } else {
-                          // แสดงปุ่มถัดไปและย้อนกลับในท้ายรายการ
                           // แสดงปุ่มถัดไปและย้อนกลับในท้ายรายการ
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

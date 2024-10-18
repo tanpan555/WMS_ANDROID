@@ -68,8 +68,7 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
   }
 
   Future<void> nextPage() async {
-    const url =
-        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_next';
+    const url = 'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_next';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -217,12 +216,14 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    item['ware_code'] ?? '',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 17,
-                                      color: Color.fromARGB(255, 0, 0, 0),
+                                  Center(
+                                    child: Text(
+                                      item['ware_code'] ?? '',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                      ),
                                     ),
                                   ),
                                   const Divider(

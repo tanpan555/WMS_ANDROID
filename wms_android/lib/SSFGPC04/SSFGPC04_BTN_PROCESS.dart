@@ -2,14 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-// import 'package:intl/intl.dart';
-// import 'package:url_launcher/url_launcher.dart';
-// import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
-// import 'SSFGRP09_.dart';
 
 class SSFGPC04_BTN_PROCESS extends StatefulWidget {
   SSFGPC04_BTN_PROCESS({
@@ -20,81 +16,70 @@ class SSFGPC04_BTN_PROCESS extends StatefulWidget {
 }
 
 class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
-  List<dynamic> dataLovStartGroup = [];
-  List<dynamic> dataLovEndGroup = [];
-  List<dynamic> dataLovStartCategory = [];
-  List<dynamic> dataLovEndCategory = [];
-  List<dynamic> dataLovStartSubCategory = [];
-  List<dynamic> dataLovEndSubCategory = [];
-  List<dynamic> dataLovStartBrand = [];
-  List<dynamic> dataLovEndBrand = [];
-  List<dynamic> dataLovStartItem = [];
-  List<dynamic> dataLovEndItem = [];
-
   // ----------------------------- Start Group
+  List<dynamic> dataLovStartGroup = [];
   String? displayStartGroup;
   String returnStartGroup = '';
   TextEditingController startGroupController = TextEditingController();
+  TextEditingController searchStartGroupController = TextEditingController();
   // ----------------------------- End Group
+  List<dynamic> dataLovEndGroup = [];
   String? displayEndGroup;
   String returnEndGroup = '';
   TextEditingController endGroupController = TextEditingController();
+  TextEditingController searchEndGroupController = TextEditingController();
   // ----------------------------- Start Category
+  List<dynamic> dataLovStartCategory = [];
   String? displayStartCategory;
   String returnStartCategory = '';
   TextEditingController startCategoryController = TextEditingController();
+  TextEditingController searchStartCatController = TextEditingController();
   // ----------------------------- End Category
+  List<dynamic> dataLovEndCategory = [];
   String? displayEndCategory;
   String returnEndCategory = '';
   TextEditingController endCategoryController = TextEditingController();
+  TextEditingController searchEndCatController = TextEditingController();
   // ----------------------------- Start Sub Category
+  List<dynamic> dataLovStartSubCategory = [];
   String? displayStartSubCategory;
   String returnStartSubCategory = '';
   TextEditingController startSubCategoryController = TextEditingController();
+  TextEditingController searchStartSubCatController = TextEditingController();
   // ----------------------------- End Sub Category
+  List<dynamic> dataLovEndSubCategory = [];
   String? displayEndSubCategory;
   String returnEndSubCategory = '';
   TextEditingController endSubCategoryController = TextEditingController();
+  TextEditingController searchEndSubCatController = TextEditingController();
   // ----------------------------- Start Brand
-  String? displayStartBrand;
-  String returnStartBrand = '';
-  TextEditingController startBrandController = TextEditingController();
+  // List<dynamic> dataLovStartBrand = [];
+  // String? displayStartBrand;
+  // String returnStartBrand = '';
+  // TextEditingController startBrandController = TextEditingController();
+  // TextEditingController searchStartBrandController = TextEditingController();
   // ----------------------------- End Brand
-  String? displayEndBrand;
-  String returnEndBrand = '';
-  TextEditingController endBrandController = TextEditingController();
+  // List<dynamic> dataLovEndBrand = [];
+  // String? displayEndBrand;
+  // String returnEndBrand = '';
+  // TextEditingController endBrandController = TextEditingController();
+  // TextEditingController searchEndBrandController = TextEditingController();
   // ----------------------------- Start Item
+  List<dynamic> dataLovStartItem = [];
   String? displayStartItem;
   String returnStartItem = '';
   TextEditingController startItemController = TextEditingController();
+  TextEditingController searchStartItemController = TextEditingController();
   // ----------------------------- End Item
+  List<dynamic> dataLovEndItem = [];
   String? displayEndItem;
   String returnEndItem = '';
   TextEditingController endItemController = TextEditingController();
-
+  TextEditingController searchEndItemController = TextEditingController();
+//----------------------------------------------------------------------------//
   bool isLoading = false;
   bool isFirstLoad = true;
   bool checkUpdateData = false;
-  //----------------------------------------------------------------------------//
-  // จากกลุ่ม
-  TextEditingController searchStartGroupController = TextEditingController();
-  TextEditingController searchEndGroupController = TextEditingController();
-  //----------------------------------------------------------------------------//
-  // Category
-  TextEditingController searchStartCatController = TextEditingController();
-  TextEditingController searchEndCatController = TextEditingController();
-  //----------------------------------------------------------------------------//
-  // Sub Category
-  TextEditingController searchStartSubCatController = TextEditingController();
-  TextEditingController searchEndSubCatController = TextEditingController();
-  //----------------------------------------------------------------------------//
-  // Brand
-  // TextEditingController searchStartBrandController = TextEditingController();
-  // TextEditingController searchEndBrandController = TextEditingController();
-  //----------------------------------------------------------------------------//
-  // Item
-  TextEditingController searchStartItemController = TextEditingController();
-  TextEditingController searchEndItemController = TextEditingController();
 
   @override
   void initState() {
@@ -523,6 +508,17 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $jsonDecode');
+        print('http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_ITM_E'
+          '/${globals.BROWSER_LANGUAGE}'
+          '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
+          '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
+          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
+          '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
+          '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'
+          '/${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'null'}'
+          // '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
+          // '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'
+          '/${returnStartItem.isNotEmpty ? returnStartItem : 'null'}');
         if (mounted) {
           setState(() {
             dataLovEndItem =
@@ -538,13 +534,13 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
             }
           });
         }
-        print('dataLovStartItem : $dataLovStartItem');
+        print('dataLovEndItem : $dataLovEndItem');
       } else {
         throw Exception(
-            'dataLovStartItem Failed to load fetchData ||  Status Code: ${response.statusCode}');
+            'dataLovEndItem Failed to load fetchData ||  Status Code: ${response.statusCode}');
       }
     } catch (e) {
-      print('dataLovStartItem ERROR IN Fetch Data : $e');
+      print('dataLovEndItem ERROR IN Fetch Data : $e');
     }
   }
 
@@ -561,8 +557,8 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                   returnEndCategory.isEmpty &&
                   returnStartSubCategory.isEmpty &&
                   returnEndSubCategory.isEmpty &&
-                  returnStartBrand.isEmpty &&
-                  returnEndBrand.isEmpty &&
+                  // returnStartBrand.isEmpty &&
+                  // returnEndBrand.isEmpty &&
                   returnStartItem.isEmpty &&
                   returnEndItem.isEmpty
               ? false
@@ -2336,10 +2332,6 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                     displayEndItem = doc;
                                     endItemController.text =
                                         displayEndItem.toString();
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
-                                    // -----------------------------------------
                                     print(
                                         'endItemController New: $endItemController Type : ${endItemController.runtimeType}');
                                     print(

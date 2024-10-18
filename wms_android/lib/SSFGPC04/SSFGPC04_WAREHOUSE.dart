@@ -8,9 +8,7 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 // import 'SSFGPC04_WARE.dart';
 
 class SSFGPC04_WAREHOUSE extends StatefulWidget {
-  const SSFGPC04_WAREHOUSE({
-    Key? key,
-  }) : super(key: key);
+  const SSFGPC04_WAREHOUSE({super.key});
 
   @override
   _SSFGPC04_WAREHOUSEState createState() => _SSFGPC04_WAREHOUSEState();
@@ -117,7 +115,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
 
     final body = jsonEncode({
       'APP_SESSION': gb.APP_SESSION,
-      'WARE_CODE': wareCode, 
+      'WARE_CODE': wareCode,
     });
 
     print('Request body: $body');
@@ -307,23 +305,43 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Checkbox(
-                    value: row["selected"] ?? false,
-                    onChanged: (bool? value) {
+                  GestureDetector(
+                    onTap: () {
                       setState(() {
-                        row["selected"] = value!;
+                        row["selected"] =
+                            !(row["selected"] ?? false); // สลับสถานะ
                       });
 
-                      // ตรวจสอบสถานะของ Checkbox เพื่อเลือกว่าจะเรียก POST หรือ DELETE
-                      if (value == true) {
-                        // ถ้าเลือก (ติ๊กถูก) => รัน .post
+                      if (row["selected"]!) {
                         fetchCheck(row['ware_code']);
                       } else {
-                        // ถ้าไม่เลือก (ติ๊กออก) => รัน .delete
                         deleteData(row['ware_code']);
                       }
                     },
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          value: row["selected"] ?? false,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              row["selected"] = value!;
+                            });
+
+                            // ตรวจสอบสถานะของ Checkbox เพื่อเลือกว่าจะเรียก POST หรือ DELETE
+                            if (value == true) {
+                              // ถ้าเลือก (ติ๊กถูก) => รัน .post
+                              fetchCheck(row['ware_code']);
+                            } else {
+                              // ถ้าไม่เลือก (ติ๊กออก) => รัน .delete
+                              deleteData(row['ware_code']);
+                            }
+                          },
+                        ),
+                        // เพิ่มเนื้อหาที่เหลือของ Row ที่นี่
+                      ],
+                    ),
                   ),
+
                   const SizedBox(width: 10),
                   Text(
                     row['ware_code'] ?? '',
