@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+// import 'package:intl/intl.dart';
+// import 'package:url_launcher/url_launcher.dart';
+// import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:wms_android/styles.dart';
-import 'package:wms_android/Global_Parameter.dart' as gb;
+import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
+// import 'SSFGRP09_.dart';
 
 class SSFGPC04_BTN_PROCESS extends StatefulWidget {
   SSFGPC04_BTN_PROCESS({
@@ -15,83 +20,122 @@ class SSFGPC04_BTN_PROCESS extends StatefulWidget {
 }
 
 class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
-  List<dynamic> dataStartGroup = [];
-  List<dynamic> dataEndGroup = [];
-  String? selectStartGroup;
-  String? selectEndGroup;
+  List<dynamic> dataLovStartGroup = [];
+  List<dynamic> dataLovEndGroup = [];
+  List<dynamic> dataLovStartCategory = [];
+  List<dynamic> dataLovEndCategory = [];
+  List<dynamic> dataLovStartSubCategory = [];
+  List<dynamic> dataLovEndSubCategory = [];
+  List<dynamic> dataLovStartBrand = [];
+  List<dynamic> dataLovEndBrand = [];
+  List<dynamic> dataLovStartItem = [];
+  List<dynamic> dataLovEndItem = [];
 
+  // ----------------------------- Start Group
+  String? displayStartGroup;
+  String returnStartGroup = '';
   TextEditingController startGroupController = TextEditingController();
+  // ----------------------------- End Group
+  String? displayEndGroup;
+  String returnEndGroup = '';
   TextEditingController endGroupController = TextEditingController();
-  TextEditingController searchController1 = TextEditingController();
-  TextEditingController searchController2 = TextEditingController();
-//----------------------------------------------------------------------------//
-  List<dynamic> dataStartCat = [];
-  List<dynamic> dataEndCat = [];
-  String? selectStartCat;
-  String? selectEndCat;
-
-  TextEditingController startCatController = TextEditingController();
-  TextEditingController endCatController = TextEditingController();
-  TextEditingController searchController3 = TextEditingController();
-  TextEditingController searchController4 = TextEditingController();
-//----------------------------------------------------------------------------//
-  List<dynamic> dataStartSubCat = [];
-  List<dynamic> dataEndSubCat = [];
-  String? selectStarSubtCat;
-  String? selectEndSubCat;
-
-  TextEditingController startSubCatController = TextEditingController();
-  TextEditingController endSubCatController = TextEditingController();
-  TextEditingController searchController5 = TextEditingController();
-  TextEditingController searchController6 = TextEditingController();
-//----------------------------------------------------------------------------//
-  List<dynamic> dataStartBrand = [];
-  List<dynamic> dataEndBrand = [];
-  String? selectStartBrand;
-  String? selectEndBrand;
-
+  // ----------------------------- Start Category
+  String? displayStartCategory;
+  String returnStartCategory = '';
+  TextEditingController startCategoryController = TextEditingController();
+  // ----------------------------- End Category
+  String? displayEndCategory;
+  String returnEndCategory = '';
+  TextEditingController endCategoryController = TextEditingController();
+  // ----------------------------- Start Sub Category
+  String? displayStartSubCategory;
+  String returnStartSubCategory = '';
+  TextEditingController startSubCategoryController = TextEditingController();
+  // ----------------------------- End Sub Category
+  String? displayEndSubCategory;
+  String returnEndSubCategory = '';
+  TextEditingController endSubCategoryController = TextEditingController();
+  // ----------------------------- Start Brand
+  String? displayStartBrand;
+  String returnStartBrand = '';
   TextEditingController startBrandController = TextEditingController();
+  // ----------------------------- End Brand
+  String? displayEndBrand;
+  String returnEndBrand = '';
   TextEditingController endBrandController = TextEditingController();
-  TextEditingController searchController7 = TextEditingController();
-  TextEditingController searchController8 = TextEditingController();
-//----------------------------------------------------------------------------//
-  List<dynamic> dataStartItems = [];
-  List<dynamic> dataEndItems = [];
-  String? selectStartItems;
-  String? selectEndItems;
+  // ----------------------------- Start Item
+  String? displayStartItem;
+  String returnStartItem = '';
+  TextEditingController startItemController = TextEditingController();
+  // ----------------------------- End Item
+  String? displayEndItem;
+  String returnEndItem = '';
+  TextEditingController endItemController = TextEditingController();
 
-  TextEditingController startItemsController = TextEditingController();
-  TextEditingController endItemsController = TextEditingController();
-  TextEditingController searchController9 = TextEditingController();
-  TextEditingController searchController10 = TextEditingController();
-//----------------------------------------------------------------------------//
+  bool isLoading = false;
+  bool isFirstLoad = true;
+  bool checkUpdateData = false;
+  //----------------------------------------------------------------------------//
+  // จากกลุ่ม
+  TextEditingController searchStartGroupController = TextEditingController();
+  TextEditingController searchEndGroupController = TextEditingController();
+  //----------------------------------------------------------------------------//
+  // Category
+  TextEditingController searchStartCatController = TextEditingController();
+  TextEditingController searchEndCatController = TextEditingController();
+  //----------------------------------------------------------------------------//
+  // Sub Category
+  TextEditingController searchStartSubCatController = TextEditingController();
+  TextEditingController searchEndSubCatController = TextEditingController();
+  //----------------------------------------------------------------------------//
+  // Brand
+  // TextEditingController searchStartBrandController = TextEditingController();
+  // TextEditingController searchEndBrandController = TextEditingController();
+  //----------------------------------------------------------------------------//
+  // Item
+  TextEditingController searchStartItemController = TextEditingController();
+  TextEditingController searchEndItemController = TextEditingController();
 
   @override
   void initState() {
-    selectLovStartGroup();
-    selectLovEndGroup();
-    selectLovStartCat();
-    selectLovEndCat();
-    selectLovStartSubCat();
-    selectLovEndSubCat();
-    selectLovStartBrand();
-    selectLovEndBrand();
-    selectLovStastItems();
-    selectLovEndItems();
+    firstLoadData();
     super.initState();
   }
 
   @override
   void dispose() {
-    searchController1.dispose();
-    searchController2.dispose();
-    searchController3.dispose();
-    searchController4.dispose();
-    searchController5.dispose();
-    searchController6.dispose();
-    searchController7.dispose();
-    searchController8.dispose();
+    searchStartGroupController.dispose();
+    searchEndGroupController.dispose();
+
+    searchStartCatController.dispose();
+    searchEndCatController.dispose();
+
+    searchStartSubCatController.dispose();
+    searchEndSubCatController.dispose();
+
+    // searchStartBrandController.dispose();
+    // searchEndBrandController.dispose();
+
+    searchStartItemController.dispose();
+    searchEndItemController.dispose();
     super.dispose();
+  }
+
+  void firstLoadData() async {
+    await selectLovStartGroup();
+    await selectLovEndGroup();
+
+    await selectLovStartCategory();
+    await selectLovEndCategory();
+
+    await selectLovStartSubCategory();
+    await selectLovEndSubCategory();
+
+    // await selectLovStartBrand();
+    // await selectLovEndBrand();
+
+    await selectLovStartItem();
+    await selectLovEndItem();
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -101,172 +145,17 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     );
   }
 
-  //จากกลุ่มสินค้า//
+//----------------------------------------------------------------------------//
+// กลุ่มสินค้า
   Future<void> selectLovStartGroup() async {
-    try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_GROUP'));
-
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
-        print('Fetched data: $jsonDecode');
-        if (mounted) {
-          setState(() {
-            dataStartGroup =
-                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          });
-        }
-        print('dataStartGroup : $dataStartGroup');
-      } else {
-        throw Exception(
-            'dataStartGroup Failed to load fetchData ||  Status Code: ${response.statusCode}');
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
       }
-    } catch (e) {
-      print('dataStartGroup ERROR IN Fetch Data : $e');
     }
-  }
-
-  //ถึงกลุ่มสินค้า//
-  // String sGroupCode = '';
-  String? pSGroup;
-  Future<void> selectLovEndGroup() async {
-    try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_GROUP_E/$pSGroup'));
-
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
-        print('Fetched data: $jsonDecode');
-        if (mounted) {
-          setState(() {
-            dataEndGroup =
-                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          });
-        }
-        print('dataLovEndLoc : $dataEndGroup');
-      } else {
-        throw Exception(
-            'dataLovEndLoc Failed to load fetchData ||  Status Code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('dataLovEndLoc ERROR IN Fetch Data : $e');
-    }
-  }
-
-  //จากCategory//
-  String? pSCat;
-  String? pECat;
-  Future<void> selectLovStartCat() async {
-    try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_CAT/$pSCat/$pECat/${gb.ATTR1}'));
-
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
-        print('Fetched data: $jsonDecode');
-        print('testtttttt : $pSCat');
-        print('testtttttt : $pECat');
-        print('Hiiiiiii : ${gb.ATTR1}');
-        if (mounted) {
-          setState(() {
-            dataStartCat =
-                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          });
-        }
-        print('dataStartCat : $dataStartCat');
-      } else {
-        throw Exception(
-            'dataStartCat Failed to load fetchData ||  Status Code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('dataStartCat ERROR IN Fetch Data : $e');
-    }
-  }
-
-  Future<void> selectLovEndCat() async {
-    try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_CAT_E/$pSCat/$pECat/${gb.ATTR1}'));
-
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
-        print('Fetched data: $jsonDecode');
-        if (mounted) {
-          setState(() {
-            dataEndCat =
-                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          });
-        }
-        print('dataEndtCat : $dataEndCat');
-      } else {
-        throw Exception(
-            'dataEndtCat Failed to load fetchData ||  Status Code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('dataEndtCat ERROR IN Fetch Data : $e');
-    }
-  }
-
-  String? pESubCat;
-  String? pSSubCat;
-  Future<void> selectLovStartSubCat() async {
-    try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_SUB_CAT/$pESubCat/${gb.ATTR1}/$pSSubCat'));
-
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
-        print('Fetched data: $jsonDecode');
-        if (mounted) {
-          setState(() {
-            dataStartSubCat =
-                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          });
-        }
-        print('dataStartSubCat : $dataStartSubCat');
-      } else {
-        throw Exception(
-            'dataStartSubCat Failed to load fetchData ||  Status Code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('dataStartSubCat ERROR IN Fetch Data : $e');
-    }
-  }
-
-  Future<void> selectLovEndSubCat() async {
-    try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_SUB_CAT_E/$pSSubCat/$pESubCat/${gb.ATTR1}'));
-
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
-        print('Fetched data: $jsonDecode');
-        if (mounted) {
-          setState(() {
-            dataEndSubCat =
-                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          });
-        }
-        print('dataEndSubCat : $dataEndSubCat');
-      } else {
-        throw Exception(
-            'dataEndSubCat Failed to load fetchData ||  Status Code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('dataEndSubCat ERROR IN Fetch Data : $e');
-    }
-  }
-
-  Future<void> selectLovStartBrand() async {
     try {
       final response = await http.get(
-          Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_BRAND'));
+          Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_GROUP'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -274,25 +163,35 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
         print('Fetched data: $jsonDecode');
         if (mounted) {
           setState(() {
-            dataStartBrand =
+            dataLovStartGroup =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
-        print('dataStartBrand : $dataStartBrand');
+        print('dataLovStartGroup : $dataLovStartGroup');
       } else {
         throw Exception(
-            'dataStartBrand Failed to load fetchData ||  Status Code: ${response.statusCode}');
+            'dataLovStartGroup Failed to load fetchData ||  Status Code: ${response.statusCode}');
       }
     } catch (e) {
-      print('dataStartBrand ERROR IN Fetch Data : $e');
+      print('dataLovStartGroup ERROR IN Fetch Data : $e');
     }
   }
 
-  String? pSBrand;
-  Future<void> selectLovEndBrand() async {
+  Future<void> selectLovEndGroup() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_BRAND_E/$pSBrand'));
+          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_GROUP_E/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -300,26 +199,78 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
         print('Fetched data: $jsonDecode');
         if (mounted) {
           setState(() {
-            dataEndBrand =
+            dataLovEndGroup =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
-        print('dataEndBrand : $dataEndBrand');
+        print('dataLovEndGroup : $dataLovEndGroup');
       } else {
         throw Exception(
-            'dataEndBrand Failed to load fetchData ||  Status Code: ${response.statusCode}');
+            'dataLovEndGroup Failed to load fetchData ||  Status Code: ${response.statusCode}');
       }
     } catch (e) {
-      print('dataEndBrand ERROR IN Fetch Data : $e');
+      print('dataLovEndGroup ERROR IN Fetch Data : $e');
     }
   }
 
-  String? pEBrand;
-  String? pEGroup;
-  Future<void> selectLovStastItems() async {
+//----------------------------------------------------------------------------//
+// Category
+  Future<void> selectLovStartCategory() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
+    try {
+      final response = await http
+          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_CAT'
+              '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
+              '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'));
+
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        print('Fetched data: $jsonDecode');
+        if (mounted) {
+          setState(() {
+            dataLovStartCategory =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
+          });
+        }
+        print('dataLovStartCategory : $dataLovStartCategory');
+      } else {
+        throw Exception(
+            'dataLovStartCategory Failed to load fetchData ||  Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('dataLovStartCategory ERROR IN Fetch Data : $e');
+    }
+  }
+
+  Future<void> selectLovEndCategory() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_ITM/${gb.BROWSER_LANGUAGE}/$pSGroup/$pEGroup/$pSCat/$pECat/$pSSubCat/$pESubCat/$pSBrand/$pEBrand/${gb.ATTR1}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_CAT_E'
+          '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
+          '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
+          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -327,25 +278,39 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
         print('Fetched data: $jsonDecode');
         if (mounted) {
           setState(() {
-            dataStartItems =
+            dataLovEndCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
-        print('dataStartItems : $dataStartItems');
+        print('dataLovEndCategory : $dataLovEndCategory');
       } else {
         throw Exception(
-            'dataStartItems Failed to load fetchData ||  Status Code: ${response.statusCode}');
+            'dataLovEndCategory Failed to load fetchData ||  Status Code: ${response.statusCode}');
       }
     } catch (e) {
-      print('dataStartItems ERROR IN Fetch Data : $e');
+      print('dataLovEndCategory ERROR IN Fetch Data : $e');
     }
   }
 
-  String? pSItems;
-  Future<void> selectLovEndItems() async {
+//----------------------------------------------------------------------------//
+// Sub Category
+  Future<void> selectLovStartSubCategory() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_ITM_E/${gb.BROWSER_LANGUAGE}/$pSItems/$pSGroup/$pEGroup/$pSCat/$pECat/$pSSubCat/$pESubCat/$pSBrand/$pEBrand/${gb.ATTR1}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_SUB_CAT'
+          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
+          '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -353,2013 +318,2052 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
         print('Fetched data: $jsonDecode');
         if (mounted) {
           setState(() {
-            dataEndItems =
+            dataLovStartSubCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
           });
         }
-        print('dataEndItems : $dataEndItems');
+        print('dataLovStartSubCategory : $dataLovStartSubCategory');
       } else {
         throw Exception(
-            'dataEndItems Failed to load fetchData ||  Status Code: ${response.statusCode}');
+            'dataLovStartSubCategory Failed to load fetchData ||  Status Code: ${response.statusCode}');
       }
     } catch (e) {
-      print('dataEndItems ERROR IN Fetch Data : $e');
+      print('dataLovStartSubCategory ERROR IN Fetch Data : $e');
     }
   }
 
+  Future<void> selectLovEndSubCategory() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_SUB_CAT_E'
+          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
+          '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
+          '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'));
+
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        print('Fetched data: $jsonDecode');
+        if (mounted) {
+          setState(() {
+            dataLovEndSubCategory =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
+          });
+        }
+        print('dataLovEndSubCategory : $dataLovEndSubCategory');
+      } else {
+        throw Exception(
+            'dataLovEndSubCategory Failed to load fetchData ||  Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('dataLovEndSubCategory ERROR IN Fetch Data : $e');
+    }
+  }
+
+//----------------------------------------------------------------------------//
+// Brand
+  // Future<void> selectLovStartBrand() async {
+  //   if (isFirstLoad == false) {
+  //     if (mounted) {
+  //       isLoading = true;
+  //     }
+  //   }
+  //   try {
+  //     final response = await http.get(
+  //         Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_BRAND'));
+
+  //     if (response.statusCode == 200) {
+  //       final responseBody = utf8.decode(response.bodyBytes);
+  //       final responseData = jsonDecode(responseBody);
+  //       print('Fetched data: $jsonDecode');
+  //       if (mounted) {
+  //         setState(() {
+  //           dataLovStartGroup =
+  //               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+  //           if (isFirstLoad == false) {
+  //             if (mounted) {
+  //               isLoading = false;
+  //             }
+  //           }
+  //         });
+  //       }
+  //       print('dataLovStartGroup : $dataLovStartGroup');
+  //     } else {
+  //       throw Exception(
+  //           'dataLovStartGroup Failed to load fetchData ||  Status Code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('dataLovStartGroup ERROR IN Fetch Data : $e');
+  //   }
+  // }
+
+  // Future<void> selectLovEndBrand() async {
+  //   if (isFirstLoad == false) {
+  //     if (mounted) {
+  //       isLoading = true;
+  //     }
+  //   }
+  //   try {
+  //     final response = await http.get(Uri.parse(
+  //         'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_BRAND_E/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'));
+
+  //     if (response.statusCode == 200) {
+  //       final responseBody = utf8.decode(response.bodyBytes);
+  //       final responseData = jsonDecode(responseBody);
+  //       print('Fetched data: $jsonDecode');
+  //       if (mounted) {
+  //         setState(() {
+  //           dataLovEndGroup =
+  //               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+  //           if (isFirstLoad == false) {
+  //             if (mounted) {
+  //               isLoading = false;
+  //             }
+  //           }
+  //         });
+  //       }
+  //       print('dataLovEndGroup : $dataLovEndGroup');
+  //     } else {
+  //       throw Exception(
+  //           'dataLovEndGroup Failed to load fetchData ||  Status Code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('dataLovEndGroup ERROR IN Fetch Data : $e');
+  //   }
+  // }
+
+//----------------------------------------------------------------------------//
+// Item
+  Future<void> selectLovStartItem() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_ITM'
+          '/${globals.BROWSER_LANGUAGE}'
+          '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
+          '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
+          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
+          '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
+          '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'
+          '/${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'null'}'
+          // '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
+          // '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'
+          ));
+
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        print('Fetched data: $jsonDecode');
+        if (mounted) {
+          setState(() {
+            dataLovStartItem =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
+          });
+        }
+        print('dataLovStartItem : $dataLovStartItem');
+      } else {
+        throw Exception(
+            'dataLovStartItem Failed to load fetchData ||  Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('dataLovStartItem ERROR IN Fetch Data : $e');
+    }
+  }
+
+  Future<void> selectLovEndItem() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_ITM_E'
+          '/${globals.BROWSER_LANGUAGE}'
+          '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
+          '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
+          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
+          '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
+          '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'
+          '/${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'null'}'
+          // '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
+          // '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'
+          '/${returnStartItem.isNotEmpty ? returnStartItem : 'null'}'));
+
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        print('Fetched data: $jsonDecode');
+        if (mounted) {
+          setState(() {
+            dataLovEndItem =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+            if (isFirstLoad == true) {
+              isFirstLoad = false;
+              isLoading = false;
+            }
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
+          });
+        }
+        print('dataLovStartItem : $dataLovStartItem');
+      } else {
+        throw Exception(
+            'dataLovStartItem Failed to load fetchData ||  Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('dataLovStartItem ERROR IN Fetch Data : $e');
+    }
+  }
+
+//----------------------------------------------------------------------------//
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar:
-          CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
+      appBar: CustomAppBar(
+          title: 'ประมวลผลก่อนการตรวจนับ',
+          showExitWarning: returnStartGroup.isEmpty &&
+                  returnEndGroup.isEmpty &&
+                  returnStartCategory.isEmpty &&
+                  returnEndCategory.isEmpty &&
+                  returnStartSubCategory.isEmpty &&
+                  returnEndSubCategory.isEmpty &&
+                  returnStartBrand.isEmpty &&
+                  returnEndBrand.isEmpty &&
+                  returnStartItem.isEmpty &&
+                  returnEndItem.isEmpty
+              ? false
+              : true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              //กลุ่มสินค้า//
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(16),
-                                      height:
-                                          300, // Adjust height of Popup as needed
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'จากกลุ่ม',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: Icon(Icons.close),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Close Popup
-                                                  searchController1
-                                                      .clear(); // Clear search value on close
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 10),
-                                          // Search box
-                                          TextField(
-                                            controller: searchController1,
-                                            decoration: InputDecoration(
-                                              hintText: 'ค้นหา',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                            onChanged: (query) {
-                                              setState(() {});
-                                            },
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Expanded(
-                                            child: Builder(
-                                              builder: (context) {
-                                                final filteredItems =
-                                                    dataStartGroup
-                                                        .where((item) {
-                                                  final codeString =
-                                                      '${item['group_code'] ?? ''}'
-                                                          .toString();
-                                                  final nameString =
-                                                      '${item['group_name'] ?? ''}'
-                                                          .toString();
-                                                  final searchQuery =
-                                                      searchController1.text
-                                                          .trim()
-                                                          .toLowerCase();
-                                                  final searchQueryInt =
-                                                      int.tryParse(searchQuery);
-                                                  final docInt =
-                                                      int.tryParse(codeString);
-
-                                                  return (searchQueryInt !=
-                                                              null &&
-                                                          docInt != null &&
-                                                          docInt ==
-                                                              searchQueryInt) ||
-                                                      codeString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery) ||
-                                                      nameString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery);
-                                                }).toList();
-
-                                                if (filteredItems.isEmpty) {
-                                                  return Center(
-                                                      child: Text(
-                                                          'No data found')); // Display message when no data
-                                                }
-
-                                                return ListView.builder(
-                                                  itemCount:
-                                                      filteredItems.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final item =
-                                                        filteredItems[index];
-                                                    final gCode =
-                                                        '${item['group_code'] ?? ''}'
-                                                            .toString();
-                                                    final gName =
-                                                        '${item['group_name'] ?? ''}'
-                                                            .toString();
-                                                    return ListTile(
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                      title: RichText(
-                                                        text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                              text: '$gCode\n',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text:
-                                                                  ' ', // Add a space between gCode and gName
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                            ),
-                                                            TextSpan(
-                                                              text: '$gName',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .grey[800],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        setState(() {
-                                                          selectStartGroup =
-                                                              gCode;
-                                                          startGroupController
-                                                                  .text =
-                                                              selectStartGroup!;
-                                                          selectLovStartGroup();
-                                                        });
-                                                      },
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ).then((_) {
-                            searchController1.clear();
-                          });
-                        },
-                        child: AbsorbPointer(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              labelText: 'จาก กลุ่ม',
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelStyle: TextStyle(color: Colors.black),
-                              border: InputBorder.none,
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                            controller: startGroupController,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-//----------------------------------------------------------------------------------------------------------//
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(16),
-                                      height:
-                                          300, // Adjust height of Popup as needed
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'ถึงกลุ่ม',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: Icon(Icons.close),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Close Popup
-                                                  searchController2
-                                                      .clear(); // Clear search value on close
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 10),
-                                          // Search box
-                                          TextField(
-                                            controller: searchController2,
-                                            decoration: InputDecoration(
-                                              hintText: 'ค้นหา',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                            onChanged: (query) {
-                                              setState(() {});
-                                            },
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Expanded(
-                                            child: Builder(
-                                              builder: (context) {
-                                                final filteredItems =
-                                                    dataEndGroup.where((item) {
-                                                  final codeString =
-                                                      '${item['group_code'] ?? ''}'
-                                                          .toString();
-                                                  final nameString =
-                                                      '${item['group_name'] ?? ''}'
-                                                          .toString();
-                                                  final searchQuery =
-                                                      searchController2.text
-                                                          .trim()
-                                                          .toLowerCase();
-                                                  final searchQueryInt =
-                                                      int.tryParse(searchQuery);
-                                                  final docInt =
-                                                      int.tryParse(codeString);
-
-                                                  return (searchQueryInt !=
-                                                              null &&
-                                                          docInt != null &&
-                                                          docInt ==
-                                                              searchQueryInt) ||
-                                                      codeString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery) ||
-                                                      nameString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery);
-                                                }).toList();
-
-                                                if (filteredItems.isEmpty) {
-                                                  return Center(
-                                                      child: Text(
-                                                          'No data found')); // Display message when no data
-                                                }
-
-                                                return ListView.builder(
-                                                  itemCount:
-                                                      filteredItems.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final item =
-                                                        filteredItems[index];
-                                                    final gCode =
-                                                        '${item['group_code'] ?? ''}' //'${ ?? ''}'
-                                                            .toString();
-                                                    final gName =
-                                                        '${item['group_name'] ?? ''}'
-                                                            .toString();
-                                                    return ListTile(
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                      title: RichText(
-                                                        text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                              text: '$gCode\n',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text:
-                                                                  ' ', // Add a space between gCode and gName
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                            ),
-                                                            TextSpan(
-                                                              text: '$gName',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .grey[800],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        setState(() {
-                                                          selectEndGroup =
-                                                              gCode;
-                                                          endGroupController
-                                                                  .text =
-                                                              selectEndGroup!;
-                                                          selectLovEndGroup();
-                                                        });
-                                                      },
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ).then((_) {
-                            searchController2.clear();
-                          });
-                        },
-                        child: AbsorbPointer(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              labelText: 'ถึง กลุ่ม',
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelStyle: TextStyle(color: Colors.black),
-                              border: InputBorder.none,
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                            controller: endGroupController,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(16),
-                                      height:
-                                          300, // Adjust height of Popup as needed
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'จากCategory',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: Icon(Icons.close),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Close Popup
-                                                  searchController3
-                                                      .clear(); // Clear search value on close
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 10),
-                                          // Search box
-                                          TextField(
-                                            controller: searchController3,
-                                            decoration: InputDecoration(
-                                              hintText: 'ค้นหา',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                            onChanged: (query) {
-                                              setState(() {});
-                                            },
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Expanded(
-                                            child: Builder(
-                                              builder: (context) {
-                                                final filteredItems =
-                                                    dataStartCat.where((item) {
-                                                  final codeString =
-                                                      '${item['category_code'] ?? ''}'
-                                                          .toString();
-                                                  final nameString =
-                                                      '${item['category_desc'] ?? ''}'
-                                                          .toString();
-                                                  final searchQuery =
-                                                      searchController3.text
-                                                          .trim()
-                                                          .toLowerCase();
-                                                  final searchQueryInt =
-                                                      int.tryParse(searchQuery);
-                                                  final docInt =
-                                                      int.tryParse(codeString);
-
-                                                  return (searchQueryInt !=
-                                                              null &&
-                                                          docInt != null &&
-                                                          docInt ==
-                                                              searchQueryInt) ||
-                                                      codeString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery) ||
-                                                      nameString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery);
-                                                }).toList();
-
-                                                if (filteredItems.isEmpty) {
-                                                  return Center(
-                                                      child: Text(
-                                                          'No data found')); // Display message when no data
-                                                }
-
-                                                return ListView.builder(
-                                                  itemCount:
-                                                      filteredItems.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final item =
-                                                        filteredItems[index];
-                                                    final cCode =
-                                                        '${item['category_code'] ?? ''}'
-                                                            .toString();
-                                                    final cName =
-                                                        '${item['category_desc'] ?? ''}'
-                                                            .toString();
-                                                    return ListTile(
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                      title: RichText(
-                                                        text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                              text: '$cCode\n',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text:
-                                                                  ' ', // Add a space between gCode and gName
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                            ),
-                                                            TextSpan(
-                                                              text: '$cName',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .grey[800],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        setState(() {
-                                                          selectStartCat =
-                                                              cCode;
-                                                          startCatController
-                                                                  .text =
-                                                              selectStartCat!;
-                                                          selectLovStartCat();
-                                                        });
-                                                      },
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ).then((_) {
-                            searchController3.clear();
-                          });
-                        },
-                        child: AbsorbPointer(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              labelText: 'จาก Category',
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelStyle: TextStyle(color: Colors.black),
-                              border: InputBorder.none,
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                            controller: startCatController,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                        width: 8), // Space between the two TextFields
-//------------------------------------------------------------------------------------------------//
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(16),
-                                      height:
-                                          300, // Adjust height of Popup as needed
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'ถึงCategory',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: Icon(Icons.close),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Close Popup
-                                                  searchController4
-                                                      .clear(); // Clear search value on close
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 10),
-                                          // Search box
-                                          TextField(
-                                            controller: searchController4,
-                                            decoration: InputDecoration(
-                                              hintText: 'ค้นหา',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                            onChanged: (query) {
-                                              setState(() {});
-                                            },
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Expanded(
-                                            child: Builder(
-                                              builder: (context) {
-                                                final filteredItems =
-                                                    dataEndCat.where((item) {
-                                                  final codeString =
-                                                      '${item['category_code'] ?? ''}'
-                                                          .toString();
-                                                  final nameString =
-                                                      '${item['category_desc'] ?? ''}'
-                                                          .toString();
-                                                  final searchQuery =
-                                                      searchController4.text
-                                                          .trim()
-                                                          .toLowerCase();
-                                                  final searchQueryInt =
-                                                      int.tryParse(searchQuery);
-                                                  final docInt =
-                                                      int.tryParse(codeString);
-
-                                                  return (searchQueryInt !=
-                                                              null &&
-                                                          docInt != null &&
-                                                          docInt ==
-                                                              searchQueryInt) ||
-                                                      codeString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery) ||
-                                                      nameString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery);
-                                                }).toList();
-
-                                                if (filteredItems.isEmpty) {
-                                                  return Center(
-                                                      child: Text(
-                                                          'No data found')); // Display message when no data
-                                                }
-
-                                                return ListView.builder(
-                                                  itemCount:
-                                                      filteredItems.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final item =
-                                                        filteredItems[index];
-                                                    final cCode =
-                                                        '${item['category_code'] ?? ''}'
-                                                            .toString();
-                                                    final cName =
-                                                        '${item['category_desc'] ?? ''}'
-                                                            .toString();
-                                                    return ListTile(
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                      title: RichText(
-                                                        text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                              text: '$cCode\n',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text:
-                                                                  ' ', // Add a space between gCode and gName
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                            ),
-                                                            TextSpan(
-                                                              text: '$cName',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .grey[800],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        setState(() {
-                                                          selectEndCat = cCode;
-                                                          endCatController
-                                                                  .text =
-                                                              selectEndCat!;
-                                                          selectLovEndCat();
-                                                        });
-                                                      },
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ).then((_) {
-                            searchController4.clear();
-                          });
-                        },
-                        child: AbsorbPointer(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              labelText: 'ถึง Category',
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelStyle: TextStyle(color: Colors.black),
-                              border: InputBorder.none,
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                            controller: endCatController,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(16),
-                                      height:
-                                          300, // Adjust height of Popup as needed
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'จาก Sub Category',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: Icon(Icons.close),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Close Popup
-                                                  searchController5
-                                                      .clear(); // Clear search value on close
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 10),
-                                          // Search box
-                                          TextField(
-                                            controller: searchController5,
-                                            decoration: InputDecoration(
-                                              hintText: 'ค้นหา',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                            onChanged: (query) {
-                                              setState(() {});
-                                            },
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Expanded(
-                                            child: Builder(
-                                              builder: (context) {
-                                                final filteredItems =
-                                                    dataStartSubCat
-                                                        .where((item) {
-                                                  final codeString =
-                                                      '${item['sub_cat_code'] ?? ''}'
-                                                          .toString();
-                                                  final nameString =
-                                                      '${item['sub_cat_desc'] ?? ''}'
-                                                          .toString();
-                                                  final searchQuery =
-                                                      searchController5.text
-                                                          .trim()
-                                                          .toLowerCase();
-                                                  final searchQueryInt =
-                                                      int.tryParse(searchQuery);
-                                                  final docInt =
-                                                      int.tryParse(codeString);
-
-                                                  return (searchQueryInt !=
-                                                              null &&
-                                                          docInt != null &&
-                                                          docInt ==
-                                                              searchQueryInt) ||
-                                                      codeString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery) ||
-                                                      nameString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery);
-                                                }).toList();
-
-                                                if (filteredItems.isEmpty) {
-                                                  return Center(
-                                                      child: Text(
-                                                          'No data found')); // Display message when no data
-                                                }
-
-                                                return ListView.builder(
-                                                  itemCount:
-                                                      filteredItems.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final item =
-                                                        filteredItems[index];
-                                                    final sCode =
-                                                        '${item['sub_cat_code'] ?? ''}'
-                                                            .toString();
-                                                    final sName =
-                                                        '${item['sub_cat_desc'] ?? ''}'
-                                                            .toString();
-                                                    return ListTile(
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                      title: RichText(
-                                                        text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                              text: '$sCode\n',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text:
-                                                                  ' ', // Add a space between gCode and gName
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                            ),
-                                                            TextSpan(
-                                                              text: '$sName',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .grey[800],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        setState(() {
-                                                          selectStarSubtCat =
-                                                              sCode;
-                                                          startSubCatController
-                                                                  .text =
-                                                              selectStarSubtCat!;
-                                                          selectLovStartSubCat();
-                                                        });
-                                                      },
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ).then((_) {
-                            searchController5.clear();
-                          });
-                        },
-                        child: AbsorbPointer(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              labelText: 'จาก Sub Category',
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelStyle: TextStyle(color: Colors.black),
-                              border: InputBorder.none,
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                            controller: startSubCatController,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-//-------------------------------------------------------------------------------------------------------//
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(16),
-                                      height:
-                                          300, // Adjust height of Popup as needed
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'ถึง Sub Category',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: Icon(Icons.close),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Close Popup
-                                                  searchController6
-                                                      .clear(); // Clear search value on close
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 10),
-                                          // Search box
-                                          TextField(
-                                            controller: searchController6,
-                                            decoration: InputDecoration(
-                                              hintText: 'ค้นหา',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                            onChanged: (query) {
-                                              setState(() {});
-                                            },
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Expanded(
-                                            child: Builder(
-                                              builder: (context) {
-                                                final filteredItems =
-                                                    dataEndSubCat.where((item) {
-                                                  final codeString =
-                                                      '${item['sub_cat_code'] ?? ''}'
-                                                          .toString();
-                                                  final nameString =
-                                                      '${item['sub_cat_desc'] ?? ''}'
-                                                          .toString();
-                                                  final searchQuery =
-                                                      searchController6.text
-                                                          .trim()
-                                                          .toLowerCase();
-                                                  final searchQueryInt =
-                                                      int.tryParse(searchQuery);
-                                                  final docInt =
-                                                      int.tryParse(codeString);
-
-                                                  return (searchQueryInt !=
-                                                              null &&
-                                                          docInt != null &&
-                                                          docInt ==
-                                                              searchQueryInt) ||
-                                                      codeString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery) ||
-                                                      nameString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery);
-                                                }).toList();
-
-                                                if (filteredItems.isEmpty) {
-                                                  return Center(
-                                                      child: Text(
-                                                          'No data found')); // Display message when no data
-                                                }
-
-                                                return ListView.builder(
-                                                  itemCount:
-                                                      filteredItems.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final item =
-                                                        filteredItems[index];
-                                                    final sCode =
-                                                        '${item['sub_cat_code'] ?? ''}'
-                                                            .toString();
-                                                    final sName =
-                                                        '${item['sub_cat_desc'] ?? ''}'
-                                                            .toString();
-                                                    return ListTile(
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                      title: RichText(
-                                                        text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                              text: '$sCode\n',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text:
-                                                                  ' ', // Add a space between gCode and gName
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                            ),
-                                                            TextSpan(
-                                                              text: '$sName',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .grey[800],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        setState(() {
-                                                          selectEndSubCat =
-                                                              sCode;
-                                                          endSubCatController
-                                                                  .text =
-                                                              selectEndSubCat!;
-                                                          selectLovEndSubCat();
-                                                        });
-                                                      },
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ).then((_) {
-                            searchController6.clear();
-                          });
-                        },
-                        child: AbsorbPointer(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              labelText: 'ถึง Sub Category',
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelStyle: TextStyle(color: Colors.black),
-                              border: InputBorder.none,
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                            controller: endSubCatController,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(16),
-                                      height:
-                                          300, // Adjust height of Popup as needed
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'จาก ยี่ห้อ',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: Icon(Icons.close),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Close Popup
-                                                  searchController7
-                                                      .clear(); // Clear search value on close
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 10),
-                                          // Search box
-                                          TextField(
-                                            controller: searchController7,
-                                            decoration: InputDecoration(
-                                              hintText: 'ค้นหา',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                            onChanged: (query) {
-                                              setState(() {});
-                                            },
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Expanded(
-                                            child: Builder(
-                                              builder: (context) {
-                                                final filteredItems =
-                                                    dataStartBrand
-                                                        .where((item) {
-                                                  final codeString =
-                                                      '${item['BRAND_CODE'] ?? ''}'
-                                                          .toString();
-                                                  final nameString =
-                                                      '${item['BRAND_NAME'] ?? ''}'
-                                                          .toString();
-                                                  final searchQuery =
-                                                      searchController7.text
-                                                          .trim()
-                                                          .toLowerCase();
-                                                  final searchQueryInt =
-                                                      int.tryParse(searchQuery);
-                                                  final docInt =
-                                                      int.tryParse(codeString);
-
-                                                  return (searchQueryInt !=
-                                                              null &&
-                                                          docInt != null &&
-                                                          docInt ==
-                                                              searchQueryInt) ||
-                                                      codeString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery) ||
-                                                      nameString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery);
-                                                }).toList();
-
-                                                if (filteredItems.isEmpty) {
-                                                  return Center(
-                                                      child: Text(
-                                                          'No data found')); // Display message when no data
-                                                }
-
-                                                return ListView.builder(
-                                                  itemCount:
-                                                      filteredItems.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final item =
-                                                        filteredItems[index];
-                                                    final bCode =
-                                                        '${item['BRAND_CODE'] ?? ''}'
-                                                            .toString();
-                                                    final bName =
-                                                        '${item['BRAND_NAME'] ?? ''}'
-                                                            .toString();
-                                                    return ListTile(
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                      title: RichText(
-                                                        text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                              text: '$bCode\n',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text:
-                                                                  ' ', // Add a space between gCode and gName
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                            ),
-                                                            TextSpan(
-                                                              text: '$bName',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .grey[800],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        setState(() {
-                                                          selectStartBrand =
-                                                              bCode;
-                                                          startBrandController
-                                                                  .text =
-                                                              selectStartBrand!;
-                                                          selectLovStartBrand();
-                                                        });
-                                                      },
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ).then((_) {
-                            searchController7.clear();
-                          });
-                        },
-                        child: AbsorbPointer(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              labelText: 'จาก ยี่ห้อ',
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelStyle: TextStyle(color: Colors.black),
-                              border: InputBorder.none,
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                            controller: startBrandController,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                        width: 8), // Space between the two TextFields
-//---------------------------------------------------------------------------------------------------//
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(16),
-                                      height:
-                                          300, // Adjust height of Popup as needed
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'ถึง ยี่ห้อ',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: Icon(Icons.close),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Close Popup
-                                                  searchController8
-                                                      .clear(); // Clear search value on close
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 10),
-                                          // Search box
-                                          TextField(
-                                            controller: searchController8,
-                                            decoration: InputDecoration(
-                                              hintText: 'ค้นหา',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                            onChanged: (query) {
-                                              setState(() {});
-                                            },
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Expanded(
-                                            child: Builder(
-                                              builder: (context) {
-                                                final filteredItems =
-                                                    dataEndBrand.where((item) {
-                                                  final codeString =
-                                                      '${item['BRAND_CODE'] ?? ''}'
-                                                          .toString();
-                                                  final nameString =
-                                                      '${item['BRAND_NAME'] ?? ''}'
-                                                          .toString();
-                                                  final searchQuery =
-                                                      searchController8.text
-                                                          .trim()
-                                                          .toLowerCase();
-                                                  final searchQueryInt =
-                                                      int.tryParse(searchQuery);
-                                                  final docInt =
-                                                      int.tryParse(codeString);
-
-                                                  return (searchQueryInt !=
-                                                              null &&
-                                                          docInt != null &&
-                                                          docInt ==
-                                                              searchQueryInt) ||
-                                                      codeString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery) ||
-                                                      nameString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery);
-                                                }).toList();
-
-                                                if (filteredItems.isEmpty) {
-                                                  return Center(
-                                                      child: Text(
-                                                          'No data found')); // Display message when no data
-                                                }
-
-                                                return ListView.builder(
-                                                  itemCount:
-                                                      filteredItems.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final item =
-                                                        filteredItems[index];
-                                                    final bCode =
-                                                        '${item['BRAND_CODE'] ?? ''}'
-                                                            .toString();
-                                                    final bName =
-                                                        '${item['BRAND_NAME'] ?? ''}'
-                                                            .toString();
-                                                    return ListTile(
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                      title: RichText(
-                                                        text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                              text: '$bCode\n',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text:
-                                                                  ' ', // Add a space between gCode and gName
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                            ),
-                                                            TextSpan(
-                                                              text: '$bName',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .grey[800],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        setState(() {
-                                                          selectEndBrand =
-                                                              bCode;
-                                                          endBrandController
-                                                                  .text =
-                                                              selectEndBrand!;
-                                                          selectLovEndBrand();
-                                                        });
-                                                      },
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ).then((_) {
-                            searchController8.clear();
-                          });
-                        },
-                        child: AbsorbPointer(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              labelText: 'ถึง ยี่ห้อ',
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelStyle: TextStyle(color: Colors.black),
-                              border: InputBorder.none,
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                            controller: endBrandController,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-////////////////////////////////////////////////////////////////////////////////////////////////////
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(16),
-                                      height:
-                                          300, // Adjust height of Popup as needed
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'จาก รหัสสินค้า',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: Icon(Icons.close),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Close Popup
-                                                  searchController9
-                                                      .clear(); // Clear search value on close
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 10),
-                                          // Search box
-                                          TextField(
-                                            controller: searchController9,
-                                            decoration: InputDecoration(
-                                              hintText: 'ค้นหา',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                            onChanged: (query) {
-                                              setState(() {});
-                                            },
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Expanded(
-                                            child: Builder(
-                                              builder: (context) {
-                                                final filteredItems =
-                                                    dataStartItems
-                                                        .where((item) {
-                                                  final codeString =
-                                                      '${item['item_code'] ?? ''}'
-                                                          .toString();
-                                                  final nameString =
-                                                      '${item['itm_name'] ?? ''}'
-                                                          .toString();
-                                                  final searchQuery =
-                                                      searchController9.text
-                                                          .trim()
-                                                          .toLowerCase();
-                                                  final searchQueryInt =
-                                                      int.tryParse(searchQuery);
-                                                  final docInt =
-                                                      int.tryParse(codeString);
-
-                                                  return (searchQueryInt !=
-                                                              null &&
-                                                          docInt != null &&
-                                                          docInt ==
-                                                              searchQueryInt) ||
-                                                      codeString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery) ||
-                                                      nameString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery);
-                                                }).toList();
-
-                                                if (filteredItems.isEmpty) {
-                                                  return Center(
-                                                      child: Text(
-                                                          'No data found')); // Display message when no data
-                                                }
-
-                                                return ListView.builder(
-                                                  itemCount:
-                                                      filteredItems.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final item =
-                                                        filteredItems[index];
-                                                    final iCode =
-                                                        '${item['item_code'] ?? ''}'
-                                                            .toString();
-                                                    final iName =
-                                                        '${item['itm_name'] ?? ''}'
-                                                            .toString();
-                                                    return ListTile(
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                      title: RichText(
-                                                        text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                              text: '$iCode\n',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text:
-                                                                  ' ', // Add a space between gCode and gName
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                            ),
-                                                            TextSpan(
-                                                              text: '$iName',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .grey[800],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        setState(() {
-                                                          selectStartItems =
-                                                              iCode;
-                                                          startItemsController
-                                                                  .text =
-                                                              selectStartItems!;
-                                                          selectLovStastItems();
-                                                        });
-                                                      },
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ).then((_) {
-                            searchController9.clear();
-                          });
-                        },
-                        child: AbsorbPointer(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              labelText: 'จาก รหัสสินค้า',
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelStyle: TextStyle(color: Colors.black),
-                              border: InputBorder.none,
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                            controller: startItemsController,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                        width: 8), // Space between the two TextFields
-//----------------------------------------------------------------------------------------------------------//
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(16),
-                                      height:
-                                          300, // Adjust height of Popup as needed
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'ถึง รหัสสินค้า',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: Icon(Icons.close),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Close Popup
-                                                  searchController10
-                                                      .clear(); // Clear search value on close
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 10),
-                                          // Search box
-                                          TextField(
-                                            controller: searchController10,
-                                            decoration: InputDecoration(
-                                              hintText: 'ค้นหา',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                            onChanged: (query) {
-                                              setState(() {});
-                                            },
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Expanded(
-                                            child: Builder(
-                                              builder: (context) {
-                                                final filteredItems =
-                                                    dataEndItems.where((item) {
-                                                  final codeString =
-                                                      '${item['item_code'] ?? ''}'
-                                                          .toString();
-                                                  final nameString =
-                                                      '${item['itm_name'] ?? ''}'
-                                                          .toString();
-                                                  final searchQuery =
-                                                      searchController10.text
-                                                          .trim()
-                                                          .toLowerCase();
-                                                  final searchQueryInt =
-                                                      int.tryParse(searchQuery);
-                                                  final docInt =
-                                                      int.tryParse(codeString);
-
-                                                  return (searchQueryInt !=
-                                                              null &&
-                                                          docInt != null &&
-                                                          docInt ==
-                                                              searchQueryInt) ||
-                                                      codeString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery) ||
-                                                      nameString
-                                                          .toLowerCase()
-                                                          .contains(
-                                                              searchQuery);
-                                                }).toList();
-
-                                                if (filteredItems.isEmpty) {
-                                                  return Center(
-                                                      child: Text(
-                                                          'No data found')); // Display message when no data
-                                                }
-
-                                                return ListView.builder(
-                                                  itemCount:
-                                                      filteredItems.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final item =
-                                                        filteredItems[index];
-                                                    final iCode =
-                                                        '${item['item_code'] ?? ''}'
-                                                            .toString();
-                                                    final iName =
-                                                        '${item['itm_name'] ?? ''}'
-                                                            .toString();
-                                                    return ListTile(
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                      title: RichText(
-                                                        text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                              text: '$iCode\n',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text:
-                                                                  ' ', // Add a space between gCode and gName
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                            ),
-                                                            TextSpan(
-                                                              text: '$iName',
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .grey[800],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                        setState(() {
-                                                          selectEndItems =
-                                                              iCode;
-                                                          endItemsController
-                                                                  .text =
-                                                              selectEndItems!;
-                                                          selectLovEndItems();
-                                                        });
-                                                      },
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ).then((_) {
-                            searchController10.clear();
-                          });
-                        },
-                        child: AbsorbPointer(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              labelText: 'ถึง รหัสสินค้า',
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelStyle: TextStyle(color: Colors.black),
-                              border: InputBorder.none,
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                            controller: endItemsController,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+        child: isLoading
+            ? const Column(
                 children: [
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: AppStyles.ConfirmbuttonStyle(),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'ประมวลผล',
-                          style: AppStyles.ConfirmbuttonTextStyle(),
-                        ),
-                      ],
+                  Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
                   ),
                 ],
+              )
+            : SingleChildScrollView(
+                child: Column(
+                  children: [
+//----------------------------------------------------------------------------//
+// กลุ่มสินค้า
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: startGroupController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchStartGroup(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'จาก กลุ่มสินค้า',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: endGroupController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchEndGroup(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'ถึง กลุ่มสินค้า',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+//----------------------------------------------------------------------------//
+// Category
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: startCategoryController,
+                            readOnly: true,
+                            onTap: () =>
+                                showDialogDropdownSearchStartCategory(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'จาก Category',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: endCategoryController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchEndCategory(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'ถึง Category',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+//----------------------------------------------------------------------------//
+// Sub Category
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: startSubCategoryController,
+                            readOnly: true,
+                            onTap: () =>
+                                showDialogDropdownSearchStartSubCategory(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'จาก Sub Category',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: endSubCategoryController,
+                            readOnly: true,
+                            onTap: () =>
+                                showDialogDropdownSearchEndSubCategory(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'ถึง Sub Category',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+//----------------------------------------------------------------------------//
+// Brand
+                    // const SizedBox(height: 8),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: searchStartBrandController,
+                    //         readOnly: true,
+                    //         onTap: () => showDialogDropdownSearchStartBrand(),
+                    //         minLines: 1,
+                    //         maxLines: 3,
+                    //         // overflow: TextOverflow.ellipsis,
+                    //         decoration: const InputDecoration(
+                    //           border: InputBorder.none,
+                    //           filled: true,
+                    //           fillColor: Colors.white,
+                    //           labelText: 'จาก ยี่ห้อ',
+                    //           labelStyle: TextStyle(
+                    //             color: Colors.black87,
+                    //             fontSize: 12,
+                    //           ),
+                    //           suffixIcon: Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: Color.fromARGB(255, 113, 113, 113),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     const SizedBox(width: 8),
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: searchEndBrandController,
+                    //         readOnly: true,
+                    //         onTap: () => showDialogDropdownSearchEndBrand(),
+                    //         minLines: 1,
+                    //         maxLines: 3,
+                    //         // overflow: TextOverflow.ellipsis,
+                    //         decoration: const InputDecoration(
+                    //           border: InputBorder.none,
+                    //           filled: true,
+                    //           fillColor: Colors.white,
+                    //           labelText: 'ถึง ยี่ห้อ',
+                    //           labelStyle: TextStyle(
+                    //             color: Colors.black87,
+                    //             fontSize: 12,
+                    //           ),
+                    //           suffixIcon: Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: Color.fromARGB(255, 113, 113, 113),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     )
+                    //   ],
+                    // ),
+//----------------------------------------------------------------------------//
+// Item
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: startItemController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchStartItem(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'จาก รหัสสินค้า',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: endItemController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchEndItem(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'ถึง รหัสสินค้า',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+//----------------------------------------------------------------------------//
+// ประมวลผล
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {},
+                          style: AppStyles.ConfirmbuttonStyle(),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // const Icon(
+                              //   Icons.print,
+                              //   color: Colors.black,
+                              // ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'ประมวลผล',
+                                style: AppStyles.ConfirmbuttonTextStyle(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
       ),
       bottomNavigationBar: BottomBar(
-        currentPage: 'not_show',
+        currentPage: 'show',
       ),
+    );
+  }
+
+//----------------------------------------------------------------------------//
+// จากกลุ่มสินค้า
+  void showDialogDropdownSearchStartGroup() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'จาก กลุ่มสินค้า',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            searchStartGroupController.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // ช่องค้นหา
+                    TextField(
+                      controller: searchStartGroupController,
+                      decoration: const InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final filteredItems = dataLovStartGroup.where((item) {
+                            final docString =
+                                '${item['group_code'] ?? ''} ${item['group_name'] ?? ''}'
+                                    .toLowerCase();
+                            final searchQuery = searchStartGroupController.text
+                                .trim()
+                                .toLowerCase();
+                            return docString.contains(searchQuery);
+                          }).toList();
+
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
+                          if (filteredItems.isEmpty) {
+                            return const Center(
+                              child: Text('No data found'),
+                            );
+                          }
+
+                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final doc = '${item['group_code'] ?? ''}';
+                              final returnCode = '${item['group_code'] ?? ''}';
+
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  '${item['group_code'] ?? ''}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text('${item['group_name'] ?? ''}'),
+                                onTap: () {
+                                  isLoading = true;
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    String dataCheck = returnCode;
+                                    returnStartGroup = returnCode;
+                                    displayStartGroup = doc;
+                                    startGroupController.text =
+                                        displayStartGroup.toString();
+                                    if (returnStartGroup.isNotEmpty) {
+                                      selectLovEndGroup();
+                                      displayEndGroup = '';
+                                      returnEndGroup = '';
+                                      endGroupController.clear();
+                                      selectLovStartCategory();
+                                      displayStartCategory = '';
+                                      returnStartCategory = '';
+                                      startCategoryController.clear();
+                                      selectLovEndCategory();
+                                      displayEndCategory = '';
+                                      returnEndCategory = '';
+                                      endCategoryController.clear();
+                                      selectLovStartSubCategory();
+                                      displayStartSubCategory = '';
+                                      returnStartSubCategory = '';
+                                      startSubCategoryController.clear();
+                                      selectLovEndSubCategory();
+                                      displayEndSubCategory = '';
+                                      returnEndSubCategory = '';
+                                      endSubCategoryController.clear();
+                                      selectLovStartItem();
+                                      displayStartItem = '';
+                                      returnStartItem = '';
+                                      startItemController.clear();
+                                      selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
+                                      isLoading = false;
+                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
+                                    // -----------------------------------------
+                                    print(
+                                        'startGroupController New: $startGroupController Type : ${startGroupController.runtimeType}');
+                                    print(
+                                        'doc New: $doc Type : ${doc.runtimeType}');
+                                    print(
+                                        'displayStartGroup New: $displayStartGroup Type : ${displayStartGroup.runtimeType}');
+                                    print(
+                                        'returnStartGroup New: $returnStartGroup Type : ${returnStartGroup.runtimeType}');
+                                  });
+                                  searchStartGroupController.clear();
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+//----------------------------------------------------------------------------//
+// ถึงกลุ่มสินค้า
+  void showDialogDropdownSearchEndGroup() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'ถึง กลุ่มสินค้า',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            searchEndGroupController.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // ช่องค้นหา
+                    TextField(
+                      controller: searchEndGroupController,
+                      decoration: const InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final filteredItems = dataLovEndGroup.where((item) {
+                            final docString =
+                                '${item['group_code'] ?? ''} ${item['group_name'] ?? ''}'
+                                    .toLowerCase();
+                            final searchQuery = searchEndGroupController.text
+                                .trim()
+                                .toLowerCase();
+                            return docString.contains(searchQuery);
+                          }).toList();
+
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
+                          if (filteredItems.isEmpty) {
+                            return const Center(
+                              child: Text('No data found'),
+                            );
+                          }
+
+                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final doc = '${item['group_code'] ?? ''}';
+                              final returnCode = '${item['group_code'] ?? ''}';
+
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  '${item['group_code'] ?? ''}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text('${item['group_name'] ?? ''}'),
+                                onTap: () {
+                                  isLoading = true;
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    String dataCheck = returnCode;
+                                    returnEndGroup = returnCode;
+                                    displayEndGroup = doc;
+                                    endGroupController.text =
+                                        displayEndGroup.toString();
+                                    if (returnEndGroup.isNotEmpty) {
+                                      selectLovStartCategory();
+                                      displayStartCategory = '';
+                                      returnStartCategory = '';
+                                      startCategoryController.clear();
+                                      selectLovEndCategory();
+                                      displayEndCategory = '';
+                                      returnEndCategory = '';
+                                      endCategoryController.clear();
+                                      selectLovStartSubCategory();
+                                      displayStartSubCategory = '';
+                                      returnStartSubCategory = '';
+                                      startSubCategoryController.clear();
+                                      selectLovEndSubCategory();
+                                      displayEndSubCategory = '';
+                                      returnEndSubCategory = '';
+                                      endSubCategoryController.clear();
+                                      selectLovStartItem();
+                                      displayStartItem = '';
+                                      returnStartItem = '';
+                                      startItemController.clear();
+                                      selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
+                                      isLoading = false;
+                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
+                                    // -----------------------------------------
+                                    print(
+                                        'endGroupController New: $endGroupController Type : ${endGroupController.runtimeType}');
+                                    print(
+                                        'doc New: $doc Type : ${doc.runtimeType}');
+                                    print(
+                                        'displayEndGroup New: $displayEndGroup Type : ${displayEndGroup.runtimeType}');
+                                    print(
+                                        'returnEndGroup New: $returnEndGroup Type : ${returnEndGroup.runtimeType}');
+                                  });
+                                  searchEndGroupController.clear();
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+//----------------------------------------------------------------------------//
+// จาก Category
+  void showDialogDropdownSearchStartCategory() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'จาก Category',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            searchStartCatController.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // ช่องค้นหา
+                    TextField(
+                      controller: searchStartCatController,
+                      decoration: const InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final filteredItems =
+                              dataLovStartCategory.where((item) {
+                            final docString =
+                                '${item['category_code'] ?? ''} ${item['category_desc'] ?? ''}'
+                                    .toLowerCase();
+                            final searchQuery = searchStartCatController.text
+                                .trim()
+                                .toLowerCase();
+                            return docString.contains(searchQuery);
+                          }).toList();
+
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
+                          if (filteredItems.isEmpty) {
+                            return const Center(
+                              child: Text('No data found'),
+                            );
+                          }
+
+                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final doc = '${item['category_code'] ?? ''}';
+                              final returnCode =
+                                  '${item['category_code'] ?? ''}';
+
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  '${item['category_code'] ?? ''}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle:
+                                    Text('${item['category_desc'] ?? ''}'),
+                                onTap: () {
+                                  isLoading = true;
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    String dataCheck = returnCode;
+                                    returnStartCategory = returnCode;
+                                    displayStartCategory = doc;
+                                    startCategoryController.text =
+                                        displayStartCategory.toString();
+                                    if (returnStartCategory.isNotEmpty) {
+                                      selectLovEndCategory();
+                                      displayEndCategory = '';
+                                      returnEndCategory = '';
+                                      endCategoryController.clear();
+                                      selectLovStartSubCategory();
+                                      displayStartSubCategory = '';
+                                      returnStartSubCategory = '';
+                                      startSubCategoryController.clear();
+                                      selectLovEndSubCategory();
+                                      displayEndSubCategory = '';
+                                      returnEndSubCategory = '';
+                                      endSubCategoryController.clear();
+                                      selectLovStartItem();
+                                      displayStartItem = '';
+                                      returnStartItem = '';
+                                      startItemController.clear();
+                                      selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
+                                      isLoading = false;
+                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
+                                    // -----------------------------------------
+                                    print(
+                                        'endGroupController New: $endGroupController Type : ${endGroupController.runtimeType}');
+                                    print(
+                                        'doc New: $doc Type : ${doc.runtimeType}');
+                                    print(
+                                        'displayStartCategory New: $displayStartCategory Type : ${displayStartCategory.runtimeType}');
+                                    print(
+                                        'returnStartCategory New: $returnStartCategory Type : ${returnStartCategory.runtimeType}');
+                                  });
+                                  searchStartCatController.clear();
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+//----------------------------------------------------------------------------//
+// ถึง Category
+  void showDialogDropdownSearchEndCategory() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'ถึง Category',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            searchEndCatController.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // ช่องค้นหา
+                    TextField(
+                      controller: searchEndCatController,
+                      decoration: const InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final filteredItems =
+                              dataLovEndCategory.where((item) {
+                            final docString =
+                                '${item['category_code'] ?? ''} ${item['category_desc'] ?? ''}'
+                                    .toLowerCase();
+                            final searchQuery = searchEndCatController.text
+                                .trim()
+                                .toLowerCase();
+                            return docString.contains(searchQuery);
+                          }).toList();
+
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
+                          if (filteredItems.isEmpty) {
+                            return const Center(
+                              child: Text('No data found'),
+                            );
+                          }
+
+                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final doc = '${item['category_code'] ?? ''}';
+                              final returnCode =
+                                  '${item['category_code'] ?? ''}';
+
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  '${item['category_code'] ?? ''}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle:
+                                    Text('${item['category_desc'] ?? ''}'),
+                                onTap: () {
+                                  isLoading = true;
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    String dataCheck = returnCode;
+                                    returnEndCategory = returnCode;
+                                    displayEndCategory = doc;
+                                    endCategoryController.text =
+                                        displayEndCategory.toString();
+                                    if (returnEndCategory.isNotEmpty) {
+                                      selectLovStartSubCategory();
+                                      displayStartSubCategory = '';
+                                      returnStartSubCategory = '';
+                                      startSubCategoryController.clear();
+                                      selectLovEndSubCategory();
+                                      displayEndSubCategory = '';
+                                      returnEndSubCategory = '';
+                                      endSubCategoryController.clear();
+                                      selectLovStartItem();
+                                      displayStartItem = '';
+                                      returnStartItem = '';
+                                      startItemController.clear();
+                                      selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
+                                      isLoading = false;
+                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
+                                    // -----------------------------------------
+                                    print(
+                                        'endCategoryController New: $endCategoryController Type : ${endCategoryController.runtimeType}');
+                                    print(
+                                        'doc New: $doc Type : ${doc.runtimeType}');
+                                    print(
+                                        'displayEndCategory New: $displayEndCategory Type : ${displayEndCategory.runtimeType}');
+                                    print(
+                                        'returnEndCategory New: $returnEndCategory Type : ${returnEndCategory.runtimeType}');
+                                  });
+                                  searchEndCatController.clear();
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+//----------------------------------------------------------------------------//
+// จาก Sub Category
+  void showDialogDropdownSearchStartSubCategory() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'จาก Sub Category',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            searchStartSubCatController.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // ช่องค้นหา
+                    TextField(
+                      controller: searchStartSubCatController,
+                      decoration: const InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final filteredItems =
+                              dataLovStartSubCategory.where((item) {
+                            final docString =
+                                '${item['sub_cat_code'] ?? ''} ${item['sub_cat_desc'] ?? ''}'
+                                    .toLowerCase();
+                            final searchQuery = searchStartSubCatController.text
+                                .trim()
+                                .toLowerCase();
+                            return docString.contains(searchQuery);
+                          }).toList();
+
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
+                          if (filteredItems.isEmpty) {
+                            return const Center(
+                              child: Text('No data found'),
+                            );
+                          }
+
+                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final doc = '${item['sub_cat_code'] ?? ''}';
+                              final returnCode =
+                                  '${item['sub_cat_code'] ?? ''}';
+
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  '${item['sub_cat_code'] ?? ''}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text('${item['sub_cat_desc'] ?? ''}'),
+                                onTap: () {
+                                  isLoading = true;
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    // String dataCheck = returnCode;
+                                    returnStartSubCategory = returnCode;
+                                    displayStartSubCategory = doc;
+                                    startSubCategoryController.text =
+                                        displayStartSubCategory.toString();
+                                    if (returnStartSubCategory.isNotEmpty) {
+                                      // selectLovStartBrand();
+                                      // displayStartBrand = '';
+                                      // returnStartBrand = '';
+                                      // startBrandController.clear();
+                                      // selectLovEndBrand();
+                                      // displayEndBrand = '';
+                                      // returnEndBrand = '';
+                                      // endBrandController.clear();
+                                      selectLovEndSubCategory();
+                                      displayEndSubCategory = '';
+                                      returnEndSubCategory = '';
+                                      endSubCategoryController.clear();
+                                      selectLovStartItem();
+                                      displayStartItem = '';
+                                      returnStartItem = '';
+                                      startItemController.clear();
+                                      selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
+                                      isLoading = false;
+                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
+                                    // -----------------------------------------
+                                    print(
+                                        'startSubCategoryController New: $startSubCategoryController Type : ${startSubCategoryController.runtimeType}');
+                                    print(
+                                        'doc New: $doc Type : ${doc.runtimeType}');
+                                    print(
+                                        'displayStartSubCategory New: $displayStartSubCategory Type : ${displayStartSubCategory.runtimeType}');
+                                    print(
+                                        'returnStartSubCategory New: $returnStartSubCategory Type : ${returnStartSubCategory.runtimeType}');
+                                  });
+                                  searchStartSubCatController.clear();
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+//----------------------------------------------------------------------------//
+// ถึง Sub Category
+  void showDialogDropdownSearchEndSubCategory() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'ถึง Sub Category',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            searchEndSubCatController.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // ช่องค้นหา
+                    TextField(
+                      controller: searchEndSubCatController,
+                      decoration: const InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final filteredItems =
+                              dataLovEndSubCategory.where((item) {
+                            final docString =
+                                '${item['sub_cat_code'] ?? ''} ${item['sub_cat_desc'] ?? ''}'
+                                    .toLowerCase();
+                            final searchQuery = searchEndSubCatController.text
+                                .trim()
+                                .toLowerCase();
+                            return docString.contains(searchQuery);
+                          }).toList();
+
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
+                          if (filteredItems.isEmpty) {
+                            return const Center(
+                              child: Text('No data found'),
+                            );
+                          }
+
+                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final doc = '${item['sub_cat_code'] ?? ''}';
+                              final returnCode =
+                                  '${item['sub_cat_code'] ?? ''}';
+
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  '${item['sub_cat_code'] ?? ''}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text('${item['sub_cat_desc'] ?? ''}'),
+                                onTap: () {
+                                  isLoading = true;
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    // String dataCheck = returnCode;
+                                    returnEndSubCategory = returnCode;
+                                    displayEndSubCategory = doc;
+                                    endSubCategoryController.text =
+                                        displayEndSubCategory.toString();
+                                    if (returnEndSubCategory.isNotEmpty) {
+                                      // selectLovStartBrand();
+                                      // displayStartBrand = '';
+                                      // returnStartBrand = '';
+                                      // startBrandController.clear();
+                                      selectLovStartItem();
+                                      displayStartItem = '';
+                                      returnStartItem = '';
+                                      startItemController.clear();
+                                      selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
+                                      isLoading = false;
+                                    }
+                                    print(
+                                        'endSubCategoryController New: $endSubCategoryController Type : ${endSubCategoryController.runtimeType}');
+                                    print(
+                                        'doc New: $doc Type : ${doc.runtimeType}');
+                                    print(
+                                        'displayEndSubCategory New: $displayEndSubCategory Type : ${displayEndSubCategory.runtimeType}');
+                                    print(
+                                        'returnEndSubCategory New: $returnEndSubCategory Type : ${returnEndSubCategory.runtimeType}');
+                                  });
+                                  searchEndSubCatController.clear();
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+//----------------------------------------------------------------------------//
+// จาก Brand
+  // void showDialogDropdownSearchStartBrand() {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: true,
+  //     builder: (BuildContext context) {
+  //       return Dialog(
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(10),
+  //         ),
+  //         child: StatefulBuilder(
+  //           builder: (context, setState) {
+  //             return Container(
+  //               padding: const EdgeInsets.all(16),
+  //               height: 300, // ปรับความสูงของ Popup ตามต้องการ
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Row(
+  //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                     children: [
+  //                       const Text(
+  //                         'จาก Brand',
+  //                         style: TextStyle(
+  //                             fontSize: 18, fontWeight: FontWeight.bold),
+  //                       ),
+  //                       IconButton(
+  //                         icon: const Icon(Icons.close),
+  //                         onPressed: () {
+  //                           Navigator.of(context).pop();
+  //                           searchStartBrandController.clear();
+  //                         },
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   const SizedBox(height: 10),
+  //                   // ช่องค้นหา
+  //                   TextField(
+  //                     controller: searchStartBrandController,
+  //                     decoration: const InputDecoration(
+  //                       hintText: 'ค้นหา',
+  //                       border: OutlineInputBorder(),
+  //                     ),
+  //                     onChanged: (query) {
+  //                       if (mounted) {
+  //                         setState(() {});
+  //                       }
+  //                     },
+  //                   ),
+  //                   const SizedBox(height: 10),
+  //                   Expanded(
+  //                     child: Builder(
+  //                       builder: (context) {
+  //                         final filteredItems = dataLovStartBrand.where((item) {
+  //                           final docString =
+  //                               '${item['brand_code'] ?? ''} ${item['brand_name'] ?? ''}'
+  //                                   .toLowerCase();
+  //                           final searchQuery = searchStartBrandController.text
+  //                               .trim()
+  //                               .toLowerCase();
+  //                           return docString.contains(searchQuery);
+  //                         }).toList();
+
+  //                         // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
+  //                         if (filteredItems.isEmpty) {
+  //                           return const Center(
+  //                             child: Text('No data found'),
+  //                           );
+  //                         }
+
+  //                         // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+  //                         return ListView.builder(
+  //                           itemCount: filteredItems.length,
+  //                           itemBuilder: (context, index) {
+  //                             final item = filteredItems[index];
+  //                             final doc = '${item['brand_code'] ?? ''}';
+  //                             final returnCode =
+  //                                 '${item['brand_code'] ?? ''}';
+
+  //                             return ListTile(
+  //                               contentPadding: EdgeInsets.zero,
+  //                               title: Text(
+  //                                 '${item['brand_code'] ?? ''}',
+  //                                 style: const TextStyle(
+  //                                   fontSize: 12,
+  //                                   fontWeight: FontWeight.bold,
+  //                                 ),
+  //                               ),
+  //                               subtitle: Text('${item['brand_name'] ?? ''}'),
+  //                               onTap: () {
+  //                                 isLoading = true;
+  //                                 Navigator.of(context).pop();
+  //                                 setState(() {
+  //                                   // String dataCheck = returnCode;
+  //                                   returnStartBrand = returnCode;
+  //                                   displayStartBrand = doc;
+  //                                   startBrandController.text =
+  //                                       displayStartBrand.toString();
+  //                                   if (returnStartBrand.isNotEmpty) {
+  //                                     selectLovEndBrand();
+  //                                     displayEndBrand = '';
+  //                                     returnEndBrand = '';
+  //                                     endBrandController.clear();
+  //                                     selectLovStartItem();
+  //                                     displayStartItem = '';
+  //                                     returnStartItem = '';
+  //                                     startItemController.clear();
+  //                                     selectLovEndItem();
+  //                                     displayEndItem = '';
+  //                                     returnEndItem = '';
+  //                                     endItemController.clear();
+  //                                     isLoading = false;
+  //                                   }
+  //                                   // if (dataCheck != '') {
+  //                                   //   checkUpdateData = true;
+  //                                   // }
+  //                                   // -----------------------------------------
+  //                                   print(
+  //                                       'startBrandController New: $startBrandController Type : ${startBrandController.runtimeType}');
+  //                                   print(
+  //                                       'doc New: $doc Type : ${doc.runtimeType}');
+  //                                   print(
+  //                                       'displayStartBrand New: $displayStartSubCategory Type : ${displayStartSubCategory.runtimeType}');
+  //                                   print(
+  //                                       'returnStartBrand New: $returnStartBrand Type : ${returnStartBrand.runtimeType}');
+  //                                 });
+  //                                 searchStartBrandController.clear();
+  //                               },
+  //                             );
+  //                           },
+  //                         );
+  //                       },
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             );
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
+//----------------------------------------------------------------------------//
+// ถึง Brand
+  // void showDialogDropdownSearchEndBrand() {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: true,
+  //     builder: (BuildContext context) {
+  //       return Dialog(
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(10),
+  //         ),
+  //         child: StatefulBuilder(
+  //           builder: (context, setState) {
+  //             return Container(
+  //               padding: const EdgeInsets.all(16),
+  //               height: 300, // ปรับความสูงของ Popup ตามต้องการ
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Row(
+  //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                     children: [
+  //                       const Text(
+  //                         'ถึง Brand',
+  //                         style: TextStyle(
+  //                             fontSize: 18, fontWeight: FontWeight.bold),
+  //                       ),
+  //                       IconButton(
+  //                         icon: const Icon(Icons.close),
+  //                         onPressed: () {
+  //                           Navigator.of(context).pop();
+  //                           searchEndBrandController.clear();
+  //                         },
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   const SizedBox(height: 10),
+  //                   // ช่องค้นหา
+  //                   TextField(
+  //                     controller: searchEndBrandController,
+  //                     decoration: const InputDecoration(
+  //                       hintText: 'ค้นหา',
+  //                       border: OutlineInputBorder(),
+  //                     ),
+  //                     onChanged: (query) {
+  //                       if (mounted) {
+  //                         setState(() {});
+  //                       }
+  //                     },
+  //                   ),
+  //                   const SizedBox(height: 10),
+  //                   Expanded(
+  //                     child: Builder(
+  //                       builder: (context) {
+  //                         final filteredItems =
+  //                             dataLovEndBrand.where((item) {
+  //                           final docString =
+  //                               '${item['brand_code'] ?? ''} ${item['brand_name'] ?? ''}'
+  //                                   .toLowerCase();
+  //                           final searchQuery = searchEndBrandController.text
+  //                               .trim()
+  //                               .toLowerCase();
+  //                           return docString.contains(searchQuery);
+  //                         }).toList();
+
+  //                         // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
+  //                         if (filteredItems.isEmpty) {
+  //                           return const Center(
+  //                             child: Text('No data found'),
+  //                           );
+  //                         }
+
+  //                         // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+  //                         return ListView.builder(
+  //                           itemCount: filteredItems.length,
+  //                           itemBuilder: (context, index) {
+  //                             final item = filteredItems[index];
+  //                             final doc = '${item['brand_code'] ?? ''}';
+  //                             final returnCode =
+  //                                 '${item['brand_code'] ?? ''}';
+
+  //                             return ListTile(
+  //                               contentPadding: EdgeInsets.zero,
+  //                               title: Text(
+  //                                 '${item['brand_code'] ?? ''}',
+  //                                 style: const TextStyle(
+  //                                   fontSize: 12,
+  //                                   fontWeight: FontWeight.bold,
+  //                                 ),
+  //                               ),
+  //                               subtitle: Text('${item['brand_name'] ?? ''}'),
+  //                               onTap: () {
+  //                                 isLoading = true;
+  //                                 Navigator.of(context).pop();
+  //                                 setState(() {
+  //                                   // String dataCheck = returnCode;
+  //                                   returnEndBrand = returnCode;
+  //                                   displayEndBrand = doc;
+  //                                   endBrandController.text =
+  //                                       displayEndBrand.toString();
+  //                                   if (returnEndBrand.isNotEmpty) {
+  //                                     selectLovStartItem();
+  //                                     displayStartItem = '';
+  //                                     returnStartItem = '';
+  //                                     startItemController.clear();
+  //                                     selectLovEndItem();
+  //                                     displayEndItem = '';
+  //                                     returnEndItem = '';
+  //                                     endItemController.clear();
+  //                                     isLoading = false;
+  //                                   }
+  //                                   print(
+  //                                       'endBrandController New: $endBrandController Type : ${endBrandController.runtimeType}');
+  //                                   print(
+  //                                       'doc New: $doc Type : ${doc.runtimeType}');
+  //                                   print(
+  //                                       'displayEndBrand New: $displayEndBrand Type : ${displayEndBrand.runtimeType}');
+  //                                   print(
+  //                                       'returnEndBrand New: $returnEndBrand Type : ${returnEndBrand.runtimeType}');
+  //                                 });
+  //                                 searchEndBrandController.clear();
+  //                               },
+  //                             );
+  //                           },
+  //                         );
+  //                       },
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             );
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+//----------------------------------------------------------------------------//
+// จาก item
+  void showDialogDropdownSearchStartItem() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'จาก รหัสสินค้า',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            searchStartItemController.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // ช่องค้นหา
+                    TextField(
+                      controller: searchStartItemController,
+                      decoration: const InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final filteredItems = dataLovStartItem.where((item) {
+                            final docString =
+                                '${item['item_code'] ?? ''} ${item['itm_name'] ?? ''}'
+                                    .toLowerCase();
+                            final searchQuery = searchStartItemController.text
+                                .trim()
+                                .toLowerCase();
+                            return docString.contains(searchQuery);
+                          }).toList();
+
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
+                          if (filteredItems.isEmpty) {
+                            return const Center(
+                              child: Text('No data found'),
+                            );
+                          }
+
+                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final doc = '${item['item_code'] ?? ''}';
+                              final returnCode = '${item['item_code'] ?? ''}';
+
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  '${item['item_code'] ?? ''}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text('${item['itm_name'] ?? ''}'),
+                                onTap: () {
+                                  isLoading = true;
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    // String dataCheck = returnCode;
+                                    returnStartItem = returnCode;
+                                    displayStartItem = doc;
+                                    startItemController.text =
+                                        displayStartItem.toString();
+                                    if (returnStartItem.isNotEmpty) {
+                                      selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
+                                      isLoading = false;
+                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
+                                    // -----------------------------------------
+                                    print(
+                                        'startItemController New: $startItemController Type : ${startItemController.runtimeType}');
+                                    print(
+                                        'doc New: $doc Type : ${doc.runtimeType}');
+                                    print(
+                                        'displayEndSubCategory New: $displayEndSubCategory Type : ${displayEndSubCategory.runtimeType}');
+                                    print(
+                                        'returnStartItem New: $returnStartItem Type : ${returnStartItem.runtimeType}');
+                                  });
+                                  searchStartItemController.clear();
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+//----------------------------------------------------------------------------//
+// ถึง Item
+  void showDialogDropdownSearchEndItem() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'ถึง รหัสสินค้า',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            searchEndItemController.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // ช่องค้นหา
+                    TextField(
+                      controller: searchEndItemController,
+                      decoration: const InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final filteredItems = dataLovEndItem.where((item) {
+                            final docString =
+                                '${item['item_code'] ?? ''} ${item['itm_name'] ?? ''}'
+                                    .toLowerCase();
+                            final searchQuery = searchEndItemController.text
+                                .trim()
+                                .toLowerCase();
+                            return docString.contains(searchQuery);
+                          }).toList();
+
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
+                          if (filteredItems.isEmpty) {
+                            return const Center(
+                              child: Text('No data found'),
+                            );
+                          }
+
+                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final doc = '${item['item_code'] ?? ''}';
+                              final returnCode = '${item['item_code'] ?? ''}';
+
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  '${item['item_code'] ?? ''}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text('${item['itm_name'] ?? ''}'),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    // String dataCheck = returnCode;
+                                    returnEndItem = returnCode;
+                                    displayEndItem = doc;
+                                    endItemController.text =
+                                        displayEndItem.toString();
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
+                                    // -----------------------------------------
+                                    print(
+                                        'endItemController New: $endItemController Type : ${endItemController.runtimeType}');
+                                    print(
+                                        'doc New: $doc Type : ${doc.runtimeType}');
+                                    print(
+                                        'displayEndItem New: $displayEndItem Type : ${displayEndItem.runtimeType}');
+                                    print(
+                                        'returnEndItem New: $returnEndItem Type : ${returnEndItem.runtimeType}');
+                                  });
+                                  searchEndItemController.clear();
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -2369,7 +2373,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   ) {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Row(

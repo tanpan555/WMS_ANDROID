@@ -482,9 +482,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                               backgroundColor: Colors.white,
                               side: const BorderSide(color: Colors.grey),
                             ),
-                            child: Text(
-                              'ตกลง'
-                            ),
+                            child: Text('ตกลง'),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },

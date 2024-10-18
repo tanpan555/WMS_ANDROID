@@ -570,316 +570,317 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   }
 
   Widget _buildCards() {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 10),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
+  return Container(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(height: 10),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            widget.po_doc_no,
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
             ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const SizedBox(height: 10),
+        // Text with background color
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.lightBlue[100],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Text(
-              widget.po_doc_no,
+              setqc ?? '',
               style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontSize: 20,
               ),
               textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(height: 10),
-// Text with background color
-          Container(
-            width: double.infinity, // ทำให้กว้างเต็มที่
-            padding: const EdgeInsets.symmetric(
-                vertical: 8), // ปรับ padding ซ้ายขวาเป็น 0
-            decoration: BoxDecoration(
-              color: Colors.lightBlue[100], // Background color for the text
-              borderRadius:
-                  BorderRadius.circular(8), // Rounded corners (optional)
-            ),
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 30), // Padding ซ้ายขวา
-              child: Text(
-                setqc ?? '',
-                //'${widget.setqc}', // Text ที่ต้องการแสดง
-                style: const TextStyle(
-                  color: Colors.black, // Text color
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
+        ),
+        const SizedBox(height: 10),
 
-          const SizedBox(height: 10),
-          ListView.builder(
-            shrinkWrap: true, // ให้ ListView มีขนาดตามข้อมูล
-            physics: const NeverScrollableScrollPhysics(), // ปิดการเลื่อน
-            itemCount: gridItems.length,
-            itemBuilder: (context, index) {
-              final item = gridItems[index];
-              return Card(
-                color: Colors.lightBlue[100],
-                elevation: 4,
+        // Check if gridItems is empty
+        gridItems.isEmpty
+            ? Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Center(
-                        child: Text(
-                          item['item_code'] ?? '',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      const Divider(color: Colors.black26, thickness: 1),
-                      const SizedBox(height: 8),
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'จำนวนรับ:',
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  color: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 2,
-                                    horizontal: 8,
-                                  ),
-                                  child: Text(
-                                    // Format the number if it's not null, else display an empty string
-                                    item['pack_qty'] != null
-                                        ? NumberFormat('#,###')
-                                            .format(item['pack_qty'])
-                                        : '',
-                                    textAlign: TextAlign.end,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .start, // จัดให้อยู่ทางซ้ายในแนวนอน
-                            children: [
-                              const Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'จำนวน Pallet:',
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  color:
-                                      Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 2,
-                                    horizontal: 8,
-                                  ), // เพิ่ม padding รอบๆข้อความ
-                                  child: Text(
-                                    item['count_qty'] ?? '',
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .start, // จัดให้อยู่ทางซ้ายในแนวนอน
-                            children: [
-                              const Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'จำนวนรวม:',
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  color:
-                                      Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 2,
-                                    horizontal: 8,
-                                  ), // เพิ่ม padding รอบๆข้อความ
-                                  child: Text(
-                                    item['count_qty_in'] ?? '',
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      // Row with delete and edit buttons
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment
-                            .spaceBetween, // Align buttons to left and right
-                        children: [
-                          // Delete button as image
-                          IconButton(
-                            icon: Image.asset(
-                              'assets/images/bin.png', // Your delete image path
-                              width: 30,
-                              height: 30,
-                            ),
-                            onPressed: () async {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: const [
-                                            Icon(
-                                              Icons
-                                                  .notification_important, // ไอคอนแจ้งเตือน
-                                              color: Colors.red, // สีแดง
-                                              size: 30,
-                                            ),
-                                            SizedBox(
-                                              width:
-                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                            ),
-                                            Text('แจ้งเตือน'),
-                                          ],
-                                        ),
-                                        // Close icon
-                                        IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                    content:
-                                        const Text('ต้องการลบรายการหรือไม่?'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.white,
-                                          side: const BorderSide(
-                                              color: Colors.grey),
-                                        ),
-                                        child: const Text('ยกเลิก'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop(false);
-                                        },
-                                      ),
-                                      TextButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.white,
-                                          side: const BorderSide(
-                                              color: Colors.grey),
-                                        ),
-                                        child: const Text('ตกลง'),
-                                        onPressed: () async {
-                                          final poItemCode = item['item_code'];
-                                          final poSeq = item['seq'];
-                                          await delete(
-                                              widget.po_doc_no,
-                                              widget.po_doc_type,
-                                              poSeq,
-                                              poItemCode);
-                                          if (mounted) {
-                                            setState(() {
-                                              gridItems.removeWhere((item) =>
-                                                  item['item_code'] ==
-                                                      poItemCode &&
-                                                  item['seq'] == poSeq);
-                                            });
-                                          }
-                                          if (mounted) {Navigator.of(context).pop(true);}
-                                          
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                          // Edit button as image
-                          IconButton(
-                            icon: Image.asset(
-                              'assets/images/edit.png', // Your edit image path //assets/images/edit.png
-                              width: 30,
-                              height: 30,
-                            ),
-                            onPressed: () {
-                              _showEditDialog(context, item);
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
+                  padding: const EdgeInsets.only(top: 100),
+                  child: Text(
+                    'No data found',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
+              )
+            : ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: gridItems.length,
+                itemBuilder: (context, index) {
+                  final item = gridItems[index];
+                  return Card(
+                    color: Colors.lightBlue[100],
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Center(
+                            child: Text(
+                              item['item_code'] ?? '',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const Divider(color: Colors.black26, thickness: 1),
+                          const SizedBox(height: 8),
+                          Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  const Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      'จำนวนรับ:',
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      color: Colors.white,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 2,
+                                        horizontal: 8,
+                                      ),
+                                      child: Text(
+                                        item['pack_qty'] != null
+                                            ? NumberFormat('#,###')
+                                                .format(item['pack_qty'])
+                                            : '',
+                                        textAlign: TextAlign.end,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  const Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      'จำนวน Pallet:',
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      color: Colors.white,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 2,
+                                        horizontal: 8,
+                                      ),
+                                      child: Text(
+                                        item['count_qty'] ?? '',
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  const Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      'จำนวนรวม:',
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      color: Colors.white,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 2,
+                                        horizontal: 8,
+                                      ),
+                                      child: Text(
+                                        item['count_qty_in'] ?? '',
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          // Row with delete and edit buttons
+                          Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween, // Align buttons
+                            children: [
+                              // Delete button as image
+                              IconButton(
+                                icon: Image.asset(
+                                  'assets/images/bin.png', // Delete image path
+                                  width: 30,
+                                  height: 30,
+                                ),
+                                onPressed: () async {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: const [
+                                                Icon(
+                                                  Icons
+                                                      .notification_important,
+                                                  color: Colors.red,
+                                                  size: 30,
+                                                ),
+                                                SizedBox(width: 8),
+                                                Text('แจ้งเตือน'),
+                                              ],
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.close),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        content: const Text(
+                                            'ต้องการลบรายการหรือไม่?'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.white,
+                                              side: const BorderSide(
+                                                  color: Colors.grey),
+                                            ),
+                                            child: const Text('ยกเลิก'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop(false);
+                                            },
+                                          ),
+                                          TextButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.white,
+                                              side: const BorderSide(
+                                                  color: Colors.grey),
+                                            ),
+                                            child: const Text('ตกลง'),
+                                            onPressed: () async {
+                                              final poItemCode =
+                                                  item['item_code'];
+                                              final poSeq = item['seq'];
+                                              await delete(
+                                                  widget.po_doc_no,
+                                                  widget.po_doc_type,
+                                                  poSeq,
+                                                  poItemCode);
+                                              if (mounted) {
+                                                setState(() {
+                                                  gridItems.removeWhere(
+                                                      (item) =>
+                                                          item['item_code'] ==
+                                                              poItemCode &&
+                                                          item['seq'] == poSeq);
+                                                });
+                                              }
+                                              if (mounted) {
+                                                Navigator.of(context).pop(true);
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                              // Edit button as image
+                              IconButton(
+                                icon: Image.asset(
+                                  'assets/images/edit.png', // Edit image path
+                                  width: 30,
+                                  height: 30,
+                                ),
+                                onPressed: () {
+                                  _showEditDialog(context, item);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+      ],
+    ),
+  );
+}
+
 }

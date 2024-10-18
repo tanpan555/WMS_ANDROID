@@ -750,140 +750,186 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                     ),
                                   ),
                                   actions: <Widget>[
-  Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween, // Spacing between buttons
-    children: [
-      TextButton(
-        onPressed: () {
-          _canCelController.clear();
-          // Close popup
-          Navigator.of(context).pop();
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          side: const BorderSide(color: Colors.grey),
-        ),
-        child: const Text('Cancel'),
-      ),
-      TextButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          side: const BorderSide(color: Colors.grey),
-        ),
-        child: Text('OK'),
-        onPressed: () async {
-          await cancel_INHeadNonePO_WMS(selectedCancelCode ?? '');
-          if (selectedCancelCode == null) {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: const [
-                          Icon(
-                            Icons.notification_important,
-                            color: Colors.red,
-                            size: 30,
-                          ),
-                          SizedBox(width: 8),
-                          Text('แจ้งเตือน'),
-                        ],
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  ),
-                  content: Text('$po_message'),
-                  actions: <Widget>[
-                    TextButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.grey),
-                      ),
-                      child: Text('ตกลง'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
-          } else {
-            Navigator.of(context).pop();
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: const [
-                          Icon(
-                            Icons.notification_important,
-                            color: Colors.red,
-                            size: 30,
-                          ),
-                          SizedBox(width: 8),
-                          Text('แจ้งเตือน'),
-                        ],
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  ),
-                  content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
-                  actions: <Widget>[
-                    TextButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.grey),
-                      ),
-                      child: Text('ตกลง'),
-                      onPressed: () {
-                        cancel_INHeadNonePO_WMS(selectedCancelCode!).then((_) {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop(
-                            MaterialPageRoute(
-                              builder: (context) => SSFGDT04_MENU(
-                                pWareCode: gb.P_WARE_CODE,
-                                pErpOuCode: gb.P_ERP_OU_CODE,
-                              ),
-                            ),
-                          );
-                          Navigator.of(context).pop();
-                        }).catchError((error) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('An error occurred: $error'),
-                            ),
-                          );
-                        });
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
-          }
-        },
-      ),
-    ],
-  ),
-],
-
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .spaceBetween, // Spacing between buttons
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            _canCelController.clear();
+                                            // Close popup
+                                            Navigator.of(context).pop();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            side: const BorderSide(
+                                                color: Colors.grey),
+                                          ),
+                                          child: const Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            side: const BorderSide(
+                                                color: Colors.grey),
+                                          ),
+                                          child: Text('OK'),
+                                          onPressed: () async {
+                                            await cancel_INHeadNonePO_WMS(
+                                                selectedCancelCode ?? '');
+                                            if (selectedCancelCode == null) {
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Row(
+                                                          children: const [
+                                                            Icon(
+                                                              Icons
+                                                                  .notification_important,
+                                                              color: Colors.red,
+                                                              size: 30,
+                                                            ),
+                                                            SizedBox(width: 8),
+                                                            Text('แจ้งเตือน'),
+                                                          ],
+                                                        ),
+                                                        IconButton(
+                                                          icon: const Icon(
+                                                              Icons.close),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    content:
+                                                        Text('$po_message'),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                          side:
+                                                              const BorderSide(
+                                                                  color: Colors
+                                                                      .grey),
+                                                        ),
+                                                        child: Text('ตกลง'),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            } else {
+                                              Navigator.of(context).pop();
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Row(
+                                                          children: const [
+                                                            Icon(
+                                                              Icons
+                                                                  .notification_important,
+                                                              color: Colors.red,
+                                                              size: 30,
+                                                            ),
+                                                            SizedBox(width: 8),
+                                                            Text('แจ้งเตือน'),
+                                                          ],
+                                                        ),
+                                                        IconButton(
+                                                          icon: const Icon(
+                                                              Icons.close),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    content: Text(
+                                                        'ยกเลิกรายการเสร็จสมบูรณ์'),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                          side:
+                                                              const BorderSide(
+                                                                  color: Colors
+                                                                      .grey),
+                                                        ),
+                                                        child: Text('ตกลง'),
+                                                        onPressed: () {
+                                                          cancel_INHeadNonePO_WMS(
+                                                                  selectedCancelCode!)
+                                                              .then((_) {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop(
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        SSFGDT04_MENU(
+                                                                  pWareCode: gb
+                                                                      .P_WARE_CODE,
+                                                                  pErpOuCode: gb
+                                                                      .P_ERP_OU_CODE,
+                                                                ),
+                                                              ),
+                                                            );
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          }).catchError(
+                                                                  (error) {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              SnackBar(
+                                                                content: Text(
+                                                                    'An error occurred: $error'),
+                                                              ),
+                                                            );
+                                                          });
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 );
                               },
                             );

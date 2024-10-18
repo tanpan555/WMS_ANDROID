@@ -67,10 +67,10 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
   List<Map<String, dynamic>> getCurrentPageItems() {
     final startIndex = currentPage * itemsPerPage;
     final endIndex = startIndex + itemsPerPage;
-    return widget.selectedItems.sublist(
+    return tmpLocItems.sublist(
         startIndex,
-        endIndex > widget.selectedItems.length
-            ? widget.selectedItems.length
+        endIndex > tmpLocItems.length
+            ? tmpLocItems.length
             : endIndex);
   }
 
@@ -154,7 +154,7 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                       itemCount: currentPageItems.length + 1, // +1 เพื่อรองรับปุ่มถัดไป/ย้อนกลับ
                       itemBuilder: (context, index) {
                         if (index < currentPageItems.length) {
-                          final item = currentPageItems[index];
+                          final item = tmpLocItems[index];
                           return Card(
                             color: Colors.lightBlue[100],
                             child: Padding(
@@ -177,7 +177,7 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                                     item['location_code'] ?? '',
                                   ),
                                   Text(
-                                    item['location_name'] ?? '',
+                                    item['nb_location_name'] ?? '',
                                   ),
                                 ],
                               ),

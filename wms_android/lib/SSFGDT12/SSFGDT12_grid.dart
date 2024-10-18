@@ -75,6 +75,8 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   String? nextLink = '';
   String? prevLink = '';
 
+  String urlLoad = '';
+
   // --------------------------------------\\
   bool checkUpdateData = false;
   // --------------------------------------\\
@@ -118,6 +120,8 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
             List<dynamic> links = parsedResponse['links'] ?? [];
             nextLink = getLink(links, 'next');
             prevLink = getLink(links, 'prev');
+            urlLoad = url ??
+                'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectDataGridCard/${widget.pErpOuCode}/${widget.docNo}';
             isLoading = false;
           });
         }
@@ -275,11 +279,11 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     };
 
     final body = jsonEncode({
-      'COUNT_QTY': updatedCountQty,
-      'REMARK': updatedRemark,
+      'COUNT_QTY': updatedCountQty == 0 ? 'null' : updatedCountQty.toString(),
+      'REMARK': updatedRemark.isNotEmpty ? updatedRemark : 'null',
       'ou_code': ou_code,
       'doc_no': doc_no,
-      'seq': seq,
+      'seq': seq.toString(),
     });
     print('Request body: $body');
 
@@ -302,7 +306,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         print('Failed to post data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
+      print('updateDataGridDetail Error: $e');
     }
   }
 
@@ -1102,8 +1106,8 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     //     TextEditingController(text: formattedSysQty);
     // TextEditingController diffQtyController =
     //     TextEditingController(text: formattedDiffQty);
-    TextEditingController countQtyController =
-        TextEditingController(text: formattedCountQty.toString());
+    TextEditingController countQtyController = TextEditingController(
+        text: count_qty == 0 ? '' : formattedCountQty.toString());
     TextEditingController seqController =
         TextEditingController(text: formattedSeq.toString());
     TextEditingController itemCodeController =
@@ -1148,7 +1152,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                               showExitWarningDialog();
                             } else {
                               Navigator.of(context).pop(false);
-                              fetchData();
+                              fetchData(urlLoad);
                             }
                           },
                         ),
@@ -1360,7 +1364,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                               doc_no,
                               seq,
                             );
-                            await fetchData();
+                            await fetchData(urlLoad);
                             setState(() {});
                           },
                           child: Image.asset(

@@ -55,6 +55,13 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
   String dataGridStatus = 'สภาพปกติ/ของดี'; //  เก็บชื่อ status barcode
   String statusGridBarcode = '01'; // เก็บ status barcode
   String appUser = globals.APP_USER;
+
+  String poMessageBarcode = '';
+  String poStatusBarcode = '';
+
+  String statusSubmit = '';
+  String messageSubmit = '';
+
   final FocusNode _focusNode = FocusNode();
   final TextEditingController barcodeTextController = TextEditingController();
   final TextEditingController wareCodeBarcodeController =
@@ -98,42 +105,33 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
     super.initState();
     fetchDataLocator();
     fetchDataGradeStatus();
+    setDataIsFirst();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(_focusNode);
+    });
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
-        if (dataLocator.isNotEmpty) {
-          print(
-              'have data !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-          fetchDataBarcode(barcodeTextString, dataLocator);
-          print(
-              'barcodeTextString in check focus: $barcodeTextString Type: ${barcodeTextString.runtimeType}');
-          print(
-              'dataLocator in check focus: $dataLocator Type: ${dataLocator.runtimeType}');
-        } else {
-          print(
-              'no data !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-          print(
-              'barcodeTextString in check focus: $barcodeTextString Type: ${barcodeTextString.runtimeType}');
-          print(
-              'dataLocator in check focus: $dataLocator Type: ${dataLocator.runtimeType}');
+        if (barcodeTextString.isNotEmpty) {
+          fetchDataBarcode();
         }
       }
     });
-    print(
-        'nbCountStaff : ${widget.nbCountStaff} Type : ${widget.nbCountStaff.runtimeType}');
-    print(
-        'nbCountDate : ${widget.nbCountDate} Type : ${widget.nbCountDate.runtimeType}');
-    print('docNo : ${widget.docNo} Type : ${widget.docNo.runtimeType}');
-    print('status : ${widget.status} Type : ${widget.status.runtimeType}');
-    print(
-        'wareCode : ${widget.wareCode} Type : ${widget.wareCode.runtimeType}');
-    print(
-        'pErpOuCode : ${widget.pErpOuCode} Type : ${widget.pErpOuCode.runtimeType}');
+  }
+
+  void setDataIsFirst() {
+    if (mounted) {
+      setState(() {
+        dataGridStatus = 'สภาพปกติ/ของดี'; //  เก็บชื่อ status barcode
+        statusGridBarcode = '01'; // เก็บ status barcode
+        dataGridStatusBarcodeController.text = 'สภาพปกติ/ของดี';
+      });
+    }
   }
 
   Future<void> fetchDataLocator() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_BarcodeSelsectLocator/${widget.pWareCode}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_4_BarcodeSelsectLocator/${widget.pWareCode}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -161,7 +159,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
   Future<void> fetchDataGradeStatus() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_BarcodeSelectGradeStatus'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_4_BarcodeSelectGradeStatus'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -186,46 +184,126 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
     }
   }
 
-  Future<void> fetchDataBarcode(
-      String barcodeTextString, String dataLocator) async {
-    print(
-        'barcodeTextString in fetchDataBarcode: $barcodeTextString Type : ${barcodeTextString.runtimeType}');
-    print(
-        'dataLocator in  fetchDataBarcode: $dataLocator Type : ${dataLocator.runtimeType}');
+  Future<void> fetchDataBarcode() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_BarcodeSelectDataBarcode/${widget.pErpOuCode}/${widget.docNo}/${widget.pWareCode}/$appUser/$dataLocator/$barcodeTextString'));
-
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_4_BarcodeSelectDataBarcode/${widget.pErpOuCode}/${widget.docNo}/${widget.pWareCode}/$appUser/${dataLocator.isNotEmpty ? dataLocator : 'null'}/$barcodeTextString')); // ตรวจสอบให้แน่ใจว่า URL ถูกต้อง
       if (response.statusCode == 200) {
-        final Map<String, dynamic> dataBarcodeList =
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataBarcode =
             jsonDecode(utf8.decode(response.bodyBytes));
-        final List<dynamic> items = dataBarcodeList['items'];
-        print(items);
-        if (items.isNotEmpty) {
-          final Map<String, dynamic> item = items[0];
-          print('Fetched dataBarcodeList: $jsonDecode');
-          if (mounted) {
-            setState(() {
-              seqNumberBarcodeInt = item['p_count_seq'] ?? '';
-              seqNumberBarcodeString = item['p_count_seq'].toString();
+        print('dataBarcode : $dataBarcode type : ${dataBarcode.runtimeType}');
+        if (mounted) {
+          setState(() {
+            poMessageBarcode = dataBarcode['po_message'] ?? '';
+            poStatusBarcode = dataBarcode['po_status'] ?? '';
+
+            if (poStatusBarcode == '1') {
+              showExitAlertDialog(poMessageBarcode);
+            }
+            if (poStatusBarcode == '0') {
+              seqNumberBarcodeInt = dataBarcode['po_count_seq'] ?? '';
+              seqNumberBarcodeString = dataBarcode['po_count_seq'].toString();
               wareCodeBarcode = widget.pWareCode;
-              itemCodeBarcode = item['p_item_code'] ?? '';
-              locatorCodeBarcode = item['p_curr_loc'] ?? '';
+              itemCodeBarcode = dataBarcode['po_item_code'] ?? '';
+              locatorCodeBarcode = dataBarcode['po_curr_loc'] ?? '';
 
               wareCodeBarcodeController.text = wareCodeBarcode;
               itemCodeBarcodeController.text = itemCodeBarcode;
               locatorCodeBarcodeController.text = locatorCodeBarcode;
-            });
-          }
-        } else {
-          print('No items found.');
+            }
+          });
         }
       } else {
-        print(
-            'dataBarcodeList  Failed to load data. Status code: ${response.statusCode}');
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print('ดึงข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
-      print('dataBarcodeList Error: $e');
+      print(
+          'Error: $e'); // จัดการข้อผิดพลาด เช่น การเชื่อมต่อหรือการ decode JSON
+    }
+  }
+
+  Future<void> submitBarcode() async {
+    final url =
+        'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_4_SubmitBarcode';
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'p_erp_ou_code': widget.pErpOuCode,
+      'p_doc_no': widget.docNo,
+      'p_ware_code': widget.pWareCode,
+      'p_location_to':
+          locatorCodeBarcode.isNotEmpty ? locatorCodeBarcode : 'null',
+      'p_seq':
+          seqNumberBarcodeString.isNotEmpty ? seqNumberBarcodeString : 'null',
+      'p_barcode': barcodeTextString.isNotEmpty ? barcodeTextString : 'null',
+      'p_item_code': itemCodeBarcode.isNotEmpty ? itemCodeBarcode : 'null',
+      'p_lot_number': lotNumberBarcode.isNotEmpty ? lotNumberBarcode : 'null',
+      'p_count_qty':
+          countQuantityBarcode.isNotEmpty ? countQuantityBarcode : 'null',
+      'p_grad_status': statusGridBarcode,
+      'p_app_user': globals.APP_USER,
+    });
+    print('Request body: $body');
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataSubmit = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print('dataSubmit : $dataSubmit type : ${dataSubmit.runtimeType}');
+        if (mounted) {
+          setState(() {
+            statusSubmit = dataSubmit['po_status'];
+            messageSubmit = dataSubmit['po_message'];
+            if (statusSubmit == '1') {
+              showExitAlertDialog(messageSubmit);
+            }
+            if (statusSubmit == '0') {
+              dataLocator = '';
+              dataLocatorListBarcodeController.clear();
+
+              barcodeTextString = '';
+              barcodeTextController.clear();
+
+              wareCodeBarcode = '';
+              wareCodeBarcodeController.clear();
+
+              itemCodeBarcode = '';
+              itemCodeBarcodeController.clear();
+
+              lotNumberBarcode = '';
+              lotNumberBarcodeController.clear();
+
+              countQuantityBarcode = '';
+              countQuantityBarcodeController.clear();
+
+              locatorCodeBarcode = '';
+              locatorCodeBarcodeController.clear();
+
+              dataGridStatus = 'สภาพปกติ/ของดี'; //  เก็บชื่อ status barcode
+              statusGridBarcode = '01'; // เก็บ status barcode
+              dataGridStatusBarcodeController.text = 'สภาพปกติ/ของดี';
+              seqNumberBarcodeInt = 0;
+              seqNumberBarcodeString = '';
+            }
+          });
+        }
+      } else {
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
@@ -539,7 +617,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                         lotNumberBarcodeController.clear();
                         countQuantityBarcodeController.clear();
                         locatorCodeBarcodeController.clear();
-                        dataGradeStatuslist.clear();
+                        // dataGradeStatuslist.clear();
                       });
                     },
                     style: AppStyles.cancelButtonStyle(),
@@ -550,27 +628,8 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // Navigator.of(context).pop();
-                      setState(() {
-                        print(
-                            'dataLocator : $dataLocator Type : ${dataLocator.runtimeType}');
-                        print(
-                            'barcodeTextString : $barcodeTextString Type : ${barcodeTextString.runtimeType}');
-                        print(
-                            'wareCodeBarcode : $wareCodeBarcode Type : ${wareCodeBarcode.runtimeType}');
-                        print(
-                            'itemCodeBarcode : $itemCodeBarcode Type : ${itemCodeBarcode.runtimeType}');
-                        print(
-                            'lotNumberBarcode : $lotNumberBarcode Type : ${lotNumberBarcode.runtimeType}');
-                        print(
-                            'countQuantityBarcode : $countQuantityBarcode Type : ${countQuantityBarcode.runtimeType}');
-                        print(
-                            'locatorCodeBarcode : $locatorCodeBarcode Type : ${locatorCodeBarcode.runtimeType}');
-                        print(
-                            'dataGridStatus : $dataGridStatus Type : ${dataGridStatus.runtimeType}');
-                        print(
-                            'statusGridBarcode : $statusGridBarcode Type : ${statusGridBarcode.runtimeType}');
-                      });
+                      submitBarcode();
+                      // setState(() {});
                     },
                     style: AppStyles.ConfirmbuttonStyle(),
                     child: Text(
@@ -588,6 +647,118 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
         currentPage: 'show',
       ),
     );
+  }
+
+  void showExitAlertDialog(String message) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.notification_important,
+                      color: Colors.red,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'แจ้งเตือน',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Text(
+                      message,
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     Navigator.of(context).pop(false);
+                  //   },
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: Colors.white,
+                  //     side: const BorderSide(color: Colors.grey),
+                  //   ),
+                  //   child: const Text('Cancel'),
+                  // ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('OK'),
+                  ),
+                ],
+              )
+            ]);
+      },
+    );
+    FocusScope.of(context).requestFocus(_focusNode);
+    if (mounted) {
+      setState(() {
+        dataLocator = '';
+        dataLocatorListBarcodeController.clear();
+
+        barcodeTextString = '';
+        barcodeTextController.clear();
+
+        wareCodeBarcode = '';
+        wareCodeBarcodeController.clear();
+
+        itemCodeBarcode = '';
+        itemCodeBarcodeController.clear();
+
+        lotNumberBarcode = '';
+        lotNumberBarcodeController.clear();
+
+        countQuantityBarcode = '';
+        countQuantityBarcodeController.clear();
+
+        locatorCodeBarcode = '';
+        locatorCodeBarcodeController.clear();
+
+        dataGridStatus = 'สภาพปกติ/ของดี'; //  เก็บชื่อ status barcode
+        statusGridBarcode = '01'; // เก็บ status barcode
+        dataGridStatusBarcodeController.text = 'สภาพปกติ/ของดี';
+        seqNumberBarcodeInt = 0;
+        seqNumberBarcodeString = '';
+      });
+    }
   }
 
   void showDialogSelectDataLocator() {
