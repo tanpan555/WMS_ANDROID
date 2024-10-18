@@ -55,6 +55,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   String? nextLink = '';
   String? prevLink = '';
 
+  int showRecord = 0;
   // PDF
   String? V_DS_PDF;
   String? LIN_ID;
@@ -144,6 +145,9 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
             List<dynamic> links = parsedResponse['links'] ?? [];
             nextLink = getLink(links, 'next');
             prevLink = getLink(links, 'prev');
+            if (url.toString().isNotEmpty) {
+              extractLastNumberFromUrl(url.toString());
+            }
             isLoading = false;
           });
         }
@@ -196,34 +200,21 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     }
   }
 
-  // Future<void> fetchData([String? url]) async {
-  //   isLoading = true;
-  //   try {
-  //     final response = await http.get(Uri.parse(url ??
-  //         'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${widget.pErpOuCode}/${widget.pAttr1}/${widget.pAppUser}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}'));
+  void extractLastNumberFromUrl(String url) {
+    RegExp regExp = RegExp(r'\d{2,4}(?=\D*$)');
 
-  //     if (response.statusCode == 200) {
-  //       final responseBody = utf8.decode(response.bodyBytes);
-  //       final responseData = jsonDecode(responseBody);
-  //       print('Fetched data: $jsonDecode');
-  //       if (mounted) {
-  //         setState(() {
-  //           dataCard =
-  //           List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+    RegExpMatch? match = regExp.firstMatch(url);
 
-  //         });
-  //       }
-  //       print('dataCard : $dataCard');
-  //     } else {
-  //       throw Exception('Failed to load fetchData');
-  //     }
-  //   } catch (e) {
-  //     if (mounted) {
-  //       setState(() {});
-  //     }
-  //     print('ERROR IN Fetch Data : $e');
-  //   }
-  // }
+    if (match != null) {
+      setState(() {
+        showRecord = int.parse(match.group(0)!);
+        print('ตัวเลขท้ายสุดคือ: $showRecord');
+      });
+      print(match.group(0));
+    } else {
+      print('ไม่พบตัวเลขท้ายสุด');
+    }
+  }
 
   Future<void> checkStatusCard(
       String pReceiveNo, String pDocNo, String pDocType) async {
@@ -886,24 +877,96 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                 );
                               },
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ElevatedButton(
-                                  onPressed:
-                                      prevLink != null ? loadPrevPage : null,
-                                  child: const Text('Previous'),
-                                ),
-                                ElevatedButton(
-                                  onPressed:
-                                      nextLink != null ? loadNextPage : null,
-                                  child: const Text('Next'),
-                                ),
-                              ],
-                            ),
+                            dataCard.length > 2
+                                ? Row(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: prevLink != null
+                                                ? loadPrevPage
+                                                : null,
+                                            child: const Text('Previous'),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 30),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Center(
+                                            child: Text(
+                                              '${showRecord == 0 ? '1' : showRecord} - ${showRecord == 0 ? '15' : showRecord + dataCard.length}',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      const SizedBox(width: 30),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: nextLink != null
+                                                ? loadNextPage
+                                                : null,
+                                            child: const Text('Next'),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox.shrink(),
                           ],
                         ),
             ),
+            dataCard.length <= 2
+                ? Row(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          ElevatedButton(
+                            onPressed: prevLink != null ? loadPrevPage : null,
+                            child: const Text('Previous'),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Text(
+                              '${showRecord == 0 ? '1' : showRecord} - ${showRecord == 0 ? '15' : showRecord + dataCard.length}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(width: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: nextLink != null ? loadNextPage : null,
+                            child: const Text('Next'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                : const SizedBox.shrink(),
           ],
         ),
       ),

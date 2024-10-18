@@ -101,10 +101,23 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
     }
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectDate(
+      BuildContext context, String? initialDateString) async {
+    DateTime? initialDate;
+
+    if (initialDateString != null) {
+      try {
+        initialDate = DateFormat('dd/MM/yyyy').parseStrict(initialDateString);
+      } catch (e) {
+        initialDate = DateTime.now();
+      }
+    } else {
+      initialDate = DateTime.now();
+    }
+
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: initialDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
       initialEntryMode: DatePickerEntryMode.calendarOnly,
@@ -225,7 +238,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                               Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
                           onPressed: () async {
                             // กดไอคอนเพื่อเปิด date picker
-                            _selectDate(context);
+                            _selectDate(context, selectedDate);
                           },
                         ),
                       ),
