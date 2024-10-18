@@ -389,97 +389,97 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
       appBar: CustomAppBar(title: 'ผลการตรวจนับ', showExitWarning: false),
       body: Padding(
         padding: EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (statusForCheck != 'X') ...[
-                  ElevatedButton(
-                    onPressed: () {
-                      showDialogconfirmCancel(
-                        widget.docNo,
-                      );
-                    },
-                    style: AppStyles.cancelButtonStyle(),
-                    child: Text('ยกเลิก',
-                        style: AppStyles.CancelbuttonTextStyle()),
-                  ),
-                ],
-                ElevatedButton(
-                  onPressed: () {
-                    _navigateToPage(
-                        context,
-                        Ssfgdt12Barcode(
-                          nbCountStaff: widget.nbCountStaff,
-                          nbCountDate: widget.nbCountDate,
-                          docNo: widget.docNo,
-                          status: widget.status,
-                          wareCode: widget.wareCode,
-                          pErpOuCode: widget.pErpOuCode,
-                          pWareCode: widget.pWareCode,
-                          docDate: widget.docDate,
-                          countStaff: widget.countStaff,
-                          p_attr1: widget.p_attr1,
-                        )
-                        //
-                        );
-                  },
-                  style: AppStyles.cancelButtonStyle(),
-                  child: Text('บันทึกสินค้าเพิ่มเติม',
-                      style: AppStyles.CancelbuttonTextStyle()),
-                ),
-                if (statusForCheck == 'N' ||
-                    statusForCheck == 'T' ||
-                    statusForCheck == 'X') ...[
-                  ElevatedButton(
-                    onPressed: () async {
-                      await checkData();
-                    },
-                    style: AppStyles.ConfirmbuttonStyle(),
+        child: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : dataCard.isEmpty
+                ? const Center(
                     child: Text(
-                      'Confirm',
-                      style: AppStyles.ConfirmbuttonTextStyle(),
+                      'No data found',
+                      style: TextStyle(color: Colors.white),
                     ),
-                  ),
-                ],
-              ],
-            ),
-            const SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.all(12.0),
-              decoration: BoxDecoration(
-                color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
-                border: Border.all(
-                  color: Colors.black, // ขอบสีดำ
-                  width: 2.0, // ความกว้างของขอบ 2.0
-                ),
-                borderRadius:
-                    BorderRadius.circular(8.0), // เพิ่มมุมโค้งให้กับ Container
-              ),
-              child: Center(
-                child: Text(
-                  '${widget.docNo}',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20, // ปรับขนาดตัวอักษรตามที่ต้องการ
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : dataCard.isEmpty
-                      ? const Center(
-                          child: Text(
-                            'No data found',
-                            style: TextStyle(color: Colors.white),
+                  )
+                : Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (statusForCheck != 'X') ...[
+                            ElevatedButton(
+                              onPressed: () {
+                                showDialogconfirmCancel(
+                                  widget.docNo,
+                                );
+                              },
+                              style: AppStyles.cancelButtonStyle(),
+                              child: Text('ยกเลิก',
+                                  style: AppStyles.CancelbuttonTextStyle()),
+                            ),
+                          ],
+                          ElevatedButton(
+                            onPressed: () {
+                              _navigateToPage(
+                                  context,
+                                  Ssfgdt12Barcode(
+                                    nbCountStaff: widget.nbCountStaff,
+                                    nbCountDate: widget.nbCountDate,
+                                    docNo: widget.docNo,
+                                    status: widget.status,
+                                    wareCode: widget.wareCode,
+                                    pErpOuCode: widget.pErpOuCode,
+                                    pWareCode: widget.pWareCode,
+                                    docDate: widget.docDate,
+                                    countStaff: widget.countStaff,
+                                    p_attr1: widget.p_attr1,
+                                  )
+                                  //
+                                  );
+                            },
+                            style: AppStyles.cancelButtonStyle(),
+                            child: Text('บันทึกสินค้าเพิ่มเติม',
+                                style: AppStyles.CancelbuttonTextStyle()),
                           ),
-                        )
-                      : ListView(
+                          if (statusForCheck == 'N' ||
+                              statusForCheck == 'T' ||
+                              statusForCheck == 'X') ...[
+                            ElevatedButton(
+                              onPressed: () async {
+                                await checkData();
+                              },
+                              style: AppStyles.ConfirmbuttonStyle(),
+                              child: Text(
+                                'Confirm',
+                                style: AppStyles.ConfirmbuttonTextStyle(),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
+                          border: Border.all(
+                            color: Colors.black, // ขอบสีดำ
+                            width: 2.0, // ความกว้างของขอบ 2.0
+                          ),
+                          borderRadius: BorderRadius.circular(
+                              8.0), // เพิ่มมุมโค้งให้กับ Container
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${widget.docNo}',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: ListView(
                           //
                           // children: dataCard.map((item) {
                           //   return Card(
@@ -1073,9 +1073,9 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                             ),
                           ],
                         ),
-            ),
-          ],
-        ),
+                      ),
+                    ],
+                  ),
       ),
       bottomNavigationBar: BottomBar(
         currentPage: 'show',
