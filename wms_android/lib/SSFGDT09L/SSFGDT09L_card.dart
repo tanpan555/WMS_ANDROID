@@ -8,6 +8,8 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
+import 'package:wms_android/ICON.dart';
+import 'package:wms_android/styles.dart';
 import 'SSFGDT09L_form.dart';
 import 'SSFGDT09L_grid.dart';
 
@@ -55,7 +57,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   String? nextLink = '';
   String? prevLink = '';
 
-  int showRecord = 0;
+  int showRecordRRR = 0;
   // PDF
   String? V_DS_PDF;
   String? LIN_ID;
@@ -123,7 +125,9 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
         isLoading = true;
       });
     }
-
+    print(
+        'RRRR http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${widget.pErpOuCode}/${widget.pAttr1}/${widget.pAppUser}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}');
+    print('URL : $url ');
     final String requestUrl = url ??
         'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${widget.pErpOuCode}/${widget.pAttr1}/${widget.pAppUser}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}';
 
@@ -143,10 +147,14 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
             }
 
             List<dynamic> links = parsedResponse['links'] ?? [];
+            showRecordRRR = 0;
             nextLink = getLink(links, 'next');
             prevLink = getLink(links, 'prev');
             if (url.toString().isNotEmpty) {
-              extractLastNumberFromUrl(url.toString());
+              extractLastNumberFromUrl(url.toString() ==
+                      'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${widget.pErpOuCode}/${widget.pAttr1}/${widget.pAppUser}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}'
+                  ? 'null'
+                  : url.toString());
             }
             isLoading = false;
           });
@@ -182,6 +190,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
       if (mounted) {
         setState(() {
           print('nextLink $nextLink');
+          // showRecord = 0;
           isLoading = true;
         });
       }
@@ -193,6 +202,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     if (prevLink != '') {
       if (mounted) {
         setState(() {
+          // showRecord = 0;
           isLoading = true;
         });
       }
@@ -201,20 +211,34 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   }
 
   void extractLastNumberFromUrl(String url) {
-    RegExp regExp = RegExp(r'\d{2,4}(?=\D*$)');
-
+    // Regular Expression สำหรับจับค่าหลัง offset=
+    RegExp regExp = RegExp(r'offset=(\d+)$');
     RegExpMatch? match = regExp.firstMatch(url);
 
+    // ตัวแปรสำหรับเก็บผลลัพธ์
+    int showRecord = 0; // ตั้งค่าเริ่มต้นเป็น 0
+
     if (match != null) {
-      setState(() {
-        showRecord = int.parse(match.group(0)!);
-        print('ตัวเลขท้ายสุดคือ: $showRecord');
-      });
-      print(match.group(0));
+      // แปลงค่าที่จับคู่ได้จาก String ไปเป็น int
+      showRecordRRR =
+          int.parse(match.group(1)!); // group(1) หมายถึงค่าหลัง offset=
+      print('ตัวเลขท้ายสุดคือ: $showRecord');
     } else {
-      print('ไม่พบตัวเลขท้ายสุด');
+      // ถ้าไม่พบค่า ให้ผลลัพธ์เป็น 0
+      print('ไม่พบตัวเลขท้ายสุด, ส่งกลับเป็น 0');
     }
+
+    // พิมพ์ค่าที่ได้
+    print('ผลลัพธ์: $showRecord');
   }
+
+// void main() {
+//   String url1 = "null?offset=15";
+//   String url2 = "url/RICR98k/GHFIK88/null/null";
+
+//   extractLastNumberFromUrl(url1); // ผลลัพธ์ควรเป็น 15
+//   extractLastNumberFromUrl(url2); // ผลลัพธ์ควรเป็น 0
+// }
 
   Future<void> checkStatusCard(
       String pReceiveNo, String pDocNo, String pDocType) async {
@@ -664,40 +688,40 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
       appBar: CustomAppBar(title: 'เบิกจ่าย', showExitWarning: false),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // dataCard.isEmpty
-            // ? const Center(
-            //     child: Column(
-            //     mainAxisSize: MainAxisSize.min,
-            //     mainAxisAlignment:
-            //         MainAxisAlignment.center, // จัดกึ่งกลางในแนวตั้ง
-            //     crossAxisAlignment:
-            //         CrossAxisAlignment.center, // จัดกึ่งกลางในแนวนอน
-            //     children: [
-            //       // Text(
-            //       //   'No Data Available',
-            //       //   style: TextStyle(color: Colors.white),
-            //       // ),
-            //       Center(
-            //         child: Text(
-            //           'No Data Available',
-            //           style: TextStyle(color: Colors.white),
-            //         ),
-            //       )
-            //     ],
-            //   ))
-            Expanded(
-              child: isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : dataCard.isEmpty
-                      ? const Center(
-                          child: Text(
-                            'No data found',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        )
-                      : ListView(
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : dataCard.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No data found',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                : Column(
+                    children: [
+                      // dataCard.isEmpty
+                      // ? const Center(
+                      //     child: Column(
+                      //     mainAxisSize: MainAxisSize.min,
+                      //     mainAxisAlignment:
+                      //         MainAxisAlignment.center, // จัดกึ่งกลางในแนวตั้ง
+                      //     crossAxisAlignment:
+                      //         CrossAxisAlignment.center, // จัดกึ่งกลางในแนวนอน
+                      //     children: [
+                      //       // Text(
+                      //       //   'No Data Available',
+                      //       //   style: TextStyle(color: Colors.white),
+                      //       // ),
+                      //       Center(
+                      //         child: Text(
+                      //           'No Data Available',
+                      //           style: TextStyle(color: Colors.white),
+                      //         ),
+                      //       )
+                      //     ],
+                      //   ))
+                      Expanded(
+                        child: ListView(
                           children: [
                             ListView.builder(
                               shrinkWrap: true,
@@ -879,27 +903,41 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                             ),
                             dataCard.length > 2
                                 ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          ElevatedButton(
-                                            onPressed: prevLink != null
-                                                ? loadPrevPage
-                                                : null,
-                                            child: const Text('Previous'),
-                                          ),
+                                          prevLink != null
+                                              ? ElevatedButton.icon(
+                                                  onPressed: prevLink != null
+                                                      ? loadPrevPage
+                                                      : null,
+                                                  icon: const Icon(
+                                                      MyIcons
+                                                          .arrow_back_ios_rounded,
+                                                      color: Colors.black),
+                                                  label: const Text(
+                                                    'Previous  ',
+                                                    style: TextStyle(
+                                                        color: Colors.black),
+                                                  ),
+                                                  style: AppStyles
+                                                      .PreviousButtonStyle(),
+                                                )
+                                              : const SizedBox.shrink(),
                                         ],
                                       ),
-                                      const SizedBox(width: 30),
+                                      // const SizedBox(width: 30),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
                                           Center(
                                             child: Text(
-                                              '${showRecord == 0 ? '1' : showRecord} - ${showRecord == 0 ? '15' : showRecord + dataCard.length}',
+                                              '${showRecordRRR == 0 ? '1' : showRecordRRR} - ${showRecordRRR == 0 ? '15' : showRecordRRR + dataCard.length}',
                                               style: const TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
@@ -908,17 +946,37 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                           )
                                         ],
                                       ),
-                                      const SizedBox(width: 30),
+                                      // const SizedBox(width: 30),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
                                         children: [
-                                          ElevatedButton(
-                                            onPressed: nextLink != null
-                                                ? loadNextPage
-                                                : null,
-                                            child: const Text('Next'),
-                                          ),
+                                          nextLink != null
+                                              ? ElevatedButton(
+                                                  onPressed: nextLink != null
+                                                      ? loadNextPage
+                                                      : null,
+                                                  style: AppStyles
+                                                      .NextRecordDataButtonStyle(),
+                                                  child: const Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        '   Next',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                      SizedBox(width: 7),
+                                                      Icon(
+                                                          MyIcons
+                                                              .arrow_forward_ios_rounded,
+                                                          color: Colors.black),
+                                                    ],
+                                                  ),
+                                                )
+                                              : const SizedBox.shrink(),
                                         ],
                                       ),
                                     ],
@@ -926,49 +984,78 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                 : const SizedBox.shrink(),
                           ],
                         ),
-            ),
-            dataCard.length <= 2
-                ? Row(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          ElevatedButton(
-                            onPressed: prevLink != null ? loadPrevPage : null,
-                            child: const Text('Previous'),
-                          ),
-                        ],
                       ),
-                      const SizedBox(width: 30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Center(
-                            child: Text(
-                              '${showRecord == 0 ? '1' : showRecord} - ${showRecord == 0 ? '15' : showRecord + dataCard.length}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(width: 30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                            onPressed: nextLink != null ? loadNextPage : null,
-                            child: const Text('Next'),
-                          ),
-                        ],
-                      ),
+                      dataCard.length <= 2
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    prevLink != null
+                                        ? ElevatedButton.icon(
+                                            onPressed: prevLink != null
+                                                ? loadPrevPage
+                                                : null,
+                                            icon: const Icon(
+                                                MyIcons.arrow_back_ios_rounded,
+                                                color: Colors.black),
+                                            label: const Text(
+                                              'Previous  ',
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                            style:
+                                                AppStyles.PreviousButtonStyle(),
+                                          )
+                                        : const SizedBox.shrink(),
+                                  ],
+                                ),
+                                // const SizedBox(width: 30),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Center(
+                                      child: Text(
+                                        '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? dataCard.length : showRecordRRR + dataCard.length}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(width: 30),
+                                nextLink != null
+                                    ? ElevatedButton(
+                                        onPressed: nextLink != null
+                                            ? loadNextPage
+                                            : null,
+                                        style: AppStyles
+                                            .NextRecordDataButtonStyle(),
+                                        child: const Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              '   Next',
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                            SizedBox(width: 7),
+                                            Icon(
+                                                MyIcons
+                                                    .arrow_forward_ios_rounded,
+                                                color: Colors.black),
+                                          ],
+                                        ),
+                                      )
+                                    : const SizedBox.shrink(),
+                              ],
+                            )
+                          : const SizedBox.shrink(),
                     ],
-                  )
-                : const SizedBox.shrink(),
-          ],
-        ),
+                  ),
       ),
       bottomNavigationBar: BottomBar(
         currentPage: 'show',

@@ -150,4 +150,26 @@ class AppStyles {
       padding: const EdgeInsets.all(0),
     );
   }
+
+  static ButtonStyle PreviousButtonStyle() {
+    return ElevatedButton.styleFrom(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+      ),
+      minimumSize: const Size(70, 35),
+      padding: const EdgeInsets.all(0),
+    );
+  }
+
+  static ButtonStyle NextRecordDataButtonStyle() {
+    return ElevatedButton.styleFrom(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+      ),
+      minimumSize: const Size(70, 35),
+      padding: const EdgeInsets.all(0),
+    );
+  }
 }
