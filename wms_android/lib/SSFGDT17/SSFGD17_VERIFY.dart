@@ -478,67 +478,88 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
               // const SizedBox(height: 8.0),
               Column(
                 children: [
-                  SizedBox(
-                    width: 300, // Set your desired width here
-                    child: TextFormField(
-                      style: const TextStyle(
-                        color: Colors.black87,
-                      ),
-                      controller: NB_WARE_CODEController,
-                      decoration: const InputDecoration(
-                        labelText: 'Warehouse ต้นทาง',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
+                  GestureDetector(
+                    onTap: () {
+                      // Handle the tap event here
+                    },
+                    child: AbsorbPointer(
+                      child: SizedBox(
+                        width: 300, // Set your desired width here
+                        child: TextFormField(
+                          style: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                          controller: NB_WARE_CODEController,
+                          decoration: const InputDecoration(
+                            labelText: 'Warehouse ต้นทาง',
+                            labelStyle: TextStyle(
+                              color: Colors.black87,
+                            ),
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Color.fromRGBO(224, 224, 224, 1),
+                          ),
+                          readOnly: true,
                         ),
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Color.fromRGBO(224, 224, 224, 1),
                       ),
-                      readOnly: true,
                     ),
                   ),
                   const SizedBox(height: 8.0),
-                  SizedBox(
-                    width: 300, // Set your desired width here
-                    child: TextFormField(
-                      style: const TextStyle(
-                        color: Colors.black87,
-                      ),
-                      controller: NB_TO_WHController,
-                      decoration: const InputDecoration(
-                        labelText: 'Warehouse ปลายทาง',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
+                  GestureDetector(
+                    onTap: () {
+                      // Handle the tap event here
+                    },
+                    child: AbsorbPointer(
+                      child: SizedBox(
+                        width: 300, // Set your desired width here
+                        child: TextFormField(
+                          style: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                          controller: NB_TO_WHController,
+                          decoration: const InputDecoration(
+                            labelText: 'Warehouse ปลายทาง',
+                            labelStyle: TextStyle(
+                              color: Colors.black87,
+                            ),
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Color.fromRGBO(224, 224, 224, 1),
+                          ),
+                          readOnly: true,
                         ),
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Color.fromRGBO(224, 224, 224, 1),
                       ),
-                      readOnly: true,
                     ),
                   ),
                   const SizedBox(height: 8.0),
-                  SizedBox(
-                    width: 300, // Set your desired width here
-                    child: TextFormField(
-                      style: const TextStyle(
-                        color: Colors.black87,
-                      ),
-                      controller: CR_DATEController,
-                      decoration: const InputDecoration(
-                        labelText: 'วันที่บันทึกโอน',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
+                  GestureDetector(
+                    onTap: () {
+                      // Handle the tap event (e.g., open a date picker)
+                    },
+                    child: AbsorbPointer(
+                      child: SizedBox(
+                        width: 300, // Set your desired width here
+                        child: TextFormField(
+                          style: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                          controller: CR_DATEController,
+                          decoration: const InputDecoration(
+                            labelText: 'วันที่บันทึกโอน',
+                            labelStyle: TextStyle(
+                              color: Colors.black87,
+                            ),
+                            // suffixIcon:
+                            //     Icon(Icons.calendar_today, color: Colors.black),
+                            border: InputBorder.none,
+                            filled: true,
+                            fillColor: Color.fromRGBO(224, 224, 224, 1),
+                          ),
+                          readOnly: true,
                         ),
-                        suffixIcon:
-                            Icon(Icons.calendar_today, color: Colors.black),
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Color.fromRGBO(224, 224, 224, 1),
                       ),
-                      readOnly: true,
                     ),
-                  ),
+                  )
                 ],
               ),
 

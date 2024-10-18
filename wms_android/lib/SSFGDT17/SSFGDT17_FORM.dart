@@ -87,6 +87,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     print('pWareName: ${widget.pWareName}');
     print('LocCode: ${widget.LocCode}');
     print(widget.selectedwhCode);
+    print(widget.LocOUTCode);
   }
 
   @override
@@ -249,18 +250,15 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                     TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                        hintText: 'ค้นหา', // Search hint
+                        hintText: 'ค้นหารหัสหรือคำอธิบาย', // Updated hint
                         border: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black), // Black border
+                          borderSide: BorderSide(color: Colors.black),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.black), // Black border when focused
+                          borderSide: BorderSide(color: Colors.black),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.black), // Black border when enabled
+                          borderSide: BorderSide(color: Colors.black),
                         ),
                       ),
                       onChanged: (query) {
@@ -274,10 +272,14 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                         itemBuilder: (context, index) {
                           final item = cCode[index];
                           final code = item['r']?.toString() ?? 'No code';
+                          final desc = item['cancel_desc']?.toString() ??
+                              'No description';
 
-                          // Filter based on search query
+                          // Filter based on search query (code or description)
                           if (_searchController.text.isNotEmpty &&
                               !code.toLowerCase().contains(
+                                  _searchController.text.toLowerCase()) &&
+                              !desc.toLowerCase().contains(
                                   _searchController.text.toLowerCase())) {
                             return SizedBox
                                 .shrink(); // Filter out non-matching items
@@ -289,8 +291,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(color: Colors.black),
                             ),
-                            subtitle: Text(
-                                item['cancel_desc']?.toString() ?? 'No code'),
+                            subtitle: Text(desc),
                             onTap: () {
                               setState(() {
                                 selectedcCode = code; // Set selected code
@@ -624,18 +625,36 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
               child: ListView(
                 children: [
                   SizedBox(height: 8),
-                  _buildTextField(po_doc_noText, 'เลขที่เอกสาร WMS',
-                      readOnly: true),
-                  _buildTextField(po_doc_typeText, 'ประเภทเอกสาร',
-                      readOnly: true),
+                  GestureDetector(
+                      child: AbsorbPointer(
+                    child: _buildTextField(po_doc_noText, 'เลขที่เอกสาร WMS',
+                        readOnly: true),
+                  )),
+                  GestureDetector(
+                      child: AbsorbPointer(
+                    child: _buildTextField(po_doc_typeText, 'ประเภทเอกสาร',
+                        readOnly: true),
+                  )),
                   _buildDateTextField(CR_DATE, 'วันที่บันทึก'),
                   _buildDropRefdownSearch(),
                   _buildTextField(MO_DO_NO, 'เลขที่คำสั่งผลผลิต'),
-                  _buildTextField(NB_WARE_CODE, 'คลังต้นทาง', readOnly: true),
-                  _buildTextField(NB_TO_WH, 'คลังปลายทาง', readOnly: true),
+                  GestureDetector(
+                      child: AbsorbPointer(
+                    child: _buildTextField(NB_WARE_CODE, 'คลังต้นทาง',
+                        readOnly: true),
+                  )),
+                  GestureDetector(
+                      child: AbsorbPointer(
+                    child: _buildTextField(NB_TO_WH, 'คลังปลายทาง',
+                        readOnly: true),
+                  )),
                   _buildDropStaffdownSearch(),
                   _buildTextField(PO_REMARK, 'หมายเหตุ'),
-                  _buildTextField(REF_ERP, 'เลขที่เอกสาร ERP', readOnly: true),
+                  GestureDetector(
+                      child: AbsorbPointer(
+                    child: _buildTextField(REF_ERP, 'เลขที่เอกสาร ERP',
+                        readOnly: true),
+                  ))
                 ],
               ),
             ),

@@ -415,6 +415,18 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     Function(Map<String, dynamic>?) onChanged,
     String label,
   ) {
+    String displayText =
+        'เลือก Location ต้นทาง'; // Default text: "Select Destination Warehouse"
+    if (selectedValue != null) {
+      final selectedItem = items.firstWhere(
+        (item) => item['location_code'] == selectedValue,
+        orElse: () => null,
+      );
+      if (selectedItem != null) {
+        displayText = selectedItem['location_name'];
+      }
+    }
+
     return GestureDetector(
       onTap: () {
         _showDialog1(context, items, selectedValue, onChanged, label);
@@ -430,7 +442,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
               MainAxisAlignment.spaceBetween, // Align text and arrow
           children: [
             Text(
-              selectedValue ?? 'Select Location',
+              displayText ?? 'Select Location',
               style: TextStyle(color: Colors.black),
             ),
             Icon(
@@ -683,6 +695,19 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     Function(Map<String, dynamic>?) onChanged,
     String label,
   ) {
+    // Find the selected warehouse name
+    String displayText =
+        'เลือกคลังปลายทาง'; // Default text: "Select Destination Warehouse"
+    if (selectedValue != null) {
+      final selectedItem = items.firstWhere(
+        (item) => item['ware_code'] == selectedValue,
+        orElse: () => null,
+      );
+      if (selectedItem != null) {
+        displayText = selectedItem['ware_name'];
+      }
+    }
+
     return GestureDetector(
       onTap: () {
         _showDialog2(context, items, selectedValue, onChanged, label);
@@ -694,15 +719,17 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
           labelStyle: TextStyle(color: Colors.black, fontSize: 16),
         ),
         child: Row(
-          mainAxisAlignment:
-              MainAxisAlignment.spaceBetween, // Align text and arrow
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              selectedValue ?? 'Select Location',
-              style: TextStyle(color: Colors.black),
+            Expanded(
+              child: Text(
+                displayText,
+                style: TextStyle(color: Colors.black),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             Icon(
-              Icons.arrow_drop_down, // Dropdown arrow icon
+              Icons.arrow_drop_down,
               color: Colors.grey,
             ),
           ],
@@ -839,6 +866,18 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     Function(Map<String, dynamic>?) onChanged,
     String label,
   ) {
+    String displayText =
+        'เลือก Location ต้นทาง'; // Default text: "Select Destination Warehouse"
+    if (selectedValue != null) {
+      final selectedItem = items.firstWhere(
+        (item) => item['location_code'] == selectedValue,
+        orElse: () => null,
+      );
+      if (selectedItem != null) {
+        displayText = selectedItem['location_name'];
+      }
+    }
+
     return GestureDetector(
       onTap: () {
         _showDialog3(context, items, selectedValue, onChanged, label);
@@ -854,7 +893,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
               MainAxisAlignment.spaceBetween, // Align text and arrow
           children: [
             Text(
-              selectedValue ?? 'เลือก Location ปลายทาง',
+              displayText ?? 'เลือก Location ปลายทาง',
               style: TextStyle(color: Colors.black),
             ),
             Icon(

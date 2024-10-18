@@ -262,7 +262,62 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                   ),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
-                    // Existing date validation and formatting logic here...
+                    // Remove all slashes for processing
+                    String numbersOnly = value.replaceAll('/', '');
+
+                    // Limit the length of the input to 8 digits
+                    if (numbersOnly.length > 8) {
+                      numbersOnly = numbersOnly.substring(0, 8);
+                    }
+
+                    // Format the value with slashes
+                    String formattedValue = '';
+                    for (int i = 0; i < numbersOnly.length; i++) {
+                      if (i == 2 || i == 4) {
+                        formattedValue += '/'; // Add slashes after DD and MM
+                      }
+                      formattedValue += numbersOnly[i];
+                    }
+
+                    // Update the controller
+                    _dateController.value = TextEditingValue(
+                      text: formattedValue,
+                      selection: TextSelection.collapsed(
+                          offset:
+                              formattedValue.length), // Set cursor to the end
+                    );
+
+                    // Validate the date
+                    if (numbersOnly.length == 8) {
+                      try {
+                        final day = int.parse(numbersOnly.substring(0, 2));
+                        final month = int.parse(numbersOnly.substring(2, 4));
+                        final year = int.parse(numbersOnly.substring(4, 8));
+
+                        final date = DateTime(year, month, day);
+
+                        // Check if the day, month, and year are valid
+                        if (date.day == day &&
+                            date.month == month &&
+                            date.year == year) {
+                          setState(() {
+                            isDateValid = true; // Valid date
+                            _selectedDate = date; // Update selected date
+                          });
+                        } else {
+                          throw Exception('Invalid date');
+                        }
+                      } catch (e) {
+                        setState(() {
+                          isDateValid = false; // Invalid date
+                        });
+                      }
+                    } else {
+                      setState(() {
+                        isDateValid =
+                            false; // Invalid length (not 8 digits yet)
+                      });
+                    }
                   },
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,

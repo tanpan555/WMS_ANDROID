@@ -54,7 +54,8 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
 
   late final TextEditingController LOT_NUMBER = TextEditingController();
   late final TextEditingController QUANTITY = TextEditingController();
-  late final TextEditingController LOCATOR_TO = TextEditingController();
+  late final TextEditingController LOCATOR_TO =
+      TextEditingController(text: widget.LocOUTCode ?? ' ');
   late final TextEditingController BAL_LOT = TextEditingController();
   late final TextEditingController BAL_QTY = TextEditingController();
 
@@ -75,6 +76,12 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
     if (widget.LocCode == 'null') {
       LOCATOR_FROM.text = '';
     }
+
+    // Add this condition for LOCATOR_TO
+    if (widget.LocOUTCode == 'null') {
+      LOCATOR_TO.text = '';
+    }
+
     fetchLocationCodes();
 
     print(widget.selectedwhCode);
@@ -412,65 +419,67 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
               child: ListView(
                 children: [
                   const SizedBox(height: 8),
-                  _buildTextField(DOC_NO, 'เลขที่เอกสาร', readOnly: true),
+                  GestureDetector(
+                      child: AbsorbPointer(
+                    child:
+                        _buildTextField(DOC_NO, 'เลขที่เอกสาร', readOnly: true),
+                  )),
                   _buildTextField(BARCODE, 'Barcode', readOnly: false),
-                  // ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: const Color.fromARGB(255, 72, 199, 85),
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(12.0),
-                  //     ),
-                  //   ),
-                  //   child: const Text(
-                  //     'Submit',
-                  //     style: TextStyle(
-                  //       color: Colors.white,
-                  //     ),
-                  //   ),
-                  //   onPressed: fetchBarcodeData,
-                  // ),
-                  // ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(12.0),
-                  //     ),
-                  //   ),
-                  //   child: const Text(
-                  //     'Open Camera',
-                  //     style: TextStyle(
-                  //       color: Colors.white,
-                  //     ),
-                  //   ),
-                  //   onPressed: _scanQRCode,
-                  // ),
-                  _buildTextField(LOCATOR_FROM, 'Locator ต้นทาง',
-                      readOnly: true),
-                  _buildTextField(ITEM_CODE, 'Item Code', readOnly: true),
+                  GestureDetector(
+                      child: AbsorbPointer(
+                    child: _buildTextField(LOCATOR_FROM, 'Locator ต้นทาง',
+                        readOnly: true),
+                  )),
+                  GestureDetector(
+                      child: AbsorbPointer(
+                    child:
+                        _buildTextField(ITEM_CODE, 'Item Code', readOnly: true),
+                  )),
+                  SizedBox(height: 8),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 103, 58, 183),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0),
                       ),
+                      minimumSize: Size(double.infinity, 50),
                     ),
                     child: const Text(
                       'เปลี่ยน',
                       style: TextStyle(
                         color: Colors.white,
+                        fontSize: 16,
                       ),
                     ),
                     onPressed: () {
                       _showLocatorDialog(context);
                     },
                   ),
+                  SizedBox(height: 16),
                   _buildTextFieldNumber(LOT_NUMBER, 'Lot Number'),
                   _buildTextFieldNumber(QUANTITY, 'Quantity'),
-                  _buildTextField(LOCATOR_TO, 'Locator ปลายทาง',
-                      readOnly: true),
-                  _buildYellowTextField(BAL_LOT, 'รวมรายการโอน',
-                      readOnly: true),
-                  _buildYellowTextField(BAL_QTY, 'รวมจำนวนโอน', readOnly: true),
+                  GestureDetector(
+                    child: AbsorbPointer(
+                      child: _buildTextField(
+                        LOCATOR_TO,
+                        'Locator ปลายทาง',
+                        readOnly: true,
+                        initialValue: widget.LocOUTCode == 'null'
+                            ? ''
+                            : widget.LocOUTCode,
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                      child: AbsorbPointer(
+                    child: _buildYellowTextField(BAL_LOT, 'รวมรายการโอน',
+                        readOnly: true),
+                  )),
+                  GestureDetector(
+                      child: AbsorbPointer(
+                    child: _buildYellowTextField(BAL_QTY, 'รวมจำนวนโอน',
+                        readOnly: true),
+                  ))
                 ],
               ),
             ),
@@ -503,7 +512,10 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   }
 
   Widget _buildTextField(TextEditingController controller, String label,
-      {bool readOnly = false}) {
+      {bool readOnly = false, String? initialValue}) {
+    if (initialValue != null) {
+      controller.text = initialValue;
+    }
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(

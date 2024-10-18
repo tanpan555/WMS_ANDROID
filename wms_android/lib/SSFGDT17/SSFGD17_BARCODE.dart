@@ -39,15 +39,13 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   late final TextEditingController DOC_NO =
       TextEditingController(text: widget.po_doc_no);
   late final TextEditingController BARCODE = TextEditingController();
-
   late final TextEditingController LOCATOR_FROM =
-      TextEditingController(text: widget.LocCode ?? ' ');
-
+      TextEditingController(text: widget.LocCode ?? '');
   late final TextEditingController ITEM_CODE = TextEditingController();
-
   late final TextEditingController LOT_NUMBER = TextEditingController();
   late final TextEditingController QUANTITY = TextEditingController();
-  late final TextEditingController LOCATOR_TO = TextEditingController();
+  late final TextEditingController LOCATOR_TO =
+      TextEditingController(text: widget.selectedLocCode ?? '');
   late final TextEditingController BAL_LOT = TextEditingController();
   late final TextEditingController BAL_QTY = TextEditingController();
 
@@ -61,12 +59,12 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   void initState() {
     super.initState();
     currentSessionID = SessionManager().sessionID;
-    print(widget.LocCode);
+    print('asdasdasdasdasdasdasd');
+    print(widget.LocOUTCode);
     if (widget.LocCode == 'null') {
       LOCATOR_FROM.text = '';
     }
     fetchLocationCodes();
-
     print(widget.selectedwhCode);
   }
 
@@ -400,22 +398,27 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
                   _buildTextField(LOCATOR_FROM, 'Locator ต้นทาง',
                       readOnly: true),
                   _buildTextField(ITEM_CODE, 'Item Code', readOnly: false),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 103, 58, 183),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 103, 58, 183),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                        ),
+                        child: const Text(
+                          'เปลี่ยน',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        onPressed: () {
+                          _showLocatorDialog(context);
+                        },
                       ),
-                    ),
-                    child: const Text(
-                      'เปลี่ยน',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    onPressed: () {
-                      _showLocatorDialog(context);
-                    },
+                    ],
                   ),
                   _buildTextField(LOT_NUMBER, 'Lot Number'),
                   _buildTextField(QUANTITY, 'Quantity'),
@@ -434,6 +437,25 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   }
 
   Widget _buildTextField(TextEditingController controller, String label,
+      {bool readOnly = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        controller: controller,
+        style: const TextStyle(color: Colors.black),
+        readOnly: readOnly,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: Colors.black),
+          filled: true,
+          fillColor: readOnly ? Colors.grey[300] : Colors.white,
+          border: InputBorder.none,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextFieldLocOut(TextEditingController controller, String label,
       {bool readOnly = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),

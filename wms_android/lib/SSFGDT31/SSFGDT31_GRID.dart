@@ -286,136 +286,130 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF17153B),
       appBar:
           CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(
-                width: 8,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SSFGDT31_PICKINGSLIP(
-                        po_doc_no: widget.po_doc_no,
-                        po_doc_type: widget.po_doc_type,
-                        pWareCode: widget.pWareCode,
-                        v_ref_doc_no: widget.v_ref_doc_no,
-                        v_ref_type: widget.v_ref_type,
-                        SCHID: widget.SCHID,
-                      ),
-                    ),
-                  );
-                  print('Picking Slip');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  minimumSize: const Size(90, 40),
-                  padding: const EdgeInsets.all(0),
-                ),
-                child: const Text(
-                  'Picking Slip',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Spacer(),
-              ElevatedButton(
-                style: AppStyles.NextButtonStyle(),
-                onPressed: () async {
-                  await get_grid_data();
-                  print('vChkCol');
-                  print(vChkCol);
-                  if (vChkCol == '1') {
-                    print(
-                        'Confirmationจำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!');
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Row(
-                            children: [
-                              Icon(
-                                Icons
-                                    .notification_important, // Use the bell icon
-                                color: Colors.red, // Set the color to red
-                              ),
-                              SizedBox(
-                                  width:
-                                      8), // Add some space between the icon and the text
-                              Text('แจ้งเตือน'), // Title text
-                            ],
-                          ),
-                          content: const Text(
-                              'Confirmation จำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('ตกลง'),
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          final isPortrait = orientation == Orientation.portrait;
+
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                if (isPortrait) const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Picking Slip Button
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SSFGDT31_PICKINGSLIP(
+                              po_doc_no: widget.po_doc_no,
+                              po_doc_type: widget.po_doc_type,
+                              pWareCode: widget.pWareCode,
+                              v_ref_doc_no: widget.v_ref_doc_no,
+                              v_ref_type: widget.v_ref_type,
+                              SCHID: widget.SCHID,
                             ),
-                          ],
+                          ),
                         );
+                        print('Picking Slip');
                       },
-                    );
-                  } else {
-                    await validateSave_NonePOLine_WMS();
-                    print('==================');
-                    print('po_status: $po_status');
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => SSFGDT31_VERIFY(
-                          po_doc_no: widget.po_doc_no,
-                          po_doc_type: widget.po_doc_type,
-                          pWareCode: widget.pWareCode,
-                          v_ref_doc_no: widget.v_ref_doc_no,
-                          v_ref_type: widget.v_ref_type,
-                          SCHID: widget.SCHID,
-                          DOC_DATE: widget.DOC_DATE,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 255, 255, 255),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        minimumSize: const Size(90, 40),
+                        padding: const EdgeInsets.all(0),
+                      ),
+                      child: const Text(
+                        'Picking Slip',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    );
-                  }
+                    ),
+                    ElevatedButton(
+                      style: AppStyles.NextButtonStyle(),
+                      onPressed: () async {
+                        await get_grid_data();
+                        print('vChkCol');
+                        print(vChkCol);
+                        if (vChkCol == '1') {
+                          print(
+                              'Confirmationจำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!');
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Row(
+                                  children: [
+                                    Icon(
+                                      Icons
+                                          .notification_important, // Use the bell icon
+                                      color: Colors.red, // Set the color to red
+                                    ),
+                                    SizedBox(
+                                        width:
+                                            8), // Add some space between the icon and the text
+                                    Text('แจ้งเตือน'), // Title text
+                                  ],
+                                ),
+                                content: const Text(
+                                    'Confirmation จำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('ตกลง'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          await validateSave_NonePOLine_WMS();
+                          print('==================');
+                          print('po_status: $po_status');
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => SSFGDT31_VERIFY(
+                                po_doc_no: widget.po_doc_no,
+                                po_doc_type: widget.po_doc_type,
+                                pWareCode: widget.pWareCode,
+                                v_ref_doc_no: widget.v_ref_doc_no,
+                                v_ref_type: widget.v_ref_type,
+                                SCHID: widget.SCHID,
+                                DOC_DATE: widget.DOC_DATE,
+                              ),
+                            ),
+                          );
+                        }
 
-                  print('Right button pressed');
-                },
-                child: Image.asset(
-                  'assets/images/right.png',
-                  width: 20.0,
-                  height: 20.0,
+                        print('Right button pressed');
+                      },
+                      child: Image.asset(
+                        'assets/images/right.png',
+                        width: 20.0,
+                        height: 20.0,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: items.length + 1,
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return Column(
+                SizedBox(height: 8),
+                Expanded(
+                  child: ListView(
                     children: [
                       Container(
                         padding: const EdgeInsets.all(12.0),
+                        margin: const EdgeInsets.symmetric(vertical: 8.0),
                         decoration: BoxDecoration(
                           color: Colors.yellow[200],
                           border: Border.all(
@@ -435,14 +429,8 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 8,
-                      ),
                       Row(
                         children: [
-                          const SizedBox(
-                            width: 8,
-                          ),
                           ElevatedButton(
                             onPressed: () async {
                               final result = await Navigator.of(context).push(
@@ -458,29 +446,23 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                               );
                               await get_grid_data();
                               print('+Create and refreshed');
-                              print('+Create');
                             },
                             style: AppStyles.createButtonStyle(),
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                border: Border.all(
-                                    color: Colors.white,
-                                    width: 3), // White border for the circle
+                                border:
+                                    Border.all(color: Colors.white, width: 3),
                               ),
-                              padding: const EdgeInsets.all(
-                                  2), // Padding to make the circle
+                              padding: const EdgeInsets.all(2),
                               child: const Icon(
-                                Icons.add, // Plus icon inside the circle
-                                color: Colors.white, // White plus icon
-                                size: 24, // Icon size
+                                Icons.add,
+                                color: Colors.white,
+                                size: 24,
                               ),
                             ),
                           ),
-                          // Spacer(),
-                          const SizedBox(
-                            width: 8,
-                          ),
+                          const SizedBox(width: 8),
                           ElevatedButton(
                             onPressed: () async {
                               showDialog(
@@ -489,19 +471,14 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                                   return AlertDialog(
                                     title: Row(
                                       children: [
-                                        Icon(
-                                          Icons
-                                              .notification_important, // Use the bell icon
-                                          color: Colors
-                                              .red, // Set the color to red
-                                        ),
-                                        SizedBox(
-                                            width:
-                                                8), // Add some space between the icon and the text
-                                        Text('แจ้งเตือน'), // Title text
+                                        Icon(Icons.notification_important,
+                                            color: Colors.red),
+                                        SizedBox(width: 8),
+                                        Text('แจ้งเตือน'),
                                       ],
                                     ),
-                                    content: const Text('ยืนยันที่จะลบหรือไม่'),
+                                    content: const Text(
+                                        'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม้'),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () {
@@ -526,392 +503,208 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                border: Border.all(
-                                    color: Colors.white,
-                                    width: 3), // White border for the circle
+                                border:
+                                    Border.all(color: Colors.white, width: 3),
                               ),
-                              padding: const EdgeInsets.all(
-                                  3), // Padding for circle size
+                              padding: const EdgeInsets.all(3),
                               child: const Icon(
-                                Icons.delete, // Trash icon inside the circle
-                                color: Colors.white, // White trash icon
-                                size: 20, // Icon size
+                                Icons.delete,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 8,
                           ),
                         ],
                       ),
-                    ],
-                  );
-                } else {
-                  final item = items[index - 1];
-                  return InkWell(
-                    // onTap: () {
-                    //   setState(() {
-                    //     selectedItemDescName = item['nb_item_name'] ?? '';
-                    //     selectedPackDescName = item['nb_pack_name'] ?? '';
-                    //   });
-                    // },
-                    child: Card(
-                      margin: const EdgeInsets.all(10),
-                      color: const Color.fromRGBO(204, 235, 252, 1.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text('Lots No: ',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black)),
-                                CustomContainerStyles.styledContainer(
-                                  item['lots_no'],
-                                  child: Text('${item['lots_no'] ?? ''}',
-                                      style: TextStyle(color: Colors.black)),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text('จำนวนรับ: ',
-                                    style: TextStyle(color: Colors.black)),
-                                CustomContainerStyles.styledContainer(
-                                  item['pack_qty']?.toString(),
-                                  child: Text(
-                                    '${item['pack_qty'] != null ? numberFormat.format(item['pack_qty']) : ''}',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text('Item: ',
-                                    style: TextStyle(color: Colors.black)),
-                                CustomContainerStyles.styledContainer(
-                                  item['item_code'],
-                                  child: Text('${item['item_code'] ?? ''}',
-                                      style: TextStyle(color: Colors.black)),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text('จำนวนจ่าย: ',
-                                    style: TextStyle(color: Colors.black)),
-                                CustomContainerStyles.styledContainer(
-                                  item['old_pack_qty']?.toString(),
-                                  child: Text('${item['old_pack_qty'] ?? ''}',
-                                      style: TextStyle(color: Colors.black)),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text('Pack: ',
-                                    style: TextStyle(color: Colors.black)),
-                                CustomContainerStyles.styledContainer(
-                                  item['pack_code'],
-                                  child: Text('${item['pack_code'] ?? ''}',
-                                      style: TextStyle(color: Colors.black)),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text('Locator: ',
-                                    style: TextStyle(color: Colors.black)),
-                                CustomContainerStyles.styledContainer(
-                                  item['location_code'],
-                                  child: Text('${item['location_code'] ?? ''}',
-                                      style: TextStyle(color: Colors.black)),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text('PD Location: ',
-                                    style: TextStyle(color: Colors.black)),
-                                CustomContainerStyles.styledContainer(
-                                  item['attribute1'],
-                                  child: Text('${item['attribute1'] ?? ''}',
-                                      style: TextStyle(color: Colors.black)),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text('Reason: ',
-                                    style: TextStyle(color: Colors.black)),
-                                CustomContainerStyles.styledContainer(
-                                  item['attribute2'],
-                                  child: Text('${item['attribute2'] ?? ''}',
-                                      style: TextStyle(color: Colors.black)),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text('ใช้แทนจุด: ',
-                                    style: TextStyle(color: Colors.black)),
-                                CustomContainerStyles.styledContainer(
-                                  item['attribute3'],
-                                  child: Text('${item['attribute3'] ?? ''}',
-                                      style: TextStyle(color: Colors.black)),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text('Replace Lot: ',
-                                    style: TextStyle(color: Colors.black)),
-                                CustomContainerStyles.styledContainer(
-                                  item['attribute4'],
-                                  child: Text('${item['attribute4'] ?? ''}',
-                                      style: TextStyle(color: Colors.black)),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text('Item Desc: ',
-                                    style: TextStyle(color: Colors.black)),
-                                Expanded(
-                                  child: CustomContainerStyles.styledContainer(
-                                    item['nb_item_name'],
-                                    child: Text('${item['nb_item_name'] ?? ''}',
-                                        style: TextStyle(color: Colors.black)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text('Pack Desc: ',
-                                    style: TextStyle(color: Colors.black)),
-                                Expanded(
-                                  child: CustomContainerStyles.styledContainer(
-                                    item['nb_pack_name'],
-                                    child: Text('${item['nb_pack_name'] ?? ''}',
-                                        style: TextStyle(color: Colors.black)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(
-                                    decoration: BoxDecoration(
-                                      // color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    child: IconButton(
-                                      iconSize: 20.0,
-                                      icon: Image.asset(
-                                        'assets/images/bin.png',
-                                        width: 45.0,
-                                        height: 45.0,
+                      const SizedBox(height: 8),
+                      ...items
+                          .map((item) => Card(
+                                margin: const EdgeInsets.only(bottom: 8.0),
+                                color: const Color.fromRGBO(204, 235, 252, 1.0),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      buildItemRow('Lots No:', item['lots_no']),
+                                      buildItemRow('จำนวนรับ:',
+                                          item['pack_qty']?.toString()),
+                                      buildItemRow('Item:', item['item_code']),
+                                      buildItemRow('จำนวนจ่าย:',
+                                          item['old_pack_qty']?.toString()),
+                                      buildItemRow('Pack:', item['pack_code']),
+                                      buildItemRow(
+                                          'Locator:', item['location_code']),
+                                      buildItemRow(
+                                          'PD Location:', item['attribute1']),
+                                      buildItemRow(
+                                          'Reason:', item['attribute2']),
+                                      buildItemRow(
+                                          'ใช้แทนจุด:', item['attribute3']),
+                                      buildItemRow(
+                                          'Replace Lot:', item['attribute4']),
+                                      buildItemRow(
+                                          'Item Desc:', item['nb_item_name']),
+                                      buildItemRow(
+                                          'Pack Desc:', item['nb_pack_name']),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                            icon: Image.asset(
+                                                'assets/images/bin.png',
+                                                width: 45.0,
+                                                height: 45.0),
+                                            onPressed: () =>
+                                                showDeleteConfirmation(
+                                                    context, item),
+                                          ),
+                                          const Spacer(),
+                                          IconButton(
+                                            icon: Image.asset(
+                                                'assets/images/edit.png',
+                                                width: 45.0,
+                                                height: 45.0),
+                                            onPressed: () =>
+                                                showEditDialog(context, item),
+                                          ),
+                                        ],
                                       ),
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons
-                                                        .notification_important, // Use the bell icon
-                                                    color: Colors
-                                                        .red, // Set the color to red
-                                                  ),
-                                                  SizedBox(
-                                                      width:
-                                                          8), // Add some space between the icon and the text
-                                                  Text(
-                                                      'แจ้งเตือน'), // Title text
-                                                ],
-                                              ),
-                                              content: const Text(
-                                                  'ยืนยันที่จะลบหรือไม่'),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: const Text('ยกเลิก'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () async {
-                                                    Navigator.of(context).pop();
-                                                    await deleteLot(
-                                                      p_doc_type:
-                                                          widget.po_doc_type,
-                                                      p_doc_no:
-                                                          widget.po_doc_no,
-                                                      p_seq: item['seq'] ?? '',
-                                                      p_item_code:
-                                                          item['item_code'] ??
-                                                              '',
-                                                    );
-                                                    print('===============');
-                                                    print(widget.po_doc_type);
-                                                    print(widget.po_doc_no);
-                                                    print(item['seq']);
-                                                    print(item['item_code']);
-                                                  },
-                                                  child: const Text('ตกลง'),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                    )),
-                                Spacer(),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    // color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: IconButton(
-                                    iconSize: 20.0,
-                                    icon: Image.asset(
-                                      'assets/images/edit.png',
-                                      width: 45.0,
-                                      height: 45.0,
-                                    ),
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          TextEditingController
-                                              packQtyController =
-                                              TextEditingController(
-                                            text:
-                                                item['pack_qty']?.toString() ??
-                                                    '',
-                                          );
-
-                                          return AlertDialog(
-                                            title: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                const Text(
-                                                  'แก้ไขจำนวนรับ',
-                                                  style:
-                                                      TextStyle(fontSize: 18),
-                                                ),
-                                                IconButton(
-                                                  icon: const Icon(Icons.close),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                            content: TextField(
-                                              controller: packQtyController,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              decoration: InputDecoration(
-                                                labelText: 'Pack Quantity',
-                                                border:
-                                                    OutlineInputBorder(), // Adds a border around the TextField
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  // Optional: customize border when focused
-                                                  borderSide: BorderSide(
-                                                      color: Colors.black,
-                                                      width: 2.0),
-                                                ),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  // Optional: customize border when not focused
-                                                  borderSide: BorderSide(
-                                                      color: Colors.black,
-                                                      width: 1.0),
-                                                ),
-                                              ),
-                                            ),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: const Text('ยกเลิก'),
-                                              ),
-                                              TextButton(
-                                                onPressed: () async {
-                                                  final newPackQty =
-                                                      int.tryParse(
-                                                              packQtyController
-                                                                  .text) ??
-                                                          0;
-
-                                                  await updateLot(
-                                                    pack_qty: newPackQty,
-                                                    OLD_PACK_QTY: int.tryParse(
-                                                            item['old_pack_qty']
-                                                                    ?.toString() ??
-                                                                '0') ??
-                                                        0,
-                                                    item_code:
-                                                        item['item_code'] ?? '',
-                                                    pack_code:
-                                                        item['pack_code'] ?? '',
-                                                    rowid: item['rowid'] ?? '',
-                                                  );
-
-                                                  setState(() {
-                                                    item['pack_qty'] =
-                                                        newPackQty;
-                                                  });
-
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: const Text('ตกลง'),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }
-              },
+                              ))
+                          .toList(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      bottomNavigationBar: BottomBar(currentPage: 'show'),
+    );
+  }
+
+  Widget buildItemRow(String label, String? value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4.0),
+      child: Row(
+        children: [
+          Text(label,
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+          const SizedBox(width: 4),
+          Expanded(
+            child: CustomContainerStyles.styledContainer(
+              value,
+              child: Text(value ?? '', style: TextStyle(color: Colors.black)),
             ),
           ),
         ],
       ),
-      bottomNavigationBar: BottomBar(currentPage: 'show'),
+    );
+  }
+
+  void showDeleteConfirmation(BuildContext context, Map<String, dynamic> item) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(Icons.notification_important, color: Colors.red),
+              SizedBox(width: 8),
+              Text('แจ้งเตือน'),
+            ],
+          ),
+          content: const Text('ยืนยันที่จะลบหรือไม่'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('ยกเลิก'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await deleteLot(
+                  p_doc_type: widget.po_doc_type,
+                  p_doc_no: widget.po_doc_no,
+                  p_seq: item['seq'] ?? '',
+                  p_item_code: item['item_code'] ?? '',
+                );
+              },
+              child: const Text('ตกลง'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showEditDialog(BuildContext context, Map<String, dynamic> item) {
+    TextEditingController packQtyController = TextEditingController(
+      text: item['pack_qty']?.toString() ?? '',
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('แก้ไขจำนวนรับ', style: TextStyle(fontSize: 18)),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+          content: TextField(
+            controller: packQtyController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: 'Pack Quantity',
+              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black, width: 2.0),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black, width: 1.0),
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('ยกเลิก'),
+            ),
+            TextButton(
+              onPressed: () async {
+                final newPackQty = int.tryParse(packQtyController.text) ?? 0;
+                await updateLot(
+                  pack_qty: newPackQty,
+                  OLD_PACK_QTY:
+                      int.tryParse(item['old_pack_qty']?.toString() ?? '0') ??
+                          0,
+                  item_code: item['item_code'] ?? '',
+                  pack_code: item['pack_code'] ?? '',
+                  rowid: item['rowid'] ?? '',
+                );
+                setState(() {
+                  item['pack_qty'] = newPackQty;
+                });
+                Navigator.of(context).pop();
+              },
+              child: const Text('ตกลง'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
