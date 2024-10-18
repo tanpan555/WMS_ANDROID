@@ -44,7 +44,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
   final TextEditingController _searchController2 = TextEditingController();
   final TextEditingController _searchController3 = TextEditingController();
   final TextEditingController _CcodeController = TextEditingController();
-
+  bool checkUpdateData = false;
   String ifHasData = 'not_show';
 
   void checkIfHasData() {
@@ -774,8 +774,8 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: true),
+      appBar: CustomAppBar(
+          title: 'รับคืนจากการเบิกผลิต', showExitWarning: checkUpdateData),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
         padding: const EdgeInsets.all(8.0), // Adjust padding as needed
@@ -921,6 +921,11 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         controller: controller,
         style: TextStyle(color: Colors.black),
         readOnly: readOnly,
+        onChanged: (value) {
+          setState(() {
+            checkUpdateData = true;
+          });
+        },
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(color: Colors.black),
@@ -1216,6 +1221,8 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                 ),
                                 onTap: () {
                                   setState(() {
+                                    checkUpdateData = true;
+
                                     selectedMoDoNo = schid;
                                     selectedschid = item[
                                         'fg_code']; // Update the selected item
@@ -1582,6 +1589,10 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: GestureDetector(
         onTap: () {
+          setState(() {
+            checkUpdateData = true;
+          });
+
           _showRefNoDialog();
         },
         child: InputDecorator(

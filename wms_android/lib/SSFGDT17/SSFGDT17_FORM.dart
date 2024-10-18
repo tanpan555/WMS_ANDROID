@@ -67,6 +67,8 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   final TextEditingController _CcodeController = TextEditingController();
   bool isDateValid = true;
 
+  bool checkUpdateData = false;
+
   @override
   void initState() {
     super.initState();
@@ -555,7 +557,8 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'Move Locator', showExitWarning: true),
+      appBar:
+          CustomAppBar(title: 'Move Locator', showExitWarning: checkUpdateData),
       body: Column(
         children: [
           const SizedBox(height: 8.0),
@@ -1081,6 +1084,11 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
         controller: controller,
         style: TextStyle(color: Colors.black),
         readOnly: readOnly,
+        onChanged: (value) {
+          setState(() {
+            checkUpdateData = true;
+          });
+        },
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(color: Colors.black),
@@ -1101,21 +1109,25 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
         controller: controller,
         style: TextStyle(color: Colors.black),
         readOnly: readOnly,
+        onChanged: (value) {
+          setState(() {
+            checkUpdateData = true;
+          });
+        },
         decoration: InputDecoration(
-          labelText: null, // Set to null to customize with RichText
+          labelText: null,
           labelStyle: TextStyle(color: Colors.black),
           filled: true,
           fillColor: readOnly ? Colors.grey[300] : Colors.white,
           border: InputBorder.none,
-          // Using label as a RichText
           label: RichText(
             text: TextSpan(
-              text: label, // Main label text
-              style: TextStyle(color: Colors.black), // Default label color
+              text: label,
+              style: TextStyle(color: Colors.black),
               children: [
                 TextSpan(
-                  text: '*', // Asterisk
-                  style: TextStyle(color: Colors.red), // Red asterisk
+                  text: '*',
+                  style: TextStyle(color: Colors.red),
                 ),
               ],
             ),
@@ -1140,7 +1152,9 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
               FilteringTextInputFormatter.digitsOnly,
             ],
             onChanged: (value) {
-              // Only proceed if there is input
+              setState(() {
+                checkUpdateData = true;
+              });
               if (value.isNotEmpty) {
                 String numbersOnly =
                     value.replaceAll('/', ''); // Remove existing slashes

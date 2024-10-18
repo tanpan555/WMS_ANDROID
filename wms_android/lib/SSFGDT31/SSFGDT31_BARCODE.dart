@@ -43,6 +43,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
   late final TextEditingController LOT_UNIT = TextEditingController();
 
   String? Barcode;
+  bool checkUpdateData = false;
 
   @override
   void initState() {
@@ -628,7 +629,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Scan รับ', showExitWarning: false),
+      appBar: CustomAppBar(title: 'Scan รับ', showExitWarning: checkUpdateData),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: SingleChildScrollView(
         child: Column(
@@ -844,14 +845,39 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
     TextEditingController controller,
     String label, {
     bool readOnly = false,
-    FocusNode? focusNode, // Add this parameter
+    FocusNode? focusNode,
     void Function(String)? onSubmitted,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
         controller: controller,
-        focusNode: focusNode, // Add this line
+        focusNode: focusNode,
+        style: TextStyle(color: Colors.black),
+        readOnly: readOnly,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.black),
+          filled: true,
+          fillColor: readOnly ? Colors.grey[300] : Colors.white,
+          border: InputBorder.none,
+        ),
+        onChanged: (value) {
+          setState(() {
+            checkUpdateData = true;
+          });
+        },
+        onSubmitted: onSubmitted,
+      ),
+    );
+  }
+
+  Widget _buildQuantityTextField(TextEditingController controller, String label,
+      {bool readOnly = false, void Function(String)? onSubmitted}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: TextField(
+        controller: controller,
         style: TextStyle(color: Colors.black),
         readOnly: readOnly,
         decoration: InputDecoration(
@@ -865,43 +891,23 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
       ),
     );
   }
-}
 
-Widget _buildQuantityTextField(TextEditingController controller, String label,
-    {bool readOnly = false, void Function(String)? onSubmitted}) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 8.0),
-    child: TextField(
-      controller: controller,
-      style: TextStyle(color: Colors.black),
-      readOnly: readOnly,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(color: Colors.black),
-        filled: true,
-        fillColor: readOnly ? Colors.grey[300] : Colors.white,
-        border: InputBorder.none,
+  Widget _buildTextField(TextEditingController controller, String label,
+      {bool readOnly = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: TextField(
+        controller: controller,
+        style: TextStyle(color: Colors.black),
+        readOnly: readOnly,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.black),
+          filled: true,
+          fillColor: readOnly ? Colors.grey[300] : Colors.white,
+          border: InputBorder.none,
+        ),
       ),
-      onSubmitted: onSubmitted,
-    ),
-  );
-}
-
-Widget _buildTextField(TextEditingController controller, String label,
-    {bool readOnly = false}) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 8.0),
-    child: TextField(
-      controller: controller,
-      style: TextStyle(color: Colors.black),
-      readOnly: readOnly,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(color: Colors.black),
-        filled: true,
-        fillColor: readOnly ? Colors.grey[300] : Colors.white,
-        border: InputBorder.none,
-      ),
-    ),
-  );
+    );
+  }
 }

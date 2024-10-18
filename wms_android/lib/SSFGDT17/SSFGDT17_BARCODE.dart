@@ -379,7 +379,8 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'Move Locator', showExitWarning: false),
+      appBar:
+          CustomAppBar(title: 'Move Locator', showExitWarning: checkUpdateData),
       body: Column(
         children: [
           const SizedBox(height: 8.0),
@@ -490,6 +491,8 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
     );
   }
 
+  bool checkUpdateData = false;
+
   Widget _buildYellowTextField(TextEditingController controller, String label,
       {bool readOnly = false}) {
     return Padding(
@@ -530,6 +533,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
           border: InputBorder.none,
         ),
         onChanged: (text) {
+          checkUpdateData = true;
           fetchBarcodeData();
         },
       ),
