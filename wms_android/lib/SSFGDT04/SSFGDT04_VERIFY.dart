@@ -111,12 +111,14 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final data = json.decode(responseBody);
-        if (mounted) {setState(() {
-          poStatus = data['po_status'];
-          poMessage = data['po_message'];
-          poErpDocNo = data['po_erp_doc_no'];
-          vTypeComplete = data['v_type_complete'];
-        });}
+        if (mounted) {
+          setState(() {
+            poStatus = data['po_status'];
+            poMessage = data['po_message'];
+            poErpDocNo = data['po_erp_doc_no'];
+            vTypeComplete = data['v_type_complete'];
+          });
+        }
       } else {
         throw Exception('Failed to load data');
       }
@@ -139,51 +141,53 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
         final Map<String, dynamic> dataPDF = jsonDecode(utf8
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
-        if (mounted) {setState(() {
-          V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
-          LIN_ID = dataPDF['LIN_ID'] ?? '';
-          OU_CODE = dataPDF['OU_CODE'] ?? '';
-          USER_ID = dataPDF['USER_ID'] ?? '';
-          PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
-          P_SESSION = dataPDF['P_SESSION'] ?? '';
+        if (mounted) {
+          setState(() {
+            V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
+            LIN_ID = dataPDF['LIN_ID'] ?? '';
+            OU_CODE = dataPDF['OU_CODE'] ?? '';
+            USER_ID = dataPDF['USER_ID'] ?? '';
+            PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
+            P_SESSION = dataPDF['P_SESSION'] ?? '';
 
-          S_DOC_TYPE = dataPDF['S_DOC_TYPE'] ?? '';
-          S_DOC_NO = dataPDF['S_DOC_NO'] ?? '';
-          E_DOC_TYPE = dataPDF['E_DOC_TYPE'] ?? '';
-          E_DOC_NO = dataPDF['E_DOC_NO'] ?? '';
-          FLAG = dataPDF['FLAG'] ?? '';
+            S_DOC_TYPE = dataPDF['S_DOC_TYPE'] ?? '';
+            S_DOC_NO = dataPDF['S_DOC_NO'] ?? '';
+            E_DOC_TYPE = dataPDF['E_DOC_TYPE'] ?? '';
+            E_DOC_NO = dataPDF['E_DOC_NO'] ?? '';
+            FLAG = dataPDF['FLAG'] ?? '';
 
-          LH_PAGE = dataPDF['LH_PAGE'] ?? '';
-          LH_DATE = dataPDF['LH_DATE'] ?? '';
-          LH_WARE = dataPDF['LH_WARE'] ?? '';
-          LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
-          LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
-          LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
-          LH_DOC_TYPE = dataPDF['LH_DOC_TYPE'] ?? '';
-          LH_PROGRAM_NAME = dataPDF['LH_PROGRAM_NAME'] ?? '';
-          LH_REF_NO1 = dataPDF['LH_REF_NO1'] ?? '';
-          LH_REF_NO2 = dataPDF['LH_REF_NO2'] ?? '';
+            LH_PAGE = dataPDF['LH_PAGE'] ?? '';
+            LH_DATE = dataPDF['LH_DATE'] ?? '';
+            LH_WARE = dataPDF['LH_WARE'] ?? '';
+            LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
+            LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
+            LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
+            LH_DOC_TYPE = dataPDF['LH_DOC_TYPE'] ?? '';
+            LH_PROGRAM_NAME = dataPDF['LH_PROGRAM_NAME'] ?? '';
+            LH_REF_NO1 = dataPDF['LH_REF_NO1'] ?? '';
+            LH_REF_NO2 = dataPDF['LH_REF_NO2'] ?? '';
 
-          LB_ITEM_CODE = dataPDF['LB_ITEM_CODE'] ?? '';
-          LB_ITEM_NAME = dataPDF['LB_ITEM_NAME'] ?? '';
-          LB_LOCATION = dataPDF['LB_LOCATION'] ?? '';
-          LB_UMS = dataPDF['LB_UMS'] ?? '';
-          LB_TRAN_QTY = dataPDF['LB_TRAN_QTY'] ?? '';
-          LB_TRAN_UCOST = dataPDF['LB_TRAN_UCOST'] ?? '';
-          LB_TRAN_AMT = dataPDF['LB_TRAN_AMT'] ?? '';
+            LB_ITEM_CODE = dataPDF['LB_ITEM_CODE'] ?? '';
+            LB_ITEM_NAME = dataPDF['LB_ITEM_NAME'] ?? '';
+            LB_LOCATION = dataPDF['LB_LOCATION'] ?? '';
+            LB_UMS = dataPDF['LB_UMS'] ?? '';
+            LB_TRAN_QTY = dataPDF['LB_TRAN_QTY'] ?? '';
+            LB_TRAN_UCOST = dataPDF['LB_TRAN_UCOST'] ?? '';
+            LB_TRAN_AMT = dataPDF['LB_TRAN_AMT'] ?? '';
 
-          LT_NOTE = dataPDF['LT_NOTE'] ?? '';
-          LT_TOTAL = dataPDF['LT_TOTAL'] ?? '';
-          LT_INPUT = dataPDF['LT_INPUT'] ?? '';
-          LT_RECEIVE = dataPDF['LT_RECEIVE'] ?? '';
-          LT_CHECK = dataPDF['LT_CHECK'] ?? '';
+            LT_NOTE = dataPDF['LT_NOTE'] ?? '';
+            LT_TOTAL = dataPDF['LT_TOTAL'] ?? '';
+            LT_INPUT = dataPDF['LT_INPUT'] ?? '';
+            LT_RECEIVE = dataPDF['LT_RECEIVE'] ?? '';
+            LT_CHECK = dataPDF['LT_CHECK'] ?? '';
 
-          LB_PALLET_NO = dataPDF['LB_PALLET_NO'] ?? '';
-          LB_PALLET_QTY = dataPDF['LB_PALLET_QTY'] ?? '';
-          LH_MO_DO_NO = dataPDF['LH_MO_DO_NO'] ?? '';
+            LB_PALLET_NO = dataPDF['LB_PALLET_NO'] ?? '';
+            LB_PALLET_QTY = dataPDF['LB_PALLET_QTY'] ?? '';
+            LH_MO_DO_NO = dataPDF['LH_MO_DO_NO'] ?? '';
 
-          _launchUrl(poDocNo);
-        });}
+            _launchUrl(poDocNo);
+          });
+        }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
@@ -292,8 +296,8 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false
-      ),
+      appBar:
+          CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer:CustomDrawer(),
       body: Padding(
@@ -313,34 +317,33 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: const [
-                                            Icon(
-                                              Icons
-                                                  .notification_important, // ไอคอนแจ้งเตือน
-                                              color: Colors.red, // สีแดง
-                                              size: 30,
-                                            ),
-                                            SizedBox(
-                                              width:
-                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                            ),
-                                            Text('แจ้งเตือน'),
-                                          ],
-                                        ),
-                                        // Close icon
-                                        IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                        ),
-                                      ],
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: const [
+                                    Icon(
+                                      Icons
+                                          .notification_important, // ไอคอนแจ้งเตือน
+                                      color: Colors.red, // สีแดง
+                                      size: 30,
                                     ),
+                                    SizedBox(
+                                      width:
+                                          8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                    ),
+                                    Text('แจ้งเตือน'),
+                                  ],
+                                ),
+                                // Close icon
+                                IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
+                                ),
+                              ],
+                            ),
                             content: Text('$poErpDocNo'),
                             actions: <Widget>[
                               TextButton(
@@ -356,34 +359,34 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                     builder: (BuildContext context) {
                                       return AlertDialog(
                                         title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: const [
-                                            Icon(
-                                              Icons
-                                                  .notification_important, // ไอคอนแจ้งเตือน
-                                              color: Colors.red, // สีแดง
-                                              size: 30,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: const [
+                                                Icon(
+                                                  Icons
+                                                      .notification_important, // ไอคอนแจ้งเตือน
+                                                  color: Colors.red, // สีแดง
+                                                  size: 30,
+                                                ),
+                                                SizedBox(
+                                                  width:
+                                                      8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                                ),
+                                                Text('แจ้งเตือน'),
+                                              ],
                                             ),
-                                            SizedBox(
-                                              width:
-                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                            // Close icon
+                                            IconButton(
+                                              icon: const Icon(Icons.close),
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                              },
                                             ),
-                                            Text('แจ้งเตือน'),
                                           ],
                                         ),
-                                        // Close icon
-                                        IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                        ),
-                                      ],
-                                    ),
                                         content: const Text(
                                             'ต้องการพิมพ์เอกสารใบรับหรือไม่ ?'),
                                         actions: <Widget>[
@@ -448,34 +451,33 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: const [
-                                            Icon(
-                                              Icons
-                                                  .notification_important, // ไอคอนแจ้งเตือน
-                                              color: Colors.red, // สีแดง
-                                              size: 30,
-                                            ),
-                                            SizedBox(
-                                              width:
-                                                  8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                            ),
-                                            Text('แจ้งเตือน'),
-                                          ],
-                                        ),
-                                        // Close icon
-                                        IconButton(
-                                          icon: const Icon(Icons.close),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                        ),
-                                      ],
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: const [
+                                    Icon(
+                                      Icons
+                                          .notification_important, // ไอคอนแจ้งเตือน
+                                      color: Colors.red, // สีแดง
+                                      size: 30,
                                     ),
+                                    SizedBox(
+                                      width:
+                                          8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                                    ),
+                                    Text('แจ้งเตือน'),
+                                  ],
+                                ),
+                                // Close icon
+                                IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
+                                ),
+                              ],
+                            ),
                             content: Text(poMessage ?? ''),
                             actions: [
                               TextButton(
@@ -560,166 +562,126 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
           ),
           const SizedBox(height: 10),
           gridItems.isEmpty
-            ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 100),
-                  child: Text(
-                    'No data found',
-                    style: TextStyle(color: Colors.white),
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 100),
+                    child: Text(
+                      'No data found',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-                ),
-              )
-            :ListView.builder(
-            shrinkWrap: true, // ให้ ListView มีขนาดตามข้อมูล
-            physics: const NeverScrollableScrollPhysics(), // ปิดการเลื่อน
-            itemCount: gridItems.length,
-            itemBuilder: (context, index) {
-              final item = gridItems[index];
-              return Card(
-                color: Colors.lightBlue[100],
-                elevation: 4,
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Center(
-                        child: Text(
-                          item['item_code'] ?? '',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                          textAlign: TextAlign.center,
+                )
+              : ListView.builder(
+                  shrinkWrap: true, // ให้ ListView มีขนาดตามข้อมูล
+                  physics: const NeverScrollableScrollPhysics(), // ปิดการเลื่อน
+                  itemCount: gridItems.length,
+                  itemBuilder: (context, index) {
+                    final item = gridItems[index];
+                    return Card(
+                      color: Colors.lightBlue[100],
+                      elevation: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Center(
+                              child: Text(
+                                item['item_code'] ?? '',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            const Divider(color: Colors.black26, thickness: 1),
+                            const SizedBox(height: 8),
+                            Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'จำนวนรับ :',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    CustomContainerStyles.styledContainer(
+                                      item['pack_qty']
+                                          ?.toString(), // Passing the 'pack_qty' as the itemValue
+                                      child: Text(
+                                        item['pack_qty'] != null &&
+                                                item['pack_qty'] != ''
+                                            ? NumberFormat('#,###')
+                                                .format(item['pack_qty'])
+                                            : '',
+                                        textAlign: TextAlign.left,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'จำนวน Pallet :',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    CustomContainerStyles.styledContainer(
+                                      item['count_qty']
+                                          ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                      child: Text(
+                                        item['count_qty'] ?? '',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'จำนวนรวม :',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    CustomContainerStyles.styledContainer(
+                                      item['count_qty_in']
+                                          ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                      child: Text(
+                                        item['count_qty_in'] ?? '',
+                                        style: const TextStyle(fontSize: 14.0),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      const Divider(color: Colors.black26, thickness: 1),
-                      const SizedBox(height: 8),
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'จำนวนรับ:',
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  color: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 2,
-                                    horizontal: 8,
-                                  ),
-                                  child: Text(
-                                    // Format the number if it's not null, else display an empty string
-                                    item['pack_qty'] != null
-                                        ? NumberFormat('#,###')
-                                            .format(item['pack_qty'])
-                                        : '',
-                                    textAlign: TextAlign.end,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .start, // จัดให้อยู่ทางซ้ายในแนวนอน
-                            children: [
-                              const Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'จำนวน Pallet:',
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  color:
-                                      Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 2,
-                                    horizontal: 8,
-                                  ), // เพิ่ม padding รอบๆข้อความ
-                                  child: Text(
-                                    item['count_qty'] ?? '',
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .start, // จัดให้อยู่ทางซ้ายในแนวนอน
-                            children: [
-                              const Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'จำนวนรวม:',
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  color:
-                                      Colors.white, // กำหนดสีพื้นหลังที่ต้องการ
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 2,
-                                    horizontal: 8,
-                                  ), // เพิ่ม padding รอบๆข้อความ
-                                  child: Text(
-                                    item['count_qty_in'] ?? '',
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ],
       ),
     );
