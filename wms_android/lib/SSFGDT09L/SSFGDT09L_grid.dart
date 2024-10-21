@@ -4,6 +4,7 @@ import 'dart:convert';
 // import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
+import 'package:wms_android/ICON.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
@@ -52,6 +53,11 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   String deleteCardAllMessage = '';
 
   bool isLoading = false;
+  String? nextLink = '';
+  String? prevLink = '';
+
+  String urlLoad = '';
+  int showRecordRRR = 0;
 
   @override
   void initState() {
@@ -66,34 +72,139 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
     );
   }
 
-  Future<void> fetchData() async {
+  // Future<void> fetchData() async {
+  //   isLoading = true;
+  //   try {
+  //     final response = await http.get(Uri.parse(
+  //         'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}'));
+
+  //     if (response.statusCode == 200) {
+  //       final responseBody = utf8.decode(response.bodyBytes);
+  //       final responseData = jsonDecode(responseBody);
+  //       print('Fetched data: $responseData');
+  //       if (mounted) {
+  //         setState(() {
+  //           dataCard =
+  //               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+  //           isLoading = false;
+  //         });
+  //       }
+  //       print('dataCard : $dataCard');
+  //     } else {
+  //       throw Exception('Failed to load fetchData');
+  //     }
+  //   } catch (e) {
+  //     if (mounted) {
+  //       setState(() {});
+  //     }
+  //     print('ERROR IN Fetch Data : $e');
+  //   }
+  // }
+
+  Future<void> fetchData([String? url]) async {
     isLoading = true;
+    final String requestUrl = url ??
+        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}';
     try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}'));
+      final response = await http.get(Uri.parse(requestUrl));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
-        print('Fetched data: $responseData');
+        final parsedResponse = json.decode(responseBody);
+
         if (mounted) {
           setState(() {
-            dataCard =
-                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+            if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+              dataCard = parsedResponse['items'];
+            } else {
+              dataCard = [];
+            }
 
+            List<dynamic> links = parsedResponse['links'] ?? [];
+            nextLink = getLink(links, 'next');
+            prevLink = getLink(links, 'prev');
+            urlLoad = url ??
+                'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}';
+            if (url.toString().isNotEmpty) {
+              extractLastNumberFromUrl(url.toString() ==
+                      'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}'
+                  ? 'null'
+                  : url.toString());
+            }
             isLoading = false;
           });
         }
-        print('dataCard : $dataCard');
       } else {
-        throw Exception('Failed to load fetchData');
+        if (mounted) {
+          setState(() {
+            print('Failed to load data: ${response.statusCode}');
+          });
+        }
+        print('HTTP Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
+      // Handle exceptions that may occur
       if (mounted) {
-        setState(() {});
+        setState(() {
+          // isLoading = false;
+          print('Error occurred: $e');
+        });
       }
-      print('ERROR IN Fetch Data : $e');
+      print('Exception: $e');
     }
+  }
+
+  String? getLink(List<dynamic> links, String rel) {
+    final link =
+        links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
+    return link != null ? link['href'] : null;
+  }
+
+  void loadNextPage() {
+    if (nextLink != '') {
+      setState(() {
+        print('nextLink $nextLink');
+        isLoading = true;
+      });
+      fetchData(nextLink);
+    }
+  }
+
+  void loadPrevPage() {
+    if (prevLink != '') {
+      setState(() {
+        isLoading = true;
+      });
+      fetchData(prevLink);
+    }
+  }
+
+  void extractLastNumberFromUrl(String url) {
+    // Regular Expression สำหรับจับค่าหลัง offset=
+    RegExp regExp = RegExp(r'offset=(\d+)$');
+    RegExpMatch? match = regExp.firstMatch(url);
+
+    // ตัวแปรสำหรับเก็บผลลัพธ์
+    int showRecord = 0; // ตั้งค่าเริ่มต้นเป็น 0
+
+    if (match != null) {
+      // แปลงค่าที่จับคู่ได้จาก String ไปเป็น int
+      showRecordRRR =
+          int.parse(match.group(1)!); // group(1) หมายถึงค่าหลัง offset=
+      print('ตัวเลขท้ายสุดคือ: $showRecord');
+      print('$showRecordRRR');
+      print('$showRecordRRR + 1 = ${showRecordRRR + 1}');
+      print('${dataCard.length}');
+      print(
+          '${dataCard.length} + $showRecordRRR = ${dataCard.length + showRecordRRR}');
+    } else {
+      // ถ้าไม่พบค่า ให้ผลลัพธ์เป็น 0
+      print('ไม่พบตัวเลขท้ายสุด, ส่งกลับเป็น 0');
+    }
+
+    // พิมพ์ค่าที่ได้
+    print('ผลลัพธ์: $showRecord');
   }
 
   Future<void> updatePackQty(
@@ -305,7 +416,6 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                       // เมื่อกลับมาหน้าเดิม เรียก fetchData
                       await fetchData();
                       await fetchData();
-                      print('11111111111111111111111111');
                     });
                   },
                   style: AppStyles.NextButtonStyle(),
@@ -320,475 +430,690 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
             const SizedBox(height: 8),
             // --------------------------------------------------------------------
             Expanded(
-              child: ListView(children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: Container(
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
-                          border: Border.all(
-                            color: Colors.black, // ขอบสีดำ
-                            width: 2.0, // ความกว้างของขอบ 2.0
+              child: ListView(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: Container(
+                          padding: const EdgeInsets.all(12.0),
+                          decoration: BoxDecoration(
+                            color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
+                            border: Border.all(
+                              color: Colors.black, // ขอบสีดำ
+                              width: 2.0, // ความกว้างของขอบ 2.0
+                            ),
+                            borderRadius: BorderRadius.circular(
+                                8.0), // เพิ่มมุมโค้งให้กับ Container
                           ),
-                          borderRadius: BorderRadius.circular(
-                              8.0), // เพิ่มมุมโค้งให้กับ Container
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${widget.docNo}',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                          child: Center(
+                            child: Text(
+                              '${widget.docNo}',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
-                          border: Border.all(
-                            color: Colors.black, // ขอบสีดำ
-                            width: 2.0, // ความกว้างของขอบ 2.0
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          padding: const EdgeInsets.all(12.0),
+                          decoration: BoxDecoration(
+                            color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
+                            border: Border.all(
+                              color: Colors.black, // ขอบสีดำ
+                              width: 2.0, // ความกว้างของขอบ 2.0
+                            ),
+                            borderRadius: BorderRadius.circular(
+                                8.0), // เพิ่มมุมโค้งให้กับ Container
                           ),
-                          borderRadius: BorderRadius.circular(
-                              8.0), // เพิ่มมุมโค้งให้กับ Container
-                        ),
-                        child: Center(
-                          child: Text(
-                            widget.moDoNo,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                          child: Center(
+                            child: Text(
+                              widget.moDoNo,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                // --------------------------------------------------------------------
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Ssfgdt09lBarcode(
-                                    pWareCode: widget.pWareCode,
-                                    pErpOuCode: widget.pErpOuCode,
-                                    pOuCode: widget.pOuCode,
-                                    pAttr1: widget.pAttr1,
-                                    pAppUser: widget.pAppUser,
-                                    pDocNo: widget.docNo,
-                                    pDocType: widget.docType,
-                                    pDocDate: widget.docDate,
-                                    pMoDoNO: widget.moDoNo,
-                                  )),
-                        ).then((value) async {
-                          // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                          await fetchData();
-                        });
-                      },
-                      style: AppStyles.createButtonStyle(),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: Colors.white,
-                              width: 3), // White border for the circle
-                        ),
-                        padding: const EdgeInsets.all(
-                            2), // Padding to make the circle
-                        child: const Icon(
-                          Icons.add, // Plus icon inside the circle
-                          color: Colors.white, // White plus icon
-                          size: 24, // Icon size
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    // --------------------------------------------------------------------
-                    ElevatedButton(
-                      onPressed: () {
-                        if (dataCard.isNotEmpty) {
-                          setState(() {
-                            String messageDelete =
-                                'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม่ ?';
-                            String dataTest = 'test';
-                            showDialogComfirmDelete(
-                              context,
-                              dataTest,
-                              dataTest,
-                              messageDelete,
-                            );
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  // --------------------------------------------------------------------
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Ssfgdt09lBarcode(
+                                      pWareCode: widget.pWareCode,
+                                      pErpOuCode: widget.pErpOuCode,
+                                      pOuCode: widget.pOuCode,
+                                      pAttr1: widget.pAttr1,
+                                      pAppUser: widget.pAppUser,
+                                      pDocNo: widget.docNo,
+                                      pDocType: widget.docType,
+                                      pDocDate: widget.docDate,
+                                      pMoDoNO: widget.moDoNo,
+                                    )),
+                          ).then((value) async {
+                            // เมื่อกลับมาหน้าเดิม เรียก fetchData
+                            await fetchData();
                           });
-                        }
-                      },
-                      style: AppStyles.ClearButtonStyle(),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: Colors.white,
-                              width: 3), // White border for the circle
-                        ),
-                        padding: const EdgeInsets.all(
-                            2), // Padding to make the circle
-                        child: const Icon(
-                          Icons.delete, // Plus icon inside the circle
-                          color: Colors.white, // White plus icon
-                          size: 24, // Icon size
+                        },
+                        style: AppStyles.createButtonStyle(),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: Colors.white,
+                                width: 3), // White border for the circle
+                          ),
+                          padding: const EdgeInsets.all(
+                              2), // Padding to make the circle
+                          child: const Icon(
+                            Icons.add, // Plus icon inside the circle
+                            color: Colors.white, // White plus icon
+                            size: 24, // Icon size
+                          ),
                         ),
                       ),
-                    ),
-                    // --------------------------------------------------------------------
-                  ],
-                ),
-                const SizedBox(height: 8),
-                // ข้อมูลที่ต้องการแสดงใน ListView
-                isLoading
-                    ? Center(child: CircularProgressIndicator())
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        physics:
-                            const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
-                        itemCount: dataCard
-                            .length, // ใช้ length ของ dataCard แทนการใช้ map
-                        itemBuilder: (context, index) {
-                          final item = dataCard[
-                              index]; // ดึงข้อมูลแต่ละรายการจาก dataCard
-                          return Card(
-                            elevation: 8.0,
-                            margin: EdgeInsets.symmetric(vertical: 8.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            color: Color.fromRGBO(204, 235, 252, 1.0),
-                            child: InkWell(
-                              onTap: () {},
-                              borderRadius: BorderRadius.circular(15.0),
-                              child: Stack(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          child: Row(
-                                            // mainAxisAlignment:
-                                            // MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const Text(
-                                                'Item : ',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14.0),
-                                              ),
-                                              CustomContainerStyles
-                                                  .styledContainer(
-                                                item['item_code'],
-                                                child: Text(
-                                                  item['item_code'] ?? '',
-                                                  style: const TextStyle(
-                                                      fontSize: 14.0),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4.0),
-                                        SizedBox(
-                                          child: Row(
-                                            // mainAxisAlignment:
-                                            // MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const Text(
-                                                'Lot No : ',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14.0),
-                                              ),
-                                              CustomContainerStyles
-                                                  .styledContainer(
-                                                item[
-                                                    'lots_no'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                child: Text(
-                                                  item['lots_no'] ?? '',
-                                                  style: const TextStyle(
-                                                      fontSize: 14.0),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4.0),
-                                        SizedBox(
-                                          child: Row(
-                                            // mainAxisAlignment:
-                                            // MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const Text(
-                                                'จำนวนที่จ่าย : ',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14.0),
-                                              ),
-                                              CustomContainerStyles
-                                                  .styledContainer(
-                                                item['pack_qty']
-                                                    .toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                child: Text(
-                                                  NumberFormat(
-                                                          '#,###,###,###,###,###')
-                                                      .format(
-                                                          item['pack_qty'] ??
-                                                              ''),
-                                                  style: const TextStyle(
-                                                      fontSize: 14.0),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4.0),
-                                        SizedBox(
-                                          child: Row(
-                                            // mainAxisAlignment:
-                                            // MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const Text(
-                                                'Pack : ',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14.0),
-                                              ),
-                                              CustomContainerStyles
-                                                  .styledContainer(
-                                                item[
-                                                    'pack_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                child: Text(
-                                                  item['pack_code'] ?? '',
-                                                  style: const TextStyle(
-                                                      fontSize: 14.0),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4.0),
-                                        SizedBox(
-                                          child: Row(
-                                            // mainAxisAlignment:
-                                            // MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const Text(
-                                                'Location : ',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14.0),
-                                              ),
-                                              CustomContainerStyles
-                                                  .styledContainer(
-                                                item[
-                                                    'location_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                child: Text(
-                                                  item['location_code'] ?? '',
-                                                  style: const TextStyle(
-                                                      fontSize: 14.0),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4.0),
-                                        SizedBox(
-                                          child: Row(
-                                            children: [
-                                              const Text(
-                                                'PD Location : ',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14.0),
-                                              ),
-                                              CustomContainerStyles
-                                                  .styledContainer(
-                                                item[
-                                                    'pd_location'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                child: Text(
-                                                  item['pd_location'] ?? '',
-                                                  style: const TextStyle(
-                                                      fontSize: 14.0),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4.0),
-                                        SizedBox(
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const SizedBox(
-                                                child: Text(
-                                                  'Reason : ',
+                      const SizedBox(width: 8),
+                      // --------------------------------------------------------------------
+                      ElevatedButton(
+                        onPressed: () {
+                          if (dataCard.isNotEmpty) {
+                            setState(() {
+                              String messageDelete =
+                                  'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม่ ?';
+                              String dataTest = 'test';
+                              showDialogComfirmDelete(
+                                context,
+                                dataTest,
+                                dataTest,
+                                messageDelete,
+                              );
+                            });
+                          }
+                        },
+                        style: AppStyles.ClearButtonStyle(),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: Colors.white,
+                                width: 3), // White border for the circle
+                          ),
+                          padding: const EdgeInsets.all(
+                              2), // Padding to make the circle
+                          child: const Icon(
+                            Icons.delete, // Plus icon inside the circle
+                            color: Colors.white, // White plus icon
+                            size: 24, // Icon size
+                          ),
+                        ),
+                      ),
+                      // --------------------------------------------------------------------
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  // ข้อมูลที่ต้องการแสดงใน ListView
+                  isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          physics:
+                              const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
+                          itemCount: dataCard
+                              .length, // ใช้ length ของ dataCard แทนการใช้ map
+                          itemBuilder: (context, index) {
+                            final item = dataCard[
+                                index]; // ดึงข้อมูลแต่ละรายการจาก dataCard
+                            return Card(
+                              elevation: 8.0,
+                              margin: EdgeInsets.symmetric(vertical: 8.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              color: Color.fromRGBO(204, 235, 252, 1.0),
+                              child: InkWell(
+                                onTap: () {},
+                                borderRadius: BorderRadius.circular(15.0),
+                                child: Stack(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            child: Row(
+                                              // mainAxisAlignment:
+                                              // MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                const Text(
+                                                  'Item : ',
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontSize: 14.0),
                                                 ),
-                                              ),
-                                              Expanded(
-                                                child: CustomContainerStyles
+                                                CustomContainerStyles
                                                     .styledContainer(
-                                                  item['reason_mismatch'],
+                                                  item['item_code'],
                                                   child: Text(
-                                                    item['reason_mismatch'] ??
-                                                        '',
+                                                    item['item_code'] ?? '',
                                                     style: const TextStyle(
                                                         fontSize: 14.0),
-                                                    softWrap:
-                                                        true, // เปิดให้ตัดบรรทัด
-                                                    overflow: TextOverflow
-                                                        .visible, // แสดงข้อความทั้งหมด
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4.0),
+                                          SizedBox(
+                                            child: Row(
+                                              // mainAxisAlignment:
+                                              // MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                const Text(
+                                                  'Lot No : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14.0),
+                                                ),
+                                                CustomContainerStyles
+                                                    .styledContainer(
+                                                  item[
+                                                      'lots_no'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                  child: Text(
+                                                    item['lots_no'] ?? '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4.0),
+                                          SizedBox(
+                                            child: Row(
+                                              // mainAxisAlignment:
+                                              // MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                const Text(
+                                                  'จำนวนที่จ่าย : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14.0),
+                                                ),
+                                                CustomContainerStyles
+                                                    .styledContainer(
+                                                  item['pack_qty']
+                                                      .toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                  child: Text(
+                                                    NumberFormat(
+                                                            '#,###,###,###,###,###')
+                                                        .format(
+                                                            item['pack_qty'] ??
+                                                                ''),
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4.0),
+                                          SizedBox(
+                                            child: Row(
+                                              // mainAxisAlignment:
+                                              // MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                const Text(
+                                                  'Pack : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14.0),
+                                                ),
+                                                CustomContainerStyles
+                                                    .styledContainer(
+                                                  item[
+                                                      'pack_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                  child: Text(
+                                                    item['pack_code'] ?? '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4.0),
+                                          SizedBox(
+                                            child: Row(
+                                              // mainAxisAlignment:
+                                              // MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                const Text(
+                                                  'Location : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14.0),
+                                                ),
+                                                CustomContainerStyles
+                                                    .styledContainer(
+                                                  item[
+                                                      'location_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                  child: Text(
+                                                    item['location_code'] ?? '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4.0),
+                                          SizedBox(
+                                            child: Row(
+                                              children: [
+                                                const Text(
+                                                  'PD Location : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14.0),
+                                                ),
+                                                CustomContainerStyles
+                                                    .styledContainer(
+                                                  item[
+                                                      'pd_location'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                  child: Text(
+                                                    item['pd_location'] ?? '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4.0),
+                                          SizedBox(
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const SizedBox(
+                                                  child: Text(
+                                                    'Reason : ',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: CustomContainerStyles
+                                                      .styledContainer(
+                                                    item['reason_mismatch'],
+                                                    child: Text(
+                                                      item['reason_mismatch'] ??
+                                                          '',
+                                                      style: const TextStyle(
+                                                          fontSize: 14.0),
+                                                      softWrap:
+                                                          true, // เปิดให้ตัดบรรทัด
+                                                      overflow: TextOverflow
+                                                          .visible, // แสดงข้อความทั้งหมด
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4.0),
+                                          SizedBox(
+                                            child: Row(
+                                              // mainAxisAlignment:
+                                              // MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                const Text(
+                                                  'ใช้แทนจุด : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14.0),
+                                                ),
+                                                CustomContainerStyles
+                                                    .styledContainer(
+                                                  item[
+                                                      'attribute3'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                  child: Text(
+                                                    item['attribute3'] ?? '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4.0),
+                                          SizedBox(
+                                            child: Row(
+                                              // mainAxisAlignment:
+                                              // MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                const Text(
+                                                  'Replace Lot# : ',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14.0),
+                                                ),
+                                                CustomContainerStyles
+                                                    .styledContainer(
+                                                  item[
+                                                      'attribute4'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                  child: Text(
+                                                    item['attribute4'] ?? '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 20.0),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    String messageDelete =
+                                                        'ต้องการลบรายการหรือไม่ ?';
+
+                                                    showDialogComfirmDelete(
+                                                      context,
+                                                      item['seq'].toString(),
+                                                      item['item_code'] ?? '',
+                                                      messageDelete,
+                                                    );
+                                                  });
+                                                },
+                                                child: Container(
+                                                  width: 30,
+                                                  height: 30,
+                                                  // color: cardColor, // เปลี่ยนสีพื้นหลังที่นี่
+                                                  child: Image.asset(
+                                                    'assets/images/bin.png',
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                ),
+                                              ),
+                                              InkWell(
+                                                onTap: () {
+                                                  showDetailsDialog(
+                                                    context,
+                                                    item['seq'],
+                                                    item['pack_qty'],
+                                                    item['nb_item_name'] ?? '',
+                                                    item['rowid'] ?? '',
+                                                    // item['nb_pack_name'] ?? '',
+                                                    item['item_code'] ?? '',
+                                                    item['pack_code'] ?? '',
+                                                  );
+                                                },
+                                                child: Container(
+                                                  width: 30,
+                                                  height: 30,
+                                                  // color: cardColor, // เปลี่ยนสีพื้นหลังที่นี่
+                                                  child: Image.asset(
+                                                    'assets/images/edit (1).png',
+                                                    fit: BoxFit.contain,
                                                   ),
                                                 ),
                                               ),
                                             ],
                                           ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                  // =======================================================  dataCard.length > 1
+                  dataCard.isNotEmpty
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                prevLink != null
+                                    ? ElevatedButton.icon(
+                                        onPressed: prevLink != null
+                                            ? loadPrevPage
+                                            : null,
+                                        icon: const Icon(
+                                            MyIcons.arrow_back_ios_rounded,
+                                            color: Colors.black),
+                                        label: const Text(
+                                          'Previous',
+                                          style: TextStyle(color: Colors.black),
                                         ),
-                                        const SizedBox(height: 4.0),
-                                        SizedBox(
-                                          child: Row(
-                                            // mainAxisAlignment:
-                                            // MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const Text(
-                                                'ใช้แทนจุด : ',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14.0),
-                                              ),
-                                              CustomContainerStyles
-                                                  .styledContainer(
-                                                item[
-                                                    'attribute3'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                child: Text(
-                                                  item['attribute3'] ?? '',
-                                                  style: const TextStyle(
-                                                      fontSize: 14.0),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                        style: AppStyles.PreviousButtonStyle(),
+                                      )
+                                    : ElevatedButton.icon(
+                                        onPressed: null,
+                                        icon: const Icon(
+                                            MyIcons.arrow_back_ios_rounded,
+                                            color: Color.fromARGB(
+                                                255, 23, 21, 59)),
+                                        label: const Text(
+                                          'Previous',
+                                          style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 23, 21, 59)),
                                         ),
-                                        const SizedBox(height: 4.0),
-                                        SizedBox(
-                                          child: Row(
-                                            // mainAxisAlignment:
-                                            // MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const Text(
-                                                'Replace Lot# : ',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14.0),
-                                              ),
-                                              CustomContainerStyles
-                                                  .styledContainer(
-                                                item[
-                                                    'attribute4'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                child: Text(
-                                                  item['attribute4'] ?? '',
-                                                  style: const TextStyle(
-                                                      fontSize: 14.0),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 20.0),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  String messageDelete =
-                                                      'ต้องการลบรายการหรือไม่ ?';
-
-                                                  showDialogComfirmDelete(
-                                                    context,
-                                                    item['seq'].toString(),
-                                                    item['item_code'] ?? '',
-                                                    messageDelete,
-                                                  );
-                                                });
-                                              },
-                                              child: Container(
-                                                width: 30,
-                                                height: 30,
-                                                // color: cardColor, // เปลี่ยนสีพื้นหลังที่นี่
-                                                child: Image.asset(
-                                                  'assets/images/bin.png',
-                                                  fit: BoxFit.contain,
-                                                ),
-                                              ),
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                showDetailsDialog(
-                                                  context,
-                                                  item['seq'],
-                                                  item['pack_qty'],
-                                                  item['nb_item_name'] ?? '',
-                                                  item['rowid'] ?? '',
-                                                  // item['nb_pack_name'] ?? '',
-                                                  item['item_code'] ?? '',
-                                                  item['pack_code'] ?? '',
-                                                );
-                                              },
-                                              child: Container(
-                                                width: 30,
-                                                height: 30,
-                                                // color: cardColor, // เปลี่ยนสีพื้นหลังที่นี่
-                                                child: Image.asset(
-                                                  'assets/images/edit (1).png',
-                                                  fit: BoxFit.contain,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                        style: AppStyles
+                                            .DisablePreviousButtonStyle(),
+                                      ),
+                              ],
+                            ),
+                            // const SizedBox(width: 30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? dataCard.length : showRecordRRR + dataCard.length}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ],
-                              ),
+                                )
+                              ],
                             ),
-                          );
-                        },
-                      )
-              ]),
+                            // const SizedBox(width: 30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                nextLink != null
+                                    ? ElevatedButton(
+                                        onPressed: nextLink != null
+                                            ? loadNextPage
+                                            : null,
+                                        style: AppStyles
+                                            .NextRecordDataButtonStyle(),
+                                        child: const Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              'Next',
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                            SizedBox(width: 7),
+                                            Icon(
+                                                MyIcons
+                                                    .arrow_forward_ios_rounded,
+                                                color: Colors.black),
+                                          ],
+                                        ),
+                                      )
+                                    : ElevatedButton(
+                                        onPressed: null,
+                                        style: AppStyles
+                                            .DisableNextRecordDataButtonStyle(),
+                                        child: const Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              'Next',
+                                              style: TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 23, 21, 59)),
+                                            ),
+                                            SizedBox(width: 7),
+                                            Icon(
+                                                MyIcons
+                                                    .arrow_forward_ios_rounded,
+                                                color: Color.fromARGB(
+                                                    255, 23, 21, 59)),
+                                          ],
+                                        ),
+                                      ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
+                  // =======================================================  dataCard.length > 1
+                ],
+              ),
             ),
-            // ),
-            // --------------------------------------------------------------------
+            // =======================================================  dataCard.length == 1
+            // dataCard.length == 1
+            //     ? Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //         children: [
+            //           Row(
+            //             mainAxisAlignment: MainAxisAlignment.start,
+            //             children: [
+            //               prevLink != null
+            //                   ? ElevatedButton.icon(
+            //                       onPressed:
+            //                           prevLink != null ? loadPrevPage : null,
+            //                       icon: const Icon(
+            //                           MyIcons.arrow_back_ios_rounded,
+            //                           color: Colors.black),
+            //                       label: const Text(
+            //                         'Previous',
+            //                         style: TextStyle(color: Colors.black),
+            //                       ),
+            //                       style: AppStyles.PreviousButtonStyle(),
+            //                     )
+            //                   : ElevatedButton.icon(
+            //                       onPressed: null,
+            //                       icon: const Icon(
+            //                           MyIcons.arrow_back_ios_rounded,
+            //                           color: Color.fromARGB(255, 23, 21, 59)),
+            //                       label: const Text(
+            //                         'Previous',
+            //                         style: TextStyle(
+            //                             color: Color.fromARGB(255, 23, 21, 59)),
+            //                       ),
+            //                       style: AppStyles.DisablePreviousButtonStyle(),
+            //                     ),
+            //             ],
+            //           ),
+            //           // const SizedBox(width: 30),
+            //           Row(
+            //             mainAxisAlignment: MainAxisAlignment.center,
+            //             children: [
+            //               Center(
+            //                 child: Text(
+            //                   '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? dataCard.length : showRecordRRR + dataCard.length}',
+            //                   style: const TextStyle(
+            //                     color: Colors.white,
+            //                     fontWeight: FontWeight.bold,
+            //                   ),
+            //                 ),
+            //               )
+            //             ],
+            //           ),
+            //           // const SizedBox(width: 30),
+            //           Row(
+            //             mainAxisAlignment: MainAxisAlignment.end,
+            //             children: [
+            //               nextLink != null
+            //                   ? ElevatedButton(
+            //                       onPressed:
+            //                           nextLink != null ? loadNextPage : null,
+            //                       style: AppStyles.NextRecordDataButtonStyle(),
+            //                       child: const Row(
+            //                         mainAxisSize: MainAxisSize.min,
+            //                         children: [
+            //                           Text(
+            //                             'Next',
+            //                             style: TextStyle(color: Colors.black),
+            //                           ),
+            //                           SizedBox(width: 7),
+            //                           Icon(MyIcons.arrow_forward_ios_rounded,
+            //                               color: Colors.black),
+            //                         ],
+            //                       ),
+            //                     )
+            //                   : ElevatedButton(
+            //                       onPressed: null,
+            //                       style: AppStyles
+            //                           .DisableNextRecordDataButtonStyle(),
+            //                       child: const Row(
+            //                         mainAxisSize: MainAxisSize.min,
+            //                         children: [
+            //                           Text(
+            //                             'Next',
+            //                             style: TextStyle(
+            //                                 color: Color.fromARGB(
+            //                                     255, 23, 21, 59)),
+            //                           ),
+            //                           SizedBox(width: 7),
+            //                           Icon(MyIcons.arrow_forward_ios_rounded,
+            //                               color:
+            //                                   Color.fromARGB(255, 23, 21, 59)),
+            //                         ],
+            //                       ),
+            //                     ),
+            //             ],
+            //           ),
+            //         ],
+            //       )
+            //     : const SizedBox.shrink(),
+            // ======================================================= dataCard.length == 1
           ],
         ),
       ),
@@ -1015,7 +1340,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                               showExitWarningDialog();
                             } else {
                               Navigator.of(context).pop(false);
-                              fetchData();
+                              fetchData(urlLoad);
                             }
                           },
                         ),
@@ -1106,7 +1431,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                             Navigator.of(context).pop(true);
                             await updatePackQty(
                                 updatedPackQty, itemCode, packCode, rowID);
-                            await fetchData();
+                            await fetchData(urlLoad);
                             setState(() {});
                             print('updatedPackQty : $updatedPackQty');
                             print('packQtyController : $packQtyController');

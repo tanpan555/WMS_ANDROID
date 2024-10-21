@@ -958,7 +958,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                         children: [
                                           Center(
                                             child: Text(
-                                              '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? '15' : showRecordRRR + dataCard.length}',
+                                              '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? dataCard.length : showRecordRRR + dataCard.length}',
                                               style: const TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
@@ -1080,7 +1080,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                   children: [
                                     Center(
                                       child: Text(
-                                        '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? '15' : showRecordRRR + dataCard.length}',
+                                        '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? dataCard.length : showRecordRRR + dataCard.length}',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,

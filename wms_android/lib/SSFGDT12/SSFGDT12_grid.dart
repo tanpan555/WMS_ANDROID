@@ -1092,7 +1092,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                               },
                             ),
                             // =======================================================  dataCard.length > 1
-                            dataCard.length > 1
+                            dataCard.isNotEmpty
                                 ? Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -1143,7 +1143,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                         children: [
                                           Center(
                                             child: Text(
-                                              '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? '15' : showRecordRRR + dataCard.length}',
+                                              '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? dataCard.length : showRecordRRR + dataCard.length}',
                                               style: const TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
@@ -1219,115 +1219,115 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                         ),
                       ),
                       // =======================================================  dataCard.length == 1
-                      dataCard.length == 1
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    prevLink != null
-                                        ? ElevatedButton.icon(
-                                            onPressed: prevLink != null
-                                                ? loadPrevPage
-                                                : null,
-                                            icon: const Icon(
-                                                MyIcons.arrow_back_ios_rounded,
-                                                color: Colors.black),
-                                            label: const Text(
-                                              'Previous',
-                                              style: TextStyle(
-                                                  color: Colors.black),
-                                            ),
-                                            style:
-                                                AppStyles.PreviousButtonStyle(),
-                                          )
-                                        : ElevatedButton.icon(
-                                            onPressed: null,
-                                            icon: const Icon(
-                                                MyIcons.arrow_back_ios_rounded,
-                                                color: Color.fromARGB(
-                                                    255, 23, 21, 59)),
-                                            label: const Text(
-                                              'Previous',
-                                              style: TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 23, 21, 59)),
-                                            ),
-                                            style: AppStyles
-                                                .DisablePreviousButtonStyle(),
-                                          ),
-                                  ],
-                                ),
-                                // const SizedBox(width: 30),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Center(
-                                      child: Text(
-                                        '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? '15' : showRecordRRR + dataCard.length}',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                // const SizedBox(width: 30),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    nextLink != null
-                                        ? ElevatedButton(
-                                            onPressed: nextLink != null
-                                                ? loadNextPage
-                                                : null,
-                                            style: AppStyles
-                                                .NextRecordDataButtonStyle(),
-                                            child: const Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  'Next',
-                                                  style: TextStyle(
-                                                      color: Colors.black),
-                                                ),
-                                                SizedBox(width: 7),
-                                                Icon(
-                                                    MyIcons
-                                                        .arrow_forward_ios_rounded,
-                                                    color: Colors.black),
-                                              ],
-                                            ),
-                                          )
-                                        : ElevatedButton(
-                                            onPressed: null,
-                                            style: AppStyles
-                                                .DisableNextRecordDataButtonStyle(),
-                                            child: const Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  'Next',
-                                                  style: TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 23, 21, 59)),
-                                                ),
-                                                SizedBox(width: 7),
-                                                Icon(
-                                                    MyIcons
-                                                        .arrow_forward_ios_rounded,
-                                                    color: Color.fromARGB(
-                                                        255, 23, 21, 59)),
-                                              ],
-                                            ),
-                                          ),
-                                  ],
-                                ),
-                              ],
-                            )
-                          : const SizedBox.shrink(),
+                      // dataCard.length == 1
+                      //     ? Row(
+                      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //         children: [
+                      //           Row(
+                      //             mainAxisAlignment: MainAxisAlignment.start,
+                      //             children: [
+                      //               prevLink != null
+                      //                   ? ElevatedButton.icon(
+                      //                       onPressed: prevLink != null
+                      //                           ? loadPrevPage
+                      //                           : null,
+                      //                       icon: const Icon(
+                      //                           MyIcons.arrow_back_ios_rounded,
+                      //                           color: Colors.black),
+                      //                       label: const Text(
+                      //                         'Previous',
+                      //                         style: TextStyle(
+                      //                             color: Colors.black),
+                      //                       ),
+                      //                       style:
+                      //                           AppStyles.PreviousButtonStyle(),
+                      //                     )
+                      //                   : ElevatedButton.icon(
+                      //                       onPressed: null,
+                      //                       icon: const Icon(
+                      //                           MyIcons.arrow_back_ios_rounded,
+                      //                           color: Color.fromARGB(
+                      //                               255, 23, 21, 59)),
+                      //                       label: const Text(
+                      //                         'Previous',
+                      //                         style: TextStyle(
+                      //                             color: Color.fromARGB(
+                      //                                 255, 23, 21, 59)),
+                      //                       ),
+                      //                       style: AppStyles
+                      //                           .DisablePreviousButtonStyle(),
+                      //                     ),
+                      //             ],
+                      //           ),
+                      //           // const SizedBox(width: 30),
+                      //           Row(
+                      //             mainAxisAlignment: MainAxisAlignment.center,
+                      //             children: [
+                      //               Center(
+                      //                 child: Text(
+                      //                   '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? dataCard.length : showRecordRRR + dataCard.length}',
+                      //                   style: const TextStyle(
+                      //                     color: Colors.white,
+                      //                     fontWeight: FontWeight.bold,
+                      //                   ),
+                      //                 ),
+                      //               )
+                      //             ],
+                      //           ),
+                      //           // const SizedBox(width: 30),
+                      //           Row(
+                      //             mainAxisAlignment: MainAxisAlignment.end,
+                      //             children: [
+                      //               nextLink != null
+                      //                   ? ElevatedButton(
+                      //                       onPressed: nextLink != null
+                      //                           ? loadNextPage
+                      //                           : null,
+                      //                       style: AppStyles
+                      //                           .NextRecordDataButtonStyle(),
+                      //                       child: const Row(
+                      //                         mainAxisSize: MainAxisSize.min,
+                      //                         children: [
+                      //                           Text(
+                      //                             'Next',
+                      //                             style: TextStyle(
+                      //                                 color: Colors.black),
+                      //                           ),
+                      //                           SizedBox(width: 7),
+                      //                           Icon(
+                      //                               MyIcons
+                      //                                   .arrow_forward_ios_rounded,
+                      //                               color: Colors.black),
+                      //                         ],
+                      //                       ),
+                      //                     )
+                      //                   : ElevatedButton(
+                      //                       onPressed: null,
+                      //                       style: AppStyles
+                      //                           .DisableNextRecordDataButtonStyle(),
+                      //                       child: const Row(
+                      //                         mainAxisSize: MainAxisSize.min,
+                      //                         children: [
+                      //                           Text(
+                      //                             'Next',
+                      //                             style: TextStyle(
+                      //                                 color: Color.fromARGB(
+                      //                                     255, 23, 21, 59)),
+                      //                           ),
+                      //                           SizedBox(width: 7),
+                      //                           Icon(
+                      //                               MyIcons
+                      //                                   .arrow_forward_ios_rounded,
+                      //                               color: Color.fromARGB(
+                      //                                   255, 23, 21, 59)),
+                      //                         ],
+                      //                       ),
+                      //                     ),
+                      //             ],
+                      //           ),
+                      //         ],
+                      //       )
+                      //     : const SizedBox.shrink(),
                       // ======================================================= dataCard.length == 1
                     ],
                   ),
