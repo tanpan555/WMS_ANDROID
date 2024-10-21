@@ -1377,8 +1377,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
               title: Row(
-                mainAxisAlignment: MainAxisAlignment
-                    .spaceBetween, // Space between text and button
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'เลือก Item ที่จะลบ',
@@ -1466,7 +1465,6 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                               ],
                             ),
                           ),
-                          // Divider(height: 1, color: Colors.black),
                           CheckboxListTile(
                             title:
                                 Text('Select', style: TextStyle(fontSize: 12)),
@@ -1497,22 +1495,67 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                     TextButton(
                       child: Text('ยืนยันลบ'),
                       onPressed: () {
-                        // Count the number of selected items
+                        // Check if at least one item is selected
                         int selectedCount =
                             selectedItems.where((item) => item).length;
 
+                        if (selectedCount == 0) {
+                          // Show an AlertDialog if no items are selected
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Icon(
+                                      Icons.notification_important,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'แจ้งเตือน',
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.close),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                content: Text('เลือกอย่างน้อย 1 รายการเพื่อลบ'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('ตกลง'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          return;
+                        }
+
+                        // Show confirmation dialog if items are selected
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween, // Space between text and button
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Icon(
-                                    Icons
-                                        .notification_important, // Use the bell icon
-                                    color: Colors.red, // Set the color to red
+                                    Icons.notification_important,
+                                    color: Colors.red,
                                   ),
                                   SizedBox(width: 8),
                                   Text(
@@ -1530,7 +1573,6 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                   ),
                                 ],
                               ),
-                              // Show the number of selected items in the confirmation message
                               content: Text(
                                   'ต้องการลบ $selectedCount รายการหรือไม่ ?'),
                               actions: <Widget>[
@@ -1646,10 +1688,48 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                   ),
                                   TextButton(
                                     child: Text('ตกลง'),
-                                    onPressed: () async {
+                                    onPressed: () {
                                       Navigator.of(context).pop();
-                                      await sendPostRequestlineWMS();
-                                      await sendGetRequestlineWMS();
+
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            // title: Center(child: Text('คำเตือน')),
+                                            content: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                SizedBox(width: 8),
+                                                Text(
+                                                  'complete',
+                                                  style: TextStyle(
+                                                    fontSize: 20.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                IconButton(
+                                                  icon: Icon(Icons.close),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text('ตกลง'),
+                                                onPressed: () async {
+                                                  Navigator.of(context).pop();
+                                                  await sendPostRequestlineWMS();
+                                                  await sendGetRequestlineWMS();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
                                     },
                                   ),
                                 ],
@@ -1662,7 +1742,26 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 // title: Center(child: Text('คำเตือน')),
-                                content: Text('Complete.'),
+                                content: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'complete',
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.close),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                ),
                                 actions: <Widget>[
                                   TextButton(
                                     child: Text('ตกลง'),
@@ -3584,27 +3683,37 @@ class _LotDialogState extends State<LotDialog> {
   }
 
 // Helper method to build each info row
+  // Helper method to build each info row
   Widget _buildInfoRow(String label, String value) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        SizedBox(width: 8),
-        Flexible(
-          child: CustomContainerStyles.styledContainer(
-            value,
-            padding: 8.0,
-            child: Text(
-              value,
-              softWrap: true,
-              overflow: TextOverflow.visible,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          vertical: 4.0), // Optional padding for better spacing
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment
+            .center, // Align both label and value to the center
+        children: [
+          Text(
+            label,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(width: 8),
+          Flexible(
+            // Flexible allows the value to take only the necessary space
+            child: CustomContainerStyles.styledContainer(
+              value, // Pass the value to determine the container style
+              padding:
+                  5.0, // Adjust padding for better spacing inside the container
+              child: Text(
+                value,
+                style: TextStyle(
+                    overflow: TextOverflow.ellipsis), // Ellipsis for long text
+                softWrap: true,
+                maxLines: 2, // Limit to two lines if necessary
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
