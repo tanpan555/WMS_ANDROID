@@ -1412,20 +1412,39 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                // Row for Checkbox and Item
                                 Row(
                                   children: [
-                                    Text('Item: ',
-                                        style: TextStyle(fontSize: 12)),
-                                    CustomContainerStyles.styledContainer(
-                                      dataList[index]['item'],
-                                      child: Text(
-                                        '${dataList[index]['item'] ?? ''}',
-                                        style: TextStyle(fontSize: 12),
+                                    // Checkbox placed before the item
+                                    Checkbox(
+                                      value: selectedItems[index],
+                                      onChanged: (bool? value) {
+                                        setState(() {
+                                          selectedItems[index] = value ?? false;
+                                        });
+                                      },
+                                    ),
+                                    Text(
+                                      'Item: ',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                    Expanded(
+                                      child:
+                                          CustomContainerStyles.styledContainer(
+                                        dataList[index]['item'],
+                                        child: Text(
+                                          '${dataList[index]['item'] ?? ''}',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.black),
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
                                 SizedBox(height: 4),
+
+                                // Row for Item Desc
                                 Row(
                                   children: [
                                     Text('Item Desc: ',
@@ -1446,6 +1465,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                   ],
                                 ),
                                 SizedBox(height: 4),
+
+                                // Row for Pending Qty
                                 Row(
                                   children: [
                                     Text('ค้างรับ: ',
@@ -1462,19 +1483,9 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                     ),
                                   ],
                                 ),
+                                SizedBox(height: 4),
                               ],
                             ),
-                          ),
-                          CheckboxListTile(
-                            title:
-                                Text('Select', style: TextStyle(fontSize: 12)),
-                            value: selectedItems[index],
-                            onChanged: (bool? value) {
-                              setState(() {
-                                selectedItems[index] = value ?? false;
-                              });
-                            },
-                            controlAffinity: ListTileControlAffinity.leading,
                           ),
                         ],
                       ),
