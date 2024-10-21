@@ -1780,7 +1780,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
-                    'ตรวจพบสินค้าที่ไม่ระบุจำนวนนับ',
+                    'ตรวจพบสินค้าที่ไม่ระบุจำนวนตรวจนับ',
                     // style: TextStyle(fontSize: 12),
                   ),
                   const SizedBox(height: 10),
@@ -2293,7 +2293,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      'คุณต้องการออกจากหน้านี้โดยไม่อบันทึกหรือไม่',
+                      'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่',
                       style: const TextStyle(color: Colors.black),
                     ),
                     const SizedBox(height: 10),
