@@ -5,6 +5,7 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:intl/intl.dart';
+import 'package:wms_android/ICON.dart';
 import 'package:wms_android/styles.dart';
 import 'SSFGDT12_main.dart';
 import 'SSFGDT12_barcode.dart';
@@ -76,6 +77,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   String? prevLink = '';
 
   String urlLoad = '';
+  int showRecordRRR = 0;
 
   // --------------------------------------\\
   bool checkUpdateData = false;
@@ -122,6 +124,12 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
             prevLink = getLink(links, 'prev');
             urlLoad = url ??
                 'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectDataGridCard/${widget.pErpOuCode}/${widget.docNo}';
+            if (url.toString().isNotEmpty) {
+              extractLastNumberFromUrl(url.toString() ==
+                      'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectDataGridCard/${widget.pErpOuCode}/${widget.docNo}'
+                  ? 'null'
+                  : url.toString());
+            }
             isLoading = false;
           });
         }
@@ -168,6 +176,33 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
       });
       fetchData(prevLink);
     }
+  }
+
+  void extractLastNumberFromUrl(String url) {
+    // Regular Expression สำหรับจับค่าหลัง offset=
+    RegExp regExp = RegExp(r'offset=(\d+)$');
+    RegExpMatch? match = regExp.firstMatch(url);
+
+    // ตัวแปรสำหรับเก็บผลลัพธ์
+    int showRecord = 0; // ตั้งค่าเริ่มต้นเป็น 0
+
+    if (match != null) {
+      // แปลงค่าที่จับคู่ได้จาก String ไปเป็น int
+      showRecordRRR =
+          int.parse(match.group(1)!); // group(1) หมายถึงค่าหลัง offset=
+      print('ตัวเลขท้ายสุดคือ: $showRecord');
+      print('$showRecordRRR');
+      print('$showRecordRRR + 1 = ${showRecordRRR + 1}');
+      print('${dataCard.length}');
+      print(
+          '${dataCard.length} + $showRecordRRR = ${dataCard.length + showRecordRRR}');
+    } else {
+      // ถ้าไม่พบค่า ให้ผลลัพธ์เป็น 0
+      print('ไม่พบตัวเลขท้ายสุด, ส่งกลับเป็น 0');
+    }
+
+    // พิมพ์ค่าที่ได้
+    print('ผลลัพธ์: $showRecord');
   }
 
   Future<void> checkData() async {
@@ -1056,24 +1091,244 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                 );
                               },
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ElevatedButton(
-                                  onPressed:
-                                      prevLink != null ? loadPrevPage : null,
-                                  child: const Text('Previous'),
-                                ),
-                                ElevatedButton(
-                                  onPressed:
-                                      nextLink != null ? loadNextPage : null,
-                                  child: const Text('Next'),
-                                ),
-                              ],
-                            ),
+                            // =======================================================  dataCard.length > 1
+                            dataCard.isNotEmpty
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          prevLink != null
+                                              ? ElevatedButton.icon(
+                                                  onPressed: prevLink != null
+                                                      ? loadPrevPage
+                                                      : null,
+                                                  icon: const Icon(
+                                                      MyIcons
+                                                          .arrow_back_ios_rounded,
+                                                      color: Colors.black),
+                                                  label: const Text(
+                                                    'Previous',
+                                                    style: TextStyle(
+                                                        color: Colors.black),
+                                                  ),
+                                                  style: AppStyles
+                                                      .PreviousButtonStyle(),
+                                                )
+                                              : ElevatedButton.icon(
+                                                  onPressed: null,
+                                                  icon: const Icon(
+                                                      MyIcons
+                                                          .arrow_back_ios_rounded,
+                                                      color: Color.fromARGB(
+                                                          255, 23, 21, 59)),
+                                                  label: const Text(
+                                                    'Previous',
+                                                    style: TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 23, 21, 59)),
+                                                  ),
+                                                  style: AppStyles
+                                                      .DisablePreviousButtonStyle(),
+                                                ),
+                                        ],
+                                      ),
+                                      // const SizedBox(width: 30),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Center(
+                                            child: Text(
+                                              '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? dataCard.length : showRecordRRR + dataCard.length}',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      // const SizedBox(width: 30),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          nextLink != null
+                                              ? ElevatedButton(
+                                                  onPressed: nextLink != null
+                                                      ? loadNextPage
+                                                      : null,
+                                                  style: AppStyles
+                                                      .NextRecordDataButtonStyle(),
+                                                  child: const Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        'Next',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                      SizedBox(width: 7),
+                                                      Icon(
+                                                          MyIcons
+                                                              .arrow_forward_ios_rounded,
+                                                          color: Colors.black),
+                                                    ],
+                                                  ),
+                                                )
+                                              : ElevatedButton(
+                                                  onPressed: null,
+                                                  style: AppStyles
+                                                      .DisableNextRecordDataButtonStyle(),
+                                                  child: const Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        'Next',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    23,
+                                                                    21,
+                                                                    59)),
+                                                      ),
+                                                      SizedBox(width: 7),
+                                                      Icon(
+                                                          MyIcons
+                                                              .arrow_forward_ios_rounded,
+                                                          color: Color.fromARGB(
+                                                              255, 23, 21, 59)),
+                                                    ],
+                                                  ),
+                                                ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox.shrink(),
+                            // =======================================================  dataCard.length > 1
                           ],
                         ),
                       ),
+                      // =======================================================  dataCard.length == 1
+                      // dataCard.length == 1
+                      //     ? Row(
+                      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //         children: [
+                      //           Row(
+                      //             mainAxisAlignment: MainAxisAlignment.start,
+                      //             children: [
+                      //               prevLink != null
+                      //                   ? ElevatedButton.icon(
+                      //                       onPressed: prevLink != null
+                      //                           ? loadPrevPage
+                      //                           : null,
+                      //                       icon: const Icon(
+                      //                           MyIcons.arrow_back_ios_rounded,
+                      //                           color: Colors.black),
+                      //                       label: const Text(
+                      //                         'Previous',
+                      //                         style: TextStyle(
+                      //                             color: Colors.black),
+                      //                       ),
+                      //                       style:
+                      //                           AppStyles.PreviousButtonStyle(),
+                      //                     )
+                      //                   : ElevatedButton.icon(
+                      //                       onPressed: null,
+                      //                       icon: const Icon(
+                      //                           MyIcons.arrow_back_ios_rounded,
+                      //                           color: Color.fromARGB(
+                      //                               255, 23, 21, 59)),
+                      //                       label: const Text(
+                      //                         'Previous',
+                      //                         style: TextStyle(
+                      //                             color: Color.fromARGB(
+                      //                                 255, 23, 21, 59)),
+                      //                       ),
+                      //                       style: AppStyles
+                      //                           .DisablePreviousButtonStyle(),
+                      //                     ),
+                      //             ],
+                      //           ),
+                      //           // const SizedBox(width: 30),
+                      //           Row(
+                      //             mainAxisAlignment: MainAxisAlignment.center,
+                      //             children: [
+                      //               Center(
+                      //                 child: Text(
+                      //                   '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? dataCard.length : showRecordRRR + dataCard.length}',
+                      //                   style: const TextStyle(
+                      //                     color: Colors.white,
+                      //                     fontWeight: FontWeight.bold,
+                      //                   ),
+                      //                 ),
+                      //               )
+                      //             ],
+                      //           ),
+                      //           // const SizedBox(width: 30),
+                      //           Row(
+                      //             mainAxisAlignment: MainAxisAlignment.end,
+                      //             children: [
+                      //               nextLink != null
+                      //                   ? ElevatedButton(
+                      //                       onPressed: nextLink != null
+                      //                           ? loadNextPage
+                      //                           : null,
+                      //                       style: AppStyles
+                      //                           .NextRecordDataButtonStyle(),
+                      //                       child: const Row(
+                      //                         mainAxisSize: MainAxisSize.min,
+                      //                         children: [
+                      //                           Text(
+                      //                             'Next',
+                      //                             style: TextStyle(
+                      //                                 color: Colors.black),
+                      //                           ),
+                      //                           SizedBox(width: 7),
+                      //                           Icon(
+                      //                               MyIcons
+                      //                                   .arrow_forward_ios_rounded,
+                      //                               color: Colors.black),
+                      //                         ],
+                      //                       ),
+                      //                     )
+                      //                   : ElevatedButton(
+                      //                       onPressed: null,
+                      //                       style: AppStyles
+                      //                           .DisableNextRecordDataButtonStyle(),
+                      //                       child: const Row(
+                      //                         mainAxisSize: MainAxisSize.min,
+                      //                         children: [
+                      //                           Text(
+                      //                             'Next',
+                      //                             style: TextStyle(
+                      //                                 color: Color.fromARGB(
+                      //                                     255, 23, 21, 59)),
+                      //                           ),
+                      //                           SizedBox(width: 7),
+                      //                           Icon(
+                      //                               MyIcons
+                      //                                   .arrow_forward_ios_rounded,
+                      //                               color: Color.fromARGB(
+                      //                                   255, 23, 21, 59)),
+                      //                         ],
+                      //                       ),
+                      //                     ),
+                      //             ],
+                      //           ),
+                      //         ],
+                      //       )
+                      //     : const SizedBox.shrink(),
+                      // ======================================================= dataCard.length == 1
                     ],
                   ),
       ),
@@ -1525,7 +1780,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
-                    'ตรวจพบสินค้าที่ไม่ระบุจำนวนนับ',
+                    'ตรวจพบสินค้าที่ไม่ระบุจำนวนตรวจนับ',
                     // style: TextStyle(fontSize: 12),
                   ),
                   const SizedBox(height: 10),
@@ -2038,7 +2293,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                   children: [
                     const SizedBox(height: 10),
                     Text(
-                      'คุณต้องการออกจากหน้านี้โดยไม่อบันทึกหรือไม่',
+                      'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่',
                       style: const TextStyle(color: Colors.black),
                     ),
                     const SizedBox(height: 10),

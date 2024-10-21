@@ -155,9 +155,9 @@ class AppStyles {
     return ElevatedButton.styleFrom(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(10),
       ),
-      minimumSize: const Size(70, 35),
+      minimumSize: const Size(100, 35),
       padding: const EdgeInsets.all(0),
     );
   }
@@ -166,9 +166,31 @@ class AppStyles {
     return ElevatedButton.styleFrom(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(10),
       ),
-      minimumSize: const Size(70, 35),
+      minimumSize: const Size(100, 35),
+      padding: const EdgeInsets.all(0),
+    );
+  }
+
+  static ButtonStyle DisablePreviousButtonStyle() {
+    return ElevatedButton.styleFrom(
+      backgroundColor: const Color.fromARGB(255, 23, 21, 59),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      minimumSize: const Size(100, 35),
+      padding: const EdgeInsets.all(0),
+    );
+  }
+
+  static ButtonStyle DisableNextRecordDataButtonStyle() {
+    return ElevatedButton.styleFrom(
+      backgroundColor: const Color.fromARGB(255, 23, 21, 59),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      minimumSize: const Size(100, 35),
       padding: const EdgeInsets.all(0),
     );
   }
