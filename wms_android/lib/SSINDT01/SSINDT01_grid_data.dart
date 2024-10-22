@@ -2428,19 +2428,26 @@ class _LotDialogState extends State<LotDialog> {
       text: workingItem['lot_supplier']?.toString() ?? '',
     );
 
+    // Store original MFG date
+    String originalMfgDate = '';
+
     // Safely initialize the mfgDateController
     try {
       if (workingItem['mfg_date'] != null &&
           workingItem['mfg_date'].toString().isNotEmpty) {
         final date = displayFormat.parse(workingItem['mfg_date'].toString());
         mfgDateController.text = displayFormat.format(date);
+        originalMfgDate = mfgDateController.text;
       } else {
         item['mfg_date'] = '';
+        originalMfgDate = '';
       }
     } catch (e) {
       print('Error parsing initial date: $e');
       mfgDateController.text = '';
+      originalMfgDate = '';
     }
+
     void clearFields() {
       workingItem['lot_qty'] = item['lot_qty'];
       workingItem['lot_supplier'] = item['lot_supplier'];
@@ -2448,18 +2455,8 @@ class _LotDialogState extends State<LotDialog> {
 
       lotQtyController.text = item['lot_qty']?.toString() ?? '';
       lotSupplierController.text = item['lot_supplier']?.toString() ?? '';
-      try {
-        if (item['mfg_date'] != null &&
-            item['mfg_date'].toString().isNotEmpty) {
-          final date = displayFormat.parse(item['mfg_date'].toString());
-          mfgDateController.text = displayFormat.format(date);
-        } else {
-          mfgDateController.text = '';
-        }
-      } catch (e) {
-        print('Error resetting date: $e');
-        mfgDateController.text = '';
-      }
+      mfgDateController.text = originalMfgDate;
+      isMfgDateValid = true;
     }
 
     showGeneralDialog(
@@ -2518,7 +2515,7 @@ class _LotDialogState extends State<LotDialog> {
                                 setState(() {
                                   mfgDateController.text = formattedDate;
                                   isMfgDateValid = true;
-                                  // item['mfg_date'] = formattedDate;
+                                  check = true;
                                 });
                               }
                             },
@@ -2529,9 +2526,8 @@ class _LotDialogState extends State<LotDialog> {
                           ? 'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024'
                           : null,
                       errorStyle: TextStyle(
-                        // Add the errorStyle property here
-                        fontSize: 8.0, // Set your desired font size
-                        color: Colors.red, // Customize the error color
+                        fontSize: 8.0,
+                        color: Colors.red,
                       ),
                     ),
                     onChanged: (value) {
@@ -2578,7 +2574,6 @@ class _LotDialogState extends State<LotDialog> {
                               offset: formattedDate.length),
                         );
                         isMfgDateValid = numbersOnly.isEmpty || isValidDate;
-                        item['mfg_date'] = formattedDate;
                       });
                     },
                     keyboardType: TextInputType.number,
@@ -2705,7 +2700,6 @@ class _LotDialogState extends State<LotDialog> {
                                 contentPadding:
                                     EdgeInsets.symmetric(horizontal: 16.0),
                               ),
-                              // keyboardType: TextInputType.number,
                               textAlign: TextAlign.left,
                             ),
                             SizedBox(height: 16.0),
@@ -2754,9 +2748,7 @@ class _LotDialogState extends State<LotDialog> {
                         child: IconButton(
                           icon: Icon(Icons.close),
                           onPressed: () {
-                            print('fffffffffffff $check');
                             if (check == true) {
-                              // or simply if (check)
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -2769,21 +2761,16 @@ class _LotDialogState extends State<LotDialog> {
                                           children: [
                                             Icon(
                                               Icons.notification_important,
-                                              color: Colors
-                                                  .red, // Set the color to red
+                                              color: Colors.red,
                                             ),
-                                            SizedBox(
-                                                width:
-                                                    8), // Add some space between the icon and the text
-                                            Text('แจ้งเตือน'), // Title text
+                                            SizedBox(width: 8),
+                                            Text('แจ้งเตือน'),
                                           ],
                                         ),
                                         IconButton(
-                                          icon:
-                                              Icon(Icons.close), // Close button
+                                          icon: Icon(Icons.close),
                                           onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
+                                            Navigator.of(context).pop();
                                           },
                                         ),
                                       ],
@@ -2801,13 +2788,11 @@ class _LotDialogState extends State<LotDialog> {
                                       TextButton(
                                         child: Text('ตกลง'),
                                         onPressed: () {
-                                          lotQtyController.clear();
-                                          lotSupplierController.clear();
-                                          mfgDateController
-                                              .clear(); // This clears the text field
+                                          clearFields(); // Reset to original values
                                           Navigator.of(context)
-                                              .pop(); // This closes the dialog
-                                          Navigator.of(context).pop();
+                                              .pop(); // Close dialog
+                                          Navigator.of(context)
+                                              .pop(); // Close main dialog
                                         },
                                       ),
                                     ],
