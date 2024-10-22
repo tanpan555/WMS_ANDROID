@@ -104,8 +104,8 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   String? selectedwhOUTCode;
   Future<void> fetchwhOUTCodes() async {
     try {
-      final response = await http
-          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/WH_OUT'));
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/WH_OUT/${gb.P_ERP_OU_CODE}/${gb.ATTR1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -415,8 +415,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     Function(Map<String, dynamic>?) onChanged,
     String label,
   ) {
-    String displayText =
-        'เลือก Location ต้นทาง'; // Default text: "Select Destination Warehouse"
+    String displayText = 'เลือก Location ต้นทาง'; // Default text
     if (selectedValue != null) {
       final selectedItem = items.firstWhere(
         (item) => item['location_code'] == selectedValue,
@@ -438,15 +437,21 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
           labelStyle: TextStyle(color: Colors.black, fontSize: 16),
         ),
         child: Row(
-          mainAxisAlignment:
-              MainAxisAlignment.spaceBetween, // Align text and arrow
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              displayText ?? 'Select Location',
-              style: TextStyle(color: Colors.black),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Text(
+                  displayText ?? 'Select Location',
+                  style: TextStyle(color: Colors.black),
+                  overflow: TextOverflow
+                      .visible, // Allow text to be visible when scrolling
+                ),
+              ),
             ),
             Icon(
-              Icons.arrow_drop_down, // Dropdown arrow icon
+              Icons.arrow_drop_down,
               color: Colors.grey,
             ),
           ],
@@ -550,7 +555,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                                 subtitle: Text(
                                   locationName,
                                   style: TextStyle(
-                                      color: Colors.grey, fontSize: 12),
+                                      color: Colors.black, fontSize: 12),
                                 ),
                                 onTap: () {
                                   onChanged(
@@ -695,9 +700,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     Function(Map<String, dynamic>?) onChanged,
     String label,
   ) {
-    // Find the selected warehouse name
-    String displayText =
-        'เลือกคลังปลายทาง'; // Default text: "Select Destination Warehouse"
+    String displayText = 'เลือกคลังปลายทาง'; // Default text
     if (selectedValue != null) {
       final selectedItem = items.firstWhere(
         (item) => item['ware_code'] == selectedValue,
@@ -722,10 +725,14 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Text(
-                displayText,
-                style: TextStyle(color: Colors.black),
-                overflow: TextOverflow.ellipsis,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Text(
+                  displayText,
+                  style: TextStyle(color: Colors.black),
+                  overflow:
+                      TextOverflow.visible, // Changed from ellipsis to visible
+                ),
               ),
             ),
             Icon(
@@ -833,7 +840,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                                 subtitle: Text(
                                   locationName ?? '',
                                   style: TextStyle(
-                                    color: Colors.grey,
+                                    color: Colors.black,
                                     fontSize: 12,
                                   ),
                                 ),
@@ -866,8 +873,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     Function(Map<String, dynamic>?) onChanged,
     String label,
   ) {
-    String displayText =
-        'เลือก Location ต้นทาง'; // Default text: "Select Destination Warehouse"
+    String displayText = 'เลือก Location ต้นทาง'; // Default text
     if (selectedValue != null) {
       final selectedItem = items.firstWhere(
         (item) => item['location_code'] == selectedValue,
@@ -889,15 +895,20 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
           labelStyle: TextStyle(color: Colors.black, fontSize: 16),
         ),
         child: Row(
-          mainAxisAlignment:
-              MainAxisAlignment.spaceBetween, // Align text and arrow
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              displayText ?? 'เลือก Location ปลายทาง',
-              style: TextStyle(color: Colors.black),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Text(
+                  displayText ?? 'เลือก Location ปลายทาง',
+                  style: TextStyle(color: Colors.black),
+                  overflow: TextOverflow.visible,
+                ),
+              ),
             ),
             Icon(
-              Icons.arrow_drop_down, // Dropdown arrow icon
+              Icons.arrow_drop_down,
               color: Colors.grey,
             ),
           ],

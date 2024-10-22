@@ -4,6 +4,7 @@ import 'package:wms_android/SSFGDT17/SSFGDT17_SEARCH.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
 import 'SSFGDT17_MAIN.dart';
+import 'package:wms_android/Global_Parameter.dart' as gb;
 
 class SSFGDT17_MENU extends StatefulWidget {
   final String pWareCode;
@@ -34,6 +35,8 @@ class _SSFGDT17_MENUState extends State<SSFGDT17_MENU> {
   @override
   void initState() {
     super.initState();
+    print('=================================');
+    print(gb.ATTR1);
     print('pWareCode: ${widget.pWareCode}');
     print('pWareName: ${widget.pWareName}');
     print('p_ou_code: ${widget.p_ou_code}');

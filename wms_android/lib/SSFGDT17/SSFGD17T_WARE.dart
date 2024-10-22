@@ -27,6 +27,8 @@ class _SSFGDT17_WAREState extends State<SSFGDT17_WARE> {
   @override
   void initState() {
     super.initState();
+    print('=================================');
+    print(gb.ATTR1);
     fetchData();
   }
 
