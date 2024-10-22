@@ -325,7 +325,7 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
                                                         item['usage_qty'] !=
                                                                 null
                                                             ? NumberFormat(
-                                                                    '#,###,###,###,###,###.##')
+                                                                    '#,###,###,###,###,###')
                                                                 .format(item[
                                                                     'usage_qty'])
                                                             : '',
