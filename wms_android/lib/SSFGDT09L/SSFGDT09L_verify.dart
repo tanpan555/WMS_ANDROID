@@ -184,6 +184,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
   void loadNextPage() {
     if (nextLink != '') {
       setState(() {
+        showRecordRRR = 0;
         print('nextLink $nextLink');
         isLoading = true;
       });
@@ -194,6 +195,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
   void loadPrevPage() {
     if (prevLink != '') {
       setState(() {
+        showRecordRRR = 0;
         isLoading = true;
       });
       fetchData(prevLink);

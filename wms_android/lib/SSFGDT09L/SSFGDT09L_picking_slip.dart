@@ -121,6 +121,7 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
   void loadNextPage() {
     if (nextLink != '') {
       setState(() {
+        showRecordRRR = 0;
         print('nextLink $nextLink');
         isLoading = true;
       });
@@ -131,6 +132,7 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
   void loadPrevPage() {
     if (prevLink != '') {
       setState(() {
+        showRecordRRR = 0;
         isLoading = true;
       });
       fetchData(prevLink);

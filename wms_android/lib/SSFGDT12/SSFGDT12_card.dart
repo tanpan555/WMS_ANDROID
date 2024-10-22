@@ -154,6 +154,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
     if (nextLink != '') {
       if (mounted) {
         setState(() {
+          showRecordRRR = 0;
           print('nextLink $nextLink');
           isLoading = true;
         });
@@ -166,6 +167,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
     if (prevLink != '') {
       if (mounted) {
         setState(() {
+          showRecordRRR = 0;
           isLoading = true;
         });
       }
@@ -195,6 +197,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
       // ถ้าไม่พบค่า ให้ผลลัพธ์เป็น 0
       print('ไม่พบตัวเลขท้ายสุด, ส่งกลับเป็น 0');
     }
+    // match = null;
 
     // พิมพ์ค่าที่ได้
     print('ผลลัพธ์: $showRecord');

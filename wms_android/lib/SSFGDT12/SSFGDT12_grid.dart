@@ -162,6 +162,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   void loadNextPage() {
     if (nextLink != '') {
       setState(() {
+        showRecordRRR = 0;
         print('nextLink $nextLink');
         isLoading = true;
       });
@@ -172,6 +173,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   void loadPrevPage() {
     if (prevLink != '') {
       setState(() {
+        showRecordRRR = 0;
         isLoading = true;
       });
       fetchData(prevLink);
@@ -1025,6 +1027,10 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                               const SizedBox(height: 4),
                                               SizedBox(
                                                 child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisSize: MainAxisSize
+                                                      .min, // ให้ Row ใช้ขนาดที่จำเป็น
                                                   children: [
                                                     const Text(
                                                       'หมายเหตุสินค้า : ',
@@ -1033,14 +1039,23 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                               FontWeight.bold,
                                                           fontSize: 14.0),
                                                     ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item[
-                                                          'remark'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                      child: Text(
-                                                        item['remark'] ?? '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
+                                                    Flexible(
+                                                      // ใช้ Flexible แทน Expanded เพื่อให้ขยายตามขนาดที่จำเป็น
+                                                      child:
+                                                          CustomContainerStyles
+                                                              .styledContainer(
+                                                        item['remark'],
+                                                        child: Text(
+                                                          item['remark'] ?? '',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                          softWrap:
+                                                              true, // เปิดให้ตัดบรรทัดเมื่อความยาวเกิน
+                                                          overflow: TextOverflow
+                                                              .visible, // แสดงข้อความทั้งหมด
+                                                        ),
                                                       ),
                                                     ),
                                                   ],

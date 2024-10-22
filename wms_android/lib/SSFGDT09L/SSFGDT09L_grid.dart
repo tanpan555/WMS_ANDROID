@@ -134,6 +134,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   void loadNextPage() {
     if (nextLink != '') {
       setState(() {
+        showRecordRRR = 0;
         print('nextLink $nextLink');
         isLoading = true;
       });
@@ -144,6 +145,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   void loadPrevPage() {
     if (prevLink != '') {
       setState(() {
+        showRecordRRR = 0;
         isLoading = true;
       });
       fetchData(prevLink);

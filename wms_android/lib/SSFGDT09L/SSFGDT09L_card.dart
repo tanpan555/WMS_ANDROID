@@ -189,6 +189,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     if (nextLink != '') {
       if (mounted) {
         setState(() {
+          showRecordRRR = 0;
           print('nextLink $nextLink');
           // showRecord = 0;
           isLoading = true;
@@ -202,7 +203,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     if (prevLink != '') {
       if (mounted) {
         setState(() {
-          // showRecord = 0;
+          showRecordRRR = 0;
           isLoading = true;
         });
       }

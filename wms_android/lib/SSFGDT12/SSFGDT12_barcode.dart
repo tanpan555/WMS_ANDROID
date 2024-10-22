@@ -323,10 +323,10 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   ),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child: const Center(
+                child: Center(
                   child: Text(
-                    'widget.docNo',
-                    style: TextStyle(
+                    widget.docNo,
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
