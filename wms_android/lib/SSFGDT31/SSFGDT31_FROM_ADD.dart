@@ -490,8 +490,12 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                 subtitle: Text(description),
                                 onTap: () {
                                   setState(() {
+                                    final selectedDescription =
+                                        item['d']?.toString() ?? '';
                                     selectedcCode = code; // Set selected code
-                                    _CcodeController.text = selectedcCode ?? '';
+                                    _CcodeController.text =
+                                        selectedcCode.toString() +
+                                            selectedDescription;
                                     print('$selectedcCode');
                                   });
                                   Navigator.of(context)

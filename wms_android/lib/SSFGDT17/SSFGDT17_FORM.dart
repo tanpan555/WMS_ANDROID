@@ -296,9 +296,12 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                             subtitle: Text(desc),
                             onTap: () {
                               setState(() {
+                                final selectedDescription =
+                                    item['cancel_desc']?.toString() ?? '';
                                 selectedcCode = code; // Set selected code
                                 _CcodeController.text =
-                                    selectedcCode.toString();
+                                    selectedcCode.toString() +
+                                        selectedDescription;
                                 print('$selectedcCode');
                               });
                               Navigator.of(context).pop(); // Close the dialog
