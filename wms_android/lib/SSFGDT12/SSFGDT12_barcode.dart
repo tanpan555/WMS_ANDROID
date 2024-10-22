@@ -171,7 +171,6 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
           });
         }
-        print('dataGradeStatuslist : $dataGradeStatuslist');
       } else {
         throw Exception(
             'fetchDatadataGradeStatuslist Failed to load fetchData');
@@ -192,7 +191,6 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
         // ถอดรหัสข้อมูล JSON จาก response
         final Map<String, dynamic> dataBarcode =
             jsonDecode(utf8.decode(response.bodyBytes));
-        print('dataBarcode : $dataBarcode type : ${dataBarcode.runtimeType}');
         if (mounted) {
           setState(() {
             poMessageBarcode = dataBarcode['po_message'] ?? '';
@@ -248,7 +246,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
       'p_grad_status': statusGridBarcode,
       'p_app_user': globals.APP_USER,
     });
-    print('Request body: $body');
+    // print('Request body: $body');
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -257,10 +255,8 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
       );
 
       if (response.statusCode == 200) {
-        // ถอดรหัสข้อมูล JSON จาก response
-        final Map<String, dynamic> dataSubmit = jsonDecode(utf8
-            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
-        print('dataSubmit : $dataSubmit type : ${dataSubmit.runtimeType}');
+        final Map<String, dynamic> dataSubmit =
+            jsonDecode(utf8.decode(response.bodyBytes));
         if (mounted) {
           setState(() {
             statusSubmit = dataSubmit['po_status'];
@@ -327,9 +323,9 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                   ),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child: Center(
+                child: const Center(
                   child: Text(
-                    '${widget.docNo}',
+                    'widget.docNo',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -352,8 +348,8 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                 ),
                 child: Center(
                   child: Text(
-                    '$seqNumberBarcodeString',
-                    style: TextStyle(
+                    seqNumberBarcodeString,
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -367,12 +363,12 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                 controller: dataLocatorListBarcodeController,
                 readOnly: true,
                 onTap: () => showDialogSelectDataLocator(),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: InputBorder.none,
                   filled: true,
                   fillColor: Colors.white,
                   labelText: 'Locator ตรวจนับ',
-                  labelStyle: const TextStyle(
+                  labelStyle: TextStyle(
                     color: Colors.black87,
                   ),
                   suffixIcon: Icon(
@@ -415,12 +411,12 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                     child: TextFormField(
                       controller: barcodeTextController,
                       focusNode: _focusNode,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
                         filled: true,
                         fillColor: Colors.white,
                         labelText: 'Barcode',
-                        labelStyle: const TextStyle(
+                        labelStyle: TextStyle(
                           color: Colors.black87,
                         ),
                       ),
@@ -477,12 +473,12 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
               //////////////////////////////////////////////////////////////////////////////
               TextFormField(
                 controller: lotNumberBarcodeController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: InputBorder.none,
                   filled: true,
                   fillColor: Colors.white,
                   labelText: 'Lot Number',
-                  labelStyle: const TextStyle(
+                  labelStyle: TextStyle(
                     color: Colors.black87,
                   ),
                 ),
@@ -496,12 +492,12 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
               //////////////////////////////////////////////////////////////////////////////
               TextFormField(
                 controller: countQuantityBarcodeController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: InputBorder.none,
                   filled: true,
                   fillColor: Colors.white,
                   labelText: 'Count Quantity',
-                  labelStyle: const TextStyle(
+                  labelStyle: TextStyle(
                     color: Colors.black87,
                   ),
                 ),
@@ -537,12 +533,12 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                 controller: dataGridStatusBarcodeController,
                 readOnly: true,
                 onTap: () => showDialogSelectStatus(),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: InputBorder.none,
                   filled: true,
                   fillColor: Colors.white,
                   labelText: 'สภาพ',
-                  labelStyle: const TextStyle(
+                  labelStyle: TextStyle(
                     color: Colors.black87,
                   ),
                   suffixIcon: Icon(
