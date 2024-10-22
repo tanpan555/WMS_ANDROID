@@ -922,13 +922,19 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                                       ? loadPrevPage
                                                       : null,
                                                   icon: const Icon(
-                                                      MyIcons
-                                                          .arrow_back_ios_rounded,
-                                                      color: Colors.black),
+                                                    MyIcons
+                                                        .arrow_back_ios_rounded,
+                                                    color: Colors.black,
+                                                    size: 20.0,
+                                                  ),
                                                   label: const Text(
                                                     'Previous',
                                                     style: TextStyle(
-                                                        color: Colors.black),
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13,
+                                                    ),
                                                   ),
                                                   style: AppStyles
                                                       .PreviousButtonStyle(),
@@ -936,15 +942,21 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                               : ElevatedButton.icon(
                                                   onPressed: null,
                                                   icon: const Icon(
-                                                      MyIcons
-                                                          .arrow_back_ios_rounded,
-                                                      color: Color.fromARGB(
-                                                          255, 23, 21, 59)),
+                                                    MyIcons
+                                                        .arrow_back_ios_rounded,
+                                                    color: Color.fromARGB(
+                                                        255, 23, 21, 59),
+                                                    size: 20.0,
+                                                  ),
                                                   label: const Text(
                                                     'Previous',
                                                     style: TextStyle(
-                                                        color: Color.fromARGB(
-                                                            255, 23, 21, 59)),
+                                                      color: Color.fromARGB(
+                                                          255, 23, 21, 59),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13,
+                                                    ),
                                                   ),
                                                   style: AppStyles
                                                       .DisablePreviousButtonStyle(),
@@ -986,14 +998,19 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                                       Text(
                                                         'Next',
                                                         style: TextStyle(
-                                                            color:
-                                                                Colors.black),
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 13,
+                                                        ),
                                                       ),
                                                       SizedBox(width: 7),
                                                       Icon(
-                                                          MyIcons
-                                                              .arrow_forward_ios_rounded,
-                                                          color: Colors.black),
+                                                        MyIcons
+                                                            .arrow_forward_ios_rounded,
+                                                        color: Colors.black,
+                                                        size: 20.0,
+                                                      ),
                                                     ],
                                                   ),
                                                 )
@@ -1008,19 +1025,21 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                                       Text(
                                                         'Next',
                                                         style: TextStyle(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    23,
-                                                                    21,
-                                                                    59)),
+                                                          color: Color.fromARGB(
+                                                              255, 23, 21, 59),
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 13,
+                                                        ),
                                                       ),
                                                       SizedBox(width: 7),
                                                       Icon(
-                                                          MyIcons
-                                                              .arrow_forward_ios_rounded,
-                                                          color: Color.fromARGB(
-                                                              255, 23, 21, 59)),
+                                                        MyIcons
+                                                            .arrow_forward_ios_rounded,
+                                                        color: Color.fromARGB(
+                                                            255, 23, 21, 59),
+                                                        size: 20.0,
+                                                      ),
                                                     ],
                                                   ),
                                                 ),
@@ -1047,12 +1066,17 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                                 ? loadPrevPage
                                                 : null,
                                             icon: const Icon(
-                                                MyIcons.arrow_back_ios_rounded,
-                                                color: Colors.black),
+                                              MyIcons.arrow_back_ios_rounded,
+                                              color: Colors.black,
+                                              size: 20.0,
+                                            ),
                                             label: const Text(
                                               'Previous',
                                               style: TextStyle(
-                                                  color: Colors.black),
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                              ),
                                             ),
                                             style:
                                                 AppStyles.PreviousButtonStyle(),
@@ -1060,14 +1084,19 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                         : ElevatedButton.icon(
                                             onPressed: null,
                                             icon: const Icon(
-                                                MyIcons.arrow_back_ios_rounded,
-                                                color: Color.fromARGB(
-                                                    255, 23, 21, 59)),
+                                              MyIcons.arrow_back_ios_rounded,
+                                              color: Color.fromARGB(
+                                                  255, 23, 21, 59),
+                                              size: 20.0,
+                                            ),
                                             label: const Text(
                                               'Previous',
                                               style: TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 23, 21, 59)),
+                                                color: Color.fromARGB(
+                                                    255, 23, 21, 59),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                              ),
                                             ),
                                             style: AppStyles
                                                 .DisablePreviousButtonStyle(),
@@ -1106,13 +1135,18 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                                 Text(
                                                   'Next',
                                                   style: TextStyle(
-                                                      color: Colors.black),
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                  ),
                                                 ),
                                                 SizedBox(width: 7),
                                                 Icon(
-                                                    MyIcons
-                                                        .arrow_forward_ios_rounded,
-                                                    color: Colors.black),
+                                                  MyIcons
+                                                      .arrow_forward_ios_rounded,
+                                                  color: Colors.black,
+                                                  size: 20.0,
+                                                ),
                                               ],
                                             ),
                                           )
@@ -1126,15 +1160,20 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                                 Text(
                                                   'Next',
                                                   style: TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 23, 21, 59)),
+                                                    color: Color.fromARGB(
+                                                        255, 23, 21, 59),
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                  ),
                                                 ),
                                                 SizedBox(width: 7),
                                                 Icon(
-                                                    MyIcons
-                                                        .arrow_forward_ios_rounded,
-                                                    color: Color.fromARGB(
-                                                        255, 23, 21, 59)),
+                                                  MyIcons
+                                                      .arrow_forward_ios_rounded,
+                                                  color: Color.fromARGB(
+                                                      255, 23, 21, 59),
+                                                  size: 20.0,
+                                                ),
                                               ],
                                             ),
                                           ),

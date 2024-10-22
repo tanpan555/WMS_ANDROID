@@ -1181,13 +1181,19 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                       ? loadPrevPage
                                                       : null,
                                                   icon: const Icon(
-                                                      MyIcons
-                                                          .arrow_back_ios_rounded,
-                                                      color: Colors.black),
+                                                    MyIcons
+                                                        .arrow_back_ios_rounded,
+                                                    color: Colors.black,
+                                                    size: 20.0,
+                                                  ),
                                                   label: const Text(
                                                     'Previous',
                                                     style: TextStyle(
-                                                        color: Colors.black),
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13,
+                                                    ),
                                                   ),
                                                   style: AppStyles
                                                       .PreviousButtonStyle(),
@@ -1195,15 +1201,21 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                               : ElevatedButton.icon(
                                                   onPressed: null,
                                                   icon: const Icon(
-                                                      MyIcons
-                                                          .arrow_back_ios_rounded,
-                                                      color: Color.fromARGB(
-                                                          255, 23, 21, 59)),
+                                                    MyIcons
+                                                        .arrow_back_ios_rounded,
+                                                    color: Color.fromARGB(
+                                                        255, 23, 21, 59),
+                                                    size: 20.0,
+                                                  ),
                                                   label: const Text(
                                                     'Previous',
                                                     style: TextStyle(
-                                                        color: Color.fromARGB(
-                                                            255, 23, 21, 59)),
+                                                      color: Color.fromARGB(
+                                                          255, 23, 21, 59),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13,
+                                                    ),
                                                   ),
                                                   style: AppStyles
                                                       .DisablePreviousButtonStyle(),
@@ -1245,14 +1257,19 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                       Text(
                                                         'Next',
                                                         style: TextStyle(
-                                                            color:
-                                                                Colors.black),
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 13,
+                                                        ),
                                                       ),
                                                       SizedBox(width: 7),
                                                       Icon(
-                                                          MyIcons
-                                                              .arrow_forward_ios_rounded,
-                                                          color: Colors.black),
+                                                        MyIcons
+                                                            .arrow_forward_ios_rounded,
+                                                        color: Colors.black,
+                                                        size: 20.0,
+                                                      ),
                                                     ],
                                                   ),
                                                 )
@@ -1267,19 +1284,21 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                       Text(
                                                         'Next',
                                                         style: TextStyle(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    23,
-                                                                    21,
-                                                                    59)),
+                                                          color: Color.fromARGB(
+                                                              255, 23, 21, 59),
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 13,
+                                                        ),
                                                       ),
                                                       SizedBox(width: 7),
                                                       Icon(
-                                                          MyIcons
-                                                              .arrow_forward_ios_rounded,
-                                                          color: Color.fromARGB(
-                                                              255, 23, 21, 59)),
+                                                        MyIcons
+                                                            .arrow_forward_ios_rounded,
+                                                        color: Color.fromARGB(
+                                                            255, 23, 21, 59),
+                                                        size: 20,
+                                                      ),
                                                     ],
                                                   ),
                                                 ),
@@ -1608,6 +1627,8 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     const SizedBox(height: 8.0),
                     TextFormField(
                       controller: remarkController,
+                      minLines: 1,
+                      maxLines: 5,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black)),

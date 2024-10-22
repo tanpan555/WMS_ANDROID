@@ -157,7 +157,7 @@ class AppStyles {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      minimumSize: const Size(100, 35),
+      minimumSize: const Size(90, 35),
       padding: const EdgeInsets.all(0),
     );
   }
@@ -168,7 +168,7 @@ class AppStyles {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      minimumSize: const Size(100, 35),
+      minimumSize: const Size(90, 35),
       padding: const EdgeInsets.all(0),
     );
   }
@@ -179,7 +179,7 @@ class AppStyles {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      minimumSize: const Size(100, 35),
+      minimumSize: const Size(90, 35),
       padding: const EdgeInsets.all(0),
     );
   }
@@ -190,7 +190,7 @@ class AppStyles {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      minimumSize: const Size(100, 35),
+      minimumSize: const Size(90, 35),
       padding: const EdgeInsets.all(0),
     );
   }
