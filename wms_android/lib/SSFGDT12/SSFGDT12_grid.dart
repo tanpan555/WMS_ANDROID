@@ -1047,6 +1047,80 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                                                 ),
                                               ),
                                               const SizedBox(height: 4),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Expanded(
+                                                    // flex: 5,
+                                                    child: SizedBox(
+                                                      child: Row(
+                                                        // mainAxisAlignment:
+                                                        //     MainAxisAlignment
+                                                        //         .start,
+                                                        children: [
+                                                          const Text(
+                                                            'หน่วยนับ : ',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 14.0),
+                                                          ),
+                                                          CustomContainerStyles
+                                                              .styledContainer(
+                                                            item['ums_code']
+                                                                .toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                            child: Text(
+                                                              item['ums_code'],
+                                                              style:
+                                                                  const TextStyle(
+                                                                      fontSize:
+                                                                          14.0),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  // const SizedBox(width: 4.0),
+                                                  // Expanded(
+                                                  //   flex: 5,
+                                                  //   child: SizedBox(
+                                                  //     child: Row(
+                                                  //       // mainAxisAlignment:
+                                                  //       //     MainAxisAlignment
+                                                  //       //         .end,
+                                                  //       children: [
+                                                  //         const Text(
+                                                  //           '',
+                                                  //           style: TextStyle(
+                                                  //               fontWeight:
+                                                  //                   FontWeight
+                                                  //                       .bold,
+                                                  //               fontSize: 14.0),
+                                                  //         ),
+                                                  //         CustomContainerStyles
+                                                  //             .styledContainer(
+                                                  //           item[
+                                                  //               'get_ums_name'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                  //           child: Text(
+                                                  //             item['get_ums_name'] ??
+                                                  //                 '',
+                                                  //             style:
+                                                  //                 const TextStyle(
+                                                  //                     fontSize:
+                                                  //                         14.0),
+                                                  //           ),
+                                                  //         ),
+                                                  //       ],
+                                                  //     ),
+                                                  //   ),
+                                                  // )
+                                                ],
+                                              ),
+                                              const SizedBox(height: 4),
                                               if (statusForCheck == 'T' ||
                                                   statusForCheck == 'N') ...[
                                                 Row(
