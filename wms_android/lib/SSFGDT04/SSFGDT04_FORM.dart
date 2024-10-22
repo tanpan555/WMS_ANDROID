@@ -1176,6 +1176,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                       final filteredItems =
                                                           docTypeItems
                                                               .where((item) {
+                                                        final typeString =
+                                                            item['doc_type']
+                                                                .toString();
                                                         final docString =
                                                             item['doc_desc']
                                                                 .toString();
@@ -1197,6 +1200,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                                     null &&
                                                                 docInt ==
                                                                     searchQueryInt) ||
+                                                            typeString
+                                                                .toLowerCase()
+                                                                .contains(
+                                                                    searchQuery) ||
                                                             docString
                                                                 .toLowerCase()
                                                                 .contains(
@@ -1218,6 +1225,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                           final item =
                                                               filteredItems[
                                                                   index];
+                                                          final type =
+                                                              item['doc_type']
+                                                                  .toString();
                                                           final doc =
                                                               item['doc_desc']
                                                                   .toString();
@@ -1228,6 +1238,19 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                             title: RichText(
                                                               text: TextSpan(
                                                                 children: [
+                                                                  TextSpan(
+                                                                    text:
+                                                                        '$type\n',
+                                                                    style:
+                                                                          TextStyle(
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
+                                                                  ),
                                                                   TextSpan(
                                                                     text:
                                                                         '$doc',
@@ -2212,21 +2235,25 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 0),
                             child: TextField(
+                              minLines: 2,
+                              maxLines: 5,
                               decoration: InputDecoration(
                                 labelText: 'หมายเหตุ',
                                 filled: true,
                                 fillColor: Colors.white,
                                 labelStyle: TextStyle(color: Colors.black),
                                 border: InputBorder.none,
+                                floatingLabelBehavior: FloatingLabelBehavior
+                                    .always, // บังคับให้ label อยู่ขอบบนเสมอ
                               ),
                               controller: _noteController,
-                              onChanged: (value) => {
+                              onChanged: (value) {
                                 setState(() {
                                   note = value;
                                   if (note != _noteController) {
                                     checkUpdateData = true;
                                   }
-                                }),
+                                });
                               },
                             ),
                           ),

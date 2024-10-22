@@ -134,6 +134,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   void loadNextPage() {
     if (nextLink != '') {
       setState(() {
+        showRecordRRR = 0;
         print('nextLink $nextLink');
         isLoading = true;
       });
@@ -144,6 +145,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   void loadPrevPage() {
     if (prevLink != '') {
       setState(() {
+        showRecordRRR = 0;
         isLoading = true;
       });
       fetchData(prevLink);
@@ -935,25 +937,36 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                             ? loadPrevPage
                                             : null,
                                         icon: const Icon(
-                                            MyIcons.arrow_back_ios_rounded,
-                                            color: Colors.black),
+                                          MyIcons.arrow_back_ios_rounded,
+                                          color: Colors.black,
+                                          size: 20.0,
+                                        ),
                                         label: const Text(
                                           'Previous',
-                                          style: TextStyle(color: Colors.black),
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13,
+                                          ),
                                         ),
                                         style: AppStyles.PreviousButtonStyle(),
                                       )
                                     : ElevatedButton.icon(
                                         onPressed: null,
                                         icon: const Icon(
-                                            MyIcons.arrow_back_ios_rounded,
-                                            color: Color.fromARGB(
-                                                255, 23, 21, 59)),
+                                          MyIcons.arrow_back_ios_rounded,
+                                          color:
+                                              Color.fromARGB(255, 23, 21, 59),
+                                          size: 20.0,
+                                        ),
                                         label: const Text(
                                           'Previous',
                                           style: TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 23, 21, 59)),
+                                            color:
+                                                Color.fromARGB(255, 23, 21, 59),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13,
+                                          ),
                                         ),
                                         style: AppStyles
                                             .DisablePreviousButtonStyle(),
@@ -992,13 +1005,17 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                             Text(
                                               'Next',
                                               style: TextStyle(
-                                                  color: Colors.black),
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                              ),
                                             ),
                                             SizedBox(width: 7),
                                             Icon(
-                                                MyIcons
-                                                    .arrow_forward_ios_rounded,
-                                                color: Colors.black),
+                                              MyIcons.arrow_forward_ios_rounded,
+                                              color: Colors.black,
+                                              size: 20.0,
+                                            ),
                                           ],
                                         ),
                                       )
@@ -1012,15 +1029,19 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                             Text(
                                               'Next',
                                               style: TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 23, 21, 59)),
+                                                color: Color.fromARGB(
+                                                    255, 23, 21, 59),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                              ),
                                             ),
                                             SizedBox(width: 7),
                                             Icon(
-                                                MyIcons
-                                                    .arrow_forward_ios_rounded,
-                                                color: Color.fromARGB(
-                                                    255, 23, 21, 59)),
+                                              MyIcons.arrow_forward_ios_rounded,
+                                              color: Color.fromARGB(
+                                                  255, 23, 21, 59),
+                                              size: 20.0,
+                                            ),
                                           ],
                                         ),
                                       ),

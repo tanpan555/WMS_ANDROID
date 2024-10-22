@@ -37,9 +37,9 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   final String sDateFormat = "dd-MM-yyyy";
   final List<dynamic> dropdownItems = [
     'ทั้งหมด',
-    'ระหว่างบันทึก',
-    'ยืนยันการรับ',
     'ยกเลิก',
+    'ยืนยันการรับ',
+    'ระหว่างบันทึก',
   ];
   final dateRegExp =
       RegExp(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$");

@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wms_android/ICON.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
@@ -29,6 +30,11 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
   List<dynamic> dataCard = [];
 
   bool isLoading = false;
+  String? nextLink = '';
+  String? prevLink = '';
+
+  String urlLoad = '';
+  int showRecordRRR = 0;
 
 //  -----------------------------  p  -----------------------------  \\
   String? P_LIN_ID;
@@ -53,34 +59,111 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
     super.initState();
   }
 
-  Future<void> fetchData() async {
+  Future<void> fetchData([String? url]) async {
     isLoading = true;
+    final String requestUrl = url ??
+        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO}';
     try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO}'));
+      final response = await http.get(Uri.parse(requestUrl));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
-        print('Fetched data: $jsonDecode');
+        final parsedResponse = json.decode(responseBody);
+
         if (mounted) {
           setState(() {
-            dataCard =
-                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+            if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+              dataCard = parsedResponse['items'];
+            } else {
+              dataCard = [];
+            }
 
+            List<dynamic> links = parsedResponse['links'] ?? [];
+            nextLink = getLink(links, 'next');
+            prevLink = getLink(links, 'prev');
+            urlLoad = url ??
+                'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO}';
+            if (url.toString().isNotEmpty) {
+              extractLastNumberFromUrl(url.toString() ==
+                      'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO}'
+                  ? 'null'
+                  : url.toString());
+            }
             isLoading = false;
           });
         }
-        print('dataCard : $dataCard');
       } else {
-        throw Exception('Failed to load fetchData');
+        if (mounted) {
+          setState(() {
+            print('Failed to load data: ${response.statusCode}');
+          });
+        }
+        print('HTTP Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
+      // Handle exceptions that may occur
       if (mounted) {
-        setState(() {});
+        setState(() {
+          // isLoading = false;
+          print('Error occurred: $e');
+        });
       }
-      print('ERROR IN Fetch Data : $e');
+      print('Exception: $e');
     }
+  }
+
+  String? getLink(List<dynamic> links, String rel) {
+    final link =
+        links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
+    return link != null ? link['href'] : null;
+  }
+
+  void loadNextPage() {
+    if (nextLink != '') {
+      setState(() {
+        showRecordRRR = 0;
+        print('nextLink $nextLink');
+        isLoading = true;
+      });
+      fetchData(nextLink);
+    }
+  }
+
+  void loadPrevPage() {
+    if (prevLink != '') {
+      setState(() {
+        showRecordRRR = 0;
+        isLoading = true;
+      });
+      fetchData(prevLink);
+    }
+  }
+
+  void extractLastNumberFromUrl(String url) {
+    // Regular Expression สำหรับจับค่าหลัง offset=
+    RegExp regExp = RegExp(r'offset=(\d+)$');
+    RegExpMatch? match = regExp.firstMatch(url);
+
+    // ตัวแปรสำหรับเก็บผลลัพธ์
+    int showRecord = 0; // ตั้งค่าเริ่มต้นเป็น 0
+
+    if (match != null) {
+      // แปลงค่าที่จับคู่ได้จาก String ไปเป็น int
+      showRecordRRR =
+          int.parse(match.group(1)!); // group(1) หมายถึงค่าหลัง offset=
+      print('ตัวเลขท้ายสุดคือ: $showRecord');
+      print('$showRecordRRR');
+      print('$showRecordRRR + 1 = ${showRecordRRR + 1}');
+      print('${dataCard.length}');
+      print(
+          '${dataCard.length} + $showRecordRRR = ${dataCard.length + showRecordRRR}');
+    } else {
+      // ถ้าไม่พบค่า ให้ผลลัพธ์เป็น 0
+      print('ไม่พบตัวเลขท้ายสุด, ส่งกลับเป็น 0');
+    }
+
+    // พิมพ์ค่าที่ได้
+    print('ผลลัพธ์: $showRecord');
   }
 
   Future<void> getPDF() async {
@@ -176,8 +259,9 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
       backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'Picking Silp', showExitWarning: false),
       body: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(children: [
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: [
             Row(
               children: [
                 ElevatedButton(
@@ -205,21 +289,29 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
                           ),
                         )
                       : ListView(
-                          children: dataCard.map((item) {
-                            return Card(
-                              elevation: 8.0,
-                              margin: EdgeInsets.symmetric(vertical: 8.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              color: Color.fromRGBO(204, 235, 252, 1.0),
-                              child: InkWell(
-                                  onTap: () {},
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  child: Stack(children: [
-                                    Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Column(
+                          children: [
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: dataCard.length,
+                              itemBuilder: (context, index) {
+                                final item = dataCard[index];
+
+                                return Card(
+                                  elevation: 8.0,
+                                  margin: EdgeInsets.symmetric(vertical: 8.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  color: Color.fromRGBO(204, 235, 252, 1.0),
+                                  child: InkWell(
+                                    onTap: () {},
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    child: Stack(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
@@ -393,13 +485,164 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
                                               ),
                                               const SizedBox(height: 4.0),
                                               // ---------------------------------------------------- \\
-                                            ]))
-                                  ])),
-                            );
-                          }).toList(),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            // =======================================================  dataCard.length > 1
+                            dataCard.isNotEmpty
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          prevLink != null
+                                              ? ElevatedButton.icon(
+                                                  onPressed: prevLink != null
+                                                      ? loadPrevPage
+                                                      : null,
+                                                  icon: const Icon(
+                                                    MyIcons
+                                                        .arrow_back_ios_rounded,
+                                                    color: Colors.black,
+                                                    size: 20.0,
+                                                  ),
+                                                  label: const Text(
+                                                    'Previous',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13,
+                                                    ),
+                                                  ),
+                                                  style: AppStyles
+                                                      .PreviousButtonStyle(),
+                                                )
+                                              : ElevatedButton.icon(
+                                                  onPressed: null,
+                                                  icon: const Icon(
+                                                    MyIcons
+                                                        .arrow_back_ios_rounded,
+                                                    color: Color.fromARGB(
+                                                        255, 23, 21, 59),
+                                                    size: 20.0,
+                                                  ),
+                                                  label: const Text(
+                                                    'Previous',
+                                                    style: TextStyle(
+                                                      color: Color.fromARGB(
+                                                          255, 23, 21, 59),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13,
+                                                    ),
+                                                  ),
+                                                  style: AppStyles
+                                                      .DisablePreviousButtonStyle(),
+                                                ),
+                                        ],
+                                      ),
+                                      // const SizedBox(width: 30),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Center(
+                                            child: Text(
+                                              '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? dataCard.length : showRecordRRR + dataCard.length}',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      // const SizedBox(width: 30),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          nextLink != null
+                                              ? ElevatedButton(
+                                                  onPressed: nextLink != null
+                                                      ? loadNextPage
+                                                      : null,
+                                                  style: AppStyles
+                                                      .NextRecordDataButtonStyle(),
+                                                  child: const Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        'Next',
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 13,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 7),
+                                                      Icon(
+                                                        MyIcons
+                                                            .arrow_forward_ios_rounded,
+                                                        color: Colors.black,
+                                                        size: 20.0,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              : ElevatedButton(
+                                                  onPressed: null,
+                                                  style: AppStyles
+                                                      .DisableNextRecordDataButtonStyle(),
+                                                  child: const Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        'Next',
+                                                        style: TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255, 23, 21, 59),
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 13,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 7),
+                                                      Icon(
+                                                        MyIcons
+                                                            .arrow_forward_ios_rounded,
+                                                        color: Color.fromARGB(
+                                                            255, 23, 21, 59),
+                                                        size: 20.0,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox.shrink(),
+                            // =======================================================  dataCard.length > 1
+                          ],
                         ),
             ),
-          ])),
+          ],
+        ),
+      ),
       bottomNavigationBar: BottomBar(
         currentPage: 'show',
       ),
