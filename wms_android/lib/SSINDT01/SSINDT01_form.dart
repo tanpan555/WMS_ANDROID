@@ -668,6 +668,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       },
       body: jsonEncode({
         'RECEIVE_NO': receiveNo,
+        'OU_CODE': 'LIK',
         'PO_REMARK': poRemark,
         'RECEIVE_DATE': receiveDate,
         'INVOICE_DATE': invoiceDate,
@@ -1078,7 +1079,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                     'วันที่ตรวจรับ',
                     style: TextStyle(color: Colors.black),
                   ),
-                  const SizedBox(width: 2), // Add a small space
+                  const SizedBox(width: 2),
                   Text(
                     '*',
                     style: TextStyle(color: Colors.red),
@@ -1098,8 +1099,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               suffixIcon: IconButton(
                 icon: const Icon(Icons.calendar_today, color: Colors.black),
                 onPressed: () {
-                  _selectReceiveDate(
-                      context); // Assume this opens a date picker
+                  _selectReceiveDate(context);
                 },
               ),
             ),
@@ -1108,25 +1108,78 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             ),
             readOnly: false,
             onChanged: (value) {
-              // Remove slashes and get digits only
-              String numbersOnly = value.replaceAll('/', '');
+              // Store the current cursor position and previous text
+              final previousText = receiveDateController.text;
+              final cursorPosition = receiveDateController.selection.start;
+              final isDeleting = value.length < previousText.length;
 
-              if (numbersOnly.length > 8) {
-                numbersOnly =
-                    numbersOnly.substring(0, 8); // Restrict to 8 characters
+              // Remove any non-digit characters
+              String numbersOnly = value.replaceAll(RegExp(r'[^\d]'), '');
+
+              // Handle deletion specifically
+              if (isDeleting) {
+                // If deleting at a slash position (position 2 or 5), move cursor back one more
+                if (cursorPosition == 3 || cursorPosition == 6) {
+                  numbersOnly = previousText
+                          .replaceAll('/', '')
+                          .substring(0, cursorPosition - 2) +
+                      previousText
+                          .replaceAll('/', '')
+                          .substring(cursorPosition - 1);
+                } else {
+                  // Normal deletion
+                  numbersOnly = previousText
+                          .replaceAll('/', '')
+                          .substring(0, cursorPosition - 1) +
+                      previousText
+                          .replaceAll('/', '')
+                          .substring(cursorPosition);
+                }
               }
 
-              // Format the date string to 'DD/MM/YYYY'
+              // Limit to 8 digits
+              if (numbersOnly.length > 8) {
+                numbersOnly = numbersOnly.substring(0, 8);
+              }
+
+              // Format the date string with slashes
               String formattedValue = '';
               for (int i = 0; i < numbersOnly.length; i++) {
                 if (i == 2 || i == 4) {
-                  formattedValue += '/'; // Add slashes after DD and MM
+                  formattedValue += '/';
                 }
                 formattedValue += numbersOnly[i];
               }
 
-              // Validate date if length is 8
-              bool isValidDate = false;
+              // Calculate new cursor position
+              int newCursorPosition = cursorPosition;
+
+              if (isDeleting) {
+                // When deleting, move cursor back appropriately
+                if (cursorPosition == 3 || cursorPosition == 6) {
+                  newCursorPosition = cursorPosition - 1;
+                } else {
+                  newCursorPosition = cursorPosition - 1;
+                }
+              } else {
+                // When adding numbers
+                if (numbersOnly.length >= 2 && cursorPosition > 2) {
+                  newCursorPosition++;
+                }
+                if (numbersOnly.length >= 4 && cursorPosition > 5) {
+                  newCursorPosition++;
+                }
+              }
+
+              // Ensure cursor position is within bounds
+              if (newCursorPosition < 0) {
+                newCursorPosition = 0;
+              }
+              if (newCursorPosition > formattedValue.length) {
+                newCursorPosition = formattedValue.length;
+              }
+
+              // Validate date if complete
               if (numbersOnly.length == 8) {
                 try {
                   final day = int.parse(numbersOnly.substring(0, 2));
@@ -1135,43 +1188,38 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
                   final date = DateTime(year, month, day);
 
-                  // Check if the date is valid
                   if (date.year == year &&
                       date.month == month &&
                       date.day == day) {
                     setState(() {
-                      isDateValid = true; // Mark as valid
-                      receiveDateController.text =
-                          date.toString(); // Store the selected date
+                      isDateValid = true;
                     });
                   } else {
                     throw Exception('Invalid date');
                   }
                 } catch (e) {
                   setState(() {
-                    isDateValid = false; // Invalid date
+                    isDateValid = false;
                   });
                 }
               } else {
                 setState(() {
-                  isDateValid = false; // Input is incomplete
+                  isDateValid = false;
                 });
               }
 
-              // Update the controller with the formatted value and move the cursor to the end
+              // Update controller with formatted value and cursor position
               setState(() {
                 receiveDateController.value = TextEditingValue(
                   text: formattedValue,
-                  selection:
-                      TextSelection.collapsed(offset: formattedValue.length),
+                  selection: TextSelection.collapsed(offset: newCursorPosition),
                 );
               });
             },
             keyboardType: TextInputType.number,
             inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly, // Allow only digits
-              LengthLimitingTextInputFormatter(
-                  10), // Limit to 10 (with slashes)
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(10),
             ],
           ),
           isDateValid == false
@@ -1477,7 +1525,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             style: const TextStyle(
               color: Colors.black87,
             ),
-            controller: receiveDateController,
+            controller: crDateController,
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.grey[300],
