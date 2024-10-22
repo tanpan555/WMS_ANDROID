@@ -333,7 +333,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
         'v_rec': widget.poReceiveNo,
         'v_cancel': selectedcCode,
         'APP_USER': gb.APP_USER,
-        'p_ou': gb.P_OU_CODE,
+        'p_ou': gb.P_ERP_OU_CODE,
         'p_erp_ou': gb.P_ERP_OU_CODE,
       }),
     );
@@ -444,9 +444,13 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                             onTap: () {
                               setState(() {
                                 selectedcCode = code; // Set selected code
-                                _CcodeController.text =
-                                    selectedcCode.toString();
-                                print('$selectedcCode');
+                                final selectedDescription =
+                                    item['d']?.toString() ??
+                                        ''; // Get item description
+                                _CcodeController.text = selectedcCode
+                                        .toString() +
+                                    selectedDescription; // Append code and description
+                                print('$selectedcCode, $selectedDescription');
                               });
                               Navigator.of(context).pop(); // Close the dialog
                             },
@@ -1501,24 +1505,32 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             readOnly: true,
           ),
           const SizedBox(height: 16.0),
-          TextFormField(
-            style: const TextStyle(
-              color: Colors.black87,
-            ),
-            controller: erpReceiveNoController,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[300],
-              labelText: 'เลขที่ใบรับคลัง',
-              hintText: 'เลขที่ใบรับคลัง',
-              labelStyle: const TextStyle(
-                color: Colors.black87,
+          GestureDetector(
+            onTap: () {
+              // Add your custom logic when the TextFormField is tapped
+              print("TextFormField tapped");
+              // You can also open a dialog, navigate to another screen, etc.
+            },
+            child: AbsorbPointer(
+              child: TextFormField(
+                style: const TextStyle(
+                  color: Colors.black87,
+                ),
+                controller: erpReceiveNoController,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  labelText: 'เลขที่ใบรับคลัง',
+                  labelStyle: const TextStyle(
+                    color: Colors.black87,
+                  ),
+                  // floatingLabelBehavior: FloatingLabelBehavior
+                  //     .always, // Prevents the label from shrinking
+                  border: InputBorder.none,
+                ),
+                readOnly: true, // To keep it read-only
               ),
-              floatingLabelBehavior: FloatingLabelBehavior
-                  .always, // Prevents the label from shrinking
-              border: InputBorder.none,
             ),
-            readOnly: true,
           ),
           const SizedBox(height: 16.0),
           TextFormField(
