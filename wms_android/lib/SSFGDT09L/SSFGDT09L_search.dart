@@ -7,6 +7,7 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'SSFGDT09L_card.dart';
+// import 'TEST_SELECT_TIME.dart';
 
 class Ssfgdt09lSearch extends StatefulWidget {
   final String pWareCode;
@@ -448,6 +449,20 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                         ),
                       ],
                     ),
+                    // Row(
+                    //   children: [
+                    //     ElevatedButton(
+                    //         onPressed: () {
+                    //           Navigator.push(
+                    //             context,
+                    //             MaterialPageRoute(
+                    //                 builder: (context) => TestSelectDateTime()),
+                    //           ).then((value) async {});
+                    //         },
+                    //         style: AppStyles.EraserButtonStyle(),
+                    //         child: Text('TEST')),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),

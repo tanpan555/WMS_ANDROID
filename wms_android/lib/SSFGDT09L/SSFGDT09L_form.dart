@@ -1960,17 +1960,33 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             itemCount: filteredItems.length,
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
-                              final doc = '${item['d']}';
+                              final doc = '${item['cancel_desc']}';
                               final returnCode = '${item['r']}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  '${item['r']}',
-                                  style: TextStyle(color: Colors.black),
+                                title: RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: '$returnCode ',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: '$doc',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                subtitle:
-                                    Text(item['d']?.toString() ?? 'No code'),
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
