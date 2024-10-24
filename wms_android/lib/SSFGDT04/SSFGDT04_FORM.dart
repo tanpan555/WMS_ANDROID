@@ -11,12 +11,14 @@ import 'SSFGDT04_MENU.dart';
 import '../styles.dart';
 
 class SSFGDT04_FORM extends StatefulWidget {
+  // final String pReceiveNo; // ware code ที่มาจากเลือ lov
   final String pWareCode; // ware code ที่มาจากเลือ lov
   final String po_doc_no;
   final String? po_doc_type;
 
   SSFGDT04_FORM({
     Key? key,
+    // required this.pReceiveNo,
     required this.pWareCode,
     required this.po_doc_no,
     required this.po_doc_type,
@@ -351,7 +353,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
           'P_REF_RECEIVE': selectedRefReceive,
           'P_ORDER_NO': _oderNoController.text,
           'P_MO_DO_NO': _moDoNoController.text,
-          'P_STAFF_CODE': selectedSaffCode,
+          'P_STAFF_CODE': _staffCodeController.text,
+          // 'P_STAFF_CODE': selectedSaffCode,
           'P_NOTE': _noteController.text,
           'APP_USER': gb.APP_USER,
           'P_DOC_NO': po_doc_no,
@@ -360,13 +363,14 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
         }));
 
     print('Navigating to SSFGDT04_GRID with:');
-    print('po_doc_no: ${widget.po_doc_no}');
-    print('po_doc_type: ${widget.po_doc_type}');
+    print('REF_RECEIVE: ${selectedRefReceive}');
+    print('ORDER_NO: ${_oderNoController.text}');
+    print('MO_DO_NO: ${_moDoNoController.text}');
+    print('STAFF_CODE: ${selectedSaffCode}');
+    print('P_DOC_NO: ${widget.po_doc_no}');
+    print('P_DOC_TYPE: ${widget.po_doc_type}');
     print('pWareCode: ${widget.pWareCode}');
     print('ref_no: ${selectedRefReceive}');
-    print('mo_do_no: ${_moDoNoController.text}');
-    print('staff_code: ${selectedSaffCode}');
-    // print('P_REF_RECEIVE: ${selectedRefReceive}');
 
     if (response.statusCode == 200) {
       print('Update successful');
