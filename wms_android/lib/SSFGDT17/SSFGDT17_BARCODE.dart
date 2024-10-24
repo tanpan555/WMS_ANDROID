@@ -253,12 +253,12 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
       }
     } catch (e) {
       print('Error: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text('Error: $e'),
+      //     backgroundColor: Colors.red,
+      //   ),
+      // );
     }
   }
 
