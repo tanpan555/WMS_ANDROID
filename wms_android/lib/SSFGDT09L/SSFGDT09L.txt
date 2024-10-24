@@ -1,0 +1,84 @@
+ข้อมูลเทส 
+
+เลขคำสั่งผลิต : 230303001
+
+เลข Barcode ที่ไม่ตรง	1808030126-EKC185-58-A
+
+เลข Barcode ที่ตรง	   2209301529-TKA230-48-A
+
+ 
+
+เมื่อแสกน Barcode  
+
+หาก Barcode มีช่องว่าง(“ ”) เช่น TKA230-48-A 2209301529 
+
+ให้นำค่าหลังมาใส่ในช่อง Lot NO => 2209301529 
+
+ถ้าไม่มีช่องว่าง เช่น 1808030126-EKC185-58-A 
+
+ให้นำค่าไปใส่ในช่อง Lot NO => 1808030126-EKC185-58-A 
+
+ 
+
+เมื่อแก้ไขช่อง Lot NO ->  scan_validate_Issue  
+
+ถ้า PO_STATUS = 0 
+
+ให้นำค่าที่ได้ ใส่ไอเทมตามที่กำหนดไว้ 
+
+po_item_code	=>	Item Code 
+
+po_lot_number	=>	Lot Number 
+
+po_quantity	=>	Quantity 
+
+po_curr_loc	=>	Current Locator 
+
+po_bal_lot	=>	รวมรายการจ่าย 
+
+po_bal_qty	=>	รวมจำนวนจ่าย 
+
+ถ้า PO_STATUS = 1 และ PO_VALID = N 
+
+ให้นำค่าที่ได้ ใส่ไอเทมตามที่กำหนดไว้ (ตามด้านบน) 
+
+ถามข้อความยืนยัน “รายการไม่ตรงกับระบบการจอง ต้องการยืนยัน ?” (OK/Cancel) 
+
+ถ้ากด OK => เปิด Popup เลือกเหตุผลการยืนยัน 
+
+กรอก Reason, Replace Location, Replace LOT, Remark 
+
+เมื่อกด Save ให้เรียก issue_addLine_detail 
+
+ถ้ากด Cancel => ให้เคลียร์ค่าทุกช่อง แล้วโฟกัสที่ช่อง Barcode 
+
+ถ้า PO_STATUS = 1 และ PO_VALID != N 
+
+ให้แจ้ง Alert จาก PO_MESSAGE 
+
+ให้เคลียร์ค่าทุกช่อง แล้วโฟกัสที่ช่อง Barcode 
+
+ 
+
+
+เมื่อแก้ไขช่อง Quantity ->  xfer_valOnhand 
+
+ถ้า PO_STATUS = 1 
+
+แจ้ง Alert ตาม PO_MESSAGE 
+
+ถ้า PO_STATUS = 0 
+
+ให้แสดงข้อความยืนยัน(OK/Cancel) “ต้องการยืนยันการสร้างรายการเบิกจ่าย หรือไม่ ?” 
+
+ถ้ากด OK ให้เรียก issue_addLine_detail 
+
+ถ้า PO_STATUS = 1 
+
+แจ้ง Alert ตาม PO_MESSAGE 
+
+ถ้า PO_STATUS = 0 
+
+ให้เคลียร์ค่าทุกช่อง แล้วโฟกัสที่ช่อง Barcode 
+
+ 

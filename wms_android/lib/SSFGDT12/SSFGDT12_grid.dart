@@ -307,7 +307,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   }
 
   Future<void> updateDataGridDetail(int updatedCountQty, String updatedRemark,
-      String ou_code, String doc_no, int seq) async {
+      String erp_ou_code, String doc_no, int seq) async {
     final url =
         'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_UpdateDataGridCrad';
 
@@ -316,9 +316,10 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     };
 
     final body = jsonEncode({
-      'COUNT_QTY': updatedCountQty == 0 ? 'null' : updatedCountQty.toString(),
-      'REMARK': updatedRemark.isNotEmpty ? updatedRemark : 'null',
-      'ou_code': ou_code,
+      'count_qty': updatedCountQty == 0 ? 'null' : updatedCountQty.toString(),
+      'remark': updatedRemark.isNotEmpty ? updatedRemark : 'null',
+      'app_user': globals.APP_USER,
+      'erp_ou_code': erp_ou_code,
       'doc_no': doc_no,
       'seq': seq.toString(),
     });
@@ -1454,7 +1455,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     int count_qty,
     String remark,
     String doc_no,
-    String ou_code,
+    String erp_ou_code,
     int seq,
     String item_code,
   ) {
@@ -1725,7 +1726,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                             await updateDataGridDetail(
                               updatedCountQty,
                               updatedRemark,
-                              ou_code,
+                              erp_ou_code,
                               doc_no,
                               seq,
                             );
