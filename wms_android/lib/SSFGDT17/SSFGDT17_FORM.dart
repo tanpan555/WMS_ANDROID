@@ -252,7 +252,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                     TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                        hintText: 'ค้นหารหัสหรือคำอธิบาย', // Updated hint
+                        hintText: 'ค้นหา',
                         border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black),
                         ),
@@ -288,10 +288,15 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                           }
 
                           return ListTile(
-                            title: Text(
-                              code,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: Colors.black),
+                            title: SingleChildScrollView(
+                              scrollDirection: Axis
+                                  .horizontal, // Enable horizontal scrolling
+                              child: Text(
+                                '$code $desc', // Combine code and description
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 14),
+                              ),
                             ),
                             subtitle: Text(desc),
                             onTap: () {

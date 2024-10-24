@@ -425,31 +425,37 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                         itemBuilder: (context, index) {
                           final item = cCode[index];
                           final code = item['r']?.toString() ?? 'No code';
+                          final description =
+                              item['d']?.toString() ?? 'No description';
 
                           // Filter based on search query
                           if (_searchController.text.isNotEmpty &&
                               !code.toLowerCase().contains(
+                                  _searchController.text.toLowerCase()) &&
+                              !description.toLowerCase().contains(
                                   _searchController.text.toLowerCase())) {
                             return SizedBox
                                 .shrink(); // Filter out non-matching items
                           }
 
                           return ListTile(
-                            title: Text(
-                              code,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: Colors.black),
+                            title: SingleChildScrollView(
+                              scrollDirection: Axis
+                                  .horizontal, // Enable horizontal scrolling
+                              child: Text(
+                                '$code $description', // Combine code and description
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 14),
+                              ),
                             ),
-                            subtitle: Text(item['d']?.toString() ?? 'No code'),
                             onTap: () {
                               setState(() {
                                 selectedcCode = code; // Set selected code
                                 final selectedDescription =
-                                    item['d']?.toString() ??
-                                        ''; // Get item description
-                                _CcodeController.text = selectedcCode
-                                        .toString() +
-                                    selectedDescription; // Append code and description
+                                    description; // Set selected description
+                                _CcodeController.text =
+                                    '$selectedcCode $selectedDescription'; // Append code and description
                                 print('$selectedcCode, $selectedDescription');
                               });
                               Navigator.of(context).pop(); // Close the dialog

@@ -482,20 +482,22 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                   item['d']?.toString() ?? 'No description';
 
                               return ListTile(
-                                title: Text(
-                                  code,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.black),
+                                title: SingleChildScrollView(
+                                  scrollDirection: Axis
+                                      .horizontal, // Enable horizontal scrolling
+                                  child: Text(
+                                    '$description', // Combine code and description
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 14),
+                                  ),
                                 ),
-                                subtitle: Text(description),
                                 onTap: () {
                                   setState(() {
                                     final selectedDescription =
                                         item['d']?.toString() ?? '';
                                     selectedcCode = code; // Set selected code
-                                    _CcodeController.text =
-                                        selectedcCode.toString() +
-                                            selectedDescription;
+                                    _CcodeController.text = selectedDescription;
                                     print('$selectedcCode');
                                   });
                                   Navigator.of(context)
