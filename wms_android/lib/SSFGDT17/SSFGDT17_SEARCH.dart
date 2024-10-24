@@ -152,7 +152,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                       final item = statusItems[index];
 
                       return Container(
-                        height: 55,
+                        height: 52,
                         margin: const EdgeInsets.only(bottom: 8),
                         decoration: BoxDecoration(
                           border: Border.all(

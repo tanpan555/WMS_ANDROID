@@ -885,14 +885,14 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          _buildTextField(NOTE, 'หมายเหตุ'),
+                          _buildNoteTextField(NOTE, 'หมายเหตุ'),
                           GestureDetector(
                             child: AbsorbPointer(
                               child: TextFormField(
                                 controller: ERP_DOC_NO,
                                 readOnly: true,
                                 minLines: 1,
-                                maxLines: 3,
+                                maxLines: 5,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   filled: true,
@@ -916,6 +916,34 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         ),
       ),
       bottomNavigationBar: BottomBar(currentPage: 'show'),
+    );
+  }
+
+  Widget _buildNoteTextField(TextEditingController controller, String label,
+      {bool readOnly = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: TextField(
+        controller: controller,
+        style: TextStyle(color: Colors.black),
+        readOnly: readOnly,
+        // Add these properties for multiline support
+        keyboardType: TextInputType.multiline,
+        minLines: 1, // Minimum number of lines
+        maxLines: 5, // Maximum number of lines or null for unlimited
+        onChanged: (value) {
+          setState(() {
+            checkUpdateData = true;
+          });
+        },
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.black),
+          filled: true,
+          fillColor: readOnly ? Colors.grey[300] : Colors.white,
+          border: InputBorder.none,
+        ),
+      ),
     );
   }
 
@@ -1150,7 +1178,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'ค้นหาเลขที่คำสั่งผลิต',
+                          'ค้นหาเลขที่คำสั่งผลิต*',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -1221,7 +1249,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                 subtitle: Text(
                                   custName,
                                   style: TextStyle(
-                                    color: Colors.grey,
+                                    color: Colors.black,
                                     fontSize: 12,
                                   ),
                                 ),
@@ -1386,7 +1414,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                 subtitle: Text(
                                   docDesc,
                                   style: TextStyle(
-                                      color: Colors.grey, fontSize: 12),
+                                      color: Colors.black, fontSize: 12),
                                 ),
                                 onTap: () => Navigator.of(context).pop(docType),
                               );

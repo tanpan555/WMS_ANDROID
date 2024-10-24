@@ -113,7 +113,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                       final item = statusItems[index];
 
                       return Container(
-                        height: 55,
+                        height: 52,
                         margin: const EdgeInsets.only(bottom: 8),
                         decoration: BoxDecoration(
                           border: Border.all(
