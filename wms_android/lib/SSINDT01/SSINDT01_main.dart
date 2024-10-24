@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:wms_android/ICON.dart';
+import 'package:wms_android/SSINDT01/SSINDT01_grid_data.dart';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:wms_android/bottombar.dart';
@@ -382,11 +383,11 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
         title: Row(
           children: [
             Icon(
-              Icons.notification_important, // Use the bell icon
-              color: Colors.red, // Set the color to red
+              Icons.notification_important,
+              color: Colors.red,
             ),
-            SizedBox(width: 8), // Add some space between the icon and the text
-            Text('แจ้งเตือน'), // Title text
+            SizedBox(width: 8),
+            Text('แจ้งเตือน'),
           ],
         ),
         content: Text('โปรดเลือกคลังสินค้า'),
@@ -401,17 +402,42 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       );
       return;
     }
+
     final pPoNo = item['po_no'] ?? '';
     final vReceiveNo = item['receive_no'] ?? 'null';
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //                     SnackBar(
-    //                       content: Text(
-    //                           'WH: $selectedwhCode Pono: $pPoNo RecNo: $vReceiveNo'),
-    //                     ),
-    //                   );
+
     await fetchPoStatus(pPoNo, vReceiveNo);
     await fetchPoStatusconform(vReceiveNo);
-    if (poStatus == '0') {
+
+    if (poStatus == '0' && poStep == '2') {
+      // Navigate to Form page
+      await sendPostRequest(pPoNo, vReceiveNo, selectedwhCode ?? '');
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => Ssindt01Form(
+            poReceiveNo: poReceiveNo ?? '',
+            pWareCode: widget.pWareCode ?? '',
+            pWareName: widget.pWareName,
+            p_ou_code: widget.p_ou_code,
+          ),
+        ),
+      );
+    } else if (poStatus == '0' && poStep == '4') {
+      // Navigate to Grid page
+      await sendPostRequest(pPoNo, vReceiveNo, selectedwhCode ?? '');
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => Ssindt01Grid(
+            poReceiveNo: poReceiveNo ?? '',
+            poPONO: pPoNo,
+            pWareCode: widget.pWareCode ?? '',
+            pWareName: widget.pWareName,
+            p_ou_code: widget.p_ou_code,
+          ),
+        ),
+      );
+    } else if (poStatus == '0') {
+      // Original flow - Navigate to Form page
       await sendPostRequest(pPoNo, vReceiveNo, selectedwhCode ?? '');
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -431,25 +457,14 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
             title: Row(
               children: [
                 Icon(
-                  Icons.notification_important, // Use the bell icon
-                  color: Colors.red, // Set the color to red
+                  Icons.notification_important,
+                  color: Colors.red,
                 ),
-                SizedBox(
-                    width: 8), // Add some space between the icon and the text
-                Text('แจ้งเตือน'), // Title text
+                SizedBox(width: 8),
+                Text('แจ้งเตือน'),
               ],
             ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Text('Status: ${poStatus ?? 'No status available'}'),
-                // SizedBox(height: 8.0),
-                Text('${poMessage ?? 'No message available'}'),
-                // SizedBox(height: 8.0),
-                // Text('Step: ${poStep ?? 'No message available'}'),
-              ],
-            ),
+            content: Text('${poMessage ?? 'No message available'}'),
             actions: [
               TextButton(
                 child: Text('ยกเลิก'),
@@ -469,28 +484,15 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                           title: Row(
                             children: [
                               Icon(
-                                Icons
-                                    .notification_important, // Use the bell icon
-                                color: Colors.red, // Set the color to red
+                                Icons.notification_important,
+                                color: Colors.red,
                               ),
-                              SizedBox(
-                                  width:
-                                      8), // Add some space between the icon and the text
-                              Text('แจ้งเตือน'), // Title text
+                              SizedBox(width: 8),
+                              Text('แจ้งเตือน'),
                             ],
                           ),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Text('Status: ${poStatus ?? 'No status available'}'),
-                              // SizedBox(height: 8.0),
-                              Text(
-                                  '${poMessageconform ?? 'No message available'}'),
-                              // SizedBox(height: 8.0),
-                              // Text('Step: ${poStep ?? 'No message available'}'),
-                            ],
-                          ),
+                          content: Text(
+                              '${poMessageconform ?? 'No message available'}'),
                           actions: [
                             TextButton(
                               child: Text('ตกลง'),
@@ -518,24 +520,14 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
             title: Row(
               children: [
                 Icon(
-                  Icons.notification_important, // Use the bell icon
-                  color: Colors.red, // Set the color to red
+                  Icons.notification_important,
+                  color: Colors.red,
                 ),
-                SizedBox(
-                    width: 8), // Add some space between the icon and the text
-                Text('แจ้งเตือน'), // Title text
+                SizedBox(width: 8),
+                Text('แจ้งเตือน'),
               ],
             ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Text('Status: ${poStatus ?? 'No status available'}'),
-                // SizedBox(height: 8.0),
-                Text('${poMessage ?? 'No message available'}'),
-                // Text('Step: ${poStep ?? 'No message available'}'),
-              ],
-            ),
+            content: Text('${poMessage ?? 'No message available'}'),
             actions: [
               TextButton(
                 child: Text('OK'),
