@@ -156,6 +156,36 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
     }
   }
 
+  void _showStatusAlert(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(
+                Icons.notification_important, // Use the bell icon
+                color: Colors.red, // Set the color to red
+              ),
+              SizedBox(
+                  width: 8), // Add some space between the icon and the text
+              Text('แจ้งเตือน'), // Title text
+            ],
+          ),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text('ตกลง'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   String? p_lot_number;
   String? p_quantity;
   String? p_curr_ware;
@@ -193,9 +223,19 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
             po_status = data['po_status'];
             po_message = data['po_message'];
 
-            // Update text fields with fetched data
-            LOT_NUMBER.text = p_lot_number ?? '';
-            QUANTITY.text = p_quantity ?? '';
+            // Check status and show alert if needed
+            if (po_status == '1') {
+              _showStatusAlert(po_message ?? 'เกิดข้อผิดพลาด');
+              return;
+            }
+
+            // Only set initial values if fields are empty
+            if (LOT_NUMBER.text.isEmpty) {
+              LOT_NUMBER.text = p_lot_number ?? '';
+            }
+            if (QUANTITY.text.isEmpty) {
+              QUANTITY.text = p_quantity ?? '';
+            }
             LOCATOR_TO.text = p_curr_ware ?? '';
             BAL_LOT.text = p_bal_lot ?? '';
             BAL_QTY.text = p_bal_qty ?? '';
@@ -204,9 +244,21 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
         }
       } else {
         print('Failed to load data, status code: ${response.statusCode}');
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(
+        //     content: Text('Failed to load barcode data'),
+        //     backgroundColor: Colors.red,
+        //   ),
+        // );
       }
     } catch (e) {
       print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -425,7 +477,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
                     child:
                         _buildTextField(DOC_NO, 'เลขที่เอกสาร', readOnly: true),
                   )),
-                  _buildTextField(BARCODE, 'Barcode', readOnly: false),
+                  _buildBarcodeTextField(),
                   GestureDetector(
                       child: AbsorbPointer(
                     child: _buildTextField(LOCATOR_FROM, 'Locator ต้นทาง',
@@ -532,10 +584,44 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
           fillColor: readOnly ? Colors.grey[300] : Colors.white,
           border: InputBorder.none,
         ),
-        onChanged: (text) {
+        onSubmitted: (value) {
+          // setState(() {
           checkUpdateData = true;
-          fetchBarcodeData();
+          // });
         },
+      ),
+    );
+  }
+
+  Widget _buildBarcodeTextField() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Stack(
+        alignment: Alignment.centerRight,
+        children: [
+          TextField(
+            controller: BARCODE,
+            style: const TextStyle(color: Colors.black),
+            decoration: InputDecoration(
+              labelText: 'Barcode',
+              labelStyle: const TextStyle(color: Colors.black),
+              filled: true,
+              fillColor: Colors.white,
+              border: InputBorder.none,
+            ),
+            onSubmitted: (text) {
+              checkUpdateData = true;
+              fetchBarcodeData();
+            },
+          ),
+          // Positioned(
+          //   right: 8,
+          //   child: IconButton(
+          //     icon: Icon(Icons.qr_code_scanner),
+          //     onPressed: _scanQRCode,
+          //   ),
+          // ),
+        ],
       ),
     );
   }
