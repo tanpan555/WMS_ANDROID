@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:wms_android/ICON.dart';
 import 'package:wms_android/SSFGDT17/SSFGD17_VERIFY.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_BARCODE.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_FORM.dart';
@@ -10,6 +11,7 @@ import 'package:wms_android/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import 'package:wms_android/styles.dart';
 
 class SSFGDT17_MAIN extends StatefulWidget {
   final String pWareCode;
@@ -45,6 +47,10 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
   final TextEditingController _docNumberController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   String? DateSend;
+  int showRecordRRR = 0;
+
+  int pageSize = 25; // Number of records per page
+  int currentPage = 1; // Current page number
 
   @override
   void initState() {
@@ -101,7 +107,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     if (nextLink != null) {
       if (mounted) {
         setState(() {
-          print('nextLink $nextLink');
+          currentPage++;
           isLoading = true;
         });
       }
@@ -113,11 +119,30 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     if (prevLink != null) {
       if (mounted) {
         setState(() {
+          currentPage--;
           isLoading = true;
         });
       }
       data_card_list(prevLink);
     }
+  }
+
+  String _getPageIndicatorText() {
+    final startRecord = ((currentPage - 1) * pageSize) + 1;
+    final endRecord = startRecord +
+        data.length -
+        1; // Use actual data length instead of page size
+    return '$startRecord - $endRecord';
+  }
+
+  Widget _buildPageIndicator() {
+    return Text(
+      _getPageIndicatorText(),
+      style: const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+    );
   }
 
   String? _selectedStatusValue = 'ทั้งหมด';
@@ -148,10 +173,15 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     try {
       final uri = url ??
           'http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$statusValue/000/${widget.docData1}/$DateSend/${widget.documentNumber}';
+
+      // Reset currentPage if this is a new search (no url provided)
+      if (url == null) {
+        currentPage = 1;
+      }
+
       final response = await http.get(Uri.parse(uri));
 
       if (response.statusCode == 200) {
-        print(uri);
         final responseBody = utf8.decode(response.bodyBytes);
         final parsedResponse = json.decode(responseBody);
         if (mounted) {
@@ -463,24 +493,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
                                             buildListTile(context, item))
                                         .toList(),
                                     const SizedBox(height: 10),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        ElevatedButton(
-                                          onPressed: prevLink != null
-                                              ? _loadPrevPage
-                                              : null,
-                                          child: const Text('Previous'),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: nextLink != null
-                                              ? _loadNextPage
-                                              : null,
-                                          child: const Text('Next'),
-                                        ),
-                                      ],
-                                    ),
+                                    _buildPaginationControls(),
                                   ],
                                 ),
                 ),
@@ -491,5 +504,107 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
       ),
       bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
+  }
+
+  Widget _buildPaginationControls() {
+    final showPaginationControls = data.length > 0;
+    if (!showPaginationControls) return const SizedBox.shrink();
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildPreviousButton(),
+        _buildPageIndicator(),
+        _buildNextButton(),
+      ],
+    );
+  }
+
+  Widget _buildPreviousButton() {
+    return prevLink != null
+        ? ElevatedButton.icon(
+            onPressed: _loadPrevPage,
+            icon: const Icon(
+              MyIcons.arrow_back_ios_rounded,
+              color: Colors.black,
+              size: 20.0,
+            ),
+            label: const Text(
+              'Previous',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+            ),
+            style: AppStyles.PreviousButtonStyle(),
+          )
+        : ElevatedButton.icon(
+            onPressed: null,
+            icon: const Icon(
+              MyIcons.arrow_back_ios_rounded,
+              color: Color.fromARGB(255, 23, 21, 59),
+              size: 20.0,
+            ),
+            label: const Text(
+              'Previous',
+              style: TextStyle(
+                color: Color.fromARGB(255, 23, 21, 59),
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+            ),
+            style: AppStyles.DisablePreviousButtonStyle(),
+          );
+  }
+
+  Widget _buildNextButton() {
+    return nextLink != null
+        ? ElevatedButton(
+            onPressed: _loadNextPage,
+            style: AppStyles.NextRecordDataButtonStyle(),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Next',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
+                ),
+                SizedBox(width: 7),
+                Icon(
+                  MyIcons.arrow_forward_ios_rounded,
+                  color: Colors.black,
+                  size: 20.0,
+                ),
+              ],
+            ),
+          )
+        : ElevatedButton(
+            onPressed: null,
+            style: AppStyles.DisableNextRecordDataButtonStyle(),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Next',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 23, 21, 59),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
+                ),
+                SizedBox(width: 7),
+                Icon(
+                  MyIcons.arrow_forward_ios_rounded,
+                  color: Color.fromARGB(255, 23, 21, 59),
+                  size: 20.0,
+                ),
+              ],
+            ),
+          );
   }
 }

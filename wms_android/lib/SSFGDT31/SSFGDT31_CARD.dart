@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:wms_android/ICON.dart';
 import 'package:wms_android/bottombar.dart';
 import 'dart:convert';
 
@@ -9,6 +12,7 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:async/async.dart';
+import 'package:wms_android/styles.dart';
 
 class SSFGDT31_CARD extends StatefulWidget {
   final String soNo;
@@ -36,6 +40,11 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
   String? prevLink;
 
   bool _isMounted = false;
+  int showRecordRRR = 0;
+
+  int pageSize = 25; // Number of records per page
+  int currentPage = 1; // Current page number
+  int totalRecords = 0; // Total number of records
 
   late CancelableOperation _fetchOperation;
 
@@ -283,6 +292,13 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
   }
 
   Future<void> fetchData([String? url]) async {
+    if (!_isMounted) return;
+
+    // Reset currentPage if this is a new search (no url provided)
+    if (url == null) {
+      currentPage = 1;
+    }
+
     final String apiUrl = url ??
         "http://172.16.0.82:8888/apex/wms/SSFGDT31/Card_Test/${widget.soNo}/${widget.statusDesc}/${widget.wareCode}/$DateSend";
 
@@ -303,14 +319,16 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
           setState(() {
             if (parsedResponse is Map && parsedResponse.containsKey('items')) {
               data = parsedResponse['items'];
+              totalRecords = parsedResponse['total_count'] ??
+                  (currentPage * pageSize + data.length);
             } else {
               data = [];
+              totalRecords = 0;
             }
 
-            List<dynamic> links = parsedResponse['links'];
+            List<dynamic> links = parsedResponse['links'] ?? [];
             nextLink = getLink(links, 'next');
             prevLink = getLink(links, 'prev');
-
             isLoading = false;
           });
         }
@@ -339,25 +357,31 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
   }
 
   void _loadNextPage() {
-    if (nextLink != null) {
-      if (mounted) {
-        setState(() {
-          isLoading = true;
-        });
-      }
+    if (nextLink != null && _isMounted) {
+      setState(() {
+        currentPage++;
+        isLoading = true;
+      });
       fetchData(nextLink);
     }
   }
 
   void _loadPrevPage() {
-    if (prevLink != null) {
-      if (mounted) {
-        setState(() {
-          isLoading = true;
-        });
-      }
+    if (prevLink != null && _isMounted) {
+      setState(() {
+        currentPage--;
+        isLoading = true;
+      });
       fetchData(prevLink);
     }
+  }
+
+  String _getPageIndicatorText() {
+    final startRecord = ((currentPage - 1) * pageSize) + 1;
+    final endRecord = startRecord +
+        data.length -
+        1; // Use actual data length instead of page size
+    return '$startRecord - $endRecord';
   }
 
   Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
@@ -521,25 +545,121 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
                                         .map((item) =>
                                             buildListTile(context, item))
                                         .toList(),
-                                    // Add spacing if needed
+                                    // Add spacing
                                     const SizedBox(height: 10),
-                                    // Previous and Next buttons
+                                    // Navigation controls
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        ElevatedButton(
-                                          onPressed: prevLink != null
-                                              ? _loadPrevPage
-                                              : null,
-                                          child: const Text('Previous'),
+                                        // Previous Button
+                                        prevLink != null
+                                            ? ElevatedButton.icon(
+                                                onPressed: _loadPrevPage,
+                                                icon: const Icon(
+                                                  MyIcons
+                                                      .arrow_back_ios_rounded,
+                                                  color: Colors.black,
+                                                  size: 20.0,
+                                                ),
+                                                label: const Text(
+                                                  'Previous',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                                style: AppStyles
+                                                    .PreviousButtonStyle(),
+                                              )
+                                            : ElevatedButton.icon(
+                                                onPressed: null,
+                                                icon: const Icon(
+                                                  MyIcons
+                                                      .arrow_back_ios_rounded,
+                                                  color: Color.fromARGB(
+                                                      255, 23, 21, 59),
+                                                  size: 20.0,
+                                                ),
+                                                label: const Text(
+                                                  'Previous',
+                                                  style: TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 23, 21, 59),
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                                style: AppStyles
+                                                    .DisablePreviousButtonStyle(),
+                                              ),
+                                        // Page Indicator
+                                        Text(
+                                          _getPageIndicatorText(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                        ElevatedButton(
-                                          onPressed: nextLink != null
-                                              ? _loadNextPage
-                                              : null,
-                                          child: const Text('Next'),
-                                        ),
+                                        // Next Button
+                                        nextLink != null
+                                            ? ElevatedButton(
+                                                onPressed: _loadNextPage,
+                                                style: AppStyles
+                                                    .NextRecordDataButtonStyle(),
+                                                child: const Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Text(
+                                                      'Next',
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 13,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 7),
+                                                    Icon(
+                                                      MyIcons
+                                                          .arrow_forward_ios_rounded,
+                                                      color: Colors.black,
+                                                      size: 20.0,
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : ElevatedButton(
+                                                onPressed: null,
+                                                style: AppStyles
+                                                    .DisableNextRecordDataButtonStyle(),
+                                                child: const Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Text(
+                                                      'Next',
+                                                      style: TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 23, 21, 59),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 13,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 7),
+                                                    Icon(
+                                                      MyIcons
+                                                          .arrow_forward_ios_rounded,
+                                                      color: Color.fromARGB(
+                                                          255, 23, 21, 59),
+                                                      size: 20.0,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                       ],
                                     ),
                                   ],

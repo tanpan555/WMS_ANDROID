@@ -170,7 +170,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                                 final item = filteredProductTypes[index];
                                 return Container(
                                   height:
-                                      55, // Set a fixed height for each item
+                                      52, // Set a fixed height for each item
                                   margin: const EdgeInsets.only(bottom: 8),
                                   decoration: BoxDecoration(
                                     border: Border.all(color: Colors.black),
@@ -300,7 +300,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                             child: Text(
                               'No data found', // Show message when no data is found
                               style: TextStyle(
-                                color: Colors.grey,
+                                color: Colors.black,
                                 fontSize: 16,
                               ),
                             ),
@@ -328,7 +328,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                                 subtitle: Text(
                                   apName,
                                   style: TextStyle(
-                                    color: Colors.grey,
+                                    color: Colors.black,
                                     fontSize: 12,
                                   ),
                                 ),

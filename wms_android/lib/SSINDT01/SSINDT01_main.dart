@@ -1,11 +1,14 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:wms_android/ICON.dart';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
+import 'package:wms_android/styles.dart';
 // import 'package:wms_android/custom_drawer.dart';
 import 'SSINDT01_form.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -56,6 +59,11 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
 
   String? nextLink;
   String? prevLink;
+  int showRecordRRR = 0;
+
+  int pageSize = 25; // Number of records per page
+  int currentPage = 1; // Current page number
+  int totalRecords = 0; // Total number of records
 
   @override
   void initState() {
@@ -70,7 +78,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
 
     // Debug statements
     print('Card Global Ware Code: ${gb.P_WARE_CODE}');
-    log('Card Global Ware Code: ${gb.P_WARE_CODE}');
+
     print('+----------------------------------------');
     print(gb.ATTR1);
     print(widget.selectedValue);
@@ -104,6 +112,11 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       });
     }
 
+    // Reset currentPage if this is a new search (no url provided)
+    if (url == null) {
+      currentPage = 1;
+    }
+
     final String requestUrl = url ??
         'http://172.16.0.82:8888/apex/wms/SSINDT01/SSINDT01_Card_list/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue';
 
@@ -117,37 +130,34 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
           setState(() {
             if (parsedResponse is Map && parsedResponse.containsKey('items')) {
               data = parsedResponse['items'];
+              totalRecords = parsedResponse['total_count'] ??
+                  (currentPage * pageSize + data.length);
             } else {
               data = [];
+              totalRecords = 0;
             }
 
             List<dynamic> links = parsedResponse['links'] ?? [];
             nextLink = getLink(links, 'next');
             prevLink = getLink(links, 'prev');
             isLoading = false;
-            print(
-                'http://172.16.0.82:8888/apex/wms/SSINDT01/SSINDT01_Card_list/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue');
           });
         }
       } else {
-        // Handle HTTP error responses
         if (mounted) {
           setState(() {
             isLoading = false;
             errorMessage = 'Failed to load data: ${response.statusCode}';
           });
         }
-        print('HTTP Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
-      // Handle exceptions that may occur
       if (mounted) {
         setState(() {
           isLoading = false;
           errorMessage = 'Error occurred: $e';
         });
       }
-      print('Exception: $e');
     }
   }
 
@@ -161,7 +171,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     if (nextLink != null) {
       if (mounted) {
         setState(() {
-          print('nextLink $nextLink');
+          currentPage++;
           isLoading = true;
         });
       }
@@ -173,11 +183,20 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     if (prevLink != null) {
       if (mounted) {
         setState(() {
+          currentPage--;
           isLoading = true;
         });
       }
       fetchWareCodes(prevLink);
     }
+  }
+
+  String _getPageIndicatorText() {
+    final startRecord = ((currentPage - 1) * pageSize) + 1;
+    final endRecord = startRecord +
+        data.length -
+        1; // Use actual data length instead of page size
+    return '$startRecord - $endRecord';
   }
 
   // void filterData() {
@@ -660,27 +679,123 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                                         .map((item) =>
                                             buildListTile(context, item))
                                         .toList(),
-                                    // Add spacing if needed
+                                    // Add spacing
                                     const SizedBox(height: 10),
-                                    // Previous and Next buttons
+                                    // Navigation controls
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        ElevatedButton(
-                                          onPressed: prevLink != null
-                                              ? _loadPrevPage
-                                              : null,
-                                          child: const Text('Previous'),
+                                        // Previous Button
+                                        prevLink != null
+                                            ? ElevatedButton.icon(
+                                                onPressed: _loadPrevPage,
+                                                icon: const Icon(
+                                                  MyIcons
+                                                      .arrow_back_ios_rounded,
+                                                  color: Colors.black,
+                                                  size: 20.0,
+                                                ),
+                                                label: const Text(
+                                                  'Previous',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                                style: AppStyles
+                                                    .PreviousButtonStyle(),
+                                              )
+                                            : ElevatedButton.icon(
+                                                onPressed: null,
+                                                icon: const Icon(
+                                                  MyIcons
+                                                      .arrow_back_ios_rounded,
+                                                  color: Color.fromARGB(
+                                                      255, 23, 21, 59),
+                                                  size: 20.0,
+                                                ),
+                                                label: const Text(
+                                                  'Previous',
+                                                  style: TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 23, 21, 59),
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                                style: AppStyles
+                                                    .DisablePreviousButtonStyle(),
+                                              ),
+                                        // Page Indicator
+                                        Text(
+                                          _getPageIndicatorText(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                        ElevatedButton(
-                                          onPressed: nextLink != null
-                                              ? _loadNextPage
-                                              : null,
-                                          child: const Text('Next'),
-                                        ),
+                                        // Next Button
+                                        nextLink != null
+                                            ? ElevatedButton(
+                                                onPressed: _loadNextPage,
+                                                style: AppStyles
+                                                    .NextRecordDataButtonStyle(),
+                                                child: const Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Text(
+                                                      'Next',
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 13,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 7),
+                                                    Icon(
+                                                      MyIcons
+                                                          .arrow_forward_ios_rounded,
+                                                      color: Colors.black,
+                                                      size: 20.0,
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : ElevatedButton(
+                                                onPressed: null,
+                                                style: AppStyles
+                                                    .DisableNextRecordDataButtonStyle(),
+                                                child: const Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Text(
+                                                      'Next',
+                                                      style: TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 23, 21, 59),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 13,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 7),
+                                                    Icon(
+                                                      MyIcons
+                                                          .arrow_forward_ios_rounded,
+                                                      color: Color.fromARGB(
+                                                          255, 23, 21, 59),
+                                                      size: 20.0,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                       ],
-                                    ),
+                                    )
                                   ],
                                 ),
                 ),
