@@ -59,11 +59,12 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   TextEditingController _docDateController = TextEditingController();
   String docDate = '';
 
-  TextEditingController _refNoController = TextEditingController();
-  String refNo = '';
   TextEditingController _refReceiveController =
       TextEditingController(); // REF_RECEIVE
   String refReceive = '';
+
+  TextEditingController _refNoController = TextEditingController();
+  String refNo = '';
 
   TextEditingController _oderNoController = TextEditingController(); // order_no
   String oder = '';
@@ -106,8 +107,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     setState(() {
       if (_docNoController.text.isNotEmpty ||
           _docDateController.text.isNotEmpty ||
-          _refNoController.text.isNotEmpty ||
           _refReceiveController.text.isNotEmpty ||
+          _refNoController.text.isNotEmpty ||
           _oderNoController.text.isNotEmpty ||
           _moDoNoController.text.isNotEmpty ||
           _staffCodeController.text.isNotEmpty ||
@@ -137,48 +138,68 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   }
 
   Future<void> fetchFromItems() async {
-    print('get form');
-    print('po_doc_no : ${widget.po_doc_no} : ${widget.po_doc_no.runtimeType}');
-    print(
-        'po_doc_type : ${widget.po_doc_type} Type : ${widget.po_doc_type.runtimeType}');
+  print('Fetching form data...');
+  print('po_doc_no : ${widget.po_doc_no} : ${widget.po_doc_no.runtimeType}');
+  print('po_doc_type : ${widget.po_doc_type} Type : ${widget.po_doc_type.runtimeType}');
+  
+  try {
     final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_form/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}'));
-    print(response.statusCode);
+      'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_form/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}',
+    ));
+    
+    print('Response status code: ${response.statusCode}');
+    
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
+
       if (mounted) {
         setState(() {
           fromItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
           if (fromItems.isNotEmpty) {
             _docNoController.text = fromItems[0]['doc_no'] ?? '';
             docNo = fromItems[0]['doc_no'] ?? '';
-            if (fromItems[0]['cr_date'] != null &&
-                fromItems[0]['cr_date'].isNotEmpty) {
+
+            // ตรวจสอบและกำหนดค่าให้ _docDateController
+            if (fromItems[0]['cr_date'] != null && fromItems[0]['cr_date'].isNotEmpty) {
               DateTime parsedDate = DateTime.parse(fromItems[0]['cr_date']);
               _docDateController.text = _dateTimeFormatter.format(parsedDate);
               docDate = fromItems[0]['cr_date'] ?? '';
             }
-            _refNoController.text = fromItems[0]['ref_no'] ?? ''; // REF_RECEIVE
+
+            _refReceiveController.text = fromItems[0]['ref_receive'] ?? ''; // REF_RECEIVE
+            refReceive = fromItems[0]['ref_receive'] ?? '';
+
+            _refNoController.text = fromItems[0]['ref_no'] ?? ''; // REF_NO
             refNo = fromItems[0]['ref_no'] ?? '';
+
             _oderNoController.text = fromItems[0]['order_no'] ?? ''; // order_no
             oder = fromItems[0]['order_no'] ?? '';
+
             _moDoNoController.text = fromItems[0]['mo_do_no'] ?? ''; // mo_do_no
             moDoNo = fromItems[0]['mo_do_no'] ?? '';
-            _staffCodeController.text =
-                fromItems[0]['staff_code'] ?? ''; // staff_code
+
+            _staffCodeController.text = fromItems[0]['staff_code'] ?? ''; // staff_code
             staffCode = fromItems[0]['staff_code'] ?? '';
+
             _noteController.text = fromItems[0]['note'] ?? '';
             note = fromItems[0]['note'] ?? '';
+
             _erpDocNoController.text = fromItems[0]['erp_doc_no'] ?? '';
             erpDocNo = fromItems[0]['erp_doc_no'] ?? '';
           }
         });
       }
     } else {
-      throw Exception('Failed to load from items');
+      print('Error: ${response.statusCode} - ${response.reasonPhrase}');
+      throw Exception('Failed to load form data.');
     }
+  } catch (e) {
+    print('Error occurred while fetching form data: $e');
+    throw Exception('Failed to load form data.');
   }
+}
+
 
   Future<void> fetchDocTypeItems() async {
     final response = await http.get(Uri.parse(
@@ -470,10 +491,21 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   }
 
   @override
-  void dispose() {
-    _refReceiveController.dispose();
-    super.dispose();
-  }
+void dispose() {
+  // เรียกใช้ dispose() บน TextEditingController โดยตรง
+  _docNoController.dispose();
+  _docDateController.dispose();
+  _refReceiveController.dispose();
+  _refNoController.dispose();
+  _oderNoController.dispose();
+  _moDoNoController.dispose();
+  _staffCodeController.dispose();
+  _noteController.dispose();
+  _erpDocNoController.dispose();
+
+  super.dispose();
+}
+
 
   @override
   Widget build(BuildContext context) {
