@@ -68,16 +68,20 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $responseData');
 
-        setState(() {
-          dataMenu =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-        });
+        if (mounted) {
+          setState(() {
+            dataMenu =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
+        }
         print('dataMenu : $dataMenu');
       } else {
         throw Exception('Failed to load fetchData');
       }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
       print('ERROR IN Fetch Data : $e');
     }
   }

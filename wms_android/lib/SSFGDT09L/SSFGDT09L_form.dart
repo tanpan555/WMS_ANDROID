@@ -661,13 +661,25 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
             if (deleteStatus == '0') {
               if (mounted) {
                 setState(() async {
-                  _navigateToPage(
-                      context,
-                      SSFGDT09L_MAIN(
-                        pOuCode: globals.P_OU_CODE,
-                        pErpOuCode: globals.P_ERP_OU_CODE,
-                        pAttr1: globals.ATTR1,
-                      ));
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  // Navigator.of(context).pushAndRemoveUntil(
+                  //   MaterialPageRoute(
+                  //       builder: (context) => SSFGDT09L_MAIN(
+                  //           pOuCode: globals.P_OU_CODE,
+                  //           pErpOuCode: globals.P_ERP_OU_CODE,
+                  //           pAttr1: globals.ATTR1)),
+                  //   (Route<dynamic> route) => false,
+                  // );
+
+                  // _navigateToPage(
+                  //     context,
+                  //     SSFGDT09L_MAIN(
+                  //       pOuCode: globals.P_OU_CODE,
+                  //       pErpOuCode: globals.P_ERP_OU_CODE,
+                  //       pAttr1: globals.ATTR1,
+                  //     ));
                 });
               }
             }
@@ -1990,8 +2002,9 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    selectLovCancel = doc;
-                                    cancelController.text = doc;
+                                    selectLovCancel = '$returnCode $doc';
+                                    cancelController.text =
+                                        selectLovCancel.toString();
                                     returnStatusLovCancel = returnCode;
 
                                     //  if(returnStatusLovCancel != returnStatusLovCancelForCheck) {
