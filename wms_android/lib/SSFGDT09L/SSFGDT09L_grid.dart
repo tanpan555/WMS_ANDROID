@@ -251,7 +251,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
 
       if (multiplication >= limitPage) {
         lastURL =
-            'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_CountDataGridCard/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}?offset=$multiplication';
+            'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}?offset=$multiplication';
       } else {
         fetchData(urlLoad);
       }
@@ -259,7 +259,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
     }
     if (lastURL != '') {
       print(
-          'โหลดหน้าสุดท้าย : http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_CountDataGridCard/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}?offset=$multiplication');
+          'โหลดหน้าสุดท้าย : http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}?offset=$multiplication');
       fetchData(lastURL);
     }
   }
