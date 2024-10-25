@@ -412,10 +412,11 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
             }
             if (deleteCardAllStatus == '0') {
               if (mounted) {
-                setState(() {
+                setState(() async {
                   print('delete allllllllllllllllllllllll');
                   Navigator.of(context).pop();
-                  fetchData();
+                  await fetchData();
+                  await countDataGridCard(true);
                 });
               }
             }
