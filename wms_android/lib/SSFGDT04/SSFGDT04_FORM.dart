@@ -374,7 +374,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
           'P_REF_RECEIVE': selectedRefReceive,
           'P_ORDER_NO': _oderNoController.text,
           'P_MO_DO_NO': _moDoNoController.text,
-          'P_STAFF_CODE': _staffCodeController.text,
+          'P_STAFF_CODE': selectedSaffCode,
           // 'P_STAFF_CODE': selectedSaffCode,
           'P_NOTE': _noteController.text,
           'APP_USER': gb.APP_USER,

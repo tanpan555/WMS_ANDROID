@@ -630,11 +630,11 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
     final body = jsonEncode({
       'p_ou_code': globals.P_OU_CODE,
-      'pErpOuCode': globals.P_ERP_OU_CODE,
-      'pDocType': widget.pDocType,
-      'pDocNo': widget.pDocNo,
+      'p_erp_ou_code': globals.P_ERP_OU_CODE,
+      'p_doc_type': widget.pDocType,
+      'p_doc_no': widget.pDocNo,
       'p_cancel_code': cancelCode,
-      'pAppUser': globals.APP_USER,
+      'p_app_user': globals.APP_USER,
     });
     print('Request body: $body');
 

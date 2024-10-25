@@ -59,10 +59,17 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   String urlLoad = '';
   int showRecordRRR = 0;
 
+  bool isFirstLoad = true;
+  String countDataGridCardNUMBER1 = '';
+  String countDataGridCardNUMBER2 = '';
+  String statusCountDataGridCard = '';
+  String messageCountDataGridCard = '';
+
   @override
   void initState() {
-    super.initState();
     fetchData();
+    countDataGridCard();
+    super.initState();
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -177,6 +184,84 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
 
     // พิมพ์ค่าที่ได้
     print('ผลลัพธ์: $showRecord');
+  }
+
+  Future<void> countDataGridCard() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_CountDataGridCard/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}'));
+
+      if (response.statusCode == 200) {
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataConut = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        if (mounted) {
+          setState(() {
+            statusCountDataGridCard = dataConut['po_status'];
+            messageCountDataGridCard = dataConut['po_message'];
+            if (isFirstLoad == true) {
+              if (statusCountDataGridCard == '0') {
+                countDataGridCardNUMBER1 = dataConut['po_count_check'];
+              }
+            }
+            if (isFirstLoad == false) {
+              if (statusCountDataGridCard == '0') {
+                countDataGridCardNUMBER2 = dataConut['po_count_check'];
+                checkCount(countDataGridCardNUMBER1.toString(),
+                    countDataGridCardNUMBER2.toString());
+              }
+            }
+            isFirstLoad = false;
+            print('statusCountDataGridCard : $statusCountDataGridCard');
+            print('messageCountDataGridCard : $messageCountDataGridCard');
+            print('countDataGridCardNUMBER1 : $countDataGridCardNUMBER1');
+            print('countDataGridCardNUMBER2 : $countDataGridCardNUMBER2');
+          });
+        }
+      } else {
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print('ดึงข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error countDataGridCard: $e');
+    }
+  }
+
+  void checkCount(
+      String countDataGridCardNUMBER1, String countDataGridCardNUMBER2) {
+    int count1 = int.parse(countDataGridCardNUMBER1);
+    int count2 = int.parse(countDataGridCardNUMBER2);
+    int floorDivision = 0;
+    int multiplication = 0;
+    int limitPage = 5;
+    String lastURL = '';
+
+    if (count1 == count2) {
+      fetchData(urlLoad);
+      print('จำนวนเท่ากัน โหลดข้อมูลหน้าเดิม');
+    } else if (count1 > count2) {
+      //
+      print('จำนวนไม่เท่ากัน ข้อมูลถูกลบ');
+    } else if (count1 < count2) {
+      floorDivision = count2 ~/ limitPage;
+      print('floorDivision = ${count2 ~/ limitPage}');
+
+      multiplication = floorDivision * limitPage;
+      print('multiplication = ${floorDivision * limitPage}');
+
+      if (multiplication >= limitPage) {
+        lastURL =
+            'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}?offset=$multiplication';
+      } else {
+        fetchData(urlLoad);
+      }
+      print('จำไม่เท่ากัน ข้อมูลถูกเพิ่ม');
+    }
+    if (lastURL != '') {
+      print(
+          'โหลดหน้าสุดท้าย : http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}?offset=$multiplication');
+      fetchData(lastURL);
+    }
   }
 
   Future<void> updatePackQty(
@@ -482,7 +567,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                     )),
                           ).then((value) async {
                             // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                            await fetchData();
+                            await countDataGridCard();
                           });
                         },
                         style: AppStyles.createButtonStyle(),
