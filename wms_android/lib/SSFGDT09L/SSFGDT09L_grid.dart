@@ -113,6 +113,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
 
             if (countData == 0 && prevLink != null) {
               loadPrevPage();
+              // countDataGridCard(true);
             }
             isLoading = false;
           });
@@ -358,6 +359,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                 setState(() async {
                   Navigator.of(context).pop();
                   await fetchData(urlLoad);
+                  await countDataGridCard(true);
                 });
               }
             }
