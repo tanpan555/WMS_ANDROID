@@ -678,7 +678,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       },
       body: jsonEncode({
         'RECEIVE_NO': receiveNo,
-        'OU_CODE': 'LIK',
+        'OU_CODE': '000',
         'PO_REMARK': poRemark,
         'RECEIVE_DATE': receiveDate,
         'INVOICE_DATE': invoiceDate,
@@ -691,6 +691,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
     print('Updating form with data: ${jsonEncode({
           'RECEIVE_NO': receiveNo,
+          'OU_CODE': '000',
           'PO_REMARK': poRemark,
           'RECEIVE_DATE': receiveDate,
           'INVOICE_DATE': invoiceDate,
