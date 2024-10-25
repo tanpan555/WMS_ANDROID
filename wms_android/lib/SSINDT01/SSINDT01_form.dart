@@ -1163,32 +1163,6 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               }
 
               // Calculate new cursor position
-              int newCursorPosition = cursorPosition;
-
-              if (isDeleting) {
-                // When deleting, move cursor back appropriately
-                if (cursorPosition == 3 || cursorPosition == 6) {
-                  newCursorPosition = cursorPosition - 1;
-                } else {
-                  newCursorPosition = cursorPosition - 1;
-                }
-              } else {
-                // When adding numbers
-                if (numbersOnly.length >= 2 && cursorPosition > 2) {
-                  newCursorPosition++;
-                }
-                if (numbersOnly.length >= 4 && cursorPosition > 5) {
-                  newCursorPosition++;
-                }
-              }
-
-              // Ensure cursor position is within bounds
-              if (newCursorPosition < 0) {
-                newCursorPosition = 0;
-              }
-              if (newCursorPosition > formattedValue.length) {
-                newCursorPosition = formattedValue.length;
-              }
 
               // Validate date if complete
               if (numbersOnly.length == 8) {
@@ -1223,7 +1197,6 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               setState(() {
                 receiveDateController.value = TextEditingValue(
                   text: formattedValue,
-                  selection: TextSelection.collapsed(offset: newCursorPosition),
                 );
               });
             },
