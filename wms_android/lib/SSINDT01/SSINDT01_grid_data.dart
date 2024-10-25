@@ -46,6 +46,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     print('poReceiveNo: ${widget.poReceiveNo}');
     print('poPONO: ${widget.poPONO}');
     print('********************************************');
+    print(widget.p_ou_code);
     sendGetRequestlineWMS();
     print(dataList.length);
   }
@@ -145,44 +146,44 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     }
   }
 
-  Future<void> postLot(String poReceiveNo, String recSeq, String ouCode) async {
-    final url = 'http://172.16.0.82:8888/apex/wms/c/add_lot';
+  // Future<void> postLot(String poReceiveNo, String recSeq, String ouCode) async {
+  //   final url = 'http://172.16.0.82:8888/apex/wms/c/add_lot';
 
-    final headers = {
-      'Content-Type': 'application/json',
-    };
+  //   final headers = {
+  //     'Content-Type': 'application/json',
+  //   };
 
-    final body = jsonEncode({
-      'p_ou': ouCode,
-      'p_receive_no': poReceiveNo,
-      'p_rec_seq': recSeq,
-    });
-    print('Request body: $body');
+  //   final body = jsonEncode({
+  //     'p_ou': ouCode,
+  //     'p_receive_no': poReceiveNo,
+  //     'p_rec_seq': recSeq,
+  //   });
+  //   print('Request body: $body');
 
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: headers,
-        body: body,
-      );
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(url),
+  //       headers: headers,
+  //       body: body,
+  //     );
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        if (mounted) {
-          setState(() {
-            poStatus = responseData['po_status'];
-            poMessage = responseData['po_message'];
-            sendGetRequestlineWMS();
-          });
-        }
-        print('Success: $responseData');
-      } else {
-        print('Failed to post data. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> responseData = jsonDecode(response.body);
+  //       if (mounted) {
+  //         setState(() {
+  //           poStatus = responseData['po_status'];
+  //           poMessage = responseData['po_message'];
+  //           sendGetRequestlineWMS();
+  //         });
+  //       }
+  //       print('Success: $responseData');
+  //     } else {
+  //       print('Failed to post data. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
 
   Future<void> genLot(String v_WMS_NO, String v_PO_NO, String v_rec_seq,
       String v_lot_qty, String OU_CODE) async {
@@ -765,8 +766,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                   child: Text('ADD',
                                       style: TextStyle(color: Colors.white)),
                                   onPressed: () async {
-                                    await postLot(
-                                        widget.poReceiveNo, recSeq, ouCode);
+                                    // await postLot(
+                                    //     widget.poReceiveNo, recSeq, ouCode);
                                     await getLotList(
                                         widget.poReceiveNo, recSeq, ouCode);
                                     setState(() {});
@@ -2205,6 +2206,7 @@ class _LotDialogState extends State<LotDialog> {
     getLotList(widget.poReceiveNo, widget.recSeq, widget.ouCode);
     sendGetRequestlineWMS();
     print('======================================');
+    print(widget.ouCode);
   }
 
   Future<void> genLot(String v_WMS_NO, String v_PO_NO, String v_rec_seq,
@@ -2319,6 +2321,7 @@ class _LotDialogState extends State<LotDialog> {
       'p_ou': ouCode,
       'p_receive_no': poReceiveNo,
       'p_rec_seq': recSeq,
+      'APP_USER': gb.APP_USER,
     });
     print('Request body: $body');
 
@@ -2329,14 +2332,21 @@ class _LotDialogState extends State<LotDialog> {
         body: body,
       );
 
+      print('Response status code: ${response.statusCode}'); // Debug line
+      print('Response body: ${response.body}'); // Debug line
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        setState(() {
-          poStatus = responseData['po_status'];
-          poMessage = responseData['po_message'];
-          sendGetRequestlineWMS();
-        });
-        print('Success: $responseData');
+        if (response.body.isNotEmpty) {
+          final Map<String, dynamic> responseData = jsonDecode(response.body);
+          setState(() {
+            poStatus = responseData['po_status'];
+            poMessage = responseData['po_message'];
+            sendGetRequestlineWMS();
+          });
+          print('Success: $responseData');
+        } else {
+          print('Empty response body.');
+        }
       } else {
         print('Failed to post data. Status code: ${response.statusCode}');
       }
@@ -3159,6 +3169,7 @@ class _LotDialogState extends State<LotDialog> {
         'RECEIVE_NO': RECEIVE_NO,
         'REC_SEQ': REC_SEQ,
         'lot_seq': lot_seq,
+        'APP_USER': gb.APP_USER,
       }),
     );
 
