@@ -413,7 +413,6 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
             if (deleteCardAllStatus == '0') {
               if (mounted) {
                 setState(() async {
-                  print('delete allllllllllllllllllllllll');
                   Navigator.of(context).pop();
                   await fetchData();
                   await countDataGridCard(true);
@@ -456,8 +455,8 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                 pDocNo: widget.docNo,
                               )),
                     ).then((value) async {
-                      // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                      await fetchData();
+                      showRecordRRR = 0;
+                      await fetchData(urlLoad);
                     });
                   },
                   style: AppStyles.cancelButtonStyle(),
@@ -483,8 +482,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                 pWareCode: widget.pWareCode,
                               )),
                     ).then((value) async {
-                      // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                      await fetchData();
+                      showRecordRRR = 0;
                       await fetchData();
                     });
                   },
