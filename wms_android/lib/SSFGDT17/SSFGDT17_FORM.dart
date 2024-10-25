@@ -874,7 +874,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                                     selectedStaff =
                                         staffCode; // Update the selected item
                                     STAFF_CODE.text =
-                                        staffCode; // Update the text controller
+                                        empName; // Update the text controller
                                   });
                                   Navigator.of(context)
                                       .pop(); // Close the dialog
@@ -920,7 +920,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                 MainAxisAlignment.spaceBetween, // Align text and arrow
             children: [
               Text(
-                selectedStaff.toString(), // Default placeholder text
+                STAFF_CODE.text, // Default placeholder text
                 style: TextStyle(fontSize: 16),
               ),
               Icon(
