@@ -113,6 +113,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
 
             if (countData == 0 && prevLink != null) {
               loadPrevPage();
+              // countDataGridCard(true);
             }
             isLoading = false;
           });
@@ -358,6 +359,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                 setState(() async {
                   Navigator.of(context).pop();
                   await fetchData(urlLoad);
+                  await countDataGridCard(true);
                 });
               }
             }
@@ -410,10 +412,10 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
             }
             if (deleteCardAllStatus == '0') {
               if (mounted) {
-                setState(() {
-                  print('delete allllllllllllllllllllllll');
+                setState(() async {
                   Navigator.of(context).pop();
-                  fetchData();
+                  await fetchData();
+                  await countDataGridCard(true);
                 });
               }
             }
@@ -453,8 +455,8 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                 pDocNo: widget.docNo,
                               )),
                     ).then((value) async {
-                      // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                      await fetchData();
+                      showRecordRRR = 0;
+                      await fetchData(urlLoad);
                     });
                   },
                   style: AppStyles.cancelButtonStyle(),
@@ -480,8 +482,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                 pWareCode: widget.pWareCode,
                               )),
                     ).then((value) async {
-                      // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                      await fetchData();
+                      showRecordRRR = 0;
                       await fetchData();
                     });
                   },
