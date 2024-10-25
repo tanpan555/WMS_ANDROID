@@ -55,6 +55,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   bool isLoading = false;
   String? nextLink = '';
   String? prevLink = '';
+  int countData = 0;
 
   String urlLoad = '';
   int showRecordRRR = 0;
@@ -100,6 +101,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
             List<dynamic> links = parsedResponse['links'] ?? [];
             nextLink = getLink(links, 'next');
             prevLink = getLink(links, 'prev');
+            countData = parsedResponse['count'];
             urlLoad = url ??
                 'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}';
             if (url.toString().isNotEmpty) {
@@ -107,6 +109,10 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                       'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}'
                   ? 'null'
                   : url.toString());
+            }
+
+            if (countData == 0 && prevLink != null) {
+              loadPrevPage();
             }
             isLoading = false;
           });
@@ -141,6 +147,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
     if (nextLink != '') {
       setState(() {
         showRecordRRR = 0;
+        // countData = 0;
         print('nextLink $nextLink');
         isLoading = true;
       });
@@ -152,6 +159,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
     if (prevLink != '') {
       setState(() {
         showRecordRRR = 0;
+        // countData = 0;
         isLoading = true;
       });
       fetchData(prevLink);
@@ -349,7 +357,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
               if (mounted) {
                 setState(() async {
                   Navigator.of(context).pop();
-                  await fetchData();
+                  await fetchData(urlLoad);
                 });
               }
             }
