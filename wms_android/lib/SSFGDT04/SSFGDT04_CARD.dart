@@ -193,26 +193,30 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   }
 
   void _loadPrevPage() {
-  if (currentPage > 0) {
-    setState(() {
-      currentPage--;
-      // No need to call fetchData here, just update the UI
-    });
-    _scrollToTop();
+    if (currentPage > 0) {
+      setState(() {
+        currentPage--;
+        // No need to call fetchData here, just update the UI
+      });
+      _scrollToTop();
+    }
   }
-}
 
-void _loadNextPage() {
-  if ((currentPage + 1) * itemsPerPage < dataCard.length) {
-    setState(() {
-      currentPage++;
-      // No need to call fetchData here, just update the UI
-    });
-    _scrollToTop();
+  void _loadNextPage() {
+    if ((currentPage + 1) * itemsPerPage < dataCard.length) {
+      setState(() {
+        currentPage++;
+        // No need to call fetchData here, just update the UI
+      });
+      _scrollToTop();
+    }
   }
-}
 
-
+  void _scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0); // เลื่อนไปยังตำแหน่งเริ่มต้น (index 0)
+    }
+  }
 
   Future<void> checkRCV(
       String pReceiveNo, String poDocNo, String poDocType) async {
@@ -234,7 +238,6 @@ void _loadNextPage() {
           dataStatusCard['po_goto_step'] ?? '',
           poDocNo,
           poDocType,
-          pReceiveNo,
         );
       } else {
         print(
@@ -249,10 +252,10 @@ void _loadNextPage() {
   }
 
   void checkGoTostep(String statusCard, String messageCard, String goToStep,
-      String poDocNo, String poDocType, String pReceiveNo) {
+      String poDocNo, String poDocType) {
     //
-    print(
-        'checkGoTostep pReceiveNo : $pReceiveNo Type : ${pReceiveNo.runtimeType}');
+    // print(
+    //     'checkGoTostep pReceiveNo : $pReceiveNo Type : ${pReceiveNo.runtimeType}');
     print('checkGoTostep poDocNo : $poDocNo Type : ${poDocNo.runtimeType}');
     print(
         'checkGoTostep poDocType : $poDocType Type : ${poDocType.runtimeType}');
@@ -266,9 +269,9 @@ void _loadNextPage() {
     }
     if (statusCard == '0') {
       getInhead(
-        goToStep,
         poDocNo,
         poDocType,
+        goToStep,
       );
     }
   }
@@ -295,8 +298,8 @@ void _loadNextPage() {
 
         if (mounted) {
           setState(() {
-            pDocNoGetInHead = dataGetInHead['p_doc_no'] ?? '';
-            pDocTypeGetInHead = dataGetInHead['p_doc_type'] ?? '';
+            pDocTypeGetInHead = dataGetInHead['po_doc_type'] ?? '';
+            pDocNoGetInHead = dataGetInHead['po_doc_no'] ?? '';
             print('pDocNoGetInHead: $pDocNoGetInHead');
             print('pDocTypeGetInHead: $pDocTypeGetInHead');
             getInheadStep(
@@ -346,8 +349,10 @@ void _loadNextPage() {
     }
   }
 
-  void getInheadStep(String pDocNoGetInHead, String pDocTypeGetInHead,
+  void getInheadStep(String pDocTypeGetInHead, String pDocNoGetInHead,
       String poStatus, String poMessage, String goToStep) {
+    print('getInheadStep -> pDocNoGetInHead: $pDocNoGetInHead');
+    print('getInheadStep -> pDocTypeGetInHead: $pDocTypeGetInHead');
     if (poStatus == '1') {
       showMessageStatusCard(context, poMessage);
     }
@@ -355,12 +360,13 @@ void _loadNextPage() {
       switch (goToStep) {
         case '2':
           return _navigateToPage(
-              context,
-              SSFGDT04_FORM(
-                pWareCode: widget.pErpOuCode,
-                po_doc_no: pDocNoGetInHead,
-                po_doc_type: pDocTypeGetInHead,
-              ));
+            context,
+            SSFGDT04_FORM(
+              pWareCode: widget.pErpOuCode,
+              po_doc_no: pDocNoGetInHead,
+              po_doc_type: pDocTypeGetInHead,
+            ),
+          );
         default:
           return;
       }
@@ -533,323 +539,258 @@ void _loadNextPage() {
         '&LH_MO_DO_NO=$LH_MO_DO_NO');
   }
 
-  void _scrollToTop() {
-    if (_scrollController.hasClients) {
-      _scrollController.jumpTo(0); // เลื่อนไปยังตำแหน่งเริ่มต้น (index 0)
-    }
-  }
-
   @override
-Widget build(BuildContext context) {
-  int totalCards = dataCard.length;
-  bool hasPreviousPage = currentPage > 0;
-  bool hasNextPage = (currentPage + 1) * itemsPerPage < totalCards;
+  Widget build(BuildContext context) {
+    int totalCards = dataCard.length;
+    bool hasPreviousPage = currentPage > 0;
+    bool hasNextPage = (currentPage + 1) * itemsPerPage < totalCards;
 
-  return Scaffold(
-    backgroundColor: const Color(0xFF17153B),
-    appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
-    body: Padding(
-      padding: const EdgeInsets.all(16),
-      child: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : dataCard.isEmpty
-              ? const Center(
-                  child: Text(
-                    'No data found',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
-              : ListView.builder(
-                  controller: _scrollController,
-                  itemCount: itemsPerPage + 1, // +1 for the pagination row
-                  itemBuilder: (context, index) {
-                    if (index < itemsPerPage) {
-                      int actualIndex = (currentPage * itemsPerPage) + index;
+    return Scaffold(
+      backgroundColor: const Color(0xFF17153B),
+      appBar:
+          CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : dataCard.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No data found',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                : ListView.builder(
+                    controller: _scrollController,
+                    itemCount: itemsPerPage + 1, // +1 for the pagination row
+                    itemBuilder: (context, index) {
+                      if (index < itemsPerPage) {
+                        int actualIndex = (currentPage * itemsPerPage) + index;
 
-                      // Check if we have reached the end of the data
-                      if (actualIndex >= dataCard.length) {
-                        return const SizedBox.shrink();
-                      }
+                        // Check if we have reached the end of the data
+                        if (actualIndex >= dataCard.length) {
+                          return const SizedBox.shrink();
+                        }
 
-                      final item = dataCard[actualIndex];
+                        final item = dataCard[actualIndex];
 
-                      return Card(
-                        elevation: 8.0,
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        color: Colors.lightBlue[100],
-                        child: InkWell(
-                          onTap: () {
-                            // Navigate to the form page with selected card data
-                            String poNo = item['po_no'] ?? '';
-                            String docNo = item['doc_no'] ?? '';
-                            String docType = item['doc_type'] ?? '';
+                        return Card(
+                          elevation: 8.0,
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          color: Colors.lightBlue[100],
+                          child: InkWell(
+                            onTap: () {
+                              checkRCV(item['po_no'] ?? '',
+                                  item['doc_no'] ?? '', item['doc_type'] ?? '');
 
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SSFGDT04_FORM(
-                                  pWareCode: widget.pErpOuCode, // Make sure this value is correct
-                                  po_doc_no: poNo,
-                                  po_doc_type: docType,
-                                ),
-                              ),
-                            );
-                          },
-                          borderRadius: BorderRadius.circular(15.0),
-                          child: Stack(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      item['ap_name'] ?? 'No Name',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 17,
-                                        color: Color.fromARGB(255, 0, 0, 0),
+                              print(
+                                  'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
+                              print(
+                                  'p_doc_no in Card : ${item['doc_no']} Type : ${item['doc_no'].runtimeType}');
+                              print(
+                                  'p_doc_type in Card : ${item['doc_type']} Type : ${item['doc_type'].runtimeType}');
+                            },
+                            borderRadius: BorderRadius.circular(15.0),
+                            child: Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        item['ap_name'] ?? 'No Name',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 17,
+                                          color: Color.fromARGB(255, 0, 0, 0),
+                                        ),
                                       ),
-                                    ),
-                                    const Divider(
-                                        color: Colors.black26, thickness: 1),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 12.0,
-                                            vertical: 6.0,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: (() {
-                                              switch (item['card_status_desc']) {
-                                                case 'ระหว่างบันทึก':
-                                                  return const Color.fromRGBO(
-                                                      246, 250, 112, 1);
-                                                case 'ยืนยันการรับ':
-                                                  return const Color.fromRGBO(
-                                                      146, 208, 80, 1);
-                                                case 'ยกเลิก':
-                                                  return const Color.fromRGBO(
-                                                      208, 206, 206, 1);
-                                                case 'ทั้งหมด':
-                                                default:
-                                                  return const Color.fromARGB(
-                                                      255, 255, 255, 255);
-                                              }
-                                            })(),
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          child: Text(
-                                            item['card_status_desc'],
-                                            style: const TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
+                                      const Divider(
+                                          color: Colors.black26, thickness: 1),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 12.0,
+                                              vertical: 6.0,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: (() {
+                                                switch (
+                                                    item['card_status_desc']) {
+                                                  case 'ระหว่างบันทึก':
+                                                    return const Color.fromRGBO(
+                                                        246, 250, 112, 1);
+                                                  case 'ยืนยันการรับ':
+                                                    return const Color.fromRGBO(
+                                                        146, 208, 80, 1);
+                                                  case 'ยกเลิก':
+                                                    return const Color.fromRGBO(
+                                                        208, 206, 206, 1);
+                                                  case 'ทั้งหมด':
+                                                  default:
+                                                    return const Color.fromARGB(
+                                                        255, 255, 255, 255);
+                                                }
+                                              })(),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: Text(
+                                              item['card_status_desc'],
+                                              style: const TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Center(
-                                          child: (() {
-                                            if (item['card_qc'] ==
-                                                '#APP_IMAGES#rt_machine_on.png') {
-                                              return Image.asset(
-                                                'assets/images/rt_machine_on.png',
-                                                width: 50,
-                                                height: 50,
-                                              );
-                                            } else if (item['card_qc'] ==
-                                                '#APP_IMAGES#rt_machine_off.png') {
-                                              return Image.asset(
-                                                'assets/images/rt_machine_off.png',
-                                                width: 50,
-                                                height: 50,
-                                              );
-                                            } else if (item['card_qc'] == '') {
-                                              return const SizedBox.shrink();
-                                            } else {
-                                              return const Text('');
-                                            }
-                                          })(),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Center(
-                                          child: item['status'] != null
-                                              ? Container(
-                                                  decoration: BoxDecoration(
-                                                    color: const Color.fromARGB(
-                                                        72, 145, 144, 144),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                  ),
-                                                  child: TextButton(
-                                                    onPressed: () {
-                                                      getPDF(item['doc_no'],
-                                                          item['doc_type']);
-                                                    },
-                                                    child: item['status'] ==
-                                                            'พิมพ์'
-                                                        ? Image.asset(
-                                                            'assets/images/printer.png',
-                                                            width: 30,
-                                                            height: 30,
-                                                          )
-                                                        : Text(
-                                                            item['status']!,
-                                                            style:
-                                                                const TextStyle(
-                                                              fontSize: 15,
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      137,
-                                                                      0,
-                                                                      0,
-                                                                      0),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                          const SizedBox(width: 8),
+                                          Center(
+                                            child: (() {
+                                              if (item['card_qc'] ==
+                                                  '#APP_IMAGES#rt_machine_on.png') {
+                                                return Image.asset(
+                                                  'assets/images/rt_machine_on.png',
+                                                  width: 50,
+                                                  height: 50,
+                                                );
+                                              } else if (item['card_qc'] ==
+                                                  '#APP_IMAGES#rt_machine_off.png') {
+                                                return Image.asset(
+                                                  'assets/images/rt_machine_off.png',
+                                                  width: 50,
+                                                  height: 50,
+                                                );
+                                              } else if (item['card_qc'] ==
+                                                  '') {
+                                                return const SizedBox.shrink();
+                                              } else {
+                                                return const Text('');
+                                              }
+                                            })(),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Center(
+                                            child: item['status'] != null
+                                                ? Container(
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              72,
+                                                              145,
+                                                              144,
+                                                              144),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        getPDF(item['doc_no'],
+                                                            item['doc_type']);
+                                                      },
+                                                      child: item['status'] ==
+                                                              'พิมพ์'
+                                                          ? Image.asset(
+                                                              'assets/images/printer.png',
+                                                              width: 30,
+                                                              height: 30,
+                                                            )
+                                                          : Text(
+                                                              item['status']!,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 15,
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        137,
+                                                                        0,
+                                                                        0,
+                                                                        0),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
                                                             ),
-                                                          ),
-                                                  ),
-                                                )
-                                              : const SizedBox.shrink(),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      '${item['po_date']} ${item['po_no']} ${item['item_stype_desc'] ?? ''}',
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black54,
+                                                    ),
+                                                  )
+                                                : const SizedBox.shrink(),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ],
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        '${item['po_date']} ${item['po_no']} ${item['item_stype_desc'] ?? ''}',
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Previous Button
-                          hasPreviousPage
-                              ? ElevatedButton.icon(
-                                  onPressed: _loadPrevPage,
-                                  icon: const Icon(
-                                    MyIcons.arrow_back_ios_rounded,
-                                    color: Colors.black,
-                                    size: 20.0,
-                                  ),
-                                  label: const Text(
-                                    'Previous',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                  style: AppStyles.PreviousButtonStyle(),
-                                )
-                              : ElevatedButton.icon(
-                                  onPressed: null,
-                                  icon: const Icon(
-                                    MyIcons.arrow_back_ios_rounded,
-                                    color: Color.fromARGB(255, 23, 21, 59),
-                                    size: 20.0,
-                                  ),
-                                  label: const Text(
-                                    'Previous',
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 23, 21, 59),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                  style: AppStyles.DisablePreviousButtonStyle(),
-                                ),
-
-                          // Page Indicator
-                          Text(
-                            '${(currentPage * itemsPerPage) + 1}-${(currentPage + 1) * itemsPerPage > totalCards ? totalCards : (currentPage + 1) * itemsPerPage}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                              ],
                             ),
                           ),
-
-                          // Next Button
-                          hasNextPage
-                              ? ElevatedButton(
-                                  onPressed: _loadNextPage,
-                                  style: AppStyles.NextRecordDataButtonStyle(),
-                                  child: const Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        'Next',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                      SizedBox(width: 7),
-                                      Icon(
-                                        MyIcons.arrow_forward_ios_rounded,
-                                        color: Colors.black,
-                                        size: 20.0,
-                                      ),
-                                    ],
+                        );
+                      } else {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Previous Button
+                            hasPreviousPage
+                                ? ElevatedButton(
+                                    onPressed: _loadPrevPage,
+                                    style: ButtonStyles.previousButtonStyle,
+                                    child: ButtonStyles.previousButtonContent,
+                                  )
+                                : ElevatedButton(
+                                    onPressed: null,
+                                    style:
+                                        ButtonStyles.disablePreviousButtonStyle,
+                                    child: ButtonStyles
+                                        .disablePreviousButtonContent,
                                   ),
-                                )
-                              : ElevatedButton(
-                                  onPressed: null,
-                                  style: AppStyles.DisableNextRecordDataButtonStyle(),
-                                  child: const Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        'Next',
-                                        style: TextStyle(
-                                          color: Color.fromARGB(255, 23, 21, 59),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                      SizedBox(width: 7),
-                                      Icon(
-                                        MyIcons.arrow_forward_ios_rounded,
-                                        color: Color.fromARGB(255, 23, 21, 59),
-                                        size: 20.0,
-                                      ),
-                                    ],
+
+                            // Page Indicator
+                            Text(
+                              '${(currentPage * itemsPerPage) + 1}-${(currentPage + 1) * itemsPerPage > totalCards ? totalCards : (currentPage + 1) * itemsPerPage}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            // Next Button
+                            hasNextPage
+                                ? ElevatedButton(
+                                    onPressed: _loadNextPage,
+                                    style: ButtonStyles.nextButtonStyle,
+                                    child: ButtonStyles.nextButtonContent(),
+                                  )
+                                : ElevatedButton(
+                                    onPressed: null,
+                                    style: ButtonStyles.disableNextButtonStyle,
+                                    child: ButtonStyles
+                                        .disablePreviousButtonContent,
                                   ),
-                                ),
-                        ],
-                      );
-                    }
-                  },
-                ),
-    ),
-    bottomNavigationBar: BottomBar(currentPage: 'not_show'),
-  );
-}
-
-
-
-
+                          ],
+                        );
+                      }
+                    },
+                  ),
+      ),
+      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
+    );
+  }
 
   void showMessageStatusCard(BuildContext context, String messageCard) {
     showDialog(
