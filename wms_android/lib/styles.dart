@@ -1,20 +1,5 @@
 import 'package:flutter/material.dart';
-
-// class CustomContainerStyles {
-//   // สร้าง style สำหรับ Container พร้อม padding
-//   static Container styledContainer(String? itemValue,
-//       {double padding = 5.0, required Widget child}) {
-//     return Container(
-//       padding: EdgeInsets.all(padding), // ใช้ค่าจากพารามิเตอร์ padding
-//       decoration: BoxDecoration(
-//         color: itemValue != null && itemValue.isNotEmpty
-//             ? Colors.white // พื้นหลังสีขาวเมื่อมีข้อมูล
-//             : Colors.transparent, // พื้นหลังโปร่งใสเมื่อไม่มีข้อมูล
-//       ),
-//       child: child, // เนื้อหาภายใน Container
-//     );
-//   }
-// }
+import 'ICON.dart';
 
 class CustomContainerStyles {
   static Container styledContainer(String? itemValue,
@@ -30,6 +15,7 @@ class CustomContainerStyles {
     );
   }
 }
+// -----------------------------------------------------------------------------------
 
 class AppStyles {
   static ButtonStyle ConfirmbuttonStyle() {
@@ -194,4 +180,128 @@ class AppStyles {
       padding: const EdgeInsets.all(0),
     );
   }
+}
+// -----------------------------------------------------------------------------------
+
+class ButtonStyles {
+  static final ButtonStyle nextButtonStyle = ElevatedButton.styleFrom(
+    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    minimumSize: const Size(90, 35),
+    padding: const EdgeInsets.all(0),
+  );
+
+  static Widget nextButtonContent() {
+    return const Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'Next',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+          ),
+        ),
+        SizedBox(width: 7),
+        Icon(
+          MyIcons.arrow_forward_ios_rounded,
+          color: Colors.black,
+          size: 20.0,
+        ),
+      ],
+    );
+  }
+
+  static final ButtonStyle previousButtonStyle = ElevatedButton.styleFrom(
+    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    minimumSize: const Size(90, 35),
+    padding: const EdgeInsets.all(0),
+  );
+
+  static final Widget previousButtonContent = Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(
+        MyIcons.arrow_back_ios_rounded,
+        color: Colors.black,
+        size: 20.0,
+      ),
+      const SizedBox(width: 7),
+      const Text(
+        'Previous',
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 13,
+        ),
+      ),
+    ],
+  );
+
+  static final ButtonStyle disableNextButtonStyle = ElevatedButton.styleFrom(
+    backgroundColor: const Color.fromARGB(255, 23, 21, 59),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    minimumSize: const Size(90, 35),
+    padding: const EdgeInsets.all(0),
+  );
+
+  static Widget disableNextButtonContent() {
+    return const Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'Next',
+          style: TextStyle(
+            color: Color.fromARGB(255, 23, 21, 59),
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+          ),
+        ),
+        SizedBox(width: 7),
+        Icon(
+          MyIcons.arrow_forward_ios_rounded,
+          color: Color.fromARGB(255, 23, 21, 59),
+          size: 20.0,
+        ),
+      ],
+    );
+  }
+
+  static final ButtonStyle disablePreviousButtonStyle =
+      ElevatedButton.styleFrom(
+    backgroundColor: const Color.fromARGB(255, 23, 21, 59),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    minimumSize: const Size(90, 35),
+    padding: const EdgeInsets.all(0),
+  );
+
+  static final Widget disablePreviousButtonContent = Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(
+        MyIcons.arrow_back_ios_rounded,
+        color: Color.fromARGB(255, 23, 21, 59),
+        size: 20.0,
+      ),
+      const SizedBox(width: 7),
+      const Text(
+        'Previous',
+        style: TextStyle(
+          color: Color.fromARGB(255, 23, 21, 59),
+          fontWeight: FontWeight.bold,
+          fontSize: 13,
+        ),
+      ),
+    ],
+  );
 }

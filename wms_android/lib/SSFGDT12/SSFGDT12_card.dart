@@ -3,9 +3,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 import 'dart:ui';
-// import 'package:url_launcher/url_launcher.dart';
-// import 'package:intl/intl.dart';
-import 'package:wms_android/ICON.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
@@ -412,50 +409,24 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                             MainAxisAlignment.start,
                                         children: [
                                           prevLink != null
-                                              ? ElevatedButton.icon(
+                                              ? ElevatedButton(
                                                   onPressed: prevLink != null
                                                       ? loadPrevPage
                                                       : null,
-                                                  icon: const Icon(
-                                                    MyIcons
-                                                        .arrow_back_ios_rounded,
-                                                    color: Colors.black,
-                                                    size: 20.0,
-                                                  ),
-                                                  label: const Text(
-                                                    'Previous',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 13,
-                                                    ),
-                                                  ),
-                                                  style: AppStyles
-                                                      .PreviousButtonStyle(),
+                                                  style: ButtonStyles
+                                                      .previousButtonStyle,
+                                                  child: ButtonStyles
+                                                      .previousButtonContent,
                                                 )
-                                              : ElevatedButton.icon(
-                                                  onPressed: null,
-                                                  icon: const Icon(
-                                                    MyIcons
-                                                        .arrow_back_ios_rounded,
-                                                    color: Color.fromARGB(
-                                                        255, 23, 21, 59),
-                                                    size: 20.0,
-                                                  ),
-                                                  label: const Text(
-                                                    'Previous',
-                                                    style: TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 23, 21, 59),
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 13,
-                                                    ),
-                                                  ),
-                                                  style: AppStyles
-                                                      .DisablePreviousButtonStyle(),
-                                                ),
+                                              : ElevatedButton(
+                                                  onPressed: prevLink != null
+                                                      ? loadPrevPage
+                                                      : null,
+                                                  style: ButtonStyles
+                                                      .disablePreviousButtonStyle,
+                                                  child: ButtonStyles
+                                                      .disablePreviousButtonContent,
+                                                )
                                         ],
                                       ),
                                       // const SizedBox(width: 30),
@@ -484,59 +455,17 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                                   onPressed: nextLink != null
                                                       ? loadNextPage
                                                       : null,
-                                                  style: AppStyles
-                                                      .NextRecordDataButtonStyle(),
-                                                  child: const Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Text(
-                                                        'Next',
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 13,
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 7),
-                                                      Icon(
-                                                        MyIcons
-                                                            .arrow_forward_ios_rounded,
-                                                        color: Colors.black,
-                                                        size: 20.0,
-                                                      ),
-                                                    ],
-                                                  ),
+                                                  style: ButtonStyles
+                                                      .nextButtonStyle,
+                                                  child: ButtonStyles
+                                                      .nextButtonContent(),
                                                 )
                                               : ElevatedButton(
                                                   onPressed: null,
-                                                  style: AppStyles
-                                                      .DisableNextRecordDataButtonStyle(),
-                                                  child: const Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Text(
-                                                        'Next',
-                                                        style: TextStyle(
-                                                          color: Color.fromARGB(
-                                                              255, 23, 21, 59),
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 13,
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 7),
-                                                      Icon(
-                                                        MyIcons
-                                                            .arrow_forward_ios_rounded,
-                                                        color: Color.fromARGB(
-                                                            255, 23, 21, 59),
-                                                        size: 20.0,
-                                                      ),
-                                                    ],
-                                                  ),
+                                                  style: ButtonStyles
+                                                      .disableNextButtonStyle,
+                                                  child: ButtonStyles
+                                                      .disablePreviousButtonContent,
                                                 ),
                                         ],
                                       ),
@@ -556,46 +485,24 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     prevLink != null
-                                        ? ElevatedButton.icon(
+                                        ? ElevatedButton(
                                             onPressed: prevLink != null
                                                 ? loadPrevPage
                                                 : null,
-                                            icon: const Icon(
-                                              MyIcons.arrow_back_ios_rounded,
-                                              color: Colors.black,
-                                              size: 20.0,
-                                            ),
-                                            label: const Text(
-                                              'Previous',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 13,
-                                              ),
-                                            ),
-                                            style:
-                                                AppStyles.PreviousButtonStyle(),
+                                            style: ButtonStyles
+                                                .previousButtonStyle,
+                                            child: ButtonStyles
+                                                .previousButtonContent,
                                           )
-                                        : ElevatedButton.icon(
-                                            onPressed: null,
-                                            icon: const Icon(
-                                              MyIcons.arrow_back_ios_rounded,
-                                              color: Color.fromARGB(
-                                                  255, 23, 21, 59),
-                                              size: 20.0,
-                                            ),
-                                            label: const Text(
-                                              'Previous',
-                                              style: TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 23, 21, 59),
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 13,
-                                              ),
-                                            ),
-                                            style: AppStyles
-                                                .DisablePreviousButtonStyle(),
-                                          ),
+                                        : ElevatedButton(
+                                            onPressed: prevLink != null
+                                                ? loadPrevPage
+                                                : null,
+                                            style: ButtonStyles
+                                                .disablePreviousButtonStyle,
+                                            child: ButtonStyles
+                                                .disablePreviousButtonContent,
+                                          )
                                   ],
                                 ),
                                 // const SizedBox(width: 30),
@@ -622,55 +529,16 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                             onPressed: nextLink != null
                                                 ? loadNextPage
                                                 : null,
-                                            style: AppStyles
-                                                .NextRecordDataButtonStyle(),
-                                            child: const Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  'Next',
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13,
-                                                  ),
-                                                ),
-                                                SizedBox(width: 7),
-                                                Icon(
-                                                  MyIcons
-                                                      .arrow_forward_ios_rounded,
-                                                  color: Colors.black,
-                                                  size: 20.0,
-                                                ),
-                                              ],
-                                            ),
+                                            style: ButtonStyles.nextButtonStyle,
+                                            child: ButtonStyles
+                                                .nextButtonContent(),
                                           )
                                         : ElevatedButton(
                                             onPressed: null,
-                                            style: AppStyles
-                                                .DisableNextRecordDataButtonStyle(),
-                                            child: const Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  'Next',
-                                                  style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 23, 21, 59),
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13,
-                                                  ),
-                                                ),
-                                                SizedBox(width: 7),
-                                                Icon(
-                                                  MyIcons
-                                                      .arrow_forward_ios_rounded,
-                                                  color: Color.fromARGB(
-                                                      255, 23, 21, 59),
-                                                  size: 20.0,
-                                                ),
-                                              ],
-                                            ),
+                                            style: ButtonStyles
+                                                .disableNextButtonStyle,
+                                            child: ButtonStyles
+                                                .disablePreviousButtonContent,
                                           ),
                                   ],
                                 ),
