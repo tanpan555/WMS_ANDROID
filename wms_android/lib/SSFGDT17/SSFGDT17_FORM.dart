@@ -298,7 +298,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                                     color: Colors.black, fontSize: 14),
                               ),
                             ),
-                            subtitle: Text(desc),
+                            // subtitle: Text(desc),
                             onTap: () {
                               setState(() {
                                 final selectedDescription =
