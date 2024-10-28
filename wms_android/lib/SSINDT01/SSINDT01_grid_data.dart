@@ -40,6 +40,11 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   List<Map<String, dynamic>> dataLotList = [];
   List<bool> selectedItems = [];
 
+  int itemsPerPage = 5;
+  int currentPage = 1;
+  int totalItems = 0;
+  List<Map<String, dynamic>> paginatedData = [];
+
   @override
   void initState() {
     super.initState();
@@ -49,6 +54,43 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     print(widget.p_ou_code);
     sendGetRequestlineWMS();
     print(dataList.length);
+  }
+
+  void updatePaginatedData() {
+    int startIndex = (currentPage - 1) * itemsPerPage;
+    int endIndex = startIndex + itemsPerPage;
+    if (endIndex > dataList.length) {
+      endIndex = dataList.length;
+    }
+
+    setState(() {
+      paginatedData = dataList.sublist(startIndex, endIndex);
+      totalItems = dataList.length;
+    });
+  }
+
+  void _loadNextPage() {
+    if (currentPage < (dataList.length / itemsPerPage).ceil()) {
+      setState(() {
+        currentPage++;
+        updatePaginatedData();
+      });
+    }
+  }
+
+  void _loadPrevPage() {
+    if (currentPage > 1) {
+      setState(() {
+        currentPage--;
+        updatePaginatedData();
+      });
+    }
+  }
+
+  String _getPageIndicatorText() {
+    int startIndex = ((currentPage - 1) * itemsPerPage) + 1;
+    int endIndex = startIndex + paginatedData.length - 1;
+    return '$startIndex-$endIndex';
   }
 
   String? poStatus;
@@ -326,6 +368,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
           dataList =
               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
           selectedItems = List<bool>.filled(dataList.length, false);
+          currentPage = 1; // Reset to first page when new data is loaded
+          updatePaginatedData();
         });
         print('Success: $dataList');
       } else {
@@ -333,14 +377,18 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
         setState(() {
           dataList = [];
           selectedItems = [];
+          paginatedData = [];
         });
       }
     } catch (e) {
       print('Error: $e');
-      setState(() {
-        dataList = [];
-        selectedItems = [];
-      });
+      if (mounted) {
+        setState(() {
+          dataList = [];
+          selectedItems = [];
+          paginatedData = [];
+        });
+      }
     }
   }
 
@@ -885,7 +933,9 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                 Navigator.of(context).pop();
                 await updateOkLot(poReceiveNo, recSeq, ouCode);
                 await sendGetRequestlineWMS();
-                setState(() {});
+                if (mounted) {
+                  setState(() {});
+                }
               },
             ),
           ],
@@ -1634,6 +1684,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   @override
   Widget build(BuildContext context) {
+    bool hasNextPage = currentPage < (dataList.length / itemsPerPage).ceil();
+    bool hasPrevPage = currentPage > 1;
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ', showExitWarning: false),
@@ -2155,6 +2207,68 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                         ),
                       );
                     }).toList(),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Previous Button
+                        ElevatedButton.icon(
+                          onPressed: hasPrevPage ? _loadPrevPage : null,
+                          icon: const Icon(
+                            Icons.arrow_back_ios_rounded,
+                            color: Colors.black,
+                            size: 20.0,
+                          ),
+                          label: const Text(
+                            'Previous',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                          style: hasPrevPage
+                              ? AppStyles.PreviousButtonStyle()
+                              : AppStyles.DisablePreviousButtonStyle(),
+                        ),
+
+                        // Page Indicator
+                        Text(
+                          _getPageIndicatorText(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        // Next Button
+                        ElevatedButton(
+                          onPressed: hasNextPage ? _loadNextPage : null,
+                          style: hasNextPage
+                              ? AppStyles.NextRecordDataButtonStyle()
+                              : AppStyles.DisableNextRecordDataButtonStyle(),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Next',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              SizedBox(width: 7),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: Colors.black,
+                                size: 20.0,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -2197,6 +2311,49 @@ class _LotDialogState extends State<LotDialog> {
   String? poMessage;
   List<Map<String, dynamic>> dataList = [];
   List<Map<String, dynamic>> dataLotList = [];
+
+  int itemsPerPage = 5;
+  int currentPage = 1;
+  int totalItems = 0;
+  List<Map<String, dynamic>> paginatedLotList = [];
+
+  // Add these methods for pagination control
+  void updatePaginatedLotList() {
+    int startIndex = (currentPage - 1) * itemsPerPage;
+    int endIndex = startIndex + itemsPerPage;
+    if (endIndex > dataLotList.length) {
+      endIndex = dataLotList.length;
+    }
+
+    setState(() {
+      paginatedLotList = dataLotList.sublist(startIndex, endIndex);
+      totalItems = dataLotList.length;
+    });
+  }
+
+  void _loadNextPage() {
+    if (currentPage < (dataLotList.length / itemsPerPage).ceil()) {
+      setState(() {
+        currentPage++;
+        updatePaginatedLotList();
+      });
+    }
+  }
+
+  void _loadPrevPage() {
+    if (currentPage > 1) {
+      setState(() {
+        currentPage--;
+        updatePaginatedLotList();
+      });
+    }
+  }
+
+  String _getPageIndicatorText() {
+    int startIndex = ((currentPage - 1) * itemsPerPage) + 1;
+    int endIndex = startIndex + paginatedLotList.length - 1;
+    return '$startIndex-$endIndex';
+  }
 
   @override
   void initState() {
@@ -2363,8 +2520,6 @@ class _LotDialogState extends State<LotDialog> {
       'Content-Type': 'application/json; charset=UTF-8',
     };
 
-    print('Request URL: $url');
-
     try {
       final response = await http.get(Uri.parse(url), headers: headers);
 
@@ -2372,14 +2527,11 @@ class _LotDialogState extends State<LotDialog> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
 
-        print('Response Data: $responseData');
-
-        // Assuming 'items' is the correct key containing the list
         setState(() {
           dataLotList =
               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-
-          print('dataLotList.length ${dataLotList.length}');
+          currentPage = 1; // Reset to first page when new data is loaded
+          updatePaginatedLotList();
         });
       } else {
         print('Failed to get data. Status code: ${response.statusCode}');
@@ -3375,6 +3527,9 @@ class _LotDialogState extends State<LotDialog> {
 
   @override
   Widget build(BuildContext context) {
+    bool hasNextPage = currentPage < (dataLotList.length / itemsPerPage).ceil();
+    bool hasPrevPage = currentPage > 1;
+
     return Scaffold(
       backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(title: 'LOT Details', showExitWarning: true),
@@ -3383,6 +3538,7 @@ class _LotDialogState extends State<LotDialog> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              // OK Button
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -3405,6 +3561,8 @@ class _LotDialogState extends State<LotDialog> {
                   ),
                 ],
               ),
+
+              // Item Description
               TextField(
                 controller: TextEditingController(
                     text: '${widget.item} ${widget.itemDesc}'),
@@ -3419,14 +3577,12 @@ class _LotDialogState extends State<LotDialog> {
                 readOnly: true,
               ),
               SizedBox(height: 4),
+
+              // Lot Count Controls
               Row(
                 children: [
                   IconButton(
-                    icon: Icon(
-                      Icons.remove,
-                      size: 50,
-                      color: Colors.white,
-                    ),
+                    icon: Icon(Icons.remove, size: 50, color: Colors.white),
                     onPressed: () {
                       int currentValue = int.parse(lotCountController.text);
                       setState(() {
@@ -3446,18 +3602,12 @@ class _LotDialogState extends State<LotDialog> {
                         fillColor: const Color.fromARGB(255, 255, 255, 255),
                         border: InputBorder.none,
                       ),
-                      style: const TextStyle(
-                        color: Colors.black87,
-                      ),
+                      style: const TextStyle(color: Colors.black87),
                       keyboardType: TextInputType.number,
                     ),
                   ),
                   IconButton(
-                    icon: Icon(
-                      Icons.add,
-                      size: 50,
-                      color: Colors.white,
-                    ),
+                    icon: Icon(Icons.add, size: 50, color: Colors.white),
                     onPressed: () {
                       int currentValue = int.parse(lotCountController.text);
                       setState(() {
@@ -3467,14 +3617,15 @@ class _LotDialogState extends State<LotDialog> {
                   ),
                 ],
               ),
+
+              // ADD and GENLOT Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                      ),
+                          backgroundColor: Colors.green),
                       child: Text('ADD', style: TextStyle(color: Colors.white)),
                       onPressed: () async {
                         await postLot(
@@ -3489,8 +3640,7 @@ class _LotDialogState extends State<LotDialog> {
                   Expanded(
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.greenAccent,
-                        ),
+                            backgroundColor: Colors.greenAccent),
                         child: Text('GENLOT',
                             style:
                                 TextStyle(color: Colors.white, fontSize: 12)),
@@ -3501,8 +3651,6 @@ class _LotDialogState extends State<LotDialog> {
                               widget.recSeq,
                               lotCountController.text,
                               widget.ouCode);
-                          print(poStatus);
-                          print(poMessage);
                           if (poStatus == '1') {
                             _showAlertDialogGenLot(context);
                           }
@@ -3514,178 +3662,226 @@ class _LotDialogState extends State<LotDialog> {
                 ],
               ),
               SizedBox(height: 4),
-              dataLotList.isNotEmpty
-                  ? ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: dataLotList.length,
-                      itemBuilder: (context, index) {
-                        var item = dataLotList[index];
-                        return SizedBox(
-                          width: 300.0,
-                          child: Card(
-                            elevation: 4.0,
-                            margin: EdgeInsets.symmetric(vertical: 8.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            color: Color.fromRGBO(204, 235, 252, 1.0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+
+              // Lot List with Pagination
+              if (dataLotList.isNotEmpty) ...[
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: paginatedLotList.length,
+                  itemBuilder: (context, index) {
+                    var item = paginatedLotList[index];
+                    return SizedBox(
+                      width: 300.0,
+                      child: Card(
+                        elevation: 4.0,
+                        margin: EdgeInsets.symmetric(vertical: 8.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        color: Color.fromRGBO(204, 235, 252, 1.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildInfoRow(
+                                  'Seq:', item['lot_seq_nb']?.toString() ?? ''),
+                              SizedBox(height: 8),
+                              _buildInfoRow('Lot No:',
+                                  item['lot_product_no']?.toString() ?? ''),
+                              SizedBox(height: 8),
+                              _buildInfoRow(
+                                  'Lot QTY:',
+                                  item['lot_qty'] != null
+                                      ? numberFormat.format(item['lot_qty'])
+                                      : ''),
+                              SizedBox(height: 8),
+                              _buildInfoRow('Lot ผู้ผลิต:',
+                                  item['lot_supplier']?.toString() ?? ''),
+                              SizedBox(height: 8),
+                              _buildInfoRow('MFG Date:',
+                                  item['mfg_date']?.toString() ?? ''),
+                              SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  _buildInfoRow('Seq:',
-                                      item['lot_seq_nb']?.toString() ?? ''),
-                                  SizedBox(height: 8),
-                                  _buildInfoRow('Lot No:',
-                                      item['lot_product_no']?.toString() ?? ''),
-                                  SizedBox(height: 8),
-                                  _buildInfoRow(
-                                      'Lot QTY:',
-                                      item['lot_qty'] != null
-                                          ? numberFormat.format(item['lot_qty'])
-                                          : ''),
-                                  SizedBox(height: 8),
-                                  _buildInfoRow('Lot ผู้ผลิต:',
-                                      item['lot_supplier']?.toString() ?? ''),
-                                  SizedBox(height: 8),
-                                  _buildInfoRow('MFG Date:',
-                                      item['mfg_date']?.toString() ?? ''),
-                                  SizedBox(height: 16),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        child: IconButton(
-                                          iconSize: 20.0,
-                                          icon: Image.asset(
-                                            'assets/images/bin.png',
-                                            width: 45.0,
-                                            height: 45.0,
-                                          ),
-                                          onPressed: () async {
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween, // Space between text and button
-                                                    children: [
-                                                      Icon(
-                                                        Icons
-                                                            .notification_important, // Use the bell icon
-                                                        color: Colors
-                                                            .red, // Set the color to red
-                                                      ),
-                                                      SizedBox(width: 8),
-                                                      Text(
-                                                        'แจ้งเตือน',
-                                                        style: TextStyle(
-                                                          fontSize: 20.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                      IconButton(
-                                                        icon: Icon(Icons.close),
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  content: Text(
-                                                      'ยืนยันที่จะลบหรือไม่'),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      child: Text('ยกเลิก'),
-                                                    ),
-                                                    TextButton(
-                                                      onPressed: () async {
-                                                        await deleteLot(
-                                                          widget.poReceiveNo,
-                                                          widget.ouCode,
-                                                          widget.recSeq,
-                                                          widget.poReceiveNo,
-                                                          item['lot_seq']
-                                                                  ?.toString() ??
-                                                              '',
-                                                          item['po_seq']
-                                                                  ?.toString() ??
-                                                              '',
-                                                        );
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      child: Text('ตกลง'),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      Spacer(),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        child: IconButton(
-                                          iconSize: 20.0,
-                                          icon: Image.asset(
-                                            'assets/images/edit.png',
-                                            width: 45.0,
-                                            height: 45.0,
-                                          ),
-                                          onPressed: () {
-                                            showDetailsLotDialog(
-                                              context,
-                                              item,
-                                              widget.recSeq,
-                                              widget.ouCode,
-                                              () async {
-                                                await getLotList(
-                                                    widget.poReceiveNo,
-                                                    widget.recSeq,
-                                                    widget.ouCode);
-                                                setState(() {});
-                                              },
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  _buildDeleteButton(item),
+                                  Spacer(),
+                                  _buildEditButton(item),
                                 ],
                               ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+
+                // Pagination Controls
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: hasPrevPage ? _loadPrevPage : null,
+                      icon: const Icon(
+                        Icons.arrow_back_ios_rounded,
+                        color: Colors.black,
+                        size: 20.0,
+                      ),
+                      label: const Text(
+                        'Previous',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
+                      ),
+                      style: hasPrevPage
+                          ? AppStyles.PreviousButtonStyle()
+                          : AppStyles.DisablePreviousButtonStyle(),
+                    ),
+                    Text(
+                      _getPageIndicatorText(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: hasNextPage ? _loadNextPage : null,
+                      style: hasNextPage
+                          ? AppStyles.NextRecordDataButtonStyle()
+                          : AppStyles.DisableNextRecordDataButtonStyle(),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Next',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
                             ),
                           ),
-                        );
-                      },
-                    )
-                  : Center(
-                      child: Text('No LOT details available',
-                          style: TextStyle(color: Colors.white)),
+                          SizedBox(width: 7),
+                          Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: Colors.black,
+                            size: 20.0,
+                          ),
+                        ],
+                      ),
                     ),
+                  ],
+                ),
+              ] else
+                Center(
+                  child: Text('No Data available',
+                      style: TextStyle(color: Colors.white)),
+                ),
             ],
           ),
         ),
       ),
       bottomNavigationBar: BottomBar(currentPage: 'show'),
+    );
+  }
+
+// Helper method for delete button
+  Widget _buildDeleteButton(Map<String, dynamic> item) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: IconButton(
+        iconSize: 20.0,
+        icon: Image.asset(
+          'assets/images/bin.png',
+          width: 45.0,
+          height: 45.0,
+        ),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(Icons.notification_important, color: Colors.red),
+                    SizedBox(width: 8),
+                    Text(
+                      'แจ้งเตือน',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
+                ),
+                content: Text('ยืนยันที่จะลบหรือไม่'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('ยกเลิก'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      await deleteLot(
+                        widget.poReceiveNo,
+                        widget.ouCode,
+                        widget.recSeq,
+                        widget.poReceiveNo,
+                        item['lot_seq']?.toString() ?? '',
+                        item['po_seq']?.toString() ?? '',
+                      );
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('ตกลง'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+// Helper method for edit button
+  Widget _buildEditButton(Map<String, dynamic> item) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: IconButton(
+        iconSize: 20.0,
+        icon: Image.asset(
+          'assets/images/edit.png',
+          width: 45.0,
+          height: 45.0,
+        ),
+        onPressed: () {
+          showDetailsLotDialog(
+            context,
+            item,
+            widget.recSeq,
+            widget.ouCode,
+            () async {
+              await getLotList(
+                  widget.poReceiveNo, widget.recSeq, widget.ouCode);
+              setState(() {});
+            },
+          );
+        },
+      ),
     );
   }
 

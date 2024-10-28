@@ -125,6 +125,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       final response = await http.get(Uri.parse(requestUrl));
 
       if (response.statusCode == 200) {
+        print(requestUrl);
         final responseBody = utf8.decode(response.bodyBytes);
         final parsedResponse = json.decode(responseBody);
         if (mounted) {

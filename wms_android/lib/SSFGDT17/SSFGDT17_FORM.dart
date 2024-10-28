@@ -479,6 +479,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                                       onPressed: () {
                                         cancel_from(selectedcCode!).then((_) {
                                           Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
                                           Navigator.of(context).pop(
                                             MaterialPageRoute(
                                               builder: (context) =>

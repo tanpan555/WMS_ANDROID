@@ -929,8 +929,8 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         readOnly: readOnly,
         // Add these properties for multiline support
         keyboardType: TextInputType.multiline,
-        minLines: 1, // Minimum number of lines
-        maxLines: 5, // Maximum number of lines or null for unlimited
+        minLines: 1,
+        maxLines: 5,
         onChanged: (value) {
           setState(() {
             checkUpdateData = true;
@@ -972,12 +972,11 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
   }
 
   bool isValidDate(int day, int month, int year) {
-    // Handle February and leap year validation
     if (month == 2) {
       if (isLeapYear(year)) {
-        return day <= 29; // Leap year, February has 29 days
+        return day <= 29;
       } else {
-        return day <= 28; // Non-leap year, February has 28 days
+        return day <= 28;
       }
     }
 
