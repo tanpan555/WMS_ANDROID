@@ -1136,7 +1136,6 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             controller: moDoNoController,
                             readOnly: true,
                             onTap: () => showDialogDropdownSearchMoDoNo(),
-                            // onTap: () => showDialogDropdownSearchMoDoNo(),
                             minLines: 1,
                             maxLines: 3,
                             // overflow: TextOverflow.ellipsis,
@@ -1359,7 +1358,6 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                       controller: cancelController,
                       readOnly: true,
                       onTap: () => showDialogDropdownSearchCancel(),
-                      // onTap: () => showDialogDropdownSearchMoDoNo(),
                       minLines: 1,
                       maxLines: 3,
                       // overflow: TextOverflow.ellipsis,
@@ -1500,280 +1498,99 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         });
   }
 
-  void showDialogDropdownSearchMoDoNo() async {
-    final result = await showDialog(
+  void showDialogDropdownSearchMoDoNo() {
+    showDialog(
       context: context,
-      // barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'เลขที่คำสั่งผลผลิต *',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            // Navigator.of(context).pop();
-                            Navigator.of(context).pop('button');
-                            _searchController1.clear();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    // ช่องค้นหา
-                    TextField(
-                      controller: _searchController1,
-                      decoration: const InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final filteredItems = dataLovMoDoNo.where((item) {
-                            final docString =
-                                '${item['schid'] ?? ''} ${item['fg_code'] ?? ''} ${item['cust_name'] ?? ''}'
-                                    .toLowerCase();
-                            final searchQuery =
-                                _searchController1.text.trim().toLowerCase();
-                            return docString.contains(searchQuery);
-                          }).toList();
+        return DialogStyles.customRequiredSearchDialog(
+          context: context,
+          headerText: 'เลขที่คำสั่งผลผลิต',
+          searchController: _searchController1,
+          data: dataLovMoDoNo,
+          docString: (item) =>
+              '${item['schid'] ?? ''} ${item['fg_code'] ?? ''} ${item['cust_name'] ?? ''}',
+          titleText: (item) =>
+              '${item['schid'] ?? ''} ${item['fg_code'] ?? ''}',
+          subtitleText: (item) => '${item['cust_name'] ?? ''}',
+          onTap: (item) {
+            Navigator.of(context).pop();
+            setState(() {
+              String dataCHK = '${item['schid']}';
+              selectLovMoDoNo = '${item['schid']}';
+              returnStatusLovMoDoNo = '${item['schid']}';
+              moDoNoController.text = selectLovMoDoNo.toString();
 
-                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-                          if (filteredItems.isEmpty) {
-                            return const Center(
-                              child: Text('No data found'),
-                            );
-                          }
+              if (dataCHK != returnStatusLovRefNoForCheck) {
+                checkUpdateData = true;
+              } else {
+                print('returnStatusLovRefNo : '
+                    '$returnStatusLovRefNo'
+                    'returnStatusLovRefNoForCheck'
+                    '$returnStatusLovRefNoForCheck');
+              }
 
-                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final doc =
-                                  '${item['schid'] ?? ''} ${item['fg_code'] ?? ''}';
-                              final returnCode = '${item['schid']}';
-
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  doc,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text('${item['cust_name'] ?? ''}'),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    String dataCHK = returnCode;
-                                    selectLovMoDoNo = returnCode;
-                                    returnStatusLovMoDoNo = returnCode;
-                                    moDoNoController.text =
-                                        selectLovMoDoNo.toString();
-
-                                    if (dataCHK !=
-                                        returnStatusLovRefNoForCheck) {
-                                      checkUpdateData = true;
-                                    } else {
-                                      print('returnStatusLovRefNo : '
-                                          '$returnStatusLovRefNo'
-                                          'returnStatusLovRefNoForCheck'
-                                          '$returnStatusLovRefNoForCheck');
-                                    }
-
-                                    print(
-                                        'returnStatusLovMoDoNo New: $returnStatusLovMoDoNo Type : ${returnStatusLovMoDoNo.runtimeType}');
-                                    print(
-                                        'selectLovMoDoNo New: $selectLovMoDoNo Type : ${selectLovMoDoNo.runtimeType}');
-                                    print(
-                                        'moDoNoController New: $moDoNoController Type : ${moDoNoController.runtimeType}');
-                                    shidForChk = returnCode;
-                                    selectCust(returnStatusLovMoDoNo);
-                                    print('shidForChk : $shidForChk');
-                                    print(
-                                        'returnStatusLovRefNoForCheck : $returnStatusLovRefNoForCheck');
-                                    print(
-                                        ' checkUpdateData : $checkUpdateData');
-                                    chkCust(
-                                      shidForChk,
-                                      soNoForChk.isNotEmpty
-                                          ? soNoForChk
-                                          : 'null',
-                                      testChk = 0,
-                                    );
-                                  });
-                                  _searchController1.clear();
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+              print(
+                  'returnStatusLovMoDoNo New: $returnStatusLovMoDoNo Type : ${returnStatusLovMoDoNo.runtimeType}');
+              print(
+                  'selectLovMoDoNo New: $selectLovMoDoNo Type : ${selectLovMoDoNo.runtimeType}');
+              print(
+                  'moDoNoController New: $moDoNoController Type : ${moDoNoController.runtimeType}');
+              shidForChk = '${item['schid']}';
+              selectCust(returnStatusLovMoDoNo);
+              print('shidForChk : $shidForChk');
+              print(
+                  'returnStatusLovRefNoForCheck : $returnStatusLovRefNoForCheck');
+              print(' checkUpdateData : $checkUpdateData');
+              chkCust(
+                shidForChk,
+                soNoForChk.isNotEmpty ? soNoForChk : 'null',
+                testChk = 0,
               );
-            },
-          ),
+            });
+          },
         );
       },
     );
-    if (result == null) {
-      // กดปิดจากพื้นที่นอก dialog
-      print('Dialog closed by clicking outside.');
-    } else if (result == 'button') {
-      // กดปิดโดยใช้ปุ่มใน dialog
-      print('Dialog closed by button.');
-    }
   }
 
   void showDialogDropdownSearchRefNo() {
     showDialog(
       context: context,
-      // barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'เลขที่เอกสารอ้างอิง',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            _searchController2.clear();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    // ช่องค้นหา
-                    TextField(
-                      controller: _searchController2,
-                      decoration: const InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final filteredItems = dataLovRefNo.where((item) {
-                            final docString =
-                                '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}'
-                                    .toLowerCase();
-                            final searchQuery =
-                                _searchController2.text.trim().toLowerCase();
-                            return docString.contains(searchQuery);
-                          }).toList();
+        return DialogStyles.customSearchDialog(
+          context: context,
+          headerText: 'เลขที่เอกสารอ้างอิง',
+          searchController: _searchController2,
+          data: dataLovRefNo,
+          docString: (item) =>
+              '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}',
+          titleText: (item) =>
+              '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}',
+          subtitleText: (item) => '',
+          onTap: (item) {
+            Navigator.of(context).pop();
+            setState(() {
+              String dataCHK =
+                  '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}';
+              selectLovRefNo =
+                  '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}';
+              returnStatusLovRefNo = '${item['so_no']}';
+              refNoController.text = selectLovRefNo.toString();
 
-                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-                          if (filteredItems.isEmpty) {
-                            return const Center(
-                              child: Text('No data found'),
-                            );
-                          }
-
-                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final doc =
-                                  '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}';
-                              final returnCode = '${item['so_no']}';
-
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                // subtitle: Text('${item['cust_name'] ?? ''}'),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    String dataCHK = doc;
-                                    selectLovRefNo = doc;
-                                    returnStatusLovRefNo = returnCode;
-                                    refNoController.text =
-                                        selectLovRefNo.toString();
-
-                                    if (dataCHK !=
-                                        returnStatusLovRefNoForCheck) {
-                                      checkUpdateData = true;
-                                    }
-                                    print(
-                                        'returnStatusLovRefNo New: $returnStatusLovRefNo Type : ${returnStatusLovRefNo.runtimeType}');
-                                    print(
-                                        'selectLovRefNo New: $selectLovRefNo Type : ${selectLovRefNo.runtimeType}');
-                                    print(
-                                        'refNoController New: $refNoController Type : ${refNoController.runtimeType}');
-                                    soNoForChk = returnCode;
-                                  });
-                                  _searchController2.clear();
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+              if (dataCHK != returnStatusLovRefNoForCheck) {
+                checkUpdateData = true;
+              }
+              print(
+                  'returnStatusLovRefNo New: $returnStatusLovRefNo Type : ${returnStatusLovRefNo.runtimeType}');
+              print(
+                  'selectLovRefNo New: $selectLovRefNo Type : ${selectLovRefNo.runtimeType}');
+              print(
+                  'refNoController New: $refNoController Type : ${refNoController.runtimeType}');
+              soNoForChk = '${item['so_no']}';
+            });
+          },
         );
       },
     );
@@ -1782,120 +1599,34 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   void showDialogDropdownSearchDocType() {
     showDialog(
       context: context,
-      // barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'ประเภทการจ่าย *',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            _searchController3.clear();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    // ช่องค้นหา
-                    TextField(
-                      controller: _searchController3,
-                      decoration: const InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final filteredItems = dataLovDocType.where((item) {
-                            final docString =
-                                '${item['doc_type']} ${item['doc_desc']}'
-                                    .toLowerCase();
-                            final searchQuery =
-                                _searchController3.text.trim().toLowerCase();
-                            return docString.contains(searchQuery);
-                          }).toList();
+        return DialogStyles.customRequiredSearchDialog(
+          context: context,
+          headerText: 'ประเภทการจ่าย',
+          searchController: _searchController3,
+          data: dataLovDocType,
+          docString: (item) => '${item['doc_type']} ${item['doc_desc']}',
+          titleText: (item) => '${item['doc_type']}',
+          subtitleText: (item) => '${item['doc_desc'] ?? ''}',
+          onTap: (item) {
+            Navigator.of(context).pop();
+            setState(() {
+              String dataCHK = '${item['doc_desc']}';
+              selectLovDocType = '${item['doc_desc']}';
+              docTypeController.text = '${item['doc_desc']}';
+              returnStatusLovDocType = '${item['doc_type']}';
 
-                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-                          if (filteredItems.isEmpty) {
-                            return const Center(
-                              child: Text('No data found'),
-                            );
-                          }
-
-                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final doc = '${item['doc_desc']}';
-                              final returnCode = '${item['doc_type']}';
-
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  '${item['doc_type']}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text('${item['doc_desc'] ?? ''}'),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    String dataCHK = doc;
-                                    selectLovDocType = doc;
-                                    docTypeController.text = doc;
-                                    returnStatusLovDocType = returnCode;
-
-                                    if (dataCHK !=
-                                        returnStatusLovDocTypeForCheck) {
-                                      checkUpdateData = true;
-                                    }
-                                  });
-                                  print(
-                                      'dataLovDocType in body: $dataLovDocType type: ${dataLovDocType.runtimeType}');
-                                  // print(selectedItem);
-                                  print(
-                                      'returnStatusLovDocType in body: $returnStatusLovDocType type: ${returnStatusLovDocType.runtimeType}');
-                                  _searchController3.clear();
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+              if (dataCHK != returnStatusLovDocTypeForCheck) {
+                checkUpdateData = true;
+              }
+            });
+            print(
+                'dataLovDocType in body: $dataLovDocType type: ${dataLovDocType.runtimeType}');
+            // print(selectedItem);
+            print(
+                'returnStatusLovDocType in body: $returnStatusLovDocType type: ${returnStatusLovDocType.runtimeType}');
+          },
         );
       },
     );
@@ -1904,130 +1635,33 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   void showDialogDropdownSearchCancel() {
     showDialog(
       context: context,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'สาเหตุการยกเลิก',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            _searchController4.clear();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    // ช่องค้นหา
-                    TextField(
-                      controller: _searchController4,
-                      decoration: const InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final filteredItems = dataLovCancel.where((item) {
-                            final docString = '${item['d']}'.toLowerCase();
-                            final searchQuery =
-                                _searchController4.text.trim().toLowerCase();
-                            return docString.contains(searchQuery);
-                          }).toList();
+        return DialogStyles.customSearchDialog(
+          context: context,
+          headerText: 'สาเหตุการยกเลิก',
+          searchController: _searchController4,
+          data: dataLovCancel,
+          docString: (item) => '${item['d']}',
+          titleText: (item) => '${item['r']}',
+          subtitleText: (item) => '${item['cancel_desc']}',
+          onTap: (item) {
+            Navigator.of(context).pop();
+            setState(() {
+              selectLovCancel = '${item['d']}';
+              cancelController.text = selectLovCancel.toString();
+              returnStatusLovCancel = '${item['r']}';
 
-                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-                          if (filteredItems.isEmpty) {
-                            return const Center(
-                              child: Text('No data found'),
-                            );
-                          }
-
-                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final doc = '${item['cancel_desc']}';
-                              final returnCode = '${item['r']}';
-
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: '$returnCode ',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: '$doc',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    selectLovCancel = '$returnCode $doc';
-                                    cancelController.text =
-                                        selectLovCancel.toString();
-                                    returnStatusLovCancel = returnCode;
-
-                                    //  if(returnStatusLovCancel != returnStatusLovCancelForCheck) {
-                                    // checkUpdateData = true;
-                                    // }
-                                  });
-                                  print(
-                                      'dataLovCancel in body: $dataLovCancel type: ${dataLovCancel.runtimeType}');
-                                  // print(selectedItem);
-                                  print(
-                                      'returnStatusLovCancel in body: $returnStatusLovCancel type: ${returnStatusLovCancel.runtimeType}');
-                                  _searchController4.clear();
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+              //  if(returnStatusLovCancel != returnStatusLovCancelForCheck) {
+              // checkUpdateData = true;
+              // }
+            });
+            print(
+                'dataLovCancel in body: $dataLovCancel type: ${dataLovCancel.runtimeType}');
+            // print(selectedItem);
+            print(
+                'returnStatusLovCancel in body: $returnStatusLovCancel type: ${returnStatusLovCancel.runtimeType}');
+          },
         );
       },
     );
