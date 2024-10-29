@@ -13,8 +13,8 @@ import 'package:intl/intl.dart';
 
 class SSFGDT04_SCANBARCODE extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจาก lov
-  final String po_doc_no;
-  final String po_doc_type;
+  final String? po_doc_no;
+  final String? po_doc_type;
   final String setqc;
 
   const SSFGDT04_SCANBARCODE({
@@ -203,14 +203,14 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                     Row(
                       children: const [
                         Icon(
-                          Icons.notification_important, // ไอคอนแจ้งเตือน
-                          color: Colors.red, // สีแดง
+                          Icons.check_box, // ไอคอนแจ้งเตือน
+                          color: Colors.green, // สีแดง
                           size: 30,
                         ),
                         SizedBox(
                           width: 8, // ระยะห่างระหว่างไอคอนกับข้อความ
                         ),
-                        Text('แจ้งเตือน'),
+                        Text('Update'),
                       ],
                     ),
                     // Close icon
@@ -385,7 +385,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                   BorderRadius.circular(8), // Rounded corners (optional)
             ),
             child: Text(
-              widget.po_doc_no,
+              widget.po_doc_no ?? '',
               textAlign: TextAlign.center,
               style: const TextStyle(
                   color: Colors.black,
@@ -482,7 +482,9 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                               backgroundColor: Colors.white,
                               side: const BorderSide(color: Colors.grey),
                             ),
-                            child: Text('ตกลง'),
+                            child: Text(
+                              'ตกลง'
+                            ),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },

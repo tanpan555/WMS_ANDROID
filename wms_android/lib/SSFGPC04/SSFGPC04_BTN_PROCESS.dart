@@ -53,17 +53,17 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   TextEditingController endSubCategoryController = TextEditingController();
   TextEditingController searchEndSubCatController = TextEditingController();
   // ----------------------------- Start Brand
-  // List<dynamic> dataLovStartBrand = [];
-  // String? displayStartBrand;
-  // String returnStartBrand = '';
-  // TextEditingController startBrandController = TextEditingController();
-  // TextEditingController searchStartBrandController = TextEditingController();
+  List<dynamic> dataLovStartBrand = [];
+  String? displayStartBrand;
+  String returnStartBrand = '';
+  TextEditingController startBrandController = TextEditingController();
+  TextEditingController searchStartBrandController = TextEditingController();
   // ----------------------------- End Brand
-  // List<dynamic> dataLovEndBrand = [];
-  // String? displayEndBrand;
-  // String returnEndBrand = '';
-  // TextEditingController endBrandController = TextEditingController();
-  // TextEditingController searchEndBrandController = TextEditingController();
+  List<dynamic> dataLovEndBrand = [];
+  String? displayEndBrand;
+  String returnEndBrand = '';
+  TextEditingController endBrandController = TextEditingController();
+  TextEditingController searchEndBrandController = TextEditingController();
   // ----------------------------- Start Item
   List<dynamic> dataLovStartItem = [];
   String? displayStartItem;
@@ -98,8 +98,8 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     searchStartSubCatController.dispose();
     searchEndSubCatController.dispose();
 
-    // searchStartBrandController.dispose();
-    // searchEndBrandController.dispose();
+    searchStartBrandController.dispose();
+    searchEndBrandController.dispose();
 
     searchStartItemController.dispose();
     searchEndItemController.dispose();
@@ -364,77 +364,77 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
 
 //----------------------------------------------------------------------------//
 // Brand
-  // Future<void> selectLovStartBrand() async {
-  //   if (isFirstLoad == false) {
-  //     if (mounted) {
-  //       isLoading = true;
-  //     }
-  //   }
-  //   try {
-  //     final response = await http.get(
-  //         Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_BRAND'));
+  Future<void> selectLovStartBrand() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
+    try {
+      final response = await http.get(
+          Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_BRAND'));
 
-  //     if (response.statusCode == 200) {
-  //       final responseBody = utf8.decode(response.bodyBytes);
-  //       final responseData = jsonDecode(responseBody);
-  //       print('Fetched data: $jsonDecode');
-  //       if (mounted) {
-  //         setState(() {
-  //           dataLovStartGroup =
-  //               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        print('Fetched data: $jsonDecode');
+        if (mounted) {
+          setState(() {
+            dataLovStartGroup =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-  //           if (isFirstLoad == false) {
-  //             if (mounted) {
-  //               isLoading = false;
-  //             }
-  //           }
-  //         });
-  //       }
-  //       print('dataLovStartGroup : $dataLovStartGroup');
-  //     } else {
-  //       throw Exception(
-  //           'dataLovStartGroup Failed to load fetchData ||  Status Code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('dataLovStartGroup ERROR IN Fetch Data : $e');
-  //   }
-  // }
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
+          });
+        }
+        print('dataLovStartGroup : $dataLovStartGroup');
+      } else {
+        throw Exception(
+            'dataLovStartGroup Failed to load fetchData ||  Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('dataLovStartGroup ERROR IN Fetch Data : $e');
+    }
+  }
 
-  // Future<void> selectLovEndBrand() async {
-  //   if (isFirstLoad == false) {
-  //     if (mounted) {
-  //       isLoading = true;
-  //     }
-  //   }
-  //   try {
-  //     final response = await http.get(Uri.parse(
-  //         'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_BRAND_E/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'));
+  Future<void> selectLovEndBrand() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_BRAND_E/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'));
 
-  //     if (response.statusCode == 200) {
-  //       final responseBody = utf8.decode(response.bodyBytes);
-  //       final responseData = jsonDecode(responseBody);
-  //       print('Fetched data: $jsonDecode');
-  //       if (mounted) {
-  //         setState(() {
-  //           dataLovEndGroup =
-  //               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        print('Fetched data: $jsonDecode');
+        if (mounted) {
+          setState(() {
+            dataLovEndGroup =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-  //           if (isFirstLoad == false) {
-  //             if (mounted) {
-  //               isLoading = false;
-  //             }
-  //           }
-  //         });
-  //       }
-  //       print('dataLovEndGroup : $dataLovEndGroup');
-  //     } else {
-  //       throw Exception(
-  //           'dataLovEndGroup Failed to load fetchData ||  Status Code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('dataLovEndGroup ERROR IN Fetch Data : $e');
-  //   }
-  // }
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
+          });
+        }
+        print('dataLovEndGroup : $dataLovEndGroup');
+      } else {
+        throw Exception(
+            'dataLovEndGroup Failed to load fetchData ||  Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('dataLovEndGroup ERROR IN Fetch Data : $e');
+    }
+  }
 
 //----------------------------------------------------------------------------//
 // Item
@@ -454,8 +454,8 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
           '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'
           '/${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'null'}'
-          // '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
-          // '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'
+          '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
+          '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'
           ));
 
       if (response.statusCode == 200) {
@@ -500,25 +500,14 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
           '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'
           '/${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'null'}'
-          // '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
-          // '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'
+          '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
+          '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'
           '/${returnStartItem.isNotEmpty ? returnStartItem : 'null'}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $jsonDecode');
-        print('http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_ITM_E'
-          '/${globals.BROWSER_LANGUAGE}'
-          '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
-          '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
-          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
-          '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
-          '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'
-          '/${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'null'}'
-          // '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
-          // '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'
-          '/${returnStartItem.isNotEmpty ? returnStartItem : 'null'}');
         if (mounted) {
           setState(() {
             dataLovEndItem =
@@ -752,60 +741,60 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                     ),
 //----------------------------------------------------------------------------//
 // Brand
-                    // const SizedBox(height: 8),
-                    // Row(
-                    //   children: [
-                    //     Expanded(
-                    //       child: TextFormField(
-                    //         controller: searchStartBrandController,
-                    //         readOnly: true,
-                    //         onTap: () => showDialogDropdownSearchStartBrand(),
-                    //         minLines: 1,
-                    //         maxLines: 3,
-                    //         // overflow: TextOverflow.ellipsis,
-                    //         decoration: const InputDecoration(
-                    //           border: InputBorder.none,
-                    //           filled: true,
-                    //           fillColor: Colors.white,
-                    //           labelText: 'จาก ยี่ห้อ',
-                    //           labelStyle: TextStyle(
-                    //             color: Colors.black87,
-                    //             fontSize: 12,
-                    //           ),
-                    //           suffixIcon: Icon(
-                    //             Icons.arrow_drop_down,
-                    //             color: Color.fromARGB(255, 113, 113, 113),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     const SizedBox(width: 8),
-                    //     Expanded(
-                    //       child: TextFormField(
-                    //         controller: searchEndBrandController,
-                    //         readOnly: true,
-                    //         onTap: () => showDialogDropdownSearchEndBrand(),
-                    //         minLines: 1,
-                    //         maxLines: 3,
-                    //         // overflow: TextOverflow.ellipsis,
-                    //         decoration: const InputDecoration(
-                    //           border: InputBorder.none,
-                    //           filled: true,
-                    //           fillColor: Colors.white,
-                    //           labelText: 'ถึง ยี่ห้อ',
-                    //           labelStyle: TextStyle(
-                    //             color: Colors.black87,
-                    //             fontSize: 12,
-                    //           ),
-                    //           suffixIcon: Icon(
-                    //             Icons.arrow_drop_down,
-                    //             color: Color.fromARGB(255, 113, 113, 113),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     )
-                    //   ],
-                    // ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: searchStartBrandController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchStartBrand(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'จาก ยี่ห้อ',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: searchEndBrandController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchEndBrand(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'ถึง ยี่ห้อ',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
 //----------------------------------------------------------------------------//
 // Item
                     const SizedBox(height: 8),
@@ -1819,286 +1808,286 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
 
 //----------------------------------------------------------------------------//
 // จาก Brand
-  // void showDialogDropdownSearchStartBrand() {
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: true,
-  //     builder: (BuildContext context) {
-  //       return Dialog(
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(10),
-  //         ),
-  //         child: StatefulBuilder(
-  //           builder: (context, setState) {
-  //             return Container(
-  //               padding: const EdgeInsets.all(16),
-  //               height: 300, // ปรับความสูงของ Popup ตามต้องการ
-  //               child: Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: [
-  //                   Row(
-  //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                     children: [
-  //                       const Text(
-  //                         'จาก Brand',
-  //                         style: TextStyle(
-  //                             fontSize: 18, fontWeight: FontWeight.bold),
-  //                       ),
-  //                       IconButton(
-  //                         icon: const Icon(Icons.close),
-  //                         onPressed: () {
-  //                           Navigator.of(context).pop();
-  //                           searchStartBrandController.clear();
-  //                         },
-  //                       ),
-  //                     ],
-  //                   ),
-  //                   const SizedBox(height: 10),
-  //                   // ช่องค้นหา
-  //                   TextField(
-  //                     controller: searchStartBrandController,
-  //                     decoration: const InputDecoration(
-  //                       hintText: 'ค้นหา',
-  //                       border: OutlineInputBorder(),
-  //                     ),
-  //                     onChanged: (query) {
-  //                       if (mounted) {
-  //                         setState(() {});
-  //                       }
-  //                     },
-  //                   ),
-  //                   const SizedBox(height: 10),
-  //                   Expanded(
-  //                     child: Builder(
-  //                       builder: (context) {
-  //                         final filteredItems = dataLovStartBrand.where((item) {
-  //                           final docString =
-  //                               '${item['brand_code'] ?? ''} ${item['brand_name'] ?? ''}'
-  //                                   .toLowerCase();
-  //                           final searchQuery = searchStartBrandController.text
-  //                               .trim()
-  //                               .toLowerCase();
-  //                           return docString.contains(searchQuery);
-  //                         }).toList();
+  void showDialogDropdownSearchStartBrand() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'จาก Brand',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            searchStartBrandController.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // ช่องค้นหา
+                    TextField(
+                      controller: searchStartBrandController,
+                      decoration: const InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final filteredItems = dataLovStartBrand.where((item) {
+                            final docString =
+                                '${item['brand_code'] ?? ''} ${item['brand_name'] ?? ''}'
+                                    .toLowerCase();
+                            final searchQuery = searchStartBrandController.text
+                                .trim()
+                                .toLowerCase();
+                            return docString.contains(searchQuery);
+                          }).toList();
 
-  //                         // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-  //                         if (filteredItems.isEmpty) {
-  //                           return const Center(
-  //                             child: Text('No data found'),
-  //                           );
-  //                         }
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
+                          if (filteredItems.isEmpty) {
+                            return const Center(
+                              child: Text('No data found'),
+                            );
+                          }
 
-  //                         // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-  //                         return ListView.builder(
-  //                           itemCount: filteredItems.length,
-  //                           itemBuilder: (context, index) {
-  //                             final item = filteredItems[index];
-  //                             final doc = '${item['brand_code'] ?? ''}';
-  //                             final returnCode =
-  //                                 '${item['brand_code'] ?? ''}';
+                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final doc = '${item['brand_code'] ?? ''}';
+                              final returnCode =
+                                  '${item['brand_code'] ?? ''}';
 
-  //                             return ListTile(
-  //                               contentPadding: EdgeInsets.zero,
-  //                               title: Text(
-  //                                 '${item['brand_code'] ?? ''}',
-  //                                 style: const TextStyle(
-  //                                   fontSize: 12,
-  //                                   fontWeight: FontWeight.bold,
-  //                                 ),
-  //                               ),
-  //                               subtitle: Text('${item['brand_name'] ?? ''}'),
-  //                               onTap: () {
-  //                                 isLoading = true;
-  //                                 Navigator.of(context).pop();
-  //                                 setState(() {
-  //                                   // String dataCheck = returnCode;
-  //                                   returnStartBrand = returnCode;
-  //                                   displayStartBrand = doc;
-  //                                   startBrandController.text =
-  //                                       displayStartBrand.toString();
-  //                                   if (returnStartBrand.isNotEmpty) {
-  //                                     selectLovEndBrand();
-  //                                     displayEndBrand = '';
-  //                                     returnEndBrand = '';
-  //                                     endBrandController.clear();
-  //                                     selectLovStartItem();
-  //                                     displayStartItem = '';
-  //                                     returnStartItem = '';
-  //                                     startItemController.clear();
-  //                                     selectLovEndItem();
-  //                                     displayEndItem = '';
-  //                                     returnEndItem = '';
-  //                                     endItemController.clear();
-  //                                     isLoading = false;
-  //                                   }
-  //                                   // if (dataCheck != '') {
-  //                                   //   checkUpdateData = true;
-  //                                   // }
-  //                                   // -----------------------------------------
-  //                                   print(
-  //                                       'startBrandController New: $startBrandController Type : ${startBrandController.runtimeType}');
-  //                                   print(
-  //                                       'doc New: $doc Type : ${doc.runtimeType}');
-  //                                   print(
-  //                                       'displayStartBrand New: $displayStartSubCategory Type : ${displayStartSubCategory.runtimeType}');
-  //                                   print(
-  //                                       'returnStartBrand New: $returnStartBrand Type : ${returnStartBrand.runtimeType}');
-  //                                 });
-  //                                 searchStartBrandController.clear();
-  //                               },
-  //                             );
-  //                           },
-  //                         );
-  //                       },
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             );
-  //           },
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  '${item['brand_code'] ?? ''}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text('${item['brand_name'] ?? ''}'),
+                                onTap: () {
+                                  isLoading = true;
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    // String dataCheck = returnCode;
+                                    returnStartBrand = returnCode;
+                                    displayStartBrand = doc;
+                                    startBrandController.text =
+                                        displayStartBrand.toString();
+                                    if (returnStartBrand.isNotEmpty) {
+                                      selectLovEndBrand();
+                                      displayEndBrand = '';
+                                      returnEndBrand = '';
+                                      endBrandController.clear();
+                                      selectLovStartItem();
+                                      displayStartItem = '';
+                                      returnStartItem = '';
+                                      startItemController.clear();
+                                      selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
+                                      isLoading = false;
+                                    }
+                                    // if (dataCheck != '') {
+                                    //   checkUpdateData = true;
+                                    // }
+                                    // -----------------------------------------
+                                    print(
+                                        'startBrandController New: $startBrandController Type : ${startBrandController.runtimeType}');
+                                    print(
+                                        'doc New: $doc Type : ${doc.runtimeType}');
+                                    print(
+                                        'displayStartBrand New: $displayStartSubCategory Type : ${displayStartSubCategory.runtimeType}');
+                                    print(
+                                        'returnStartBrand New: $returnStartBrand Type : ${returnStartBrand.runtimeType}');
+                                  });
+                                  searchStartBrandController.clear();
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
 
 //----------------------------------------------------------------------------//
 // ถึง Brand
-  // void showDialogDropdownSearchEndBrand() {
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: true,
-  //     builder: (BuildContext context) {
-  //       return Dialog(
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(10),
-  //         ),
-  //         child: StatefulBuilder(
-  //           builder: (context, setState) {
-  //             return Container(
-  //               padding: const EdgeInsets.all(16),
-  //               height: 300, // ปรับความสูงของ Popup ตามต้องการ
-  //               child: Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: [
-  //                   Row(
-  //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                     children: [
-  //                       const Text(
-  //                         'ถึง Brand',
-  //                         style: TextStyle(
-  //                             fontSize: 18, fontWeight: FontWeight.bold),
-  //                       ),
-  //                       IconButton(
-  //                         icon: const Icon(Icons.close),
-  //                         onPressed: () {
-  //                           Navigator.of(context).pop();
-  //                           searchEndBrandController.clear();
-  //                         },
-  //                       ),
-  //                     ],
-  //                   ),
-  //                   const SizedBox(height: 10),
-  //                   // ช่องค้นหา
-  //                   TextField(
-  //                     controller: searchEndBrandController,
-  //                     decoration: const InputDecoration(
-  //                       hintText: 'ค้นหา',
-  //                       border: OutlineInputBorder(),
-  //                     ),
-  //                     onChanged: (query) {
-  //                       if (mounted) {
-  //                         setState(() {});
-  //                       }
-  //                     },
-  //                   ),
-  //                   const SizedBox(height: 10),
-  //                   Expanded(
-  //                     child: Builder(
-  //                       builder: (context) {
-  //                         final filteredItems =
-  //                             dataLovEndBrand.where((item) {
-  //                           final docString =
-  //                               '${item['brand_code'] ?? ''} ${item['brand_name'] ?? ''}'
-  //                                   .toLowerCase();
-  //                           final searchQuery = searchEndBrandController.text
-  //                               .trim()
-  //                               .toLowerCase();
-  //                           return docString.contains(searchQuery);
-  //                         }).toList();
+  void showDialogDropdownSearchEndBrand() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'ถึง Brand',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            searchEndBrandController.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // ช่องค้นหา
+                    TextField(
+                      controller: searchEndBrandController,
+                      decoration: const InputDecoration(
+                        hintText: 'ค้นหา',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (query) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final filteredItems =
+                              dataLovEndBrand.where((item) {
+                            final docString =
+                                '${item['brand_code'] ?? ''} ${item['brand_name'] ?? ''}'
+                                    .toLowerCase();
+                            final searchQuery = searchEndBrandController.text
+                                .trim()
+                                .toLowerCase();
+                            return docString.contains(searchQuery);
+                          }).toList();
 
-  //                         // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-  //                         if (filteredItems.isEmpty) {
-  //                           return const Center(
-  //                             child: Text('No data found'),
-  //                           );
-  //                         }
+                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
+                          if (filteredItems.isEmpty) {
+                            return const Center(
+                              child: Text('No data found'),
+                            );
+                          }
 
-  //                         // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-  //                         return ListView.builder(
-  //                           itemCount: filteredItems.length,
-  //                           itemBuilder: (context, index) {
-  //                             final item = filteredItems[index];
-  //                             final doc = '${item['brand_code'] ?? ''}';
-  //                             final returnCode =
-  //                                 '${item['brand_code'] ?? ''}';
+                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
+                          return ListView.builder(
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
+                              final doc = '${item['brand_code'] ?? ''}';
+                              final returnCode =
+                                  '${item['brand_code'] ?? ''}';
 
-  //                             return ListTile(
-  //                               contentPadding: EdgeInsets.zero,
-  //                               title: Text(
-  //                                 '${item['brand_code'] ?? ''}',
-  //                                 style: const TextStyle(
-  //                                   fontSize: 12,
-  //                                   fontWeight: FontWeight.bold,
-  //                                 ),
-  //                               ),
-  //                               subtitle: Text('${item['brand_name'] ?? ''}'),
-  //                               onTap: () {
-  //                                 isLoading = true;
-  //                                 Navigator.of(context).pop();
-  //                                 setState(() {
-  //                                   // String dataCheck = returnCode;
-  //                                   returnEndBrand = returnCode;
-  //                                   displayEndBrand = doc;
-  //                                   endBrandController.text =
-  //                                       displayEndBrand.toString();
-  //                                   if (returnEndBrand.isNotEmpty) {
-  //                                     selectLovStartItem();
-  //                                     displayStartItem = '';
-  //                                     returnStartItem = '';
-  //                                     startItemController.clear();
-  //                                     selectLovEndItem();
-  //                                     displayEndItem = '';
-  //                                     returnEndItem = '';
-  //                                     endItemController.clear();
-  //                                     isLoading = false;
-  //                                   }
-  //                                   print(
-  //                                       'endBrandController New: $endBrandController Type : ${endBrandController.runtimeType}');
-  //                                   print(
-  //                                       'doc New: $doc Type : ${doc.runtimeType}');
-  //                                   print(
-  //                                       'displayEndBrand New: $displayEndBrand Type : ${displayEndBrand.runtimeType}');
-  //                                   print(
-  //                                       'returnEndBrand New: $returnEndBrand Type : ${returnEndBrand.runtimeType}');
-  //                                 });
-  //                                 searchEndBrandController.clear();
-  //                               },
-  //                             );
-  //                           },
-  //                         );
-  //                       },
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             );
-  //           },
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(
+                                  '${item['brand_code'] ?? ''}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text('${item['brand_name'] ?? ''}'),
+                                onTap: () {
+                                  isLoading = true;
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    // String dataCheck = returnCode;
+                                    returnEndBrand = returnCode;
+                                    displayEndBrand = doc;
+                                    endBrandController.text =
+                                        displayEndBrand.toString();
+                                    if (returnEndBrand.isNotEmpty) {
+                                      selectLovStartItem();
+                                      displayStartItem = '';
+                                      returnStartItem = '';
+                                      startItemController.clear();
+                                      selectLovEndItem();
+                                      displayEndItem = '';
+                                      returnEndItem = '';
+                                      endItemController.clear();
+                                      isLoading = false;
+                                    }
+                                    print(
+                                        'endBrandController New: $endBrandController Type : ${endBrandController.runtimeType}');
+                                    print(
+                                        'doc New: $doc Type : ${doc.runtimeType}');
+                                    print(
+                                        'displayEndBrand New: $displayEndBrand Type : ${displayEndBrand.runtimeType}');
+                                    print(
+                                        'returnEndBrand New: $returnEndBrand Type : ${returnEndBrand.runtimeType}');
+                                  });
+                                  searchEndBrandController.clear();
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
 //----------------------------------------------------------------------------//
 // จาก item
   void showDialogDropdownSearchStartItem() {

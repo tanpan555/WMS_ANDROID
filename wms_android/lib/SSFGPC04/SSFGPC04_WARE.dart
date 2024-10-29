@@ -10,13 +10,9 @@ import 'SSFGPC04_LOC.dart';
 
 class SSFGPC04_WARE extends StatefulWidget {
   final List<Map<String, dynamic>> selectedItems;
-  // final String soNo;
-  // final String date;
   const SSFGPC04_WARE({
     Key? key,
     required this.selectedItems,
-    // required this.soNo,
-    // required this.date,
   }) : super(key: key);
 
   @override
@@ -149,7 +145,9 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
                     final selectedItems = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SSFGPC04_WAREHOUSE(),
+                        builder: (context) => SSFGPC04_WAREHOUSE(
+                          selectedItems: widget.selectedItems,
+                        ),
                       ),
                     );
                     if (selectedItems != null) {

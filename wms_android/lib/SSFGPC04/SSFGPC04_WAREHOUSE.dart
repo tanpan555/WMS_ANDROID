@@ -8,7 +8,7 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 // import 'SSFGPC04_WARE.dart';
 
 class SSFGPC04_WAREHOUSE extends StatefulWidget {
-  const SSFGPC04_WAREHOUSE({super.key});
+  const SSFGPC04_WAREHOUSE({super.key, required List<Map<String, dynamic>> selectedItems});
 
   @override
   _SSFGPC04_WAREHOUSEState createState() => _SSFGPC04_WAREHOUSEState();

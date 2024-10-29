@@ -7,7 +7,6 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGDT04_FORM.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../styles.dart';
-import 'package:wms_android/ICON.dart';
 
 class SSFGDT04_CARD extends StatefulWidget {
   final int pFlag;
@@ -24,7 +23,6 @@ class SSFGDT04_CARD extends StatefulWidget {
     required this.date,
     required this.status,
     required this.pWareCode,
-    // required this.pOuCode,
     required this.pErpOuCode,
     required this.pFlag,
     required this.pAppUser,

@@ -5,7 +5,6 @@ import '../custom_appbar.dart';
 import '../bottombar.dart';
 import 'SSFGDT04_MENU.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
-// import 'package:wms_android/custom_drawer.dart';
 
 class SSFGDT04_MAIN extends StatefulWidget {
   final String p_attr1;
@@ -22,15 +21,14 @@ class SSFGDT04_MAIN extends StatefulWidget {
 }
 
 class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
-  List<dynamic> data = [];
-  final ScrollController _scrollController = ScrollController();
+  List<dynamic> datawarehouse = [];
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     fetchData();
-    print(widget.p_attr1);
+    print(gb.ATTR1);
     print(gb.P_ERP_OU_CODE);
   }
 
@@ -46,11 +44,11 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
 
         if (mounted) {
           setState(() {
-            data = List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+            datawarehouse = List<Map<String, dynamic>>.from(responseData['items'] ?? []);
             isLoading = false;
           });
         }
-        print('dataMenu : $data');
+        print('dataMenu : $datawarehouse');
       } else {
         throw Exception('Failed to load fetchData');
       }
@@ -78,10 +76,8 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    margin: const EdgeInsets.only(
-                        bottom: 8.0), // Add some space below the container
-                    color: Colors.grey[
-                        300], // Customize the background color of the container
+                    margin: const EdgeInsets.only(bottom: 8.0), 
+                    color: Colors.grey[300],
                     child: const Center(
                       child: Text(
                         'เลือกคลังปฏิบัติงาน',
@@ -94,7 +90,7 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
                     ),
                   ),
                   Expanded(
-                    child: data.isNotEmpty
+                    child: datawarehouse.isNotEmpty
                         ? GridView.builder(
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
@@ -103,9 +99,9 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
                               mainAxisSpacing: 5,
                               childAspectRatio: 1.0,
                             ),
-                            itemCount: data.length,
+                            itemCount: datawarehouse.length,
                             itemBuilder: (context, index) {
-                              final item = data[index];
+                              final item = datawarehouse[index];
                               return Card(
                                 elevation: 4,
                                 child: InkWell(

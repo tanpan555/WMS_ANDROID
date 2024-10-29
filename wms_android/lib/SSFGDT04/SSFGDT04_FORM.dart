@@ -13,8 +13,8 @@ import '../styles.dart';
 class SSFGDT04_FORM extends StatefulWidget {
   // final String pReceiveNo; // ware code ที่มาจากเลือ lov
   final String pWareCode; // ware code ที่มาจากเลือ lov
-  final String po_doc_no;
-  final String po_doc_type;
+  final String? po_doc_no;
+  final String? po_doc_type;
 
   SSFGDT04_FORM({
     Key? key,
