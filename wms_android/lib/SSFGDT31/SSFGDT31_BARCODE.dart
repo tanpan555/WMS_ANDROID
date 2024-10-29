@@ -119,10 +119,7 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
 
             ITEM_CODE.text = po_item_code ?? ''; // Item Code
             LOT_NUMBER.text = po_lot_number ?? ''; // Lot Number
-            // Quantity.text = po_quantity ?? '';  // Quantity
-
             CUR_LOC.text = po_curr_loc ?? ''; // Current Locator
-
             LOT_QTY.text = po_bal_lot ?? ''; // รวมรายการจ่าย
             LOT_UNIT.text = po_bal_qty ?? ''; // รวมจำนวนจ่าย
 
@@ -134,10 +131,42 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
             print('po_curr_loc: $po_curr_loc');
             print('po_bal_lot: $po_bal_lot');
             print('po_bal_qty: $po_bal_qty');
-            // Cur_loc_code.text = LCBARCODE ?? '';
+
             get_LCBARCODE();
-            // fetchLocCurrStatus();
           });
+
+          if (poBarcodeStatus == '1') {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Row(
+                    children: [
+                      Icon(
+                        Icons.notification_important,
+                        color: Colors.red,
+                      ),
+                      SizedBox(width: 8),
+                      Text('แจ้งเตือน'),
+                    ],
+                  ),
+                  content: Text(poBarcodeMessage ?? 'No message provided'),
+                  actions: [
+                    TextButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.grey),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('ตกลง'),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
         }
       } else {
         throw Exception('Failed to load PO status');
