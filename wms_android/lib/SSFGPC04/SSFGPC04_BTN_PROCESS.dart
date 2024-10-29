@@ -3,13 +3,21 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/styles.dart';
-import 'package:wms_android/Global_Parameter.dart' as globals;
+import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
 
 class SSFGPC04_BTN_PROCESS extends StatefulWidget {
+  final List<Map<String, dynamic>> selectedItems;
+  final String date;
+  final String note;
+  final String docNo;
   SSFGPC04_BTN_PROCESS({
     Key? key,
+    required this.selectedItems,
+    required this.date,
+    required this.note,
+    required this.docNo,
   }) : super(key: key);
   @override
   _SSFGPC04_BTN_PROCESSState createState() => _SSFGPC04_BTN_PROCESSState();
@@ -447,7 +455,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_ITM'
-          '/${globals.BROWSER_LANGUAGE}'
+          '/${gb.BROWSER_LANGUAGE}'
           '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
           '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
           '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
@@ -455,8 +463,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'
           '/${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'null'}'
           '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
-          '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'
-          ));
+          '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -493,7 +500,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_ITM_E'
-          '/${globals.BROWSER_LANGUAGE}'
+          '/${gb.BROWSER_LANGUAGE}'
           '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
           '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
           '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
@@ -530,6 +537,76 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
       }
     } catch (e) {
       print('dataLovEndItem ERROR IN Fetch Data : $e');
+    }
+  }
+
+//----------------------------------------------------------------------------//
+//button
+  String? empid;
+  String? v_nb_doc_no;
+  String? v_alt;
+  String? v_alt2;
+
+  Future<void> process() async {
+    const url = 'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_process_new';
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'P_s_group_code': startGroupController,
+      'P_e_group_code': endGroupController,
+      'P_s_cat_code': startCategoryController,
+      'P_e_cat_code': endCategoryController,
+      'P_s_sub_cat_code': startSubCategoryController,
+      'P_e_sub_cat_code': endSubCategoryController,
+      'P_s_brand_code': startBrandController,
+      'P_e_brand_code': endBrandController,
+      'P_s_item_code': startItemController,
+      'P_e_item_code': endItemController,
+      'P_NB_DATE': widget.date,
+      'P_NOTE': widget.note,
+      'P_EMP_ID': gb.P_EMP_ID,
+      'APP_SESSION': gb.APP_SESSION,
+      'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
+      'browser_language': gb.BROWSER_LANGUAGE,
+      'APP_USER': gb.APP_USER,
+      'P_ATTR1': gb.ATTR1,
+    });
+
+    print('Request body: $body');
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        if (response.body.isNotEmpty) {
+          try {
+            final Map<String, dynamic> responseData = jsonDecode(response.body);
+            if (mounted) {
+              setState(() {
+                v_nb_doc_no = responseData['V_NB_DOC_NO'];
+                v_alt = responseData['V_ALT'];
+                v_alt2 = responseData['V_ALT2'];
+              });
+            }
+            print('Success: $responseData');
+          } catch (e) {
+            print('Error decoding JSON: $e');
+          }
+        } else {
+          print('เช็คแล้วจ้าาา');
+        }
+      } else {
+        print('Failed to post data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('การประมวลผล Error นะฮ๊าฟฟู๊วววว: $e');
     }
   }
 
@@ -858,15 +935,53 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                          onPressed: () async {},
+                          onPressed: () async {
+                            // เช็คค่า empid ก่อนที่จะทำการประมวลผล
+                            if (empid != null && empid!.isNotEmpty) {
+                              await process();
+                              // แสดง popup สำเร็จหลังจากประมวลผลเสร็จ
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    // title: Text('สำเร็จ'),
+                                    content: Text('$v_alt'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('ตกลง'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            } else {
+                              // แสดง popup แจ้งเตือนหาก empid ไม่มีค่า
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    // title: Text('ข้อผิดพลาด'),
+                                    content: Text('$v_alt'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('ตกลง'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          },
                           style: AppStyles.ConfirmbuttonStyle(),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // const Icon(
-                              //   Icons.print,
-                              //   color: Colors.black,
-                              // ),
                               const SizedBox(width: 8),
                               Text(
                                 'ประมวลผล',
@@ -877,6 +992,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                         ),
                       ],
                     ),
+
                     const SizedBox(width: 8),
                   ],
                 ),
@@ -887,7 +1003,6 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
       ),
     );
   }
-
 //----------------------------------------------------------------------------//
 // จากกลุ่มสินค้า
   void showDialogDropdownSearchStartGroup() {
@@ -1883,8 +1998,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
                               final doc = '${item['brand_code'] ?? ''}';
-                              final returnCode =
-                                  '${item['brand_code'] ?? ''}';
+                              final returnCode = '${item['brand_code'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
@@ -2005,8 +2119,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                     Expanded(
                       child: Builder(
                         builder: (context) {
-                          final filteredItems =
-                              dataLovEndBrand.where((item) {
+                          final filteredItems = dataLovEndBrand.where((item) {
                             final docString =
                                 '${item['brand_code'] ?? ''} ${item['brand_name'] ?? ''}'
                                     .toLowerCase();
@@ -2029,8 +2142,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
                               final doc = '${item['brand_code'] ?? ''}';
-                              final returnCode =
-                                  '${item['brand_code'] ?? ''}';
+                              final returnCode = '${item['brand_code'] ?? ''}';
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
@@ -2088,6 +2200,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
       },
     );
   }
+
 //----------------------------------------------------------------------------//
 // จาก item
   void showDialogDropdownSearchStartItem() {

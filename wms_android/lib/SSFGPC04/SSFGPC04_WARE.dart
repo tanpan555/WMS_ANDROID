@@ -10,9 +10,15 @@ import 'SSFGPC04_LOC.dart';
 
 class SSFGPC04_WARE extends StatefulWidget {
   final List<Map<String, dynamic>> selectedItems;
+  final String date;
+  final String note;
+  final String docNo;
   const SSFGPC04_WARE({
     Key? key,
     required this.selectedItems,
+    required this.date,
+    required this.note,
+    required this.docNo,
   }) : super(key: key);
 
   @override
@@ -176,6 +182,9 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
                           selectedItems: widget.selectedItems
                               .map((item) => Map<String, dynamic>.from(item))
                               .toList(),
+                              date: widget.date,
+                              note: widget.note,
+                              docNo: widget.docNo,
                         ),
                       ),
                     );

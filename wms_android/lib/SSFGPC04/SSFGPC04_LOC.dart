@@ -10,9 +10,15 @@ import 'SSFGPC04_BTN_PROCESS.dart';
 
 class SSFGPC04_LOC extends StatefulWidget {
   final List<Map<String, dynamic>> selectedItems;
+  final String date;
+  final String note;
+  final String docNo;
   const SSFGPC04_LOC({
     Key? key,
     required this.selectedItems,
+    required this.date,
+    required this.note,
+    required this.docNo,
   }) : super(key: key);
 
   @override
@@ -35,6 +41,8 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_TMP_IN_LOC/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}'));
+      print(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_TMP_IN_LOC/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}'));
 
       if (response.statusCode == 200) {
@@ -120,7 +128,14 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SSFGPC04_BTN_PROCESS(),
+                        builder: (context) => SSFGPC04_BTN_PROCESS(
+                          selectedItems: widget.selectedItems
+                              .map((item) => Map<String, dynamic>.from(item))
+                              .toList(),
+                          date: widget.date,
+                          note: widget.note, // เพิ่ม ',' ตรงนี้
+                          docNo: widget.docNo,
+                        ),
                       ),
                     );
                   },
