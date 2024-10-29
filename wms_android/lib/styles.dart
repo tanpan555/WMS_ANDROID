@@ -436,21 +436,6 @@ class DialogStyles {
     );
   }
 
-//   showDialog(
-//   context: context,
-//   builder: (BuildContext context) {
-//     return DialogStyles.customAlertDialog(
-//       context: context,
-//       content: const Text('คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?'),
-//       onClose: () => Navigator.of(context).pop(),
-//       onConfirm: () {
-//         // ใส่โค้ดการทำงานเมื่อกดปุ่ม "ตกลง"
-//         Navigator.of(context).pop();
-//       },
-//     );
-//   },
-// );
-
 // ----------------------------------------------------------------------
 
   static Dialog customSearchDialog({

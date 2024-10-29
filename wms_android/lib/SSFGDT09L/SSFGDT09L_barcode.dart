@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
+import 'package:wms_android/styles.dart';
 import 'SSFGDT09L_reason.dart';
 
 class Ssfgdt09lBarcode extends StatefulWidget {
@@ -737,115 +738,62 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.notification_important,
-                    color: Colors.red,
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    'แจ้งเตือน',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () async {
-                      // ปิด popup
-                      Navigator.of(context).pop();
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageDelete),
+          onClose: () {
+            Navigator.of(context).pop();
+            barCode = '';
+            locatorForm = '';
+            itemCode = '';
+            lotNo = '';
+            quantity = '';
+            locatorTo = '';
+            lotQty = '';
+            lotUnit = '';
 
-                      barCode = '';
-                      locatorForm = '';
-                      itemCode = '';
-                      lotNo = '';
-                      quantity = '';
-                      locatorTo = '';
-                      lotQty = '';
-                      lotUnit = '';
+            statusFetchDataBarcode = '';
+            messageFetchDataBarcode = '';
+            valIDFetchDataBarcode = '';
 
-                      statusFetchDataBarcode = '';
-                      messageFetchDataBarcode = '';
-                      valIDFetchDataBarcode = '';
+            barcodeController.clear();
+            locatorFormController.clear();
+            itemCodeController.clear();
+            lotNoController.clear();
+            quantityController.clear();
+            locatorToController.clear();
+            lotQtyController.clear();
+            lotUnitController.clear();
 
-                      barcodeController.clear();
-                      locatorFormController.clear();
-                      itemCodeController.clear();
-                      lotNoController.clear();
-                      quantityController.clear();
-                      locatorToController.clear();
-                      lotQtyController.clear();
-                      lotUnitController.clear();
+            _barcodeFocusNode.requestFocus();
+          },
+          onConfirm: () {
+            Navigator.of(context).pop();
 
-                      _barcodeFocusNode.requestFocus();
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    messageDelete,
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          // ปิด popup
-                          Navigator.of(context).pop();
+            barCode = '';
+            locatorForm = '';
+            itemCode = '';
+            lotNo = '';
+            quantity = '';
+            locatorTo = '';
+            lotQty = '';
+            lotUnit = '';
 
-                          barCode = '';
-                          locatorForm = '';
-                          itemCode = '';
-                          lotNo = '';
-                          quantity = '';
-                          locatorTo = '';
-                          lotQty = '';
-                          lotUnit = '';
+            statusFetchDataBarcode = '';
+            messageFetchDataBarcode = '';
+            valIDFetchDataBarcode = '';
 
-                          statusFetchDataBarcode = '';
-                          messageFetchDataBarcode = '';
-                          valIDFetchDataBarcode = '';
+            barcodeController.clear();
+            locatorFormController.clear();
+            itemCodeController.clear();
+            lotNoController.clear();
+            quantityController.clear();
+            locatorToController.clear();
+            lotQtyController.clear();
+            lotUnitController.clear();
 
-                          barcodeController.clear();
-                          locatorFormController.clear();
-                          itemCodeController.clear();
-                          lotNoController.clear();
-                          quantityController.clear();
-                          locatorToController.clear();
-                          lotQtyController.clear();
-                          lotUnitController.clear();
-
-                          _barcodeFocusNode.requestFocus();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ตกลง'),
-                      ),
-                    ],
-                  )
-                ])),
-          ),
+            _barcodeFocusNode.requestFocus();
+          },
         );
       },
     );
@@ -858,64 +806,13 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.notification_important,
-                    color: Colors.red,
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    'แจ้งเตือน',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    messageAlert,
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ตกลง'),
-                      ),
-                    ],
-                  )
-                ])),
-          ),
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () => Navigator.of(context).pop(),
+          onConfirm: () {
+            Navigator.of(context).pop();
+          },
         );
       },
     );
@@ -1244,7 +1141,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                         });
                       },
                     ),
-                    const SizedBox(height: 10),
+                    // const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -1344,7 +1241,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       });
                     },
                   ),
-                  const SizedBox(height: 10),
+                  // const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     // mainAxisAlignment: MainAxisAlignment.center,

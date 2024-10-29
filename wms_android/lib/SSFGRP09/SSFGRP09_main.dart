@@ -2671,50 +2671,14 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   ) {
     showDialog(
       context: context,
-      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Row(
-            children: [
-              Icon(
-                Icons.notification_important,
-                color: Colors.red,
-              ),
-              SizedBox(width: 10),
-              Text(
-                'แจ้งเตือน',
-                style: TextStyle(color: Colors.black),
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    messageAlert,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ย้อนกลับ'),
-                      ),
-                    ],
-                  )
-                ])),
-          ),
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () => Navigator.of(context).pop(),
+          onConfirm: () {
+            Navigator.of(context).pop();
+          },
         );
       },
     );
