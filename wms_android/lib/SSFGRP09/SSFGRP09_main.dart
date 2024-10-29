@@ -3623,13 +3623,13 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       builder: (BuildContext context) {
         return DialogStyles.customSearchDialog(
           context: context,
-          headerText: 'ค้นหารายการ',
+          headerText: 'ถึง รหัสสินค้า',
           searchController: searchController14,
           data: dataLovEndItem,
           docString: (item) =>
               '${item['item_code'] ?? ''} ${item['name'] ?? ''}',
           titleText: (item) => item['item_code'] ?? '',
-          subtitleText: (item) => item['description'] ?? '',
+          subtitleText: (item) => item['name'] ?? '',
           onTap: (item) {
             Navigator.of(context).pop();
             setState(() {

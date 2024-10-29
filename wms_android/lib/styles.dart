@@ -137,7 +137,7 @@ class AppStyles {
     );
   }
 
-    static ButtonStyle PreviousButtonStyle() {
+  static ButtonStyle PreviousButtonStyle() {
     return ElevatedButton.styleFrom(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       shape: RoundedRectangleBorder(
@@ -487,7 +487,6 @@ class DialogStyles {
                       icon: const Icon(Icons.close),
                       onPressed: () {
                         Navigator.of(context).pop();
-                        searchController.clear();
                       },
                     ),
                   ],
