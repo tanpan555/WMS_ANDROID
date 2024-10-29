@@ -181,7 +181,7 @@ class AppStyles {
     );
   }
 }
-// -----------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------- ButtonStyles  Previous & Next
 
 class ButtonStyles {
   static final ButtonStyle nextButtonStyle = ElevatedButton.styleFrom(
@@ -304,4 +304,249 @@ class ButtonStyles {
       ),
     ],
   );
+}
+// ----------------------------------------------------------------------------------- DialogStyles
+
+class DialogStyles {
+  // ---------------------------------------------------------------------  dialog แจ้งเตือนย้อนกลับ
+  static AlertDialog warningNotSaveDialog(BuildContext context) {
+    return AlertDialog(
+      title: Row(
+        children: [
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.notification_important,
+                color: Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'แจ้งเตือน',
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: const Icon(MyIcons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+      content: const Text('คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?'),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
+              child: const Text('Cancel'),
+            ),
+            const SizedBox(width: 4),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
+              child: const Text('OK'),
+            ),
+          ],
+        )
+      ],
+    );
+  }
+  // ElevatedButton(
+  // onPressed: () {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => DialogStyles.exitConfirmationDialog(context),
+  //   );
+  // },
+  // child: const Text('Show Dialog'),
+  // ---------------------------------------------------------------------  alertMessageDialog
+
+  static AlertDialog alertMessageDialog({
+    required BuildContext context,
+    required Widget content,
+    required VoidCallback onClose,
+    required VoidCallback onConfirm,
+  }) {
+    return AlertDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.notification_important,
+                color: Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'แจ้งเตือน',
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: const Icon(MyIcons.close),
+                onPressed: onClose,
+              ),
+            ],
+          ),
+        ],
+      ),
+      content: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: content,
+        ),
+      ),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              onPressed: onConfirm,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
+              child: const Text('ตกลง'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+//   showDialog(
+//   context: context,
+//   builder: (BuildContext context) {
+//     return DialogStyles.customAlertDialog(
+//       context: context,
+//       content: const Text('คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?'),
+//       onClose: () => Navigator.of(context).pop(),
+//       onConfirm: () {
+//         // ใส่โค้ดการทำงานเมื่อกดปุ่ม "ตกลง"
+//         Navigator.of(context).pop();
+//       },
+//     );
+//   },
+// );
+
+// ----------------------------------------------------------------------
+
+  static Dialog customSearchDialog({
+    required BuildContext context,
+    required String headerText,
+    required TextEditingController searchController,
+    required List<dynamic> data,
+    required String Function(dynamic item) docString,
+    required String Function(Map<String, dynamic> item) titleText,
+    required String Function(Map<String, dynamic> item) subtitleText,
+    required void Function(Map<String, dynamic> item) onTap,
+  }) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: StatefulBuilder(
+        builder: (context, setState) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            height: 300, // ปรับความสูงตามต้องการ
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      headerText,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                // ช่องค้นหา
+                TextField(
+                  controller: searchController,
+                  decoration: const InputDecoration(
+                    hintText: 'ค้นหา',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (query) {
+                    setState(() {}); // อัปเดตข้อมูลเมื่อมีการค้นหา
+                  },
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: Builder(
+                    builder: (context) {
+                      final filteredItems = data.where((item) {
+                        final docValue = docString(item).toLowerCase();
+                        final searchQuery =
+                            searchController.text.trim().toLowerCase();
+                        return docValue.contains(searchQuery);
+                      }).toList();
+
+                      if (filteredItems.isEmpty) {
+                        return const Center(
+                          child: Text('No data found'),
+                        );
+                      }
+
+                      return ListView.builder(
+                        itemCount: filteredItems.length,
+                        itemBuilder: (context, index) {
+                          final item = filteredItems[index];
+
+                          return ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(
+                              titleText(item),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(subtitleText(item)),
+                            onTap: () => onTap(item),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
 }

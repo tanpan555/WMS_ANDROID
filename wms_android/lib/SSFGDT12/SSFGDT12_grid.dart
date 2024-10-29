@@ -1647,11 +1647,11 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                             int updatedCountQty = int.tryParse(
                                     countQtyController.text
                                         .replaceAll(',', '')) ??
-                                count_qty;
+                                0;
                             String updatedRemark =
                                 remarkController.text.isNotEmpty
                                     ? remarkController.text
-                                    : remark;
+                                    : 'null';
 
                             Navigator.of(context).pop(true);
                             await updateDataGridDetail(

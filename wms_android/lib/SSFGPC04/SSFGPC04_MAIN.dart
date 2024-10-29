@@ -28,7 +28,7 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
   String selectedDate = 'null'; // Allow null for the date
   String pSoNo = 'null';
   TextEditingController _dateController = TextEditingController();
-  // TextEditingController _controller = TextEditingController();
+  TextEditingController _docNoController = TextEditingController();
   TextEditingController _noteController = TextEditingController();
   final String sDateFormat = "dd-MM-yyyy";
   final dateRegExp =
@@ -160,17 +160,25 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
                         const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                     border: InputBorder.none,
                   ),
-                  controller: TextEditingController(text: 'AUTO'),
+                  controller: _docNoController.text.isNotEmpty
+                      ? _docNoController
+                      : TextEditingController(text: 'AUTO'),
                   style: TextStyle(fontWeight: FontWeight.bold),
+                  // controller: _docNoController,
+                  // controller: TextEditingController(text: 'AUTO'),
+                  // style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 TextField(
+                  minLines: 2,
+                  maxLines: 5,
                   decoration: InputDecoration(
                     labelText: 'หมายเหตุ',
                     filled: true,
                     fillColor: Colors.white,
                     labelStyle: TextStyle(color: Colors.black),
                     border: InputBorder.none,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
                   controller: _noteController,
                 ),
@@ -187,11 +195,13 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => SSFGPC04_WARE(
-                              // soNo: pSoNo.isEmpty ? 'null' : pSoNo,
-                              // date: selectedDate.isEmpty
-                              //     ? 'null'
-                              //     : selectedDate, // Ensure selectedDate is passed
-                              selectedItems: selectedItems, // Pass selectedItems correctly
+                              docNo: _docNoController.text,
+                              note: _noteController.text,
+                              date: selectedDate.isEmpty
+                                  ? 'null'
+                                  : selectedDate, // Ensure selectedDate is passed
+                              selectedItems:
+                                  selectedItems, // Pass selectedItems correctly
                             ),
                           ),
                         );

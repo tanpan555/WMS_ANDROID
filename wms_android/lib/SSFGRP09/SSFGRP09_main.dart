@@ -229,6 +229,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     await selectLovEndSubCategory();
     await selectLovStartItem();
     await selectLovEndItem();
+    setDataFirstLoad();
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -236,6 +237,57 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context,
       MaterialPageRoute(builder: (context) => page),
     );
+  }
+
+  void setDataFirstLoad() {
+    // ----------------------------- Start Ware Code
+    displayStartWareCode = '--No Value Set--';
+    returnStartWareCode = 'null';
+    startWareCodeController.text = '--No Value Set--';
+    // ----------------------------- End Ware Code
+    displayEndWareCode = '--No Value Set--';
+    returnEndWareCode = 'null';
+    endWareCodeController.text = '--No Value Set--';
+    // ----------------------------- Start Loc
+    displayStartLoc = '--No Value Set--';
+    returnStartLoc = 'null';
+    startLocController.text = '--No Value Set--';
+    // ----------------------------- End Loc
+    displayEndLoc = '--No Value Set--';
+    returnEndLoc = 'null';
+    endLocController.text = '--No Value Set--';
+    // ----------------------------- Start Group
+    displayStartGroup = '--No Value Set--';
+    returnStartGroup = 'null';
+    startGroupController.text = '--No Value Set--';
+    // ----------------------------- End Group
+    displayEndGroup = '--No Value Set--';
+    returnEndGroup = 'null';
+    endGroupController.text = '--No Value Set--';
+    // ----------------------------- Start Category
+    displayStartCategory = '--No Value Set--';
+    returnStartCategory = 'null';
+    startCategoryController.text = '--No Value Set--';
+    // ----------------------------- End Category
+    displayEndCategory = '--No Value Set--';
+    returnEndCategory = 'null';
+    endCategoryController.text = '--No Value Set--';
+    // ----------------------------- Start Sub Category
+    displayStartSubCategory = '--No Value Set--';
+    returnStartSubCategory = 'null';
+    startSubCategoryController.text = '--No Value Set--';
+    // ----------------------------- End Sub Category
+    displayEndSubCategory = '--No Value Set--';
+    returnEndSubCategory = 'null';
+    endSubCategoryController.text = '--No Value Set--';
+    // ----------------------------- Start Item
+    displayStartItem = '--No Value Set--';
+    returnStartItem = 'null';
+    startItemController.text = '--No Value Set--';
+    // ----------------------------- End Item
+    displayEndItem = '--No Value Set--';
+    returnEndItem = 'null';
+    endItemController.text = '--No Value Set--';
   }
 
   Future<void> selectLovDate() async {
@@ -1007,23 +1059,23 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
         '&P_OU_NAME=$P_OU_NAME'
         '&P_OU_CODE=$P_OU_CODE'
         //
-        '&P_E_CAT=${returnEndCategory.isNotEmpty ? returnEndCategory : 'สิ้นสุด'}'
-        '&P_E_GRP=${returnEndGroup.isNotEmpty ? returnEndGroup : 'สิ้นสุด'}'
-        '&P_E_ITEM=${returnEndItem.isNotEmpty ? returnEndItem : 'สิ้นสุด'}'
-        '&P_E_LOC=${returnEndLoc.isNotEmpty ? returnEndLoc : 'สิ้นสุด'}'
-        '&P_E_SUB_CAT=${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'สิ้นสุด'}'
-        '&P_E_WARE=${returnEndWareCode.isNotEmpty ? returnEndWareCode : 'สิ้นสุด'}'
+        '&P_E_CAT=${returnEndCategory}'
+        '&P_E_GRP=${returnEndGroup}'
+        '&P_E_ITEM=${returnEndItem}'
+        '&P_E_LOC=${returnEndLoc}'
+        '&P_E_SUB_CAT=${returnEndSubCategory}'
+        '&P_E_WARE=${returnEndWareCode}'
         '&P_F_DOC_NO=$returnLovDocNo'
         '&P_F_P_DATE=$returnLovDate'
         '&P_I_E_WARE=$P_I_E_WARE'
         '&P_I_S_WARE=$P_I_S_WARE'
         '&P_SHOW_MODE=$P_SHOW_MODE'
-        '&P_S_CAT=${returnStartCategory.isNotEmpty ? returnStartCategory : 'เริ่มต้น'}'
-        '&P_S_GRP=${returnStartGroup.isNotEmpty ? returnStartGroup : 'เริ่มต้น'}'
-        '&P_S_ITEM=${returnStartItem.isNotEmpty ? returnStartItem : 'เริ่มต้น'}'
-        '&P_S_LOC=${returnStartLoc.isNotEmpty ? returnStartLoc : 'เริ่มต้น'}'
-        '&P_S_SUB_CAT=${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'เริ่มต้น'}'
-        '&P_S_WARE=${returnStartWareCode.isNotEmpty ? returnStartWareCode : 'เริ่มต้น'}'
+        '&P_S_CAT=${returnStartCategory}'
+        '&P_S_GRP=${returnStartGroup}'
+        '&P_S_ITEM=${returnStartItem}'
+        '&P_S_LOC=${returnStartLoc}'
+        '&P_S_SUB_CAT=$returnStartSubCategory'
+        '&P_S_WARE=${returnStartWareCode}'
         //
         '&LH_PROGRAM_ID=$LH_PROGRAM_ID'
         '&LH_WARE=$LH_WARE'
@@ -1064,31 +1116,22 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     // isLoading = false;
   }
 
+  void checkUpdateDataALL(bool check) {
+    if (mounted) {
+      setState(() {
+        checkUpdateData = check;
+        print('check in checkUpdateDataALL : $check');
+        print('checkUpdateData in checkUpdateDataALL : $checkUpdateData');
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(
-          title: 'รายงานผลการตรวจนับสินค้า',
-          showExitWarning:
-              // checkUpdateData
-
-              returnLovDate.isEmpty &&
-                      returnLovDocNo.isEmpty &&
-                      returnStartWareCode.isEmpty &&
-                      returnEndWareCode.isEmpty &&
-                      returnStartLoc.isEmpty &&
-                      returnEndLoc.isEmpty &&
-                      returnStartGroup.isEmpty &&
-                      returnEndGroup.isEmpty &&
-                      returnStartCategory.isEmpty &&
-                      returnEndCategory.isEmpty &&
-                      returnStartSubCategory.isEmpty &&
-                      returnEndSubCategory.isEmpty &&
-                      returnStartItem.isEmpty &&
-                      returnEndItem.isEmpty
-                  ? false
-                  : true),
+          title: 'รายงานผลการตรวจนับสินค้า', showExitWarning: checkUpdateData),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: isLoading
@@ -1491,6 +1534,29 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     ),
                     // -------------------------------------------------------------------------------------------------------------//
                     const SizedBox(height: 8),
+                    TextFormField(
+                      controller: endItemController,
+                      readOnly: true,
+                      onTap: () => rrr(),
+                      // minLines: 1,
+                      // maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'ถึง รหัสสินค้า',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
 
                     Container(
                       color: Colors.white, // กำหนดสีพื้นหลังของ Container
@@ -1583,22 +1649,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               ),
       ),
       bottomNavigationBar: BottomBar(
-        currentPage: returnLovDate.isEmpty &&
-                returnLovDocNo.isEmpty &&
-                returnStartWareCode.isEmpty &&
-                returnEndWareCode.isEmpty &&
-                returnStartLoc.isEmpty &&
-                returnEndLoc.isEmpty &&
-                returnStartGroup.isEmpty &&
-                returnEndGroup.isEmpty &&
-                returnStartCategory.isEmpty &&
-                returnEndCategory.isEmpty &&
-                returnStartSubCategory.isEmpty &&
-                returnEndSubCategory.isEmpty &&
-                returnStartItem.isEmpty &&
-                returnEndItem.isEmpty
-            ? 'not_show'
-            : 'show',
+        currentPage: checkUpdateData == true ? 'show' : 'not_show',
       ),
     );
   }
@@ -1725,11 +1776,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       docNoController.clear();
                                       isLoading = false;
                                     }
-
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
-                                    // -----------------------------------------
                                     print(
                                         'dateController New: $dateController Type : ${dateController.runtimeType}');
                                     print(
@@ -1739,6 +1785,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnLovDate New: $returnLovDate Type : ${returnLovDate.runtimeType}');
                                   });
+                                  if (returnLovDate != '') {
+                                    checkUpdateDataALL(true);
+                                  }
                                   searchController1.clear();
                                 },
                               );
@@ -1831,8 +1880,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             itemBuilder: (context, index) {
                               final item = filteredItems[index];
                               final doc = '${item['doc_no'] ?? ''}';
-                              final returnCode =
-                                  '${item['doc_no'] ?? 'ไมมีค่า'}';
+                              final returnCode = '${item['doc_no'] ?? ''}';
                               // print('item $item');
                               // print('doc $doc');
                               // print('returnCode $returnCode');
@@ -1856,9 +1904,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     docNoController.text =
                                         displayLovDocNo.toString();
                                     // -----------------------------------------
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
                                     print(
                                         'docNoController New: $docNoController Type : ${docNoController.runtimeType}');
                                     print(
@@ -1868,6 +1913,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnLovDocNo New: $returnLovDocNo Type : ${returnLovDocNo.runtimeType}');
                                   });
+                                  if (returnLovDocNo != 'null') {
+                                    checkUpdateDataALL(true);
+                                  }
                                   searchController2.clear();
                                 },
                               );
@@ -1977,9 +2025,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    // String dataCheck = returnCode;
                                     returnStartWareCode = returnCode;
-                                    displayStartWareCode = doc;
+                                    displayStartWareCode = doc == 'null'
+                                        ? '--No Value Set--'
+                                        : doc;
                                     startWareCodeController.text =
                                         displayStartWareCode.toString();
                                     if (returnStartWareCode.isNotEmpty) {
@@ -1997,10 +2046,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endLocController.clear();
                                       isLoading = false;
                                     }
-
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
                                     // -----------------------------------------
                                     print(
                                         'startWareCodeController New: $startWareCodeController Type : ${startWareCodeController.runtimeType}');
@@ -2011,6 +2056,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnStartWareCode New: $returnStartWareCode Type : ${returnStartWareCode.runtimeType}');
                                   });
+                                  if (returnStartWareCode != 'null') {
+                                    checkUpdateDataALL(true);
+                                  }
                                   searchController3.clear();
                                 },
                               );
@@ -2136,9 +2184,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endLocController.clear();
                                       isLoading = false;
                                     }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
                                     // -----------------------------------------
                                     print(
                                         'endWareCodeController New: $endWareCodeController Type : ${endWareCodeController.runtimeType}');
@@ -2149,6 +2194,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnEndWareCode New: $returnEndWareCode Type : ${returnEndWareCode.runtimeType}');
                                   });
+                                  if (returnEndWareCode != 'null') {
+                                    checkUpdateDataALL(true);
+                                  }
                                   searchController4.clear();
                                 },
                               );
@@ -2259,7 +2307,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    // String dataCheck = returnCode;
                                     returnStartLoc = returnCode;
                                     displayStartLoc = doc;
                                     startLocController.text =
@@ -2271,9 +2318,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endLocController.clear();
                                       isLoading = false;
                                     }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
                                     // -----------------------------------------
                                     print(
                                         'startLocController New: $startLocController Type : ${startLocController.runtimeType}');
@@ -2284,6 +2328,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnStartLoc New: $returnStartLoc Type : ${returnStartLoc.runtimeType}');
                                   });
+                                  if (returnStartLoc != 'null') {
+                                    checkUpdateDataALL(true);
+                                  }
                                   searchController5.clear();
                                 },
                               );
@@ -2393,15 +2440,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    // String dataCheck = returnCode;
                                     returnEndLoc = returnCode;
                                     displayEndLoc = doc;
                                     endLocController.text =
                                         displayEndLoc.toString();
                                     // -----------------------------------------
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
                                     print(
                                         'endLocController New: $endLocController Type : ${endLocController.runtimeType}');
                                     print(
@@ -2411,6 +2454,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnEndLoc New: $returnEndLoc Type : ${returnEndLoc.runtimeType}');
                                   });
+                                  if (returnEndLoc != 'null') {
+                                    checkUpdateDataALL(true);
+                                  }
                                   searchController6.clear();
                                 },
                               );
@@ -2519,7 +2565,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    // String dataCheck = returnCode;
                                     returnStartGroup = returnCode;
                                     displayStartGroup = doc;
                                     startGroupController.text =
@@ -2555,9 +2600,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endItemController.clear();
                                       isLoading = false;
                                     }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
                                     // -----------------------------------------
                                     print(
                                         'startGroupController New: $startGroupController Type : ${startGroupController.runtimeType}');
@@ -2568,6 +2610,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnStartGroup New: $returnStartGroup Type : ${returnStartGroup.runtimeType}');
                                   });
+                                  if (returnStartGroup != 'null') {
+                                    checkUpdateDataALL(true);
+                                  }
                                   searchController7.clear();
                                 },
                               );
@@ -2676,7 +2721,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    // String dataCheck = returnCode;
                                     returnEndGroup = returnCode;
                                     displayEndGroup = doc;
                                     endGroupController.text =
@@ -2708,9 +2752,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endItemController.clear();
                                       isLoading = false;
                                     }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
                                     // -----------------------------------------
                                     print(
                                         'endGroupController New: $endGroupController Type : ${endGroupController.runtimeType}');
@@ -2721,6 +2762,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnEndGroup New: $returnEndGroup Type : ${returnEndGroup.runtimeType}');
                                   });
+                                  if (returnEndGroup != 'null') {
+                                    checkUpdateDataALL(true);
+                                  }
                                   searchController8.clear();
                                 },
                               );
@@ -2801,7 +2845,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             return docString.contains(searchQuery);
                           }).toList();
 
-                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
                           if (filteredItems.isEmpty) {
                             return const Center(
                               child: Text('No data found'),
@@ -2832,7 +2875,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    // String dataCheck = returnCode;
                                     returnStartCategory = returnCode;
                                     displayStartCategory = doc;
                                     startCategoryController.text =
@@ -2860,9 +2902,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endItemController.clear();
                                       isLoading = false;
                                     }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
                                     // -----------------------------------------
                                     print(
                                         'endGroupController New: $endGroupController Type : ${endGroupController.runtimeType}');
@@ -2873,6 +2912,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnStartCategory New: $returnStartCategory Type : ${returnStartCategory.runtimeType}');
                                   });
+                                  if (returnStartCategory != 'null') {
+                                    checkUpdateDataALL(true);
+                                  }
                                   searchController9.clear();
                                 },
                               );
@@ -2984,7 +3026,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    // String dataCheck = returnCode;
                                     returnEndCategory = returnCode;
                                     displayEndCategory = doc;
                                     endCategoryController.text =
@@ -3008,9 +3049,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endItemController.clear();
                                       isLoading = false;
                                     }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
                                     // -----------------------------------------
                                     print(
                                         'endCategoryController New: $endCategoryController Type : ${endCategoryController.runtimeType}');
@@ -3021,6 +3059,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnEndCategory New: $returnEndCategory Type : ${returnEndCategory.runtimeType}');
                                   });
+                                  if (returnEndCategory != 'null') {
+                                    checkUpdateDataALL(true);
+                                  }
                                   searchController10.clear();
                                 },
                               );
@@ -3131,7 +3172,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    // String dataCheck = returnCode;
                                     returnStartSubCategory = returnCode;
                                     displayStartSubCategory = doc;
                                     startSubCategoryController.text =
@@ -3151,9 +3191,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endItemController.clear();
                                       isLoading = false;
                                     }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
                                     // -----------------------------------------
                                     print(
                                         'startSubCategoryController New: $startSubCategoryController Type : ${startSubCategoryController.runtimeType}');
@@ -3164,6 +3201,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnStartSubCategory New: $returnStartSubCategory Type : ${returnStartSubCategory.runtimeType}');
                                   });
+                                  if (returnStartSubCategory != 'null') {
+                                    checkUpdateDataALL(true);
+                                  }
                                   searchController11.clear();
                                 },
                               );
@@ -3274,7 +3314,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    // String dataCheck = returnCode;
                                     returnEndSubCategory = returnCode;
                                     displayEndSubCategory = doc;
                                     endSubCategoryController.text =
@@ -3290,9 +3329,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endItemController.clear();
                                       isLoading = false;
                                     }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
                                     // -----------------------------------------
                                     print(
                                         'endSubCategoryController New: $endSubCategoryController Type : ${endSubCategoryController.runtimeType}');
@@ -3303,6 +3339,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnEndSubCategory New: $returnEndSubCategory Type : ${returnEndSubCategory.runtimeType}');
                                   });
+                                  if (returnEndSubCategory != 'null') {
+                                    checkUpdateDataALL(true);
+                                  }
                                   searchController12.clear();
                                 },
                               );
@@ -3411,7 +3450,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    // String dataCheck = returnCode;
                                     returnStartItem = returnCode;
                                     displayStartItem = doc;
                                     startItemController.text =
@@ -3423,9 +3461,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                       endItemController.clear();
                                       isLoading = false;
                                     }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
                                     // -----------------------------------------
                                     print(
                                         'startItemController New: $startItemController Type : ${startItemController.runtimeType}');
@@ -3436,6 +3471,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnStartItem New: $returnStartItem Type : ${returnStartItem.runtimeType}');
                                   });
+                                  if (returnStartItem != 'null') {
+                                    checkUpdateDataALL(true);
+                                  }
                                   searchController13.clear();
                                 },
                               );
@@ -3543,14 +3581,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    // String dataCheck = returnCode;
                                     returnEndItem = returnCode;
                                     displayEndItem = doc;
                                     endItemController.text =
                                         displayEndItem.toString();
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
                                     // -----------------------------------------
                                     print(
                                         'endItemController New: $endItemController Type : ${endItemController.runtimeType}');
@@ -3561,6 +3595,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                                     print(
                                         'returnEndItem New: $returnEndItem Type : ${returnEndItem.runtimeType}');
                                   });
+                                  if (returnEndItem != 'null') {
+                                    checkUpdateDataALL(true);
+                                  }
                                   searchController14.clear();
                                 },
                               );
@@ -3574,6 +3611,43 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               );
             },
           ),
+        );
+      },
+    );
+  }
+
+  void rrr() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return DialogStyles.customSearchDialog(
+          context: context,
+          headerText: 'ถึง รหัสสินค้า',
+          searchController: searchController14,
+          data: dataLovEndItem,
+          docString: (item) =>
+              '${item['item_code'] ?? ''} ${item['name'] ?? ''}',
+          titleText: (item) => item['item_code'] ?? '',
+          subtitleText: (item) => item['name'] ?? '',
+          onTap: (item) {
+            Navigator.of(context).pop();
+            setState(() {
+              returnEndItem = item['item_code'] ?? '';
+              displayEndItem = item['item_code'] ?? '';
+              endItemController.text = displayEndItem.toString();
+              // -----------------------------------------
+              print(
+                  'endItemController New: $endItemController Type : ${endItemController.runtimeType}');
+              print(
+                  'displayEndItem New: $displayEndItem Type : ${displayEndItem.runtimeType}');
+              print(
+                  'returnEndItem New: $returnEndItem Type : ${returnEndItem.runtimeType}');
+            });
+            if (returnEndItem != 'null') {
+              checkUpdateDataALL(true);
+            }
+          },
         );
       },
     );

@@ -254,7 +254,6 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
                   const SizedBox(height: 10),
                   Text(
                     messageAlert,
-                    style: const TextStyle(color: Colors.red),
                   ),
                   const SizedBox(height: 10),
                   Row(
