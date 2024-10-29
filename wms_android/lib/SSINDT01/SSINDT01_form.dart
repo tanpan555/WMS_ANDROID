@@ -1101,87 +1101,79 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               filled: true,
               fillColor: Colors.white,
               border: InputBorder.none,
-              labelStyle: TextStyle(
-                color: Colors.black,
-              ),
-              hintStyle: TextStyle(
-                color: Colors.grey,
-              ),
+              labelStyle: TextStyle(color: Colors.black),
+              hintStyle: TextStyle(color: Colors.grey),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.calendar_today, color: Colors.black),
-                onPressed: () {
-                  _selectReceiveDate(context);
-                },
+                onPressed: () => _selectReceiveDate(context),
               ),
             ),
-            style: TextStyle(
-              color: Colors.black,
-            ),
+            style: TextStyle(color: Colors.black),
             readOnly: false,
             onChanged: (value) {
-              // Store the current cursor position and previous text
-              final previousText = receiveDateController.text;
+              // Get current cursor position and text
               final cursorPosition = receiveDateController.selection.start;
-              final isDeleting = value.length < previousText.length;
+              final text = value.replaceAll('/', '');
 
-              // Remove any non-digit characters
-              String numbersOnly = value.replaceAll(RegExp(r'[^\d]'), '');
-
-              // Handle deletion specifically
-              if (isDeleting) {
-                // If deleting at a slash position (position 2 or 5), move cursor back one more
-                if (cursorPosition == 3 || cursorPosition == 6) {
-                  numbersOnly = previousText
-                          .replaceAll('/', '')
-                          .substring(0, cursorPosition - 2) +
-                      previousText
-                          .replaceAll('/', '')
-                          .substring(cursorPosition - 1);
-                } else {
-                  // Normal deletion
-                  numbersOnly = previousText
-                          .replaceAll('/', '')
-                          .substring(0, cursorPosition - 1) +
-                      previousText
-                          .replaceAll('/', '')
-                          .substring(cursorPosition);
+              // Handle backspace/delete
+              if (value.length < receiveDateController.text.length) {
+                String newText = receiveDateController.text.replaceAll('/', '');
+                if (cursorPosition > 0) {
+                  newText = newText.substring(0, cursorPosition - 1) +
+                      newText.substring(cursorPosition);
                 }
+
+                // Format the date with slashes
+                String formattedText = '';
+                for (int i = 0; i < newText.length; i++) {
+                  if (i == 2 || i == 4) formattedText += '/';
+                  formattedText += newText[i];
+                }
+
+                // Calculate new cursor position
+                int newPosition = cursorPosition;
+                if (cursorPosition > 2) newPosition--;
+                if (cursorPosition > 5) newPosition--;
+                if (newPosition > formattedText.length)
+                  newPosition = formattedText.length;
+
+                receiveDateController.value = TextEditingValue(
+                  text: formattedText,
+                  selection: TextSelection.collapsed(offset: newPosition),
+                );
+                return;
               }
 
-              // Limit to 8 digits
-              if (numbersOnly.length > 8) {
-                numbersOnly = numbersOnly.substring(0, 8);
-              }
+              // Format new input
+              String formattedText = '';
+              String numbers = text.replaceAll(RegExp(r'[^\d]'), '');
 
-              // Format the date string with slashes
-              String formattedValue = '';
-              for (int i = 0; i < numbersOnly.length; i++) {
-                if (i == 2 || i == 4) {
-                  formattedValue += '/';
-                }
-                formattedValue += numbersOnly[i];
+              if (numbers.length > 8) numbers = numbers.substring(0, 8);
+
+              for (int i = 0; i < numbers.length; i++) {
+                if (i == 2 || i == 4) formattedText += '/';
+                formattedText += numbers[i];
               }
 
               // Calculate new cursor position
+              int newPosition = cursorPosition;
+              if (cursorPosition > 2) newPosition++;
+              if (cursorPosition > 5) newPosition++;
+              if (newPosition > formattedText.length)
+                newPosition = formattedText.length;
 
               // Validate date if complete
-              if (numbersOnly.length == 8) {
+              if (numbers.length == 8) {
                 try {
-                  final day = int.parse(numbersOnly.substring(0, 2));
-                  final month = int.parse(numbersOnly.substring(2, 4));
-                  final year = int.parse(numbersOnly.substring(4, 8));
-
+                  final day = int.parse(numbers.substring(0, 2));
+                  final month = int.parse(numbers.substring(2, 4));
+                  final year = int.parse(numbers.substring(4, 8));
                   final date = DateTime(year, month, day);
-
-                  if (date.year == year &&
-                      date.month == month &&
-                      date.day == day) {
-                    setState(() {
-                      isDateValid = true;
-                    });
-                  } else {
-                    throw Exception('Invalid date');
-                  }
+                  setState(() {
+                    isDateValid = date.year == year &&
+                        date.month == month &&
+                        date.day == day;
+                  });
                 } catch (e) {
                   setState(() {
                     isDateValid = false;
@@ -1193,12 +1185,11 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                 });
               }
 
-              // Update controller with formatted value and cursor position
-              setState(() {
-                receiveDateController.value = TextEditingValue(
-                  text: formattedValue,
-                );
-              });
+              // Update text field
+              receiveDateController.value = TextEditingValue(
+                text: formattedText,
+                selection: TextSelection.collapsed(offset: newPosition),
+              );
             },
             keyboardType: TextInputType.number,
             inputFormatters: [
@@ -1275,7 +1266,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                     'วันที่ใบแจ้งหนี้',
                     style: TextStyle(color: Colors.black),
                   ),
-                  const SizedBox(width: 2), // Add a small space
+                  const SizedBox(width: 2),
                   Text(
                     '*',
                     style: TextStyle(color: Colors.red),
@@ -1286,80 +1277,104 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               fillColor: Colors.white,
               hintText: 'DD/MM/YYYY',
               border: InputBorder.none,
-              labelStyle: TextStyle(
-                color: Colors.black,
-              ),
-              hintStyle: TextStyle(
-                color: Colors.grey,
-              ),
+              labelStyle: TextStyle(color: Colors.black),
+              hintStyle: TextStyle(color: Colors.grey),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.calendar_today, color: Colors.black),
-                onPressed: () {
-                  _selectInvoiceDate(context); // Function to open date picker
-                },
+                onPressed: () => _selectInvoiceDate(context),
               ),
             ),
-            style: TextStyle(
-              color: Colors.black,
-            ),
+            style: TextStyle(color: Colors.black),
             readOnly: false,
             onChanged: (value) {
               setState(() {
                 checkUpdateData = true;
               });
-              // Remove all non-numeric characters (slashes)
-              String numbersOnly = value.replaceAll('/', '');
 
-              // Limit the number of digits to 8 (for DDMMYYYY)
-              if (numbersOnly.length > 8) {
-                numbersOnly = numbersOnly.substring(0, 8);
-              }
+              // Get current cursor position and text
+              final cursorPosition = invoiceDateController.selection.start;
+              final text = value.replaceAll('/', '');
 
-              // Format the string into DD/MM/YYYY
-              String formattedDate = '';
-              for (int i = 0; i < numbersOnly.length; i++) {
-                if (i == 2 || i == 4) {
-                  formattedDate += '/'; // Add slashes after DD and MM
+              // Handle backspace/delete
+              if (value.length < invoiceDateController.text.length) {
+                String newText = invoiceDateController.text.replaceAll('/', '');
+                if (cursorPosition > 0) {
+                  newText = newText.substring(0, cursorPosition - 1) +
+                      newText.substring(cursorPosition);
                 }
-                formattedDate += numbersOnly[i];
+
+                // Format the date with slashes
+                String formattedText = '';
+                for (int i = 0; i < newText.length; i++) {
+                  if (i == 2 || i == 4) formattedText += '/';
+                  formattedText += newText[i];
+                }
+
+                // Calculate new cursor position
+                int newPosition = cursorPosition;
+                if (cursorPosition > 2) newPosition--;
+                if (cursorPosition > 5) newPosition--;
+                if (newPosition > formattedText.length)
+                  newPosition = formattedText.length;
+
+                invoiceDateController.value = TextEditingValue(
+                  text: formattedText,
+                  selection: TextSelection.collapsed(offset: newPosition),
+                );
+                return;
               }
 
-              // Update the text field with the formatted date and move cursor to the end
-              invoiceDateController.value = TextEditingValue(
-                text: formattedDate,
-                selection:
-                    TextSelection.collapsed(offset: formattedDate.length),
-              );
+              // Format new input
+              String formattedText = '';
+              String numbers = text.replaceAll(RegExp(r'[^\d]'), '');
 
-              // Validate the date if the length is correct (DD/MM/YYYY = 10 characters)
-              bool isValidDate = false;
-              if (numbersOnly.length == 8) {
+              if (numbers.length > 8) numbers = numbers.substring(0, 8);
+
+              for (int i = 0; i < numbers.length; i++) {
+                if (i == 2 || i == 4) formattedText += '/';
+                formattedText += numbers[i];
+              }
+
+              // Calculate new cursor position
+              int newPosition = cursorPosition;
+              if (cursorPosition > 2) newPosition++;
+              if (cursorPosition > 5) newPosition++;
+              if (newPosition > formattedText.length)
+                newPosition = formattedText.length;
+
+              // Validate date if complete
+              if (numbers.length == 8) {
                 try {
-                  final day = int.parse(numbersOnly.substring(0, 2));
-                  final month = int.parse(numbersOnly.substring(2, 4));
-                  final year = int.parse(numbersOnly.substring(4, 8));
-
+                  final day = int.parse(numbers.substring(0, 2));
+                  final month = int.parse(numbers.substring(2, 4));
+                  final year = int.parse(numbers.substring(4, 8));
                   final date = DateTime(year, month, day);
-                  // Check if the date is valid
-                  if (date.year == year &&
-                      date.month == month &&
-                      date.day == day) {
-                    isValidDate = true;
-                  }
+                  setState(() {
+                    isInvoiceDateValid = date.year == year &&
+                        date.month == month &&
+                        date.day == day;
+                  });
                 } catch (e) {
-                  isValidDate = false;
+                  setState(() {
+                    isInvoiceDateValid = false;
+                  });
                 }
+              } else {
+                setState(() {
+                  isInvoiceDateValid = false;
+                });
               }
 
-              setState(() {
-                isInvoiceDateValid = isValidDate;
-              });
+              // Update text field
+              invoiceDateController.value = TextEditingValue(
+                text: formattedText,
+                selection: TextSelection.collapsed(offset: newPosition),
+              );
             },
             keyboardType: TextInputType.number,
             inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly, // Allow only digits
-              LengthLimitingTextInputFormatter(
-                  10), // Limit to 10 characters (DD/MM/YYYY)
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(10),
             ],
           ),
           isInvoiceDateValid == false
