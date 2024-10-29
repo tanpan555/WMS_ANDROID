@@ -1225,7 +1225,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    const SizedBox(height: 10),
+                    // const SizedBox(height: 10),
                     TextFormField(
                       controller: locatorFormChkController,
                       decoration: const InputDecoration(
@@ -1325,7 +1325,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  const SizedBox(height: 10),
+                  // const SizedBox(height: 10),
                   TextFormField(
                     controller: locatorToChkController,
                     decoration: const InputDecoration(

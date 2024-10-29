@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'ICON.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -75,14 +76,33 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Row(
+            title: Row(
               children: [
-                Icon(
-                  Icons.notification_important,
-                  color: Colors.red,
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.notification_important,
+                      color: Colors.red,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'แจ้งเตือน',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 8),
-                Text('แจ้งเตือน'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: const Icon(MyIcons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
             content: const Text('คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?'),

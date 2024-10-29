@@ -336,7 +336,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                             ),
                           ),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     //////////////////////////////////////////////////////////////////////////////////////
                     GestureDetector(
                       child: AbsorbPointer(
@@ -359,7 +359,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
                       controller: nbCountDateController,
@@ -450,7 +450,6 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                             ))
                         : const SizedBox.shrink(),
                     const SizedBox(height: 8),
-                    const SizedBox(height: 10),
                     //////////////////////////////////////////////////////////////////////////////////////
                     GestureDetector(
                       child: AbsorbPointer(
@@ -470,7 +469,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     //////////////////////////////////////////////////////////////////////////////////////
                     GestureDetector(
                       child: AbsorbPointer(
@@ -490,7 +489,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
                       controller: nbCountStaffController,
@@ -511,7 +510,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                         });
                       },
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     //////////////////////////////////////////////////////////////////////////////////////
                     GestureDetector(
                       child: AbsorbPointer(
@@ -531,7 +530,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     //////////////////////////////////////////////////////////////////////////////////////
                     GestureDetector(
                       child: AbsorbPointer(
@@ -551,7 +550,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     //////////////////////////////////////////////////////////////////////////////////////
                     GestureDetector(
                       child: AbsorbPointer(
@@ -571,7 +570,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     //////////////////////////////////////////////////////////////////////////////////////
                     GestureDetector(
                       child: AbsorbPointer(
@@ -591,7 +590,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     //////////////////////////////////////////////////////////////////////////////////////
                     GestureDetector(
                       child: AbsorbPointer(
@@ -611,7 +610,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     //////////////////////////////////////////////////////////////////////////////////////
                   ],
                 ),
@@ -668,12 +667,12 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
             child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(children: [
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                   Text(
                     messageAlert,
                     style: const TextStyle(color: Colors.red),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     mainAxisAlignment: MainAxisAlignment.end,
