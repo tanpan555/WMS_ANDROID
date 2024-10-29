@@ -286,7 +286,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                                   po_doc_no:
                                       po_doc_no ?? '', // ส่งค่า po_doc_no
                                   po_doc_type:
-                                      po_doc_type, // ส่งค่า po_doc_type
+                                      po_doc_type ?? '', // ส่งค่า po_doc_type
                                   pWareCode: widget.pWareCode,
                                 ),
                               ),
