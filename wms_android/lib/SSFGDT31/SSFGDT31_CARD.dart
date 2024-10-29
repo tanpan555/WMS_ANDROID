@@ -42,7 +42,7 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
   bool _isMounted = false;
   int showRecordRRR = 0;
 
-  int pageSize = 25; // Number of records per page
+  int pageSize = 20; // Number of records per page
   int currentPage = 1; // Current page number
   int totalRecords = 0; // Total number of records
 

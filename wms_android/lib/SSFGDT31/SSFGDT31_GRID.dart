@@ -377,6 +377,11 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                                     'Confirmation จำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!'),
                                 actions: <Widget>[
                                   TextButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      side:
+                                          const BorderSide(color: Colors.grey),
+                                    ),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
@@ -511,12 +516,22 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                                         'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม้'),
                                     actions: <Widget>[
                                       TextButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                          side: const BorderSide(
+                                              color: Colors.grey),
+                                        ),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
                                         child: const Text('ยกเลิก'),
                                       ),
                                       TextButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                          side: const BorderSide(
+                                              color: Colors.grey),
+                                        ),
                                         onPressed: () async {
                                           Navigator.of(context).pop();
                                           await deleteAll();
@@ -671,10 +686,18 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
           content: const Text('ยืนยันที่จะลบหรือไม่'),
           actions: <Widget>[
             TextButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
               onPressed: () => Navigator.of(context).pop(),
               child: const Text('ยกเลิก'),
             ),
             TextButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
               onPressed: () async {
                 Navigator.of(context).pop();
                 await deleteLot(
@@ -727,10 +750,18 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
           ),
           actions: <Widget>[
             TextButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
               onPressed: () => Navigator.of(context).pop(),
               child: const Text('ยกเลิก'),
             ),
             TextButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
               onPressed: () async {
                 final newPackQty = int.tryParse(packQtyController.text) ?? 0;
                 await updateLot(

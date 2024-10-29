@@ -505,6 +505,10 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                           content: Text('$po__loc_message_curr'),
                           actions: [
                             TextButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                side: const BorderSide(color: Colors.grey),
+                              ),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
@@ -607,6 +611,10 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                           content: Text('$po__loc_message'),
                           actions: [
                             TextButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                side: const BorderSide(color: Colors.grey),
+                              ),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
@@ -731,6 +739,10 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                                   'ต้องการยืนยันการสร้างรายการรับ หรือไม่ ?'),
                               actions: [
                                 TextButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    side: const BorderSide(color: Colors.grey),
+                                  ),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
@@ -764,6 +776,11 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
                                                 'No message provided'),
                                             actions: [
                                               TextButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.white,
+                                                  side: const BorderSide(
+                                                      color: Colors.grey),
+                                                ),
                                                 onPressed: () {
                                                   Navigator.of(context).pop();
                                                 },

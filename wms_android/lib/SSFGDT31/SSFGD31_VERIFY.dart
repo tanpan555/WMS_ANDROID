@@ -373,6 +373,10 @@ class _SSFGDT31_VERIFYState extends State<SSFGDT31_VERIFY> {
                           content: Text(po_message ?? ''),
                           actions: <Widget>[
                             TextButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                side: const BorderSide(color: Colors.grey),
+                              ),
                               onPressed: () async {
                                 Navigator.of(context).pop();
                               },
@@ -416,12 +420,20 @@ class _SSFGDT31_VERIFYState extends State<SSFGDT31_VERIFY> {
                               'ต้องการพิมพ์เอกสารการรับคืนหรือไม่ ?'),
                           actions: <Widget>[
                             TextButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                side: const BorderSide(color: Colors.grey),
+                              ),
                               onPressed: () async {
                                 Navigator.of(context).pop();
                               },
                               child: const Text('ยกเลิก'),
                             ),
                             TextButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                side: const BorderSide(color: Colors.grey),
+                              ),
                               onPressed: () async {
                                 Navigator.of(context).pop();
                                 fetchPDFData();

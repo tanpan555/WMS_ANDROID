@@ -577,12 +577,20 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
                         child: Text('Cancel'),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
                       ),
                       TextButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
                         child: Text('OK'),
                         onPressed: () async {
                           await cancel_from(selectedcCode ?? '');
@@ -620,6 +628,11 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                   content: Text('$pomsg'),
                                   actions: <Widget>[
                                     TextButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        side: const BorderSide(
+                                            color: Colors.grey),
+                                      ),
                                       child: Text('ตกลง'),
                                       onPressed: () {
                                         Navigator.of(context).pop();
@@ -664,6 +677,11 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                                   content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
                                   actions: <Widget>[
                                     TextButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        side: const BorderSide(
+                                            color: Colors.grey),
+                                      ),
                                       child: Text('ตกลง'),
                                       onPressed: () {
                                         cancel_from(selectedcCode!).then((_) {
@@ -1292,26 +1310,40 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: GestureDetector(
         onTap: () {
-          _showProductionOrderDialog(); // Show the dialog on tap
+          setState(() {
+            checkUpdateData = true;
+          });
+          _showProductionOrderDialog();
         },
         child: InputDecorator(
           decoration: InputDecoration(
-            labelText: "เลขที่คำสั่งผลิต",
+            labelText: selectedMoDoNo != null ? "เลขที่คำสั่งผลิต" : null,
+            hintStyle: TextStyle(fontSize: 12.0),
             filled: true,
             fillColor: Colors.white,
             border: InputBorder.none,
-            labelStyle: TextStyle(fontSize: 16, color: Colors.black),
+            contentPadding: selectedMoDoNo != null
+                ? EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0)
+                : EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
           ),
           child: Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween, // Align text and arrow
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                selectedMoDoNo ?? '', // Default placeholder text
-                style: TextStyle(fontSize: 16),
-              ),
+              if (selectedMoDoNo == null)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "เลขที่คำสั่งผลิต",
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+                )
+              else
+                Text(
+                  selectedMoDoNo!,
+                  style: TextStyle(fontSize: 16),
+                ),
               Icon(
-                Icons.arrow_drop_down, // Dropdown arrow icon
+                Icons.arrow_drop_down,
                 color: Colors.grey,
               ),
             ],
@@ -1630,19 +1662,31 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
         },
         child: InputDecorator(
           decoration: InputDecoration(
-            labelText: "เลขที่เอกสารอ้างอิง",
+            labelText: REF_NO.text != 'null' ? "เลขที่เอกสารอ้างอิง" : null,
             hintStyle: TextStyle(fontSize: 12.0),
             filled: true,
             fillColor: Colors.white,
             border: InputBorder.none,
+            contentPadding: REF_NO.text != 'null'
+                ? EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0)
+                : EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                REF_NO.text == 'null' ? '' : REF_NO.text,
-                style: TextStyle(fontSize: 16),
-              ),
+              if (REF_NO.text == 'null' || REF_NO.text.isEmpty)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "เลขที่เอกสารอ้างอิง",
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+                )
+              else
+                Text(
+                  REF_NO.text,
+                  style: TextStyle(fontSize: 16),
+                ),
               Icon(
                 Icons.arrow_drop_down,
                 color: Colors.grey,
