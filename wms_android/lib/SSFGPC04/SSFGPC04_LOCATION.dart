@@ -108,7 +108,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
     }
   }
 
-  Future<void> fetchCheck(String? loc) async {
+  Future<void> fetchCheck(String? loc, String? wareCode) async {
     const url =
         'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_PU_INS_TMP_LOC_SEL';
 
@@ -118,7 +118,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
 
     final body = jsonEncode({
       'APP_SESSION': gb.APP_SESSION,
-      'WARE_CODE': gb.P_WARE_CODE, // ส่งรหัสคลังที่เลือกไปด้วย
+      'WARE_CODE': wareCode, // ส่งรหัสคลังที่เลือกไปด้วย
       'LOCATION_CODE': loc, // ส่งค่า NB_SEL เป็น 'Y' หรือ 'N'
     });
 
@@ -192,8 +192,6 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
     }
   }
 
-  
-
   @override
   void dispose() {
     searchController.dispose();
@@ -229,8 +227,8 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
                   onPressed: () {
                     _selectAll(true); // เลือกทั้งหมด (ติ๊กถูกทุกแถว)
                     for (var row in filteredLocItems) {
-                      fetchCheck(row[
-                          'ware_code']); // ส่งคำขอ POST สำหรับทุกแถวที่เลือก
+                      fetchCheck(row['location_code'],
+                          row['ware_code']); // ส่งคำขอ POST สำหรับทุกแถวที่เลือก
                     }
                   },
                   child: const Text(
@@ -290,7 +288,8 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
   Widget _buildDataTable() {
     if (locItems.isEmpty) {
       return Padding(
-        padding: const EdgeInsets.only(top: 100), // Adjust the top padding as needed
+        padding:
+            const EdgeInsets.only(top: 100), // Adjust the top padding as needed
         child: const Center(
           child: Text(
             'No data found', // Show message when no data is available
@@ -320,7 +319,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
                     });
 
                     if (row["selected"]!) {
-                      fetchCheck(row['ware_code']);
+                      fetchCheck(row['location_code'], row['ware_code']);
                     } else {
                       deleteData(row['ware_code']);
                     }
@@ -337,7 +336,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
                           // ตรวจสอบสถานะของ Checkbox เพื่อเลือกว่าจะเรียก POST หรือ DELETE
                           if (value == true) {
                             // ถ้าเลือก (ติ๊กถูก) => รัน .post
-                            fetchCheck(row['ware_code']);
+                            fetchCheck(row['location_code'], row['ware_code']);
                           } else {
                             // ถ้าไม่เลือก (ติ๊กออก) => รัน .delete
                             deleteData(row['ware_code']);

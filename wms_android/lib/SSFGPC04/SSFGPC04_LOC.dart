@@ -10,7 +10,6 @@ import 'SSFGPC04_BTN_PROCESS.dart';
 
 class SSFGPC04_LOC extends StatefulWidget {
   final List<Map<String, dynamic>> selectedItems;
-
   const SSFGPC04_LOC({
     Key? key,
     required this.selectedItems,
@@ -67,11 +66,8 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
   List<Map<String, dynamic>> getCurrentPageItems() {
     final startIndex = currentPage * itemsPerPage;
     final endIndex = startIndex + itemsPerPage;
-    return tmpLocItems.sublist(
-        startIndex,
-        endIndex > tmpLocItems.length
-            ? tmpLocItems.length
-            : endIndex);
+    return tmpLocItems.sublist(startIndex,
+        endIndex > tmpLocItems.length ? tmpLocItems.length : endIndex);
   }
 
   void _scrollToTop() {
@@ -151,7 +147,8 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                     )
                   : ListView.builder(
                       controller: _scrollController, // ใช้ scrollController
-                      itemCount: currentPageItems.length + 1, // +1 เพื่อรองรับปุ่มถัดไป/ย้อนกลับ
+                      itemCount: currentPageItems.length +
+                          1, // +1 เพื่อรองรับปุ่มถัดไป/ย้อนกลับ
                       itemBuilder: (context, index) {
                         if (index < currentPageItems.length) {
                           final item = tmpLocItems[index];
@@ -164,13 +161,13 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                                 children: [
                                   Center(
                                     child: Text(
-                                    item['ware_code'] ?? '',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Color.fromARGB(255, 0, 0, 0),
+                                      item['ware_code'] ?? '',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                      ),
                                     ),
-                                  ),
                                   ),
                                   const Divider(
                                       color: Colors.black26,

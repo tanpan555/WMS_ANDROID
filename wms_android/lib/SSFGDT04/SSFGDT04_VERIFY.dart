@@ -3,6 +3,7 @@ import '../custom_appbar.dart';
 import '../bottombar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:ui';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:intl/intl.dart';
 import '../styles.dart';
@@ -12,8 +13,8 @@ import 'SSFGDT04_MENU.dart';
 
 class SSFGDT04_VERIFY extends StatefulWidget {
   final String pWareCode;
-  final String po_doc_no;
-  final String po_doc_type;
+  final String? po_doc_no;
+  final String? po_doc_type;
   final String setqc;
 
   const SSFGDT04_VERIFY({
@@ -32,6 +33,11 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
   List<Map<String, dynamic>> gridItems = [];
   late TextEditingController _docNoController;
   String pDsPdf = gb.P_DS_PDF;
+  int currentPage = 0;
+  final int itemsPerPage = 15;
+
+  bool get hasPreviousPage => currentPage > 0;
+  bool get hasNextPage => (currentPage + 1) * itemsPerPage < gridItems.length;
 
   String? V_DS_PDF;
   String? LIN_ID;
@@ -94,6 +100,39 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
       }
     } else {
       throw Exception('Failed to load DOC_TYPE items');
+    }
+  }
+
+  String? getLink(List<dynamic> links, String rel) {
+    final link =
+        links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
+    return link != null ? link['href'] : null;
+  }
+
+  void _loadPrevPage() {
+    if (currentPage > 0) {
+      setState(() {
+        currentPage--;
+        // No need to call fetchData here, just update the UI
+      });
+      _scrollToTop();
+    }
+  }
+
+  void _loadNextPage() {
+    if ((currentPage + 1) * itemsPerPage < gridItems.length) {
+      setState(() {
+        currentPage++;
+        // No need to call fetchData here, just update the UI
+      });
+      _scrollToTop();
+    }
+  }
+
+  final ScrollController _scrollController = ScrollController();
+  void _scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0); // เลื่อนไปยังตำแหน่งเริ่มต้น (index 0)
     }
   }
 
@@ -295,6 +334,9 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
 
   @override
   Widget build(BuildContext context) {
+    int totalCards = gridItems.length;
+    bool hasPreviousPage = currentPage > 0;
+    bool hasNextPage = (currentPage + 1) * itemsPerPage < totalCards;
     return Scaffold(
       appBar:
           CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
@@ -414,7 +456,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                                   .pop(); // ปิด popup ที่สอง
 
                                               // เรียก getPDF
-                                              getPDF(widget.po_doc_no)
+                                              getPDF(widget.po_doc_no ?? '')
                                                   .then((_) {
                                                 // หลังจากเรียก getPDF เสร็จแล้ว, กลับไปยังหน้า SSFGDT04_MENU
                                                 Navigator.of(context)
@@ -507,7 +549,428 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
             const SizedBox(height: 10),
             Expanded(
               child: SingleChildScrollView(
-                child: _buildCards(),
+                // child: _buildCards(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 10),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 30),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        widget.po_doc_no ?? '',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // Text with background color
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 80),
+                      decoration: BoxDecoration(
+                        color: Colors
+                            .lightBlue[100], // Background color for the text
+                        borderRadius: BorderRadius.circular(
+                            8), // Rounded corners (optional)
+                      ),
+                      child: Text(
+                        widget.setqc, // Text ที่ต้องการแสดง
+                        style: const TextStyle(
+                          color: Colors.black, // Text color
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    gridItems.isEmpty
+                        ? Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 100),
+                              child: Text(
+                                'No data found',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            //  shrinkWrap: true, // ให้ ListView มีขนาดตามข้อมูล
+                            // physics: const NeverScrollableScrollPhysics(), // ปิดการเลื่อน
+                            // itemCount: gridItems.length,
+                            // itemBuilder: (context, index) {
+                            //   final item = gridItems[index];
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            // itemCount: gridItems.length,
+                            controller: _scrollController,
+                            itemCount:
+                                itemsPerPage + 1, // +1 for the pagination row
+                            itemBuilder: (context, index) {
+                              if (index < itemsPerPage) {
+                                int actualIndex =
+                                    (currentPage * itemsPerPage) + index;
+
+                                // Check if we have reached the end of the data
+                                if (actualIndex >= gridItems.length) {
+                                  return const SizedBox.shrink();
+                                }
+
+                                final item = gridItems[actualIndex];
+                                return Card(
+                                  color: Colors.lightBlue[100],
+                                  elevation: 4,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Center(
+                                          child: Text(
+                                            item['item_code'] ?? '',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                        const Divider(
+                                            color: Colors.black26,
+                                            thickness: 1),
+                                        const SizedBox(height: 8),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  'จำนวนรับ :',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                CustomContainerStyles
+                                                    .styledContainer(
+                                                  item['pack_qty']
+                                                      ?.toString(), // Passing the 'pack_qty' as the itemValue
+                                                  child: Text(
+                                                    item['pack_qty'] != null &&
+                                                            item['pack_qty'] !=
+                                                                ''
+                                                        ? NumberFormat('#,###')
+                                                            .format(item[
+                                                                'pack_qty'])
+                                                        : '',
+                                                    textAlign: TextAlign.left,
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  'จำนวน Pallet :',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                CustomContainerStyles
+                                                    .styledContainer(
+                                                  item['count_qty']
+                                                      ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                  child: Text(
+                                                    item['count_qty'] ?? '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  'จำนวนรวม :',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                CustomContainerStyles
+                                                    .styledContainer(
+                                                  item['count_qty_in']
+                                                      ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                  child: Text(
+                                                    item['count_qty_in'] ?? '',
+                                                    style: const TextStyle(
+                                                        fontSize: 14.0),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // Previous Button
+                                    hasPreviousPage
+                                        ? ElevatedButton.icon(
+                                            onPressed: _loadPrevPage,
+                                            icon: const Icon(
+                                              Icons.arrow_back_ios_rounded,
+                                              color: Colors.black,
+                                              size: 20.0,
+                                            ),
+                                            label: const Text(
+                                              'Previous',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            style:
+                                                AppStyles.PreviousButtonStyle(),
+                                          )
+                                        : ElevatedButton.icon(
+                                            onPressed: null,
+                                            icon: const Icon(
+                                              Icons.arrow_back_ios_rounded,
+                                              color:
+                                                  Color.fromARGB(0, 23, 21, 59),
+                                              size: 20.0,
+                                            ),
+                                            label: const Text(
+                                              'Previous',
+                                              style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    0, 255, 255, 255),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            style: AppStyles
+                                                .DisablePreviousButtonStyle(),
+                                          ),
+
+                                    // Page Indicator
+                                    Text(
+                                      '${(currentPage * itemsPerPage) + 1}-${(currentPage + 1) * itemsPerPage > totalCards ? totalCards : (currentPage + 1) * itemsPerPage}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+
+                                    // Next Button
+                                    hasNextPage
+                                        ? ElevatedButton(
+                                            onPressed: _loadNextPage,
+                                            style: AppStyles
+                                                .NextRecordDataButtonStyle(),
+                                            child: const Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  'Next',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 7),
+                                                Icon(
+                                                  Icons
+                                                      .arrow_forward_ios_rounded,
+                                                  color: Colors.black,
+                                                  size: 20.0,
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        : ElevatedButton(
+                                            onPressed: null,
+                                            style: AppStyles
+                                                .DisableNextRecordDataButtonStyle(),
+                                            child: const Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  'Next',
+                                                  style: TextStyle(
+                                                    color: Color.fromARGB(
+                                                        0, 23, 21, 59),
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 7),
+                                                Icon(
+                                                  Icons
+                                                      .arrow_forward_ios_rounded,
+                                                  color: Color.fromARGB(
+                                                      0, 23, 21, 59),
+                                                  size: 20.0,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                  ],
+                                );
+                              }
+                            },
+                          ),
+                    // Row(
+                    //                   mainAxisAlignment:
+                    //                       MainAxisAlignment.spaceBetween,
+                    //                   children: [
+                    //                     // Previous Button
+                    //                     hasPreviousPage
+                    //                         ? ElevatedButton.icon(
+                    //                             onPressed: _loadPrevPage,
+                    //                             icon: const Icon(
+                    //                               Icons.arrow_back_ios_rounded,
+                    //                               color: Colors.black,
+                    //                               size: 20.0,
+                    //                             ),
+                    //                             label: const Text(
+                    //                               'Previous',
+                    //                               style: TextStyle(
+                    //                                 color: Colors.black,
+                    //                                 fontWeight: FontWeight.bold,
+                    //                                 fontSize: 13,
+                    //                               ),
+                    //                             ),
+                    //                             style:
+                    //                                 AppStyles.PreviousButtonStyle(),
+                    //                           )
+                    //                         : ElevatedButton.icon(
+                    //                             onPressed: null,
+                    //                             icon: const Icon(
+                    //                               Icons.arrow_back_ios_rounded,
+                    //                               color: Color.fromARGB(
+                    //                                   0, 23, 21, 59),
+                    //                               size: 20.0,
+                    //                             ),
+                    //                             label: const Text(
+                    //                               'Previous',
+                    //                               style: TextStyle(
+                    //                                 color: Color.fromARGB(0, 255, 255, 255),
+                    //                                 fontWeight: FontWeight.bold,
+                    //                                 fontSize: 13,
+                    //                               ),
+                    //                             ),
+                    //                             style: AppStyles
+                    //                                 .DisablePreviousButtonStyle(),
+                    //                           ),
+
+                    //                     // Page Indicator
+                    //                     Text(
+                    //                       '${(currentPage * itemsPerPage) + 1}-${(currentPage + 1) * itemsPerPage > totalCards ? totalCards : (currentPage + 1) * itemsPerPage}',
+                    //                       style: const TextStyle(
+                    //                         color: Colors.white,
+                    //                         fontWeight: FontWeight.bold,
+                    //                       ),
+                    //                     ),
+
+                    //                     // Next Button
+                    //                     hasNextPage
+                    //                         ? ElevatedButton(
+                    //                             onPressed: _loadNextPage,
+                    //                             style: AppStyles
+                    //                                 .NextRecordDataButtonStyle(),
+                    //                             child: const Row(
+                    //                               mainAxisSize: MainAxisSize.min,
+                    //                               children: [
+                    //                                 Text(
+                    //                                   'Next',
+                    //                                   style: TextStyle(
+                    //                                     color: Colors.black,
+                    //                                     fontWeight: FontWeight.bold,
+                    //                                     fontSize: 13,
+                    //                                   ),
+                    //                                 ),
+                    //                                 SizedBox(width: 7),
+                    //                                 Icon(
+                    //                                   Icons
+                    //                                       .arrow_forward_ios_rounded,
+                    //                                   color: Colors.black,
+                    //                                   size: 20.0,
+                    //                                 ),
+                    //                               ],
+                    //                             ),
+                    //                           )
+                    //                         : ElevatedButton(
+                    //                             onPressed: null,
+                    //                             style: AppStyles
+                    //                                 .DisableNextRecordDataButtonStyle(),
+                    //                             child: const Row(
+                    //                               mainAxisSize: MainAxisSize.min,
+                    //                               children: [
+                    //                                 Text(
+                    //                                   'Next',
+                    //                                   style: TextStyle(
+                    //                                     color: Color.fromARGB(
+                    //                                         0, 23, 21, 59),
+                    //                                     fontWeight: FontWeight.bold,
+                    //                                     fontSize: 13,
+                    //                                   ),
+                    //                                 ),
+                    //                                 SizedBox(width: 7),
+                    //                                 Icon(
+                    //                                   Icons
+                    //                                       .arrow_forward_ios_rounded,
+                    //                                   color: Color.fromARGB(
+                    //                                       0, 23, 21, 59),
+                    //                                   size: 20.0,
+                    //                                 ),
+                    //                               ],
+                    //                             ),
+                    //                           ),
+                    //                   ],
+                    //                 ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -517,173 +980,173 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
     );
   }
 
-  Widget _buildCards() {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 10),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              widget.po_doc_no,
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(height: 10),
-          // Text with background color
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 80),
-            decoration: BoxDecoration(
-              color: Colors.lightBlue[100], // Background color for the text
-              borderRadius:
-                  BorderRadius.circular(8), // Rounded corners (optional)
-            ),
-            child: Text(
-              widget.setqc, // Text ที่ต้องการแสดง
-              style: const TextStyle(
-                color: Colors.black, // Text color
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(height: 10),
-          gridItems.isEmpty
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 100),
-                    child: Text(
-                      'No data found',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                )
-              : ListView.builder(
-                  shrinkWrap: true, // ให้ ListView มีขนาดตามข้อมูล
-                  physics: const NeverScrollableScrollPhysics(), // ปิดการเลื่อน
-                  itemCount: gridItems.length,
-                  itemBuilder: (context, index) {
-                    final item = gridItems[index];
-                    return Card(
-                      color: Colors.lightBlue[100],
-                      elevation: 4,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Center(
-                              child: Text(
-                                item['item_code'] ?? '',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            const Divider(color: Colors.black26, thickness: 1),
-                            const SizedBox(height: 8),
-                            Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'จำนวนรับ :',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    CustomContainerStyles.styledContainer(
-                                      item['pack_qty']
-                                          ?.toString(), // Passing the 'pack_qty' as the itemValue
-                                      child: Text(
-                                        item['pack_qty'] != null &&
-                                                item['pack_qty'] != ''
-                                            ? NumberFormat('#,###')
-                                                .format(item['pack_qty'])
-                                            : '',
-                                        textAlign: TextAlign.left,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'จำนวน Pallet :',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    CustomContainerStyles.styledContainer(
-                                      item['count_qty']
-                                          ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                      child: Text(
-                                        item['count_qty'] ?? '',
-                                        style: const TextStyle(fontSize: 14.0),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'จำนวนรวม :',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    CustomContainerStyles.styledContainer(
-                                      item['count_qty_in']
-                                          ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                      child: Text(
-                                        item['count_qty_in'] ?? '',
-                                        style: const TextStyle(fontSize: 14.0),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildCards() {
+  //   return Container(
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: [
+  //         const SizedBox(height: 10),
+  //         Container(
+  //           width: double.infinity,
+  //           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
+  //           decoration: BoxDecoration(
+  //             color: Colors.white,
+  //             borderRadius: BorderRadius.circular(8),
+  //           ),
+  //           child: Text(
+  //             widget.po_doc_no ?? '',
+  //             style: const TextStyle(
+  //               color: Colors.black,
+  //               fontWeight: FontWeight.bold,
+  //               fontSize: 18,
+  //             ),
+  //             textAlign: TextAlign.center,
+  //           ),
+  //         ),
+  //         const SizedBox(height: 10),
+  //         // Text with background color
+  //         Container(
+  //           width: double.infinity,
+  //           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 80),
+  //           decoration: BoxDecoration(
+  //             color: Colors.lightBlue[100], // Background color for the text
+  //             borderRadius:
+  //                 BorderRadius.circular(8), // Rounded corners (optional)
+  //           ),
+  //           child: Text(
+  //             widget.setqc, // Text ที่ต้องการแสดง
+  //             style: const TextStyle(
+  //               color: Colors.black, // Text color
+  //               fontWeight: FontWeight.bold,
+  //               fontSize: 20,
+  //             ),
+  //             textAlign: TextAlign.center,
+  //           ),
+  //         ),
+  //         const SizedBox(height: 10),
+  //         gridItems.isEmpty
+  //             ? Center(
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.only(top: 100),
+  //                   child: Text(
+  //                     'No data found',
+  //                     style: TextStyle(color: Colors.white),
+  //                   ),
+  //                 ),
+  //               )
+  //             : ListView.builder(
+  //                 shrinkWrap: true, // ให้ ListView มีขนาดตามข้อมูล
+  //                 physics: const NeverScrollableScrollPhysics(), // ปิดการเลื่อน
+  //                 itemCount: gridItems.length,
+  //                 itemBuilder: (context, index) {
+  //                   final item = gridItems[index];
+  //                   return Card(
+  //                     color: Colors.lightBlue[100],
+  //                     elevation: 4,
+  //                     child: Padding(
+  //                       padding: const EdgeInsets.all(20),
+  //                       child: Column(
+  //                         mainAxisSize: MainAxisSize.min,
+  //                         children: [
+  //                           Center(
+  //                             child: Text(
+  //                               item['item_code'] ?? '',
+  //                               style: const TextStyle(
+  //                                 fontWeight: FontWeight.bold,
+  //                                 fontSize: 20,
+  //                               ),
+  //                               textAlign: TextAlign.center,
+  //                             ),
+  //                           ),
+  //                           const Divider(color: Colors.black26, thickness: 1),
+  //                           const SizedBox(height: 8),
+  //                           Column(
+  //                             children: [
+  //                               Row(
+  //                                 mainAxisAlignment: MainAxisAlignment.start,
+  //                                 children: [
+  //                                   const Text(
+  //                                     'จำนวนรับ :',
+  //                                     textAlign: TextAlign.left,
+  //                                     style: TextStyle(
+  //                                       fontSize: 14,
+  //                                       fontWeight: FontWeight.bold,
+  //                                     ),
+  //                                   ),
+  //                                   const SizedBox(width: 8),
+  //                                   CustomContainerStyles.styledContainer(
+  //                                     item['pack_qty']
+  //                                         ?.toString(), // Passing the 'pack_qty' as the itemValue
+  //                                     child: Text(
+  //                                       item['pack_qty'] != null &&
+  //                                               item['pack_qty'] != ''
+  //                                           ? NumberFormat('#,###')
+  //                                               .format(item['pack_qty'])
+  //                                           : '',
+  //                                       textAlign: TextAlign.left,
+  //                                       style: const TextStyle(
+  //                                         fontSize: 14,
+  //                                         fontWeight: FontWeight.normal,
+  //                                         color: Colors.black,
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                 ],
+  //                               ),
+  //                               const SizedBox(height: 4),
+  //                               Row(
+  //                                 mainAxisAlignment: MainAxisAlignment.start,
+  //                                 children: [
+  //                                   const Text(
+  //                                     'จำนวน Pallet :',
+  //                                     textAlign: TextAlign.left,
+  //                                     style: TextStyle(
+  //                                         fontSize: 14,
+  //                                         fontWeight: FontWeight.bold),
+  //                                   ),
+  //                                   const SizedBox(width: 8),
+  //                                   CustomContainerStyles.styledContainer(
+  //                                     item['count_qty']
+  //                                         ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+  //                                     child: Text(
+  //                                       item['count_qty'] ?? '',
+  //                                       style: const TextStyle(fontSize: 14.0),
+  //                                     ),
+  //                                   ),
+  //                                 ],
+  //                               ),
+  //                               const SizedBox(height: 4),
+  //                               Row(
+  //                                 mainAxisAlignment: MainAxisAlignment.start,
+  //                                 children: [
+  //                                   const Text(
+  //                                     'จำนวนรวม :',
+  //                                     textAlign: TextAlign.left,
+  //                                     style: TextStyle(
+  //                                         fontSize: 14,
+  //                                         fontWeight: FontWeight.bold),
+  //                                   ),
+  //                                   const SizedBox(width: 8),
+  //                                   CustomContainerStyles.styledContainer(
+  //                                     item['count_qty_in']
+  //                                         ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+  //                                     child: Text(
+  //                                       item['count_qty_in'] ?? '',
+  //                                       style: const TextStyle(fontSize: 14.0),
+  //                                     ),
+  //                                   ),
+  //                                 ],
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   );
+  //                 },
+  //               ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

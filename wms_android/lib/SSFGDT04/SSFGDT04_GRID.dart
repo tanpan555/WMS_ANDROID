@@ -10,19 +10,19 @@ import '../styles.dart';
 
 class SSFGDT04_GRID extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจาก lov
-  final String po_doc_no;
-  final String po_doc_type;
+  final String? po_doc_no;
+  final String? po_doc_type;
   final String p_ref_no;
   final String mo_do_no;
 
   const SSFGDT04_GRID({
-    super.key,
+    Key? key,
     required this.pWareCode,
     required this.po_doc_no,
     required this.po_doc_type,
     required this.p_ref_no,
     required this.mo_do_no,
-  });
+  }) : super(key: key);
 
   @override
   _SSFGDT04_GRIDState createState() => _SSFGDT04_GRIDState();
@@ -37,6 +37,12 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   String? poMessage;
   String? setqc;
   bool isLoading = true;
+  int currentPage = 0;
+  int itemsPerPage = 15; // จำนวนการ์ดต่อหน้า
+  List<dynamic> dataCard = [];
+  String? next;
+  String? previous;
+  String errorMessage = '';
 
   @override
   void initState() {
@@ -216,26 +222,104 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     }
   }
 
-  Future<void> fetchGridItems() async {
-    final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_WMS_IN_TRAN_DETAIL/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}/${gb.P_OU_CODE}'));
-    if (response.statusCode == 200) {
-      final responseBody = utf8.decode(response.bodyBytes);
-      final data = jsonDecode(responseBody);
-      if (mounted) {
-        setState(() {
-          // Update gridItems with new data
-          gridItems = List<Map<String, dynamic>>.from(data['items'] ?? []);
-          isLoading = false;
+  Future<void> fetchGridItems([String? url]) async {
+    if (!mounted) return; // ตรวจสอบว่าตัว component ยังถูก mount อยู่หรือไม่
 
-          // Filter out deleted items
-          gridItems = gridItems
-              .where((item) => !deletedItemCodes.contains(item['item_code']))
-              .toList();
+    setState(() {
+      isLoading = true;
+    });
+
+    final String requestUrl = url ??
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_WMS_IN_TRAN_DETAIL/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}/${gb.P_OU_CODE}';
+
+    try {
+      final response = await http.get(Uri.parse(requestUrl));
+      print(requestUrl);
+
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final parsedResponse = json.decode(responseBody);
+
+        if (!mounted) return;
+
+        if (mounted) {
+          setState(() {
+            // ตรวจสอบข้อมูลก่อนการอัปเดต
+            if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+              dataCard = parsedResponse['items'];
+            } else {
+              dataCard = [];
+            }
+
+            // อัปเดตและกรองข้อมูลใน gridItems
+            gridItems = List<Map<String, dynamic>>.from(
+                    parsedResponse['items'] ?? [])
+                .where((item) => !deletedItemCodes.contains(item['item_code']))
+                .toList();
+
+            // คำนวณจำนวน totalCards
+            int totalCards = dataCard.length;
+            List<dynamic> getCurrentPageItems() {
+              int startIndex = currentPage * itemsPerPage;
+              int endIndex = (startIndex + itemsPerPage > totalCards)
+                  ? totalCards
+                  : startIndex + itemsPerPage;
+              return dataCard.sublist(
+                  startIndex, endIndex); // ดึงเฉพาะ card ในหน้าปัจจุบัน
+            }
+
+            isLoading = false;
+          });
+        }
+      } else {
+        if (!mounted) return;
+        setState(() {
+          isLoading = false;
+          errorMessage = 'Failed to load data: ${response.statusCode}';
         });
       }
-    } else {
-      throw Exception('Failed to load DOC_TYPE items');
+    } catch (e) {
+      if (!mounted) return;
+
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          errorMessage = 'Error occurred: $e';
+        });
+      }
+    }
+  }
+
+  String? getLink(List<dynamic> links, String rel) {
+    final link =
+        links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
+    return link != null ? link['href'] : null;
+  }
+
+  void _loadPrevPage() {
+    if (currentPage > 0) {
+      setState(() {
+        currentPage--;
+        // No need to call fetchData here, just update the UI
+      });
+      _scrollToTop();
+    }
+  }
+
+  void _loadNextPage() {
+    if ((currentPage + 1) * itemsPerPage < dataCard.length) {
+      setState(() {
+        currentPage++;
+        // No need to call fetchData here, just update the UI
+      });
+      _scrollToTop();
+    }
+  }
+
+  final ScrollController _scrollController = ScrollController();
+  void _scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0); // เลื่อนไปยังตำแหน่งเริ่มต้น (index 0)
     }
   }
 
@@ -362,6 +446,9 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
 
   @override
   Widget build(BuildContext context) {
+    int totalCards = dataCard.length;
+    bool hasPreviousPage = currentPage > 0;
+    bool hasNextPage = (currentPage + 1) * itemsPerPage < totalCards;
     return Scaffold(
       appBar:
           CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
@@ -573,7 +660,484 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
             const SizedBox(height: 16),
             Expanded(
               child: SingleChildScrollView(
-                child: _buildCards(),
+                // child: _buildCards(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 10),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 30),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        widget.po_doc_no ?? '',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // Text with background color
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.lightBlue[100],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child: Text(
+                          setqc ?? '',
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    gridItems.isEmpty
+                        ? Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 100),
+                              child: Text(
+                                'No data found',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            // itemCount: gridItems.length,
+                            controller: _scrollController,
+                            itemCount:
+                                itemsPerPage + 1, // +1 for the pagination row
+                            itemBuilder: (context, index) {
+                              if (index < itemsPerPage) {
+                                int actualIndex =
+                                    (currentPage * itemsPerPage) + index;
+
+                                // Check if we have reached the end of the data
+                                if (actualIndex >= dataCard.length) {
+                                  return const SizedBox.shrink();
+                                }
+
+                                final item = dataCard[actualIndex];
+
+                                return Card(
+                                  elevation: 8.0,
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  color: Colors.lightBlue[100],
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    child: Stack(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Center(
+                                                child: Text(
+                                                  item['item_code'] ?? '',
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                              const Divider(
+                                                  color: Colors.black26,
+                                                  thickness: 1),
+                                              const SizedBox(height: 8),
+                                              Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      const Text(
+                                                        'จำนวนรับ :',
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 8),
+                                                      CustomContainerStyles
+                                                          .styledContainer(
+                                                        item['pack_qty']
+                                                            ?.toString(), // Passing the 'pack_qty' as the itemValue
+                                                        child: Text(
+                                                          item['pack_qty'] !=
+                                                                      null &&
+                                                                  item['pack_qty'] !=
+                                                                      ''
+                                                              ? NumberFormat(
+                                                                      '#,###')
+                                                                  .format(item[
+                                                                      'pack_qty'])
+                                                              : '',
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      const Text(
+                                                        'จำนวน Pallet :',
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      const SizedBox(width: 8),
+                                                      CustomContainerStyles
+                                                          .styledContainer(
+                                                        item['count_qty']
+                                                            ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                        child: Text(
+                                                          item['count_qty'] ??
+                                                              '',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      const Text(
+                                                        'จำนวนรวม :',
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      const SizedBox(width: 8),
+                                                      CustomContainerStyles
+                                                          .styledContainer(
+                                                        item['count_qty_in']
+                                                            ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                        child: Text(
+                                                          item['count_qty_in'] ??
+                                                              '',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      14.0),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 8),
+                                              // Row with delete and edit buttons
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment
+                                                    .spaceBetween, // Align buttons
+                                                children: [
+                                                  // Delete button as image
+                                                  IconButton(
+                                                    icon: Image.asset(
+                                                      'assets/images/bin.png', // Delete image path
+                                                      width: 30,
+                                                      height: 30,
+                                                    ),
+                                                    onPressed: () async {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return AlertDialog(
+                                                            title: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Row(
+                                                                  children: const [
+                                                                    Icon(
+                                                                      Icons
+                                                                          .notification_important,
+                                                                      color: Colors
+                                                                          .red,
+                                                                      size: 30,
+                                                                    ),
+                                                                    SizedBox(
+                                                                        width:
+                                                                            8),
+                                                                    Text(
+                                                                        'แจ้งเตือน'),
+                                                                  ],
+                                                                ),
+                                                                IconButton(
+                                                                  icon: const Icon(
+                                                                      Icons
+                                                                          .close),
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            content: const Text(
+                                                                'ต้องการลบรายการหรือไม่?'),
+                                                            actions: <Widget>[
+                                                              TextButton(
+                                                                style: ElevatedButton
+                                                                    .styleFrom(
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  side: const BorderSide(
+                                                                      color: Colors
+                                                                          .grey),
+                                                                ),
+                                                                child: const Text(
+                                                                    'ยกเลิก'),
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop(
+                                                                          false);
+                                                                },
+                                                              ),
+                                                              TextButton(
+                                                                style: ElevatedButton
+                                                                    .styleFrom(
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  side: const BorderSide(
+                                                                      color: Colors
+                                                                          .grey),
+                                                                ),
+                                                                child:
+                                                                    const Text(
+                                                                        'ตกลง'),
+                                                                onPressed:
+                                                                    () async {
+                                                                  final poItemCode =
+                                                                      item[
+                                                                          'item_code'];
+                                                                  final poSeq =
+                                                                      item[
+                                                                          'seq'];
+                                                                  await delete(
+                                                                      widget
+                                                                          .po_doc_no,
+                                                                      widget
+                                                                          .po_doc_type,
+                                                                      poSeq,
+                                                                      poItemCode);
+                                                                  if (mounted) {
+                                                                    setState(
+                                                                        () {
+                                                                      gridItems.removeWhere((item) =>
+                                                                          item['item_code'] ==
+                                                                              poItemCode &&
+                                                                          item['seq'] ==
+                                                                              poSeq);
+                                                                    });
+                                                                  }
+                                                                  if (mounted) {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop(
+                                                                            true);
+                                                                  }
+                                                                },
+                                                              ),
+                                                            ],
+                                                          );
+                                                        },
+                                                      );
+                                                    },
+                                                  ),
+                                                  // Edit button as image
+                                                  IconButton(
+                                                    icon: Image.asset(
+                                                      'assets/images/edit.png', // Edit image path
+                                                      width: 30,
+                                                      height: 30,
+                                                    ),
+                                                    onPressed: () {
+                                                      _showEditDialog(
+                                                          context, item);
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // Previous Button
+                                    hasPreviousPage
+                                        ? ElevatedButton.icon(
+                                            onPressed: _loadPrevPage,
+                                            icon: const Icon(
+                                              Icons.arrow_back_ios_rounded,
+                                              color: Colors.black,
+                                              size: 20.0,
+                                            ),
+                                            label: const Text(
+                                              'Previous',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            style:
+                                                AppStyles.PreviousButtonStyle(),
+                                          )
+                                        : ElevatedButton.icon(
+                                            onPressed: null,
+                                            icon: const Icon(
+                                              Icons.arrow_back_ios_rounded,
+                                              color: Color.fromARGB(
+                                                  0, 23, 21, 59),
+                                              size: 20.0,
+                                            ),
+                                            label: const Text(
+                                              'Previous',
+                                              style: TextStyle(
+                                                color: Color.fromARGB(0, 255, 255, 255),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            style: AppStyles
+                                                .DisablePreviousButtonStyle(),
+                                          ),
+
+                                    // Page Indicator
+                                    Text(
+                                      '${(currentPage * itemsPerPage) + 1}-${(currentPage + 1) * itemsPerPage > totalCards ? totalCards : (currentPage + 1) * itemsPerPage}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+
+                                    // Next Button
+                                    hasNextPage
+                                        ? ElevatedButton(
+                                            onPressed: _loadNextPage,
+                                            style: AppStyles
+                                                .NextRecordDataButtonStyle(),
+                                            child: const Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  'Next',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 7),
+                                                Icon(
+                                                  Icons
+                                                      .arrow_forward_ios_rounded,
+                                                  color: Colors.black,
+                                                  size: 20.0,
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        : ElevatedButton(
+                                            onPressed: null,
+                                            style: AppStyles
+                                                .DisableNextRecordDataButtonStyle(),
+                                            child: const Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  'Next',
+                                                  style: TextStyle(
+                                                    color: Color.fromARGB(
+                                                        0, 23, 21, 59),
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 7),
+                                                Icon(
+                                                  Icons
+                                                      .arrow_forward_ios_rounded,
+                                                  color: Color.fromARGB(
+                                                      0, 23, 21, 59),
+                                                  size: 20.0,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                  ],
+                                );
+                              }
+                            },
+                          ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -582,287 +1146,4 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
       bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
   }
-
-  Widget _buildCards() {
-  return Container(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(height: 10),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Text(
-            widget.po_doc_no,
-            style: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        const SizedBox(height: 10),
-        // Text with background color
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          decoration: BoxDecoration(
-            color: Colors.lightBlue[100],
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Text(
-              setqc ?? '',
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-
-        // Check if gridItems is empty
-        gridItems.isEmpty
-            ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 100),
-                  child: Text(
-                    'No data found',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              )
-            : ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: gridItems.length,
-                  itemBuilder: (context, index) {
-                    final item = gridItems[index];
-                    return Card(
-                      color: Colors.lightBlue[100],
-                      elevation: 4,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Center(
-                              child: Text(
-                                item['item_code'] ?? '',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            const Divider(color: Colors.black26, thickness: 1),
-                            const SizedBox(height: 8),
-                            Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'จำนวนรับ :',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    CustomContainerStyles.styledContainer(
-                                      item['pack_qty']
-                                          ?.toString(), // Passing the 'pack_qty' as the itemValue
-                                      child: Text(
-                                        item['pack_qty'] != null &&
-                                                item['pack_qty'] != ''
-                                            ? NumberFormat('#,###')
-                                                .format(item['pack_qty'])
-                                            : '',
-                                        textAlign: TextAlign.left,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'จำนวน Pallet :',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    CustomContainerStyles.styledContainer(
-                                      item['count_qty']
-                                          ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                      child: Text(
-                                        item['count_qty'] ?? '',
-                                        style: const TextStyle(fontSize: 14.0),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'จำนวนรวม :',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    CustomContainerStyles.styledContainer(
-                                      item['count_qty_in']
-                                          ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                      child: Text(
-                                        item['count_qty_in'] ?? '',
-                                        style: const TextStyle(fontSize: 14.0),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            // Row with delete and edit buttons
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment
-                                  .spaceBetween, // Align buttons
-                              children: [
-                                // Delete button as image
-                                IconButton(
-                                  icon: Image.asset(
-                                    'assets/images/bin.png', // Delete image path
-                                    width: 30,
-                                    height: 30,
-                                  ),
-                                  onPressed: () async {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: const [
-                                                  Icon(
-                                                    Icons
-                                                        .notification_important,
-                                                    color: Colors.red,
-                                                    size: 30,
-                                                  ),
-                                                  SizedBox(width: 8),
-                                                  Text('แจ้งเตือน'),
-                                                ],
-                                              ),
-                                              IconButton(
-                                                icon: const Icon(Icons.close),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          content: const Text(
-                                              'ต้องการลบรายการหรือไม่?'),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.white,
-                                                side: const BorderSide(
-                                                    color: Colors.grey),
-                                              ),
-                                              child: const Text('ยกเลิก'),
-                                              onPressed: () {
-                                                Navigator.of(context)
-                                                    .pop(false);
-                                              },
-                                            ),
-                                            TextButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.white,
-                                                side: const BorderSide(
-                                                    color: Colors.grey),
-                                              ),
-                                              child: const Text('ตกลง'),
-                                              onPressed: () async {
-                                                final poItemCode =
-                                                    item['item_code'];
-                                                final poSeq = item['seq'];
-                                                await delete(
-                                                    widget.po_doc_no,
-                                                    widget.po_doc_type,
-                                                    poSeq,
-                                                    poItemCode);
-                                                if (mounted) {
-                                                  setState(() {
-                                                    gridItems.removeWhere(
-                                                        (item) =>
-                                                            item['item_code'] ==
-                                                                poItemCode &&
-                                                            item['seq'] ==
-                                                                poSeq);
-                                                  });
-                                                }
-                                                if (mounted) {
-                                                  Navigator.of(context)
-                                                      .pop(true);
-                                                }
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                                // Edit button as image
-                                IconButton(
-                                  icon: Image.asset(
-                                    'assets/images/edit.png', // Edit image path
-                                    width: 30,
-                                    height: 30,
-                                  ),
-                                  onPressed: () {
-                                    _showEditDialog(context, item);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-      ],
-    ),
-  );
-}
-
 }
