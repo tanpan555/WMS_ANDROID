@@ -435,26 +435,11 @@ class DialogStyles {
     );
   }
 
-//   showDialog(
-//   context: context,
-//   builder: (BuildContext context) {
-//     return DialogStyles.customAlertDialog(
-//       context: context,
-//       content: const Text('คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?'),
-//       onClose: () => Navigator.of(context).pop(),
-//       onConfirm: () {
-//         // ใส่โค้ดการทำงานเมื่อกดปุ่ม "ตกลง"
-//         Navigator.of(context).pop();
-//       },
-//     );
-//   },
-// );
-
 // ----------------------------------------------------------------------
 
-  static Dialog customSearchDialog({
+  static Dialog customLovSearchDialog({
     required BuildContext context,
-    required String headerText,
+    required String? headerText,
     required TextEditingController searchController,
     required List<dynamic> data,
     required String Function(dynamic item) docString,
@@ -478,7 +463,7 @@ class DialogStyles {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      headerText,
+                      headerText.toString(),
                       style: const TextStyle(
                           fontSize: 18, fontWeight: FontWeight.bold),
                     ),
@@ -492,6 +477,116 @@ class DialogStyles {
                 ),
                 const SizedBox(height: 10),
                 // ช่องค้นหา
+                TextField(
+                  controller: searchController,
+                  decoration: const InputDecoration(
+                    hintText: 'ค้นหา',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (query) {
+                    setState(() {}); // อัปเดตข้อมูลเมื่อมีการค้นหา
+                  },
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: Builder(
+                    builder: (context) {
+                      final filteredItems = data.where((item) {
+                        final docValue = docString(item).toLowerCase();
+                        final searchQuery =
+                            searchController.text.trim().toLowerCase();
+                        return docValue.contains(searchQuery);
+                      }).toList();
+
+                      if (filteredItems.isEmpty) {
+                        return const Center(
+                          child: Text('No data found'),
+                        );
+                      }
+
+                      return ListView.builder(
+                        itemCount: filteredItems.length,
+                        itemBuilder: (context, index) {
+                          final item = filteredItems[index];
+
+                          return ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(
+                              titleText(item),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(subtitleText(item)),
+                            onTap: () => onTap(item),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  static Dialog customRequiredLovSearchDialog({
+    required BuildContext context,
+    required String headerText, // ปรับเป็น String
+    required TextEditingController searchController,
+    required List<dynamic> data,
+    required String Function(dynamic item) docString,
+    required String Function(Map<String, dynamic> item) titleText,
+    required String Function(Map<String, dynamic> item) subtitleText,
+    required void Function(Map<String, dynamic> item) onTap,
+  }) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: StatefulBuilder(
+        builder: (context, setState) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            height: 300,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: headerText,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        children: const [
+                          TextSpan(
+                            text: ' *',
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        searchController.clear();
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
                 TextField(
                   controller: searchController,
                   decoration: const InputDecoration(

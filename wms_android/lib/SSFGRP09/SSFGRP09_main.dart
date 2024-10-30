@@ -1194,345 +1194,622 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                       ),
                     ),
 
-                    // -------------------------------------------------------------------------------------------------------------//
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: startWareCodeController,
-                            readOnly: true,
-                            onTap: () =>
-                                showDialogDropdownSearchStartWareCode(),
-                            minLines: 1,
-                            maxLines: 3,
-                            // overflow: TextOverflow.ellipsis,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText: 'จาก คลังสินค้า',
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 12,
-                              ),
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextFormField(
-                            controller: endWareCodeController,
-                            readOnly: true,
-                            onTap: () => showDialogDropdownSearchEndWareCode(),
-                            minLines: 1,
-                            maxLines: 3,
-                            // overflow: TextOverflow.ellipsis,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText: 'ถึง คลังสินค้า',
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 12,
-                              ),
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                    // // -------------------------------------------------------------------------------------------------------------//
+                    // const SizedBox(height: 8),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: startWareCodeController,
+                    //         readOnly: true,
+                    //         onTap: () =>
+                    //             showDialogDropdownSearchStartWareCode(),
+                    //         minLines: 1,
+                    //         maxLines: 3,
+                    //         // overflow: TextOverflow.ellipsis,
+                    //         decoration: const InputDecoration(
+                    //           border: InputBorder.none,
+                    //           filled: true,
+                    //           fillColor: Colors.white,
+                    //           labelText: 'จาก คลังสินค้า',
+                    //           labelStyle: TextStyle(
+                    //             color: Colors.black87,
+                    //             fontSize: 12,
+                    //           ),
+                    //           suffixIcon: Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: Color.fromARGB(255, 113, 113, 113),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     const SizedBox(width: 8),
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: endWareCodeController,
+                    //         readOnly: true,
+                    //         onTap: () => showDialogDropdownSearchEndWareCode(),
+                    //         minLines: 1,
+                    //         maxLines: 3,
+                    //         // overflow: TextOverflow.ellipsis,
+                    //         decoration: const InputDecoration(
+                    //           border: InputBorder.none,
+                    //           filled: true,
+                    //           fillColor: Colors.white,
+                    //           labelText: 'ถึง คลังสินค้า',
+                    //           labelStyle: TextStyle(
+                    //             color: Colors.black87,
+                    //             fontSize: 12,
+                    //           ),
+                    //           suffixIcon: Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: Color.fromARGB(255, 113, 113, 113),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     )
+                    //   ],
+                    // ),
 
-                    // -------------------------------------------------------------------------------------------------------------//
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: startLocController,
-                            readOnly: true,
-                            onTap: () => showDialogDropdownSearchStartLoc(),
-                            minLines: 1,
-                            maxLines: 3,
-                            // overflow: TextOverflow.ellipsis,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText: 'จาก ตำแหน่งจัดเก็บ',
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 12,
-                              ),
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextFormField(
-                            controller: endLocController,
-                            readOnly: true,
-                            onTap: () => showDialogDropdownSearchEndLoc(),
-                            minLines: 1,
-                            maxLines: 3,
-                            // overflow: TextOverflow.ellipsis,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText: 'ถึง ตำแหน่งจัดเก็บ',
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 12,
-                              ),
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                    // // -------------------------------------------------------------------------------------------------------------//
+                    // const SizedBox(height: 8),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: startLocController,
+                    //         readOnly: true,
+                    //         onTap: () => showDialogDropdownSearchStartLoc(),
+                    //         minLines: 1,
+                    //         maxLines: 3,
+                    //         // overflow: TextOverflow.ellipsis,
+                    //         decoration: const InputDecoration(
+                    //           border: InputBorder.none,
+                    //           filled: true,
+                    //           fillColor: Colors.white,
+                    //           labelText: 'จาก ตำแหน่งจัดเก็บ',
+                    //           labelStyle: TextStyle(
+                    //             color: Colors.black87,
+                    //             fontSize: 12,
+                    //           ),
+                    //           suffixIcon: Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: Color.fromARGB(255, 113, 113, 113),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     const SizedBox(width: 8),
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: endLocController,
+                    //         readOnly: true,
+                    //         onTap: () => showDialogDropdownSearchEndLoc(),
+                    //         minLines: 1,
+                    //         maxLines: 3,
+                    //         // overflow: TextOverflow.ellipsis,
+                    //         decoration: const InputDecoration(
+                    //           border: InputBorder.none,
+                    //           filled: true,
+                    //           fillColor: Colors.white,
+                    //           labelText: 'ถึง ตำแหน่งจัดเก็บ',
+                    //           labelStyle: TextStyle(
+                    //             color: Colors.black87,
+                    //             fontSize: 12,
+                    //           ),
+                    //           suffixIcon: Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: Color.fromARGB(255, 113, 113, 113),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     )
+                    //   ],
+                    // ),
 
-                    // -------------------------------------------------------------------------------------------------------------//
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: startGroupController,
-                            readOnly: true,
-                            onTap: () => showDialogDropdownSearchStartGroup(),
-                            minLines: 1,
-                            maxLines: 3,
-                            // overflow: TextOverflow.ellipsis,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText: 'จาก กลุ่มสินค้า',
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 12,
-                              ),
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextFormField(
-                            controller: endGroupController,
-                            readOnly: true,
-                            onTap: () => showDialogDropdownSearchEndGroup(),
-                            minLines: 1,
-                            maxLines: 3,
-                            // overflow: TextOverflow.ellipsis,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText: 'ถึง กลุ่มสินค้า',
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 12,
-                              ),
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    // -------------------------------------------------------------------------------------------------------------//
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: startCategoryController,
-                            readOnly: true,
-                            onTap: () =>
-                                showDialogDropdownSearchStartCategory(),
-                            minLines: 1,
-                            maxLines: 3,
-                            // overflow: TextOverflow.ellipsis,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText: 'จาก Category',
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 12,
-                              ),
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextFormField(
-                            controller: endCategoryController,
-                            readOnly: true,
-                            onTap: () => showDialogDropdownSearchEndCategory(),
-                            minLines: 1,
-                            maxLines: 3,
-                            // overflow: TextOverflow.ellipsis,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText: 'ถึง Category',
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 12,
-                              ),
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                    // // -------------------------------------------------------------------------------------------------------------//
+                    // const SizedBox(height: 8),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: startGroupController,
+                    //         readOnly: true,
+                    //         onTap: () => showDialogDropdownSearchStartGroup(),
+                    //         minLines: 1,
+                    //         maxLines: 3,
+                    //         // overflow: TextOverflow.ellipsis,
+                    //         decoration: const InputDecoration(
+                    //           border: InputBorder.none,
+                    //           filled: true,
+                    //           fillColor: Colors.white,
+                    //           labelText: 'จาก กลุ่มสินค้า',
+                    //           labelStyle: TextStyle(
+                    //             color: Colors.black87,
+                    //             fontSize: 12,
+                    //           ),
+                    //           suffixIcon: Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: Color.fromARGB(255, 113, 113, 113),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     const SizedBox(width: 8),
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: endGroupController,
+                    //         readOnly: true,
+                    //         onTap: () => showDialogDropdownSearchEndGroup(),
+                    //         minLines: 1,
+                    //         maxLines: 3,
+                    //         // overflow: TextOverflow.ellipsis,
+                    //         decoration: const InputDecoration(
+                    //           border: InputBorder.none,
+                    //           filled: true,
+                    //           fillColor: Colors.white,
+                    //           labelText: 'ถึง กลุ่มสินค้า',
+                    //           labelStyle: TextStyle(
+                    //             color: Colors.black87,
+                    //             fontSize: 12,
+                    //           ),
+                    //           suffixIcon: Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: Color.fromARGB(255, 113, 113, 113),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     )
+                    //   ],
+                    // ),
+                    // // -------------------------------------------------------------------------------------------------------------//
+                    // const SizedBox(height: 8),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: startCategoryController,
+                    //         readOnly: true,
+                    //         onTap: () =>
+                    //             showDialogDropdownSearchStartCategory(),
+                    //         minLines: 1,
+                    //         maxLines: 3,
+                    //         // overflow: TextOverflow.ellipsis,
+                    //         decoration: const InputDecoration(
+                    //           border: InputBorder.none,
+                    //           filled: true,
+                    //           fillColor: Colors.white,
+                    //           labelText: 'จาก Category',
+                    //           labelStyle: TextStyle(
+                    //             color: Colors.black87,
+                    //             fontSize: 12,
+                    //           ),
+                    //           suffixIcon: Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: Color.fromARGB(255, 113, 113, 113),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     const SizedBox(width: 8),
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: endCategoryController,
+                    //         readOnly: true,
+                    //         onTap: () => showDialogDropdownSearchEndCategory(),
+                    //         minLines: 1,
+                    //         maxLines: 3,
+                    //         // overflow: TextOverflow.ellipsis,
+                    //         decoration: const InputDecoration(
+                    //           border: InputBorder.none,
+                    //           filled: true,
+                    //           fillColor: Colors.white,
+                    //           labelText: 'ถึง Category',
+                    //           labelStyle: TextStyle(
+                    //             color: Colors.black87,
+                    //             fontSize: 12,
+                    //           ),
+                    //           suffixIcon: Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: Color.fromARGB(255, 113, 113, 113),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     )
+                    //   ],
+                    // ),
 
+                    // // -------------------------------------------------------------------------------------------------------------//
+                    // const SizedBox(height: 8),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: startSubCategoryController,
+                    //         readOnly: true,
+                    //         onTap: () =>
+                    //             showDialogDropdownSearchStartSubCategory(),
+                    //         minLines: 1,
+                    //         maxLines: 3,
+                    //         // overflow: TextOverflow.ellipsis,
+                    //         decoration: const InputDecoration(
+                    //           border: InputBorder.none,
+                    //           filled: true,
+                    //           fillColor: Colors.white,
+                    //           labelText: 'จาก Sub Category',
+                    //           labelStyle: TextStyle(
+                    //             color: Colors.black87,
+                    //             fontSize: 12,
+                    //           ),
+                    //           suffixIcon: Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: Color.fromARGB(255, 113, 113, 113),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     const SizedBox(width: 8),
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: endSubCategoryController,
+                    //         readOnly: true,
+                    //         onTap: () =>
+                    //             showDialogDropdownSearchEndSubCategory(),
+                    //         minLines: 1,
+                    //         maxLines: 3,
+                    //         // overflow: TextOverflow.ellipsis,
+                    //         decoration: const InputDecoration(
+                    //           border: InputBorder.none,
+                    //           filled: true,
+                    //           fillColor: Colors.white,
+                    //           labelText: 'ถึง Sub Category',
+                    //           labelStyle: TextStyle(
+                    //             color: Colors.black87,
+                    //             fontSize: 12,
+                    //           ),
+                    //           suffixIcon: Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: Color.fromARGB(255, 113, 113, 113),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     )
+                    //   ],
+                    // ),
+                    // // -------------------------------------------------------------------------------------------------------------//
+                    // const SizedBox(height: 8),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: startItemController,
+                    //         readOnly: true,
+                    //         onTap: () => showDialogDropdownSearchStartItem(),
+                    //         minLines: 1,
+                    //         maxLines: 3,
+                    //         // overflow: TextOverflow.ellipsis,
+                    //         decoration: const InputDecoration(
+                    //           border: InputBorder.none,
+                    //           filled: true,
+                    //           fillColor: Colors.white,
+                    //           labelText: 'จาก รหัสสินค้า',
+                    //           labelStyle: TextStyle(
+                    //             color: Colors.black87,
+                    //             fontSize: 12,
+                    //           ),
+                    //           suffixIcon: Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: Color.fromARGB(255, 113, 113, 113),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     const SizedBox(width: 8),
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: endItemController,
+                    //         readOnly: true,
+                    //         onTap: () => showDialogDropdownSearchEndItem(),
+                    //         minLines: 1,
+                    //         maxLines: 3,
+                    //         // overflow: TextOverflow.ellipsis,
+                    //         decoration: const InputDecoration(
+                    //           border: InputBorder.none,
+                    //           filled: true,
+                    //           fillColor: Colors.white,
+                    //           labelText: 'ถึง รหัสสินค้า',
+                    //           labelStyle: TextStyle(
+                    //             color: Colors.black87,
+                    //             fontSize: 12,
+                    //           ),
+                    //           suffixIcon: Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: Color.fromARGB(255, 113, 113, 113),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     )
+                    //   ],
+                    // ),
                     // -------------------------------------------------------------------------------------------------------------//
                     const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: startSubCategoryController,
-                            readOnly: true,
-                            onTap: () =>
-                                showDialogDropdownSearchStartSubCategory(),
-                            minLines: 1,
-                            maxLines: 3,
-                            // overflow: TextOverflow.ellipsis,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText: 'จาก Sub Category',
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 12,
-                              ),
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                          ),
+
+                    TextFormField(
+                      controller: startWareCodeController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchStartWareCode(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'จาก คลังสินค้า',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextFormField(
-                            controller: endSubCategoryController,
-                            readOnly: true,
-                            onTap: () =>
-                                showDialogDropdownSearchEndSubCategory(),
-                            minLines: 1,
-                            maxLines: 3,
-                            // overflow: TextOverflow.ellipsis,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText: 'ถึง Sub Category',
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 12,
-                              ),
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
                     ),
-                    // -------------------------------------------------------------------------------------------------------------//
                     const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: startItemController,
-                            readOnly: true,
-                            onTap: () => showDialogDropdownSearchStartItem(),
-                            minLines: 1,
-                            maxLines: 3,
-                            // overflow: TextOverflow.ellipsis,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText: 'จาก รหัสสินค้า',
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 12,
-                              ),
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                          ),
+                    TextFormField(
+                      controller: endWareCodeController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchEndWareCode(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'ถึง คลังสินค้า',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextFormField(
-                            controller: endItemController,
-                            readOnly: true,
-                            onTap: () => showDialogDropdownSearchEndItem(),
-                            minLines: 1,
-                            maxLines: 3,
-                            // overflow: TextOverflow.ellipsis,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText: 'ถึง รหัสสินค้า',
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 12,
-                              ),
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
                     ),
-                    // -------------------------------------------------------------------------------------------------------------//
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: startLocController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchStartLoc(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'จาก ตำแหน่งจัดเก็บ',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: endLocController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchEndLoc(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'ถึง ตำแหน่งจัดเก็บ',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: startGroupController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchStartGroup(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'จาก กลุ่มสินค้า',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: endGroupController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchEndGroup(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'ถึง กลุ่มสินค้า',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: startCategoryController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchStartCategory(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'จาก Category',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: endCategoryController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchEndCategory(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'ถึง Category',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: startSubCategoryController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchStartSubCategory(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'จาก Sub Category',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: endSubCategoryController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchEndSubCategory(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'ถึง Sub Category',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: startItemController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchStartItem(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'จาก รหัสสินค้า',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: endItemController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchEndItem(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'ถึง รหัสสินค้า',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     Container(
                       color: Colors.white, // กำหนดสีพื้นหลังของ Container
@@ -1642,7 +1919,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'วันที่เตรียมการตรวจนับ',
           searchController: searchController1,
@@ -1685,7 +1962,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'เลขที่ตรวจนับ',
           searchController: searchController2,
@@ -1722,7 +1999,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'จาก คลังสินค้า',
           searchController: searchController3,
@@ -1779,7 +2056,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'ถึง คลังสินค้า',
           searchController: searchController4,
@@ -1833,7 +2110,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'จาก ตำแหน่งจัดเก็บ',
           searchController: searchController5,
@@ -1882,7 +2159,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'ถึง ตำแหน่งจัดเก็บ',
           searchController: searchController6,
@@ -1923,7 +2200,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'จาก กลุ่มสินค้า',
           searchController: searchController7,
@@ -1996,7 +2273,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'ถึง กลุ่มสินค้า',
           searchController: searchController8,
@@ -2065,7 +2342,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'จาก Category',
           searchController: searchController9,
@@ -2130,7 +2407,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'ถึง Category',
           searchController: searchController10,
@@ -2191,7 +2468,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'จาก Sub Category',
           searchController: searchController11,
@@ -2250,7 +2527,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'ถึง Sub Category',
           searchController: searchController12,
@@ -2303,7 +2580,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'จาก รหัสสินค้า',
           searchController: searchController13,
@@ -2352,7 +2629,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'ถึง รหัสสินค้า',
           searchController: searchController14,
@@ -2394,50 +2671,14 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   ) {
     showDialog(
       context: context,
-      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Row(
-            children: [
-              Icon(
-                Icons.notification_important,
-                color: Colors.red,
-              ),
-              SizedBox(width: 10),
-              Text(
-                'แจ้งเตือน',
-                style: TextStyle(color: Colors.black),
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    messageAlert,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ย้อนกลับ'),
-                      ),
-                    ],
-                  )
-                ])),
-          ),
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () => Navigator.of(context).pop(),
+          onConfirm: () {
+            Navigator.of(context).pop();
+          },
         );
       },
     );
