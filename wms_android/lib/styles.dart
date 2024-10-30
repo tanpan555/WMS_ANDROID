@@ -49,7 +49,7 @@ class AppStyles {
 
   static ButtonStyle createButtonStyle() {
     return ElevatedButton.styleFrom(
-      backgroundColor: Colors.green, // Green background for the button
+      backgroundColor: Colors.white, // Green background for the button
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5.0), // Rounded rectangle border
         side: const BorderSide(color: Colors.white, width: 2), // White outline
@@ -62,14 +62,13 @@ class AppStyles {
 
   static ButtonStyle ClearButtonStyle() {
     return ElevatedButton.styleFrom(
-      backgroundColor: Colors.red, // Red background
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5.0), // Rounded rectangle border
-        side: const BorderSide(color: Colors.white, width: 2), // White outline
+        borderRadius: BorderRadius.circular(5.0),
+        side: const BorderSide(color: Colors.white, width: 2),
       ),
-      padding: const EdgeInsets.symmetric(
-          horizontal: 10, vertical: 5), // Padding for button size
-      minimumSize: const Size(80, 45), // Button size
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      minimumSize: const Size(80, 45),
     );
   }
 
