@@ -41,6 +41,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
   String lotNo = '';
   String quantity = '';
   String locatorTo = '';
+  String controlLot = '';
   String lotQty = '';
   String lotUnit = '';
 
@@ -191,6 +192,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
               lotNo = dataBarcode['po_lot_number'];
               quantity = dataBarcode['po_quantity'];
               locatorTo = dataBarcode['po_curr_loc'];
+              controlLot = dataBarcode['po_control_lot'];
               lotQty = dataBarcode['po_bal_lot']; // ====== รวมรายการจ่าย
               lotUnit = dataBarcode['po_bal_qty']; //--- รวมจำนวนจ่าย
 
@@ -198,8 +200,10 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
               lotNoController.text = lotNo;
               quantityController.text = quantity;
               locatorToController.text = locatorTo;
-              lotQtyController.text = lotQty;
-              lotUnitController.text = lotUnit;
+              lotQtyController.text = lotQty == '' ? '0' : lotQty;
+              lotUnitController.text = lotUnit == '' ? '0' : lotUnit;
+
+              print('controlLot : $controlLot');
             }
             if (statusFetchDataBarcode == '1' && valIDFetchDataBarcode == 'N') {
               changeData(
@@ -635,28 +639,46 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             ),
             const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
-            TextFormField(
-                controller: quantityController,
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelText: 'Quantity',
-                  labelStyle: TextStyle(
-                    color: Colors.black87,
-                  ),
-                ),
-                onChanged: (value) {
-                  setState(
-                    () {
-                      quantity = value;
+            controlLot == 'Y'
+                ? GestureDetector(
+                    child: AbsorbPointer(
+                      child: TextFormField(
+                        controller: quantityController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          filled: true,
+                          fillColor: Colors.grey[300],
+                          labelText: 'Quantity',
+                          labelStyle: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : TextFormField(
+                    controller: quantityController,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: 'Quantity',
+                      labelStyle: TextStyle(
+                        color: Colors.black87,
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(
+                        () {
+                          quantity = value;
 
-                      if (quantity != '') {
-                        chkQuantity();
-                      }
-                    },
-                  );
-                }),
+                          if (quantity != '') {
+                            chkQuantity();
+                          }
+                        },
+                      );
+                    }),
             const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
             TextFormField(
@@ -829,6 +851,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
       chkShowDialogcomfirmMessage = true;
       showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
               title: Row(
@@ -1003,6 +1026,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
   ) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
             title: Row(

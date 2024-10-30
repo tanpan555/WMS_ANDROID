@@ -1503,7 +1503,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customRequiredSearchDialog(
+        return DialogStyles.customRequiredLovSearchDialog(
           context: context,
           headerText: 'เลขที่คำสั่งผลผลิต',
           searchController: _searchController1,
@@ -1559,7 +1559,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'เลขที่เอกสารอ้างอิง',
           searchController: _searchController2,
@@ -1601,7 +1601,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customRequiredSearchDialog(
+        return DialogStyles.customRequiredLovSearchDialog(
           context: context,
           headerText: 'ประเภทการจ่าย',
           searchController: _searchController3,
@@ -1637,7 +1637,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'สาเหตุการยกเลิก',
           searchController: _searchController4,

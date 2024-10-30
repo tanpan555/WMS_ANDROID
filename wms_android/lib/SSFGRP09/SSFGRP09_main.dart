@@ -1919,7 +1919,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'วันที่เตรียมการตรวจนับ',
           searchController: searchController1,
@@ -1962,7 +1962,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'เลขที่ตรวจนับ',
           searchController: searchController2,
@@ -1999,7 +1999,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'จาก คลังสินค้า',
           searchController: searchController3,
@@ -2056,7 +2056,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'ถึง คลังสินค้า',
           searchController: searchController4,
@@ -2110,7 +2110,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'จาก ตำแหน่งจัดเก็บ',
           searchController: searchController5,
@@ -2159,7 +2159,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'ถึง ตำแหน่งจัดเก็บ',
           searchController: searchController6,
@@ -2200,7 +2200,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'จาก กลุ่มสินค้า',
           searchController: searchController7,
@@ -2273,7 +2273,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'ถึง กลุ่มสินค้า',
           searchController: searchController8,
@@ -2342,7 +2342,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'จาก Category',
           searchController: searchController9,
@@ -2407,7 +2407,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'ถึง Category',
           searchController: searchController10,
@@ -2468,7 +2468,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'จาก Sub Category',
           searchController: searchController11,
@@ -2527,7 +2527,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'ถึง Sub Category',
           searchController: searchController12,
@@ -2580,7 +2580,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'จาก รหัสสินค้า',
           searchController: searchController13,
@@ -2629,7 +2629,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'ถึง รหัสสินค้า',
           searchController: searchController14,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:wms_android/SSFGDT17/SSFGD17T_WARE.dart';
 import 'package:wms_android/SSFGRP08/SSFGRP08.dart';
 import 'custom_appbar.dart';
-// import 'custom_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'bottombar.dart';
@@ -15,7 +14,6 @@ import 'package:wms_android/SSINDT01/SSINDT01_WARE.dart';
 import 'SSFGDT31/SSFGDT31_MAIN.dart';
 import 'Global_Parameter.dart' as gb;
 import 'package:wms_android/Global_Parameter.dart' as globals;
-// Import หน้าหรือ widgets ต่างๆ ที่คุณต้องการนำทางไป
 
 class TestMenuLv2 extends StatefulWidget {
   final String sessionID;

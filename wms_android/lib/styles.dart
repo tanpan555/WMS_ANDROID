@@ -438,7 +438,7 @@ class DialogStyles {
 
 // ----------------------------------------------------------------------
 
-  static Dialog customSearchDialog({
+  static Dialog customLovSearchDialog({
     required BuildContext context,
     required String? headerText,
     required TextEditingController searchController,
@@ -535,7 +535,7 @@ class DialogStyles {
     );
   }
 
-  static Dialog customRequiredSearchDialog({
+  static Dialog customRequiredLovSearchDialog({
     required BuildContext context,
     required String headerText, // ปรับเป็น String
     required TextEditingController searchController,
