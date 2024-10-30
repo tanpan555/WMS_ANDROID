@@ -468,14 +468,15 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                border:
-                                    Border.all(color: Colors.white, width: 3),
+                                // border:
+                                //     Border.all(color: Colors.green, width: 3),
                               ),
                               padding: const EdgeInsets.all(2),
-                              child: const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 24,
+                              child: Image.asset(
+                                'assets/images/plus.png',
+                                // color: Colors.black,
+                                width: 30,
+                                height: 30,
                               ),
                             ),
                           ),
@@ -548,14 +549,14 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                border:
-                                    Border.all(color: Colors.white, width: 3),
+                                // border: Border.all(color: Colors.red, width: 3),
                               ),
                               padding: const EdgeInsets.all(3),
-                              child: const Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                                size: 20,
+                              child: Image.asset(
+                                'assets/images/bin.png',
+                                // color: Colors.black,
+                                width: 30,
+                                height: 30,
                               ),
                             ),
                           ),
