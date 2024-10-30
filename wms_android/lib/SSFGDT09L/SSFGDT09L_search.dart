@@ -485,7 +485,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
             builder: (context, setState) {
               return Container(
                 padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
+                height: 300,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -493,8 +493,8 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                       decoration: const BoxDecoration(
                         border: Border(
                           bottom: BorderSide(
-                            color: Colors.grey, // สีของเส้น
-                            width: 1.0, // ความหนาของเส้น
+                            color: Colors.grey,
+                            width: 1.0,
                           ),
                         ),
                       ),
@@ -515,50 +515,31 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                         ],
                       ),
                     ),
-
-                    const SizedBox(height: 10),
                     Expanded(
                       child: ListView(
                         children: [
                           ListView.builder(
                             shrinkWrap: true,
-                            physics:
-                                const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
+                            physics: const NeverScrollableScrollPhysics(),
                             itemCount: dropdownItems.length,
                             itemBuilder: (context, index) {
-                              // ดึงข้อมูลรายการจาก dataCard
                               var item = dropdownItems[index];
-
-                              // return GestureDetector(
-                              //   onTap: () {
-                              //     setState(() {
-                              //       dataLocator = item['location_code'];
-                              //     });
-                              //   },
-                              //   child: SizedBox(
-                              //     child: Text('${item['location_code']}'),
-                              //   ),
-                              // );
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 title: Container(
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
-                                      width: 2.0, // ความหนาของขอบ
+                                      color: Colors.grey,
+                                      width: 2.0,
                                     ),
-                                    borderRadius: BorderRadius.circular(
-                                        10.0), // ทำให้ขอบมีความโค้ง
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                      vertical:
-                                          8.0), // เพิ่ม padding ด้านซ้าย-ขวา และ ด้านบน-ล่าง
+                                      horizontal: 16.0, vertical: 8.0),
                                   child: Text(
                                     item['d'],
                                     style: const TextStyle(
                                       fontSize: 16,
-                                      // fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),

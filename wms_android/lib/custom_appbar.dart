@@ -81,9 +81,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           context: context,
           builder: (context) => AlertDialog(
             title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  // mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Icon(
                       Icons.notification_important,
@@ -91,18 +92,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     SizedBox(width: 10),
                     Text(
-                      'แจ้งเตือน',
+                      'a',
                       style: TextStyle(color: Colors.black),
                     ),
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  // mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     IconButton(
                       icon: const Icon(MyIcons.close),
                       onPressed: () {
-                        Navigator.of(context).pop(false);
+                        Navigator.of(context).pop();
                       },
                     ),
                   ],
