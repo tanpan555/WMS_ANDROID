@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
+import 'package:wms_android/ICON.dart';
 import 'package:wms_android/styles.dart';
 import 'SSFGDT09L_reason.dart';
 
@@ -61,9 +62,12 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
   String statusSubmitAddline = '';
   String messageSubmitAddline = '';
 
+  String previousValue = '';
+
   bool chkShowDialogcomfirmMessage = false;
 
   FocusNode _barcodeFocusNode = FocusNode();
+  FocusNode lotNumberFocusNode = FocusNode();
   TextEditingController barcodeController = TextEditingController();
   TextEditingController locatorFormController = TextEditingController();
   TextEditingController itemCodeController = TextEditingController();
@@ -78,6 +82,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
 
   @override
   void dispose() {
+    lotNumberFocusNode.dispose();
     _barcodeFocusNode.dispose();
     barcodeController.dispose();
     locatorFormController.dispose();
@@ -123,11 +128,29 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
       }
     });
 
+    lotNumberFocusNode.addListener(() {
+      if (!lotNumberFocusNode.hasFocus) {
+        if (mounted) {
+          setState(() {
+            if (barCode.isNotEmpty && lotNo.isNotEmpty) {
+              fetchData();
+            }
+          });
+        }
+      }
+    });
+
     lotNoController.addListener(() {
       if (mounted) {
         setState(() {
           if (barCode != '' && lotNo != '') {
             fetchData();
+            // if (barCode != '' &&
+            //     lotNo != '' &&
+            //     quantity != '' &&
+            //     statusFetchDataBarcode == '0') {
+            //   chkQuantity();
+            // }
           }
         });
       }
@@ -136,12 +159,15 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
     quantityController.addListener(() {
       if (mounted) {
         setState(() {
-          if (barCode != '' &&
-              lotNo != '' &&
-              quantity != '' &&
-              statusFetchDataBarcode == '0') {
+          String currentValue = quantityController.text;
+          if (currentValue != previousValue && currentValue.isNotEmpty ||
+              (barCode != '' &&
+                  lotNo != '' &&
+                  quantity != '' &&
+                  statusFetchDataBarcode == '0')) {
             chkQuantity();
           }
+          previousValue = currentValue;
         });
       }
     });
@@ -198,10 +224,14 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
 
               itemCodeController.text = itemCode;
               lotNoController.text = lotNo;
-              quantityController.text = quantity;
+              quantityController.text = dataBarcode['po_quantity'];
               locatorToController.text = locatorTo;
               lotQtyController.text = lotQty == '' ? '0' : lotQty;
               lotUnitController.text = lotUnit == '' ? '0' : lotUnit;
+
+              // if (barCode != '' && lotNo != '' && quantity != '') {
+              //   chkQuantity();
+              // }
 
               print('controlLot : $controlLot');
             }
@@ -286,6 +316,8 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
     print('itemCode : $itemCode');
     print('lotNo : $lotNo');
     print('quantity : $quantity');
+    print(
+        'EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
     final url =
         'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ChkQuantity';
 
@@ -320,6 +352,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
           setState(() {
             statusChkQuantity = dataChkQuantity['po_status'];
             messageChkQuantity = dataChkQuantity['po_message'];
+            print('statusChkQuantity : $statusChkQuantity');
             print('messageChkQuantity : $messageChkQuantity');
             if (statusChkQuantity == '0') {
               String textMessage =
@@ -369,7 +402,6 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                 locatorFormController.text = poRet;
 
                 if (locatorForm.isNotEmpty) {
-                  Navigator.of(context).pop();
                   locatorFormChk = '';
                   locatorFormChkController.clear();
                 }
@@ -445,7 +477,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             if (statusSubmitAddline == '0') {
               if (mounted) {
                 setState(() {
-                  Navigator.of(context).pop();
+                  // Navigator.of(context).pop();
 
                   barCode = '';
                   locatorForm = '';
@@ -624,6 +656,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             // --------------------------------------------------------------------------------------------------
             TextFormField(
               controller: lotNoController,
+              focusNode: lotNumberFocusNode,
               onChanged: (value) {
                 lotNo = value;
               },
@@ -1052,6 +1085,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                     IconButton(
                       icon: Icon(Icons.close),
                       onPressed: () {
+                        // Navigator.of(context).pop(false);
                         Navigator.of(context).pop();
                       },
                     ),
@@ -1066,7 +1100,6 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                     const SizedBox(height: 10),
                     Text(
                       textMessage,
-                      // style:  TextStyle(color: Colors.red),
                     ),
                     const SizedBox(height: 10),
                   ])),
@@ -1077,6 +1110,10 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
+                      // Navigator.of(context).pop(false);
+                      setState(() {
+                        statusFetchDataBarcode = '';
+                      });
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
@@ -1087,7 +1124,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      submitAddLine();
+                      Navigator.of(context).pop(true);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -1099,116 +1136,23 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
               )
             ]);
       },
-    );
+    ).then((value) {
+      if (value == true) {
+        Future.delayed(const Duration(milliseconds: 100), () {
+          submitAddLine();
+        });
+      } else if (value == false) {
+        //
+      } else if (value == null) {
+        Future.delayed(const Duration(milliseconds: 300), () {
+          showDialogLocatorForm(context);
+        });
+      }
+    });
   }
 
   void showDialogLocatorForm(
     BuildContext context,
-    // String messageDelete,
-  ) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Icon(
-                //   Icons.notification_important,
-                //   color: Colors.red,
-                // ),
-                // SizedBox(width: 10),
-                Row(
-                  children: [
-                    Text(
-                      'Locator',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        locatorFormChkController.clear();
-                        locatorFormChk = '';
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            content: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    // const SizedBox(height: 10),
-                    TextFormField(
-                      controller: locatorFormChkController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'Current Locator',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                        ),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          locatorFormChk = value;
-                        });
-                      },
-                    ),
-                    // const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            locatorFormChkController.clear();
-                            locatorFormChk = '';
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.grey),
-                          ),
-                          child: const Text('Cancel'),
-                        ),
-                        //---------------------------------------------------
-                        ElevatedButton(
-                          onPressed: () {
-                            String textForm = 'F';
-                            chkLocatorForm(locatorFormChk, textForm);
-                            // if (locatorFormChk != '') {
-                            // }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.grey),
-                          ),
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ));
-        // actions: []);
-      },
-    );
-  }
-
-  void showDialogLocatorTo(
-    BuildContext context,
-    // String messageDelete,
   ) {
     showDialog(
       context: context,
@@ -1217,20 +1161,124 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Icon(
-              //   Icons.notification_important,
-              //   color: Colors.red,
-              // ),
-              // SizedBox(width: 10),
-              Text(
-                'Locator',
-                style: TextStyle(color: Colors.black),
+              const Row(
+                children: [
+                  Text(
+                    'Locator ตัดจ่าย',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(MyIcons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      locatorFormChkController.clear();
+                      locatorFormChk = '';
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: locatorFormChkController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black)),
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: 'Current Locator',
+                      labelStyle: TextStyle(
+                        color: Colors.black87,
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        locatorFormChk = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          locatorFormChkController.clear();
+                          locatorFormChk = '';
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          String textForm = 'F';
+                          await chkLocatorForm(locatorFormChk, textForm);
+                          Navigator.of(context).pop(true);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    ).then((value) {
+      if (value == true) {
+        Future.delayed(Duration(milliseconds: 100), () {
+          FocusScope.of(context).requestFocus(lotNumberFocusNode);
+        });
+        // FocusScope.of(context).requestFocus(lotNumberFocusNode);
+      }
+    });
+  }
+
+  void showDialogLocatorTo(
+    BuildContext context,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Current Locator',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.close),
+                    icon: const Icon(MyIcons.close),
                     onPressed: () {
                       Navigator.of(context).pop();
                       locatorToChkController.clear();
@@ -1243,10 +1291,9 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
           ),
           content: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(0.0),
               child: Column(
                 children: [
-                  // const SizedBox(height: 10),
                   TextFormField(
                     controller: locatorToChkController,
                     decoration: const InputDecoration(
@@ -1265,10 +1312,9 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       });
                     },
                   ),
-                  // const SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
                         onPressed: () {
@@ -1282,13 +1328,10 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                         ),
                         child: const Text('Cancel'),
                       ),
-                      //---------------------------------------------------
                       ElevatedButton(
                         onPressed: () {
                           String textForm = 'T';
                           chkLocatorForm(locatorToChk, textForm);
-                          // if (locatorToChk != '') {
-                          // }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,

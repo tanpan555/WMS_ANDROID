@@ -92,7 +92,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     SizedBox(width: 10),
                     Text(
-                      'a',
+                      'แจ้งเตือน',
                       style: TextStyle(color: Colors.black),
                     ),
                   ],

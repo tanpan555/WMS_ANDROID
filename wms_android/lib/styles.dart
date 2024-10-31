@@ -311,9 +311,9 @@ class DialogStyles {
   static AlertDialog warningNotSaveDialog(BuildContext context) {
     return AlertDialog(
       title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Row(
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Icon(
                 Icons.notification_important,
@@ -322,12 +322,15 @@ class DialogStyles {
               SizedBox(width: 10),
               Text(
                 'แจ้งเตือน',
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                ),
               ),
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
                 icon: const Icon(MyIcons.close),
@@ -387,7 +390,6 @@ class DialogStyles {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Row(
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Icon(
                 Icons.notification_important,
@@ -396,12 +398,15 @@ class DialogStyles {
               SizedBox(width: 10),
               Text(
                 'แจ้งเตือน',
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                ),
               ),
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
                 icon: const Icon(MyIcons.close),
@@ -464,8 +469,11 @@ class DialogStyles {
                   children: [
                     Text(
                       headerText.toString(),
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                      ),
                     ),
                     IconButton(
                       icon: const Icon(Icons.close),
@@ -562,10 +570,10 @@ class DialogStyles {
                     RichText(
                       text: TextSpan(
                         text: headerText,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 16.0,
                         ),
                         children: const [
                           TextSpan(

@@ -6,6 +6,9 @@
 
 เลข Barcode ที่ตรง	   2209301529-TKA230-48-A
 
+เลข Barcode WereCode  001-01-001
+
+เลข Barcode WereCode  005-01-001
  
 
 เมื่อแสกน Barcode  
