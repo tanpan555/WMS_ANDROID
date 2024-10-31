@@ -38,7 +38,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   String? setqc;
   bool isLoading = true;
   int currentPage = 0;
-  int itemsPerPage = 15; // จำนวนการ์ดต่อหน้า
+  int itemsPerPage = 5; // จำนวนการ์ดต่อหน้า
   List<dynamic> dataCard = [];
   String? next;
   String? previous;
@@ -951,48 +951,30 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                                                 },
                                                               ),
                                                               TextButton(
-                                                                style: ElevatedButton
-                                                                    .styleFrom(
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .white,
+                                                                style: ElevatedButton.styleFrom(
+                                                                  backgroundColor:Colors.white,
                                                                   side: const BorderSide(
-                                                                      color: Colors
-                                                                          .grey),
+                                                                      color: Colors.grey),
                                                                 ),
                                                                 child:
-                                                                    const Text(
-                                                                        'ตกลง'),
+                                                                    const Text('ตกลง'),
                                                                 onPressed:
                                                                     () async {
-                                                                  final poItemCode =
-                                                                      item[
-                                                                          'item_code'];
-                                                                  final poSeq =
-                                                                      item[
-                                                                          'seq'];
+                                                                  final poItemCode = item['item_code'];
+                                                                  final poSeq = item['seq'];
                                                                   await delete(
-                                                                      widget
-                                                                          .po_doc_no,
-                                                                      widget
-                                                                          .po_doc_type,
+                                                                      widget.po_doc_no,
+                                                                      widget.po_doc_type,
                                                                       poSeq,
                                                                       poItemCode);
                                                                   if (mounted) {
                                                                     setState(
                                                                         () {
-                                                                      gridItems.removeWhere((item) =>
-                                                                          item['item_code'] ==
-                                                                              poItemCode &&
-                                                                          item['seq'] ==
-                                                                              poSeq);
+                                                                      gridItems.removeWhere((item) => item['item_code'] ==poItemCode && item['seq'] == poSeq);
                                                                     });
                                                                   }
                                                                   if (mounted) {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop(
-                                                                            true);
+                                                                    Navigator.of(context).pop(true);
                                                                   }
                                                                 },
                                                               ),

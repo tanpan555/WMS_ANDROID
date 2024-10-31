@@ -565,7 +565,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                       20), // Add padding around content
                                   content: SizedBox(
                                     width: 300, // Set desired width
-                                    height: 150, // Set desired height
+                                    // height: 150, // Set desired height
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [

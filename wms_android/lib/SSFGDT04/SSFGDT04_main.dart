@@ -44,7 +44,8 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
 
         if (mounted) {
           setState(() {
-            datawarehouse = List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+            datawarehouse =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
             isLoading = false;
           });
         }
@@ -65,7 +66,8 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
+      appBar:
+          CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer:CustomDrawer(),
       body: Padding(
@@ -76,7 +78,7 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    margin: const EdgeInsets.only(bottom: 8.0), 
+                    margin: const EdgeInsets.only(bottom: 8.0),
                     color: Colors.grey[300],
                     child: const Center(
                       child: Text(
@@ -103,10 +105,9 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
                             itemBuilder: (context, index) {
                               final item = datawarehouse[index];
                               return Card(
-                                elevation: 4,
+                                // elevation: 4,
                                 child: InkWell(
                                   onTap: () {
-                                    // Navigate to SSFGDT04_SCREEN2
                                     gb.P_WARE_CODE = item['ware_code'];
                                     Navigator.push(
                                       context,

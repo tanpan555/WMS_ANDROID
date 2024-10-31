@@ -724,13 +724,25 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        '${item['po_date']} ${item['po_no']} ${item['item_stype_desc'] ?? ''}',
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black54,
-                                        ),
+                                      // const SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 12.0,
+                                              vertical: 6.0,
+                                            ),
+                                            child: Text(
+                                              '${item['po_date']} ${item['po_no']} ${item['item_stype_desc'] ?? ''}',
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.black87,
+                                              ),
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ],
                                   ),

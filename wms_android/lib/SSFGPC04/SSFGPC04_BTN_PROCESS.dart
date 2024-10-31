@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
+import 'dart:ui';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
+import 'SSFGPC04_MAIN.dart';
 
 class SSFGPC04_BTN_PROCESS extends StatefulWidget {
   final List<Map<String, dynamic>> selectedItems;
@@ -542,73 +545,6 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
 
 //----------------------------------------------------------------------------//
 //button
-  // String? empid;
-  // String? v_nb_doc_no;
-  // String? v_alt;
-  // String? v_alt2;
-
-  // Future<void> process() async {
-  //   const url = 'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_process_new';
-
-  //   final headers = {
-  //     'Content-Type': 'application/json',
-  //   };
-
-  //   final body = jsonEncode({
-  //     'P_s_group_code': startGroupController,
-  //     'P_e_group_code': endGroupController,
-  //     'P_s_cat_code': startCategoryController,
-  //     'P_e_cat_code': endCategoryController,
-  //     'P_s_sub_cat_code': startSubCategoryController,
-  //     'P_e_sub_cat_code': endSubCategoryController,
-  //     'P_s_brand_code': startBrandController,
-  //     'P_e_brand_code': endBrandController,
-  //     'P_s_item_code': startItemController,
-  //     'P_e_item_code': endItemController,
-  //     'P_NB_DATE': widget.date,
-  //     'P_NOTE': widget.note,
-  //     'P_EMP_ID': gb.P_EMP_ID,
-  //     'APP_SESSION': gb.APP_SESSION,
-  //     'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
-  //     'browser_language': gb.BROWSER_LANGUAGE,
-  //     'APP_USER': gb.APP_USER,
-  //     'P_ATTR1': gb.ATTR1,
-  //   });
-
-  //   print('Request body: $body');
-
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse(url),
-  //       headers: headers,
-  //       body: body,
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       if (response.body.isNotEmpty) {
-  //         try {
-  //           final Map<String, dynamic> responseData = jsonDecode(response.body);
-  //           if (mounted) {
-  //             setState(() {
-  //               v_nb_doc_no = responseData['V_NB_DOC_NO'];
-  //               v_alt = responseData['V_ALT'];
-  //               v_alt2 = responseData['V_ALT2'];
-  //             });
-  //           }
-  //           print('Success: $responseData');
-  //         } catch (e) {
-  //           print('Error decoding JSON: $e');
-  //         }
-  //       } else {
-  //         print('เช็คแล้วจ้าาา');
-  //       }
-  //     } else {
-  //       print('Failed to post data. Status code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('การประมวลผล Error นะฮ๊าฟฟู๊วววว: $e');
-  //   }
-  // }
   String? v_nb_doc_no;
   String? v_alt;
   String? v_alt2;
@@ -637,7 +573,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
       'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
       'browser_language': gb.BROWSER_LANGUAGE,
       'APP_USER': gb.APP_USER,
-      'P_ATTR1': gb.ATTR1,
+      'P_ATTR1': '',
     });
 
     print('Request body: $body');
@@ -667,9 +603,14 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    content: Text(v_alt ?? 'ไม่พบข้อมูลสำหรับการสร้างเอกสารใบตรวจนับ'),
+                    content: Text(
+                        v_alt ?? 'ไม่พบข้อมูลสำหรับการสร้างเอกสารใบตรวจนับ'),
                     actions: [
                       TextButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
@@ -687,8 +628,39 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                     content: Text(v_alt ?? 'ประมวลผลเสร็จสิ้น เลขที่ใบตรวจนับ'),
                     actions: [
                       TextButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        // onPressed: () {
+                        //   Navigator.of(context).pop();
+                        // },
                         onPressed: () {
+                          // cancel_INHeadNonePO_WMS(
+                          //         selectedCancelCode!)
+                          //     .then((_) {
                           Navigator.of(context).pop();
+                          Navigator.of(context).pop(
+                            MaterialPageRoute(
+                              builder: (context) => SSFGPC04_MAIN(
+                              //   pWareCode: gb.P_WARE_CODE,
+                              //   pErpOuCode: gb.P_ERP_OU_CODE,
+                              ),
+                            ),
+                          );
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                          // }).catchError(
+                          //         (error) {
+                          //   ScaffoldMessenger
+                          //           .of(context)
+                          //       .showSnackBar(
+                          //     SnackBar(
+                          //       content: Text(
+                          //           'An error occurred: $error'),
+                          //     ),
+                          //   );
+                          // });
                         },
                         child: Text('ตกลง'),
                       ),
@@ -1035,28 +1007,27 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
 // ประมวลผล
                     const SizedBox(height: 8),
                     Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    ElevatedButton(
-      onPressed: () {
-        // เรียกใช้งาน process() เมื่อกดปุ่มประมวลผล
-        process();
-      },
-      style: AppStyles.ConfirmbuttonStyle(),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(width: 8),
-          Text(
-            'ประมวลผล',
-            style: AppStyles.ConfirmbuttonTextStyle(),
-          ),
-        ],
-      ),
-    ),
-  ],
-),
-
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            // เรียกใช้งาน process() เมื่อกดปุ่มประมวลผล
+                            process();
+                          },
+                          style: AppStyles.ConfirmbuttonStyle(),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(width: 8),
+                              Text(
+                                'ประมวลผล',
+                                style: AppStyles.ConfirmbuttonTextStyle(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
 
                     const SizedBox(width: 8),
                   ],
