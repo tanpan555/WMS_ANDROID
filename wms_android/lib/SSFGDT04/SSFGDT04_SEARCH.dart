@@ -217,7 +217,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
+      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       appBar:
           CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       body: SingleChildScrollView(
@@ -259,8 +259,6 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   ),
                   onChanged: (value) {
                     setState(() {
-                      // Update pSoNo directly with user input without converting it
-                      // pSoNo = value;
                       pSoNo = value.toUpperCase();
                     });
                   },

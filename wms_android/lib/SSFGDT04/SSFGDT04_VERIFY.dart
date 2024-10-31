@@ -34,7 +34,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
   late TextEditingController _docNoController;
   String pDsPdf = gb.P_DS_PDF;
   int currentPage = 0;
-  final int itemsPerPage = 15;
+  final int itemsPerPage = 5;
 
   bool get hasPreviousPage => currentPage > 0;
   bool get hasNextPage => (currentPage + 1) * itemsPerPage < gridItems.length;
