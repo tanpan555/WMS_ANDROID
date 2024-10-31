@@ -716,8 +716,13 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                     border: InputBorder.none,
                                   ),
                                   style: TextStyle(
-                                      fontSize: 16, color: Colors.white),
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
                                   keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
                                 ),
                               ),
                               IconButton(
@@ -2839,6 +2844,9 @@ class _LotDialogState extends State<LotDialog> {
                                     EdgeInsets.symmetric(horizontal: 16.0),
                               ),
                               keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
                               textAlign: TextAlign.right,
                             ),
                             SizedBox(height: 16.0),
@@ -3604,6 +3612,9 @@ class _LotDialogState extends State<LotDialog> {
                       ),
                       style: const TextStyle(color: Colors.black87),
                       keyboardType: TextInputType.number,
+  inputFormatters: [
+    FilteringTextInputFormatter.digitsOnly,
+  ],
                     ),
                   ),
                   IconButton(
