@@ -689,7 +689,6 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'เบิกจ่าย', showExitWarning: false),
       body: Padding(
         padding: EdgeInsets.all(16.0),

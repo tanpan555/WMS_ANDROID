@@ -181,7 +181,6 @@ class _SSFGDT31_PICKINGSLIPState extends State<SSFGDT31_PICKINGSLIP> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'Picking Slip', showExitWarning: false),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
           padding: EdgeInsets.all(16.0),
           child: Column(

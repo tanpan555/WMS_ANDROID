@@ -129,7 +129,6 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'ผลการตรวจนับ', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

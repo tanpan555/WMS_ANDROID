@@ -1,15 +1,10 @@
 import 'dart:convert';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:wms_android/SSFGDT17/SSFGD17_VERIFY.dart';
-import 'package:wms_android/SSFGDT17/SSFGDT17_BARCODE.dart';
-import 'package:wms_android/SSFGDT17/SSFGDT17_FORM.dart';
 import 'package:wms_android/SSFGDT31/SSFGD31_VERIFY.dart';
 import 'package:wms_android/SSFGDT31/SSFGDT31_BARCODE.dart';
 import 'package:wms_android/SSFGDT31/SSFGDT31_PICKINGSLIP.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
-import 'package:wms_android/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
@@ -286,7 +281,6 @@ class _SSFGDT31_GRIDState extends State<SSFGDT31_GRID> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
       appBar:
           CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
       body: OrientationBuilder(

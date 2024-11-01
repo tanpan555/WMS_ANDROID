@@ -269,7 +269,6 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(
         title: 'Reason',
         showExitWarning: true,

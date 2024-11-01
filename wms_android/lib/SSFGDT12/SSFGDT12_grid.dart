@@ -423,7 +423,6 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'ผลการตรวจนับ', showExitWarning: false),
       body: Padding(
         padding: EdgeInsets.all(10.0),

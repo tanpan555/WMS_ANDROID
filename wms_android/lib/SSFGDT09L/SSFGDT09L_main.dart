@@ -78,7 +78,6 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'เบิกจ่าย', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

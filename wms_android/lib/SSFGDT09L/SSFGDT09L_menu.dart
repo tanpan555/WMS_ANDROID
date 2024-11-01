@@ -80,7 +80,6 @@ class _Ssfgdt09lMenuState extends State<Ssfgdt09lMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(title: 'เบิกจ่าย', showExitWarning: false),
       body: Padding(
         padding: EdgeInsets.all(10.0),

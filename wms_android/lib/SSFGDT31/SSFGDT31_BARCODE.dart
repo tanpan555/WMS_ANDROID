@@ -1,16 +1,9 @@
 import 'dart:convert';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:wms_android/SSFGDT17/SSFGD17_VERIFY.dart';
-import 'package:wms_android/SSFGDT17/SSFGDT17_BARCODE.dart';
-import 'package:wms_android/SSFGDT17/SSFGDT17_FORM.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
-import 'package:wms_android/main.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
-import 'package:wms_android/styles.dart';
 
 class SSFGDT31_BARCODE extends StatefulWidget {
   final String po_doc_no;
@@ -667,7 +660,6 @@ class _SSFGDT31_BARCODEState extends State<SSFGDT31_BARCODE> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'Scan รับ', showExitWarning: checkUpdateData),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: SingleChildScrollView(
         child: Column(
           children: [

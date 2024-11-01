@@ -52,7 +52,6 @@ class _SSFGDT31_MAINState extends State<SSFGDT31_MAIN> {
     return Scaffold(
       appBar:
           CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
-      backgroundColor: Color.fromARGB(255, 17, 0, 56),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: isLoading

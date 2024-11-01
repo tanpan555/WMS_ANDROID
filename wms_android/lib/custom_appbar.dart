@@ -26,7 +26,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false, //กำหนดการแสดงของ icon
       centerTitle: false,
 
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+      backgroundColor: const Color(0xFF17153B),
       leading: isHomePage
           // padding: const EdgeInsets.symmetric(horizontal: 0),
           ? null //SizedBox()

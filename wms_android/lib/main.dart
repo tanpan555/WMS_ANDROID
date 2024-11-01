@@ -6,8 +6,6 @@ import 'package:wms_android/menuLV2.dart';
 import 'login.dart';
 import 'bottombar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
-// import 'SSFGDT09L/SSFGDT09L_main.dart';
-// import 'SSFGDT09L/SSFGDT09L_search.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,11 +18,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: '/login',
+      theme: ThemeData.from(
+        colorScheme: const ColorScheme.light(
+          primary: Color(0xFF17153B),
+          onPrimary: Colors.white,
+        ),
+      ).copyWith(
+        scaffoldBackgroundColor: const Color(0xFF17153B),
+      ),
       routes: {
         '/login': (context) => LoginPage(),
         '/home': (context) => const MyHomePage(),
-        // '/SSFGDT09L/Step1/MAIN': (context) => const SSFGDT09L_MAIN(),
-        // '/SSFGDT09L/Step1/SEARCH': (context) =>  Ssfgdt09lSearch(),
       },
       builder: (context, child) {
         final mediaQueryData = MediaQuery.of(context);

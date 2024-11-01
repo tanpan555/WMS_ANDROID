@@ -1129,7 +1129,6 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(
           title: 'รายงานผลการตรวจนับสินค้า', showExitWarning: checkUpdateData),
       body: Padding(

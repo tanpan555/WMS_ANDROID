@@ -1,16 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:wms_android/ICON.dart';
 import 'package:wms_android/bottombar.dart';
 import 'dart:convert';
-
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
-
 import 'package:url_launcher/url_launcher.dart';
-
 import 'package:async/async.dart';
 import 'package:wms_android/styles.dart';
 
@@ -509,7 +504,6 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
       appBar:
           CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
       body: OrientationBuilder(

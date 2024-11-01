@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:wms_android/SSFGDT31/SSFGDT31_CARD.dart';
 import 'package:wms_android/SSFGDT31/SSFGDT31_GRID.dart';
 import 'package:wms_android/SSFGDT31/SSFGDT31_SCREEN2.dart';
-import 'package:wms_android/SSFGDT31/SSFGDT31_SEARCH_DOC.dart';
 import 'package:wms_android/styles.dart';
 import 'dart:convert';
 import '../custom_appbar.dart';
@@ -11,7 +9,6 @@ import '../bottombar.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 
 class SSFGDT31_FROM extends StatefulWidget {
   final String po_doc_no;
@@ -151,7 +148,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     final DateTime? picked = await showDatePicker(
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       context: context,
-      initialDate: selectedDate ?? DateTime.now(),
+      initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
@@ -800,7 +797,6 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     return Scaffold(
       appBar: CustomAppBar(
           title: 'รับคืนจากการเบิกผลิต', showExitWarning: checkUpdateData),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
         padding: const EdgeInsets.all(8.0), // Adjust padding as needed
         child: Column(
@@ -839,7 +835,7 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                               v_ref_doc_no: v_ref_doc_no ?? '',
                               v_ref_type: v_ref_type ?? '',
                               SCHID: selectedMoDoNo ?? '',
-                              DOC_DATE: DOC_DATE.text ?? '',
+                              DOC_DATE: DOC_DATE.text,
                             ),
                           ),
                         );

@@ -250,7 +250,6 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(
         title: 'ผลการตรวจนับ',
         showExitWarning: checkUpdateData,

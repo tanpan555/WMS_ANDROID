@@ -147,7 +147,6 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(
           title: getTitle(P_MAIN_MENU),
           showExitWarning: false // เรียกใช้ฟังก์ชัน getTitle

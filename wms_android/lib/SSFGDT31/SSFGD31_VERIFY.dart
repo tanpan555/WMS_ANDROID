@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -330,7 +328,6 @@ class _SSFGDT31_VERIFYState extends State<SSFGDT31_VERIFY> {
     return Scaffold(
       appBar:
           CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Column(
         children: [
           Row(

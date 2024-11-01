@@ -71,7 +71,6 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(title: 'ผลการตรวจนับ', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(10.0),

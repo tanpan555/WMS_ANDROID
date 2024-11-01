@@ -495,7 +495,6 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'Scan จ่ายสินค้า', showExitWarning: false),
       body: Padding(
           padding: const EdgeInsets.all(16.0),

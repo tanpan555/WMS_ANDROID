@@ -137,7 +137,6 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'เบิกจ่าย', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
