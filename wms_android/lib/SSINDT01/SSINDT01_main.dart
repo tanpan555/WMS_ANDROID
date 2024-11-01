@@ -349,35 +349,6 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     }
   }
 
-  // void _showSelectWareCodeDialog() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text('เลือกคลังสินค้า'),
-  //         content: DropdownButton<String>(
-  //           isExpanded: true,
-  //           value: selectedwhCode,
-  //           hint: Text('เลือกคลังปฏิบัติการ'),
-  //           items: whCodes.map((item) {
-  //             return DropdownMenuItem<String>(
-  //               value: item['ware_code'],
-  //               child: Text(item['ware_code'] ?? 'No code'),
-  //             );
-  //           }).toList(),
-  //           onChanged: (value) {
-  //             setState(() {
-  //               selectedwhCode = value;
-  //               Navigator.of(context).pop();
-  //               _showFilterDialog();
-  //             });
-  //           },
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
   void handleTap(BuildContext context, Map<String, dynamic> item) async {
     if (selectedwhCode == null) {
       AlertDialog(
@@ -454,62 +425,34 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              children: [
-                Icon(
-                  Icons.notification_important,
-                  color: Colors.red,
-                ),
-                SizedBox(width: 8),
-                Text('แจ้งเตือน'),
-              ],
-            ),
+          return DialogStyles.alertMessageDialog(
+            context: context,
             content: Text('${poMessage ?? 'No message available'}'),
-            actions: [
-              TextButton(
-                child: Text('ยกเลิก'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('ตกลง'),
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  if (poStatusconform == '1') {
-                    showDialog(
+            onClose: () {
+              Navigator.of(context).pop();
+            },
+            onConfirm: () async {
+              Navigator.of(context).pop();
+              if (poStatusconform == '1') {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DialogStyles.alertMessageDialog(
                       context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Row(
-                            children: [
-                              Icon(
-                                Icons.notification_important,
-                                color: Colors.red,
-                              ),
-                              SizedBox(width: 8),
-                              Text('แจ้งเตือน'),
-                            ],
-                          ),
-                          content: Text(
-                              '${poMessageconform ?? 'No message available'}'),
-                          actions: [
-                            TextButton(
-                              child: Text('ตกลง'),
-                              onPressed: () async {
-                                await fetchPoStatusconform(vReceiveNo);
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        );
+                      content:
+                          Text('${poMessageconform ?? 'No message available'}'),
+                      onClose: () {
+                        Navigator.of(context).pop();
+                      },
+                      onConfirm: () async {
+                        await fetchPoStatusconform(vReceiveNo);
+                        Navigator.of(context).pop();
                       },
                     );
-                  }
-                },
-              ),
-            ],
+                  },
+                );
+              }
+            },
           );
         },
       );
@@ -517,26 +460,16 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              children: [
-                Icon(
-                  Icons.notification_important,
-                  color: Colors.red,
-                ),
-                SizedBox(width: 8),
-                Text('แจ้งเตือน'),
-              ],
-            ),
-            content: Text('${poMessage ?? 'No message available'}'),
-            actions: [
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+          return DialogStyles.alertMessageDialog(
+            context: context,
+            content: Text('${poMessageconform ?? 'No message available'}'),
+            onClose: () {
+              Navigator.of(context).pop();
+            },
+            onConfirm: () async {
+              await fetchPoStatusconform(vReceiveNo);
+              Navigator.of(context).pop();
+            },
           );
         },
       );
