@@ -596,14 +596,21 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                                               color: Colors.black,
                                             ),
                                           ),
+                                          // onTap: () {
+                                          //   setState(() {
+                                          //     selectedLocator !=
+                                          //         null; // Set to null
+                                          //     _locatorBarcodeController.clear();
+                                          //   });
+                                          //   Navigator.of(context).pop();
+                                          // },
                                           onTap: () {
-                                            setState(() {
-                                              selectedLocator !=
-                                                  null; // Set to null
-                                              _locatorBarcodeController.clear();
-                                            });
-                                            Navigator.of(context).pop();
-                                          },
+  setState(() {
+    selectedLocator = null; // Clear selected locator
+    _locatorBarcodeController.text = '-- No Value Set --'; // Set default text
+  });
+  Navigator.of(context).pop();
+},
                                         );
                                       }
 
@@ -705,10 +712,14 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                       color: Color.fromARGB(255, 113, 113, 113),
                     ),
                   ),
+                  // controller: _locatorBarcodeController.text.isNotEmpty
+                  //     ? _locatorBarcodeController
+                  //     : TextEditingController(
+                  //         text: selectedLocator ?? '-- No Value Set --'),
                   controller: _locatorBarcodeController.text.isNotEmpty
-                      ? _locatorBarcodeController
-                      : TextEditingController(
-                          text: selectedLocator ?? '-- No Value Set --'),
+    ? _locatorBarcodeController
+    : TextEditingController(text: selectedLocator ?? '-- No Value Set --'),
+
                   textAlign: TextAlign.center,
                 ),
               ),

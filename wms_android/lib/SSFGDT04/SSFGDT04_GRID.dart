@@ -51,7 +51,123 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     fetchSetQC();
     _docNoController = TextEditingController(text: widget.po_doc_no);
   }
+//----------------------------------------------------------------------------//
+//เก่า
+  // Future<void> _showEditDialog(
+  //     BuildContext context, Map<String, dynamic> item) async {
+  //   final quantityController = TextEditingController(
+  //     text: item['pack_qty'] != null
+  //         ? NumberFormat('#,###').format(item['pack_qty'])
+  //         : '',
+  //   );
 
+  //   final formKey = GlobalKey<FormState>();
+
+  //   return showDialog<void>(
+  //     context: context,
+  //     barrierDismissible:
+  //         true, // Can be dismissed by tapping outside the dialog
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         // Add a stack to allow placing the close button in the top right corner
+  //         content: Stack(
+  //           clipBehavior: Clip.none, // Allow overflow
+  //           children: [
+  //             Positioned(
+  //               right: -10,
+  //               top: -10,
+  //               child: IconButton(
+  //                 icon: const Icon(Icons.close),
+  //                 onPressed: () {
+  //                   Navigator.of(context).pop(); // Close the dialog
+  //                 },
+  //               ),
+  //             ),
+  //             // Adding padding around the form to adjust the spacing
+  //             Padding(
+  //               padding: const EdgeInsets.only(
+  //                   top: 40.0), // Adjust top padding to control space
+  //               child: SingleChildScrollView(
+  //                 child: Form(
+  //                   key: formKey,
+  //                   child: ListBody(
+  //                     children: <Widget>[
+  //                       const SizedBox(height: 8),
+  //                       TextFormField(
+  //                         controller: quantityController,
+  //                         keyboardType: TextInputType.number,
+  //                         decoration: const InputDecoration(
+  //                           labelText: 'จำนวนรับ',
+  //                           border: OutlineInputBorder(),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         actions: <Widget>[
+  //           Center(
+  //             child: ElevatedButton(
+  //               style: ElevatedButton.styleFrom(
+  //                 side: const BorderSide(
+  //                   color: Colors.green, // Add a border color
+  //                   width: 1.5, // Border width
+  //                 ),
+  //                 backgroundColor: Colors.white,
+  //                 shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(10),
+  //                 ),
+  //                 minimumSize: const Size(60, 40),
+  //                 padding: const EdgeInsets.all(0),
+  //               ),
+  //               onPressed: () async {
+  //                 // Check if the text field is empty
+  //                 if (quantityController.text.isEmpty) {
+  //                   // Close the dialog if no input is provided
+  //                   Navigator.of(context).pop();
+  //                   return; // Exit the function early
+  //                 }
+
+  //                 if (formKey.currentState?.validate() ?? false) {
+  //                   // Remove commas and parse the text as a number
+  //                   final String cleanedText =
+  //                       quantityController.text.replaceAll(',', '');
+
+  //                   // Attempt to parse the cleaned string as a double or int, depending on your needs
+  //                   try {
+  //                     final newQuantity = double.parse(cleanedText).toString();
+
+  //                     // Update the item in the gridItems list
+  //                     await fetchUpdate(newQuantity, item['seq']);
+  //                     setState(() {
+  //                       fetchGridItems();
+  //                     });
+
+  //                     // Close the popup
+  //                     Navigator.of(context).pop();
+  //                   } catch (e) {
+  //                     print('Error parsing quantity: $e');
+  //                     // Handle the error (you could show a message to the user)
+  //                   }
+  //                 }
+  //               },
+  //               child: Image.asset(
+  //                 'assets/images/check-mark.png',
+  //                 width: 30,
+  //                 height: 30,
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+// ---------------------------------------------------------------------------//
+//ใหม่
   Future<void> _showEditDialog(
       BuildContext context, Map<String, dynamic> item) async {
     final quantityController = TextEditingController(
@@ -140,7 +256,13 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                       final newQuantity = double.parse(cleanedText).toString();
 
                       // Update the item in the gridItems list
-                      await fetchUpdate(newQuantity, item['seq']);
+                      // await fetchUpdate(newQuantity, item['seq']);
+                      await fetchUpdate(
+                        item['item_code'], // itemCode
+                        item['pack_code'], // poPackCode
+                        newQuantity, // poPackQty
+                        item['rowid'], // ratio
+                      );
                       setState(() {
                         fetchGridItems();
                       });
@@ -165,62 +287,121 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
       },
     );
   }
+// ---------------------------------------------------------------------------//
+// เก่า
+  // Future<void> fetchUpdate(String? poPackQty, int poSeq) async {
+  //   const url =
+  //       'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_update_wms_itd';
 
-  Future<void> fetchUpdate(String? poPackQty, int poSeq) async {
-    const url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_update_wms_itd';
+  //   final headers = {
+  //     'Content-Type': 'application/json',
+  //   };
 
-    final headers = {
-      'Content-Type': 'application/json',
-    };
+  //   if (poPackQty == null || poPackQty.isEmpty) {
+  //     // print('Error: poPackQty is null or empty');
+  //     return;
+  //   }
 
-    if (poPackQty == null || poPackQty.isEmpty) {
-      // print('Error: poPackQty is null or empty');
-      return;
-    }
+  //   final body = jsonEncode({
+  //     'PACK_QTY': poPackQty,
+  //     'SEQ': poSeq.toString(),
+  //     'DOC_NO': widget.po_doc_no,
+  //     'DOC_TYPE': widget.po_doc_type,
+  //     'OU_CODE': gb.P_ERP_OU_CODE,
+  //   });
+  //   print('Request body: $body');
 
-    final body = jsonEncode({
-      'PACK_QTY': poPackQty,
-      'SEQ': poSeq.toString(),
-      'DOC_NO': widget.po_doc_no,
-      'DOC_TYPE': widget.po_doc_type,
-      'OU_CODE': gb.P_ERP_OU_CODE,
-    });
-    print('Request body: $body');
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(url),
+  //       headers: headers,
+  //       body: body,
+  //     );
 
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: headers,
-        body: body,
-      );
+  //     print('Response status: ${response.statusCode}');
+  //     print('Response body: ${response.body}'); // ตรวจสอบการตอบกลับ
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}'); // ตรวจสอบการตอบกลับ
+  //     // ตรวจสอบว่าการตอบกลับว่างเปล่าหรือไม่
+  //     if (response.body.isEmpty) {
+  //       // print('Error: Response body is empty');
+  //       return;
+  //     }
 
-      // ตรวจสอบว่าการตอบกลับว่างเปล่าหรือไม่
-      if (response.body.isEmpty) {
-        // print('Error: Response body is empty');
-        return;
-      }
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> responseData = jsonDecode(response.body);
+  //       if (mounted) {
+  //         setState(() {
+  //           poStatus = responseData['po_status'];
+  //           poMessage = responseData['po_message'];
+  //           fetchGridItems();
+  //         });
+  //       }
+  //       print('Success: $responseData');
+  //     } else {
+  //       print('Failed to post data. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error Update: $e');
+  //   }
+  // }
 
-      if (response.statusCode == 200) {
+// ---------------------------------------------------------------------------//
+// ใหม่
+  Future<void> fetchUpdate(String? itemCode, String? poPackCode, String? poPackQty, String? rowid) async {
+  const url = 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_set_pack_QTY';
+
+  final headers = {
+    'Content-Type': 'application/json',
+  };
+
+  // ตรวจสอบว่า poPackQty ไม่เป็น null หรือว่าง
+  if (poPackQty == null || poPackQty.isEmpty) {
+    print('Error: poPackQty is null or empty');
+    return;
+  }
+
+  final body = jsonEncode({
+    'item_code': itemCode,
+    'pack_code': poPackCode,
+    'pack_qty': poPackQty,
+    'rowid': rowid,
+  });
+
+  print('Request body: $body');
+
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: body,
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    // ตรวจสอบการตอบกลับจาก API
+    if (response.statusCode == 200) {
+      if (response.body.isNotEmpty) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
+        print('Success: $responseData');
+
+        // โหลดข้อมูลใหม่หากการอัปเดตสำเร็จ
         if (mounted) {
           setState(() {
-            poStatus = responseData['po_status'];
-            poMessage = responseData['po_message'];
-            fetchGridItems();
+            fetchGridItems();  // เรียกใช้ fetchGridItems เพื่ออัปเดตข้อมูลใน UI
           });
         }
-        print('Success: $responseData');
       } else {
-        print('Failed to post data. Status code: ${response.statusCode}');
+        print('Error: Response body is empty');
       }
-    } catch (e) {
-      print('Error Update: $e');
+    } else {
+      print('Failed to post data. Status code: ${response.statusCode}');
     }
+  } catch (e) {
+    print('Error Update: $e');
   }
+}
+
 
   Future<void> fetchGridItems([String? url]) async {
     if (!mounted) return; // ตรวจสอบว่าตัว component ยังถูก mount อยู่หรือไม่
@@ -951,30 +1132,48 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                                                 },
                                                               ),
                                                               TextButton(
-                                                                style: ElevatedButton.styleFrom(
-                                                                  backgroundColor:Colors.white,
+                                                                style: ElevatedButton
+                                                                    .styleFrom(
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .white,
                                                                   side: const BorderSide(
-                                                                      color: Colors.grey),
+                                                                      color: Colors
+                                                                          .grey),
                                                                 ),
                                                                 child:
-                                                                    const Text('ตกลง'),
+                                                                    const Text(
+                                                                        'ตกลง'),
                                                                 onPressed:
                                                                     () async {
-                                                                  final poItemCode = item['item_code'];
-                                                                  final poSeq = item['seq'];
+                                                                  final poItemCode =
+                                                                      item[
+                                                                          'item_code'];
+                                                                  final poSeq =
+                                                                      item[
+                                                                          'seq'];
                                                                   await delete(
-                                                                      widget.po_doc_no,
-                                                                      widget.po_doc_type,
+                                                                      widget
+                                                                          .po_doc_no,
+                                                                      widget
+                                                                          .po_doc_type,
                                                                       poSeq,
                                                                       poItemCode);
                                                                   if (mounted) {
                                                                     setState(
                                                                         () {
-                                                                      gridItems.removeWhere((item) => item['item_code'] ==poItemCode && item['seq'] == poSeq);
+                                                                      gridItems.removeWhere((item) =>
+                                                                          item['item_code'] ==
+                                                                              poItemCode &&
+                                                                          item['seq'] ==
+                                                                              poSeq);
                                                                     });
                                                                   }
                                                                   if (mounted) {
-                                                                    Navigator.of(context).pop(true);
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop(
+                                                                            true);
                                                                   }
                                                                 },
                                                               ),
@@ -1034,14 +1233,15 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                             onPressed: null,
                                             icon: const Icon(
                                               Icons.arrow_back_ios_rounded,
-                                              color: Color.fromARGB(
-                                                  0, 23, 21, 59),
+                                              color:
+                                                  Color.fromARGB(0, 23, 21, 59),
                                               size: 20.0,
                                             ),
                                             label: const Text(
                                               'Previous',
                                               style: TextStyle(
-                                                color: Color.fromARGB(0, 255, 255, 255),
+                                                color: Color.fromARGB(
+                                                    0, 255, 255, 255),
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 13,
                                               ),
