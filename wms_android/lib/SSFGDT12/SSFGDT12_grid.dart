@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -1554,6 +1555,10 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     const SizedBox(height: 8.0),
                     TextFormField(
                       controller: countQtyController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black)),
@@ -1565,7 +1570,6 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                       ),
-                      keyboardType: TextInputType.number,
                       textAlign: TextAlign.right,
                       onChanged: (value) {
                         checkCountQTY = value;

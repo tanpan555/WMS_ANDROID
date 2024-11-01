@@ -303,7 +303,35 @@ class ButtonStyles {
       ),
     ],
   );
+
+  static final ButtonStyle createButtonStyle = ElevatedButton.styleFrom(
+    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(5.0),
+      side: const BorderSide(color: Colors.white, width: 2),
+    ),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+    minimumSize: const Size(80, 45),
+  );
+
+  // เนื้อหาปุ่มที่มีเฉพาะไอคอน
+  static Widget createButtonContent() {
+    return Image.asset(
+      'assets/images/plus.png', // เส้นทางไอคอน
+      width: 30, // ความกว้างไอคอน
+      height: 30, // ความสูงไอคอน
+    );
+  }
+
+  static Widget deleteButtonContent() {
+    return Image.asset(
+      'assets/images/bin.png', // เส้นทางไอคอน
+      width: 30, // ความกว้างไอคอน
+      height: 30, // ความสูงไอคอน
+    );
+  }
 }
+
 // ----------------------------------------------------------------------------------- DialogStyles
 
 class DialogStyles {

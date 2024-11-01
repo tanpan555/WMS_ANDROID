@@ -328,7 +328,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                item['doc_no'] ?? 'No Name',
+                                                item['doc_no'] ?? '',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 18.0),
@@ -338,14 +338,14 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                                       10.0), // เพิ่มระยะห่างระหว่างข้อความ
                                               item['ware_code'] == null
                                                   ? Text(
-                                                      '${item['doc_date']} ${item['doc_no']}',
+                                                      '${item['doc_date'] ?? ''} ${item['doc_no'] ?? ''}',
                                                       style: TextStyle(
                                                           fontSize: 14.0,
                                                           color:
                                                               Colors.black54),
                                                     )
                                                   : Text(
-                                                      '${item['doc_date']} ${item['doc_no']} ${item['ware_code']}',
+                                                      '${item['doc_date'] ?? ''} ${item['doc_no'] ?? ''} ${item['ware_code'] ?? ''}',
                                                       style: TextStyle(
                                                           fontSize: 14.0,
                                                           color:

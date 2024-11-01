@@ -559,78 +559,60 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Ssfgdt09lBarcode(
-                                      pWareCode: widget.pWareCode,
-                                      pErpOuCode: widget.pErpOuCode,
-                                      pOuCode: widget.pOuCode,
-                                      pAttr1: widget.pAttr1,
-                                      pAppUser: widget.pAppUser,
-                                      pDocNo: widget.docNo,
-                                      pDocType: widget.docType,
-                                      pDocDate: widget.docDate,
-                                      pMoDoNO: widget.moDoNo,
-                                    )),
-                          ).then((value) async {
-                            // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                            await countDataGridCard(false);
-                          });
-                        },
-                        style: AppStyles.createButtonStyle(),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                color: Colors.white,
-                                width: 3), // White border for the circle
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          ElevatedButton(
+                            style: ButtonStyles.createButtonStyle,
+                            onPressed: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Ssfgdt09lBarcode(
+                                          pWareCode: widget.pWareCode,
+                                          pErpOuCode: widget.pErpOuCode,
+                                          pOuCode: widget.pOuCode,
+                                          pAttr1: widget.pAttr1,
+                                          pAppUser: widget.pAppUser,
+                                          pDocNo: widget.docNo,
+                                          pDocType: widget.docType,
+                                          pDocDate: widget.docDate,
+                                          pMoDoNO: widget.moDoNo,
+                                        )),
+                              ).then((value) async {
+                                // เมื่อกลับมาหน้าเดิม เรียก fetchData
+                                await countDataGridCard(false);
+                              });
+                            },
+                            child: ButtonStyles.createButtonContent(),
                           ),
-                          padding: const EdgeInsets.all(
-                              2), // Padding to make the circle
-                          child: const Icon(
-                            Icons.add, // Plus icon inside the circle
-                            color: Colors.white, // White plus icon
-                            size: 24, // Icon size
-                          ),
-                        ),
+                        ],
                       ),
                       const SizedBox(width: 8),
                       // --------------------------------------------------------------------
-                      ElevatedButton(
-                        onPressed: () {
-                          if (dataCard.isNotEmpty) {
-                            setState(() {
-                              String messageDelete =
-                                  'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม่ ?';
-                              String dataTest = 'test';
-                              showDialogComfirmDelete(
-                                context,
-                                dataTest,
-                                dataTest,
-                                messageDelete,
-                              );
-                            });
-                          }
-                        },
-                        style: AppStyles.ClearButtonStyle(),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                color: Colors.white,
-                                width: 3), // White border for the circle
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          ElevatedButton(
+                            style: ButtonStyles.createButtonStyle,
+                            onPressed: () {
+                              if (dataCard.isNotEmpty) {
+                                setState(() {
+                                  String messageDelete =
+                                      'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม่ ?';
+                                  String dataTest = 'test';
+                                  showDialogComfirmDelete(
+                                    context,
+                                    dataTest,
+                                    dataTest,
+                                    messageDelete,
+                                  );
+                                });
+                              }
+                            },
+                            child: ButtonStyles.deleteButtonContent(),
                           ),
-                          padding: const EdgeInsets.all(
-                              2), // Padding to make the circle
-                          child: const Icon(
-                            Icons.delete, // Plus icon inside the circle
-                            color: Colors.white, // White plus icon
-                            size: 24, // Icon size
-                          ),
-                        ),
+                        ],
                       ),
                       // --------------------------------------------------------------------
                     ],

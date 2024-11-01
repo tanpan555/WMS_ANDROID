@@ -229,13 +229,9 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
               lotQtyController.text = lotQty == '' ? '0' : lotQty;
               lotUnitController.text = lotUnit == '' ? '0' : lotUnit;
 
-              // if (barCode != '' && lotNo != '' && quantity != '') {
-              //   chkQuantity();
-              // }
-
               print('controlLot : $controlLot');
-            }
-            if (statusFetchDataBarcode == '1' && valIDFetchDataBarcode == 'N') {
+            } else if (statusFetchDataBarcode == '1' &&
+                valIDFetchDataBarcode == 'N') {
               changeData(
                 dataBarcode['po_item_code'] ?? '',
                 dataBarcode['po_lot_number'] ?? '',
@@ -244,23 +240,8 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                 dataBarcode['po_bal_lot'] ?? '',
                 dataBarcode['po_bal_qty'] ?? '',
               );
-              // itemCode = dataBarcode['po_item_code'];
-              // lotNo = dataBarcode['po_lot_number'];
-              // quantity = dataBarcode['po_quantity'];
-              // locatorTo = dataBarcode['po_curr_loc'];
-              // lotQty = dataBarcode['po_bal_lot']; // ====== รวมรายการจ่าย
-              // lotUnit = dataBarcode['po_bal_qty']; //--- รวมจำนวนจ่าย
-
-              // itemCodeController.text = itemCode;
-              // lotNoController.text = lotNo;
-              // quantityController.text = quantity;
-              // locatorToController.text = locatorTo;
-              // lotQtyController.text = lotQty;
-              // lotUnitController.text = lotUnit;
-
-              // showDialogcomfirmMessage(context);
-            }
-            if (statusFetchDataBarcode == '1' && valIDFetchDataBarcode != 'N') {
+            } else if (statusFetchDataBarcode == '1' &&
+                valIDFetchDataBarcode != 'N') {
               if (messageFetchDataBarcode !=
                   'ข้อมูลไม่ถูกต้อง รายการจ่ายซ้ำ !!!') {
                 showDialogAlertMessage(context, messageFetchDataBarcode);
