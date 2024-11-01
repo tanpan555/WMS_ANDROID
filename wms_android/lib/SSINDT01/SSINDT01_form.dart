@@ -362,113 +362,35 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     }
   }
 
-  void _showDialog() {
+  void searchDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // Adjust the height as needed
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'เลือกเหตุยกเลิก', // Title for the dialog
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'ค้นหา', // Search hint
-                        border: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black), // Black border
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.black), // Black border when focused
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.black), // Black border when enabled
-                        ),
-                      ),
-                      onChanged: (query) {
-                        setState(() {});
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: cCode.length,
-                        itemBuilder: (context, index) {
-                          final item = cCode[index];
-                          final code = item['r']?.toString() ?? 'No code';
-                          final description =
-                              item['d']?.toString() ?? 'No description';
-
-                          // Filter based on search query
-                          if (_searchController.text.isNotEmpty &&
-                              !code.toLowerCase().contains(
-                                  _searchController.text.toLowerCase()) &&
-                              !description.toLowerCase().contains(
-                                  _searchController.text.toLowerCase())) {
-                            return SizedBox
-                                .shrink(); // Filter out non-matching items
-                          }
-
-                          return ListTile(
-                            title: SingleChildScrollView(
-                              scrollDirection: Axis
-                                  .horizontal, // Enable horizontal scrolling
-                              child: Text(
-                                '$code $description', // Combine code and description
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 14),
-                              ),
-                            ),
-                            onTap: () {
-                              setState(() {
-                                selectedcCode = code; // Set selected code
-                                final selectedDescription =
-                                    description; // Set selected description
-                                _CcodeController.text =
-                                    '$selectedcCode $selectedDescription'; // Append code and description
-                                print('$selectedcCode, $selectedDescription');
-                              });
-                              Navigator.of(context).pop(); // Close the dialog
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'เลือกสาเหตุยกเลิก',
+          searchController: _searchController,
+          data: cCode,
+          docString: (item) {
+            // Define how to extract search text from each item
+            return '${item['r']?.toString() ?? ''} ${item['d']?.toString() ?? ''}';
+          },
+          titleText: (item) {
+            // Define the main text to display in ListTile
+            return item['r']?.toString() ?? 'No code';
+          },
+          subtitleText: (item) {
+            // Define the subtitle text to display in ListTile
+            return item['d']?.toString() ?? 'No description';
+          },
+          onTap: (item) {
+            // Handle item selection
+            final selectedCode = item['r']?.toString() ?? '';
+            final selectedDescription = item['d']?.toString() ?? '';
+            _CcodeController.text = '$selectedCode $selectedDescription';
+            print('$selectedCode, $selectedDescription');
+            Navigator.of(context).pop(); // Close the dialog
+          },
         );
       },
     );
@@ -478,183 +400,70 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     showDialog(
       context: parentContext,
       builder: (BuildContext context) {
-        return Dialog(
-          child: Container(
-            // width: 600.0,
-            height: 250.0,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment
-                        .spaceBetween, // Space between text and button
-                    children: [
-                      Text(
-                        'Cancel',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.close),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0), // Add horizontal padding
-                  child: GestureDetector(
-                    onTap: _showDialog,
-                    child: AbsorbPointer(
-                      child: TextField(
-                        controller: _CcodeController,
-                        decoration: InputDecoration(
-                          labelText: 'สาเหตุยกเลิก',
-                          filled: true,
-                          fillColor: Colors.white,
-                          // Add black border to TextField
-                          border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black), // Black border
+        return DialogStyles.cancelDialog(
+          context: context,
+          controller: _CcodeController,
+          onCloseDialog: () {
+            Navigator.of(context).pop();
+          },
+          onTap: searchDialog, // Open search dialog
+          onConfirmDialog: () async {
+            await cancel_from(selectedcCode ?? '');
+            if (selectedcCode == null) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return DialogStyles.alertMessageDialog(
+                    context: context,
+                    content: Text('$pomsg'),
+                    onClose: () {
+                      Navigator.of(context).pop();
+                    },
+                    onConfirm: () async {
+                      Navigator.of(context).pop();
+                    },
+                  );
+                },
+              );
+            } else {
+              Navigator.of(context).pop();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return DialogStyles.alertMessageDialog(
+                    context: context,
+                    content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
+                    onClose: () {
+                      Navigator.of(context).pop();
+                    },
+                    onConfirm: () async {
+                      await cancel_from(selectedcCode!).then((_) {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SSINDT01_MAIN(
+                              pWareCode: widget.pWareCode,
+                              pWareName: widget.pWareName,
+                              p_ou_code: widget.p_ou_code,
+                              selectedValue: 'ทั้งหมด',
+                              apCode: 'ทั้งหมด',
+                              documentNumber: 'null',
+                            ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color:
-                                    Colors.black), // Black border when focused
+                        );
+                      }).catchError((error) {
+                        ScaffoldMessenger.of(parentContext).showSnackBar(
+                          SnackBar(
+                            content: Text('An error occurred: $error'),
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color:
-                                    Colors.black), // Black border when enabled
-                          ),
-                          labelStyle: TextStyle(color: Colors.black),
-                          suffixIcon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Color.fromARGB(255, 113, 113, 113),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        child: Text('Cancel'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      TextButton(
-                        child: Text('OK'),
-                        onPressed: () async {
-                          await cancel_from(selectedcCode ?? '');
-                          if (selectedcCode == null) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Row(
-                                    children: [
-                                      Icon(
-                                        Icons
-                                            .notification_important, // Use the bell icon
-                                        color:
-                                            Colors.red, // Set the color to red
-                                      ),
-                                      SizedBox(
-                                          width:
-                                              8), // Add some space between the icon and the text
-                                      Text('แจ้งเตือน'), // Title text
-                                    ],
-                                  ),
-                                  content: Text('$pomsg'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text('ตกลง'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          } else {
-                            Navigator.of(context).pop();
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Row(
-                                    children: [
-                                      Icon(
-                                        Icons
-                                            .notification_important, // Use the bell icon
-                                        color:
-                                            Colors.red, // Set the color to red
-                                      ),
-                                      SizedBox(
-                                          width:
-                                              8), // Add some space between the icon and the text
-                                      Text('แจ้งเตือน'), // Title text
-                                    ],
-                                  ),
-                                  content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text('ตกลง'),
-                                      onPressed: () {
-                                        cancel_from(selectedcCode!).then((_) {
-                                          Navigator.of(context).pop();
-                                          Navigator.of(context).pop(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SSINDT01_MAIN(
-                                                pWareCode: widget.pWareCode,
-                                                pWareName: widget.pWareName,
-                                                p_ou_code: widget.p_ou_code,
-                                                selectedValue: 'ทั้งหมด',
-                                                apCode: 'ทั้งหมด',
-                                                documentNumber: 'null',
-                                              ),
-                                            ),
-                                          );
-                                        }).catchError((error) {
-                                          ScaffoldMessenger.of(parentContext)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                  'An error occurred: $error'),
-                                            ),
-                                          );
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+                        );
+                      });
+                    },
+                  );
+                },
+              );
+            }
+          },
         );
       },
     );
@@ -778,28 +587,17 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              children: [
-                Icon(
-                  Icons.notification_important, // Use the bell icon
-                  color: Colors.red, // Set the color to red
-                ),
-                SizedBox(
-                    width: 8), // Add some space between the icon and the text
-                Text('แจ้งเตือน'), // Title text
-              ],
-            ),
+          return DialogStyles.alertMessageDialog(
+            context: context,
             content: Text(
                 'ต้องระบุเลขที่ใบกำกับ (invoice) และวันที่ตามใบกำกับ-แจ้งหนี้ ของผู้ขายให้ครบถ้วน'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+            onClose: () {
+              Navigator.of(context).pop();
+            },
+            onConfirm: () async {
+              // await fetchPoStatusconform(vReceiveNo);
+              Navigator.of(context).pop();
+            },
           );
         },
       );
@@ -934,124 +732,31 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             child: GestureDetector(
               onTap: () {
                 showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Dialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: StatefulBuilder(
-                        builder: (context, setState) {
-                          return Container(
-                            padding: const EdgeInsets.all(16),
-                            constraints: BoxConstraints(
-                              maxHeight: MediaQuery.of(context).size.height *
-                                  0.7, // 70% of screen height
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'เลือกประเภทการรับ',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.close),
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                // Optional: Search field for filtering items
-                                TextField(
-                                  controller: _searchController,
-                                  decoration: InputDecoration(
-                                    hintText: 'ค้นหา',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  onChanged: (query) {
-                                    setState(() {});
-                                  },
-                                ),
-                                const SizedBox(height: 10),
-                                Expanded(
-                                  child: Builder(
-                                    builder: (context) {
-                                      // Create a filtered list of items
-                                      final filteredItems =
-                                          poType.where((item) {
-                                        final poTypeCode = item['po_type_code']
-                                            .toString()
-                                            .toLowerCase(); // Convert to lowercase
-                                        final searchQuery = _searchController
-                                            .text
-                                            .trim()
-                                            .toLowerCase(); // Convert to lowercase
-                                        return poTypeCode.contains(searchQuery);
-                                      }).toList();
-
-                                      // Check if filtered items are empty
-                                      if (filteredItems.isEmpty) {
-                                        return Center(
-                                          child: Text(
-                                            'Data Not Found',
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 16),
-                                          ),
-                                        );
-                                      }
-
-                                      return ListView.builder(
-                                        itemCount: filteredItems.length,
-                                        itemBuilder: (context, index) {
-                                          final item = filteredItems[index];
-                                          final poTypeCode = item[
-                                                  'po_type_code']
-                                              .toString(); // Keep original case for display
-
-                                          return ListTile(
-                                            title: Text(
-                                              poTypeCode,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  color: Colors.black),
-                                            ),
-                                            onTap: () {
-                                              Navigator.of(context).pop();
-                                              setState(() {
-                                                selectedPoType = poTypeCode;
+  context: context,
+  builder: (BuildContext context) {
+    return DialogStyles.customLovSearchDialog(
+      context: context,
+      headerText: 'เลือกประเภทการรับ',
+      searchController: _searchController,
+      data: poType,
+      docString: (item) => item['po_type_code'].toString(),
+      titleText: (item) => item['po_type_code'].toString(),
+      subtitleText: (item) => '', // You can add a subtitle if needed
+      onTap: (item) {
+        Navigator.of(context).pop();
+        setState(() {
+          selectedPoType = poTypeCode;
                                                 print(selectedPoType);
                                                 poTypeCodeController.text =
                                                     poTypeCode;
                                                 print(
                                                     poTypeCodeController.text);
-                                              });
-                                            },
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                );
+        });
+      },
+    );
+  },
+);
+
               },
               child: AbsorbPointer(
                 child: TextField(

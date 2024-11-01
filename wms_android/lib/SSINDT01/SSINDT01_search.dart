@@ -369,7 +369,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
         child: Form(
           key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [

@@ -1554,7 +1554,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                 ),
               ),
               actions: <Widget>[
-                ButtonBar(
+                OverflowBar(
                   alignment: MainAxisAlignment.end,
                   children: <Widget>[
                     TextButton(
@@ -1571,47 +1571,22 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                             selectedItems.where((item) => item).length;
 
                         if (selectedCount == 0) {
-                          // Show an AlertDialog if no items are selected
                           showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Icon(
-                                      Icons.notification_important,
-                                      color: Colors.red,
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'แจ้งเตือน',
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.close),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                content: Text('เลือกอย่างน้อย 1 รายการเพื่อลบ'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('ตกลง'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DialogStyles.alertMessageDialog(
+                      context: context,
+                      content: Text('เลือกอย่างน้อย 1 รายการเพื่อลบ'),
+                      onClose: () {
+                        Navigator.of(context).pop();
+                      },
+                      onConfirm: () async {
+                        // await fetchPoStatusconform(vReceiveNo);
+                        Navigator.of(context).pop();
+                      },
+                    );
+                  },
+                );
                           return;
                         }
 
