@@ -88,6 +88,10 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   }
 
   String _getPageIndicatorText() {
+    if (paginatedData.isEmpty) {
+      return ''; // Return an empty string if there are no cards
+    }
+
     int startIndex = ((currentPage - 1) * itemsPerPage) + 1;
     int endIndex = startIndex + paginatedData.length - 1;
     return '$startIndex-$endIndex';
@@ -2217,25 +2221,18 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         // Previous Button
-                        ElevatedButton.icon(
-                          onPressed: hasPrevPage ? _loadPrevPage : null,
-                          icon: const Icon(
-                            Icons.arrow_back_ios_rounded,
-                            color: Colors.black,
-                            size: 20.0,
-                          ),
-                          label: const Text(
-                            'Previous',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                            ),
-                          ),
-                          style: hasPrevPage
-                              ? AppStyles.PreviousButtonStyle()
-                              : AppStyles.DisablePreviousButtonStyle(),
-                        ),
+                        hasPrevPage
+                            ? ElevatedButton(
+                                onPressed: _loadPrevPage,
+                                style: ButtonStyles.previousButtonStyle,
+                                child: ButtonStyles.previousButtonContent,
+                              )
+                            : ElevatedButton(
+                                onPressed: null,
+                                style: ButtonStyles.disablePreviousButtonStyle,
+                                child:
+                                    ButtonStyles.disablePreviousButtonContent,
+                              ),
 
                         // Page Indicator
                         Text(
@@ -2247,31 +2244,18 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                         ),
 
                         // Next Button
-                        ElevatedButton(
-                          onPressed: hasNextPage ? _loadNextPage : null,
-                          style: hasNextPage
-                              ? AppStyles.NextRecordDataButtonStyle()
-                              : AppStyles.DisableNextRecordDataButtonStyle(),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'Next',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                ),
+                        hasNextPage
+                            ? ElevatedButton(
+                                onPressed: _loadNextPage,
+                                style: ButtonStyles.nextButtonStyle,
+                                child: ButtonStyles.nextButtonContent(),
+                              )
+                            : ElevatedButton(
+                                onPressed: null,
+                                style: ButtonStyles.disableNextButtonStyle,
+                                child:
+                                    ButtonStyles.disablePreviousButtonContent,
                               ),
-                              SizedBox(width: 7),
-                              Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                color: Colors.black,
-                                size: 20.0,
-                              ),
-                            ],
-                          ),
-                        ),
                       ],
                     ),
                   ],
@@ -2355,6 +2339,9 @@ class _LotDialogState extends State<LotDialog> {
   }
 
   String _getPageIndicatorText() {
+    if (paginatedLotList.isEmpty) {
+      return ''; // Return an empty
+    }
     int startIndex = ((currentPage - 1) * itemsPerPage) + 1;
     int endIndex = startIndex + paginatedLotList.length - 1;
     return '$startIndex-$endIndex';
@@ -3735,25 +3722,17 @@ class _LotDialogState extends State<LotDialog> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ElevatedButton.icon(
-                      onPressed: hasPrevPage ? _loadPrevPage : null,
-                      icon: const Icon(
-                        Icons.arrow_back_ios_rounded,
-                        color: Colors.black,
-                        size: 20.0,
-                      ),
-                      label: const Text(
-                        'Previous',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                        ),
-                      ),
-                      style: hasPrevPage
-                          ? AppStyles.PreviousButtonStyle()
-                          : AppStyles.DisablePreviousButtonStyle(),
-                    ),
+                    hasPrevPage
+                        ? ElevatedButton(
+                            onPressed: _loadPrevPage,
+                            style: ButtonStyles.previousButtonStyle,
+                            child: ButtonStyles.previousButtonContent,
+                          )
+                        : ElevatedButton(
+                            onPressed: null,
+                            style: ButtonStyles.disablePreviousButtonStyle,
+                            child: ButtonStyles.disablePreviousButtonContent,
+                          ),
                     Text(
                       _getPageIndicatorText(),
                       style: const TextStyle(
@@ -3761,31 +3740,17 @@ class _LotDialogState extends State<LotDialog> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: hasNextPage ? _loadNextPage : null,
-                      style: hasNextPage
-                          ? AppStyles.NextRecordDataButtonStyle()
-                          : AppStyles.DisableNextRecordDataButtonStyle(),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Next',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                            ),
+                    hasNextPage
+                        ? ElevatedButton(
+                            onPressed: _loadNextPage,
+                            style: ButtonStyles.nextButtonStyle,
+                            child: ButtonStyles.nextButtonContent(),
+                          )
+                        : ElevatedButton(
+                            onPressed: null,
+                            style: ButtonStyles.disableNextButtonStyle,
+                            child: ButtonStyles.disablePreviousButtonContent,
                           ),
-                          SizedBox(width: 7),
-                          Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            color: Colors.black,
-                            size: 20.0,
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ] else
