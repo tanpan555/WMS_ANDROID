@@ -244,7 +244,7 @@ class ButtonStyles {
   );
 
   static final ButtonStyle disableNextButtonStyle = ElevatedButton.styleFrom(
-    backgroundColor: const Color.fromARGB(255, 23, 21, 59),
+    backgroundColor: const Color(0xFF17153B),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10),
     ),
@@ -259,7 +259,7 @@ class ButtonStyles {
         Text(
           'Next',
           style: TextStyle(
-            color: Color.fromARGB(255, 23, 21, 59),
+            color: const Color(0xFF17153B),
             fontWeight: FontWeight.bold,
             fontSize: 13,
           ),
@@ -267,7 +267,7 @@ class ButtonStyles {
         SizedBox(width: 7),
         Icon(
           MyIcons.arrow_forward_ios_rounded,
-          color: Color.fromARGB(255, 23, 21, 59),
+          color: const Color(0xFF17153B),
           size: 20.0,
         ),
       ],
@@ -276,7 +276,7 @@ class ButtonStyles {
 
   static final ButtonStyle disablePreviousButtonStyle =
       ElevatedButton.styleFrom(
-    backgroundColor: const Color.fromARGB(255, 23, 21, 59),
+    backgroundColor: const Color(0xFF17153B),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10),
     ),
@@ -289,14 +289,14 @@ class ButtonStyles {
     children: [
       Icon(
         MyIcons.arrow_back_ios_rounded,
-        color: Color.fromARGB(255, 23, 21, 59),
+        color: const Color(0xFF17153B),
         size: 20.0,
       ),
       const SizedBox(width: 7),
       const Text(
         'Previous',
         style: TextStyle(
-          color: Color.fromARGB(255, 23, 21, 59),
+          color: const Color(0xFF17153B),
           fontWeight: FontWeight.bold,
           fontSize: 13,
         ),
@@ -528,6 +528,75 @@ class DialogStyles {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            ElevatedButton(
+              onPressed: onConfirm,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
+              child: const Text('ตกลง'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  static AlertDialog alertMessageCheckDialog({
+    required BuildContext context,
+    required Widget content,
+    required VoidCallback onClose,
+    required VoidCallback onConfirm,
+  }) {
+    return AlertDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Row(
+            children: [
+              Icon(
+                Icons.notification_important,
+                color: Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'แจ้งเตือน',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(MyIcons.close),
+                onPressed: onClose,
+              ),
+            ],
+          ),
+        ],
+      ),
+      content: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: content,
+        ),
+      ),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ElevatedButton(
+              onPressed: onClose,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
+              child: const Text('ยกเลิก'),
+            ),
             ElevatedButton(
               onPressed: onConfirm,
               style: ElevatedButton.styleFrom(
