@@ -397,14 +397,88 @@ class DialogStyles {
       ],
     );
   }
-  // ElevatedButton(
-  // onPressed: () {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) => DialogStyles.exitConfirmationDialog(context),
-  //   );
-  // },
-  // child: const Text('Show Dialog'),
+
+  static AlertDialog cancelDialog({
+    required BuildContext context,
+    required VoidCallback onCloseDialog,
+    required VoidCallback onConfirmDialog,
+    required VoidCallback onTap,
+    required TextEditingController controller,
+  }) {
+    return AlertDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            'สาเหตุการยกเลิก',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 16.0,
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.close), // ใช้ไอคอน `close` แบบปกติ
+            onPressed: onCloseDialog,
+          ),
+        ],
+      ),
+      content: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: controller,
+                readOnly: true,
+                onTap: onTap,
+                minLines: 1,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                  labelText: 'สาเหตุการยกเลิก',
+                  labelStyle: TextStyle(
+                    color: Colors.black87,
+                  ),
+                  suffixIcon: Icon(
+                    Icons.arrow_drop_down,
+                    color: Color.fromARGB(255, 113, 113, 113),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: onCloseDialog,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('Cancel'),
+                  ),
+                  ElevatedButton(
+                    onPressed: onConfirmDialog,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
   // ---------------------------------------------------------------------  alertMessageDialog
 
   static AlertDialog alertMessageDialog({

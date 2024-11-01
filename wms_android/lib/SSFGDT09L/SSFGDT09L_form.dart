@@ -1262,164 +1262,28 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
   void showDialogLovCancel() {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Icon(
-                //   Icons.notification_important,
-                //   color: Colors.red,
-                // ),
-                // SizedBox(width: 8),
-                Text('สาเหตุการยกเลิก'),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        setState(() {
-                          selectLovCancel = '';
-                          returnStatusLovCancel = '';
-                          cancelController.text = '';
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            // content: Expanded(
-            content: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  // crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Text('ตรวจพบสินค้าที่ไม่ระบุจำนวนนับ'),
-                    // const SizedBox(height: 8),
-                    /////////////////////////////////////////////////
-                    // DropdownSearch<String>(
-                    //   popupProps: PopupProps.menu(
-                    //     showSearchBox: true,
-                    //     showSelectedItems: true,
-                    //     itemBuilder: (context, item, isSelected) {
-                    //       return ListTile(
-                    //         title: Text(item),
-                    //         selected: isSelected,
-                    //       );
-                    //     },
-                    //     constraints: BoxConstraints(
-                    //       maxHeight: 250,
-                    //     ),
-                    //   ),
-                    //   items: dataLovCancel
-                    //       .map<String>((item) => '${item['d']}')
-                    //       .toList(),
-                    //   dropdownDecoratorProps: DropDownDecoratorProps(
-                    //     dropdownSearchDecoration: InputDecoration(
-                    //       border: InputBorder.none,
-                    //       filled: true,
-                    //       fillColor: Colors.white,
-                    //       labelText: 'สาเหตุการยกเลิก',
-                    //       labelStyle: const TextStyle(
-                    //         color: Colors.black87,
-                    //       ),
-                    //     ),
-                    //   ),
-                    //   onChanged: (String? value) {
-                    //     setState(() {
-                    //       selectLovCancel = value;
-
-                    //       // Find the selected item
-                    //       var selectedItem = dataLovCancel.firstWhere(
-                    //         (item) => '${item['d']}' == value,
-                    //         orElse: () => <String, dynamic>{}, // แก้ไข orElse
-                    //       );
-                    //       // Update variables based on selected item
-                    //       if (selectedItem.isNotEmpty) {
-                    //         returnStatusLovCancel = selectedItem['r'] ?? '';
-                    //       }
-                    //     });
-                    //     print(
-                    //         'dataLovCancel in body: $dataLovCancel type: ${dataLovCancel.runtimeType}');
-                    //     // print(selectedItem);
-                    //     print(
-                    //         'returnStatusLovCancel in body: $returnStatusLovCancel type: ${returnStatusLovCancel.runtimeType}');
-                    //   },
-                    //   selectedItem: selectLovCancel,
-                    // ),
-                    TextFormField(
-                      controller: cancelController,
-                      readOnly: true,
-                      onTap: () => showDialogDropdownSearchCancel(),
-                      minLines: 1,
-                      maxLines: 3,
-                      // overflow: TextOverflow.ellipsis,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'สาเหตุการยกเลิก',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                        ),
-                        suffixIcon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Color.fromARGB(255, 113, 113, 113),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    //////////////////////////////////////////////////
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            setState(() {
-                              selectLovCancel = '';
-                              returnStatusLovCancel = '';
-                              cancelController.text = '';
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.grey),
-                          ),
-                          child: const Text('Cancel'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              deleteForm(returnStatusLovCancel);
-                              // if (returnStatusLovCancel.isNotEmpty) {
-                              //   deleteForm(returnStatusLovCancel);
-                              // }
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.grey),
-                          ),
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-            actions: [],
-            // ),
-          );
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.cancelDialog(
+          context: context,
+          onCloseDialog: () {
+            Navigator.of(context).pop();
+            setState(() {
+              selectLovCancel = '';
+              returnStatusLovCancel = '';
+              cancelController.text = '';
+            });
+          },
+          onConfirmDialog: () {
+            setState(() {
+              deleteForm(returnStatusLovCancel);
+            });
+          },
+          onTap: () => showDialogDropdownSearchCancel(),
+          controller: cancelController,
+        );
+      },
+    );
   }
 
   void showDialogErrorCHK(String pMessageErr) {
