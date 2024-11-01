@@ -268,8 +268,10 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                             if (isDateInvalid == false) {
                               if (selectedDate.isNotEmpty) {
                                 if (selectedDate != '') {
+                                  String modifiedDate =
+                                      selectedDate.replaceAll('-', '/');
                                   DateTime parsedDate = DateFormat('dd/MM/yyyy')
-                                      .parse(selectedDate);
+                                      .parse(modifiedDate);
                                   String formattedDate =
                                       DateFormat('dd-MM-yyyy')
                                           .format(parsedDate);
@@ -293,7 +295,11 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                                             pDocDate: formattedDate == ''
                                                 ? 'null'
                                                 : formattedDate)),
-                                  ).then((value) async {});
+                                  ).then((value) async {
+                                    print(
+                                        'isDateInvalid PPPPPP $isDateInvalid');
+                                    print('selectedDate PPPPPP $selectedDate');
+                                  });
                                 }
                               } else {
                                 Navigator.push(

@@ -441,7 +441,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
             print(
                 'pMessageErr :: $pMessageErr  type :: ${pMessageErr.runtimeType}');
             if (pMessageErr.isNotEmpty) {
-              showDialogErrorCHK(pMessageErr);
+              showDialogErrorCHK(context, pMessageErr);
             }
             if (testChk == 1) {
               saveDataFoem();
@@ -572,7 +572,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
             messageSubmit = dataSubmit['po_message'];
 
             if (statusSubmit == '1') {
-              showDialogErrorCHK(messageSubmit);
+              showDialogErrorCHK(context, messageSubmit);
             }
             if (statusSubmit == '0') {
               checkUpdateData = false;
@@ -655,7 +655,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
             deleteMessage = dataDelete['po_message'];
 
             if (deleteStatus == '1') {
-              showDialogErrorCHK(deleteMessage);
+              showDialogErrorCHK(context, deleteMessage);
             }
             if (deleteStatus == '0') {
               if (mounted) {
@@ -772,7 +772,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             );
                           } else {
                             showDialogErrorCHK(
-                                'ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
+                                context, 'ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
                           }
                         }
                       }
@@ -1286,79 +1286,23 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     );
   }
 
-  void showDialogErrorCHK(String pMessageErr) {
+  void showDialogErrorCHK(
+    BuildContext context,
+    String messageAlert,
+  ) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.notification_important,
-                      color: Colors.red,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'แจ้งเตือน',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            // content: Expanded(
-            content: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  // crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('$pMessageErr'),
-                    const SizedBox(height: 8),
-                    /////////////////////////////////////////////////
-
-                    // const SizedBox(height: 8),
-                    //////////////////////////////////////////////////
-                  ],
-                ),
-              ),
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('ตกลง'),
-                  ),
-                ],
-              )
-            ],
-            // ),
-          );
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () => Navigator.of(context).pop(),
+          onConfirm: () {
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
   }
 
   void showDialogDropdownSearchMoDoNo() {

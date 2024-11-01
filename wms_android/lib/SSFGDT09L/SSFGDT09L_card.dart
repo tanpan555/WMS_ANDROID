@@ -1064,71 +1064,18 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
 
   void showMessageStatusCard(
     BuildContext context,
-    String messageCard,
+    String messageAlert,
   ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.notification_important,
-                    color: Colors.red,
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    'Error',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    messageCard,
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ตกลง'),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () => Navigator.of(context).pop(),
+          onConfirm: () {
+            Navigator.of(context).pop();
+          },
         );
       },
     );
