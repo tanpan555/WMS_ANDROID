@@ -30,6 +30,7 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
   TextEditingController _dateController = TextEditingController();
   TextEditingController _docNoController = TextEditingController();
   TextEditingController _noteController = TextEditingController();
+
   final String sDateFormat = "dd-MM-yyyy";
   final dateRegExp =
       RegExp(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$");
@@ -38,29 +39,46 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
   bool monthColorCheck = false;
   bool noDate = false;
   bool chkDate = false;
+  int _cursorPosition = 0;
 
   @override
   void initState() {
     super.initState();
+    _dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+  Future<void> _selectDate(
+      BuildContext context, String? initialDateString) async {
+    DateTime? initialDate;
+
+    if (initialDateString != null) {
+      try {
+        initialDate = DateFormat('dd/MM/yyyy').parseStrict(initialDateString);
+      } catch (e) {
+        initialDate = DateTime.now();
+      }
+    } else {
+      initialDate = DateTime.now();
+    }
+
+    DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: initialDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
-    if (picked != null) {
-      final formattedDate = DateFormat('dd/MM/yyyy').format(picked);
-      _dateController.text = formattedDate; // อัปเดตค่าใน TextFormField
 
-      // อัปเดต selectedDate และ chkDate
-      setState(() {
-        selectedDate = formattedDate;
-        chkDate =
-            false; // ตั้งค่า chkDate เป็น false เนื่องจากมีการเลือกวันที่แล้ว
-      });
+    if (pickedDate != null) {
+      String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
+      if (mounted) {
+        setState(() {
+          noDate = false;
+          chkDate = false;
+          _dateController.text = formattedDate;
+          selectedDate = _dateController.text;
+        });
+      }
     }
   }
 
@@ -86,8 +104,8 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
                     LengthLimitingTextInputFormatter(
-                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 8 ตัว
-                    DateInputFormatter(), // กำหนดรูปแบบ DD/MM/YYYY
+                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
+                    DateInputFormatter(), // กำหนดรูปแบบ __/__/____
                   ],
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -95,43 +113,62 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
                     fillColor: Colors.white,
                     labelText: 'ณ วันที่',
                     hintText: 'DD/MM/YYYY',
-                    hintStyle: const TextStyle(
-                      color: Colors.grey, // เปลี่ยนสี hint
-                    ),
-                    labelStyle: chkDate
+                    hintStyle: TextStyle(color: Colors.grey),
+                    labelStyle: chkDate == false && noDate == false
                         ? const TextStyle(
-                            color: Colors
-                                .red, // เปลี่ยนเป็นสีแดงเมื่อวันที่ไม่ถูกต้อง
+                            color: Colors.black87,
                           )
                         : const TextStyle(
-                            color: Colors.black87, // สีปกติเมื่อวันที่ถูกต้อง
+                            color: Colors.red,
                           ),
                     suffixIcon: IconButton(
                       icon: const Icon(
                           Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
                       onPressed: () async {
-                        // เปิด date picker เมื่อกดไอคอน
-                        _selectDate(context);
+                        // กดไอคอนเพื่อเปิด date picker
+                        _selectDate(context, selectedDate);
                       },
                     ),
                   ),
                   onChanged: (value) {
                     selectedDate = value;
                     print('selectedDate : $selectedDate');
+                    setState(() {
+                      _cursorPosition = _dateController.selection.baseOffset;
+                      _dateController.value = _dateController.value.copyWith(
+                        text: value,
+                        selection: TextSelection.fromPosition(
+                          TextPosition(offset: _cursorPosition),
+                        ),
+                      );
+                    });
 
                     setState(() {
-                      // ถ้าค่าว่างไม่ต้องแสดงอะไร
-                      if (selectedDate.isEmpty) {
-                        chkDate = false;
-                        return;
-                      }
+                      // สร้าง instance ของ DateInputFormatter
+                      DateInputFormatter formatter = DateInputFormatter();
 
-                      // ตรวจสอบรูปแบบวันที่
-                      if (RegExp(r'^\d{2}/\d{2}/\d{4}$')
-                          .hasMatch(selectedDate)) {
-                        chkDate = false; // วันที่ถูกต้อง
+                      // ตรวจสอบการเปลี่ยนแปลงของข้อความ
+                      TextEditingValue oldValue =
+                          TextEditingValue(text: _dateController.text);
+                      TextEditingValue newValue = TextEditingValue(text: value);
+
+                      // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
+                      formatter.formatEditUpdate(oldValue, newValue);
+
+                      // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
+                      dateColorCheck = formatter.dateColorCheck;
+                      monthColorCheck = formatter.monthColorCheck;
+                      noDate = formatter.noDate; // เพิ่มการตรวจสอบ noDate
+                    });
+                    setState(() {
+                      RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                      // String messageAlertValueDate =
+                      //     'กรุณากรองวันที่ให้ถูกต้อง';
+                      if (!dateRegExp.hasMatch(selectedDate)) {
                       } else {
-                        chkDate = true; // วันที่ไม่ถูกต้อง
+                        setState(() {
+                          chkDate = false;
+                        });
                       }
                     });
                   },
@@ -144,7 +181,7 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
                           style: TextStyle(
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
-                            fontSize: 12, // ขนาดตัวอักษร
+                            fontSize: 12, // ปรับขนาดตัวอักษรตามที่ต้องการ
                           ),
                         ))
                     : const SizedBox.shrink(),
@@ -197,9 +234,8 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
                             builder: (context) => SSFGPC04_WARE(
                               docNo: _docNoController.text,
                               note: _noteController.text,
-                              date: selectedDate.isEmpty
-                                  ? 'null'
-                                  : selectedDate, // Ensure selectedDate is passed
+                              date: _dateController
+                                  .text, // Ensure selectedDate is passed
                               selectedItems:
                                   selectedItems, // Pass selectedItems correctly
                             ),

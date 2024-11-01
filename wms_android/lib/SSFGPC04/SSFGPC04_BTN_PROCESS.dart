@@ -141,6 +141,101 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     );
   }
 
+  void showAlertDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(
+                Icons.notification_important, // ไอคอนแจ้งเตือน
+                color: Colors.red, // สีแดง
+                size: 30,
+              ),
+              SizedBox(width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
+              Text('แจ้งเตือน'),
+              Spacer(),
+              IconButton(
+                icon: Icon(Icons.close, color: Colors.black), // ไอคอนปิด
+                onPressed: () {
+                  Navigator.of(context).pop(); // ปิด popup
+                },
+              ),
+            ],
+          ),
+          content:
+              const Text('กรุณาระบุข้อมูล รหัสคลังสินค้า'),
+          actions: [
+            TextButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(
+                Icons.notification_important, // ไอคอนแจ้งเตือน
+                color: Colors.red, // สีแดง
+                size: 30,
+              ),
+              SizedBox(width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
+              Text('แจ้งเตือน'),
+              Spacer(),
+              IconButton(
+                icon: Icon(Icons.close, color: Colors.black), // ไอคอนปิด
+                onPressed: () {
+                  Navigator.of(context).pop(); // ปิด popup
+                },
+              ),
+            ],
+          ),
+          content: const Text('Please Confirm to process !!!'),
+          actions: [
+            TextButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
+              onPressed: () {
+                // process();
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                process(); // Proceed with processing
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 //----------------------------------------------------------------------------//
 // กลุ่มสินค้า
   Future<void> selectLovStartGroup() async {
@@ -643,9 +738,9 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                           Navigator.of(context).pop(
                             MaterialPageRoute(
                               builder: (context) => SSFGPC04_MAIN(
-                              //   pWareCode: gb.P_WARE_CODE,
-                              //   pErpOuCode: gb.P_ERP_OU_CODE,
-                              ),
+                                  //   pWareCode: gb.P_WARE_CODE,
+                                  //   pErpOuCode: gb.P_ERP_OU_CODE,
+                                  ),
                             ),
                           );
                           Navigator.of(context).pop();
@@ -662,7 +757,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                           //   );
                           // });
                         },
-                        child: Text('ตกลง'),
+                        child: Text('OK'),
                       ),
                     ],
                   );
@@ -1011,8 +1106,14 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            // เรียกใช้งาน process() เมื่อกดปุ่มประมวลผล
-                            process();
+                            if (widget.selectedItems.isEmpty) {
+                              // Show alert if no items are selected
+                              showAlertDialog();
+                            } else {
+                              showConfirmationDialog();
+                              // Call process() if items are selected
+                              
+                            }
                           },
                           style: AppStyles.ConfirmbuttonStyle(),
                           child: Row(
@@ -1028,7 +1129,6 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                         ),
                       ],
                     ),
-
                     const SizedBox(width: 8),
                   ],
                 ),

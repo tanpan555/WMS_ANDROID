@@ -29,7 +29,11 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
   List<Map<String, dynamic>> tmpWhItems = [];
   bool isLoading = true;
   int currentPage = 0;
-  final int itemsPerPage = 15;
+  final int itemsPerPage = 15; // จำนวนการ์ดต่อหน้า
+  List<dynamic> dataCard = [];
+  String? next;
+  String? previous;
+  String errorMessage = '';
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -38,34 +42,145 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
     fetchData();
   }
 
-  Future<void> fetchData() async {
+  // Future<void> fetchData() async {
+  //   try {
+  //     final response = await http.get(Uri.parse(
+  //         'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_1_TMP_IN_WH/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}'));
+
+  //     if (response.statusCode == 200) {
+  //       final responseBody = utf8.decode(response.bodyBytes);
+  //       final responseData = jsonDecode(responseBody);
+  //       print('Fetched data: $responseData');
+
+  //       if (mounted) {
+  //         setState(() {
+  //           tmpWhItems =
+  //               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+  //           isLoading = false;
+  //         });
+  //       }
+  //       print('dataTable : $tmpWhItems');
+  //     } else {
+  //       throw Exception('Failed to load fetchData');
+  //     }
+  //   } catch (e) {
+  //     if (mounted) {
+  //       setState(() {
+  //         isLoading = false;
+  //       });
+  //     }
+  //     print('ERROR IN Fetch Data : $e');
+  //   }
+  // }
+
+  Future<void> fetchData([String? url]) async {
+    if (!mounted) return; // ตรวจสอบว่าตัว component ยังถูก mount อยู่หรือไม่
+
+    setState(() {
+      isLoading = true;
+    });
+
+    final String requestUrl = url ??
+        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_1_TMP_IN_WH/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}';
+
     try {
-      final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_1_TMP_IN_WH/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}'));
+      final response = await http.get(Uri.parse(requestUrl));
+      print(requestUrl);
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
-        print('Fetched data: $responseData');
+        final parsedResponse = json.decode(responseBody);
+
+        if (!mounted) return;
 
         if (mounted) {
           setState(() {
-            tmpWhItems =
-                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+            // ตรวจสอบข้อมูลก่อนการอัปเดต
+            if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+              tmpWhItems = parsedResponse['items'];
+            } else {
+              tmpWhItems = [];
+            }
+
+            // อัปเดตและกรองข้อมูลใน gridItems
+            // gridItems = List<Map<String, dynamic>>.from(
+            //         parsedResponse['items'] ?? [])
+            //     .where((item) => !deletedItemCodes.contains(item['item_code']))
+            //     .toList();
+
+            // คำนวณจำนวน totalCards
+            int totalCards = tmpWhItems.length;
+            // List<dynamic> getCurrentPageItems() {
+            //   int startIndex = currentPage * itemsPerPage;
+            //   int endIndex = (startIndex + itemsPerPage > totalCards)
+            //       ? totalCards
+            //       : startIndex + itemsPerPage;
+            //   return tmpWhItems.sublist(
+            //       startIndex, endIndex); // ดึงเฉพาะ card ในหน้าปัจจุบัน
+            // }
+            List<Map<String, dynamic>> getCurrentPageItems() {
+  int startIndex = currentPage * itemsPerPage;
+              int endIndex = (startIndex + itemsPerPage > totalCards)
+                  ? totalCards
+                  : startIndex + itemsPerPage;
+  return widget.selectedItems.sublist(
+      startIndex,
+      endIndex > widget.selectedItems.length
+          ? widget.selectedItems.length
+          : endIndex);
+}
+
             isLoading = false;
           });
         }
-        print('dataTable : $tmpWhItems');
       } else {
-        throw Exception('Failed to load fetchData');
+        if (!mounted) return;
+        setState(() {
+          isLoading = false;
+          errorMessage = 'Failed to load data: ${response.statusCode}';
+        });
       }
     } catch (e) {
+      if (!mounted) return;
+
       if (mounted) {
         setState(() {
           isLoading = false;
+          errorMessage = 'Error occurred: $e';
         });
       }
-      print('ERROR IN Fetch Data : $e');
+    }
+  }
+
+  String? getLink(List<dynamic> links, String rel) {
+    final link =
+        links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
+    return link != null ? link['href'] : null;
+  }
+
+  void _loadPrevPage() {
+    if (currentPage > 0) {
+      setState(() {
+        currentPage--;
+        // No need to call fetchData here, just update the UI
+      });
+      _scrollToTop();
+    }
+  }
+
+  void _loadNextPage() {
+    if ((currentPage + 1) * itemsPerPage < widget.selectedItems.length) {
+      setState(() {
+        currentPage++;
+        // No need to call fetchData here, just update the UI
+      });
+      _scrollToTop();
+    }
+  }
+
+  void _scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0); // เลื่อนไปยังตำแหน่งเริ่มต้น (index 0)
     }
   }
 
@@ -114,27 +229,30 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
     }
   }
 
-  List<Map<String, dynamic>> getCurrentPageItems() {
-    final startIndex = currentPage * itemsPerPage;
-    final endIndex = startIndex + itemsPerPage;
-    return widget.selectedItems.sublist(
-        startIndex,
-        endIndex > widget.selectedItems.length
-            ? widget.selectedItems.length
-            : endIndex);
-  }
+  // List<Map<String, dynamic>> getCurrentPageItems() {
+  //   final startIndex = currentPage * itemsPerPage;
+  //   final endIndex = startIndex + itemsPerPage;
+  //   return widget.selectedItems.sublist(
+  //       startIndex,
+  //       endIndex > widget.selectedItems.length
+  //           ? widget.selectedItems.length
+  //           : endIndex);
+  // }
 
-  void _scrollToTop() {
-    if (_scrollController.hasClients) {
-      _scrollController.jumpTo(0); // เลื่อนไปยังตำแหน่งเริ่มต้น (index 0)
-    }
-  }
+  // void _scrollToTop() {
+  //   if (_scrollController.hasClients) {
+  //     _scrollController.jumpTo(0); // เลื่อนไปยังตำแหน่งเริ่มต้น (index 0)
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final totalPages = (widget.selectedItems.length / itemsPerPage).ceil();
-    final currentPageItems =
-        getCurrentPageItems(); // ดึงรายการของหน้าในปัจจุบัน
+    // final totalPages = (widget.selectedItems.length / itemsPerPage).ceil();
+    // final currentPageItems =
+    //     getCurrentPageItems(); // ดึงรายการของหน้าในปัจจุบัน
+    int totalCards = widget.selectedItems.length;
+    bool hasPreviousPage = currentPage > 0;
+    bool hasNextPage = (currentPage + 1) * itemsPerPage < totalCards;
     return Scaffold(
       appBar:
           CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: true),
@@ -211,11 +329,25 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
                       ),
                     )
                   : ListView.builder(
-                      controller: _scrollController, // ใช้ scrollController
-                      itemCount: currentPageItems.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index < currentPageItems.length) {
-                          final item = currentPageItems[index];
+                    controller: _scrollController,
+                            itemCount:
+                                itemsPerPage + 1, // +1 for the pagination row
+                            itemBuilder: (context, index) {
+                              if (index < itemsPerPage) {
+                                int actualIndex =
+                                    (currentPage * itemsPerPage) + index;
+
+                                // Check if we have reached the end of the data
+                                if (actualIndex >= widget.selectedItems.length) {
+                                  return const SizedBox.shrink();
+                                }
+
+                                final item = widget.selectedItems[actualIndex];
+                      // controller: _scrollController, // ใช้ scrollController
+                      // itemCount: currentPageItems.length + 1,
+                      // itemBuilder: (context, index) {
+                      //   if (index < currentPageItems.length) {
+                      //     final item = currentPageItems[index];
                           return Card(
                             color: Colors.lightBlue[100],
                             child: Padding(
@@ -245,38 +377,115 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
                           );
                         } else {
                           return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ElevatedButton(
-                                onPressed: currentPage > 0
-                                    ? () {
-                                        setState(() {
-                                          currentPage--;
-                                          _scrollToTop(); // เลื่อนไปยังจุดเริ่มต้นเมื่อกดย้อนกลับ
-                                        });
-                                      }
-                                    : null,
-                                child: const Text('Previous'),
-                              ),
-                              if (currentPageItems.length == itemsPerPage) ...[
-                                Text(
-                                  'Page ${currentPage + 1} of $totalPages',
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                              ],
-                              ElevatedButton(
-                                onPressed: currentPage < totalPages - 1
-                                    ? () {
-                                        setState(() {
-                                          currentPage++;
-                                          _scrollToTop(); // เลื่อนไปยังจุดเริ่มต้นเมื่อกดถัดไป
-                                        });
-                                      }
-                                    : null,
-                                child: const Text('Next'),
-                              ),
-                            ],
-                          );
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // Previous Button
+                                    hasPreviousPage
+                                        ? ElevatedButton.icon(
+                                            onPressed: _loadPrevPage,
+                                            icon: const Icon(
+                                              Icons.arrow_back_ios_rounded,
+                                              color: Colors.black,
+                                              size: 20.0,
+                                            ),
+                                            label: const Text(
+                                              'Previous',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            style:
+                                                AppStyles.PreviousButtonStyle(),
+                                          )
+                                        : ElevatedButton.icon(
+                                            onPressed: null,
+                                            icon: const Icon(
+                                              Icons.arrow_back_ios_rounded,
+                                              color:
+                                                  Color.fromARGB(0, 23, 21, 59),
+                                              size: 20.0,
+                                            ),
+                                            label: const Text(
+                                              'Previous',
+                                              style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    0, 255, 255, 255),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            style: AppStyles
+                                                .DisablePreviousButtonStyle(),
+                                          ),
+
+                                    // Page Indicator
+                                    Text(
+                                      '${(currentPage * itemsPerPage) + 1}-${(currentPage + 1) * itemsPerPage > totalCards ? totalCards : (currentPage + 1) * itemsPerPage}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+
+                                    // Next Button
+                                    hasNextPage
+                                        ? ElevatedButton(
+                                            onPressed: _loadNextPage,
+                                            style: AppStyles
+                                                .NextRecordDataButtonStyle(),
+                                            child: const Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  'Next',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 7),
+                                                Icon(
+                                                  Icons
+                                                      .arrow_forward_ios_rounded,
+                                                  color: Colors.black,
+                                                  size: 20.0,
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        : ElevatedButton(
+                                            onPressed: null,
+                                            style: AppStyles
+                                                .DisableNextRecordDataButtonStyle(),
+                                            child: const Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  'Next',
+                                                  style: TextStyle(
+                                                    color: Color.fromARGB(
+                                                        0, 23, 21, 59),
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 7),
+                                                Icon(
+                                                  Icons
+                                                      .arrow_forward_ios_rounded,
+                                                  color: Color.fromARGB(
+                                                      0, 23, 21, 59),
+                                                  size: 20.0,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                  ],
+                                );
                         }
                       },
                     ),

@@ -80,25 +80,60 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
     }
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+  // Future<void> _selectDate(BuildContext context) async {
+  //   DateTime? pickedDate = await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime(2000),
+  //     lastDate: DateTime(2101),
+  //     initialEntryMode: DatePickerEntryMode.calendarOnly,
+  //   );
+
+  //   if (pickedDate != null) {
+  //     String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+  //     if (mounted) {
+  //       setState(() {
+  //         _dateController.text = formattedDate;
+  //         selectedDate = _dateController.text;
+
+  //         // Reset error flags since date is selected from the picker
+  //         chkDate = false;
+  //         noDate = false;
+  //       });
+  //     }
+  //   }
+  // }
+
+  Future<void> _selectDate(
+      BuildContext context, String? initialDateString) async {
+    DateTime? initialDate;
+
+    if (initialDateString != null) {
+      try {
+        initialDate = DateFormat('dd/MM/yyyy').parseStrict(initialDateString);
+      } catch (e) {
+        initialDate = DateTime.now();
+      }
+    } else {
+      initialDate = DateTime.now();
+    }
+
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: initialDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
       initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
 
     if (pickedDate != null) {
-      String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+      String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
       if (mounted) {
         setState(() {
+          noDate = false;
+          chkDate = false;
           _dateController.text = formattedDate;
           selectedDate = _dateController.text;
-
-          // Reset error flags since date is selected from the picker
-          chkDate = false;
-          noDate = false;
         });
       }
     }
@@ -263,17 +298,15 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     });
                   },
                 ),
-
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _dateController,
                   keyboardType: TextInputType.number,
                   inputFormatters: [
-                    FilteringTextInputFormatter
-                        .digitsOnly, // Accept only numbers
+                    FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
                     LengthLimitingTextInputFormatter(
-                        10), // Limit to 10 characters for DD/MM/YYYY
-                    DateInputFormatter(), // Formatter to help format the date
+                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
+                    DateInputFormatter(), // กำหนดรูปแบบ __/__/____
                   ],
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -283,18 +316,24 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     hintText: 'DD/MM/YYYY',
                     hintStyle: TextStyle(color: Colors.grey),
                     labelStyle: chkDate == false && noDate == false
-                        ? const TextStyle(color: Colors.black87)
-                        : const TextStyle(color: Colors.red),
+                        ? const TextStyle(
+                            color: Colors.black87,
+                          )
+                        : const TextStyle(
+                            color: Colors.red,
+                          ),
                     suffixIcon: IconButton(
-                      icon: const Icon(Icons.calendar_today), // Calendar icon
+                      icon: const Icon(
+                          Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
                       onPressed: () async {
-                        // Open date picker when icon is clicked
-                        _selectDate(context);
+                        // กดไอคอนเพื่อเปิด date picker
+                        _selectDate(context, selectedDate);
                       },
                     ),
                   ),
                   onChanged: (value) {
                     selectedDate = value;
+                    print('selectedDate : $selectedDate');
                     setState(() {
                       _cursorPosition = _dateController.selection.baseOffset;
                       _dateController.value = _dateController.value.copyWith(
@@ -306,38 +345,35 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     });
 
                     setState(() {
-                      // Create instance of DateInputFormatter
+                      // สร้าง instance ของ DateInputFormatter
                       DateInputFormatter formatter = DateInputFormatter();
 
-                      // Check for changes in text
+                      // ตรวจสอบการเปลี่ยนแปลงของข้อความ
                       TextEditingValue oldValue =
                           TextEditingValue(text: _dateController.text);
                       TextEditingValue newValue = TextEditingValue(text: value);
 
-                      // Validate the date format
+                      // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
                       formatter.formatEditUpdate(oldValue, newValue);
 
-                      // Check the format returned by DateInputFormatter
+                      // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
                       dateColorCheck = formatter.dateColorCheck;
                       monthColorCheck = formatter.monthColorCheck;
-                      noDate = formatter.noDate; // Add check for noDate
+                      noDate = formatter.noDate; // เพิ่มการตรวจสอบ noDate
                     });
-
-                    // Check the date format only for manual input
-                    RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                    if (!dateRegExp.hasMatch(selectedDate)) {
-                      setState(() {
-                        chkDate = true;
-                      });
-                    } else {
-                      setState(() {
-                        chkDate = false;
-                      });
-                    }
+                    setState(() {
+                      RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                      // String messageAlertValueDate =
+                      //     'กรุณากรองวันที่ให้ถูกต้อง';
+                      if (!dateRegExp.hasMatch(selectedDate)) {
+                      } else {
+                        setState(() {
+                          chkDate = false;
+                        });
+                      }
+                    });
                   },
                 ),
-
-// Display error message if needed
                 chkDate == true || noDate == true
                     ? const Padding(
                         padding: EdgeInsets.only(top: 4.0),
@@ -346,11 +382,10 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                           style: TextStyle(
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
-                            fontSize: 12, // Adjust font size as needed
+                            fontSize: 12, // ปรับขนาดตัวอักษรตามที่ต้องการ
                           ),
                         ))
                     : const SizedBox.shrink(),
-
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
