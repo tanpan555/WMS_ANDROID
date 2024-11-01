@@ -66,8 +66,9 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
 
   bool chkShowDialogcomfirmMessage = false;
 
-  FocusNode _barcodeFocusNode = FocusNode();
+  FocusNode barcodeFocusNode = FocusNode();
   FocusNode lotNumberFocusNode = FocusNode();
+  FocusNode quantityFocusNode = FocusNode();
   TextEditingController barcodeController = TextEditingController();
   TextEditingController locatorFormController = TextEditingController();
   TextEditingController itemCodeController = TextEditingController();
@@ -82,8 +83,9 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
 
   @override
   void dispose() {
+    quantityFocusNode.dispose();
     lotNumberFocusNode.dispose();
-    _barcodeFocusNode.dispose();
+    barcodeFocusNode.dispose();
     barcodeController.dispose();
     locatorFormController.dispose();
     itemCodeController.dispose();
@@ -108,11 +110,11 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusScope.of(context).requestFocus(_barcodeFocusNode);
+      FocusScope.of(context).requestFocus(barcodeFocusNode);
     });
 
-    _barcodeFocusNode.addListener(() {
-      if (!_barcodeFocusNode.hasFocus) {
+    barcodeFocusNode.addListener(() {
+      if (!barcodeFocusNode.hasFocus) {
         if (mounted) {
           setState(() {
             if (barCode.contains(' ')) {
@@ -122,6 +124,10 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             } else {
               lotNo = barCode;
               lotNoController.text = lotNo;
+            }
+
+            if (barCode.isNotEmpty && lotNo.isNotEmpty) {
+              fetchData();
             }
           });
         }
@@ -140,35 +146,21 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
       }
     });
 
-    lotNoController.addListener(() {
-      if (mounted) {
-        setState(() {
-          if (barCode != '' && lotNo != '') {
-            fetchData();
+    quantityFocusNode.addListener(() {
+      if (!quantityFocusNode.hasFocus) {
+        if (mounted) {
+          setState(() {
+            if (quantity.isNotEmpty && barCode.isNotEmpty && lotNo.isNotEmpty) {
+              chkQuantity();
+            }
             // if (barCode != '' &&
             //     lotNo != '' &&
             //     quantity != '' &&
             //     statusFetchDataBarcode == '0') {
             //   chkQuantity();
             // }
-          }
-        });
-      }
-    });
-
-    quantityController.addListener(() {
-      if (mounted) {
-        setState(() {
-          String currentValue = quantityController.text;
-          if (currentValue != previousValue && currentValue.isNotEmpty ||
-              (barCode != '' &&
-                  lotNo != '' &&
-                  quantity != '' &&
-                  statusFetchDataBarcode == '0')) {
-            chkQuantity();
-          }
-          previousValue = currentValue;
-        });
+          });
+        }
       }
     });
   }
@@ -207,13 +199,21 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             statusFetchDataBarcode = dataBarcode['po_status'];
             messageFetchDataBarcode = dataBarcode['po_message'];
             valIDFetchDataBarcode = dataBarcode['po_valid'];
-            print(
-                'statusFetchDataBarcode : $statusFetchDataBarcode Type : ${statusFetchDataBarcode.runtimeType}');
-            print(
-                'messageFetchDataBarcode : $messageFetchDataBarcode Type : ${messageFetchDataBarcode.runtimeType}');
-            print(
-                'valIDFetchDataBarcode : $valIDFetchDataBarcode Type : ${valIDFetchDataBarcode.runtimeType}');
-            if (statusFetchDataBarcode == '0') {
+
+            if (dataBarcode['po_status'] == '1' &&
+                dataBarcode['po_valid'] != 'N') {
+              showDialogAlertMessage(context, messageFetchDataBarcode);
+            } else if (dataBarcode['po_status'] == '1' &&
+                dataBarcode['po_valid'] == 'N') {
+              changeData(
+                dataBarcode['po_item_code'] ?? '',
+                dataBarcode['po_lot_number'] ?? '',
+                dataBarcode['po_quantity'] ?? '',
+                dataBarcode['po_curr_loc'] ?? '',
+                dataBarcode['po_bal_lot'] ?? '',
+                dataBarcode['po_bal_qty'] ?? '',
+              );
+            } else if (dataBarcode['po_status'] == '0') {
               itemCode = dataBarcode['po_item_code'];
               lotNo = dataBarcode['po_lot_number'];
               quantity = dataBarcode['po_quantity'];
@@ -229,24 +229,16 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
               lotQtyController.text = lotQty == '' ? '0' : lotQty;
               lotUnitController.text = lotUnit == '' ? '0' : lotUnit;
 
+              chkQuantity();
+
               print('controlLot : $controlLot');
-            } else if (statusFetchDataBarcode == '1' &&
-                valIDFetchDataBarcode == 'N') {
-              changeData(
-                dataBarcode['po_item_code'] ?? '',
-                dataBarcode['po_lot_number'] ?? '',
-                dataBarcode['po_quantity'] ?? '',
-                dataBarcode['po_curr_loc'] ?? '',
-                dataBarcode['po_bal_lot'] ?? '',
-                dataBarcode['po_bal_qty'] ?? '',
-              );
-            } else if (statusFetchDataBarcode == '1' &&
-                valIDFetchDataBarcode != 'N') {
-              if (messageFetchDataBarcode !=
-                  'ข้อมูลไม่ถูกต้อง รายการจ่ายซ้ำ !!!') {
-                showDialogAlertMessage(context, messageFetchDataBarcode);
-              }
             }
+            print(
+                'statusFetchDataBarcode : $statusFetchDataBarcode Type : ${statusFetchDataBarcode.runtimeType}');
+            print(
+                'messageFetchDataBarcode : $messageFetchDataBarcode Type : ${messageFetchDataBarcode.runtimeType}');
+            print(
+                'valIDFetchDataBarcode : $valIDFetchDataBarcode Type : ${valIDFetchDataBarcode.runtimeType}');
           });
         }
       } else {
@@ -482,7 +474,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   lotQtyController.clear();
                   lotUnitController.clear();
 
-                  FocusScope.of(context).requestFocus(_barcodeFocusNode);
+                  FocusScope.of(context).requestFocus(barcodeFocusNode);
                 });
               }
             }
@@ -569,7 +561,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             // --------------------------------------------------------------------------------------------------
             TextFormField(
               controller: barcodeController,
-              focusNode: _barcodeFocusNode,
+              focusNode: barcodeFocusNode,
               onChanged: (value) {
                 barCode = value;
                 // if (!_barcodeFocusNode.hasFocus) {
@@ -640,6 +632,9 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
               focusNode: lotNumberFocusNode,
               onChanged: (value) {
                 lotNo = value;
+                if (barCode.isNotEmpty && lotNo.isNotEmpty) {
+                  fetchData();
+                }
               },
               decoration: const InputDecoration(
                 border: InputBorder.none,
@@ -673,6 +668,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   )
                 : TextFormField(
                     controller: quantityController,
+                    focusNode: quantityFocusNode,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       filled: true,
@@ -686,8 +682,9 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       setState(
                         () {
                           quantity = value;
-
-                          if (quantity != '') {
+                          if (quantity.isNotEmpty &&
+                              barCode.isNotEmpty &&
+                              lotNo.isNotEmpty) {
                             chkQuantity();
                           }
                         },
@@ -801,7 +798,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             lotQtyController.clear();
             lotUnitController.clear();
 
-            _barcodeFocusNode.requestFocus();
+            barcodeFocusNode.requestFocus();
           },
           onConfirm: () {
             Navigator.of(context).pop();
@@ -828,7 +825,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             lotQtyController.clear();
             lotUnitController.clear();
 
-            _barcodeFocusNode.requestFocus();
+            barcodeFocusNode.requestFocus();
           },
         );
       },
@@ -917,7 +914,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                           lotQtyController.clear();
                           lotUnitController.clear();
 
-                          _barcodeFocusNode.requestFocus();
+                          barcodeFocusNode.requestFocus();
                         },
                       ),
                     ],
@@ -968,7 +965,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                         lotQtyController.clear();
                         lotUnitController.clear();
 
-                        _barcodeFocusNode.requestFocus();
+                        barcodeFocusNode.requestFocus();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -1017,7 +1014,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                           lotQtyController.clear();
                           lotUnitController.clear();
 
-                          _barcodeFocusNode.requestFocus();
+                          barcodeFocusNode.requestFocus();
                         });
                       },
                       style: ElevatedButton.styleFrom(
