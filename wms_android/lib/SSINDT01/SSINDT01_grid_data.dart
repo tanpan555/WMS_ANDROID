@@ -1207,7 +1207,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
           }
           final DateTime? picked = await showDatePicker(
             context: context,
-            initialDate: initialDate,
+            initialDate: DateTime.now(),
             firstDate: DateTime(2000),
             lastDate: DateTime(2101),
             initialEntryMode: DatePickerEntryMode.calendarOnly,
@@ -1572,21 +1572,21 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
                         if (selectedCount == 0) {
                           showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return DialogStyles.alertMessageDialog(
-                      context: context,
-                      content: Text('เลือกอย่างน้อย 1 รายการเพื่อลบ'),
-                      onClose: () {
-                        Navigator.of(context).pop();
-                      },
-                      onConfirm: () async {
-                        // await fetchPoStatusconform(vReceiveNo);
-                        Navigator.of(context).pop();
-                      },
-                    );
-                  },
-                );
+                            context: context,
+                            builder: (BuildContext context) {
+                              return DialogStyles.alertMessageDialog(
+                                context: context,
+                                content: Text('เลือกอย่างน้อย 1 รายการเพื่อลบ'),
+                                onClose: () {
+                                  Navigator.of(context).pop();
+                                },
+                                onConfirm: () async {
+                                  // await fetchPoStatusconform(vReceiveNo);
+                                  Navigator.of(context).pop();
+                                },
+                              );
+                            },
+                          );
                           return;
                         }
 
@@ -2632,7 +2632,7 @@ class _LotDialogState extends State<LotDialog> {
                               }
                               final DateTime? picked = await showDatePicker(
                                 context: context,
-                                initialDate: initialDate,
+                                initialDate: DateTime.now(),
                                 firstDate: DateTime(2000),
                                 lastDate: DateTime(2101),
                                 initialEntryMode:
@@ -3214,7 +3214,7 @@ class _LotDialogState extends State<LotDialog> {
                       }
                       final DateTime? picked = await showDatePicker(
                         context: context,
-                        initialDate: initialDate,
+                        initialDate: DateTime.now(),
                         firstDate: DateTime(2000),
                         lastDate: DateTime(2101),
                         initialEntryMode: DatePickerEntryMode.calendarOnly,
@@ -3574,9 +3574,9 @@ class _LotDialogState extends State<LotDialog> {
                       ),
                       style: const TextStyle(color: Colors.black87),
                       keyboardType: TextInputType.number,
-  inputFormatters: [
-    FilteringTextInputFormatter.digitsOnly,
-  ],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                     ),
                   ),
                   IconButton(
