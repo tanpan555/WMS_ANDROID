@@ -49,7 +49,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
   String? DateSend;
   int showRecordRRR = 0;
 
-  int pageSize = 25; // Number of records per page
+  int pageSize = 15; // Number of records per page
   int currentPage = 1; // Current page number
 
   @override
@@ -172,7 +172,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     final String statusValue = valueMapping[_selectedStatusValue] ?? '0';
     try {
       final uri = url ??
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_Card_List/$selectedwhCode/$statusValue/000/${widget.docData1}/$DateSend/${widget.documentNumber}';
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_Card_List/$selectedwhCode/$statusValue/000/${widget.docData1}/$DateSend/${widget.documentNumber}';
 
       // Reset currentPage if this is a new search (no url provided)
       if (url == null) {
@@ -407,7 +407,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
   Future<void> chk_validate() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/check_TFLOCDirect_validate/$doc_no/$doc_out/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_check_TFLOCDirect_validate/$doc_no/$doc_out/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
@@ -436,7 +436,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
   Future<void> chk_validate_inhead() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/get_INHeadXfer_WMS/$doc_no/$doc_out/${widget.pWareCode}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}/${gb.APP_USER}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_get_INHeadXfer_WMS/$doc_no/$doc_out/${widget.pWareCode}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}/${gb.APP_USER}'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);

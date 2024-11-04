@@ -133,7 +133,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
 
   Future<void> chk_validateSave() async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/validateSave_INHeadXfer_WMS/$P_OU_CODE/$ERP_OU_CODE/${widget.po_doc_no}/$APP_USER');
+        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_2_validateSave_INHeadXfer_WMS/$P_OU_CODE/$ERP_OU_CODE/${widget.po_doc_no}/$APP_USER');
 
     final headers = {
       'Content-Type': 'application/json',
@@ -186,7 +186,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   Future<void> cancelCode() async {
     try {
       final response = await http.get(
-          Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/cancel_list'));
+          Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_2_cancel_list'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -524,7 +524,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   String? pomsg;
   Future<void> cancel_from(String selectedcCode) async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/cancel_INHeadXfer_WMS');
+        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_2_cancel_INHeadXfer_WMS');
     final response = await http.put(
       url,
       headers: {
@@ -717,7 +717,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   String? selectedREF_NO;
   Future<void> fetchREF_NOLIST() async {
     final url =
-        Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_REF_NO');
+        Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_2_REF_NO');
     try {
       final response = await http.get(url);
 
@@ -749,7 +749,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   String? selectedStaff;
   Future<void> fetchStaffLIST() async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/SSFGDT17_STAFF_CODE/${gb.P_ERP_OU_CODE}');
+        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_2_STAFF_CODE/${gb.P_ERP_OU_CODE}');
     try {
       final response = await http.get(url);
 

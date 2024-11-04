@@ -75,7 +75,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
 
   Future<void> getList() async {
     final url = Uri.parse(
-        "http://172.16.0.82:8888/apex/wms/SSFGDT17/Verify_Card/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}");
+        "http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_4_Verify_Card/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}");
     print(url);
 
     try {
@@ -119,7 +119,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
 
   Future<void> fetchData() async {
     final url = Uri.parse(
-        "http://172.16.0.82:8888/apex/wms/SSFGDT17/verify_form/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}");
+        "http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_4_verify_form/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}");
 
     try {
       final http.Response response = await http.get(url);
@@ -155,7 +155,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
 
   Future<void> updateItem() async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/update_card_item_verify');
+        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_4_update_card_item_verify');
     final response = await http.put(
       url,
       headers: {
@@ -191,7 +191,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
 
   Future<void> deleteItem() async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/delete_item_verify');
+        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_4_delete_item_verify');
     print(Doc_type);
     print(doc_no);
     print(req);
@@ -233,7 +233,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
   Future<void> chk_validateSave() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/inteface_XFer2ERP/${widget.po_doc_no}/${gb.P_ERP_OU_CODE}/${gb.ATTR1}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_4_inteface_XFer2ERP/${widget.po_doc_no}/${gb.P_ERP_OU_CODE}/${gb.ATTR1}'));
       print(widget.po_doc_no);
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);

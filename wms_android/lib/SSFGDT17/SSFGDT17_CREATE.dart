@@ -48,7 +48,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> fetchwhCodes() async {
     try {
       final response = await http
-          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/WH/WHCode'));
+          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_WHCode'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -77,7 +77,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> fetchLocationCodes() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/LOACATION/$selectedwhCode'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_LOACATION/$selectedwhCode'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -105,7 +105,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> fetchwhOUTCodes() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/WH_OUT/${gb.P_ERP_OU_CODE}/${gb.ATTR1}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_WH_OUT/${gb.P_ERP_OU_CODE}/${gb.ATTR1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -133,7 +133,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> fetchLocationOutCodes() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/LOACATION/$selectedwhOUTCode'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_LOCATION_OUT/${gb.ATTR1}/${gb.P_ERP_OU_CODE}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -160,7 +160,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> fetchDocType() async {
     try {
       final url = Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/default_doc_type');
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_default_doc_type');
       final response = await http.get(url, headers: {
         'Content-Type': 'application/json',
       });
@@ -189,7 +189,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> create_NewINXfer_WMS(
       String LocCode, String whOUTCode, String LocOUTCode) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/create_NewINXfer_WMS';
+        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_create_NewINXfer_WMS';
 
     final headers = {
       'Content-Type': 'application/json',

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:math';
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Ensure you import intl for DateFormat
@@ -82,7 +81,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
 
   Future<void> fetchDocType() async {
     final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/default_doc_type'));
+        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_default_doc_type'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
