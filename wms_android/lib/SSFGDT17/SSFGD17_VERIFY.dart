@@ -1,15 +1,12 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_CREATE.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_SEARCH.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/main.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:wms_android/Global_Parameter.dart' as gb;
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:wms_android/styles.dart';
 
 class SSFGD17_VERIFY extends StatefulWidget {
@@ -444,46 +441,21 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Row(
-                                  mainAxisAlignment: MainAxisAlignment
-                                      .spaceBetween, // Space between text and button
-                                  children: [
-                                    Icon(
-                                      Icons
-                                          .notification_important, // Use the bell icon
-                                      color: Colors.red, // Set the color to red
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'การบันทึก และส่งข้อมูลเข้า ERP สมบูรณ์',
-                                      style: TextStyle(
-                                        fontSize: 8.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.close),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                content:
-                                    Text('เลขที่เอกสาร : ${widget.po_doc_no}'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      Navigator.of(context).pop();
-                                      Navigator.of(context).pop();
-                                      Navigator.of(context).pop();
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('OK'),
-                                  ),
-                                ],
+                              return DialogStyles.alertMessageDialog(
+                                context: context,
+                                content: Text(
+                                    'การบันทึก และส่งข้อมูลเข้า ERP สมบูรณ์'),
+                                onClose: () {
+                                  Navigator.of(context).pop();
+                                },
+                                onConfirm: () async {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                },
                               );
                             },
                           );

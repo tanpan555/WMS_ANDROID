@@ -5,6 +5,7 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
 import 'SSFGDT17_MAIN.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import '../loading.dart';
 
 class SSFGDT17_MENU extends StatefulWidget {
   final String pWareCode;
@@ -52,7 +53,8 @@ class _SSFGDT17_MENUState extends State<SSFGDT17_MENU> {
           final isPortrait = orientation == Orientation.portrait;
 
           return isLoading
-              ? const Center(child: CircularProgressIndicator())
+          ? Center(child: LoadingIndicator())
+              // ? const Center(child: CircularProgressIndicator())
               : errorMessage.isNotEmpty
                   ? Center(
                       child: Text(

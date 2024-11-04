@@ -185,8 +185,8 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
 
   Future<void> cancelCode() async {
     try {
-      final response = await http.get(
-          Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_2_cancel_list'));
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_2_cancel_list'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -218,108 +218,24 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // Adjust the height as needed
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'เลือกเหตุยกเลิก', // Title for the dialog
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                      ),
-                      onChanged: (query) {
-                        setState(() {});
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: cCode.length,
-                        itemBuilder: (context, index) {
-                          final item = cCode[index];
-                          final code = item['r']?.toString() ?? 'No code';
-                          final desc = item['cancel_desc']?.toString() ??
-                              'No description';
-
-                          // Filter based on search query (code or description)
-                          if (_searchController.text.isNotEmpty &&
-                              !code.toLowerCase().contains(
-                                  _searchController.text.toLowerCase()) &&
-                              !desc.toLowerCase().contains(
-                                  _searchController.text.toLowerCase())) {
-                            return SizedBox
-                                .shrink(); // Filter out non-matching items
-                          }
-
-                          return ListTile(
-                            title: SingleChildScrollView(
-                              scrollDirection: Axis
-                                  .horizontal, // Enable horizontal scrolling
-                              child: Text(
-                                '$code $desc', // Combine code and description
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 14),
-                              ),
-                            ),
-                            // subtitle: Text(desc),
-                            onTap: () {
-                              setState(() {
-                                final selectedDescription =
-                                    item['cancel_desc']?.toString() ?? '';
-                                selectedcCode = code; // Set selected code
-                                _CcodeController.text =
-                                    selectedcCode.toString() +
-                                        selectedDescription;
-                                print('$selectedcCode');
-                              });
-                              Navigator.of(context).pop(); // Close the dialog
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'เลือกเหตุยกเลิก', // Title for the dialog
+          searchController: _searchController,
+          data: cCode,
+          docString: (item) =>
+              item['r']?.toString() ?? 'No code', // Document string
+          titleText: (item) => item['r']?.toString() ?? 'No code', // Title text
+          subtitleText: (item) =>
+              item['cancel_desc']?.toString() ??
+              'No description', // Subtitle text
+          onTap: (item) {
+            final selectedDescription = item['cancel_desc']?.toString() ?? '';
+            selectedcCode = item['r']?.toString() ?? ''; // Set selected code
+            _CcodeController.text = '$selectedcCode $selectedDescription';
+            print('$selectedcCode');
+            Navigator.of(context).pop(); // Close the dialog
+          },
         );
       },
     );
@@ -329,193 +245,73 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     showDialog(
       context: parentContext,
       builder: (BuildContext context) {
-        return Dialog(
-          child: Container(
-            // width: 600.0,
-            height: 200.0,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Cancel',
-                    style:
-                        TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0), // Add horizontal padding
-                  child: GestureDetector(
-                    onTap: _showDialog,
-                    child: AbsorbPointer(
-                      child: TextField(
-                        controller: _CcodeController,
-                        decoration: InputDecoration(
-                          labelText: 'สาเหตุยกเลิก',
-                          filled: true,
-                          fillColor: Colors.white,
-                          // Add black border to TextField
-                          border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black), // Black border
+        return DialogStyles.cancelDialog(
+          context: context,
+          onCloseDialog: () {
+            Navigator.of(context).pop(); // Close the dialog
+          },
+          onConfirmDialog: () async {
+            // Perform your cancellation logic here
+            await cancel_from(selectedcCode ?? '');
+
+            if (selectedcCode == '') {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return DialogStyles.alertMessageDialog(
+                    context: context,
+                    content: Text('$pomsg'),
+                    onClose: () {
+                      Navigator.of(context).pop();
+                    },
+                    onConfirm: () async {
+                      Navigator.of(context).pop();
+                    },
+                  );
+                },
+              );
+            } else {
+              Navigator.of(context).pop(); // Close the cancel dialog
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return DialogStyles.alertMessageDialog(
+                    context: context,
+                    content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
+                    onClose: () {
+                      Navigator.of(context).pop();
+                    },
+                    onConfirm: () async {
+                      await cancel_from(selectedcCode!).then((_) {
+                        Navigator.of(context).pop(); // Close the success dialog
+                        Navigator.of(context)
+                            .pop(); // Go back to the previous screen
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SSFGDT17_MENU(
+                              pWareCode: widget.pWareCode ?? '',
+                              pWareName: widget.pWareName ?? '',
+                              p_ou_code: gb.P_ERP_OU_CODE,
+                            ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color:
-                                    Colors.black), // Black border when focused
+                        );
+                      }).catchError((error) {
+                        ScaffoldMessenger.of(parentContext).showSnackBar(
+                          SnackBar(
+                            content: Text('An error occurred: $error'),
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color:
-                                    Colors.black), // Black border when enabled
-                          ),
-                          labelStyle: TextStyle(color: Colors.black),
-                          suffixIcon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Color.fromARGB(255, 113, 113, 113),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        child: Text('Cancel'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      TextButton(
-                        child: Text('OK'),
-                        onPressed: () async {
-                          await cancel_from(selectedcCode ?? '');
-                          if (selectedcCode == '') {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Row(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceBetween, // Space between text and button
-                                    children: [
-                                      Icon(
-                                        Icons
-                                            .notification_important, // Use the bell icon
-                                        color:
-                                            Colors.red, // Set the color to red
-                                      ),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        'แจ้งเตือน',
-                                        style: TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.close),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  content: Text('$pomsg'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text('ตกลง'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          } else {
-                            Navigator.of(context).pop();
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Row(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceBetween, // Space between text and button
-                                    children: [
-                                      Icon(
-                                        Icons
-                                            .notification_important, // Use the bell icon
-                                        color:
-                                            Colors.red, // Set the color to red
-                                      ),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        'แจ้งเตือน',
-                                        style: TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.close),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text('ตกลง'),
-                                      onPressed: () {
-                                        cancel_from(selectedcCode!).then((_) {
-                                          Navigator.of(context).pop();
-                                          Navigator.of(context).pop();
-                                          Navigator.of(context).pop(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SSFGDT17_MENU(
-                                                pWareCode:
-                                                    widget.pWareCode ?? '',
-                                                pWareName:
-                                                    widget.pWareName ?? '',
-                                                p_ou_code: gb.P_ERP_OU_CODE,
-                                              ),
-                                            ),
-                                          );
-                                        }).catchError((error) {
-                                          ScaffoldMessenger.of(parentContext)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                  'An error occurred: $error'),
-                                            ),
-                                          );
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+                        );
+                      });
+                    },
+                  );
+                },
+              );
+            }
+          },
+          onTap:
+              _showDialog, // This should remain as it is if you want to handle the dropdown
+          controller:
+              _CcodeController, // Pass the controller for the TextFormField
         );
       },
     );
@@ -589,51 +385,19 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                 style: AppStyles.NextButtonStyle(),
                 onPressed: () async {
                   if (CR_DATE.text.isEmpty || isDateValid == false) {
-                    showDialog<void>(
+                    showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .spaceBetween, // Space between text and button
-                            children: [
-                              Icon(
-                                Icons
-                                    .notification_important, // Use the bell icon
-                                color: Colors.red, // Set the color to red
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'แจ้งเตือน',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.close),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          ),
-                          content: SingleChildScrollView(
-                            child: ListBody(
-                              children: <Widget>[
-                                Text(
-                                    'ต้องระบุข้อมูลที่จำเป็น * ให้ครบถ้วน !!!'),
-                              ],
-                            ),
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              child: Text('ตกลง'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
+                        return DialogStyles.alertMessageDialog(
+                          context: context,
+                          content:
+                              Text('ต้องระบุข้อมูลที่จำเป็น * ให้ครบถ้วน !!!'),
+                          onClose: () {
+                            Navigator.of(context).pop();
+                          },
+                          onConfirm: () async {
+                            Navigator.of(context).pop();
+                          },
                         );
                       },
                     );
@@ -778,128 +542,36 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   }
 
   void _showStaffDialog() {
-    final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // Adjust the height as needed
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'เลือกผู้บันทึก',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        setState(() {}); // Update the UI on search text change
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          // Filter StaffItems based on search query
-                          final filteredItems = StaffItems.where((item) {
-                            final staffCode = item['r']?.toLowerCase() ?? '';
-                            final empName =
-                                item['emp_name']?.toLowerCase() ?? '';
-                            final searchQuery =
-                                _searchController.text.toLowerCase();
-
-                            return staffCode.contains(searchQuery) ||
-                                empName.contains(searchQuery);
-                          }).toList();
-
-                          if (filteredItems.isEmpty) {
-                            return Center(
-                              child: Text(
-                                'No data found',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            );
-                          }
-
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final staffCode = item['r'];
-                              final empName = item['emp_name'] ?? '';
-
-                              return ListTile(
-                                title: Text(
-                                  staffCode,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                subtitle: Text(
-                                  empName,
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 12),
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    selectedStaff =
-                                        staffCode; // Update the selected item
-                                    STAFF_CODE.text =
-                                        empName; // Update the text controller
-                                  });
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-      },
-    ).then((_) {
-      // This code runs after the dialog is closed
-      setState(() {
-        // Force rebuild to reflect the selected staff in the dropdown or other UI element
-      });
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return DialogStyles.customLovSearchDialog(
+        context: context,
+        headerText: 'เลือกผู้บันทึก', // Title for the dialog
+        searchController: _searchController,
+        data: StaffItems,
+        docString: (item) => item['r']?.toLowerCase() ?? '', // Document string
+        titleText: (item) => item['r'] ?? 'No code', // Title text
+        subtitleText: (item) => item['emp_name'] ?? '', // Subtitle text
+        onTap: (item) {
+          final staffCode = item['r'];
+          final empName = item['emp_name'] ?? '';
+          selectedStaff = staffCode; // Update the selected staff code
+          STAFF_CODE.text = empName; // Update the text controller
+          Navigator.of(context).pop(); // Close the dialog
+        },
+      );
+    },
+  ).then((_) {
+    // This code runs after the dialog is closed
+    setState(() {
+      // Force rebuild to reflect the selected staff in the dropdown or other UI element
     });
-  }
+  });
+}
+
 
   Widget _buildDropStaffdownSearch() {
     return Padding(

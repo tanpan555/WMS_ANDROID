@@ -160,27 +160,16 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              Icon(
-                Icons.notification_important, // Use the bell icon
-                color: Colors.red, // Set the color to red
-              ),
-              SizedBox(
-                  width: 8), // Add some space between the icon and the text
-              Text('แจ้งเตือน'), // Title text
-            ],
-          ),
+        return DialogStyles.alertMessageDialog(
+          context: context,
           content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              child: Text('ตกลง'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+          onClose: () {
+            Navigator.of(context).pop();
+          },
+          onConfirm: () async {
+            // await fetchPoStatusconform(vReceiveNo);
+            Navigator.of(context).pop();
+          },
         );
       },
     );
@@ -244,21 +233,9 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
         }
       } else {
         print('Failed to load data, status code: ${response.statusCode}');
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(
-        //     content: Text('Failed to load barcode data'),
-        //     backgroundColor: Colors.red,
-        //   ),
-        // );
       }
     } catch (e) {
       print('Error: $e');
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     content: Text('Error: $e'),
-      //     backgroundColor: Colors.red,
-      //   ),
-      // );
     }
   }
 
@@ -342,51 +319,29 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
               onPressed: () {
                 // First, close the current dialog
                 Navigator.of(context).pop();
-
-                // Then show the confirmation dialog
                 showDialog<void>(
                   context: context,
                   builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Row(
-                        children: [
-                          Icon(
-                            Icons.notification_important, // Use the bell icon
-                            color: Colors.red, // Set the color to red
-                          ),
-                          SizedBox(
-                              width:
-                                  8), // Add some space between the icon and the text
-                          Text('แจ้งเตือน'), // Title text
+                    return DialogStyles.alertMessageCheckDialog(
+                      context: context,
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text('ต้องการเปลี่ยนแปลง Locator ต้นทาง หรือไม่ !!!'),
                         ],
                       ),
-                      content: SingleChildScrollView(
-                        child: ListBody(
-                          children: <Widget>[
-                            Text(
-                                'ต้องการเปลี่ยนแปลง Locator ต้นทาง หรือไม่ !!!'),
-                          ],
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: Text('ยกเลิก'),
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pop(); // Close the confirmation dialog
-                          },
-                        ),
-                        TextButton(
-                          child: Text('ตกลง'),
-                          onPressed: () {
-                            setState(() {
-                              LOCATOR_FROM.text = selectedLocCode ?? '';
-                            });
-                            Navigator.of(context)
-                                .pop(); // Close the confirmation dialog
-                          },
-                        ),
-                      ],
+                      onClose: () {
+                        Navigator.of(context)
+                            .pop(); // Close the confirmation dialog
+                      },
+                      onConfirm: () {
+                        setState(() {
+                          LOCATOR_FROM.text = selectedLocCode ??
+                              ''; // Update the text controller
+                        });
+                        Navigator.of(context)
+                            .pop(); // Close the confirmation dialog
+                      },
                     );
                   },
                 );

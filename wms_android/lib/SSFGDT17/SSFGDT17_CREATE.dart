@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import 'package:wms_android/styles.dart';
 
 class SSFGDT17_CREATE extends StatefulWidget {
   final String pWareCode;
@@ -47,8 +48,8 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
 
   Future<void> fetchwhCodes() async {
     try {
-      final response = await http
-          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_WHCode'));
+      final response = await http.get(
+          Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_WHCode'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -443,7 +444,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Text(
-                  displayText ?? 'Select Location',
+                  displayText = 'Select Location',
                   style: TextStyle(color: Colors.black),
                   overflow: TextOverflow
                       .visible, // Allow text to be visible when scrolling
@@ -472,108 +473,18 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // Adjust the height as needed
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'เลือก Location ต้นทาง',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        setState(() {}); // Trigger UI update on search
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          // Filter items based on the search query
-                          final filteredItems = items.where((item) {
-                            final locationCode =
-                                item['location_code']?.toLowerCase() ?? '';
-                            final searchQuery =
-                                _searchController.text.toLowerCase();
-                            return locationCode.contains(searchQuery);
-                          }).toList();
-
-                          if (filteredItems.isEmpty) {
-                            return Center(
-                              child: Text(
-                                'No data found', // Display this when no items match
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            );
-                          }
-
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item =
-                                  filteredItems[index] as Map<String, dynamic>;
-                              final locationCode = item['location_code'];
-                              final locationName = item['location_name'];
-
-                              return ListTile(
-                                title: Text(
-                                  locationCode,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                subtitle: Text(
-                                  locationName,
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 12),
-                                ),
-                                onTap: () {
-                                  onChanged(
-                                      item); // Call onChanged with the selected item
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'เลือก Location ต้นทาง',
+          searchController: _searchController,
+          data: items,
+          docString: (item) => item['location_code'] ?? '',
+          titleText: (item) => item['location_code'] ?? '',
+          subtitleText: (item) => item['location_name'] ?? '',
+          onTap: (item) {
+            onChanged(item); // Call onChanged with the selected item
+            Navigator.of(context).pop(); // Close the dialog
+          },
         );
       },
     );
@@ -591,103 +502,18 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // Adjust the height as needed
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'เลือกคลังปลายทาง',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'ค้นหา', // Search hint text
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        setState(() {}); // Trigger UI update on search
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          // Filter items based on the search query
-                          final filteredItems = items.where((item) {
-                            final wareName =
-                                item['ware_name']?.toLowerCase() ?? '';
-                            final searchQuery =
-                                _searchController.text.toLowerCase();
-                            return wareName.contains(searchQuery);
-                          }).toList();
-
-                          if (filteredItems.isEmpty) {
-                            return Center(
-                              child: Text(
-                                'No data found', // Display this when no items match
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            );
-                          }
-
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item =
-                                  filteredItems[index] as Map<String, dynamic>;
-                              final wareCode = item['ware_code'];
-                              final wareName = item['ware_name'];
-
-                              return ListTile(
-                                title: Text(
-                                  wareName,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                onTap: () {
-                                  onChanged(
-                                      item); // Call onChanged with the selected item
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'เลือกคลังปลายทาง',
+          searchController: _searchController,
+          data: items,
+          docString: (item) => item['ware_name'] ?? '',
+          titleText: (item) => item['ware_name'] ?? '',
+          subtitleText: (item) => item['ware_code'] ?? '',
+          onTap: (item) {
+            onChanged(item); // Call onChanged with the selected item
+            Navigator.of(context).pop(); // Close the dialog
+          },
         );
       },
     );
@@ -757,110 +583,18 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // Adjust the height as needed
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'เลือก Location ปลายทาง',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'ค้นหาตำแหน่งออก', // Search hint text
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        setState(() {}); // Trigger UI update on search
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          // Filter items based on the search query
-                          final filteredItems = items.where((item) {
-                            final locationCode =
-                                item['location_code']?.toLowerCase() ?? '';
-                            final searchQuery =
-                                _searchController.text.toLowerCase();
-                            return locationCode.contains(searchQuery);
-                          }).toList();
-
-                          if (filteredItems.isEmpty) {
-                            return Center(
-                              child: Text(
-                                'No data found', // Show message when no data is found
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            );
-                          }
-
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item =
-                                  filteredItems[index] as Map<String, dynamic>;
-                              final locationCode = item['location_code'];
-                              final locationName = item['location_name'];
-
-                              return ListTile(
-                                title: Text(
-                                  locationCode,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                subtitle: Text(
-                                  locationName ?? '',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                onTap: () {
-                                  onChanged(
-                                      item); // Call onChanged with the selected item
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'เลือก Location ปลายทาง',
+          searchController: _searchController,
+          data: items,
+          docString: (item) => item['location_code'] ?? '',
+          titleText: (item) => item['location_code'] ?? '',
+          subtitleText: (item) => item['location_name'] ?? '',
+          onTap: (item) {
+            onChanged(item); // Call onChanged with the selected item
+            Navigator.of(context).pop(); // Close the dialog
+          },
         );
       },
     );
@@ -901,7 +635,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Text(
-                  displayText ?? 'เลือก Location ปลายทาง',
+                  displayText = 'เลือก Location ปลายทาง',
                   style: TextStyle(color: Colors.black),
                   overflow: TextOverflow.visible,
                 ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wms_android/SSFGDT17/SSFGD17T_WARE.dart';
+import 'package:wms_android/SSFGDT17/SSFGDT17_WARE.dart';
 import 'package:wms_android/SSFGRP08/SSFGRP08.dart';
 import 'custom_appbar.dart';
 import 'package:http/http.dart' as http;

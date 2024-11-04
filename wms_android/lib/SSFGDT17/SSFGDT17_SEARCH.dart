@@ -288,6 +288,10 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                       numbersOnly = numbersOnly.substring(0, 8);
                     }
 
+                    // Track the current cursor position
+                    final oldCursorPosition =
+                        _dateController.selection.baseOffset;
+
                     // Format the value with slashes
                     String formattedValue = '';
                     for (int i = 0; i < numbersOnly.length; i++) {
@@ -297,12 +301,22 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                       formattedValue += numbersOnly[i];
                     }
 
-                    // Update the controller
+                    // Calculate new cursor position
+                    int newCursorPosition = oldCursorPosition;
+                    if (oldCursorPosition <= formattedValue.length) {
+                      // Adjust the cursor position based on slashes added
+                      if (oldCursorPosition > 2 && oldCursorPosition <= 4) {
+                        newCursorPosition++;
+                      } else if (oldCursorPosition > 4) {
+                        newCursorPosition += 2;
+                      }
+                    }
+
+                    // Update the controller with new text and adjusted cursor position
                     _dateController.value = TextEditingValue(
                       text: formattedValue,
-                      selection: TextSelection.collapsed(
-                          offset:
-                              formattedValue.length), // Set cursor to the end
+                      selection:
+                          TextSelection.collapsed(offset: newCursorPosition),
                     );
 
                     // Validate the date

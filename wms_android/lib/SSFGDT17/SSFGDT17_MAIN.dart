@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:wms_android/styles.dart';
+import '../loading.dart';
 
 class SSFGDT17_MAIN extends StatefulWidget {
   final String pWareCode;
@@ -169,6 +170,14 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
   String errorMessage = '';
 
   Future<void> data_card_list([String? url]) async {
+    if (!mounted) return;
+
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
+
     final String statusValue = valueMapping[_selectedStatusValue] ?? '0';
     try {
       final uri = url ??
@@ -195,7 +204,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
             List<dynamic> links = parsedResponse['links'] ?? [];
             nextLink = getLink(links, 'next');
             prevLink = getLink(links, 'prev');
-            isLoading = false;
+            isLoading = false; // Hide loading indicator after data is loaded
           });
         }
       } else {
@@ -204,7 +213,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          isLoading = false;
+          isLoading = false; // Hide loading indicator on error
           errorMessage = e.toString();
         });
       }
@@ -310,34 +319,15 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Row(
-                          children: [
-                            Icon(
-                              Icons.notification_important, // Use the bell icon
-                              color: Colors.red, // Set the color to red
-                            ),
-                            SizedBox(
-                                width:
-                                    8), // Add some space between the icon and the text
-                            Text('แจ้งเตือน'), // Title text
-                          ],
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('${poMessage ?? 'No message available'}'),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            child: Text('OK'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
+                      return DialogStyles.alertMessageDialog(
+                        context: context,
+                        content: Text('${poMessage ?? 'No message available'}'),
+                        onClose: () {
+                          Navigator.of(context).pop();
+                        },
+                        onConfirm: () async {
+                          Navigator.of(context).pop();
+                        },
                       );
                     },
                   );
@@ -471,7 +461,8 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
                 if (isPortrait) const SizedBox(height: 4),
                 Expanded(
                   child: isLoading
-                      ? const Center(child: CircularProgressIndicator())
+                      ? Center(child: LoadingIndicator())
+                      // ? const Center(child: CircularProgressIndicator())
                       : errorMessage.isNotEmpty
                           ? Center(
                               child: Text(
