@@ -5,6 +5,7 @@ import 'package:wms_android/bottombar.dart';
 import 'dart:convert';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import 'package:wms_android/loading.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:async/async.dart';
 import 'package:wms_android/styles.dart';
@@ -517,7 +518,7 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
                 if (isPortrait) const SizedBox(height: 4),
                 Expanded(
                   child: isLoading
-                      ? const Center(child: CircularProgressIndicator())
+                      ? Center(child: LoadingIndicator())
                       : errorMessage.isNotEmpty
                           ? Center(
                               child: Text(

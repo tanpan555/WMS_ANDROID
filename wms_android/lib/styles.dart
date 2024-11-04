@@ -418,7 +418,7 @@ class DialogStyles {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.close), // ใช้ไอคอน `close` แบบปกติ
+            icon: const Icon(MyIcons.close),
             onPressed: onCloseDialog,
           ),
         ],
@@ -613,6 +613,98 @@ class DialogStyles {
 
 // ----------------------------------------------------------------------
 
+  static Dialog customSelectLovDialog({
+    required BuildContext context,
+    required String? headerText,
+    required List<dynamic> data,
+    required String Function(Map<String, dynamic> item) displayItem,
+    required void Function(Map<String, dynamic> item) onTap,
+  }) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: StatefulBuilder(
+        builder: (context, setState) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            height: 300,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.grey,
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        headerText.toString(),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(MyIcons.close),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          var item = data[index];
+                          return ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 8.0),
+                                child: Text(
+                                  displayItem(item),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              onTap: () => onTap(item));
+                        },
+                      ),
+                    ],
+                  ),
+                )
+
+                // ช่องค้นหา
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   static Dialog customLovSearchDialog({
     required BuildContext context,
     required String? headerText,
@@ -647,7 +739,7 @@ class DialogStyles {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(MyIcons.close),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -757,7 +849,7 @@ class DialogStyles {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(MyIcons.close),
                       onPressed: () {
                         Navigator.of(context).pop();
                         searchController.clear();

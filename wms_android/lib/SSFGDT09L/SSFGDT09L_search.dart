@@ -8,7 +8,6 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:wms_android/checkDataFormate.dart';
 import 'SSFGDT09L_card.dart';
-// import 'TEST_SELECT_TIME.dart';
 
 class Ssfgdt09lSearch extends StatefulWidget {
   final String pWareCode;

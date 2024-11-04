@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/services.dart'; // Importing for input formatters
+import 'package:flutter/services.dart';
 import 'package:wms_android/styles.dart';
+import 'package:wms_android/checkDataFormate.dart';
+import 'package:wms_android/loading.dart';
 import '../custom_appbar.dart';
 import '../bottombar.dart';
-import 'SSFGDT31_CARD.dart'; // Import the SSFGDT31_CARD file
+import 'SSFGDT31_CARD.dart';
 
 class SSFGDT31_SEARCH_DOC extends StatefulWidget {
   final String pWareCode;
@@ -20,158 +21,90 @@ class SSFGDT31_SEARCH_DOC extends StatefulWidget {
 }
 
 class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
-  DateTime? _selectedDate;
-  final List<String> statusItems = [
-    'ทั้งหมด',
-    'ระหว่างบันทึก',
-    'ปกติ',
-    'ยืนยันการตรวจรับ',
-    'อ้างอิงแล้ว',
-    'ยกเลิก',
-    'รับเข้าคลัง',
+  String selectedItem = 'ระหว่างบันทึก'; // display status
+  String statusDESC = 'ระหว่างบันทึก'; // return status
+  String selectedDate = ''; // diaplay date
+  String pSoNo = ''; // diaplay sono
+  bool isLoading = false;
+  List<dynamic> dropdownItems = [
+    {
+      'd': 'ทั้งหมด',
+      'r': 'ทั้งหมด',
+    },
+    {
+      'd': 'ระหว่างบันทึก',
+      'r': 'ระหว่างบันทึก',
+    },
+    {
+      'd': 'ปกติ',
+      'r': 'ปกติ',
+    },
+    {
+      'd': 'ยืนยันการตรวจรับ',
+      'r': 'ยืนยันการตรวจรับ',
+    },
+    {
+      'd': 'อ้างอิงแล้ว',
+      'r': 'อ้างอิงแล้ว',
+    },
+    {
+      'd': 'ยกเลิก',
+      'r': 'ยกเลิก',
+    },
+    {
+      'd': 'รับเข้าคลัง',
+      'r': 'รับเข้าคลัง',
+    },
   ];
 
-  String? selectedValue;
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController searchController = TextEditingController();
-  final TextEditingController _selectedStatusController =
-      TextEditingController();
-  bool isDateValid = true;
+  final TextEditingController dateController = TextEditingController();
+  final TextEditingController pSoNoController = TextEditingController();
+  final TextEditingController dataLovStatusController = TextEditingController();
+  final dateInputFormatter = DateInputFormatter();
+  bool isDateInvalid = false;
 
   @override
   void initState() {
+    setData;
     super.initState();
-    print(widget.pWareCode);
-    selectedValue = 'ระหว่างบันทึก';
-    _selectedStatusController.text = selectedValue!;
-    _dateController.text = _selectedDate == null
-        ? ''
-        : DateFormat('dd/MM/yyyy').format(_selectedDate!);
   }
 
   @override
   void dispose() {
-    _dateController.dispose();
-    _selectedStatusController.dispose();
-    searchController.dispose();
+    dateController.dispose();
+    dataLovStatusController.dispose();
+    pSoNoController.dispose();
     super.dispose();
   }
 
-  void _showStatusDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Container(
-            height: 300,
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Title and Close Button with bottom line
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Colors.grey, // Color of the line
-                        width: 1.0, // Thickness of the line
-                      ),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'เลือกประเภทรายการ',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.close),
-                        onPressed: () {
-                          Navigator.of(context).pop(); // Close the dialog
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 16),
-
-                // ListView with items having a black frame
-                Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: statusItems.length,
-                    itemBuilder: (context, index) {
-                      final item = statusItems[index];
-
-                      return Container(
-                        height: 52,
-                        margin: const EdgeInsets.only(bottom: 8),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Colors.black,
-                              width: 1.0), // Black border around each item
-                          borderRadius: BorderRadius.circular(
-                              16.0), // Rounded corners for each item (optional)
-                        ),
-                        child: ListTile(
-                          title: Text(item, style: TextStyle(fontSize: 14)),
-                          onTap: () {
-                            setState(() {
-                              selectedValue = item;
-                              _selectedStatusController.text = item;
-                            });
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+  void setData() {
+    isLoading = true;
+    if (mounted) {
+      setState(() {
+        dataLovStatusController.text = 'ระหว่างบันทึก';
+        isLoading = false;
+      });
+    }
   }
 
-  void _validateDate(String value) {
-    if (value.isNotEmpty) {
-      final parts = value.split('/');
-      if (parts.length == 3) {
-        final day = int.tryParse(parts[0]);
-        final month = int.tryParse(parts[1]);
-        final year = int.tryParse(parts[2]);
+  Future<void> _selectDate(
+      BuildContext context, String? initialDateString) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+    );
 
-        if (day != null && month != null && year != null) {
-          final date = DateTime(year, month, day);
-          setState(() {
-            _selectedDate = date;
-            isDateValid = true; // Set date valid if parsing is successful
-          });
-        } else {
-          setState(() {
-            isDateValid = false; // Set date invalid if parsing fails
-          });
-        }
-      } else {
+    if (pickedDate != null) {
+      String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
+      if (mounted) {
         setState(() {
-          isDateValid = false; // Set date invalid if format is incorrect
+          dateController.text = formattedDate;
+          selectedDate = dateController.text;
         });
       }
-    } else {
-      setState(() {
-        isDateValid = true; // Allow empty input as valid
-      });
     }
   }
 
@@ -180,218 +113,179 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
     return Scaffold(
       appBar:
           CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(10),
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: _showStatusDialog,
-                  child: AbsorbPointer(
-                    child: TextField(
-                      controller: _selectedStatusController,
-                      decoration: InputDecoration(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: isLoading
+            ? Center(child: LoadingIndicator())
+            : SingleChildScrollView(
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: dataLovStatusController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchStartGroup(),
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
                         filled: true,
                         fillColor: Colors.white,
                         labelText: 'ประเภทรายการ',
-                        labelStyle:
-                            TextStyle(fontSize: 16, color: Colors.black),
-                        suffixIcon: Icon(Icons.arrow_drop_down,
-                            color: Color.fromARGB(255, 113, 113, 113)),
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
                       ),
-                      style: TextStyle(color: Colors.black),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // New TextField for search
-                TextField(
-                  controller: searchController,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelText: 'เลขที่เอกสาร', // Label for the search field
-                    labelStyle: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                  style: TextStyle(color: Colors.black),
-                ),
-
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _dateController,
-                  readOnly: false,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    labelText: 'วันที่รับคืน',
-                    labelStyle: TextStyle(
-                      color: isDateValid == false ? Colors.red : Colors.black,
-                    ),
-                    hintText: 'DD/MM/YYYY',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    filled: true,
-                    fillColor: Colors.white,
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.calendar_today_outlined,
-                          color: Colors.black),
-                      onPressed: () async {
-                        DateTime? selectedDate = await showDatePicker(
-                          context: context,
-                          initialEntryMode: DatePickerEntryMode.calendarOnly,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2101),
-                        );
-                        if (selectedDate != null) {
-                          setState(() {
-                            _selectedDate = selectedDate;
-                            _dateController.text =
-                                DateFormat('dd/MM/yyyy').format(selectedDate);
-                            isDateValid = true;
-                          });
-                        }
+                    //////////////////////////////////////////////////////////////
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: pSoNoController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'เลขที่เอกสาร',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                        ),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          pSoNo = value;
+                        });
                       },
                     ),
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    // Remove all slashes for processing
-                    String numbersOnly = value.replaceAll('/', '');
-
-                    // Limit the length of the input to 8 digits
-                    if (numbersOnly.length > 8) {
-                      numbersOnly = numbersOnly.substring(0, 8);
-                    }
-
-                    // Format the value with slashes
-                    String formattedValue = '';
-                    for (int i = 0; i < numbersOnly.length; i++) {
-                      if (i == 2 || i == 4) {
-                        formattedValue += '/'; // Add slashes after DD and MM
-                      }
-                      formattedValue += numbersOnly[i];
-                    }
-
-                    // Update the controller
-                    _dateController.value = TextEditingValue(
-                      text: formattedValue,
-                      selection: TextSelection.collapsed(
-                          offset:
-                              formattedValue.length), // Set cursor to the end
-                    );
-
-                    // Validate the date
-                    if (numbersOnly.length == 8) {
-                      try {
-                        final day = int.parse(numbersOnly.substring(0, 2));
-                        final month = int.parse(numbersOnly.substring(2, 4));
-                        final year = int.parse(numbersOnly.substring(4, 8));
-
-                        final date = DateTime(year, month, day);
-
-                        // Check if the day, month, and year are valid
-                        if (date.day == day &&
-                            date.month == month &&
-                            date.year == year) {
-                          setState(() {
-                            isDateValid = true; // Valid date
-                            _selectedDate = date; // Update selected date
-                          });
-                        } else {
-                          throw Exception('Invalid date');
-                        }
-                      } catch (e) {
+                    //////////////////////////////////////////////////////////////
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: dateController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(8),
+                        dateInputFormatter,
+                      ],
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'วันที่รับคืน',
+                        hintText: 'DD/MM/YYYY',
+                        hintStyle: const TextStyle(color: Colors.grey),
+                        labelStyle: isDateInvalid
+                            ? const TextStyle(color: Colors.red)
+                            : const TextStyle(color: Colors.black87),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.calendar_today),
+                          onPressed: () {
+                            _selectDate(context, selectedDate);
+                          },
+                        ),
+                      ),
+                      onChanged: (value) {
                         setState(() {
-                          isDateValid = false; // Invalid date
+                          selectedDate = value;
+                          isDateInvalid =
+                              dateInputFormatter.noDateNotifier.value;
                         });
-                      }
-                    } else {
-                      setState(() {
-                        isDateValid =
-                            false; // Invalid length (not 8 digits yet)
-                      });
-                    }
-                  },
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(8),
-                  ],
-                ),
-                isDateValid == false
-                    ? const Padding(
+                        print('isDateInvalid : $isDateInvalid');
+                      },
+                    ),
+                    if (isDateInvalid == true)
+                      const Padding(
                         padding: EdgeInsets.only(top: 4.0),
                         child: Text(
                           'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
                           style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 11),
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
                         ),
-                      )
-                    : const SizedBox.shrink(),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _selectedDate = null;
-                          _dateController.clear();
-                          searchController.clear();
-                          selectedValue = 'ทั้งหมด';
-                          isDateValid = true;
-                        });
-                      },
-                      child: Image.asset('assets/images/eraser_red.png',
-                          width: 50, height: 25),
-                      style: AppStyles.EraserButtonStyle(),
-                    ),
-                    const SizedBox(width: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (isDateValid == false) {
-                          // Handle invalid date case
-                        } else {
-                          final documentNumber = searchController.text.isEmpty
-                              ? 'null'
-                              : searchController.text;
-                          final selectedDate = _selectedDate == null
-                              ? 'null'
-                              : DateFormat('dd/MM/yyyy').format(_selectedDate!);
-
-                          // Push to SSFGDT31_CARD with the selected values
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SSFGDT31_CARD(
-                                soNo: documentNumber,
-                                statusDesc: selectedValue ?? 'ทั้งหมด',
-                                wareCode: widget.pWareCode,
-                                receiveDate: selectedDate,
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                      child: Image.asset('assets/images/search_color.png',
-                          width: 50, height: 25),
-                      style: AppStyles.SearchButtonStyle(),
+                      ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedDate = '';
+                              dateController.clear();
+                              pSoNoController.clear();
+                              selectedItem = 'ทั้งหมด';
+                              statusDESC = 'ทั้งหมด';
+                              dataLovStatusController.text = 'ทั้งหมด';
+                            });
+                          },
+                          child: Image.asset('assets/images/eraser_red.png',
+                              width: 50, height: 25),
+                          style: AppStyles.EraserButtonStyle(),
+                        ),
+                        const SizedBox(width: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            if (isDateInvalid == false) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SSFGDT31_CARD(
+                                    soNo: pSoNo.isNotEmpty ? pSoNo : 'null',
+                                    statusDesc: statusDESC,
+                                    wareCode: widget.pWareCode,
+                                    receiveDate: selectedDate.isNotEmpty
+                                        ? selectedDate
+                                        : 'null',
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          child: Image.asset('assets/images/search_color.png',
+                              width: 50, height: 25),
+                          style: AppStyles.SearchButtonStyle(),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-        ),
+              ),
       ),
-      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
+      bottomNavigationBar: BottomBar(
+        currentPage: 'not_show',
+      ),
+    );
+  }
+
+  void showDialogDropdownSearchStartGroup() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return DialogStyles.customSelectLovDialog(
+          context: context,
+          headerText: 'เลือกประเภทรายการ',
+          data: dropdownItems,
+          displayItem: (item) => '${item['d'] ?? ''}',
+          onTap: (item) {
+            Navigator.of(context).pop();
+            setState(() {
+              selectedItem = item['d'];
+              statusDESC = item['r'];
+              dataLovStatusController.text = selectedItem;
+              // -----------------------------------------
+              print(
+                  'dataLovStatusController New: $dataLovStatusController Type : ${dataLovStatusController.runtimeType}');
+              print(
+                  'selectedItem New: $selectedItem Type : ${selectedItem.runtimeType}');
+              print(
+                  'statusDESC New: $statusDESC Type : ${statusDESC.runtimeType}');
+            });
+          },
+        );
+      },
     );
   }
 }
