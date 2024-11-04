@@ -35,7 +35,7 @@ class _SSFGDT17_WAREState extends State<SSFGDT17_WARE> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/whcode/${gb.ATTR1}/${gb.P_ERP_OU_CODE}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_whcode/${gb.ATTR1}/${gb.P_ERP_OU_CODE}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
