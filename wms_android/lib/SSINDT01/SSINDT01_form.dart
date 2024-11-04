@@ -624,7 +624,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(23, 21, 59, 1),
+      // backgroundColor: Color.fromRGBO(23, 21, 59, 1),
       appBar: CustomAppBar(
           title: 'รับจากการสั่งซื้อ', showExitWarning: checkUpdateData),
       body: Padding(

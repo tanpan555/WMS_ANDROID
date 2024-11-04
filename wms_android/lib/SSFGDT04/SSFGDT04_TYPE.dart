@@ -234,7 +234,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+      // backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),
         child: Form(

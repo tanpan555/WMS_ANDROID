@@ -61,7 +61,7 @@ class _SSFGDT01_WAREState extends State<SSFGDT01_WARE> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ', showExitWarning: false),
-      backgroundColor: Color(0xFF17153B),
+      // backgroundColor: Color(0xFF17153B),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: isLoading

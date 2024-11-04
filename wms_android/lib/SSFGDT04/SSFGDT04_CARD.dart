@@ -544,7 +544,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     bool hasNextPage = (currentPage + 1) * itemsPerPage < totalCards;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
+      // backgroundColor: const Color(0xFF17153B),
       appBar:
           CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       body: Padding(

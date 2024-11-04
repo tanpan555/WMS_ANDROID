@@ -458,7 +458,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
+      // backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'Move Locator', showExitWarning: false),
       body: OrientationBuilder(
         builder: (context, orientation) {

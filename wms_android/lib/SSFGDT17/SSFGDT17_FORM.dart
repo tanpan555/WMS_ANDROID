@@ -565,7 +565,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
+      // backgroundColor: const Color(0xFF17153B),
       appBar:
           CustomAppBar(title: 'Move Locator', showExitWarning: checkUpdateData),
       body: Column(

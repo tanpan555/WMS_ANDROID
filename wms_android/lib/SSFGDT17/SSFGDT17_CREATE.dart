@@ -241,7 +241,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
+      // backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'Move Locator', showExitWarning: false),
       body: Center(
         child: Column(

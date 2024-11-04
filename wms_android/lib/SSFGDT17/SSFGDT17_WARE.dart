@@ -65,7 +65,7 @@ class _SSFGDT17_WAREState extends State<SSFGDT17_WARE> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'Move Locator', showExitWarning: false),
-      backgroundColor: Color(0xFF17153B),
+      // backgroundColor: Color(0xFF17153B),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: isLoading

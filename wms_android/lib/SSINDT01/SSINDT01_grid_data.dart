@@ -3501,7 +3501,7 @@ class _LotDialogState extends State<LotDialog> {
     bool hasPrevPage = currentPage > 1;
 
     return Scaffold(
-      backgroundColor: Color(0xFF17153B),
+      // backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(title: 'LOT Details', showExitWarning: true),
       body: Padding(
         padding: const EdgeInsets.all(10.0),

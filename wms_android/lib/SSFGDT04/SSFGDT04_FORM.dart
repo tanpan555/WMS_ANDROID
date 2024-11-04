@@ -522,7 +522,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
         // showExitWarning: true,
         showExitWarning: checkUpdateData,
       ),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+      // backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: fromItems.isEmpty
           ? Center(child: CircularProgressIndicator())
           : Padding(

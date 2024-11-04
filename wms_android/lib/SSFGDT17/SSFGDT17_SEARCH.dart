@@ -195,7 +195,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'Move Locator', showExitWarning: false),
-      backgroundColor: const Color(0xFF17153B),
+      // backgroundColor: const Color(0xFF17153B),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),
         child: Form(

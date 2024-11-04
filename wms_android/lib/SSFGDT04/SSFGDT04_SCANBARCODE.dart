@@ -318,7 +318,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
     return Scaffold(
       appBar:
           CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+      // backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       // endDrawer:CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

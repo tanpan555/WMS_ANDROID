@@ -50,6 +50,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   bool chkDate = false;
   bool isLoading = false;
   int _cursorPosition = 0;
+  String? initialFormattedDate;
 
   @override
   void initState() {
@@ -104,7 +105,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   //   }
   // }
 
-  Future<void> _selectDate(
+   Future<void> _selectDate(
       BuildContext context, String? initialDateString) async {
     DateTime? initialDate;
 
@@ -252,7 +253,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+      // backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       appBar:
           CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       body: SingleChildScrollView(
@@ -298,94 +299,98 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     });
                   },
                 ),
+
                 const SizedBox(height: 8),
                 TextFormField(
-                  controller: _dateController,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
-                    LengthLimitingTextInputFormatter(
-                        8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
-                    DateInputFormatter(), // กำหนดรูปแบบ __/__/____
-                  ],
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelText: 'วันที่ส่งสินค้า',
-                    hintText: 'DD/MM/YYYY',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    labelStyle: chkDate == false && noDate == false
-                        ? const TextStyle(
-                            color: Colors.black87,
-                          )
-                        : const TextStyle(
-                            color: Colors.red,
-                          ),
-                    suffixIcon: IconButton(
-                      icon: const Icon(
-                          Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
-                      onPressed: () async {
-                        // กดไอคอนเพื่อเปิด date picker
-                        _selectDate(context, selectedDate);
+                      controller: _dateController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter
+                            .digitsOnly, // ยอมรับเฉพาะตัวเลข
+                        LengthLimitingTextInputFormatter(
+                            8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
+                        DateInputFormatter(), // กำหนดรูปแบบ __/__/____
+                      ],
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'วันที่ส่งสินค้า',
+                        hintText: 'DD/MM/YYYY',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        labelStyle: chkDate == false && noDate == false
+                            ? const TextStyle(
+                                color: Colors.black87,
+                              )
+                            : const TextStyle(
+                                color: Colors.red,
+                              ),
+                        suffixIcon: IconButton(
+                          icon: const Icon(
+                              Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
+                          onPressed: () async {
+                            // กดไอคอนเพื่อเปิด date picker
+                            _selectDate(context, selectedDate);
+                          },
+                        ),
+                      ),
+                      onChanged: (value) {
+                        selectedDate = value;
+                        print('selectedDate : $selectedDate');
+                        setState(() {
+                          _cursorPosition = _dateController.selection.baseOffset;
+                          _dateController.value = _dateController.value.copyWith(
+                            text: value,
+                            selection: TextSelection.fromPosition(
+                              TextPosition(offset: _cursorPosition),
+                            ),
+                          );
+                        });
+
+                        setState(() {
+                          // สร้าง instance ของ DateInputFormatter
+                          DateInputFormatter formatter = DateInputFormatter();
+
+                          // ตรวจสอบการเปลี่ยนแปลงของข้อความ
+                          TextEditingValue oldValue =
+                              TextEditingValue(text: _dateController.text);
+                          TextEditingValue newValue =
+                              TextEditingValue(text: value);
+
+                          // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
+                          formatter.formatEditUpdate(oldValue, newValue);
+
+                          // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
+                          dateColorCheck = formatter.dateColorCheck;
+                          monthColorCheck = formatter.monthColorCheck;
+                          noDate = formatter.noDate; // เพิ่มการตรวจสอบ noDate
+                        });
+                        setState(() {
+                          RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                          // String messageAlertValueDate =
+                          //     'กรุณากรองวันที่ให้ถูกต้อง';
+                          if (!dateRegExp.hasMatch(selectedDate)) {
+                          } else {
+                            setState(() {
+                              chkDate = false;
+                            });
+                          }
+                        });
                       },
                     ),
-                  ),
-                  onChanged: (value) {
-                    selectedDate = value;
-                    print('selectedDate : $selectedDate');
-                    setState(() {
-                      _cursorPosition = _dateController.selection.baseOffset;
-                      _dateController.value = _dateController.value.copyWith(
-                        text: value,
-                        selection: TextSelection.fromPosition(
-                          TextPosition(offset: _cursorPosition),
-                        ),
-                      );
-                    });
+                    chkDate == true || noDate == true
+                        ? const Padding(
+                            padding: EdgeInsets.only(top: 4.0),
+                            child: Text(
+                              'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                              ),
+                            ))
+                        : const SizedBox.shrink(),
 
-                    setState(() {
-                      // สร้าง instance ของ DateInputFormatter
-                      DateInputFormatter formatter = DateInputFormatter();
-
-                      // ตรวจสอบการเปลี่ยนแปลงของข้อความ
-                      TextEditingValue oldValue =
-                          TextEditingValue(text: _dateController.text);
-                      TextEditingValue newValue = TextEditingValue(text: value);
-
-                      // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
-                      formatter.formatEditUpdate(oldValue, newValue);
-
-                      // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
-                      dateColorCheck = formatter.dateColorCheck;
-                      monthColorCheck = formatter.monthColorCheck;
-                      noDate = formatter.noDate; // เพิ่มการตรวจสอบ noDate
-                    });
-                    setState(() {
-                      RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                      // String messageAlertValueDate =
-                      //     'กรุณากรองวันที่ให้ถูกต้อง';
-                      if (!dateRegExp.hasMatch(selectedDate)) {
-                      } else {
-                        setState(() {
-                          chkDate = false;
-                        });
-                      }
-                    });
-                  },
-                ),
-                chkDate == true || noDate == true
-                    ? const Padding(
-                        padding: EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12, // ปรับขนาดตัวอักษรตามที่ต้องการ
-                          ),
-                        ))
-                    : const SizedBox.shrink(),
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

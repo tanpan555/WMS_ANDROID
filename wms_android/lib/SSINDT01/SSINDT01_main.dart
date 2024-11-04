@@ -570,7 +570,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
+      // backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ', showExitWarning: false),
       body: OrientationBuilder(
         builder: (context, orientation) {
