@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'ICON.dart';
 
+class AppColors {
+  static const primaryColor = Color(0xFF17153B);
+}
+
 class CustomContainerStyles {
   static Container styledContainer(String? itemValue,
       {double padding = 5.0, required Widget child}) {
@@ -243,8 +247,10 @@ class ButtonStyles {
     ],
   );
 
+  // --------------------------------------------------------------------------------------------------------------- disable
+
   static final ButtonStyle disableNextButtonStyle = ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFF17153B),
+    backgroundColor: Colors.transparent,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10),
     ),
@@ -259,7 +265,7 @@ class ButtonStyles {
         Text(
           'Next',
           style: TextStyle(
-            color: const Color(0xFF17153B),
+            color: AppColors.primaryColor,
             fontWeight: FontWeight.bold,
             fontSize: 13,
           ),
@@ -267,7 +273,7 @@ class ButtonStyles {
         SizedBox(width: 7),
         Icon(
           MyIcons.arrow_forward_ios_rounded,
-          color: const Color(0xFF17153B),
+          color: AppColors.primaryColor,
           size: 20.0,
         ),
       ],
@@ -276,7 +282,7 @@ class ButtonStyles {
 
   static final ButtonStyle disablePreviousButtonStyle =
       ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFF17153B),
+    backgroundColor: Colors.transparent,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10),
     ),
@@ -289,14 +295,14 @@ class ButtonStyles {
     children: [
       Icon(
         MyIcons.arrow_back_ios_rounded,
-        color: const Color(0xFF17153B),
+        color: AppColors.primaryColor,
         size: 20.0,
       ),
       const SizedBox(width: 7),
-      const Text(
+      Text(
         'Previous',
         style: TextStyle(
-          color: const Color(0xFF17153B),
+          color: AppColors.primaryColor,
           fontWeight: FontWeight.bold,
           fontSize: 13,
         ),
@@ -330,6 +336,69 @@ class ButtonStyles {
       height: 30, // ความสูงไอคอน
     );
   }
+}
+
+class DisableButtonStyles {
+  static final ButtonStyle disableNextButtonStyle = ElevatedButton.styleFrom(
+    backgroundColor: Colors.transparent,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    minimumSize: const Size(90, 35),
+    padding: const EdgeInsets.all(0),
+  );
+
+  static Widget disableNextButtonContent() {
+    return const Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'Next',
+          style: TextStyle(
+            color: AppColors.primaryColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+          ),
+        ),
+        SizedBox(width: 7),
+        Icon(
+          MyIcons.arrow_forward_ios_rounded,
+          color: AppColors.primaryColor,
+          size: 20.0,
+        ),
+      ],
+    );
+  }
+
+  static final ButtonStyle disablePreviousButtonStyle =
+      ElevatedButton.styleFrom(
+    backgroundColor: Colors.transparent,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    minimumSize: const Size(90, 35),
+    padding: const EdgeInsets.all(0),
+  );
+
+  static final Widget disablePreviousButtonContent = Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(
+        MyIcons.arrow_back_ios_rounded,
+        color: AppColors.primaryColor,
+        size: 20.0,
+      ),
+      const SizedBox(width: 7),
+      Text(
+        'Previous',
+        style: TextStyle(
+          color: AppColors.primaryColor,
+          fontWeight: FontWeight.bold,
+          fontSize: 13,
+        ),
+      ),
+    ],
+  );
 }
 
 // ----------------------------------------------------------------------------------- DialogStyles

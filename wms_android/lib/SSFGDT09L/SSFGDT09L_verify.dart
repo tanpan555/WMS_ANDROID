@@ -112,6 +112,12 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
   void initState() {
     super.initState();
     fetchData();
+    print('docDate : ${widget.docType}');
+    print('docDate : ${widget.docDate}');
+    print('docDate : ${widget.docNo}');
+    print('docDate : $flag');
+    print('docDate : ${widget.pWareCode}');
+    print('docDate : ${globals.APP_SESSION}');
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -287,9 +293,12 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
   }
 
   Future<void> getPDF(String poErpDocNo, String poTypeComplete) async {
+    String date1 = widget.docDate;
+    String date2 = date1.replaceAll('/', '-');
+
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_GET_PDF/${widget.docType}/${widget.docDate}/$poErpDocNo/$flag/${widget.pWareCode}/${globals.APP_SESSION}/${globals.APP_USER}/${globals.P_DS_PDF}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_GET_PDF/${widget.docType}/$date2/$poErpDocNo/$flag/${widget.pWareCode}/${globals.APP_SESSION}/${globals.APP_USER}/${globals.P_DS_PDF}'));
 
       print('Response body: ${response.body}'); // แสดงข้อมูลที่ได้รับจาก API
 
@@ -335,7 +344,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
             LB_UMS = dataPDF['LB_UMS'] ?? '';
             LB_MO_NO = dataPDF['LB_MO_NO'] ?? '';
             LB_TRAN_Qty = dataPDF['LB_TRAN_Qty'] ?? '';
-            // LB_ATTRIBUTE1 = dataPDF['LB_ATTRIBUTE1'] ?? '';
+            LB_ATTRIBUTE1 = dataPDF['LB_ATTRIBUTE1'] ?? '';
 
             LT_NOTE = dataPDF['LT_NOTE'] ?? '';
             LT_TOTAL_QTY = dataPDF['LT_TOTAL_QTY'] ?? '';
@@ -346,7 +355,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
             LT_BILL = dataPDF['LT_BILL'] ?? '';
             LT_CHECK = dataPDF['LT_CHECK'] ?? '';
 
-            _launchUrl(poErpDocNo);
+            // _launchUrl(poErpDocNo);
           });
         }
       } else {
@@ -397,7 +406,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
         '&LB_LOTS_PRODUCT=$LB_LOTS_PRODUCT'
         '&LB_MO_NO=$LB_MO_NO'
         '&LB_TRAN_Qty=$LB_TRAN_Qty'
-        // '&LB_ATTRIBUTE1=$LB_ATTRIBUTE1'
+        '&LB_ATTRIBUTE1=$LB_ATTRIBUTE1'
         '&LT_NOTE=$LT_NOTE'
         '&LT_TOTAL_QTY=$LT_TOTAL_QTY'
         '&LT_ISSUE=$LT_ISSUE'
@@ -448,7 +457,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
         '&LB_LOTS_PRODUCT=$LB_LOTS_PRODUCT'
         '&LB_MO_NO=$LB_MO_NO'
         '&LB_TRAN_Qty=$LB_TRAN_Qty'
-        // '&LB_ATTRIBUTE1=$LB_ATTRIBUTE1'
+        '&LB_ATTRIBUTE1=$LB_ATTRIBUTE1'
         '&LT_NOTE=$LT_NOTE'
         '&LT_TOTAL_QTY=$LT_TOTAL_QTY'
         '&LT_ISSUE=$LT_ISSUE'
@@ -858,9 +867,9 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                                                   onPressed: prevLink != null
                                                       ? loadPrevPage
                                                       : null,
-                                                  style: ButtonStyles
+                                                  style: DisableButtonStyles
                                                       .disablePreviousButtonStyle,
-                                                  child: ButtonStyles
+                                                  child: DisableButtonStyles
                                                       .disablePreviousButtonContent,
                                                 )
                                         ],
@@ -898,9 +907,9 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                                                 )
                                               : ElevatedButton(
                                                   onPressed: null,
-                                                  style: ButtonStyles
+                                                  style: DisableButtonStyles
                                                       .disableNextButtonStyle,
-                                                  child: ButtonStyles
+                                                  child: DisableButtonStyles
                                                       .disablePreviousButtonContent,
                                                 ),
                                         ],

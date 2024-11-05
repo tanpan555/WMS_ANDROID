@@ -421,9 +421,9 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                                   onPressed: prevLink != null
                                                       ? loadPrevPage
                                                       : null,
-                                                  style: ButtonStyles
+                                                  style: DisableButtonStyles
                                                       .disablePreviousButtonStyle,
-                                                  child: ButtonStyles
+                                                  child: DisableButtonStyles
                                                       .disablePreviousButtonContent,
                                                 )
                                         ],
@@ -461,9 +461,9 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                                 )
                                               : ElevatedButton(
                                                   onPressed: null,
-                                                  style: ButtonStyles
+                                                  style: DisableButtonStyles
                                                       .disableNextButtonStyle,
-                                                  child: ButtonStyles
+                                                  child: DisableButtonStyles
                                                       .disablePreviousButtonContent,
                                                 ),
                                         ],
@@ -497,9 +497,9 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                             onPressed: prevLink != null
                                                 ? loadPrevPage
                                                 : null,
-                                            style: ButtonStyles
+                                            style: DisableButtonStyles
                                                 .disablePreviousButtonStyle,
-                                            child: ButtonStyles
+                                            child: DisableButtonStyles
                                                 .disablePreviousButtonContent,
                                           )
                                   ],
@@ -534,9 +534,9 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                           )
                                         : ElevatedButton(
                                             onPressed: null,
-                                            style: ButtonStyles
+                                            style: DisableButtonStyles
                                                 .disableNextButtonStyle,
-                                            child: ButtonStyles
+                                            child: DisableButtonStyles
                                                 .disablePreviousButtonContent,
                                           ),
                                   ],

@@ -370,7 +370,8 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
     }
   }
 
-  List<Map<String, dynamic>> cCode = [];
+  List<dynamic> cCode = [];
+  // List<Map<String, dynamic>> cCode = [];
   String? selectedcCode;
   bool isLoading = true;
   String errorMessage = '';
@@ -390,6 +391,8 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                 .toList();
             selectedcCode = cCode.isNotEmpty ? '' : null;
             isLoading = false;
+
+            print('cCode : $cCode');
           });
         }
       } else {
@@ -808,7 +811,8 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
                 ElevatedButton(
                   style: AppStyles.cancelButtonStyle(),
                   onPressed: () {
-                    showCancelDialog(context);
+                    // showCancelDialog(context);
+                    showDialogLovCancel();
                   },
                   child: Text(
                     'ยกเลิก',
@@ -1691,6 +1695,130 @@ class _SSFGDT31_FROMState extends State<SSFGDT31_FROM> {
           ),
         ),
       ),
+    );
+  }
+
+  void showDialogLovCancel() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.cancelDialog(
+          context: context,
+          onCloseDialog: () {
+            Navigator.of(context).pop();
+            setState(() {});
+          },
+          onConfirmDialog: () async {
+            await cancel_from(selectedcCode ?? '');
+            if (selectedcCode == '') {
+              showErrorMessageDialog(context, pomsg.toString());
+            } else {
+              String message = 'ยกเลิกรายการเสร็จสมบูรณ์';
+              Navigator.of(context).pop();
+              showMessageCancelDialog(context, message);
+            }
+          },
+          onTap: () => showDialogDropdownSearchCancel(),
+          controller: _CcodeController,
+        );
+      },
+    );
+  }
+
+  void showErrorMessageDialog(
+    BuildContext context,
+    String messageAlert,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () => Navigator.of(context).pop(),
+          onConfirm: () {
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
+  }
+
+  void showMessageCancelDialog(
+    BuildContext context,
+    String messageAlert,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () {
+            cancel_from(selectedcCode!).then((_) {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        SSFGDT31_SCREEN2(pWareCode: widget.pWareCode)),
+              );
+            }).catchError((error) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('An error occurred: $error'),
+                ),
+              );
+            });
+          },
+          onConfirm: () {
+            cancel_from(selectedcCode!).then((_) {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        SSFGDT31_SCREEN2(pWareCode: widget.pWareCode)),
+              );
+            }).catchError((error) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('An error occurred: $error'),
+                ),
+              );
+            });
+          },
+        );
+      },
+    );
+  }
+
+  void showDialogDropdownSearchCancel() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'สาเหตุการยกเลิก',
+          searchController: _searchController,
+          data: cCode,
+          docString: (item) => '${item['r'] ?? ''} ${item['d'] ?? ''}',
+          titleText: (item) => '${item['r'] ?? ''}',
+          subtitleText: (item) => '${item['d'] ?? ''}',
+          onTap: (item) {
+            setState(() {
+              final selectedDescription = item['d'] ?? '';
+              selectedcCode = item['r'] ?? ''; // Set selected code
+              _CcodeController.text = selectedDescription;
+              print('$selectedcCode');
+            });
+            Navigator.of(context).pop(); // Close the dialo
+          },
+        );
+      },
     );
   }
 }

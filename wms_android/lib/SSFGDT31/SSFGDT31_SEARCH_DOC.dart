@@ -65,7 +65,9 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
 
   @override
   void initState() {
-    setData;
+    if (mounted) {
+      dataLovStatusController.text = 'ระหว่างบันทึก';
+    }
     super.initState();
   }
 
@@ -75,16 +77,6 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
     dataLovStatusController.dispose();
     pSoNoController.dispose();
     super.dispose();
-  }
-
-  void setData() {
-    isLoading = true;
-    if (mounted) {
-      setState(() {
-        dataLovStatusController.text = 'ระหว่างบันทึก';
-        isLoading = false;
-      });
-    }
   }
 
   Future<void> _selectDate(
