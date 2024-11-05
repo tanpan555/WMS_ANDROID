@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:wms_android/ICON.dart';
@@ -10,12 +7,10 @@ import 'dart:ui';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/styles.dart';
-// import 'package:wms_android/custom_drawer.dart';
 import 'SSINDT01_form.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'dart:async';
-
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import '../loading.dart';
 
 class SSINDT01_MAIN extends StatefulWidget {
   final String pWareCode;
@@ -62,7 +57,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   String? prevLink;
   int showRecordRRR = 0;
 
-  int pageSize = 25; // Number of records per page
+  int pageSize = 15; // Number of records per page
   int currentPage = 1; // Current page number
   int totalRecords = 0; // Total number of records
 
@@ -583,7 +578,8 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                 if (isPortrait) const SizedBox(height: 4),
                 Expanded(
                   child: isLoading
-                      ? const Center(child: CircularProgressIndicator())
+                      // ? const Center(child: CircularProgressIndicator())
+                      ? Center(child: LoadingIndicator())
                       : errorMessage.isNotEmpty
                           ? Center(
                               child: Text(

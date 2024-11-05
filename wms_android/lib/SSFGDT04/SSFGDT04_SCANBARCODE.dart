@@ -482,9 +482,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                               backgroundColor: Colors.white,
                               side: const BorderSide(color: Colors.grey),
                             ),
-                            child: Text(
-                              'ตกลง'
-                            ),
+                            child: Text('ตกลง'),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
@@ -563,7 +561,8 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                                                   item['location_name']
                                                       .toString();
                                               final searchQuery =
-                                                  _searchController.text.trim();
+                                                  _searchController.text.trim()
+                                                                          .toLowerCase();
                                               final searchQueryInt =
                                                   int.tryParse(searchQuery);
                                               final lcbarcodeInt =
@@ -578,6 +577,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                                                   locationCode
                                                       .contains(searchQuery) ||
                                                   locationName
+                                                  .toLowerCase()
                                                       .contains(searchQuery);
                                             })
                                             .toList()
@@ -605,12 +605,14 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                                           //   Navigator.of(context).pop();
                                           // },
                                           onTap: () {
-  setState(() {
-    selectedLocator = null; // Clear selected locator
-    _locatorBarcodeController.text = '-- No Value Set --'; // Set default text
-  });
-  Navigator.of(context).pop();
-},
+                                            setState(() {
+                                              selectedLocator =
+                                                  null; // Clear selected locator
+                                              _locatorBarcodeController.text =
+                                                  '-- No Value Set --'; // Set default text
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
                                         );
                                       }
 
@@ -638,7 +640,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                                                 .contains(searchQuery) ||
                                             locationCode
                                                 .contains(searchQuery) ||
-                                            locationName.contains(searchQuery);
+                                            locationName.toLowerCase().contains(searchQuery);
                                       }).toList();
 
                                       final item = filteredItems[index -
@@ -717,8 +719,9 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                   //     : TextEditingController(
                   //         text: selectedLocator ?? '-- No Value Set --'),
                   controller: _locatorBarcodeController.text.isNotEmpty
-    ? _locatorBarcodeController
-    : TextEditingController(text: selectedLocator ?? '-- No Value Set --'),
+                      ? _locatorBarcodeController
+                      : TextEditingController(
+                          text: selectedLocator ?? '-- No Value Set --'),
 
                   textAlign: TextAlign.center,
                 ),

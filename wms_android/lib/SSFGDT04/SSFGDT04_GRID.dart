@@ -52,6 +52,102 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     _docNoController = TextEditingController(text: widget.po_doc_no);
   }
 
+  // Future<void> _showEditDialog(
+  //     BuildContext context, Map<String, dynamic> item) async {
+  //   final quantityController = TextEditingController(
+  //     text: item['pack_qty'] != null
+  //         ? NumberFormat('#,###').format(item['pack_qty'])
+  //         : '',
+  //   );
+
+  //   final formKey = GlobalKey<FormState>();
+
+  //   return showDialog<void>(
+  //     context: context,
+  //     barrierDismissible: true,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         content: Stack(
+  //           clipBehavior: Clip.none, // Allow overflow
+  //           children: [
+  //             Positioned(
+  //               right: -10,
+  //               top: -10,
+  //               child: IconButton(
+  //                 icon: const Icon(Icons.close),
+  //                 onPressed: () {
+  //                   Navigator.of(context).pop(); // Close the dialog
+  //                 },
+  //               ),
+  //             ),// Adding padding around the form to adjust the spacing
+  //             Padding(
+  //               padding: const EdgeInsets.only(top: 40.0), // Adjust top padding to control space
+  //               child: SingleChildScrollView(
+  //                 child: Form(
+  //                   key: formKey,
+  //                   child: ListBody(
+  //                     children: <Widget>[
+  //                       const SizedBox(height: 8),
+  //                       TextFormField(
+  //                         controller: quantityController,
+  //                         keyboardType: TextInputType.number,
+  //                         decoration: const InputDecoration(
+  //                           labelText: 'จำนวนรับ',
+  //                           border: OutlineInputBorder(),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         actions: <Widget>[
+  //           Center(
+  //             child: ElevatedButton(
+  //               style: ElevatedButton.styleFrom(
+  //                 side: const BorderSide(
+  //                   color: Colors.green, // Add a border color
+  //                   width: 1.5),
+  //                 backgroundColor: Colors.white,
+  //                 shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(10)),
+  //                 minimumSize: const Size(60, 40),
+  //                 padding: const EdgeInsets.all(0),),
+  //               onPressed: () async {
+  //                 if (quantityController.text.isEmpty) {
+  //                   Navigator.of(context).pop();
+  //                   return;}
+
+  //                 if (formKey.currentState?.validate() ?? false) {
+  //                   final String cleanedText = quantityController.text.replaceAll(',', '');
+  //                     try {
+  //                     final newQuantity = double.parse(cleanedText).toString();
+  //                     await fetchUpdate(
+  //                       item['item_code'], // itemCode
+  //                       item['pack_code'], // poPackCode
+  //                       newQuantity, // poPackQty
+  //                       item['rowid'], // ratio
+  //                     );
+  //                     setState(() {
+  //                       fetchGridItems();
+  //                     });
+  //                     Navigator.of(context).pop();
+  //                   } catch (e) {
+  //                     print('Error parsing quantity: $e');
+  //                   }
+  //                 }
+  //               },
+  //               child: Image.asset('assets/images/check-mark.png', width: 30,height: 30,),
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
   Future<void> _showEditDialog(
       BuildContext context, Map<String, dynamic> item) async {
     final quantityController = TextEditingController(
@@ -64,11 +160,9 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
 
     return showDialog<void>(
       context: context,
-      barrierDismissible:
-          true, // Can be dismissed by tapping outside the dialog
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          // Add a stack to allow placing the close button in the top right corner
           content: Stack(
             clipBehavior: Clip.none, // Allow overflow
             children: [
@@ -82,16 +176,69 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                   },
                 ),
               ),
-              // Adding padding around the form to adjust the spacing
               Padding(
-                padding: const EdgeInsets.only(
-                    top: 40.0), // Adjust top padding to control space
+                padding: const EdgeInsets.only(top: 40.0),
                 child: SingleChildScrollView(
                   child: Form(
                     key: formKey,
                     child: ListBody(
                       children: <Widget>[
-                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              child: Container(
+                                color: Colors.grey[300], // สีพื้นหลังเทาอ่อน
+                                padding: const EdgeInsets.all(
+                                    2), // เพิ่ม padding ภายใน
+                                child: TextFormField(
+                                  enabled: false, // ช่องแรกที่แก้ไขไม่ได้
+                                  textAlign: TextAlign.right, // ชิดขวา
+                                  decoration: const InputDecoration(
+                                    labelText: 'seq',
+                                    labelStyle: TextStyle(
+                                        color:
+                                            Colors.black), // สีตัวหนังสือสีดำ
+                                    border: InputBorder.none,
+                                  ),
+                                  initialValue: item['seq']?.toString() ??
+                                      '', // แปลงค่า int เป็น String
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight:
+                                        FontWeight.bold, // สีตัวหนังสือในช่อง
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                color: Colors.grey[300], // สีพื้นหลังเทาอ่อน
+                                padding: const EdgeInsets.all(
+                                    2), // เพิ่ม padding ภายใน
+                                child: TextFormField(
+                                  enabled: false, // ช่องที่สองที่แก้ไขไม่ได้
+                                  decoration: const InputDecoration(
+                                    labelText: 'item',
+                                    labelStyle: TextStyle(
+                                        color:
+                                            Colors.black), // สีตัวหนังสือสีดำ
+                                    border: InputBorder.none,
+                                  ),
+                                  initialValue: item['item_code'] ??
+                                      '', // ข้อมูลในช่องที่สอง
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight
+                                          .bold), // สีตัวหนังสือในช่อง
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
                         TextFormField(
                           controller: quantityController,
                           keyboardType: TextInputType.number,
@@ -111,36 +258,24 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
             Center(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  side: const BorderSide(
-                    color: Colors.green, // Add a border color
-                    width: 1.5, // Border width
-                  ),
+                  side: const BorderSide(color: Colors.green, width: 1.5),
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                      borderRadius: BorderRadius.circular(10)),
                   minimumSize: const Size(60, 40),
                   padding: const EdgeInsets.all(0),
                 ),
                 onPressed: () async {
-                  // Check if the text field is empty
                   if (quantityController.text.isEmpty) {
-                    // Close the dialog if no input is provided
                     Navigator.of(context).pop();
-                    return; // Exit the function early
+                    return;
                   }
 
                   if (formKey.currentState?.validate() ?? false) {
-                    // Remove commas and parse the text as a number
                     final String cleanedText =
                         quantityController.text.replaceAll(',', '');
-
-                    // Attempt to parse the cleaned string as a double or int, depending on your needs
                     try {
                       final newQuantity = double.parse(cleanedText).toString();
-
-                      // Update the item in the gridItems list
-                      // await fetchUpdate(newQuantity, item['seq']);
                       await fetchUpdate(
                         item['item_code'], // itemCode
                         item['pack_code'], // poPackCode
@@ -150,20 +285,14 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                       setState(() {
                         fetchGridItems();
                       });
-
-                      // Close the popup
                       Navigator.of(context).pop();
                     } catch (e) {
                       print('Error parsing quantity: $e');
-                      // Handle the error (you could show a message to the user)
                     }
                   }
                 },
-                child: Image.asset(
-                  'assets/images/check-mark.png',
-                  width: 30,
-                  height: 30,
-                ),
+                child: Image.asset('assets/images/check-mark.png',
+                    width: 30, height: 30),
               ),
             ),
           ],
@@ -171,83 +300,75 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
       },
     );
   }
-  
-  Future<void> fetchUpdate(String? itemCode, String? poPackCode, String? poPackQty, String? rowid) async {
-  const url = 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_set_pack_QTY';
 
-  final headers = {
-    'Content-Type': 'application/json',
-  };
+  Future<void> fetchUpdate(String? itemCode, String? poPackCode,
+      String? poPackQty, String? rowid) async {
+    const url = 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_set_pack_QTY';
 
-  // ตรวจสอบว่า poPackQty ไม่เป็น null หรือว่าง
-  if (poPackQty == null || poPackQty.isEmpty) {
-    print('Error: poPackQty is null or empty');
-    return;
-  }
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    // ตรวจสอบว่า poPackQty ไม่เป็น null หรือว่าง
+    if (poPackQty == null || poPackQty.isEmpty) {
+      print('Error: poPackQty is null or empty');
+      return;
+    }
+    final body = jsonEncode({
+      'item_code': itemCode,
+      'pack_code': poPackCode,
+      'pack_qty': poPackQty,
+      'rowid': rowid,
+    });
 
-  final body = jsonEncode({
-    'item_code': itemCode,
-    'pack_code': poPackCode,
-    'pack_qty': poPackQty,
-    'rowid': rowid,
-  });
+    print('Request body: $body');
 
-  print('Request body: $body');
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: body,
+      );
 
-  try {
-    final response = await http.post(
-      Uri.parse(url),
-      headers: headers,
-      body: body,
-    );
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+      // ตรวจสอบการตอบกลับจาก API
+      if (response.statusCode == 200) {
+        if (response.body.isNotEmpty) {
+          final Map<String, dynamic> responseData = jsonDecode(response.body);
+          print('Success: $responseData');
 
-    // ตรวจสอบการตอบกลับจาก API
-    if (response.statusCode == 200) {
-      if (response.body.isNotEmpty) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        print('Success: $responseData');
-
-        // โหลดข้อมูลใหม่หากการอัปเดตสำเร็จ
-        if (mounted) {
-          setState(() {
-            fetchGridItems();  // เรียกใช้ fetchGridItems เพื่ออัปเดตข้อมูลใน UI
-          });
+          // โหลดข้อมูลใหม่หากการอัปเดตสำเร็จ
+          if (mounted) {
+            setState(() {
+              fetchGridItems(); // เรียกใช้ fetchGridItems เพื่ออัปเดตข้อมูลใน UI
+            });
+          }
+        } else {
+          print('Error: Response body is empty');
         }
       } else {
-        print('Error: Response body is empty');
+        print('Failed to post data. Status code: ${response.statusCode}');
       }
-    } else {
-      print('Failed to post data. Status code: ${response.statusCode}');
+    } catch (e) {
+      print('Error Update: $e');
     }
-  } catch (e) {
-    print('Error Update: $e');
   }
-}
-
 
   Future<void> fetchGridItems([String? url]) async {
     if (!mounted) return; // ตรวจสอบว่าตัว component ยังถูก mount อยู่หรือไม่
-
     setState(() {
       isLoading = true;
     });
-
     final String requestUrl = url ??
         'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_WMS_IN_TRAN_DETAIL/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}/${gb.P_OU_CODE}';
-
     try {
       final response = await http.get(Uri.parse(requestUrl));
       print(requestUrl);
-
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final parsedResponse = json.decode(responseBody);
-
         if (!mounted) return;
-
         if (mounted) {
           setState(() {
             // ตรวจสอบข้อมูลก่อนการอัปเดต
@@ -256,13 +377,11 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
             } else {
               dataCard = [];
             }
-
             // อัปเดตและกรองข้อมูลใน gridItems
             gridItems = List<Map<String, dynamic>>.from(
                     parsedResponse['items'] ?? [])
                 .where((item) => !deletedItemCodes.contains(item['item_code']))
                 .toList();
-
             // คำนวณจำนวน totalCards
             int totalCards = dataCard.length;
             List<dynamic> getCurrentPageItems() {
@@ -757,6 +876,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                           padding: const EdgeInsets.all(16.0),
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
                                             children: [
                                               Center(
                                                 child: Text(
@@ -773,45 +894,55 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                                   thickness: 1),
                                               const SizedBox(height: 8),
                                               Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     children: [
-                                                      const Text(
-                                                        'จำนวนรับ :',
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Text(
+                                                          'จำนวนรับ :',
+                                                          textAlign:
+                                                              TextAlign.right,
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                         ),
                                                       ),
-                                                      const SizedBox(width: 8),
-                                                      CustomContainerStyles
-                                                          .styledContainer(
-                                                        item['pack_qty']
-                                                            ?.toString(), // Passing the 'pack_qty' as the itemValue
-                                                        child: Text(
-                                                          item['pack_qty'] !=
-                                                                      null &&
-                                                                  item['pack_qty'] !=
-                                                                      ''
-                                                              ? NumberFormat(
-                                                                      '#,###')
-                                                                  .format(item[
-                                                                      'pack_qty'])
-                                                              : '',
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                            color: Colors.black,
+                                                      SizedBox(width: 8),
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Container(
+                                                          color: Colors.white,
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            vertical: 2,
+                                                            horizontal: 8,
+                                                          ),
+                                                          child: Text(
+                                                            // Format the number if it's not null, else display an empty string
+                                                            item['pack_qty'] !=
+                                                                    null
+                                                                ? NumberFormat(
+                                                                        '#,###')
+                                                                    .format(item[
+                                                                        'pack_qty'])
+                                                                : '',
+                                                            textAlign:
+                                                                TextAlign.end,
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
@@ -822,28 +953,44 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     children: [
-                                                      const Text(
-                                                        'จำนวน Pallet :',
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      const SizedBox(width: 8),
-                                                      CustomContainerStyles
-                                                          .styledContainer(
-                                                        item['count_qty']
-                                                            ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                      Expanded(
+                                                        flex: 1,
                                                         child: Text(
-                                                          item['count_qty'] ??
-                                                              '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
+                                                          'จำนวน Pallet :',
+                                                          textAlign:
+                                                              TextAlign.right,
+                                                          style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Container(
+                                                          color: Colors
+                                                              .white, // กำหนดสีพื้นหลังที่ต้องการ
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            vertical: 2,
+                                                            horizontal: 8,
+                                                          ), // เพิ่ม padding รอบๆข้อความ
+                                                          child: Text(
+                                                            item['count_qty'] ??
+                                                                '',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
@@ -853,34 +1000,252 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     children: [
-                                                      const Text(
-                                                        'จำนวนรวม :',
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      const SizedBox(width: 8),
-                                                      CustomContainerStyles
-                                                          .styledContainer(
-                                                        item['count_qty_in']
-                                                            ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                      Expanded(
+                                                        flex: 1,
                                                         child: Text(
-                                                          item['count_qty_in'] ??
-                                                              '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
+                                                          'จำนวนรวม :',
+                                                          textAlign:
+                                                              TextAlign.right,
+                                                          style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Container(
+                                                          color: Colors
+                                                              .white, // กำหนดสีพื้นหลังที่ต้องการ
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            vertical: 2,
+                                                            horizontal: 8,
+                                                          ), // เพิ่ม padding รอบๆข้อความ
+                                                          child: Text(
+                                                            item['count_qty_in'] ??
+                                                                '',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .start, // จัดตำแหน่งหลักไปทางซ้าย
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start, // จัดตำแหน่งข้ามไปทางซ้าย
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Text(
+                                                          'Item Desc :',
+                                                          textAlign:
+                                                              TextAlign.right,
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Container(
+                                                          color: Colors
+                                                              .white, // กำหนดสีพื้นหลังที่ต้องการ
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            vertical: 2,
+                                                            horizontal: 8,
+                                                          ), // เพิ่ม padding รอบๆข้อความ
+                                                          child: Text(
+                                                            item['nb_item_name'] ??
+                                                                '',
+                                                            style: TextStyle(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
                                                   ),
                                                 ],
                                               ),
+                                              // Row(
+                                              //   mainAxisAlignment:
+                                              //       MainAxisAlignment.start,
+                                              //   children: [
+                                              //     Expanded(
+                                              //       flex: 1,
+                                              //       child: Column(
+                                              //         crossAxisAlignment:
+                                              //             CrossAxisAlignment
+                                              //                 .start, // จัดตำแหน่งข้อความในคอลัมน์ซ้าย
+                                              //         children: [
+                                              //           Text(
+                                              //             'จำนวนรับ :',
+                                              //             style: TextStyle(
+                                              //               fontSize: 16,
+                                              //               fontWeight:
+                                              //                   FontWeight.bold,
+                                              //             ),
+                                              //           ),
+                                              //           SizedBox(height: 4),
+                                              //           Text(
+                                              //             'จำนวน Pallet :',
+                                              //             style: TextStyle(
+                                              //               fontSize: 16,
+                                              //               fontWeight:
+                                              //                   FontWeight.bold,
+                                              //             ),
+                                              //           ),
+                                              //           SizedBox(height: 4),
+                                              //           Text(
+                                              //             'จำนวนรวม :',
+                                              //             style: TextStyle(
+                                              //               fontSize: 16,
+                                              //               fontWeight:
+                                              //                   FontWeight.bold,
+                                              //             ),
+                                              //           ),
+                                              //           SizedBox(height: 4),
+                                              //           Text(
+                                              //             'Item Desc :',
+                                              //             style: TextStyle(
+                                              //               fontSize: 16,
+                                              //               fontWeight:
+                                              //                   FontWeight.bold,
+                                              //             ),
+                                              //           ),
+                                              //         ],
+                                              //       ),
+                                              //     ),
+                                              //     SizedBox(
+                                              //         width:
+                                              //             16), // ระยะห่างระหว่างคอลัมน์
+                                              //     Expanded(
+                                              //       flex: 1,
+                                              //       child: Column(
+                                              //         crossAxisAlignment:
+                                              //             CrossAxisAlignment
+                                              //                 .start,
+                                              //         children: [
+                                              //           Container(
+                                              //             color: Colors.white,
+                                              //             padding: EdgeInsets
+                                              //                 .symmetric(
+                                              //                     vertical: 2,
+                                              //                     horizontal:
+                                              //                         8),
+                                              //             child: Text(
+                                              //               item['pack_qty'] !=
+                                              //                       null
+                                              //                   ? NumberFormat(
+                                              //                           '#,###')
+                                              //                       .format(item[
+                                              //                           'pack_qty'])
+                                              //                   : '',
+                                              //               style: TextStyle(
+                                              //                 fontSize: 16,
+                                              //                 fontWeight:
+                                              //                     FontWeight
+                                              //                         .normal,
+                                              //                 color:
+                                              //                     Colors.black,
+                                              //               ),
+                                              //             ),
+                                              //           ),
+                                              //           SizedBox(height: 4),
+                                              //           Container(
+                                              //             color: Colors.white,
+                                              //             padding: EdgeInsets
+                                              //                 .symmetric(
+                                              //                     vertical: 2,
+                                              //                     horizontal:
+                                              //                         8),
+                                              //             child: Text(
+                                              //               item['count_qty'] ??
+                                              //                   '',
+                                              //               style: TextStyle(
+                                              //                 fontSize: 16,
+                                              //                 fontWeight:
+                                              //                     FontWeight
+                                              //                         .normal,
+                                              //                 color:
+                                              //                     Colors.black,
+                                              //               ),
+                                              //             ),
+                                              //           ),
+                                              //           SizedBox(height: 4),
+                                              //           Container(
+                                              //             color: Colors.white,
+                                              //             padding: EdgeInsets
+                                              //                 .symmetric(
+                                              //                     vertical: 2,
+                                              //                     horizontal:
+                                              //                         8),
+                                              //             child: Text(
+                                              //               item['count_qty_in'] ??
+                                              //                   '',
+                                              //               style: TextStyle(
+                                              //                 fontSize: 16,
+                                              //                 fontWeight:
+                                              //                     FontWeight
+                                              //                         .normal,
+                                              //                 color:
+                                              //                     Colors.black,
+                                              //               ),
+                                              //             ),
+                                              //           ),
+                                              //           SizedBox(height: 4),
+                                              //           Container(
+                                              //             color: Colors.white,
+                                              //             padding: EdgeInsets
+                                              //                 .symmetric(
+                                              //                     vertical: 2,
+                                              //                     horizontal:
+                                              //                         8),
+                                              //             child: Text(
+                                              //               item['nb_item_name'] ??
+                                              //                   '',
+                                              //               style: TextStyle(
+                                              //                 fontSize: 16,
+                                              //                 fontWeight:
+                                              //                     FontWeight
+                                              //                         .normal,
+                                              //                 color:
+                                              //                     Colors.black,
+                                              //               ),
+                                              //             ),
+                                              //           ),
+                                              //         ],
+                                              //       ),
+                                              //     ),
+                                              //   ],
+                                              // ),
+
                                               const SizedBox(height: 8),
                                               // Row with delete and edit buttons
                                               Row(

@@ -5,6 +5,7 @@ import '../custom_appbar.dart';
 import '../bottombar.dart';
 import 'SSFGDT04_MENU.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import '../loading.dart';
 
 class SSFGDT04_MAIN extends StatefulWidget {
   final String p_attr1;
@@ -73,7 +74,8 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: isLoading
-            ? const Center(child: CircularProgressIndicator())
+        ? Center(child: LoadingIndicator())
+            // ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
                   Container(

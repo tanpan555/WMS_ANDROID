@@ -7,6 +7,7 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGDT04_FORM.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../styles.dart';
+import '../loading.dart';
 
 class SSFGDT04_CARD extends StatefulWidget {
   final int pFlag;
@@ -550,7 +551,8 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? Center(child: LoadingIndicator())
+            // ? const Center(child: CircularProgressIndicator())
             : dataCard.isEmpty
                 ? const Center(
                     child: Text(

@@ -9,6 +9,7 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGDT04_GRID.dart';
 import 'SSFGDT04_MENU.dart';
 import '../styles.dart';
+import '../loading.dart';
 
 class SSFGDT04_FORM extends StatefulWidget {
   // final String pReceiveNo; // ware code ที่มาจากเลือ lov
@@ -524,7 +525,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
       ),
       // backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: fromItems.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          // ? Center(child: CircularProgressIndicator())
+          ? Center(child: LoadingIndicator())
           : Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
