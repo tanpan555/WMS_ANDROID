@@ -18,12 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: '/login',
-      theme: ThemeData.from(
-        colorScheme: const ColorScheme.light(
-          primary: Color(0xFF17153B),
-          onPrimary: Colors.white,
-        ),
-      ).copyWith(
+      theme: ThemeData().copyWith(
         scaffoldBackgroundColor: const Color(0xFF17153B),
       ),
       routes: {

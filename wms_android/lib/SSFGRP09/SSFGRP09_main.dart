@@ -1811,44 +1811,33 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     // ),
                     const SizedBox(height: 8),
                     Container(
-                      color: Colors.white, // กำหนดสีพื้นหลังของ Container
+                      color: Colors.white,
                       child: Column(
                         children: <Widget>[
-                          ListTile(
-                            title: const Text(
-                              'แสดงข้อมูลทั้งหมด',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 12),
-                            ),
-                            leading: Radio<String>(
-                              value: '1',
-                              groupValue: selectedRadio, // ค่าที่เลือก
-                              onChanged: (String? value) {
-                                setState(() {
-                                  selectedRadio = value.toString();
-                                  P_SHOW_MODE = value;
-                                  print('selectedRadio : $selectedRadio');
-                                });
-                              },
-                            ),
+                          RadioListTile<String>(
+                            title: const Text('แสดงข้อมูลทั้งหมด'),
+                            value: '1',
+                            groupValue: selectedRadio,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedRadio = value.toString();
+                                P_SHOW_MODE = value;
+                                print('selectedRadio : $selectedRadio');
+                              });
+                            },
                           ),
-                          ListTile(
-                            title: const Text(
-                              'แสดงข้อมูลเฉพาะข้อมูลที่มีผลต่าง',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 12),
-                            ),
-                            leading: Radio<String>(
-                              value: '0',
-                              groupValue: selectedRadio, // ค่าที่เลือก
-                              onChanged: (String? value) {
-                                setState(() {
-                                  selectedRadio = value.toString();
-                                  P_SHOW_MODE = value;
-                                  print('selectedRadio : $selectedRadio');
-                                });
-                              },
-                            ),
+                          RadioListTile<String>(
+                            title:
+                                const Text('แสดงข้อมูลเฉพาะข้อมูลที่มีผลต่าง'),
+                            value: '0',
+                            groupValue: selectedRadio,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedRadio = value.toString();
+                                P_SHOW_MODE = value;
+                                print('selectedRadio : $selectedRadio');
+                              });
+                            },
                           ),
                         ],
                       ),

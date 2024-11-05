@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
+import 'package:wms_android/ICON.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 
 class Ssfgdt12Barcode extends StatefulWidget {
@@ -652,8 +653,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                const Row(
                   children: [
                     Icon(
                       Icons.notification_important,
@@ -662,15 +662,18 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                     SizedBox(width: 10),
                     Text(
                       'แจ้งเตือน',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                      ),
                     ),
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.close),
+                      icon: const Icon(MyIcons.close),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -786,244 +789,25 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
   void showDialogSelectStatus() {
     showDialog(
       context: context,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey, // สีของเส้น
-                            width: 1.0, // ความหนาของเส้น
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'สภาพ',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics:
-                                const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
-                            itemCount: dataGradeStatuslist.length,
-                            itemBuilder: (context, index) {
-                              // ดึงข้อมูลรายการจาก dataCard
-                              var item = dataGradeStatuslist[index];
-
-                              // return GestureDetector(
-                              //   onTap: () {
-                              //     setState(() {
-                              //       dataLocator = item['location_code'];
-                              //     });
-                              //   },
-                              //   child: SizedBox(
-                              //     child: Text('${item['location_code']}'),
-                              //   ),
-                              // );
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
-                                      width: 2.0, // ความหนาของขอบ
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                        10.0), // ทำให้ขอบมีความโค้ง
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                      vertical:
-                                          8.0), // เพิ่ม padding ด้านซ้าย-ขวา และ ด้านบน-ล่าง
-                                  child: Text(
-                                    item['d'],
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      // fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    dataGridStatus = item['d'];
-                                    statusGridBarcode = item['r'];
-                                    dataGridStatusBarcodeController.text =
-                                        dataGridStatus;
-                                    Navigator.of(context).pop();
-                                    print('dataGridStatus : $dataGridStatus');
-                                    print(
-                                        'statusGridBarcode : $statusGridBarcode');
-                                  });
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    )
-
-                    // ช่องค้นหา
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customSelectLovDialog(
+          context: context,
+          headerText: 'สภาพ',
+          data: dataGradeStatuslist,
+          displayItem: (item) => '${item['d'] ?? ''}',
+          onTap: (item) {
+            setState(() {
+              dataGridStatus = item['d'];
+              statusGridBarcode = item['r'];
+              dataGridStatusBarcodeController.text = dataGridStatus;
+              Navigator.of(context).pop();
+              print('dataGridStatus : $dataGridStatus');
+              print('statusGridBarcode : $statusGridBarcode');
+            });
+          },
         );
       },
     );
   }
-
-  // void showDialogSelectStatus() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return Dialog(
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(10),
-  //         ),
-  //         child: StatefulBuilder(
-  //           builder: (context, setState) {
-  //             return Container(
-  //               padding: const EdgeInsets.all(16),
-  //               height: 300, // ปรับความสูงของ Popup ตามต้องการ
-  //               child: Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: [
-  //                   Row(
-  //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                     children: [
-  //                       const Text(
-  //                         'สภาพ',
-  //                         style: TextStyle(
-  //                             fontSize: 18, fontWeight: FontWeight.bold),
-  //                       ),
-  //                       IconButton(
-  //                         icon: const Icon(Icons.close),
-  //                         onPressed: () {
-  //                           Navigator.of(context).pop();
-  //                         },
-  //                       ),
-  //                     ],
-  //                   ),
-  //                   const SizedBox(height: 10),
-  //                   Expanded(
-  //                     child: ListView(
-  //                       children: [
-  //                         ListView.builder(
-  //                           shrinkWrap: true,
-  //                           physics:
-  //                               const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
-  //                           itemCount: dataGradeStatuslist.length,
-  //                           itemBuilder: (context, index) {
-  //                             // ดึงข้อมูลรายการจาก dataCard
-  //                             var item = dataGradeStatuslist[index];
-  //                             Color cardColor;
-  //                             String statusText;
-  //                             String iconImageYorN;
-  //                             print(item['d']);
-  //                             switch (item['d']) {
-  //                               case 'สภาพปกติ/ของดี':
-  //                                 cardColor =
-  //                                     Color.fromRGBO(246, 250, 112, 1.0);
-  //                                 statusText = '01';
-  //                                 break;
-  //                               case 'สภาพรอคัด/แยกซ่อม':
-  //                                 cardColor = Color.fromRGBO(146, 208, 80, 1.0);
-  //                                 statusText = '02';
-  //                                 break;
-  //                               case 'ชำรุด/เสียหาย':
-  //                                 cardColor =
-  //                                     Color.fromRGBO(208, 206, 206, 1.0);
-  //                                 statusText = '03';
-  //                                 break;
-  //                               default:
-  //                                 cardColor =
-  //                                     Color.fromRGBO(255, 255, 255, 1.0);
-  //                                 statusText = 'Unknown';
-  //                             }
-
-  //                             switch (item['qc_yn']) {
-  //                               case 'Y':
-  //                                 iconImageYorN =
-  //                                     'assets/images/rt_machine_on.png';
-  //                                 break;
-  //                               case 'N':
-  //                                 iconImageYorN =
-  //                                     'assets/images/rt_machine_off.png';
-  //                                 break;
-  //                               default:
-  //                                 iconImageYorN =
-  //                                     'assets/images/rt_machine_off.png';
-  //                             }
-  //                             return InkWell(
-  //                               onTap: () {
-  //                                 setState(() {
-  //                                   dataGridStatus = item['d'];
-  //                                   statusGridBarcode = statusText;
-  //                                   dataGridStatusBarcodeController.text =
-  //                                       dataGridStatus;
-  //                                   Navigator.of(context).pop();
-  //                                   print('dataGridStatus : $dataGridStatus');
-  //                                   print(
-  //                                       'statusGridBarcode : $statusGridBarcode');
-  //                                 });
-  //                               },
-  //                               child: Card(
-  //                                 elevation: 8.0,
-  //                                 margin: EdgeInsets.symmetric(vertical: 8.0),
-  //                                 shape: RoundedRectangleBorder(
-  //                                   borderRadius: BorderRadius.circular(15.0),
-  //                                 ),
-  //                                 color: Color.fromRGBO(204, 235, 252, 1.0),
-  //                                 child: Padding(
-  //                                   padding: const EdgeInsets.all(16.0),
-  //                                   child: Text('${item['d']}'),
-  //                                 ),
-  //                               ),
-  //                             );
-  //                           },
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   )
-
-  //                   // ช่องค้นหา
-  //                 ],
-  //               ),
-  //             );
-  //           },
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 }

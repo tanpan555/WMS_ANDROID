@@ -40,10 +40,8 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
   String data_null = 'null';
 
   bool isLoading = true;
-  String? nextLink = '';
-  String? prevLink = '';
-
-  int showRecordRRR = 0;
+  int currentPage = 0; // หน้าปัจจุบัน
+  final int itemsPerPage = 15; // จำนวนรายการต่อหน้า
 
   @override
   void initState() {
@@ -90,16 +88,6 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
             } else {
               dataCard = [];
             }
-
-            List<dynamic> links = parsedResponse['links'] ?? [];
-            nextLink = getLink(links, 'next');
-            prevLink = getLink(links, 'prev');
-            if (url.toString().isNotEmpty) {
-              extractLastNumberFromUrl(url.toString() ==
-                      'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_1_SelectDataCard/${widget.pErpOuCode}/${widget.docNo.isNotEmpty ? widget.docNo : 'null'}/${widget.status}/${widget.browser_language}'
-                  ? 'null'
-                  : url.toString());
-            }
             filterData();
             print('dataCard : $dataCard Type : ${dataCard.runtimeType}');
           });
@@ -142,63 +130,40 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
     }
   }
 
-  String? getLink(List<dynamic> links, String rel) {
-    final link =
-        links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
-    return link != null ? link['href'] : null;
+  int totalPages() {
+    return (displayedData.length / itemsPerPage)
+        .ceil(); // คำนวณจำนวนหน้าทั้งหมด
   }
 
+  // List<dynamic> getCurrentData() {
+  //   return displayedData
+  //       .skip(currentPage * itemsPerPage)
+  //       .take(itemsPerPage)
+  //       .toList(); // รายการที่จะแสดงในหน้า
+  // }
+
   void loadNextPage() {
-    if (nextLink != '') {
-      if (mounted) {
-        setState(() {
-          showRecordRRR = 0;
-          print('nextLink $nextLink');
-          isLoading = true;
-        });
-      }
-      fetchData(nextLink);
+    if (currentPage < totalPages() - 1) {
+      setState(() {
+        currentPage++;
+      });
     }
   }
 
   void loadPrevPage() {
-    if (prevLink != '') {
-      if (mounted) {
-        setState(() {
-          showRecordRRR = 0;
-          isLoading = true;
-        });
-      }
-      fetchData(prevLink);
+    if (currentPage > 0) {
+      setState(() {
+        currentPage--;
+      });
     }
   }
 
-  void extractLastNumberFromUrl(String url) {
-    // Regular Expression สำหรับจับค่าหลัง offset=
-    RegExp regExp = RegExp(r'offset=(\d+)$');
-    RegExpMatch? match = regExp.firstMatch(url);
+  List<dynamic> getCurrentData() {
+    final start = currentPage * itemsPerPage;
+    final end = start + itemsPerPage;
 
-    // ตัวแปรสำหรับเก็บผลลัพธ์
-    int showRecord = 0; // ตั้งค่าเริ่มต้นเป็น 0
-
-    if (match != null) {
-      // แปลงค่าที่จับคู่ได้จาก String ไปเป็น int
-      showRecordRRR =
-          int.parse(match.group(1)!); // group(1) หมายถึงค่าหลัง offset=
-      print('ตัวเลขท้ายสุดคือ: $showRecord');
-      print('$showRecordRRR');
-      print('$showRecordRRR + 1 = ${showRecordRRR + 1}');
-      print('${dataCard.length}');
-      print(
-          '${dataCard.length} + $showRecordRRR = ${dataCard.length + showRecordRRR}');
-    } else {
-      // ถ้าไม่พบค่า ให้ผลลัพธ์เป็น 0
-      print('ไม่พบตัวเลขท้ายสุด, ส่งกลับเป็น 0');
-    }
-    // match = null;
-
-    // พิมพ์ค่าที่ได้
-    print('ผลลัพธ์: $showRecord');
+    // ใช้ toList() เพื่อให้ได้ลิสต์จาก Iterable
+    return displayedData.sublist(start, end.clamp(0, displayedData.length));
   }
 
   @override
@@ -225,10 +190,10 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                               shrinkWrap: true,
                               physics:
                                   const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
-                              itemCount: displayedData.length,
+                              itemCount: getCurrentData().length,
                               itemBuilder: (context, index) {
                                 // ดึงข้อมูลรายการจาก dataCard
-                                var item = displayedData[index];
+                                var item = getCurrentData()[index];
 
                                 Color cardColor;
                                 String statusText;
@@ -399,7 +364,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                               },
                             ),
                             // ======================================================= dataCard.length > 3
-                            dataCard.length > 3
+                            displayedData.length > 3
                                 ? Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -408,10 +373,14 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          prevLink != null
+                                          currentPage > 0
                                               ? ElevatedButton(
-                                                  onPressed: prevLink != null
-                                                      ? loadPrevPage
+                                                  onPressed: currentPage > 0
+                                                      ? () {
+                                                          setState(() {
+                                                            currentPage--;
+                                                          });
+                                                        }
                                                       : null,
                                                   style: ButtonStyles
                                                       .previousButtonStyle,
@@ -419,9 +388,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                                       .previousButtonContent,
                                                 )
                                               : ElevatedButton(
-                                                  onPressed: prevLink != null
-                                                      ? loadPrevPage
-                                                      : null,
+                                                  onPressed: null,
                                                   style: DisableButtonStyles
                                                       .disablePreviousButtonStyle,
                                                   child: DisableButtonStyles
@@ -436,7 +403,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                         children: [
                                           Center(
                                             child: Text(
-                                              '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? dataCard.length : showRecordRRR + dataCard.length}',
+                                              '${(currentPage * itemsPerPage) + 1} : ${((currentPage + 1) * itemsPerPage).clamp(1, displayedData.length)}',
                                               style: const TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
@@ -450,10 +417,15 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
                                         children: [
-                                          nextLink != null
+                                          currentPage < totalPages() - 1
                                               ? ElevatedButton(
-                                                  onPressed: nextLink != null
-                                                      ? loadNextPage
+                                                  onPressed: currentPage <
+                                                          totalPages() - 1
+                                                      ? () {
+                                                          setState(() {
+                                                            currentPage++;
+                                                          });
+                                                        }
                                                       : null,
                                                   style: ButtonStyles
                                                       .nextButtonStyle,
@@ -477,17 +449,21 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                         ),
                       ),
                       // ======================================================= dataCard.length <= 3
-                      dataCard.length <= 3
+                      displayedData.length <= 3
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    prevLink != null
+                                    currentPage > 0
                                         ? ElevatedButton(
-                                            onPressed: prevLink != null
-                                                ? loadPrevPage
+                                            onPressed: currentPage > 0
+                                                ? () {
+                                                    setState(() {
+                                                      currentPage--;
+                                                    });
+                                                  }
                                                 : null,
                                             style: ButtonStyles
                                                 .previousButtonStyle,
@@ -495,9 +471,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                                 .previousButtonContent,
                                           )
                                         : ElevatedButton(
-                                            onPressed: prevLink != null
-                                                ? loadPrevPage
-                                                : null,
+                                            onPressed: null,
                                             style: DisableButtonStyles
                                                 .disablePreviousButtonStyle,
                                             child: DisableButtonStyles
@@ -511,7 +485,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                   children: [
                                     Center(
                                       child: Text(
-                                        '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? dataCard.length : showRecordRRR + dataCard.length}',
+                                        '${(currentPage * itemsPerPage) + 1} : ${((currentPage + 1) * itemsPerPage).clamp(1, displayedData.length)}',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -524,11 +498,16 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    nextLink != null
+                                    currentPage < totalPages() - 1
                                         ? ElevatedButton(
-                                            onPressed: nextLink != null
-                                                ? loadNextPage
-                                                : null,
+                                            onPressed:
+                                                currentPage < totalPages() - 1
+                                                    ? () {
+                                                        setState(() {
+                                                          currentPage++;
+                                                        });
+                                                      }
+                                                    : null,
                                             style: ButtonStyles.nextButtonStyle,
                                             child: ButtonStyles
                                                 .nextButtonContent(),
