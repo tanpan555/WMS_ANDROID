@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:wms_android/styles.dart';
+import 'package:wms_android/loading.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -140,7 +141,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? Center(child: LoadingIndicator())
             : SingleChildScrollView(
                 child: Column(
                   children: [

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../custom_appbar.dart';
 import '../bottombar.dart';
+import 'package:wms_android/loading.dart';
 import 'SSFGDT31_SCREEN2.dart';
 
 class SSFGDT31_MAIN extends StatefulWidget {
@@ -55,7 +56,7 @@ class _SSFGDT31_MAINState extends State<SSFGDT31_MAIN> {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? Center(child: LoadingIndicator())
             : Column(
                 children: [
                   Container(

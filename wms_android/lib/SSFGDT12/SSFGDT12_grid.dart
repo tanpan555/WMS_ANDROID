@@ -7,6 +7,7 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:intl/intl.dart';
 import 'package:wms_android/styles.dart';
+import 'package:wms_android/loading.dart';
 import 'SSFGDT12_main.dart';
 import 'SSFGDT12_barcode.dart';
 
@@ -427,7 +428,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
       body: Padding(
         padding: EdgeInsets.all(10.0),
         child: isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? Center(child: LoadingIndicator())
             : dataCard.isEmpty
                 ? const Center(
                     child: Text(

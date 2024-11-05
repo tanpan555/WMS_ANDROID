@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-// import 'dart:ui';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
+import 'package:wms_android/loading.dart';
 import 'SSFGDT09L_menu.dart';
 
 class SSFGDT09L_MAIN extends StatefulWidget {
@@ -101,7 +101,7 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
             ),
             Expanded(
               child: isLoading
-                  ? const Center(child: CircularProgressIndicator())
+                  ? Center(child: LoadingIndicator())
                   : dataWareCode.isEmpty
                       ? const Center(
                           child: Text(

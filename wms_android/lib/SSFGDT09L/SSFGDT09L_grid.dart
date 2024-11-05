@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:wms_android/styles.dart';
+import 'package:wms_android/loading.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -619,7 +620,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                   const SizedBox(height: 8),
                   // ข้อมูลที่ต้องการแสดงใน ListView
                   isLoading
-                      ? Center(child: CircularProgressIndicator())
+                      ? Center(child: LoadingIndicator())
                       : dataCard.isEmpty
                           ? const Column(
                               children: [

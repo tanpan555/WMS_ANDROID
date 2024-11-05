@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-// import 'package:intl/intl.dart';
+import 'package:wms_android/loading.dart';
 import 'package:flutter/services.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
@@ -314,7 +314,7 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
             const SizedBox(height: 10),
             // --------------------------------------------------------------------------------------------------
             isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? Center(child: LoadingIndicator())
                 : TextFormField(
                     controller: dataLovReasonController,
                     readOnly: true,

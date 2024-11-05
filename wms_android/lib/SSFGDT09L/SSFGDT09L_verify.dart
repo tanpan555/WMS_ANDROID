@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wms_android/styles.dart';
+import 'package:wms_android/loading.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -552,7 +553,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
             // --------------------------------------------------------------------
             Expanded(
               child: isLoading
-                  ? Center(child: CircularProgressIndicator())
+                  ? Center(child: LoadingIndicator())
                   : dataCard.isEmpty
                       ? const Center(
                           child: Text(

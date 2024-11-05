@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
-//-----------
+import 'package:wms_android/loading.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'SSFGDT09L_grid.dart';
@@ -726,90 +726,140 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    showDialogLovCancel();
-                  },
-                  style: AppStyles.NextButtonStyle(),
-                  child:
-                      Text('ยกเลิก', style: AppStyles.CancelbuttonTextStyle()),
-                ),
+            isLoading
+                ? const SizedBox.shrink()
+                : dataForm.isEmpty
+                    ? const SizedBox.shrink()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              showDialogLovCancel();
+                            },
+                            style: AppStyles.NextButtonStyle(),
+                            child: Text('ยกเลิก',
+                                style: AppStyles.CancelbuttonTextStyle()),
+                          ),
 
-                // const Spacer(),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      if (noDate != true && chkDate != true) {
-                        RegExp dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                        // String messageAlertValueDate =
-                        //     'กรุณากรองวันที่ให้ถูกต้อง';
-                        if (!dateRegExp.hasMatch(crDate)) {
-                          setState(() {
-                            chkDate = true;
-                          });
-                        } else {
-                          if (docNo.isNotEmpty &&
-                              docNo != '' &&
-                              docNo != 'null' &&
-                              returnStatusLovDocType.isNotEmpty &&
-                              returnStatusLovDocType != '' &&
-                              returnStatusLovDocType != 'null' &&
-                              crDate.isNotEmpty &&
-                              crDate != '' &&
-                              crDate != 'null' &&
-                              returnStatusLovMoDoNo.isNotEmpty &&
-                              returnStatusLovMoDoNo != '' &&
-                              returnStatusLovMoDoNo != 'null') {
-                            chkCust(
-                              shidForChk,
-                              returnStatusLovRefNo.isNotEmpty
-                                  ? soNoForChk
-                                  : 'null',
-                              testChk = 1,
-                            );
-                          } else {
-                            showDialogErrorCHK(
-                                context, 'ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
-                          }
-                        }
-                      }
-                    });
-                  },
-                  style: AppStyles.NextButtonStyle(),
-                  child: Image.asset(
-                    'assets/images/right.png', // ใส่ภาพจากไฟล์ asset
-                    width: 25, // กำหนดขนาดภาพ
-                    height: 25,
-                  ),
-                ),
-              ],
-            ),
+                          // const Spacer(),
+                          ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                if (noDate != true && chkDate != true) {
+                                  RegExp dateRegExp =
+                                      RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                                  // String messageAlertValueDate =
+                                  //     'กรุณากรองวันที่ให้ถูกต้อง';
+                                  if (!dateRegExp.hasMatch(crDate)) {
+                                    setState(() {
+                                      chkDate = true;
+                                    });
+                                  } else {
+                                    if (docNo.isNotEmpty &&
+                                        docNo != '' &&
+                                        docNo != 'null' &&
+                                        returnStatusLovDocType.isNotEmpty &&
+                                        returnStatusLovDocType != '' &&
+                                        returnStatusLovDocType != 'null' &&
+                                        crDate.isNotEmpty &&
+                                        crDate != '' &&
+                                        crDate != 'null' &&
+                                        returnStatusLovMoDoNo.isNotEmpty &&
+                                        returnStatusLovMoDoNo != '' &&
+                                        returnStatusLovMoDoNo != 'null') {
+                                      chkCust(
+                                        shidForChk,
+                                        returnStatusLovRefNo.isNotEmpty
+                                            ? soNoForChk
+                                            : 'null',
+                                        testChk = 1,
+                                      );
+                                    } else {
+                                      showDialogErrorCHK(context,
+                                          'ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
+                                    }
+                                  }
+                                }
+                              });
+                            },
+                            style: AppStyles.NextButtonStyle(),
+                            child: Image.asset(
+                              'assets/images/right.png', // ใส่ภาพจากไฟล์ asset
+                              width: 25, // กำหนดขนาดภาพ
+                              height: 25,
+                            ),
+                          ),
+                        ],
+                      ),
             const SizedBox(height: 10),
             // -----------------------------
             Expanded(
               child: isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                            child: AbsorbPointer(
-                              child: TextFormField(
-                                style: const TextStyle(
-                                  color: Colors.black87,
+                  ? Center(child: LoadingIndicator())
+                  : dataForm.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No data found',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
+                      : SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              GestureDetector(
+                                child: AbsorbPointer(
+                                  child: TextFormField(
+                                    style: const TextStyle(
+                                      color: Colors.black87,
+                                    ),
+                                    controller: docNoController,
+                                    readOnly: true,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      filled: true,
+                                      fillColor: Colors.grey[300],
+                                      label: RichText(
+                                        text: const TextSpan(
+                                          text:
+                                              'เลขที่ใบเบิก WMS', // ชื่อ label
+                                          style: TextStyle(
+                                            color: Colors.black87,
+                                            fontSize: 16,
+                                          ),
+                                          children: [
+                                            TextSpan(
+                                              text: ' *', // เพิ่มเครื่องหมาย *
+                                              style: TextStyle(
+                                                color:
+                                                    Colors.red, // สีแดงสำหรับ *
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                                controller: docNoController,
+                              ),
+
+                              const SizedBox(height: 8),
+                              // -----------------------------
+
+                              TextFormField(
+                                controller: docTypeController,
                                 readOnly: true,
+                                onTap: () => showDialogDropdownSearchDocType(),
+                                minLines: 1,
+                                maxLines: 3,
+                                // overflow: TextOverflow.ellipsis,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   filled: true,
-                                  fillColor: Colors.grey[300],
+                                  fillColor: Colors.white,
                                   label: RichText(
                                     text: const TextSpan(
-                                      text: 'เลขที่ใบเบิก WMS', // ชื่อ label
+                                      text: 'ประเภทการจ่าย', // ชื่อ label
                                       style: TextStyle(
                                         color: Colors.black87,
                                         fontSize: 16,
@@ -824,432 +874,398 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                       ],
                                     ),
                                   ),
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 8),
-                          // -----------------------------
-
-                          TextFormField(
-                            controller: docTypeController,
-                            readOnly: true,
-                            onTap: () => showDialogDropdownSearchDocType(),
-                            minLines: 1,
-                            maxLines: 3,
-                            // overflow: TextOverflow.ellipsis,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              label: RichText(
-                                text: const TextSpan(
-                                  text: 'ประเภทการจ่าย', // ชื่อ label
-                                  style: TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 16,
+                                  // labelText: 'ประเภทการจ่าย *',
+                                  // labelStyle: TextStyle(
+                                  //   color: Colors.black87,
+                                  // ),
+                                  suffixIcon: const Icon(
+                                    Icons.arrow_drop_down,
+                                    color: Color.fromARGB(255, 113, 113, 113),
                                   ),
-                                  children: [
-                                    TextSpan(
-                                      text: ' *', // เพิ่มเครื่องหมาย *
-                                      style: TextStyle(
-                                        color: Colors.red, // สีแดงสำหรับ *
-                                      ),
-                                    ),
-                                  ],
                                 ),
                               ),
-                              // labelText: 'ประเภทการจ่าย *',
-                              // labelStyle: TextStyle(
-                              //   color: Colors.black87,
-                              // ),
-                              suffixIcon: const Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                          ),
 
-                          const SizedBox(height: 8),
-                          // -----------------------------
-                          TextFormField(
-                            controller: crDateController,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter
-                                  .digitsOnly, // ยอมรับเฉพาะตัวเลข
-                              LengthLimitingTextInputFormatter(
-                                  8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
-                              DateInputFormatter(), // กำหนดรูปแบบ __/__/____
-                            ],
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              label: RichText(
-                                text: TextSpan(
-                                  text: 'วันที่บันทึก', // ชื่อ label
-                                  style: chkDate == false && noDate == false
-                                      ? const TextStyle(
-                                          color: Colors.black87,
-                                          fontSize: 16,
-                                        )
-                                      : const TextStyle(
-                                          color: Colors.red,
-                                          fontSize: 16,
+                              const SizedBox(height: 8),
+                              // -----------------------------
+                              TextFormField(
+                                controller: crDateController,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter
+                                      .digitsOnly, // ยอมรับเฉพาะตัวเลข
+                                  LengthLimitingTextInputFormatter(
+                                      8), // จำกัดจำนวนตัวอักษรไม่เกิน 10 ตัว
+                                  DateInputFormatter(), // กำหนดรูปแบบ __/__/____
+                                ],
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'วันที่บันทึก', // ชื่อ label
+                                      style: chkDate == false && noDate == false
+                                          ? const TextStyle(
+                                              color: Colors.black87,
+                                              fontSize: 16,
+                                            )
+                                          : const TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 16,
+                                            ),
+                                      children: [
+                                        TextSpan(
+                                          text: ' *', // เพิ่มเครื่องหมาย *
+                                          style: TextStyle(
+                                            color: Colors.red, // สีแดงสำหรับ *
+                                          ),
                                         ),
-                                  children: [
-                                    TextSpan(
-                                      text: ' *', // เพิ่มเครื่องหมาย *
-                                      style: TextStyle(
-                                        color: Colors.red, // สีแดงสำหรับ *
-                                      ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
+                                  hintText: 'DD/MM/YYYY',
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  // labelText: 'วันที่บันทึก *',
+                                  // labelStyle: const TextStyle(
+                                  //   color: Colors.black87,
+                                  // ),
+                                  suffixIcon: IconButton(
+                                    icon: const Icon(Icons
+                                        .calendar_today), // ไอคอนที่อยู่ขวาสุด
+                                    onPressed: () async {
+                                      // กดไอคอนเพื่อเปิด date picker
+                                      _selectDate(context);
+                                    },
+                                  ),
                                 ),
-                              ),
-                              hintText: 'DD/MM/YYYY',
-                              hintStyle: TextStyle(color: Colors.grey),
-                              // labelText: 'วันที่บันทึก *',
-                              // labelStyle: const TextStyle(
-                              //   color: Colors.black87,
-                              // ),
-                              suffixIcon: IconButton(
-                                icon: const Icon(
-                                    Icons.calendar_today), // ไอคอนที่อยู่ขวาสุด
-                                onPressed: () async {
-                                  // กดไอคอนเพื่อเปิด date picker
-                                  _selectDate(context);
-                                },
-                              ),
-                            ),
-                            onChanged: (value) {
-                              crDate = value;
-                              print('crDate : $crDate');
-                              if (crDate != crDateForCheck) {
-                                checkUpdateData = true;
-                              }
-                              setState(() {
-                                //----------------------------------------------\\
-                                // สร้าง instance ของ DateInputFormatter
-                                DateInputFormatter formatter =
-                                    DateInputFormatter();
-
-                                // ตรวจสอบการเปลี่ยนแปลงของข้อความ
-                                TextEditingValue oldValue = TextEditingValue(
-                                    text: crDateController.text);
-                                TextEditingValue newValue =
-                                    TextEditingValue(text: value);
-
-                                // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
-                                formatter.formatEditUpdate(oldValue, newValue);
-
-                                // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
-                                dateColorCheck = formatter.dateColorCheck;
-                                monthColorCheck = formatter.monthColorCheck;
-                                noDate =
-                                    formatter.noDate; // เพิ่มการตรวจสอบ noDate
-                                //--------------------------------------------------\\
-                                RegExp dateRegExp =
-                                    RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                                // String messageAlertValueDate =
-                                //     'กรุณากรองวันที่ให้ถูกต้อง';
-                                if (!dateRegExp.hasMatch(crDate)) {
-                                  // setState(() {
-                                  //   chkDate == true;
-                                  // });
-                                  // showDialogAlert(context, messageAlertValueDate);
-                                } else {
+                                onChanged: (value) {
+                                  crDate = value;
+                                  print('crDate : $crDate');
+                                  if (crDate != crDateForCheck) {
+                                    checkUpdateData = true;
+                                  }
                                   setState(() {
-                                    chkDate = false;
+                                    //----------------------------------------------\\
+                                    // สร้าง instance ของ DateInputFormatter
+                                    DateInputFormatter formatter =
+                                        DateInputFormatter();
+
+                                    // ตรวจสอบการเปลี่ยนแปลงของข้อความ
+                                    TextEditingValue oldValue =
+                                        TextEditingValue(
+                                            text: crDateController.text);
+                                    TextEditingValue newValue =
+                                        TextEditingValue(text: value);
+
+                                    // ใช้ formatEditUpdate เพื่อตรวจสอบและอัปเดตค่าสีของวันที่และเดือน
+                                    formatter.formatEditUpdate(
+                                        oldValue, newValue);
+
+                                    // ตรวจสอบค่าที่ส่งกลับมาจาก DateInputFormatter
+                                    dateColorCheck = formatter.dateColorCheck;
+                                    monthColorCheck = formatter.monthColorCheck;
+                                    noDate = formatter
+                                        .noDate; // เพิ่มการตรวจสอบ noDate
+                                    //--------------------------------------------------\\
+                                    RegExp dateRegExp =
+                                        RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                                    // String messageAlertValueDate =
+                                    //     'กรุณากรองวันที่ให้ถูกต้อง';
+                                    if (!dateRegExp.hasMatch(crDate)) {
+                                      // setState(() {
+                                      //   chkDate == true;
+                                      // });
+                                      // showDialogAlert(context, messageAlertValueDate);
+                                    } else {
+                                      setState(() {
+                                        chkDate = false;
+                                      });
+                                    }
                                   });
-                                }
-                              });
-                            },
-                          ),
-                          // noDate
-                          //     ? const Text(
-                          //         'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                          //         style: TextStyle(color: Colors.red),
-                          //       )
-                          //     : const SizedBox.shrink(),
-                          chkDate == true || noDate == true
-                              ? const Padding(
-                                  padding: EdgeInsets.only(top: 4.0),
-                                  child: Text(
-                                    'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize:
-                                          12, // ปรับขนาดตัวอักษรตามที่ต้องการ
-                                    ),
-                                  ))
-                              : const SizedBox.shrink(),
-                          const SizedBox(height: 8),
-                          // -----------------------------
-                          // DropdownSearch<String>(
-                          //   popupProps: PopupProps.menu(
-                          //     showSearchBox: true,
-                          //     showSelectedItems: true,
-                          //     itemBuilder: (context, item, isSelected) {
-                          //       return ListTile(
-                          //         title: Text(item),
-                          //         selected: isSelected,
-                          //       );
-                          //     },
-                          //     constraints: BoxConstraints(
-                          //       maxHeight: 250,
-                          //     ),
-                          //   ),
-                          //   items: dataLovRefNo
-                          //       .map<String>((item) =>
-                          //           '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}')
-                          //       .toList(),
-                          //   dropdownDecoratorProps: DropDownDecoratorProps(
-                          //     dropdownSearchDecoration: InputDecoration(
-                          //       border: InputBorder.none,
-                          //       filled: true,
-                          //       fillColor: Colors.white,
-                          //       labelText: 'เลขที่เอกสารอ้างอิง',
-                          //       labelStyle: const TextStyle(
-                          //         color: Colors.black87,
-                          //       ),
-                          //     ),
-                          //   ),
-                          //   onChanged: (String? value) {
-                          //     setState(() {
-                          //       selectLovRefNo = value;
-
-                          //       // Find the selected item
-                          //       var selectedItem = dataLovRefNo.firstWhere(
-                          //         (item) =>
-                          //             '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}' ==
-                          //             value,
-                          //         orElse: () => <String, dynamic>{}, // แก้ไข orElse
-                          //       );
-                          //       // Update variables based on selected item
-                          //       if (selectedItem.isNotEmpty) {
-                          //         returnStatusLovRefNo = selectedItem['so_no'] ?? '';
-                          //         soNoForChk = selectedItem['so_no'].toString();
-                          //       }
-                          //     });
-                          //     print(
-                          //         'dataLovRefNo in body: $dataLovRefNo type: ${dataLovRefNo.runtimeType}');
-                          //     // print(selectedItem);
-                          //     print(
-                          //         'returnStatusLovRefNo in body: $returnStatusLovRefNo type: ${returnStatusLovRefNo.runtimeType}');
-                          //   },
-                          //   selectedItem: selectLovRefNo,
-                          // ),
-
-                          ///
-                          TextFormField(
-                            controller: refNoController,
-                            readOnly: true,
-                            onTap: () => showDialogDropdownSearchRefNo(),
-                            minLines: 1,
-                            maxLines: 3,
-                            // overflow: TextOverflow.ellipsis,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText: 'เลขที่เอกสารอ้างอิง',
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
+                                },
                               ),
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
+                              // noDate
+                              //     ? const Text(
+                              //         'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
+                              //         style: TextStyle(color: Colors.red),
+                              //       )
+                              //     : const SizedBox.shrink(),
+                              chkDate == true || noDate == true
+                                  ? const Padding(
+                                      padding: EdgeInsets.only(top: 4.0),
+                                      child: Text(
+                                        'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize:
+                                              12, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                                        ),
+                                      ))
+                                  : const SizedBox.shrink(),
+                              const SizedBox(height: 8),
+                              // -----------------------------
+                              // DropdownSearch<String>(
+                              //   popupProps: PopupProps.menu(
+                              //     showSearchBox: true,
+                              //     showSelectedItems: true,
+                              //     itemBuilder: (context, item, isSelected) {
+                              //       return ListTile(
+                              //         title: Text(item),
+                              //         selected: isSelected,
+                              //       );
+                              //     },
+                              //     constraints: BoxConstraints(
+                              //       maxHeight: 250,
+                              //     ),
+                              //   ),
+                              //   items: dataLovRefNo
+                              //       .map<String>((item) =>
+                              //           '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}')
+                              //       .toList(),
+                              //   dropdownDecoratorProps: DropDownDecoratorProps(
+                              //     dropdownSearchDecoration: InputDecoration(
+                              //       border: InputBorder.none,
+                              //       filled: true,
+                              //       fillColor: Colors.white,
+                              //       labelText: 'เลขที่เอกสารอ้างอิง',
+                              //       labelStyle: const TextStyle(
+                              //         color: Colors.black87,
+                              //       ),
+                              //     ),
+                              //   ),
+                              //   onChanged: (String? value) {
+                              //     setState(() {
+                              //       selectLovRefNo = value;
 
-                          // ----------------------------------------------------------------------------------------------------------------------------------
-                          // DropdownSearch<String>(
-                          //   popupProps: PopupProps.menu(
-                          //     showSearchBox: true,
-                          //     showSelectedItems: true,
-                          //     itemBuilder: (context, item, isSelected) {
-                          //       return ListTile(
-                          //         title: Text(item),
-                          //         selected: isSelected,
-                          //       );
-                          //     },
-                          //     constraints: BoxConstraints(
-                          //       maxHeight: 250,
-                          //     ),
-                          //   ),
-                          //   items: dataLovMoDoNo
-                          //       .map<String>((item) =>
-                          //           '${item['schid']} ${item['fg_code']} ${item['cust_name']}')
-                          //       .toList(),
-                          //   dropdownDecoratorProps: DropDownDecoratorProps(
-                          //     dropdownSearchDecoration: InputDecoration(
-                          //       border: InputBorder.none,
-                          //       filled: true,
-                          //       fillColor: Colors.white,
-                          //       labelText: 'เลขที่คำสั่งผลผลิต *',
-                          //       labelStyle: const TextStyle(
-                          //         color: Colors.black87,
-                          //       ),
-                          //     ),
-                          //   ),
-                          //   onChanged: (String? value) {
-                          //     setState(() {
-                          //       // Find the selected item
-                          //       var selectedItem = dataLovMoDoNo.firstWhere(
-                          //         (item) =>
-                          //             '${item['schid']} ${item['fg_code']} ${item['cust_name']}' ==
-                          //             value,
-                          //         orElse: () => <String, dynamic>{},
-                          //       );
+                              //       // Find the selected item
+                              //       var selectedItem = dataLovRefNo.firstWhere(
+                              //         (item) =>
+                              //             '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}' ==
+                              //             value,
+                              //         orElse: () => <String, dynamic>{}, // แก้ไข orElse
+                              //       );
+                              //       // Update variables based on selected item
+                              //       if (selectedItem.isNotEmpty) {
+                              //         returnStatusLovRefNo = selectedItem['so_no'] ?? '';
+                              //         soNoForChk = selectedItem['so_no'].toString();
+                              //       }
+                              //     });
+                              //     print(
+                              //         'dataLovRefNo in body: $dataLovRefNo type: ${dataLovRefNo.runtimeType}');
+                              //     // print(selectedItem);
+                              //     print(
+                              //         'returnStatusLovRefNo in body: $returnStatusLovRefNo type: ${returnStatusLovRefNo.runtimeType}');
+                              //   },
+                              //   selectedItem: selectLovRefNo,
+                              // ),
 
-                          //       // Update variables based on selected item
-                          //       if (selectedItem.isNotEmpty) {
-                          //         returnStatusLovMoDoNo =
-                          //             selectedItem['schid'].toString();
-                          //         selectLovMoDoNo = selectedItem['schid'].toString();
-                          //         selectCust(returnStatusLovMoDoNo);
-                          //         //////-----------------------------------------------
-                          //         shidForChk = selectedItem['schid'].toString();
-                          //         print(selectedItem['schid'].toString());
-                          //         chkCust(
-                          //           shidForChk,
-                          //           soNoForChk.isNotEmpty ? soNoForChk : 'null',
-                          //           testChk = 0,
-                          //         );
-                          //       }
-                          //     });
-                          //     print(
-                          //         'dataLovMoDoNo in body: $dataLovMoDoNo type: ${dataLovMoDoNo.runtimeType}');
-                          //     print(
-                          //         'returnStatusLovMoDoNo in body: $returnStatusLovMoDoNo type: ${returnStatusLovMoDoNo.runtimeType}');
-                          //   },
-                          //   selectedItem: selectLovMoDoNo,
-                          // ),
-                          TextFormField(
-                            controller: moDoNoController,
-                            readOnly: true,
-                            onTap: () => showDialogDropdownSearchMoDoNo(),
-                            minLines: 1,
-                            maxLines: 3,
-                            // overflow: TextOverflow.ellipsis,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              label: RichText(
-                                text: const TextSpan(
-                                  text: 'เลขที่คำสั่งผลผลิต', // ชื่อ label
-                                  style: TextStyle(
+                              ///
+                              TextFormField(
+                                controller: refNoController,
+                                readOnly: true,
+                                onTap: () => showDialogDropdownSearchRefNo(),
+                                minLines: 1,
+                                maxLines: 3,
+                                // overflow: TextOverflow.ellipsis,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  labelText: 'เลขที่เอกสารอ้างอิง',
+                                  labelStyle: TextStyle(
                                     color: Colors.black87,
-                                    fontSize: 16,
                                   ),
-                                  children: [
-                                    TextSpan(
-                                      text: ' *', // เพิ่มเครื่องหมาย *
+                                  suffixIcon: Icon(
+                                    Icons.arrow_drop_down,
+                                    color: Color.fromARGB(255, 113, 113, 113),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+
+                              // ----------------------------------------------------------------------------------------------------------------------------------
+                              // DropdownSearch<String>(
+                              //   popupProps: PopupProps.menu(
+                              //     showSearchBox: true,
+                              //     showSelectedItems: true,
+                              //     itemBuilder: (context, item, isSelected) {
+                              //       return ListTile(
+                              //         title: Text(item),
+                              //         selected: isSelected,
+                              //       );
+                              //     },
+                              //     constraints: BoxConstraints(
+                              //       maxHeight: 250,
+                              //     ),
+                              //   ),
+                              //   items: dataLovMoDoNo
+                              //       .map<String>((item) =>
+                              //           '${item['schid']} ${item['fg_code']} ${item['cust_name']}')
+                              //       .toList(),
+                              //   dropdownDecoratorProps: DropDownDecoratorProps(
+                              //     dropdownSearchDecoration: InputDecoration(
+                              //       border: InputBorder.none,
+                              //       filled: true,
+                              //       fillColor: Colors.white,
+                              //       labelText: 'เลขที่คำสั่งผลผลิต *',
+                              //       labelStyle: const TextStyle(
+                              //         color: Colors.black87,
+                              //       ),
+                              //     ),
+                              //   ),
+                              //   onChanged: (String? value) {
+                              //     setState(() {
+                              //       // Find the selected item
+                              //       var selectedItem = dataLovMoDoNo.firstWhere(
+                              //         (item) =>
+                              //             '${item['schid']} ${item['fg_code']} ${item['cust_name']}' ==
+                              //             value,
+                              //         orElse: () => <String, dynamic>{},
+                              //       );
+
+                              //       // Update variables based on selected item
+                              //       if (selectedItem.isNotEmpty) {
+                              //         returnStatusLovMoDoNo =
+                              //             selectedItem['schid'].toString();
+                              //         selectLovMoDoNo = selectedItem['schid'].toString();
+                              //         selectCust(returnStatusLovMoDoNo);
+                              //         //////-----------------------------------------------
+                              //         shidForChk = selectedItem['schid'].toString();
+                              //         print(selectedItem['schid'].toString());
+                              //         chkCust(
+                              //           shidForChk,
+                              //           soNoForChk.isNotEmpty ? soNoForChk : 'null',
+                              //           testChk = 0,
+                              //         );
+                              //       }
+                              //     });
+                              //     print(
+                              //         'dataLovMoDoNo in body: $dataLovMoDoNo type: ${dataLovMoDoNo.runtimeType}');
+                              //     print(
+                              //         'returnStatusLovMoDoNo in body: $returnStatusLovMoDoNo type: ${returnStatusLovMoDoNo.runtimeType}');
+                              //   },
+                              //   selectedItem: selectLovMoDoNo,
+                              // ),
+                              TextFormField(
+                                controller: moDoNoController,
+                                readOnly: true,
+                                onTap: () => showDialogDropdownSearchMoDoNo(),
+                                minLines: 1,
+                                maxLines: 3,
+                                // overflow: TextOverflow.ellipsis,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  label: RichText(
+                                    text: const TextSpan(
+                                      text: 'เลขที่คำสั่งผลผลิต', // ชื่อ label
                                       style: TextStyle(
-                                        color: Colors.red, // สีแดงสำหรับ *
+                                        color: Colors.black87,
+                                        fontSize: 16,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: ' *', // เพิ่มเครื่องหมาย *
+                                          style: TextStyle(
+                                            color: Colors.red, // สีแดงสำหรับ *
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  // labelText: 'เลขที่คำสั่งผลผลิต *',
+                                  // labelStyle: TextStyle(
+                                  //   color: Colors.black87,
+                                  // ),
+                                  suffixIcon: Icon(
+                                    Icons.arrow_drop_down,
+                                    color: Color.fromARGB(255, 113, 113, 113),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              // -----------------------------
+                              GestureDetector(
+                                child: AbsorbPointer(
+                                  child: TextFormField(
+                                    controller: custNameController,
+                                    readOnly: true,
+                                    minLines: 1,
+                                    maxLines: 3,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      filled: true,
+                                      fillColor: Colors.grey[300],
+                                      labelText: 'ลูกค้า',
+                                      labelStyle: const TextStyle(
+                                        color: Colors.black87,
                                       ),
                                     ),
-                                  ],
+                                    onChanged: (value) {
+                                      if (custName != custNameForCheck) {
+                                        checkUpdateData = true;
+                                      }
+                                    },
+                                  ),
                                 ),
                               ),
-                              // labelText: 'เลขที่คำสั่งผลผลิต *',
-                              // labelStyle: TextStyle(
-                              //   color: Colors.black87,
-                              // ),
-                              suffixIcon: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color.fromARGB(255, 113, 113, 113),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          // -----------------------------
-                          GestureDetector(
-                            child: AbsorbPointer(
-                              child: TextFormField(
-                                controller: custNameController,
-                                readOnly: true,
+                              const SizedBox(height: 8),
+                              // -----------------------------
+                              TextFormField(
+                                controller: noteController,
                                 minLines: 1,
-                                maxLines: 3,
+                                maxLines: 5,
+                                // readOnly: true,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   filled: true,
-                                  fillColor: Colors.grey[300],
-                                  labelText: 'ลูกค้า',
+                                  fillColor: Colors.white,
+                                  labelText: 'หมายเหตุ',
                                   labelStyle: const TextStyle(
                                     color: Colors.black87,
                                   ),
                                 ),
-                                onChanged: (value) {
-                                  if (custName != custNameForCheck) {
-                                    checkUpdateData = true;
-                                  }
+                                onChanged: (value) => {
+                                  setState(() {
+                                    note = value;
+                                    if (note != noteForCheck) {
+                                      checkUpdateData = true;
+                                    }
+                                  }),
                                 },
                               ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          // -----------------------------
-                          TextFormField(
-                            controller: noteController,
-                            minLines: 1,
-                            maxLines: 5,
-                            // readOnly: true,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelText: 'หมายเหตุ',
-                              labelStyle: const TextStyle(
-                                color: Colors.black87,
-                              ),
-                            ),
-                            onChanged: (value) => {
-                              setState(() {
-                                note = value;
-                                if (note != noteForCheck) {
-                                  checkUpdateData = true;
-                                }
-                              }),
-                            },
-                          ),
-                          const SizedBox(height: 8),
-                          // -----------------------------
-                          GestureDetector(
-                            child: AbsorbPointer(
-                              child: TextFormField(
-                                controller: erpDocNoController,
-                                readOnly: true,
-                                minLines: 1,
-                                maxLines: 3,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  filled: true,
-                                  fillColor: Colors.grey[300],
-                                  labelText: 'เลขที่เอกสาร ERP',
-                                  labelStyle: const TextStyle(
-                                    color: Colors.black87,
+                              const SizedBox(height: 8),
+                              // -----------------------------
+                              GestureDetector(
+                                child: AbsorbPointer(
+                                  child: TextFormField(
+                                    controller: erpDocNoController,
+                                    readOnly: true,
+                                    minLines: 1,
+                                    maxLines: 3,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      filled: true,
+                                      fillColor: Colors.grey[300],
+                                      labelText: 'เลขที่เอกสาร ERP',
+                                      labelStyle: const TextStyle(
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      if (erpDocNo != erpDocNoForCheck) {
+                                        checkUpdateData = true;
+                                      }
+                                    },
                                   ),
                                 ),
-                                onChanged: (value) {
-                                  if (erpDocNo != erpDocNoForCheck) {
-                                    checkUpdateData = true;
-                                  }
-                                },
                               ),
-                            ),
+                              const SizedBox(height: 8),
+                            ],
                           ),
-                          const SizedBox(height: 8),
-                        ],
-                      ),
-                    ),
+                        ),
             ),
           ],
         ),

@@ -6,6 +6,7 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:wms_android/styles.dart';
+import 'package:wms_android/loading.dart';
 import 'SSFGDT09L_form.dart';
 
 class Ssfgdt09lSelectDocType extends StatefulWidget {
@@ -167,7 +168,7 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
         padding: const EdgeInsets.all(16.0),
         child: Column(children: [
           isLoading
-              ? Center(child: CircularProgressIndicator())
+              ? Center(child: LoadingIndicator())
               : TextFormField(
                   controller: dataLovDocTypeController,
                   readOnly: true,

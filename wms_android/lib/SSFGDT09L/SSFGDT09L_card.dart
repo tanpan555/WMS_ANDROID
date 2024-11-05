@@ -9,6 +9,7 @@ import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:wms_android/styles.dart';
+import 'package:wms_android/loading.dart';
 import 'SSFGDT09L_form.dart';
 import 'SSFGDT09L_grid.dart';
 
@@ -675,7 +676,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? Center(child: LoadingIndicator())
             : dataCard.isEmpty
                 ? const Center(
                     child: Text(

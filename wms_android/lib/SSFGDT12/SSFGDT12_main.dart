@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
+import 'package:wms_android/loading.dart';
 import 'SSFGDT12_search.dart';
 
 class SSFGDT12_MAIN extends StatefulWidget {
@@ -93,7 +94,7 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
             ),
             Expanded(
               child: isLoading
-                  ? Center(child: CircularProgressIndicator())
+                  ? Center(child: LoadingIndicator())
                   : data.isEmpty
                       ? const Center(
                           child: Text(

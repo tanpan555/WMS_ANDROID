@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'dart:ui';
 import 'package:wms_android/styles.dart';
+import 'package:wms_android/loading.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'SSFGDT12_form.dart';
@@ -207,7 +208,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
       body: Padding(
         padding: EdgeInsets.all(10.0),
         child: isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? Center(child: LoadingIndicator())
             : displayedData.isEmpty
                 ? const Center(
                     child: Text(

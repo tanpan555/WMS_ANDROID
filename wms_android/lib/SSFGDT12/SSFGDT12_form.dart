@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:wms_android/styles.dart';
+import 'package:wms_android/loading.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'SSFGDT12_grid.dart';
@@ -313,7 +314,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                 child: Column(
                   children: [
                     isLoading
-                        ? Center(child: CircularProgressIndicator())
+                        ? Center(child: LoadingIndicator())
                         : GestureDetector(
                             child: AbsorbPointer(
                               child: TextFormField(
