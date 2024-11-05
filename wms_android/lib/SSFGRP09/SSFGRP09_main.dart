@@ -212,6 +212,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     endLocController.dispose();
     startGroupController.dispose();
     endGroupController.dispose();
+    startCategoryController.dispose();
+    endCategoryController.dispose();
+    startSubCategoryController.dispose();
+    endSubCategoryController.dispose();
+    startItemController.dispose();
+    endItemController.dispose();
     super.dispose();
   }
 
@@ -219,17 +225,17 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     await selectLovDate();
     await selectLovDocNo();
     await selectLovStartWareCode();
-    await selectLovEndWareCode();
-    await selectLovStartLoc();
-    await selectLovEndLoc();
+    await selectLovEndWareCode('-');
+    await selectLovStartLoc('-');
+    await selectLovEndLoc('-');
     await selectLovStartGroup();
-    await selectLovEndGroup();
-    await selectLovStartCategory();
-    await selectLovEndCategory();
-    await selectLovStartSubCategory();
-    await selectLovEndSubCategory();
-    await selectLovStartItem();
-    await selectLovEndItem();
+    await selectLovEndGroup('-');
+    await selectLovStartCategory('-');
+    await selectLovEndCategory('-');
+    await selectLovStartSubCategory('-');
+    await selectLovEndSubCategory('-');
+    await selectLovStartItem('-');
+    await selectLovEndItem('-');
     setDataFirstLoad();
   }
 
@@ -407,7 +413,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
   }
 
-  Future<void> selectLovEndWareCode() async {
+  Future<void> selectLovEndWareCode(String check) async {
     if (isFirstLoad == false) {
       if (mounted) {
         isLoading = true;
@@ -426,6 +432,25 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndWareCode =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
+            if (check == '0') {
+              var match = dataLovEndWareCode.firstWhere(
+                (element) =>
+                    element['someKey'].toString() == displayEndWareCode,
+                orElse: () => {'someKey': displayStartWareCode},
+              );
+
+              displayEndWareCode = match['someKey'].toString();
+              returnEndWareCode = match['someKey'].toString();
+              endWareCodeController.text = match['someKey'].toString();
+              print('Match found or fallback: $displayEndWareCode');
+              match = null;
+            }
+
+            if (check == '1') {
+              displayEndWareCode = '--';
+              returnEndWareCode = 'null';
+              endWareCodeController.text = '--';
+            }
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -443,7 +468,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
   }
 
-  Future<void> selectLovStartLoc() async {
+  Future<void> selectLovStartLoc(String check) async {
     if (isFirstLoad == false) {
       if (mounted) {
         isLoading = true;
@@ -464,6 +489,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovStartLoc =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
+            if (check == '1') {
+              displayStartLoc = '--';
+              returnStartLoc = 'null';
+              startLocController.text = '--';
+            }
+
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -481,7 +512,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
   }
 
-  Future<void> selectLovEndLoc() async {
+  Future<void> selectLovEndLoc(String check) async {
     if (isFirstLoad == false) {
       if (mounted) {
         isLoading = true;
@@ -503,6 +534,25 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovEndLoc =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (check == '0') {
+              var match = dataLovEndLoc.firstWhere(
+                (element) => element['someKey'].toString() == displayEndLoc,
+                orElse: () => {'someKey': displayStartLoc},
+              );
+
+              displayEndLoc = match['someKey'].toString();
+              returnEndLoc = match['someKey'].toString();
+              endLocController.text = match['someKey'].toString();
+              print('Match found or fallback: $displayEndLoc');
+              match = null;
+            }
+
+            if (check == '1') {
+              displayEndLoc = '--';
+              returnEndLoc = 'null';
+              endLocController.text = '--';
+            }
 
             if (isFirstLoad == false) {
               if (mounted) {
@@ -557,7 +607,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
   }
 
-  Future<void> selectLovEndGroup() async {
+  Future<void> selectLovEndGroup(String check) async {
     if (isFirstLoad == false) {
       if (mounted) {
         isLoading = true;
@@ -576,6 +626,19 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndGroup =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
+            if (check == '0') {
+              var match = dataLovEndGroup.firstWhere(
+                (element) => element['someKey'].toString() == displayEndGroup,
+                orElse: () => {'someKey': displayStartGroup},
+              );
+
+              displayEndGroup = match['someKey'].toString();
+              returnEndGroup = match['someKey'].toString();
+              endGroupController.text = match['someKey'].toString();
+              print('Match found or fallback: $displayEndGroup');
+              match = null;
+            }
+
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -593,7 +656,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
   }
 
-  Future<void> selectLovStartCategory() async {
+  Future<void> selectLovStartCategory(String check) async {
     if (isFirstLoad == false) {
       if (mounted) {
         isLoading = true;
@@ -614,6 +677,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovStartCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
+            if (check == '1') {
+              displayStartCategory = '--';
+              returnStartCategory = 'null';
+              startCategoryController.text = '--';
+            }
+
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -631,7 +700,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
   }
 
-  Future<void> selectLovEndCategory() async {
+  Future<void> selectLovEndCategory(String check) async {
     if (isFirstLoad == false) {
       if (mounted) {
         isLoading = true;
@@ -653,6 +722,26 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
+            if (check == '0') {
+              var match = dataLovEndCategory.firstWhere(
+                (element) =>
+                    element['someKey'].toString() == displayEndCategory,
+                orElse: () => {'someKey': displayStartCategory},
+              );
+
+              displayEndCategory = match['someKey'].toString();
+              returnEndCategory = match['someKey'].toString();
+              endCategoryController.text = match['someKey'].toString();
+              print('Match found or fallback: $displayEndCategory');
+              match = null;
+            }
+
+            if (check == '1') {
+              displayEndCategory = '--';
+              returnEndCategory = 'null';
+              endCategoryController.text = '--';
+            }
+
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -670,7 +759,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
   }
 
-  Future<void> selectLovStartSubCategory() async {
+  Future<void> selectLovStartSubCategory(String check) async {
     if (isFirstLoad == false) {
       if (mounted) {
         isLoading = true;
@@ -693,6 +782,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovStartSubCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
+            if (check == '1') {
+              displayStartSubCategory = '--';
+              returnStartSubCategory = 'null';
+              startSubCategoryController.text = '--';
+            }
+
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -710,7 +805,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
   }
 
-  Future<void> selectLovEndSubCategory() async {
+  Future<void> selectLovEndSubCategory(String check) async {
     if (isFirstLoad == false) {
       if (mounted) {
         isLoading = true;
@@ -734,6 +829,26 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndSubCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
+            if (check == '0') {
+              var match = dataLovEndSubCategory.firstWhere(
+                (element) =>
+                    element['someKey'].toString() == displayEndSubCategory,
+                orElse: () => {'someKey': displayStartSubCategory},
+              );
+
+              displayEndSubCategory = match['someKey'].toString();
+              returnEndSubCategory = match['someKey'].toString();
+              endSubCategoryController.text = match['someKey'].toString();
+              print('Match found or fallback: $displayEndSubCategory');
+              match = null;
+            }
+
+            if (check == '1') {
+              displayEndSubCategory = '--';
+              returnEndSubCategory = 'null';
+              endSubCategoryController.text = '--';
+            }
+
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -751,7 +866,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
   }
 
-  Future<void> selectLovStartItem() async {
+  Future<void> selectLovStartItem(String check) async {
     if (isFirstLoad == false) {
       if (mounted) {
         isLoading = true;
@@ -777,6 +892,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovStartItem =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
+            if (check == '1') {
+              displayStartItem = '--';
+              returnStartItem = 'null';
+              startItemController.text = '--';
+            }
+
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -794,7 +915,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
   }
 
-  Future<void> selectLovEndItem() async {
+  Future<void> selectLovEndItem(String check) async {
     if (isFirstLoad == false) {
       if (mounted) {
         isLoading = true;
@@ -820,6 +941,26 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovEndItem =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (check == '0') {
+              var match = dataLovEndItem.firstWhere(
+                (element) => element['someKey'].toString() == displayEndItem,
+                orElse: () => {'someKey': displayStartItem},
+              );
+
+              displayEndItem = match['someKey'].toString();
+              returnEndItem = match['someKey'].toString();
+              endItemController.text = match['someKey'].toString();
+              print('Match found or fallback: $displayEndItem');
+              match = null;
+            }
+
+            if (check == '1') {
+              displayEndItem = '--';
+              returnEndItem = 'null';
+              endItemController.text = '--';
+            }
+
             if (isFirstLoad == true) {
               isFirstLoad = false;
               isLoading = false;
@@ -1202,8 +1343,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           child: TextFormField(
                             controller: startWareCodeController,
                             readOnly: true,
-                            onTap: () =>
-                                showDialogDropdownSearchStartWareCode(),
+                            onTap: () {
+                              showDialogDropdownSearchStartWareCode();
+                              print(
+                                  'dataLovEndWareCode in onTap Start : $dataLovEndWareCode');
+                            },
                             minLines: 1,
                             maxLines: 3,
                             // overflow: TextOverflow.ellipsis,
@@ -1228,7 +1372,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           child: TextFormField(
                             controller: endWareCodeController,
                             readOnly: true,
-                            onTap: () => showDialogDropdownSearchEndWareCode(),
+                            onTap: () {
+                              showDialogDropdownSearchEndWareCode();
+                              print(
+                                  'dataLovEndWareCode in onTap end : $dataLovEndWareCode');
+                            },
                             minLines: 1,
                             maxLines: 3,
                             // overflow: TextOverflow.ellipsis,
@@ -2007,21 +2155,14 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                   ? '--'
                   : '${item['ware_code'] ?? ''}';
               startWareCodeController.text = displayStartWareCode.toString();
-              if (returnStartWareCode.isNotEmpty) {
-                selectLovEndWareCode();
-                displayEndWareCode = '--';
-                returnEndWareCode = 'null';
-                endWareCodeController.text = '--';
-                selectLovStartLoc();
-                displayStartLoc = '--';
-                returnStartLoc = 'null';
-                startLocController.text = '--';
-                selectLovEndLoc();
-                displayEndLoc = '--';
-                returnEndLoc = 'null';
-                endLocController.text = '--';
-                isLoading = false;
+              if (mounted) {
+                if (returnStartWareCode.isNotEmpty) {
+                  selectLovEndWareCode('0');
+                  selectLovStartLoc('1');
+                  selectLovEndLoc('1');
+                }
               }
+              isLoading = false;
               // -----------------------------------------
               print(
                   'startWareCodeController New: $startWareCodeController Type : ${startWareCodeController.runtimeType}');
@@ -2048,7 +2189,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           context: context,
           headerText: 'ถึง คลังสินค้า',
           searchController: searchController4,
-          data: dataLovEndLoc,
+          data: dataLovEndWareCode,
           docString: (item) =>
               '${item['ware_code'] ?? ''} ${item['ware_name'] ?? ''}',
           titleText: (item) => '${item['ware_code'] ?? ''}' == 'null'
@@ -2066,16 +2207,16 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               print('ware_code : ${item['ware_code'] ?? ''}');
               endWareCodeController.text = displayEndWareCode.toString();
               if (returnStartLoc.isNotEmpty) {
-                selectLovStartLoc();
-                displayStartLoc = '--';
-                returnStartLoc = 'null';
-                startLocController.text = '--';
-                selectLovEndLoc();
-                displayEndLoc = '--';
-                returnEndLoc = 'null';
-                endLocController.text = '--';
-                isLoading = false;
+                // selectLovStartLoc();
+                // displayStartLoc = '--';
+                // returnStartLoc = 'null';
+                // startLocController.text = '--';
+                // selectLovEndLoc();
+                // displayEndLoc = '--';
+                // returnEndLoc = 'null';
+                // endLocController.text = '--';
               }
+              isLoading = false;
               // -----------------------------------------
               print(
                   'startLocController New: $startLocController Type : ${startLocController.runtimeType}');
@@ -2119,10 +2260,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                   : '${item['location_code'] ?? ''}';
               startLocController.text = displayStartLoc.toString();
               if (returnEndWareCode.isNotEmpty) {
-                selectLovEndLoc();
-                displayEndLoc = '--';
-                returnEndLoc = 'null';
-                endLocController.text = '--';
+                selectLovEndLoc('0');
                 isLoading = false;
               }
               // -----------------------------------------
@@ -2209,34 +2347,13 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                   : '${item['group_code'] ?? ''}';
               startGroupController.text = displayStartGroup.toString();
               if (returnStartGroup.isNotEmpty) {
-                selectLovEndGroup();
-                displayEndGroup = '--';
-                returnEndGroup = 'null';
-                endGroupController.text = '--';
-                selectLovStartCategory();
-                displayStartCategory = '--';
-                returnStartCategory = 'null';
-                startCategoryController.text = '--';
-                selectLovEndCategory();
-                displayEndCategory = '--';
-                returnEndCategory = 'null';
-                endCategoryController.text = '--';
-                selectLovStartSubCategory();
-                displayStartSubCategory = '--';
-                returnStartSubCategory = 'null';
-                startSubCategoryController.text = '--';
-                selectLovEndSubCategory();
-                displayEndSubCategory = '--';
-                returnEndSubCategory = 'null';
-                endSubCategoryController.text = '--';
-                selectLovStartItem();
-                displayStartItem = '--';
-                returnStartItem = 'null';
-                startItemController.text = '--';
-                selectLovEndItem();
-                displayEndItem = '--';
-                returnEndItem = 'null';
-                endItemController.text = '--';
+                selectLovEndGroup('0');
+                selectLovStartCategory('1');
+                selectLovEndCategory('1');
+                selectLovStartSubCategory('1');
+                selectLovEndSubCategory('1');
+                selectLovStartItem('1');
+                selectLovEndItem('1');
                 isLoading = false;
               }
               // -----------------------------------------
@@ -2282,30 +2399,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                   : '${item['group_code'] ?? ''}';
               endGroupController.text = displayEndGroup.toString();
               if (returnEndGroup.isNotEmpty) {
-                selectLovStartCategory();
-                displayStartCategory = '--';
-                returnStartCategory = 'null';
-                startCategoryController.text = '--';
-                selectLovEndCategory();
-                displayEndCategory = '--';
-                returnEndCategory = 'null';
-                endCategoryController.text = '--';
-                selectLovStartSubCategory();
-                displayStartSubCategory = '--';
-                returnStartSubCategory = 'null';
-                startSubCategoryController.text = '--';
-                selectLovEndSubCategory();
-                displayEndSubCategory = '--';
-                returnEndSubCategory = 'null';
-                endSubCategoryController.text = '--';
-                selectLovStartItem();
-                displayStartItem = '--';
-                returnStartItem = 'null';
-                startItemController.text = '--';
-                selectLovEndItem();
-                displayEndItem = '--';
-                returnEndItem = 'null';
-                endItemController.text = '--';
+                selectLovStartCategory('1');
+                selectLovEndCategory('1');
+                selectLovStartSubCategory('1');
+                selectLovEndSubCategory('1');
+                selectLovStartItem('1');
+                selectLovEndItem('1');
                 isLoading = false;
               }
               // -----------------------------------------
@@ -2351,26 +2450,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                   : '${item['category_code'] ?? ''}';
               startCategoryController.text = displayStartCategory.toString();
               if (returnStartCategory.isNotEmpty) {
-                selectLovEndCategory();
-                displayEndCategory = '--';
-                returnEndCategory = 'null';
-                endCategoryController.text = '--';
-                selectLovStartSubCategory();
-                displayStartSubCategory = '--';
-                returnStartSubCategory = 'null';
-                startSubCategoryController.text = '--';
-                selectLovEndSubCategory();
-                displayEndSubCategory = '--';
-                returnEndSubCategory = 'null';
-                endSubCategoryController.text = '--';
-                selectLovStartItem();
-                displayStartItem = '--';
-                returnStartItem = 'null';
-                startItemController.text = '--';
-                selectLovEndItem();
-                displayEndItem = '--';
-                returnEndItem = 'null';
-                endItemController.text = '--';
+                selectLovEndCategory('0');
+                selectLovStartSubCategory('1');
+                selectLovEndSubCategory('1');
+                selectLovStartItem('1');
+                selectLovEndItem('1');
                 isLoading = false;
               }
               // -----------------------------------------
@@ -2416,22 +2500,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                   : '${item['category_code'] ?? ''}';
               endCategoryController.text = displayEndCategory.toString();
               if (returnEndCategory.isNotEmpty) {
-                selectLovStartSubCategory();
-                displayStartSubCategory = '--';
-                returnStartSubCategory = 'null';
-                startSubCategoryController.text = '--';
-                selectLovEndSubCategory();
-                displayEndSubCategory = '--';
-                returnEndSubCategory = 'null';
-                endSubCategoryController.text = '--';
-                selectLovStartItem();
-                displayStartItem = 'null';
-                returnStartItem = '--';
-                startItemController.text = '--';
-                selectLovEndItem();
-                displayEndItem = '--';
-                returnEndItem = 'null';
-                endItemController.text = '--';
+                selectLovStartSubCategory('1');
+                selectLovEndSubCategory('1');
+                selectLovStartItem('1');
+                selectLovEndItem('1');
                 isLoading = false;
               }
               // -----------------------------------------
@@ -2479,18 +2551,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               startSubCategoryController.text =
                   displayStartSubCategory.toString();
               if (returnStartSubCategory.isNotEmpty) {
-                selectLovEndSubCategory();
-                displayEndSubCategory = '--';
-                returnEndSubCategory = 'null';
-                endSubCategoryController.text = '--';
-                selectLovStartItem();
-                displayStartItem = '--';
-                returnStartItem = 'null';
-                startItemController.text = '--';
-                selectLovEndItem();
-                displayEndItem = '--';
-                returnEndItem = 'null';
-                endItemController.text = '--';
+                selectLovEndSubCategory('0');
+                selectLovStartItem('1');
+                selectLovEndItem('1');
                 isLoading = false;
               }
               // -----------------------------------------
@@ -2536,14 +2599,8 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                   : '${item['sub_cat_code'] ?? ''}';
               endSubCategoryController.text = displayEndSubCategory.toString();
               if (returnEndSubCategory.isNotEmpty) {
-                selectLovStartItem();
-                displayStartItem = '--';
-                returnStartItem = 'null';
-                startItemController.text = '--';
-                selectLovEndItem();
-                displayEndItem = '--';
-                returnEndItem = 'null';
-                endItemController.text = '--';
+                selectLovStartItem('1');
+                selectLovEndItem('1');
                 isLoading = false;
               }
               // -----------------------------------------
@@ -2589,10 +2646,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                   : '${item['item_code'] ?? ''}';
               startItemController.text = displayStartItem.toString();
               if (returnStartItem.isNotEmpty) {
-                selectLovEndItem();
-                displayEndItem = '--';
-                returnEndItem = 'null';
-                endItemController.text = '--';
+                selectLovEndItem('0');
                 isLoading = false;
               }
               // -----------------------------------------
