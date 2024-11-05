@@ -2644,7 +2644,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             setState(() {
               returnEndItem = item['item_code'] ?? '';
               displayEndItem = '${item['item_code'] ?? ''}' == 'null'
-                  ? '--No Value Set--'
+                  ? '--'
                   : '${item['item_code'] ?? ''}';
               endItemController.text = displayEndItem.toString();
               // -----------------------------------------

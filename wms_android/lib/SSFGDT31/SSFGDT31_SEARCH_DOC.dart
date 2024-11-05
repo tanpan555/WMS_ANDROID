@@ -115,7 +115,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
                     TextFormField(
                       controller: dataLovStatusController,
                       readOnly: true,
-                      onTap: () => showDialogDropdownSearchStartGroup(),
+                      onTap: () => showDialogDropdownSearchStatus(),
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         filled: true,
@@ -251,7 +251,7 @@ class _SSFGDT31_SEARCH_DOCState extends State<SSFGDT31_SEARCH_DOC> {
     );
   }
 
-  void showDialogDropdownSearchStartGroup() {
+  void showDialogDropdownSearchStatus() {
     showDialog(
       context: context,
       barrierDismissible: true,

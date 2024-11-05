@@ -166,44 +166,46 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
       appBar: CustomAppBar(title: 'เบิกจ่าย', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(children: [
-          isLoading
-              ? Center(child: LoadingIndicator())
-              : TextFormField(
-                  controller: dataLovDocTypeController,
-                  readOnly: true,
-                  onTap: () => showDialogSelectDocType(),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelText: 'ประเภทเอกสาร',
-                    labelStyle: const TextStyle(
-                      color: Colors.black87,
-                    ),
-                    suffixIcon: Icon(
-                      Icons.arrow_drop_down,
-                      color: Color.fromARGB(255, 113, 113, 113),
+        child: Column(
+          children: [
+            isLoading
+                ? Center(child: LoadingIndicator())
+                : TextFormField(
+                    controller: dataLovDocTypeController,
+                    readOnly: true,
+                    onTap: () => showDialogSelectDocType(),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.white,
+                      labelText: 'ประเภทเอกสาร',
+                      labelStyle: TextStyle(
+                        color: Colors.black87,
+                      ),
+                      suffixIcon: Icon(
+                        Icons.arrow_drop_down,
+                        color: Color.fromARGB(255, 113, 113, 113),
+                      ),
                     ),
                   ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    chkCreateCard();
+                  },
+                  style: AppStyles.ConfirmbuttonStyle(),
+                  child: Text('CONFIRM',
+                      style: AppStyles.ConfirmbuttonTextStyle()),
                 ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  chkCreateCard();
-                },
-                style: AppStyles.ConfirmbuttonStyle(),
-                child:
-                    Text('CONFIRM', style: AppStyles.ConfirmbuttonTextStyle()),
-              ),
-            ],
-          ),
-        ]),
+              ],
+            ),
+          ],
+        ),
       ),
-      bottomNavigationBar: BottomBar(
+      bottomNavigationBar: const BottomBar(
         currentPage: 'not_show',
       ),
     );

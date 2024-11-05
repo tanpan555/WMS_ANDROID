@@ -687,6 +687,7 @@ class DialogStyles {
     required String? headerText,
     required List<dynamic> data,
     required String Function(Map<String, dynamic> item) displayItem,
+    // required VoidCallback onClose,
     required void Function(Map<String, dynamic> item) onTap,
   }) {
     return Dialog(
