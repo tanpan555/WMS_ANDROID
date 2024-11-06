@@ -405,7 +405,12 @@ class DisableButtonStyles {
 
 class DialogStyles {
   // ---------------------------------------------------------------------  dialog แจ้งเตือนย้อนกลับ
-  static AlertDialog warningNotSaveDialog(BuildContext context) {
+  static AlertDialog warningNotSaveDialog({
+    required BuildContext context,
+    required String textMessage,
+    required VoidCallback onCloseDialog,
+    required VoidCallback onConfirmDialog,
+  }) {
     return AlertDialog(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -431,21 +436,20 @@ class DialogStyles {
             children: [
               IconButton(
                 icon: const Icon(MyIcons.close),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+                onPressed: () => onCloseDialog,
               ),
             ],
           ),
         ],
       ),
-      content: const Text('คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?'),
+      content: Text(textMessage),
+      // content: const Text('คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?'),
       actions: [
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(false),
+              onPressed: () => onCloseDialog,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 side: const BorderSide(color: Colors.grey),
@@ -454,7 +458,7 @@ class DialogStyles {
             ),
             const SizedBox(width: 4),
             ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(true),
+              onPressed: onConfirmDialog,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 side: const BorderSide(color: Colors.grey),

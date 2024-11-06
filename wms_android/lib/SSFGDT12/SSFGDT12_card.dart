@@ -40,6 +40,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
   List<dynamic> displayedData = [];
   String data_null = 'null';
 
+  bool isCardDisabled = false;
   bool isLoading = true;
   int currentPage = 0; // หน้าปัจจุบัน
   final int itemsPerPage = 15; // จำนวนรายการต่อหน้า
@@ -163,7 +164,6 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
     final start = currentPage * itemsPerPage;
     final end = start + itemsPerPage;
 
-    // ใช้ toList() เพื่อให้ได้ลิสต์จาก Iterable
     return displayedData.sublist(start, end.clamp(0, displayedData.length));
   }
 
@@ -184,8 +184,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                           children: [
                             ListView.builder(
                               shrinkWrap: true,
-                              physics:
-                                  const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
+                              physics: const NeverScrollableScrollPhysics(),
                               itemCount: getCurrentData().length,
                               itemBuilder: (context, index) {
                                 // ดึงข้อมูลรายการจาก dataCard
@@ -249,41 +248,46 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
 
                                 return Card(
                                   elevation: 8.0,
-                                  margin: EdgeInsets.symmetric(vertical: 8.0),
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        15.0), // กำหนดมุมโค้งของ Card
+                                    borderRadius: BorderRadius.circular(15.0),
                                   ),
-                                  color: Color.fromRGBO(204, 235, 252, 1.0),
+                                  color:
+                                      const Color.fromRGBO(204, 235, 252, 1.0),
                                   child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Ssfgdt12Form(
-                                            docNo: item['doc_no'],
-                                            pErpOuCode: widget.pErpOuCode,
-                                            browser_language:
-                                                widget.browser_language,
-                                            wareCode: item['ware_code'] ??
-                                                'ware_code',
-                                            pWareCode: widget.pWareCode,
-                                            p_attr1: widget.p_attr1,
-                                            // status: item['status'] ?? '',
-                                            // wareCode: item['ware_code'] == null
-                                            // ? 'ware_code  !!!'
-                                            // : item['ware_code'],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    borderRadius: BorderRadius.circular(
-                                        15.0), // กำหนดมุมโค้งให้ InkWell เช่นกัน
+                                    onTap: isCardDisabled
+                                        ? null
+                                        : () async {
+                                            setState(() {
+                                              isCardDisabled = true;
+                                            });
+                                            await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Ssfgdt12Form(
+                                                  docNo: item['doc_no'],
+                                                  pErpOuCode: widget.pErpOuCode,
+                                                  browser_language:
+                                                      widget.browser_language,
+                                                  wareCode: item['ware_code'] ??
+                                                      'ware_code',
+                                                  pWareCode: widget.pWareCode,
+                                                  p_attr1: widget.p_attr1,
+                                                ),
+                                              ),
+                                            ).then((value) async {
+                                              setState(() {
+                                                isCardDisabled = false;
+                                              });
+                                            });
+                                          },
+                                    borderRadius: BorderRadius.circular(15.0),
                                     child: Stack(
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.all(
-                                              16.0), // เพิ่ม padding เพื่อให้ content ไม่ชิดขอบ
+                                          padding: const EdgeInsets.all(16.0),
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -294,9 +298,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 18.0),
                                               ),
-                                              SizedBox(
-                                                  height:
-                                                      10.0), // เพิ่มระยะห่างระหว่างข้อความ
+                                              SizedBox(height: 10.0),
                                               item['ware_code'] == null
                                                   ? Text(
                                                       '${item['doc_date'] ?? ''} ${item['doc_no'] ?? ''}',
