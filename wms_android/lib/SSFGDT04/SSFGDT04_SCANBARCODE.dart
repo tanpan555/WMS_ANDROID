@@ -193,96 +193,83 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
         // ตรวจสอบสถานะ po_status เพื่อแสดง popup หรือเคลียร์ข้อมูลตามที่คุณต้องการ
         if (poStatus == '0') {
           // แสดง popup แจ้งเตือนและเคลียร์ค่าที่หน้าจอ
+          // showDialog(
+          //   context: context,
+          //   builder: (BuildContext context) {
+          //     return AlertDialog(
+          //       title: Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           Row(
+          //             children: const [
+          //               Icon(
+          //                 Icons.check_box, // ไอคอนแจ้งเตือน
+          //                 color: Colors.green, // สีแดง
+          //                 size: 30,
+          //               ),
+          //               SizedBox(
+          //                 width: 8, // ระยะห่างระหว่างไอคอนกับข้อความ
+          //               ),
+          //               Text('Update'),
+          //             ],
+          //           ),
+          //           // Close icon
+          //           IconButton(
+          //             icon: const Icon(Icons.close),
+          //             onPressed: () {
+          //               Navigator.of(context).pop(); // Close the dialog
+          //             },
+          //           ),
+          //         ],
+          //       ),
+          //       content: Text('Update Locator Complete. $poMessage'),
+          //       actions: [
+          //         TextButton(
+          //           style: ElevatedButton.styleFrom(
+          //             backgroundColor: Colors.white,
+          //             side: const BorderSide(color: Colors.grey),
+          //           ),
+          //           child: const Text('ตกลง'),
+          //           onPressed: () {
+          //             Navigator.of(context).pop();
+          //             clearScreen(); // ฟังก์ชันสำหรับเคลียร์ค่าที่หน้าจอ
+          //           },
+          //         ),
+          //       ],
+          //     );
+          //   },
+          // );
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return AlertDialog(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: const [
-                        Icon(
-                          Icons.check_box, // ไอคอนแจ้งเตือน
-                          color: Colors.green, // สีแดง
-                          size: 30,
-                        ),
-                        SizedBox(
-                          width: 8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                        ),
-                        Text('Update'),
-                      ],
-                    ),
-                    // Close icon
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Close the dialog
-                      },
-                    ),
-                  ],
-                ),
+              return DialogStyles.alertMessageDialog(
+                context: context,
                 content: Text('Update Locator Complete. $poMessage'),
-                actions: [
-                  TextButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('ตกลง'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      clearScreen(); // ฟังก์ชันสำหรับเคลียร์ค่าที่หน้าจอ
-                    },
-                  ),
-                ],
+                onClose: () {
+                  Navigator.of(context).pop();
+                },
+                onConfirm: () async {
+                  // await fetchPoStatusconform(vReceiveNo);
+                  Navigator.of(context).pop();
+                  clearScreen();
+                },
               );
             },
           );
         } else if (poStatus == '1') {
-          // แสดง popup แจ้งเตือนกรณีไม่ผ่าน
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return AlertDialog(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: const [
-                        Icon(
-                          Icons.notification_important, // ไอคอนแจ้งเตือน
-                          color: Colors.red, // สีแดง
-                          size: 30,
-                        ),
-                        SizedBox(
-                          width: 8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                        ),
-                        Text('แจ้งเตือน'),
-                      ],
-                    ),
-                    // Close icon
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Close the dialog
-                      },
-                    ),
-                  ],
-                ),
+              return DialogStyles.alertMessageDialog(
+                context: context,
                 content: Text('$poMessage'),
-                actions: [
-                  TextButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('ตกลง'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
+                onClose: () {
+                  Navigator.of(context).pop();
+                },
+                onConfirm: () async {
+                  Navigator.of(context).pop();
+                  // clearScreen();
+                },
               );
             },
           );
@@ -439,55 +426,70 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
                 if (po_status == '1') {
                   // Show a popup if the status is '1'
+                  // showDialog(
+                  //   context: context,
+                  //   builder: (BuildContext context) {
+                  //     return AlertDialog(
+                  //       title: Row(
+                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //         children: [
+                  //           Row(
+                  //             children: const [
+                  //               Icon(
+                  //                 Icons
+                  //                     .notification_important, // ไอคอนแจ้งเตือน
+                  //                 color: Colors.red, // สีแดง
+                  //                 size: 30,
+                  //               ),
+                  //               SizedBox(
+                  //                 width: 8, // ระยะห่างระหว่างไอคอนกับข้อความ
+                  //               ),
+                  //               Text('แจ้งเตือน'),
+                  //             ],
+                  //           ),
+                  //           // Close icon
+                  //           IconButton(
+                  //             icon: const Icon(Icons.close),
+                  //             onPressed: () {
+                  //               Navigator.of(context).pop(); // Close the dialog
+                  //             },
+                  //           ),
+                  //         ],
+                  //       ),
+                  //       content: Column(
+                  //         mainAxisSize: MainAxisSize.min,
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           Text('$po_message'),
+                  //         ],
+                  //       ),
+                  //       actions: [
+                  //         TextButton(
+                  //           style: ElevatedButton.styleFrom(
+                  //             backgroundColor: Colors.white,
+                  //             side: const BorderSide(color: Colors.grey),
+                  //           ),
+                  //           child: Text('ตกลง'),
+                  //           onPressed: () {
+                  //             Navigator.of(context).pop();
+                  //           },
+                  //         ),
+                  //       ],
+                  //     );
+                  //   },
+                  // );
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: const [
-                                Icon(
-                                  Icons
-                                      .notification_important, // ไอคอนแจ้งเตือน
-                                  color: Colors.red, // สีแดง
-                                  size: 30,
-                                ),
-                                SizedBox(
-                                  width: 8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                ),
-                                Text('แจ้งเตือน'),
-                              ],
-                            ),
-                            // Close icon
-                            IconButton(
-                              icon: const Icon(Icons.close),
-                              onPressed: () {
-                                Navigator.of(context).pop(); // Close the dialog
-                              },
-                            ),
-                          ],
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('$po_message'),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: const BorderSide(color: Colors.grey),
-                            ),
-                            child: Text('ตกลง'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
+                      return DialogStyles.alertMessageDialog(
+                        context: context,
+                        content: Text('$po_message'),
+                        onClose: () {
+                          Navigator.of(context).pop();
+                        },
+                        onConfirm: () async {
+                          Navigator.of(context).pop();
+                        },
                       );
                     },
                   );
@@ -504,202 +506,34 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return Dialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: StatefulBuilder(
-                        builder: (context, setState) {
-                          return Container(
-                            padding: const EdgeInsets.all(16),
-                            height: 300, // Adjust the height as needed
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      'Locator',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.close),
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pop(); // Close popup
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                // Search Field
-                                TextField(
-                                  controller: _searchController,
-                                  decoration: const InputDecoration(
-                                    hintText: 'ค้นหา...',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  onChanged: (query) {
-                                    setState(() {});
-                                  },
-                                ),
-                                const SizedBox(height: 10),
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemCount: locatorBarcodeItems
-                                            .where((item) {
-                                              final lcbarcodeString =
-                                                  item['lcbarcode'].toString();
-                                              final locationCode =
-                                                  item['location_code']
-                                                      .toString();
-                                              final locationName =
-                                                  item['location_name']
-                                                      .toString();
-                                              final searchQuery =
-                                                  _searchController.text.trim()
-                                                                          .toLowerCase();
-                                              final searchQueryInt =
-                                                  int.tryParse(searchQuery);
-                                              final lcbarcodeInt =
-                                                  int.tryParse(lcbarcodeString);
-
-                                              return (searchQueryInt != null &&
-                                                      lcbarcodeInt != null &&
-                                                      lcbarcodeInt ==
-                                                          searchQueryInt) ||
-                                                  lcbarcodeString
-                                                      .contains(searchQuery) ||
-                                                  locationCode
-                                                      .contains(searchQuery) ||
-                                                  locationName
-                                                  .toLowerCase()
-                                                      .contains(searchQuery);
-                                            })
-                                            .toList()
-                                            .length +
-                                        1, // +1 for the "-- No Value Set --" option
-                                    itemBuilder: (context, index) {
-                                      if (index == 0) {
-                                        // Add the special case for "-- No Value Set --"
-                                        return ListTile(
-                                          contentPadding: EdgeInsets.zero,
-                                          title: const Text(
-                                            '-- No Value Set --',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          // onTap: () {
-                                          //   setState(() {
-                                          //     selectedLocator !=
-                                          //         null; // Set to null
-                                          //     _locatorBarcodeController.clear();
-                                          //   });
-                                          //   Navigator.of(context).pop();
-                                          // },
-                                          onTap: () {
-                                            setState(() {
-                                              selectedLocator =
-                                                  null; // Clear selected locator
-                                              _locatorBarcodeController.text =
-                                                  '-- No Value Set --'; // Set default text
-                                            });
-                                            Navigator.of(context).pop();
-                                          },
-                                        );
-                                      }
-
-                                      // Filter and display other locator items
-                                      final filteredItems =
-                                          locatorBarcodeItems.where((item) {
-                                        final lcbarcodeString =
-                                            item['lcbarcode'].toString();
-                                        final locationCode =
-                                            item['location_code'].toString();
-                                        final locationName =
-                                            item['location_name'].toString();
-                                        final searchQuery =
-                                            _searchController.text.trim();
-                                        final searchQueryInt =
-                                            int.tryParse(searchQuery);
-                                        final lcbarcodeInt =
-                                            int.tryParse(lcbarcodeString);
-
-                                        return (searchQueryInt != null &&
-                                                lcbarcodeInt != null &&
-                                                lcbarcodeInt ==
-                                                    searchQueryInt) ||
-                                            lcbarcodeString
-                                                .contains(searchQuery) ||
-                                            locationCode
-                                                .contains(searchQuery) ||
-                                            locationName.toLowerCase().contains(searchQuery);
-                                      }).toList();
-
-                                      final item = filteredItems[index -
-                                          1]; // Adjust index due to added option
-                                      final lcbarcode =
-                                          item['lcbarcode'].toString();
-                                      final locationCode =
-                                          item['location_code'].toString();
-                                      final locationName =
-                                          item['location_name'].toString();
-
-                                      return ListTile(
-                                        contentPadding: EdgeInsets.zero,
-                                        title: RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: '$lcbarcode\n',
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text:
-                                                    '$locationCode $locationName',
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.normal,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            selectedLocator = lcbarcode;
-                                            _locatorBarcodeController.text =
-                                                lcbarcode;
-                                            fetchlocatorItems();
-                                            // Call the API after setting the selected locator
-                                          });
-                                          Navigator.of(context).pop();
-                                          scan_INmove_Location(lcbarcode);
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                    return DialogStyles.customLovSearchDialog(
+                      context: context,
+                      headerText: 'ผู้รับมอบสินค้า *',
+                      searchController: _searchController,
+                      data: locatorBarcodeItems,
+                      docString: (item) =>
+                          '${item['lcbarcode'] ?? ''} ${item['location_code'] ?? ''} ${item['location_name'] ?? ''}',
+                      titleText: (item) => '${item['lcbarcode'] ?? ''}',
+                      subtitleText: (item) =>
+                          '${item['location_code'] ?? ''} ${item['location_name'] ?? ''}',
+                      onTap: (item) {
+                        setState(() {
+                          // selectedLocator = docString;
+                          selectedLocator = item['lcbarcode'].toString();
+                          _locatorBarcodeController.text =
+                              item['lcbarcode'].toString();
+                          fetchlocatorItems();
+                          // Call the API after setting the selected locator
+                        });
+                        Navigator.of(context).pop();
+                        scan_INmove_Location(item['lcbarcode']);
+                      },
                     );
                   },
-                );
+                ).then((_) {
+                  // ลบค่าที่ค้นหาเมื่อ popup ถูกปิด ไม่ว่าจะกดไอคอนหรือกดที่อื่น
+                  _searchController.clear();
+                });
               },
               child: AbsorbPointer(
                 child: TextField(
@@ -714,10 +548,6 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                       color: Color.fromARGB(255, 113, 113, 113),
                     ),
                   ),
-                  // controller: _locatorBarcodeController.text.isNotEmpty
-                  //     ? _locatorBarcodeController
-                  //     : TextEditingController(
-                  //         text: selectedLocator ?? '-- No Value Set --'),
                   controller: _locatorBarcodeController.text.isNotEmpty
                       ? _locatorBarcodeController
                       : TextEditingController(

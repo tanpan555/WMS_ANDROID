@@ -357,133 +357,53 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: const [
-                                    Icon(
-                                      Icons
-                                          .notification_important, // ไอคอนแจ้งเตือน
-                                      color: Colors.red, // สีแดง
-                                      size: 30,
-                                    ),
-                                    SizedBox(
-                                      width:
-                                          8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                    ),
-                                    Text('แจ้งเตือน'),
-                                  ],
-                                ),
-                                // Close icon
-                                IconButton(
-                                  icon: const Icon(Icons.close),
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(); // Close the dialog
-                                  },
-                                ),
-                              ],
-                            ),
+                          return DialogStyles.alertMessageDialog(
+                            context: context,
                             content: Text('$poErpDocNo'),
-                            actions: <Widget>[
-                              TextButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  side: const BorderSide(color: Colors.grey),
-                                ),
-                                onPressed: () {
-                                  Navigator.of(context).pop(); // ปิด popup แรก
-                                  // เปิด popup ที่สอง
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              children: const [
-                                                Icon(
-                                                  Icons
-                                                      .notification_important, // ไอคอนแจ้งเตือน
-                                                  color: Colors.red, // สีแดง
-                                                  size: 30,
-                                                ),
-                                                SizedBox(
-                                                  width:
-                                                      8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                                ),
-                                                Text('แจ้งเตือน'),
-                                              ],
-                                            ),
-                                            // Close icon
-                                            IconButton(
-                                              icon: const Icon(Icons.close),
-                                              onPressed: () {
-                                                Navigator.of(context)
-                                                    .pop(); // Close the dialog
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                        content: const Text(
-                                            'ต้องการพิมพ์เอกสารใบรับหรือไม่ ?'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.white,
-                                              side: const BorderSide(
-                                                  color: Colors.grey),
-                                            ),
-                                            onPressed: () {
-                                              Navigator.of(context)
-                                                  .pop(); // ปิด popup ที่สอง
-                                              // ทำงานเมื่อผู้ใช้กด "Cancel"
-                                            },
-                                            child: const Text('ยกเลิก'),
-                                          ),
-                                          TextButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.white,
-                                              side: const BorderSide(
-                                                  color: Colors.grey),
-                                            ),
-                                            onPressed: () {
-                                              Navigator.of(context)
-                                                  .pop(); // ปิด popup ที่สอง
+                            onClose: () {
+                              Navigator.of(context).pop();
+                            },
+                            onConfirm: () async {
+                              Navigator.of(context)
+                                  .pop(); // Close the first dialog
 
-                                              // เรียก getPDF
-                                              getPDF(widget.po_doc_no ?? '')
-                                                  .then((_) {
-                                                // หลังจากเรียก getPDF เสร็จแล้ว, กลับไปยังหน้า SSFGDT04_MENU
-                                                Navigator.of(context)
-                                                    .pushAndRemoveUntil(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        SSFGDT04_MENU(
-                                                      pWareCode: gb.P_WARE_CODE,
-                                                      pErpOuCode:
-                                                          gb.P_ERP_OU_CODE,
-                                                    ),
-                                                  ),
-                                                  (Route<dynamic> route) =>
-                                                      false, // ลบหน้าอื่นๆ ออกจาก stack
-                                                );
-                                              });
-                                            },
-                                            child: const Text('ตกลง'),
+                              // Wait for a moment to ensure the first dialog is fully closed
+                              await Future.delayed(Duration(milliseconds: 100));
+
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return DialogStyles.alertMessageCheckDialog(
+                                    context: context,
+                                    content: const Text(
+                                        'ต้องการพิมพ์เอกสารใบรับหรือไม่ ?'),
+                                    onClose: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close the second dialog
+                                    },
+                                    onConfirm: () async {
+                                      Navigator.of(context)
+                                          .pop(); // Close the second dialog
+                                      // await fetchGetPo(); // Call the fetchGetPo function after confirming
+                                      getPDF(widget.po_doc_no ?? '').then((_) {
+                                        // หลังจากเรียก getPDF เสร็จแล้ว, กลับไปยังหน้า SSFGDT04_MENU
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                          MaterialPageRoute(
+                                            builder: (context) => SSFGDT04_MENU(
+                                              pWareCode: gb.P_WARE_CODE,
+                                              pErpOuCode: gb.P_ERP_OU_CODE,
+                                            ),
                                           ),
-                                        ],
-                                      );
+                                          (Route<dynamic> route) =>
+                                              false, // ลบหน้าอื่นๆ ออกจาก stack
+                                        );
+                                      });
                                     },
                                   );
                                 },
-                                child: const Text('ตกลง'),
-                              ),
-                            ],
+                              );
+                            },
                           );
                         },
                       );
@@ -491,48 +411,15 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: const [
-                                    Icon(
-                                      Icons
-                                          .notification_important, // ไอคอนแจ้งเตือน
-                                      color: Colors.red, // สีแดง
-                                      size: 30,
-                                    ),
-                                    SizedBox(
-                                      width:
-                                          8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                    ),
-                                    Text('แจ้งเตือน'),
-                                  ],
-                                ),
-                                // Close icon
-                                IconButton(
-                                  icon: const Icon(Icons.close),
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(); // Close the dialog
-                                  },
-                                ),
-                              ],
-                            ),
+                          return DialogStyles.alertMessageDialog(
+                            context: context,
                             content: Text(poMessage ?? ''),
-                            actions: [
-                              TextButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  side: const BorderSide(color: Colors.grey),
-                                ),
-                                child: const Text('ตกลง'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
+                            onClose: () {
+                              Navigator.of(context).pop();
+                            },
+                            onConfirm: () async {
+                              Navigator.of(context).pop();
+                            },
                           );
                         },
                       );

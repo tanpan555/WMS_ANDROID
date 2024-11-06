@@ -808,38 +808,16 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              Icon(
-                Icons.notification_important, // ไอคอนแจ้งเตือน
-                color: Colors.red, // สีแดง
-                size: 30,
-              ),
-              SizedBox(width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
-              Text('แจ้งเตือน'),
-              Spacer(),
-              IconButton(
-                icon: Icon(Icons.close, color: Colors.black), // ไอคอนปิด
-                onPressed: () {
-                  Navigator.of(context).pop(); // ปิด popup
-                },
-              ),
-            ],
-          ),
+        return DialogStyles.alertMessageDialog(
+          context: context,
           content: Text(messageCard),
-          actions: <Widget>[
-            TextButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                side: const BorderSide(color: Colors.grey),
-              ),
-              child: const Text('ตกลง'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+          onClose: () {
+            Navigator.of(context).pop();
+          },
+          onConfirm: () async {
+            // await fetchPoStatusconform(vReceiveNo);
+            Navigator.of(context).pop();
+          },
         );
       },
     );

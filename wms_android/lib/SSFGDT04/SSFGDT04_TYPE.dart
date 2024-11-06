@@ -233,7 +233,8 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
+      appBar:
+          CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       // backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),
@@ -283,8 +284,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => SSFGDT04_FORM(
-                                  po_doc_no:
-                                      po_doc_no, // ส่งค่า po_doc_no
+                                  po_doc_no: po_doc_no, // ส่งค่า po_doc_no
                                   po_doc_type:
                                       po_doc_type, // ส่งค่า po_doc_type
                                   pWareCode: widget.pWareCode,
@@ -295,57 +295,16 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: const [
-                                          Icon(
-                                            Icons
-                                                .notification_important, // ไอคอนแจ้งเตือน
-                                            color: Colors.red, // สีแดง
-                                            size: 30,
-                                          ),
-                                          SizedBox(
-                                            width:
-                                                8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                          ),
-                                          Text('แจ้งเตือน'),
-                                        ],
-                                      ),
-                                      // Close icon
-                                      IconButton(
-                                        icon: const Icon(Icons.close),
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pop(); // Close the dialog
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text('$poMessage'),
-                                    ],
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        side: const BorderSide(
-                                            color: Colors.grey),
-                                      ),
-                                      child: const Text('ตกลง'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
+                                return DialogStyles.alertMessageDialog(
+                                  context: context,
+                                  content: Text('$poMessage'),
+                                  onClose: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  onConfirm: () async {
+                                    // await fetchPoStatusconform(vReceiveNo);
+                                    Navigator.of(context).pop();
+                                  },
                                 );
                               },
                             );
@@ -355,50 +314,16 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: const [
-                                        Icon(
-                                          Icons
-                                              .notification_important, // ไอคอนแจ้งเตือน
-                                          color: Colors.red, // สีแดง
-                                          size: 30,
-                                        ),
-                                        SizedBox(
-                                          width:
-                                              8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                                        ),
-                                        Text('แจ้งเตือน'),
-                                      ],
-                                    ),
-                                    // Close icon
-                                    IconButton(
-                                      icon: const Icon(Icons.close),
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
-                                      },
-                                    ),
-                                  ],
-                                ),
+                              return DialogStyles.alertMessageDialog(
+                                context: context,
                                 content: Text('$poMessage'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      side:
-                                          const BorderSide(color: Colors.grey),
-                                    ),
-                                    child: Text('ตกลง'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
+                                onClose: () {
+                                  Navigator.of(context).pop();
+                                },
+                                onConfirm: () async {
+                                  // await fetchPoStatusconform(vReceiveNo);
+                                  Navigator.of(context).pop();
+                                },
                               );
                             },
                           );
