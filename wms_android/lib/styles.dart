@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'ICON.dart';
+import 'icon.dart';
 
 class AppColors {
   static const primaryColor = Color(0xFF17153B);

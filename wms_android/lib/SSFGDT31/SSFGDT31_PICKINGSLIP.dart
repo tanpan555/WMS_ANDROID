@@ -1,13 +1,12 @@
 import 'dart:convert';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wms_android/styles.dart';
+import 'package:wms_android/centered_message.dart';
 
 class SSFGDT31_PICKINGSLIP extends StatefulWidget {
   final String po_doc_no;
@@ -207,16 +206,7 @@ class _SSFGDT31_PICKINGSLIPState extends State<SSFGDT31_PICKINGSLIP> {
               ),
               Expanded(
                 child: items.isEmpty
-                    ? Center(
-                        child: Text(
-                          'No Data Found',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )
+                    ? const Center(child: CenteredMessage())
                     : ListView.builder(
                         itemCount: items.length,
                         itemBuilder: (context, index) {

@@ -8,6 +8,7 @@ import 'package:wms_android/loading.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:async/async.dart';
 import 'package:wms_android/styles.dart';
+import 'package:wms_android/centered_message.dart';
 
 class SSFGDT31_CARD extends StatefulWidget {
   final String soNo;
@@ -526,12 +527,7 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
                               ),
                             )
                           : data.isEmpty
-                              ? const Center(
-                                  child: Text(
-                                    'No Data Available',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                )
+                              ? const Center(child: CenteredMessage())
                               : ListView(
                                   children: [
                                     // Build the list items

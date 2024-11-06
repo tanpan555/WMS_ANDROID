@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
-import 'package:wms_android/ICON.dart';
+import 'package:wms_android/icon.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 
 class Ssfgdt12Barcode extends StatefulWidget {

@@ -8,6 +8,7 @@ import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:intl/intl.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/loading.dart';
+import 'package:wms_android/centered_message.dart';
 import 'SSFGDT12_main.dart';
 import 'SSFGDT12_barcode.dart';
 
@@ -430,12 +431,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
         child: isLoading
             ? Center(child: LoadingIndicator())
             : dataCard.isEmpty
-                ? const Center(
-                    child: Text(
-                      'No data found',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
+                ? const Center(child: CenteredMessage())
                 : Column(
                     children: [
                       Row(

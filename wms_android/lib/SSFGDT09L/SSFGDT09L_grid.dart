@@ -8,6 +8,7 @@ import 'package:wms_android/styles.dart';
 import 'package:wms_android/loading.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
+import 'package:wms_android/centered_message.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'SSFGDT09L_barcode.dart';
 import 'SSFGDT09L_picking_slip.dart';
@@ -625,12 +626,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                           ? const Column(
                               children: [
                                 SizedBox(height: 60.0),
-                                Center(
-                                  child: Text(
-                                    'No data found',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
+                                Center(child: CenteredMessage())
                               ],
                             )
                           : ListView.builder(

@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/loading.dart';
+import 'package:wms_android/centered_message.dart';
 import 'SSFGDT09L_form.dart';
 import 'SSFGDT09L_grid.dart';
 
@@ -678,12 +679,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
         child: isLoading
             ? Center(child: LoadingIndicator())
             : dataCard.isEmpty
-                ? const Center(
-                    child: Text(
-                      'No data found',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
+                ? const Center(child: CenteredMessage())
                 : Column(
                     children: [
                       // dataCard.isEmpty

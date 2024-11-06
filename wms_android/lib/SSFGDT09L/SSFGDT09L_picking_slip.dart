@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/loading.dart';
+import 'package:wms_android/centered_message.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
@@ -281,12 +282,7 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
               child: isLoading
                   ? Center(child: LoadingIndicator())
                   : dataCard.isEmpty
-                      ? const Center(
-                          child: Text(
-                            'No data found',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        )
+                      ? const Center(child: CenteredMessage())
                       : ListView(
                           children: [
                             ListView.builder(

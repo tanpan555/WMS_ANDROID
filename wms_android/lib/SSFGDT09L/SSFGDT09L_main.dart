@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/loading.dart';
+import 'package:wms_android/centered_message.dart';
 import 'SSFGDT09L_menu.dart';
 
 class SSFGDT09L_MAIN extends StatefulWidget {
@@ -103,12 +104,7 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
               child: isLoading
                   ? Center(child: LoadingIndicator())
                   : dataWareCode.isEmpty
-                      ? const Center(
-                          child: Text(
-                            'No data found',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        )
+                      ? const Center(child: CenteredMessage())
                       : SingleChildScrollView(
                           child: GridView.builder(
                             shrinkWrap: true,

@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/loading.dart';
+import 'package:wms_android/centered_message.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'SSFGDT12_form.dart';
@@ -175,12 +176,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
         child: isLoading
             ? Center(child: LoadingIndicator())
             : displayedData.isEmpty
-                ? const Center(
-                    child: Text(
-                      'No Data Available',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
+                ? const Center(child: CenteredMessage())
                 : Column(
                     children: [
                       Expanded(
