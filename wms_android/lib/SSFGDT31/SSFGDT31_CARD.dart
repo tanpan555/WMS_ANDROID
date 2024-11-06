@@ -1,112 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:wms_android/bottombar.dart';
 import 'dart:convert';
+import 'dart:async';
+import 'dart:ui';
+import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
-import 'package:wms_android/Global_Parameter.dart' as gb;
-import 'package:wms_android/loading.dart';
+import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:async/async.dart';
+import 'package:intl/intl.dart';
 import 'package:wms_android/styles.dart';
+import 'package:wms_android/loading.dart';
 import 'package:wms_android/centered_message.dart';
 
-class SSFGDT31_CARD extends StatefulWidget {
-  final String soNo;
-  final String statusDesc;
-  final String wareCode;
-  final String? receiveDate;
+class Ssfgdt31Card extends StatefulWidget {
+  final String pStatusDESC; // สถานะที่เลือก
+  final String pSoNo; // เลขที่ใบตรวจนับ
+  final String pDocDate; // date format dd-MM-yyyy
+  final String pWareCode;
 
-  SSFGDT31_CARD(
-      {required this.soNo,
-      required this.statusDesc,
-      required this.wareCode,
-      this.receiveDate});
-
+  Ssfgdt31Card({
+    Key? key,
+    required this.pStatusDESC,
+    required this.pSoNo,
+    required this.pDocDate,
+    required this.pWareCode,
+  }) : super(key: key);
   @override
-  _SSFGDT31_CARDPageState createState() => _SSFGDT31_CARDPageState();
+  _Ssfgdt31CardState createState() => _Ssfgdt31CardState();
 }
 
-class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
-  List<dynamic> data = [];
+class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
+  List<dynamic> dataCard = [];
+  String statusCard = '';
+  String messageCard = '';
+  String goToStep = '';
+  String pDocNoGetInHead = '';
+  String pDocTypeGetInHead = '';
+  String formattedDateDocDate = '';
+
+  String broeserLanguage = globals.BROWSER_LANGUAGE;
+  String sessionID = globals.APP_SESSION;
+  String pDsPdf = globals.P_DS_PDF;
+
+  int pFlag = 1;
+  int currentPage = 0; // หน้าปัจจุบัน
+  final int itemsPerPage = 15; // จำนวนรายการต่อหน้า
   bool isLoading = true;
-  String errorMessage = '';
-  String? DateSend;
 
-  String? nextLink;
-  String? prevLink;
-
-  bool _isMounted = false;
   int showRecordRRR = 0;
 
-  int pageSize = 20; // Number of records per page
-  int currentPage = 1; // Current page number
-  int totalRecords = 0; // Total number of records
-
-  late CancelableOperation _fetchOperation;
-
-  @override
-  void initState() {
-    super.initState();
-    _isMounted = true;
-    DateSend = widget.receiveDate;
-    if (DateSend != null) {
-      DateSend = DateSend!.replaceAll('/', '-');
-    }
-    fetchData();
-  }
-
-  String? doc_no;
-  String? doc_type;
-  String? erp_doc_no;
-  String? po_status;
-  String? po_message;
-
-  Future<void> Inteface_receive_WMS2ERP(
-      String v_erp_doc_type, String v_erp_doc_no) async {
-    final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT31/get_INHead_WMS/$v_erp_doc_type/$v_erp_doc_no/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}';
-    print(url);
-    try {
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        final responseBody = json.decode(response.body);
-        if (mounted) {
-          setState(() {
-            doc_no = responseBody['doc_no'];
-            doc_type = responseBody['doc_type'];
-            erp_doc_no = responseBody['erp_doc_no'];
-            po_status = responseBody['po_status'];
-            po_message = responseBody['po_message'];
-
-            print('p_doc_no: $doc_no');
-            print('p_doc_type: $doc_type');
-            print('erp_doc_no: $erp_doc_no');
-            print('po_status: $po_status');
-            print('po_message: $po_message');
-          });
-        }
-
-        fetchPDFData(v_erp_doc_type, v_erp_doc_type);
-      } else {
-        throw Exception('Failed to load PO status');
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          po_status = 'Error';
-          po_message = e.toString();
-        });
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _isMounted = false;
-    _fetchOperation.cancel();
-    super.dispose();
-  }
-
+  // PDF
   String? V_DS_PDF;
   String? LIN_ID;
   String? OU_CODE;
@@ -116,7 +59,7 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
   String? PROGRAM_ID;
   String? P_WARE;
   String? P_SESSION;
-  String? v_filename;
+
   String? S_DOC_TYPE;
   String? S_DOC_DATE;
   String? S_DOC_NO;
@@ -124,113 +67,449 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
   String? E_DOC_DATE;
   String? E_DOC_NO;
   String? FLAG;
+
   String? LH_PAGE;
   String? LH_DATE;
   String? LH_AR_NAME;
   String? LH_LOGISTIC_COMP;
+  String? LH_Doc_Type;
+  String? LH_Ware;
+  String? LH_CAR_ID;
+  String? LH_Doc_No;
+  String? LH_Doc_Date;
+  String? LH_INVOICE_NO;
   String? LH_DOC_TYPE;
   String? LH_WARE;
-  String? LH_CAR_ID;
   String? LH_DOC_NO;
   String? LH_DOC_DATE;
-  String? LH_INVOICE_NO;
-  String? LB_SEQ;
   String? LB_ITEM_CODE;
   String? LB_ITEM_NAME;
   String? LB_LOCATION;
   String? LB_UMS;
+
+  String? LB_SEQ;
+  String? LB_Item_Code;
+  String? LB_Item_Name;
+  String? LB_Location;
+  String? LB_Ums;
   String? LB_LOTS_PRODUCT;
   String? LB_MO_NO;
+  String? LB_TRAN_Qty;
+  String? LB_ATTRIBUTE1;
   String? LB_TRAN_QTY;
-  String? LB_WEIGHT;
-  String? LB_PD_LOCATION;
-  String? LB_USED_TOTAL;
+
   String? LT_NOTE;
-  String? LT_TOTAL_QTY;
+  String? lt_total_qty;
   String? LT_ISSUE;
   String? LT_APPROVE;
   String? LT_OUT;
   String? LT_RECEIVE;
   String? LT_BILL;
   String? LT_CHECK;
+  String? LT_TOTAL_QTY;
 
-  void fetchPDFData(String doc_type, String print_doc_no) async {
-    final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT31/GET_PDF/${gb.APP_SESSION}/${widget.wareCode}/${gb.APP_USER}/${gb.P_ERP_OU_CODE}/TH/$doc_type/wms');
+  @override
+  void initState() {
+    fetchData();
+    super.initState();
+  }
+
+  void _navigateToPage(BuildContext context, Widget page) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => page),
+    );
+  }
+
+  Future<void> fetchData([String? url]) async {
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
+    final String requestUrl = url ??
+        'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_1_DataCard/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${globals.ATTR1}/${widget.pWareCode}/${widget.pStatusDESC}/${widget.pDocDate}/${widget.pSoNo}';
 
     try {
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(requestUrl));
 
       if (response.statusCode == 200) {
-        print(url);
-        final data = json.decode(response.body);
+        final responseBody = utf8.decode(response.bodyBytes);
+        final parsedResponse = json.decode(responseBody);
 
-        V_DS_PDF = data['V_DS_PDF'];
-        LIN_ID = data['LIN_ID'];
-        OU_CODE = data['OU_CODE'];
-        PROGRAM_NAME = data['PROGRAM_NAME'];
-
-        CURRENT_DATE = data['CURRENT_DATE'];
-        USER_ID = data['USER_ID'];
-        PROGRAM_ID = data['PROGRAM_ID'];
-        P_WARE = data['P_WARE'];
-        P_SESSION = data['P_SESSION'];
-        v_filename = data['v_filename'];
-        S_DOC_TYPE = data['S_DOC_TYPE'];
-        S_DOC_DATE = data['S_DOC_DATE'];
-        S_DOC_NO = data['S_DOC_NO'];
-        E_DOC_TYPE = data['E_DOC_TYPE'];
-        E_DOC_DATE = data['E_DOC_DATE'];
-        E_DOC_NO = data['E_DOC_NO'];
-
-        FLAG = data['FLAG'];
-        LH_PAGE = data['LH_PAGE'];
-        LH_DATE = data['LH_DATE'];
-        LH_AR_NAME = data['LH_AR_NAME'];
-        LH_LOGISTIC_COMP = data['LH_LOGISTIC_COMP'];
-        LH_DOC_TYPE = data['LH_DOC_TYPE'];
-        LH_WARE = data['LH_WARE'];
-        LH_CAR_ID = data['LH_CAR_ID'];
-        LH_DOC_NO = data['LH_DOC_NO'];
-
-        LH_DOC_DATE = data['LH_DOC_DATE'];
-        LH_INVOICE_NO = data['LH_INVOICE_NO'];
-        LB_SEQ = data['LB_SEQ'];
-        LB_ITEM_CODE = data['LB_ITEM_CODE'];
-        LB_ITEM_NAME = data['LB_ITEM_NAME'];
-        LB_LOCATION = data['LB_LOCATION'];
-        LB_UMS = data['LB_UMS'];
-        LB_LOTS_PRODUCT = data['LB_LOTS_PRODUCT'];
-        LB_MO_NO = data['LB_MO_NO'];
-        LB_TRAN_QTY = data['LB_TRAN_QTY'];
-        LB_WEIGHT = data['LB_WEIGHT'];
-        LB_PD_LOCATION = data['LB_PD_LOCATION'];
-
-        LB_USED_TOTAL = data['LB_USED_TOTAL'];
-        LT_NOTE = data['LT_NOTE'];
-        LT_TOTAL_QTY = data['LT_TOTAL_QTY'];
-        LT_ISSUE = data['LT_ISSUE'];
-        LT_APPROVE = data['LT_APPROVE'];
-        LT_OUT = data['LT_OUT'];
-        LT_RECEIVE = data['LT_RECEIVE'];
-        LT_BILL = data['LT_BILL'];
-        LT_CHECK = data['LT_CHECK'];
-        _launchUrl(doc_type, print_doc_no);
+        if (mounted) {
+          setState(() {
+            if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+              dataCard = parsedResponse['items'];
+            } else {
+              dataCard = [];
+            }
+            isLoading = false;
+            print('dataCard : $dataCard');
+            print('ATTR1 : ${globals.ATTR1}');
+            print(
+                'URL : http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_1_DataCard/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${globals.ATTR1}/${widget.pWareCode}/${widget.pStatusDESC}/${widget.pDocDate}/${widget.pSoNo}');
+          });
+        }
       } else {
-        print('Failed to load data, status code: ${response.statusCode}');
+        if (mounted) {
+          setState(() {
+            print('Failed to load data: ${response.statusCode}');
+          });
+        }
+        print('HTTP Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
-      print('Error: $e');
+      if (mounted) {
+        isLoading = false;
+        setState(() {
+          print('Error occurred: $e');
+        });
+      }
+      print('Exception: $e');
     }
   }
 
-  String? reportname = 'SSFGDT31_REPORT';
-  Future<void> _launchUrl(String doc_type, String print_doc_no) async {
+  int totalPages() {
+    return (dataCard.length / itemsPerPage).ceil(); // คำนวณจำนวนหน้าทั้งหมด
+  }
+
+  // List<dynamic> getCurrentData() {
+  //   return dataCard
+  //       .skip(currentPage * itemsPerPage)
+  //       .take(itemsPerPage)
+  //       .toList(); // รายการที่จะแสดงในหน้า
+  // }
+
+  void loadNextPage() {
+    if (currentPage < totalPages() - 1) {
+      setState(() {
+        currentPage++;
+      });
+    }
+  }
+
+  void loadPrevPage() {
+    if (currentPage > 0) {
+      setState(() {
+        currentPage--;
+      });
+    }
+  }
+
+  List<dynamic> getCurrentData() {
+    final start = currentPage * itemsPerPage;
+    final end = start + itemsPerPage;
+
+    return dataCard.sublist(start, end.clamp(0, dataCard.length));
+  }
+
+  Future<void> checkStatusCard(
+      String pReceiveNo, String pDocNo, String pDocType) async {
+    print('po_status $pReceiveNo Type: ${pReceiveNo.runtimeType}');
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_check_ISSDirect_validate/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/$pReceiveNo'));
+
+      if (response.statusCode == 200) {
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataStatusCard = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print(
+            'dataStatusCard : $dataStatusCard type : ${dataStatusCard.runtimeType}');
+
+        //
+        print('Fetched data: $jsonDecode');
+        if (mounted) {
+          setState(() {
+            // statusCard = dataStatusCard['po_status'] ?? '';
+            // messageCard = dataStatusCard['po_message'] ?? '';
+            // goToStep = dataStatusCard['po_goto_step'] ?? '';
+            checkGoTostep(
+              dataStatusCard['po_status'] ?? '',
+              dataStatusCard['po_message'] ?? '',
+              dataStatusCard['po_goto_step'] ?? '',
+              pDocNo,
+              pDocType,
+            );
+
+            print(
+                'po_status : ${dataStatusCard['po_status']} Type: ${dataStatusCard['po_status'.runtimeType]}');
+            print(
+                'po_message : ${dataStatusCard['po_message']} Type: ${dataStatusCard['po_message'.runtimeType]}');
+            print(
+                'po_goto_step : ${dataStatusCard['po_goto_step']} Type: ${dataStatusCard['po_goto_step'.runtimeType]}');
+          });
+        }
+        // } else {
+        //   print('No items found.');
+        // }
+      } else {
+        print(
+            'checkStatusCard Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {});
+      }
+      print('checkStatusCard ERROR IN Fetch Data : $e');
+    }
+  }
+
+  void checkGoTostep(String statusCard, String messageCard, String goToStep,
+      String pDocNo, String pDocType) {
+    //
+    print('statusCard : $statusCard Type : ${statusCard.runtimeType}');
+    print('messageCard : $messageCard Type : ${messageCard.runtimeType}');
+    print('goToStep : $goToStep Type : ${goToStep.runtimeType}');
+    if (statusCard == '1') {
+      showMessageStatusCard(context, messageCard);
+    }
+    if (statusCard == '0') {
+      getInhead(
+        goToStep,
+        pDocNo,
+        pDocType,
+      );
+    }
+  }
+
+  Future<void> getInhead(
+      String goToStep, String pDocNo, String pDocType) async {
+    print('pDocNo $pDocNo Type: ${pDocNo.runtimeType}');
+    print('pDocType $pDocType Type: ${pDocType.runtimeType}');
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_INHEAD/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/$sessionID/$pDocNo/$pDocType/${globals.APP_USER}'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> dataGetInHead =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        print(
+            'dataGetInHead : $dataGetInHead type : ${dataGetInHead.runtimeType}');
+
+        //
+        print('Fetched data: $jsonDecode');
+        if (mounted) {
+          setState(() {
+            pDocNoGetInHead = dataGetInHead['po_doc_no'] ?? '';
+            pDocTypeGetInHead = dataGetInHead['po_doc_type'] ?? '';
+            getInheadStpe(
+              dataGetInHead['po_doc_no'] ?? '',
+              dataGetInHead['po_doc_type'] ?? '',
+              dataGetInHead['po_status'],
+              dataGetInHead['po_message'],
+              goToStep,
+            );
+
+            print(
+                'po_doc_type : ${dataGetInHead['po_doc_type']} Type: ${dataGetInHead['po_doc_type'.runtimeType]}');
+            print(
+                'po_doc_no : ${dataGetInHead['po_doc_no']} Type: ${dataGetInHead['po_doc_no'.runtimeType]}');
+            print(
+                'po_status : ${dataGetInHead['po_status']} Type: ${dataGetInHead['po_status'.runtimeType]}');
+            print(
+                'po_message : ${dataGetInHead['po_message']} Type: ${dataGetInHead['po_message'.runtimeType]}');
+          });
+        }
+        // } else {
+        //   print('No items found.');
+        // }
+      } else {
+        print(
+            'getInhead Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {});
+      }
+      print('getInhead ERROR IN Fetch Data : $e');
+    }
+  }
+
+  void getInheadStpe(String pDocNoGetInHead, String pDocTypeGetInHead,
+      String poStatus, String poMessage, String goToStep) {
+    if (poStatus == '1') {
+      showMessageStatusCard(context, poMessage);
+    }
+    if (poStatus == '0') {
+      switch (goToStep) {
+        case '2':
+        // return _navigateToPage(
+        //     context,
+        //     Ssfgdt09lForm(
+        //         pWareCode: globals.P_ERP_OU_CODE,
+        //         pAttr1: widget.pAttr1,
+        //         // pDocNo: 'RMO1-WMS-24090028',
+        //         // pDocType: 'RMO1',
+        //         pDocNo: pDocNoGetInHead,
+        //         pDocType: pDocTypeGetInHead,
+        //         pOuCode: globals.P_OU_CODE,
+        //         pErpOuCode: globals.P_ERP_OU_CODE));
+        case '3':
+        // return _navigateToPage(
+        //     context,
+        // Ssfgdt09lGrid(
+        //   pWareCode: globals.P_ERP_OU_CODE,
+        //   pAttr1: widget.pAttr1,
+        //   // docNo: 'RMO1-WMS-24090028',
+        //   // docType: 'RMO1',
+        //   docNo: pDocNoGetInHead,
+        //   docType: pDocTypeGetInHead,
+        //   docDate: formattedDateDocDate,
+        //   pErpOuCode: globals.P_ERP_OU_CODE,
+        //   pOuCode: globals.P_OU_CODE,
+        //   pAppUser: globals.APP_USER,
+        //   moDoNo: '230303001',
+        //   // test
+        //   statusCase: 'test3',
+        // ));
+        case '4':
+        // return _navigateToPage(
+        //     context,
+        //     Ssfgdt09lGrid(
+        //       pWareCode: globals.P_ERP_OU_CODE,
+        //       pAttr1: widget.pAttr1,
+        //       // docNo: 'RMO1-WMS-24090028',
+        //       // docType: 'RMO1',
+        //       docNo: pDocNoGetInHead,
+        //       docType: pDocTypeGetInHead,
+        //       docDate: formattedDateDocDate,
+        //       pErpOuCode: globals.P_ERP_OU_CODE,
+        //       pOuCode: globals.P_OU_CODE,
+        //       pAppUser: globals.APP_USER,
+        //       moDoNo: '230303001',
+        //       // test
+        //       statusCase: 'test4',
+        //     ));
+        default:
+          return null;
+      }
+    }
+  }
+
+  Future<void> getPDF(String docNo, String docType, String docDate) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${pFlag}/$pDsPdf'));
+
+      print('Response body: ${response.body}');
+      print('docNo in get pdf : $docNo');
+      print('docType in get pdf : $docType');
+      print('docDate in get pdf : $docDate');
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> dataPDF =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
+        if (mounted) {
+          setState(() {
+            // V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
+            // LIN_ID = dataPDF['LIN_ID'] ?? '';
+            // OU_CODE = dataPDF['OU_CODE'] ?? '';
+            // PROGRAM_NAME = dataPDF['PROGRAM_NAME'] ?? '';
+            // CURRENT_DATE = dataPDF['CURRENT_DATE'] ?? '';
+            // USER_ID = dataPDF['USER_ID'] ?? '';
+            // PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
+            // P_WARE = dataPDF['P_WARE'] ?? '';
+            // P_SESSION = dataPDF['P_SESSION'] ?? '';
+
+            // S_DOC_TYPE = dataPDF['S_DOC_TYPE'] ?? '';
+            // S_DOC_DATE = dataPDF['S_DOC_DATE'] ?? '';
+            // S_DOC_NO = dataPDF['S_DOC_NO'] ?? '';
+            // E_DOC_TYPE = dataPDF['E_DOC_TYPE'] ?? '';
+            // E_DOC_DATE = dataPDF['E_DOC_DATE'] ?? '';
+            // E_DOC_NO = dataPDF['E_DOC_NO'] ?? '';
+            // FLAG = dataPDF['FLAG'] ?? '';
+
+            // LH_PAGE = dataPDF['LH_PAGE'] ?? '';
+            // LH_DATE = dataPDF['LH_DATE'] ?? '';
+            // LH_AR_NAME = dataPDF['LH_AR_NAME'] ?? '';
+            // LH_LOGISTIC_COMP = dataPDF['LH_LOGISTIC_COMP'] ?? '';
+            // // LH_DOC_TYPE = dataPDF['LH_DOC_TYPE'] ?? '';
+            // // LH_WARE = dataPDF['LH_WARE'] ?? '';
+            // LH_CAR_ID = dataPDF['LH_CAR_ID'] ?? '';
+            // // LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
+            // // LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
+            // LH_INVOICE_NO = dataPDF['LH_INVOICE_NO'] ?? '';
+
+            // LB_SEQ = dataPDF['LB_SEQ'] ?? '';
+            // // LB_ITEM_CODE = dataPDF['LB_ITEM_CODE'] ?? '';
+            // // LB_ITEM_NAME = dataPDF['LB_ITEM_NAME'] ?? '';
+            // // LB_LOCATION = dataPDF['LB_LOCATION'] ?? '';
+            // // LB_UMS = dataPDF['LB_UMS'] ?? '';
+            // // LB_LOTS_PRODUCT = item['LB_LOTS_PRODUCT'] ?? '';
+            // // LB_MO_NO = item['LB_MO_NO'] ?? '';          ////-------////
+            // // LB_TRAN_QTY = dataPDF['LB_TRAN_QTY'] ?? '';
+            // // LB_ATTRIBUTE1 = item['LB_ATTRIBUTE1'] ?? '';
+            // LT_NOTE = dataPDF['LT_NOTE'] ?? '';
+            // // LT_TOTAL_QTY = dataPDF['LT_TOTAL_QTY'] ?? '';
+            // LT_ISSUE = dataPDF['LT_ISSUE'] ?? '';
+            // LT_APPROVE = dataPDF['LT_APPROVE'] ?? '';
+            // LT_OUT = dataPDF['LT_OUT'] ?? '';
+            // LT_RECEIVE = dataPDF['LT_RECEIVE'] ?? '';
+            // LT_BILL = dataPDF['LT_BILL'] ?? '';
+            // LT_CHECK = dataPDF['LT_CHECK'] ?? '';
+
+            V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
+            LIN_ID = dataPDF['LIN_ID'] ?? '';
+            OU_CODE = dataPDF['OU_CODE'] ?? '';
+            PROGRAM_NAME = dataPDF['PROGRAM_NAME'] ?? '';
+            CURRENT_DATE = dataPDF['CURRENT_DATE'] ?? '';
+            PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
+            P_WARE = dataPDF['P_WARE'] ?? '';
+            P_SESSION = dataPDF['P_SESSION'] ?? '';
+            S_DOC_TYPE = dataPDF['S_DOC_TYPE'] ?? '';
+            S_DOC_DATE = dataPDF['S_DOC_DATE'] ?? '';
+            S_DOC_NO = dataPDF['S_DOC_NO'] ?? '';
+            E_DOC_TYPE = dataPDF['E_DOC_TYPE'] ?? '';
+            E_DOC_DATE = dataPDF['E_DOC_DATE'] ?? '';
+            E_DOC_NO = dataPDF['E_DOC_NO'] ?? '';
+            FLAG = dataPDF['FLAG'] ?? '';
+            LH_PAGE = dataPDF['LH_PAGE'] ?? '';
+            LH_DATE = dataPDF['LH_DATE'] ?? '';
+            LH_AR_NAME = dataPDF['LH_AR_NAME'] ?? '';
+            LH_LOGISTIC_COMP = dataPDF['LH_LOGISTIC_COMP'] ?? '';
+            LH_DOC_TYPE = dataPDF['LH_DOC_TYPE'] ?? '';
+            LH_WARE = dataPDF['LH_WARE'] ?? '';
+            LH_CAR_ID = dataPDF['LH_CAR_ID'] ?? '';
+            LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
+            LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
+            LH_INVOICE_NO = dataPDF['LH_INVOICE_NO'] ?? '';
+            LB_SEQ = dataPDF['LB_SEQ'] ?? '';
+            LB_ITEM_CODE = dataPDF['LB_ITEM_CODE'] ?? '';
+            LB_ITEM_NAME = dataPDF['LB_ITEM_NAME'] ?? '';
+            LB_LOCATION = dataPDF['LB_LOCATION'] ?? '';
+            LB_UMS = dataPDF['LB_UMS'] ?? '';
+            LB_LOTS_PRODUCT = dataPDF['LB_LOTS_PRODUCT'] ?? '';
+            LB_MO_NO = dataPDF['LB_MO_NO'] ?? '';
+            LB_TRAN_QTY = dataPDF['LB_TRAN_QTY'] ?? '';
+            LB_ATTRIBUTE1 = dataPDF['LB_ATTRIBUTE1'] ?? '';
+            LT_NOTE = dataPDF['LT_NOTE'] ?? '';
+            LT_TOTAL_QTY = dataPDF['LT_TOTAL_QTY'] ?? '';
+            LT_ISSUE = dataPDF['LT_ISSUE'] ?? '';
+            LT_APPROVE = dataPDF['LT_APPROVE'] ?? '';
+            LT_OUT = dataPDF['LT_OUT'] ?? '';
+            LT_RECEIVE = dataPDF['LT_RECEIVE'] ?? '';
+            LT_BILL = dataPDF['LT_BILL'] ?? '';
+            LT_CHECK = dataPDF['LT_CHECK'] ?? '';
+            _launchUrl(docNo, docType);
+          });
+        }
+      } else {
+        print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error in submit Data: $e');
+    }
+  }
+
+  Future<void> _launchUrl(String pErpDocNo, String pDocType) async {
     final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
-        '&_repName=/WMS/$reportname'
+        '&_repName=/WMS/SSFGOD02A5'
         '&_repFormat=pdf'
-        '&_dataSource=wms'
-        '&_outFilename=${doc_type}-${print_doc_no}'
+        '&_dataSource=${globals.P_DS_PDF}'
+        '&_outFilename=$pErpDocNo.pdf'
         '&_repLocale=en_US'
         '&V_DS_PDF=$V_DS_PDF'
         '&LIN_ID=$LIN_ID'
@@ -241,8 +520,8 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
         '&PROGRAM_ID=$PROGRAM_ID'
         '&P_WARE=$P_WARE'
         '&P_SESSION=$P_SESSION'
-        '&P_DOC_TYPE=$doc_type'
-        '&P_ERP_DOC_NO=$print_doc_no'
+        '&P_DOC_TYPE=$pDocType'
+        '&P_ERP_DOC_NO=$pErpDocNo'
         '&S_DOC_TYPE=$S_DOC_TYPE'
         '&S_DOC_DATE=$S_DOC_DATE'
         '&S_DOC_NO=$S_DOC_NO'
@@ -254,25 +533,23 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
         '&LH_DATE=$LH_DATE'
         '&LH_AR_NAME=$LH_AR_NAME'
         '&LH_LOGISTIC_COMP=$LH_LOGISTIC_COMP'
-        '&LH_DOC_TYPE=$LH_DOC_TYPE'
-        '&LH_WARE=$LH_WARE'
+        '&LH_Doc_Type=$LH_Doc_Type'
+        '&LH_Ware=$LH_Ware'
         '&LH_CAR_ID=$LH_CAR_ID'
-        '&LH_DOC_NO=$LH_DOC_NO'
-        '&LH_DOC_DATE=$LH_DOC_DATE'
+        '&LH_Doc_No=$LH_Doc_No'
+        '&LH_Doc_Date=$LH_Doc_Date'
         '&LH_INVOICE_NO=$LH_INVOICE_NO'
         '&LB_SEQ=$LB_SEQ'
-        '&LB_ITEM_CODE=$LB_ITEM_CODE'
-        '&LB_ITEM_NAME=$LB_ITEM_NAME'
-        '&LB_LOCATION=$LB_LOCATION'
-        '&LB_UMS=$LB_UMS'
+        '&LB_Item_Code=$LB_Item_Code'
+        '&LB_Item_Name=$LB_Item_Name'
+        '&LB_Location=$LB_Location'
+        '&LB_Ums=$LB_Ums'
         '&LB_LOTS_PRODUCT=$LB_LOTS_PRODUCT'
         '&LB_MO_NO=$LB_MO_NO'
-        '&LB_TRAN_QTY=$LB_TRAN_QTY'
-        '&LB_WEIGHT=$LB_WEIGHT'
-        '&LB_PD_LOCATION=$LB_PD_LOCATION'
-        '&LB_USED_TOTAL=$LB_USED_TOTAL'
+        '&LB_TRAN_Qty=$LB_TRAN_Qty'
+        '&LB_ATTRIBUTE1=$LB_ATTRIBUTE1'
         '&LT_NOTE=$LT_NOTE'
-        '&LT_TOTAL_QTY=$LT_TOTAL_QTY'
+        '&lt_total_qty=$lt_total_qty'
         '&LT_ISSUE=$LT_ISSUE'
         '&LT_APPROVE=$LT_APPROVE'
         '&LT_OUT=$LT_OUT'
@@ -281,225 +558,62 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
         '&LT_CHECK=$LT_CHECK');
 
     print(uri);
-
     if (!await launchUrl(uri)) {
       throw Exception('Could not launch $uri');
     }
-  }
-
-  Future<void> fetchData([String? url]) async {
-    if (!_isMounted) return;
-
-    // Reset currentPage if this is a new search (no url provided)
-    if (url == null) {
-      currentPage = 1;
-    }
-
-    final String apiUrl = url ??
-        "http://172.16.0.82:8888/apex/wms/SSFGDT31/Card_Test/${widget.soNo}/${widget.statusDesc}/${widget.wareCode}/$DateSend";
-
-    _fetchOperation = CancelableOperation.fromFuture(
-      http.get(Uri.parse(apiUrl)),
-      onCancel: () => print('Fetch operation cancelled'),
-    );
-
-    try {
-      final response = await _fetchOperation.value;
-      if (!_isMounted) return;
-
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final parsedResponse = json.decode(responseBody);
-
-        if (_isMounted) {
-          setState(() {
-            if (parsedResponse is Map && parsedResponse.containsKey('items')) {
-              data = parsedResponse['items'];
-              totalRecords = parsedResponse['total_count'] ??
-                  (currentPage * pageSize + data.length);
-            } else {
-              data = [];
-              totalRecords = 0;
-            }
-
-            List<dynamic> links = parsedResponse['links'] ?? [];
-            nextLink = getLink(links, 'next');
-            prevLink = getLink(links, 'prev');
-            isLoading = false;
-          });
-        }
-      } else {
-        if (_isMounted) {
-          setState(() {
-            errorMessage = 'Failed to load data: $apiUrl';
-            isLoading = false;
-          });
-        }
-      }
-    } catch (error) {
-      if (_isMounted) {
-        setState(() {
-          errorMessage = 'Error fetching data: $error';
-          isLoading = false;
-        });
-      }
-    }
-  }
-
-  String? getLink(List<dynamic> links, String rel) {
-    final link =
-        links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
-    return link != null ? link['href'] : null;
-  }
-
-  void _loadNextPage() {
-    if (nextLink != null && _isMounted) {
-      setState(() {
-        currentPage++;
-        isLoading = true;
-      });
-      fetchData(nextLink);
-    }
-  }
-
-  void _loadPrevPage() {
-    if (prevLink != null && _isMounted) {
-      setState(() {
-        currentPage--;
-        isLoading = true;
-      });
-      fetchData(prevLink);
-    }
-  }
-
-  String _getPageIndicatorText() {
-    final startRecord = ((currentPage - 1) * pageSize) + 1;
-    final endRecord = startRecord +
-        data.length -
-        1; // Use actual data length instead of page size
-    return '$startRecord - $endRecord';
-  }
-
-  Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
-    Map<String, Color> statusColors = {
-      'ยืนยันการรับ': const Color.fromARGB(255, 146, 208, 80),
-      'ระหว่างบันทึก': const Color.fromARGB(255, 246, 250, 112),
-      'ยกเลิก': const Color.fromARGB(255, 208, 206, 206),
-    };
-
-    String iconImageYorN;
-
-    switch (item['qc_yn']) {
-      case 'Y':
-        iconImageYorN = 'assets/images/rt_machine_on.png';
-        break;
-      case 'N':
-        iconImageYorN = 'assets/images/rt_machine_off.png';
-        break;
-      default:
-        iconImageYorN = 'assets/images/rt_machine_off.png';
-    }
-
-    Color statusColor = statusColors[item['card_status_desc']] ?? Colors.white;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-      child: Card(
-        elevation: 8.0,
-        margin: const EdgeInsets.symmetric(vertical: 8.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        color: const Color.fromRGBO(204, 235, 252, 1.0),
-        child: InkWell(
-          onTap: () {
-            // Handle tap
-          },
-          borderRadius: BorderRadius.circular(15.0),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Center ap_name as title
-                Center(
-                  child: Text(
-                    item['ap_name'] ?? 'Unknown AP Name', // Show ap_name here
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0, // Adjust size as needed
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 4.0), // Space between title and divider
-                const Divider(
-                    color: Color.fromARGB(255, 0, 0,
-                        0)), // Divider between title and rest of data
-                const SizedBox(
-                    height: 4.0), // Space between divider and next widget
-
-                // Space between text and next row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment
-                      .spaceBetween, // Space out the items in the row
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      height: 35, // Set height to match the printer icon
-                      decoration: BoxDecoration(
-                        color: statusColor, // Use the color from the map
-                        borderRadius: BorderRadius.circular(12.0),
-                        border: Border.all(color: statusColor, width: 2.0),
-                      ),
-                      child: Center(
-                        // Center the text vertically
-                        child: Text(
-                          item['card_status_desc'] ?? 'Unknown',
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 40, // Adjust width as needed
-                      height: 40,
-                      child: Image.asset(
-                        iconImageYorN,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        print(item['doc_no']);
-                        print('${item['doc_type']}');
-                        Inteface_receive_WMS2ERP(
-                            item['doc_no'], item['doc_type']);
-                      },
-                      child: SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: Image.asset(
-                          'assets/images/printer.png',
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4.0),
-                Text(
-                  '${item['po_date']} ${item['po_no']} ${item['item_stype_desc']} ',
-                  style: const TextStyle(color: Colors.black),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    print('pErpDocNo : $pErpDocNo');
+    print('pDocType : $pDocType');
+    print('http://172.16.0.82:8888/jri/report?'
+        '&_repName=/WMS/SSFGOD02A5'
+        '&_repFormat=pdf'
+        '&_dataSource=${globals.P_DS_PDF}'
+        '&_outFilename=$pErpDocNo.pdf'
+        '&_repLocale=en_US'
+        '&V_DS_PDF=$V_DS_PDF'
+        '&LIN_ID=$LIN_ID'
+        '&OU_CODE=$OU_CODE'
+        '&PROGRAM_NAME=$PROGRAM_NAME'
+        '&CURRENT_DATE=$CURRENT_DATE'
+        '&USER_ID=$USER_ID'
+        '&PROGRAM_ID=$PROGRAM_ID'
+        '&P_WARE=$P_WARE'
+        '&P_SESSION=$P_SESSION'
+        '&P_DOC_TYPE=$pDocType'
+        '&P_ERP_DOC_NO=$pErpDocNo'
+        '&S_DOC_TYPE=$S_DOC_TYPE'
+        '&S_DOC_DATE=$S_DOC_DATE'
+        '&S_DOC_NO=$S_DOC_NO'
+        '&E_DOC_TYPE=$E_DOC_TYPE'
+        '&E_DOC_DATE=$E_DOC_DATE'
+        '&E_DOC_NO=$E_DOC_NO'
+        '&FLAG=$FLAG'
+        '&LH_PAGE=$LH_PAGE'
+        '&LH_DATE=$LH_DATE'
+        '&LH_AR_NAME=$LH_AR_NAME'
+        '&LH_LOGISTIC_COMP=$LH_LOGISTIC_COMP'
+        '&LH_Doc_Type=$LH_Doc_Type'
+        '&LH_Ware=$LH_Ware'
+        '&LH_CAR_ID=$LH_CAR_ID'
+        '&LH_Doc_No=$LH_Doc_No'
+        '&LH_Doc_Date=$LH_Doc_Date'
+        '&LH_INVOICE_NO=$LH_INVOICE_NO'
+        '&LB_SEQ=$LB_SEQ'
+        '&LB_Item_Code=$LB_Item_Code'
+        '&LB_Item_Name=$LB_Item_Name'
+        '&LB_Location=$LB_Location'
+        '&LB_Ums=$LB_Ums'
+        '&LB_LOTS_PRODUCT=$LB_LOTS_PRODUCT'
+        '&LB_MO_NO=$LB_MO_NO'
+        '&LB_TRAN_Qty=$LB_TRAN_Qty'
+        '&LB_ATTRIBUTE1=$LB_ATTRIBUTE1'
+        '&LT_NOTE=$LT_NOTE'
+        '&lt_total_qty=$lt_total_qty'
+        '&LT_ISSUE=$LT_ISSUE'
+        '&LT_APPROVE=$LT_APPROVE'
+        '&LT_OUT=$LT_OUT'
+        '&LT_RECEIVE=$LT_RECEIVE'
+        '&LT_BILL=$LT_BILL'
+        '&LT_CHECK=$LT_CHECK');
   }
 
   @override
@@ -507,177 +621,403 @@ class _SSFGDT31_CARDPageState extends State<SSFGDT31_CARD> {
     return Scaffold(
       appBar:
           CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
-      body: OrientationBuilder(
-        builder: (context, orientation) {
-          final isPortrait = orientation == Orientation.portrait;
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: isLoading
+            ? Center(child: LoadingIndicator())
+            : dataCard.isEmpty
+                ? const Center(child: CenteredMessage())
+                : Column(
+                    children: [
+                      // dataCard.isEmpty
+                      // ? const Center(
+                      //     child: Column(
+                      //     mainAxisSize: MainAxisSize.min,
+                      //     mainAxisAlignment:
+                      //         MainAxisAlignment.center, // จัดกึ่งกลางในแนวตั้ง
+                      //     crossAxisAlignment:
+                      //         CrossAxisAlignment.center, // จัดกึ่งกลางในแนวนอน
+                      //     children: [
+                      //       // Text(
+                      //       //   'No Data Available',
+                      //       //   style: TextStyle(color: Colors.white),
+                      //       // ),
+                      //       Center(
+                      //         child: Text(
+                      //           'No Data Available',
+                      //           style: TextStyle(color: Colors.white),
+                      //         ),
+                      //       )
+                      //     ],
+                      //   ))
+                      Expanded(
+                        child: ListView(
+                          children: [
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics:
+                                  const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
+                              itemCount: dataCard.length,
+                              itemBuilder: (context, index) {
+                                // ดึงข้อมูลรายการจาก dataCard
+                                var item = dataCard[index];
+                                Color cardColor;
+                                String statusText;
+                                String iconImageYorN;
+                                print(item['card_status_desc']);
+                                switch (item['card_status_desc']) {
+                                  case 'ระหว่างบันทึก':
+                                    cardColor =
+                                        Color.fromRGBO(246, 250, 112, 1.0);
+                                    statusText = 'ระหว่างบันทึก';
+                                    break;
+                                  case 'ยืนยันการรับ':
+                                    cardColor =
+                                        Color.fromRGBO(146, 208, 80, 1.0);
+                                    statusText = 'ยืนยันการรับ';
+                                    break;
+                                  case 'ยกเลิก':
+                                    cardColor =
+                                        Color.fromRGBO(208, 206, 206, 1.0);
+                                    statusText = 'ยกเลิก';
+                                    break;
+                                  case 'ยืนยันการจ่าย':
+                                    cardColor =
+                                        Color.fromRGBO(255, 255, 255, 1.0);
+                                    statusText = 'ยืนยันการจ่าย';
+                                    break;
+                                  case 'ปกติ':
+                                    cardColor =
+                                        Color.fromRGBO(255, 255, 255, 1.0);
+                                    statusText = 'ยืนยันการจ่าย';
+                                    break;
+                                  case 'อ้างอิงแล้ว':
+                                    cardColor =
+                                        Color.fromRGBO(255, 255, 255, 1.0);
+                                    statusText = 'อ้างอิงแล้ว';
+                                    break;
+                                  default:
+                                    cardColor =
+                                        Color.fromRGBO(255, 255, 255, 1.0);
+                                    statusText = 'Unknown';
+                                }
 
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                if (isPortrait) const SizedBox(height: 4),
-                Expanded(
-                  child: isLoading
-                      ? Center(child: LoadingIndicator())
-                      : errorMessage.isNotEmpty
-                          ? Center(
-                              child: Text(
-                                'Error: $errorMessage',
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            )
-                          : data.isEmpty
-                              ? const Center(child: CenteredMessage())
-                              : ListView(
-                                  children: [
-                                    // Build the list items
-                                    ...data
-                                        .map((item) =>
-                                            buildListTile(context, item))
-                                        .toList(),
-                                    // Add spacing
-                                    const SizedBox(height: 10),
-                                    // Navigation controls
-                                    data.length > 2
-                                        ? Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                switch (item['qc_yn']) {
+                                  case 'Y':
+                                    iconImageYorN =
+                                        'assets/images/rt_machine_on.png';
+                                    break;
+                                  case 'N':
+                                    iconImageYorN =
+                                        'assets/images/rt_machine_off.png';
+                                    break;
+                                  default:
+                                    iconImageYorN =
+                                        'assets/images/rt_machine_off.png';
+                                }
+                                return Card(
+                                  elevation: 8.0,
+                                  margin: EdgeInsets.symmetric(vertical: 8.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  color: Color.fromRGBO(204, 235, 252, 1.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      checkStatusCard(
+                                          item['po_no'] ?? '',
+                                          item['p_doc_no'] ?? '',
+                                          item['p_doc_type'] ?? '');
+
+                                      print(
+                                          'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
+                                      print(
+                                          'p_doc_no in Card : ${item['p_doc_no']} Type : ${item['p_doc_no'].runtimeType}');
+                                      print(
+                                          'p_doc_type in Card : ${item['p_doc_type']} Type : ${item['p_doc_type'].runtimeType}');
+                                    },
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    child: Stack(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  prevLink != null
-                                                      ? ElevatedButton(
-                                                          onPressed: prevLink !=
-                                                                  null
-                                                              ? _loadPrevPage
-                                                              : null,
-                                                          style: ButtonStyles
-                                                              .previousButtonStyle,
-                                                          child: ButtonStyles
-                                                              .previousButtonContent,
-                                                        )
-                                                      : ElevatedButton(
-                                                          onPressed: prevLink !=
-                                                                  null
-                                                              ? _loadPrevPage
-                                                              : null,
-                                                          style: DisableButtonStyles
-                                                              .disablePreviousButtonStyle,
-                                                          child: DisableButtonStyles
-                                                              .disablePreviousButtonContent,
-                                                        )
-                                                ],
-                                              ),
-                                              // const SizedBox(width: 30),
-                                              Text(
-                                                _getPageIndicatorText(),
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
+                                              InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    DateTime parsedDate =
+                                                        DateFormat('dd/MM/yyyy')
+                                                            .parse(item[
+                                                                'po_date']);
+                                                    String formattedDate =
+                                                        DateFormat('dd-MM-yyyy')
+                                                            .format(parsedDate);
+
+                                                    formattedDateDocDate =
+                                                        formattedDate;
+                                                    getPDF(
+                                                      item['p_doc_no'],
+                                                      item['p_doc_type'],
+                                                      formattedDate,
+                                                    );
+                                                  });
+                                                },
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 40,
+                                                  // color: cardColor, // เปลี่ยนสีพื้นหลังที่นี่
+                                                  child: Image.asset(
+                                                    'assets/images/printer.png',
+                                                    fit: BoxFit.contain,
+                                                  ),
                                                 ),
                                               ),
-                                              // const SizedBox(width: 30),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  nextLink != null
-                                                      ? ElevatedButton(
-                                                          onPressed: nextLink !=
-                                                                  null
-                                                              ? _loadNextPage
-                                                              : null,
-                                                          style: ButtonStyles
-                                                              .nextButtonStyle,
-                                                          child: ButtonStyles
-                                                              .nextButtonContent(),
-                                                        )
-                                                      : ElevatedButton(
-                                                          onPressed: null,
-                                                          style: DisableButtonStyles
-                                                              .disableNextButtonStyle,
-                                                          child: DisableButtonStyles
-                                                              .disablePreviousButtonContent,
-                                                        ),
-                                                ],
+                                              SizedBox(height: 20.0),
+                                              Text(
+                                                '${item['po_date']} ${item['po_no']} ${item['item_stype_desc']}',
+                                                style: TextStyle(
+                                                    color: Colors.black),
                                               ),
                                             ],
+                                          ),
+                                        ),
+                                        // Positioned สำหรับสถานะ
+                                        if (statusText != 'Unknown')
+                                          Positioned(
+                                            top: 8.0,
+                                            right: 8.0,
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 12.0,
+                                                      vertical: 6.0),
+                                                  decoration: BoxDecoration(
+                                                    color: cardColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.0),
+                                                    border: Border.all(
+                                                        color: cardColor,
+                                                        width: 2.0),
+                                                  ),
+                                                  child: Text(
+                                                    statusText,
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                                // SizedBox(height: 5.0),
+                                                SizedBox(
+                                                  width: 100,
+                                                  height: 40,
+                                                  child: Image.asset(
+                                                    iconImageYorN,
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            // =======================================================  dataCard.length > 2
+                            dataCard.length > 2
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          currentPage > 0
+                                              ? ElevatedButton(
+                                                  onPressed: currentPage > 0
+                                                      ? () {
+                                                          setState(() {
+                                                            currentPage--;
+                                                          });
+                                                        }
+                                                      : null,
+                                                  style: ButtonStyles
+                                                      .previousButtonStyle,
+                                                  child: ButtonStyles
+                                                      .previousButtonContent,
+                                                )
+                                              : ElevatedButton(
+                                                  onPressed: null,
+                                                  style: DisableButtonStyles
+                                                      .disablePreviousButtonStyle,
+                                                  child: DisableButtonStyles
+                                                      .disablePreviousButtonContent,
+                                                )
+                                        ],
+                                      ),
+                                      // const SizedBox(width: 30),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Center(
+                                            child: Text(
+                                              '${(currentPage * itemsPerPage) + 1} : ${((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length)}',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           )
-                                        : const SizedBox.shrink(),
+                                        ],
+                                      ),
+                                      // const SizedBox(width: 30),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          currentPage < totalPages() - 1
+                                              ? ElevatedButton(
+                                                  onPressed: currentPage <
+                                                          totalPages() - 1
+                                                      ? () {
+                                                          setState(() {
+                                                            currentPage++;
+                                                          });
+                                                        }
+                                                      : null,
+                                                  style: ButtonStyles
+                                                      .nextButtonStyle,
+                                                  child: ButtonStyles
+                                                      .nextButtonContent(),
+                                                )
+                                              : ElevatedButton(
+                                                  onPressed: null,
+                                                  style: DisableButtonStyles
+                                                      .disableNextButtonStyle,
+                                                  child: DisableButtonStyles
+                                                      .disablePreviousButtonContent,
+                                                ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox.shrink(),
+                            // =======================================================  dataCard.length > 2
+                          ],
+                        ),
+                      ),
+                      // =======================================================  dataCard.length <= 2
+                      dataCard.length <= 2
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    currentPage > 0
+                                        ? ElevatedButton(
+                                            onPressed: currentPage > 0
+                                                ? () {
+                                                    setState(() {
+                                                      currentPage--;
+                                                    });
+                                                  }
+                                                : null,
+                                            style: ButtonStyles
+                                                .previousButtonStyle,
+                                            child: ButtonStyles
+                                                .previousButtonContent,
+                                          )
+                                        : ElevatedButton(
+                                            onPressed: null,
+                                            style: DisableButtonStyles
+                                                .disablePreviousButtonStyle,
+                                            child: DisableButtonStyles
+                                                .disablePreviousButtonContent,
+                                          )
                                   ],
                                 ),
-                ),
-                isLoading
-                    ? const SizedBox.shrink()
-                    : data.length <= 2
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  prevLink != null
-                                      ? ElevatedButton(
-                                          onPressed: prevLink != null
-                                              ? _loadPrevPage
-                                              : null,
-                                          style:
-                                              ButtonStyles.previousButtonStyle,
-                                          child: ButtonStyles
-                                              .previousButtonContent,
-                                        )
-                                      : ElevatedButton(
-                                          onPressed: prevLink != null
-                                              ? _loadPrevPage
-                                              : null,
-                                          style: DisableButtonStyles
-                                              .disablePreviousButtonStyle,
-                                          child: DisableButtonStyles
-                                              .disablePreviousButtonContent,
-                                        )
-                                ],
-                              ),
-                              // const SizedBox(width: 30),
-                              Text(
-                                _getPageIndicatorText(),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              // const SizedBox(width: 30),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  nextLink != null
-                                      ? ElevatedButton(
-                                          onPressed: nextLink != null
-                                              ? _loadNextPage
-                                              : null,
-                                          style: ButtonStyles.nextButtonStyle,
-                                          child:
-                                              ButtonStyles.nextButtonContent(),
-                                        )
-                                      : ElevatedButton(
-                                          onPressed: null,
-                                          style: DisableButtonStyles
-                                              .disableNextButtonStyle,
-                                          child: DisableButtonStyles
-                                              .disablePreviousButtonContent,
+                                // const SizedBox(width: 30),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Center(
+                                      child: Text(
+                                        '${(currentPage * itemsPerPage) + 1} : ${((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length)}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                ],
-                              ),
-                            ],
-                          )
-                        : const SizedBox.shrink()
-              ],
-            ),
-          );
-        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                // const SizedBox(width: 30),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    currentPage < totalPages() - 1
+                                        ? ElevatedButton(
+                                            onPressed:
+                                                currentPage < totalPages() - 1
+                                                    ? () {
+                                                        setState(() {
+                                                          currentPage++;
+                                                        });
+                                                      }
+                                                    : null,
+                                            style: ButtonStyles.nextButtonStyle,
+                                            child: ButtonStyles
+                                                .nextButtonContent(),
+                                          )
+                                        : ElevatedButton(
+                                            onPressed: null,
+                                            style: DisableButtonStyles
+                                                .disableNextButtonStyle,
+                                            child: DisableButtonStyles
+                                                .disablePreviousButtonContent,
+                                          ),
+                                  ],
+                                ),
+                              ],
+                            )
+                          : const SizedBox.shrink(),
+                      // ======================================================= dataCard.length <= 2
+                    ],
+                  ),
       ),
-      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
+      bottomNavigationBar: BottomBar(
+        currentPage: 'show',
+      ),
+    );
+  }
+
+  void showMessageStatusCard(
+    BuildContext context,
+    String messageAlert,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () => Navigator.of(context).pop(),
+          onConfirm: () {
+            Navigator.of(context).pop();
+          },
+        );
+      },
     );
   }
 }

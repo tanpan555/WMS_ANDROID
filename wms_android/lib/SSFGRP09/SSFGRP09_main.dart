@@ -432,7 +432,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndWareCode =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-            if (check == '0') {
+            if (check == '0' && displayEndWareCode != '--') {
               var match = dataLovEndWareCode.firstWhere(
                 (element) =>
                     element['someKey'].toString() == displayEndWareCode,
@@ -535,7 +535,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndLoc =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-            if (check == '0') {
+            if (check == '0' && displayEndLoc != '--') {
               var match = dataLovEndLoc.firstWhere(
                 (element) => element['someKey'].toString() == displayEndLoc,
                 orElse: () => {'someKey': displayStartLoc},
@@ -626,7 +626,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndGroup =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-            if (check == '0') {
+            if (check == '0' && displayEndGroup != '--') {
               var match = dataLovEndGroup.firstWhere(
                 (element) => element['someKey'].toString() == displayEndGroup,
                 orElse: () => {'someKey': displayStartGroup},
@@ -722,7 +722,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-            if (check == '0') {
+            if (check == '0' && displayEndCategory != '--') {
               var match = dataLovEndCategory.firstWhere(
                 (element) =>
                     element['someKey'].toString() == displayEndCategory,
@@ -829,7 +829,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndSubCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-            if (check == '0') {
+            if (check == '0' && displayEndSubCategory != '--') {
               var match = dataLovEndSubCategory.firstWhere(
                 (element) =>
                     element['someKey'].toString() == displayEndSubCategory,
@@ -942,7 +942,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndItem =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-            if (check == '0') {
+            if (check == '0' && displayEndItem != '') {
               var match = dataLovEndItem.firstWhere(
                 (element) => element['someKey'].toString() == displayEndItem,
                 orElse: () => {'someKey': displayStartItem},
@@ -1992,8 +1992,75 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     ),
                     const SizedBox(height: 8),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        // -------------------------------------------------
+                        ElevatedButton(
+                          onPressed: () async {
+                            setState(() {
+                              selectedRadio = '1';
+                              displayLovDate = '--';
+                              displayLovDocNo = '--';
+                              displayStartWareCode = '--';
+                              displayEndWareCode = '--';
+                              displayStartLoc = '--';
+                              displayEndLoc = '--';
+                              displayStartGroup = '--';
+                              displayEndGroup = '--';
+                              displayStartCategory = '--';
+                              displayEndCategory = '--';
+                              displayStartSubCategory = '--';
+                              displayEndSubCategory = '--';
+                              displayStartItem = '--';
+                              displayEndItem = '--';
+                              returnLovDate = 'null';
+                              returnLovDocNo = 'null';
+                              returnStartWareCode = 'null';
+                              returnEndWareCode = 'null';
+                              returnStartLoc = 'null';
+                              returnEndLoc = 'null';
+                              returnStartGroup = 'null';
+                              returnEndGroup = 'null';
+                              returnStartCategory = 'null';
+                              returnEndCategory = 'null';
+                              returnStartSubCategory = 'null';
+                              returnEndSubCategory = 'null';
+                              returnStartItem = 'null';
+                              returnEndItem = 'null';
+
+                              dateController.text = '--';
+                              docNoController.text = '--';
+                              startWareCodeController.text = '--';
+                              endWareCodeController.text = '--';
+                              startLocController.text = '--';
+                              endLocController.text = '--';
+                              startGroupController.text = '--';
+                              endGroupController.text = '--';
+                              startCategoryController.text = '--';
+                              endCategoryController.text = '--';
+                              startSubCategoryController.text = '--';
+                              endSubCategoryController.text = '--';
+                              startItemController.text = '--';
+                              endItemController.text = '--';
+                            });
+                          },
+                          style: AppStyles.ClearButtonStyle(),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // const Icon(
+                              //   Icons.print,
+                              //   color: Colors.black,
+                              // ),
+                              // const SizedBox(width: 8),
+                              Text(
+                                'Clear',
+                                style: AppStyles.ConfirmbuttonTextStyle(),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // ----------------------------------------------
                         ElevatedButton(
                           onPressed: () async {
                             if (selectedRadio.isNotEmpty && P_SHOW_MODE != '') {
@@ -2145,7 +2212,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           titleText: (item) => '${item['ware_code'] ?? ''}' == 'null'
               ? '--No Value Set--'
               : '${item['ware_code'] ?? ''}',
-          subtitleText: (item) => '${item['ware_name'] ?? ''}',
+          subtitleText: (item) =>
+              '${item['ware_name'] ?? ''}' == '--No Value Set--'
+                  ? ''
+                  : '${item['ware_name'] ?? ''}',
           onTap: (item) {
             isLoading = true;
             Navigator.of(context).pop();
@@ -2195,7 +2265,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           titleText: (item) => '${item['ware_code'] ?? ''}' == 'null'
               ? '--No Value Set--'
               : '${item['ware_code'] ?? ''}',
-          subtitleText: (item) => '${item['ware_name'] ?? ''}',
+          subtitleText: (item) =>
+              '${item['ware_name'] ?? ''}' == '--No Value Set--'
+                  ? ''
+                  : '${item['ware_name'] ?? ''}',
           onTap: (item) {
             isLoading = true;
             Navigator.of(context).pop();
@@ -2249,7 +2322,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           titleText: (item) => '${item['location_code'] ?? ''}' == 'null'
               ? '--No Value Set--'
               : '${item['location_code'] ?? ''}',
-          subtitleText: (item) => '${item['location_name'] ?? ''}',
+          subtitleText: (item) =>
+              '${item['location_name'] ?? ''}' == '--No Value Set--'
+                  ? ''
+                  : '${item['location_name'] ?? ''}',
           onTap: (item) {
             isLoading = true;
             Navigator.of(context).pop();
@@ -2295,7 +2371,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           titleText: (item) => '${item['location_code'] ?? ''}' == 'null'
               ? '--No Value Set--'
               : '${item['location_code'] ?? ''}',
-          subtitleText: (item) => '${item['location_name'] ?? ''}',
+          subtitleText: (item) =>
+              '${item['location_name'] ?? ''}' == '--No Value Set--'
+                  ? ''
+                  : '${item['location_name'] ?? ''}',
           onTap: (item) {
             Navigator.of(context).pop();
             setState(() {
@@ -2336,7 +2415,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           titleText: (item) => '${item['group_code'] ?? ''}' == 'null'
               ? '--No Value Set--'
               : '${item['group_code'] ?? ''}',
-          subtitleText: (item) => '${item['group_name'] ?? ''}',
+          subtitleText: (item) =>
+              '${item['group_name'] ?? ''}' == '--No Value Set--'
+                  ? ''
+                  : '${item['group_name'] ?? ''}',
           onTap: (item) {
             isLoading = true;
             Navigator.of(context).pop();
@@ -2388,7 +2470,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           titleText: (item) => '${item['group_code'] ?? ''}' == 'null'
               ? '--No Value Set--'
               : '${item['group_code'] ?? ''}',
-          subtitleText: (item) => '${item['group_name'] ?? ''}',
+          subtitleText: (item) =>
+              '${item['group_name'] ?? ''}' == '--No Value Set--'
+                  ? ''
+                  : '${item['group_name'] ?? ''}',
           onTap: (item) {
             isLoading = true;
             Navigator.of(context).pop();
@@ -2439,7 +2524,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           titleText: (item) => '${item['category_code'] ?? ''}' == 'null'
               ? '--No Value Set--'
               : '${item['category_code'] ?? ''}',
-          subtitleText: (item) => '${item['category_desc'] ?? ''}',
+          subtitleText: (item) =>
+              '${item['category_desc'] ?? ''}' == '--No Value Set--'
+                  ? ''
+                  : '${item['category_desc'] ?? ''}',
           onTap: (item) {
             isLoading = true;
             Navigator.of(context).pop();
@@ -2489,7 +2577,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           titleText: (item) => '${item['category_code'] ?? ''}' == 'null'
               ? '--No Value Set--'
               : '${item['category_code'] ?? ''}',
-          subtitleText: (item) => '${item['category_desc'] ?? ''}',
+          subtitleText: (item) =>
+              '${item['category_desc'] ?? ''}' == '--No Value Set--'
+                  ? ''
+                  : '${item['category_desc'] ?? ''}',
           onTap: (item) {
             isLoading = true;
             Navigator.of(context).pop();
@@ -2538,7 +2629,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           titleText: (item) => '${item['sub_cat_code'] ?? ''}' == 'null'
               ? '--No Value Set--'
               : '${item['sub_cat_code'] ?? ''}',
-          subtitleText: (item) => '${item['sub_cat_desc'] ?? ''}',
+          subtitleText: (item) =>
+              '${item['sub_cat_desc'] ?? ''}' == '--No Value Set--'
+                  ? ''
+                  : '${item['sub_cat_desc'] ?? ''}',
           onTap: (item) {
             isLoading = true;
             Navigator.of(context).pop();
@@ -2546,7 +2640,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               returnStartSubCategory = '${item['sub_cat_code'] ?? ''}';
               displayStartSubCategory =
                   '${item['sub_cat_code'] ?? ''}' == 'null'
-                      ? '--No Value Set--'
+                      ? '--'
                       : '${item['sub_cat_code'] ?? ''}';
               startSubCategoryController.text =
                   displayStartSubCategory.toString();
@@ -2588,7 +2682,10 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           titleText: (item) => '${item['sub_cat_code'] ?? ''}' == 'null'
               ? '--No Value Set--'
               : '${item['sub_cat_code'] ?? ''}',
-          subtitleText: (item) => '${item['sub_cat_desc'] ?? ''}',
+          subtitleText: (item) =>
+              '${item['sub_cat_desc'] ?? ''}' == '--No Value Set--'
+                  ? ''
+                  : '${item['sub_cat_desc'] ?? ''}',
           onTap: (item) {
             isLoading = true;
             Navigator.of(context).pop();
@@ -2635,7 +2732,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           titleText: (item) => '${item['item_code'] ?? ''}' == 'null'
               ? '--No Value Set--'
               : '${item['item_code'] ?? ''}',
-          subtitleText: (item) => '${item['name'] ?? ''}',
+          subtitleText: (item) => '${item['name'] ?? ''}' == '--No Value Set--'
+              ? ''
+              : '${item['name'] ?? ''}',
           onTap: (item) {
             isLoading = true;
             Navigator.of(context).pop();
@@ -2681,7 +2780,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           titleText: (item) => '${item['item_code'] ?? ''}' == 'null'
               ? '--No Value Set--'
               : '${item['item_code'] ?? ''}',
-          subtitleText: (item) => item['name'] ?? '',
+          subtitleText: (item) => '${item['name'] ?? ''}' == '--No Value Set--'
+              ? ''
+              : '${item['name'] ?? ''}',
           onTap: (item) {
             Navigator.of(context).pop();
             setState(() {
