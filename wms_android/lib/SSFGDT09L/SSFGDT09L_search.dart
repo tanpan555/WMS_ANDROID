@@ -95,22 +95,11 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
   }
 
   Future<void> _selectDate(
-      BuildContext context, String? initialDateString) async {
-    DateTime? initialDate;
-
-    if (initialDateString != null) {
-      try {
-        initialDate = DateFormat('dd/MM/yyyy').parseStrict(initialDateString);
-      } catch (e) {
-        initialDate = DateTime.now();
-      }
-    } else {
-      initialDate = DateTime.now();
-    }
-
+    BuildContext context,
+  ) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: initialDate,
+      initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
       initialEntryMode: DatePickerEntryMode.calendarOnly,
@@ -120,6 +109,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
       String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
       if (mounted) {
         setState(() {
+          isDateInvalid = false;
           dateController.text = formattedDate;
           selectedDate = dateController.text;
         });
@@ -206,7 +196,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.calendar_today),
                           onPressed: () {
-                            _selectDate(context, selectedDate);
+                            _selectDate(context);
                           },
                         ),
                       ),

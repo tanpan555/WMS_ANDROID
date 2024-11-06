@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
 import 'SSFGDT31_search.dart';
+import 'SSFGDT31_select_doc_type.dart';
 
 class Ssfgdt31Menu extends StatefulWidget {
   final String pWareCode;
@@ -49,14 +50,11 @@ class _Ssfgdt31MenuState extends State<Ssfgdt31Menu> {
           ));
     }
     if (checkCard == 'สร้างเอกสาร') {
-      // return _navigateToPage(
-      //     context,
-      // Ssfgdt09lSelectDocType(
-      //   pWareCode: widget.pWareCode,
-      //   pErpOuCode: widget.pErpOuCode,
-      //   pOuCode: widget.pOuCode,
-      //   pAttr1: widget.pAttr1,
-      // ));
+      return _navigateToPage(
+          context,
+          Ssfgdt31SelectDocType(
+            pWareCode: widget.pWareCode,
+          ));
     }
   }
 
