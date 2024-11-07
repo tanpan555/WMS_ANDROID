@@ -62,7 +62,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
   Future<void> fetchApCodes() async {
     try {
       final response = await http
-          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/c/AP_CODE'));
+          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_1_AP_CODE'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -70,7 +70,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
         if (mounted) {
           setState(() {
             apCodes = jsonData['items'] ?? [];
-            apCodes.insert(0, {'ap_code': 'ทั้งหมด', 'ap_name': 'ทั้งหมด'});
+            // apCodes.insert(0, {'ap_code': 'ทั้งหมด', 'ap_name': 'ทั้งหมด'});
           });
         }
       } else {
@@ -337,8 +337,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                                     selectedApCode =
                                         apCode; // Set selected code
                                     _selectedApCodeController.text =
-                                        selectedApCode ??
-                                            ''; // Update the controller's text
+                                        apName; // Update the controller's text
                                   });
                                   Navigator.of(context)
                                       .pop(); // Close the dialog
@@ -454,7 +453,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                               pWareName: widget.pWareName,
                               p_ou_code: widget.p_ou_code,
                               selectedValue: _selectedValue ?? 'ทั้งหมด',
-                              apCode: selectedApCode ?? 'ทั้งหมด',
+                              apCode: selectedApCode ?? '',
                               documentNumber: documentNumber,
                             ),
                           ),

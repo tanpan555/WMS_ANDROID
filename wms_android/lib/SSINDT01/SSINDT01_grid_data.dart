@@ -15,6 +15,7 @@ import 'package:wms_android/bottombar.dart';
 // import 'package:wms/test.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:intl/intl.dart';
+import 'package:wms_android/checkDataFormate.dart';
 
 class Ssindt01Grid extends StatefulWidget {
   final String poReceiveNo;
@@ -106,7 +107,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   Future<void> chk_grid() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/c/chk_grid/${widget.poReceiveNo}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}'));
+          'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_chk_grid/${widget.poReceiveNo}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}'));
+          
       print(widget.poReceiveNo);
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -133,7 +135,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   Future<String?> fetchvResultStatus(String ITEM_CODE) async {
     final String apiUrl =
-        'http://172.16.0.82:8888/apex/wms/c/item_chk/$ITEM_CODE';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_item_chk/$ITEM_CODE';
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
@@ -155,7 +157,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   }
 
   Future<void> sendPostRequestlineWMS() async {
-    final url = 'http://172.16.0.82:8888/apex/wms/c/get_po_test';
+    final url = 'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_get_po_test';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -192,48 +194,9 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     }
   }
 
-  // Future<void> postLot(String poReceiveNo, String recSeq, String ouCode) async {
-  //   final url = 'http://172.16.0.82:8888/apex/wms/c/add_lot';
-
-  //   final headers = {
-  //     'Content-Type': 'application/json',
-  //   };
-
-  //   final body = jsonEncode({
-  //     'p_ou': ouCode,
-  //     'p_receive_no': poReceiveNo,
-  //     'p_rec_seq': recSeq,
-  //   });
-  //   print('Request body: $body');
-
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse(url),
-  //       headers: headers,
-  //       body: body,
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final Map<String, dynamic> responseData = jsonDecode(response.body);
-  //       if (mounted) {
-  //         setState(() {
-  //           poStatus = responseData['po_status'];
-  //           poMessage = responseData['po_message'];
-  //           sendGetRequestlineWMS();
-  //         });
-  //       }
-  //       print('Success: $responseData');
-  //     } else {
-  //       print('Failed to post data. Status code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error: $e');
-  //   }
-  // }
-
   Future<void> genLot(String v_WMS_NO, String v_PO_NO, String v_rec_seq,
       String v_lot_qty, String OU_CODE) async {
-    final url = 'http://172.16.0.82:8888/apex/wms/c/gen_lot';
+    final url = 'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_gen_lot';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -359,7 +322,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   Future<void> sendGetRequestlineWMS() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/c/pull_po/${widget.poReceiveNo}';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_pull_po/${widget.poReceiveNo}';
     final headers = {'Content-Type': 'application/json; charset=UTF-8'};
 
     try {
@@ -397,7 +360,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   }
 
   Future<void> updateReceiveQty(String rowid, String receiveQty) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/c/UPDATE_QTY');
+    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_UPDATE_QTY');
     final response = await http.put(
       url,
       headers: {
@@ -423,7 +386,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   }
 
   Future<void> deleteReceiveQty(String recNo, String recSeq) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/c/del_po');
+    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_del_po');
     final response = await http.delete(
       url,
       headers: {
@@ -452,7 +415,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   Future<void> getLotList(
       String poReceiveNo, String recSeq, String ouCode) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/c/get_lot/$poReceiveNo/$recSeq/$ouCode';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_get_lot/$poReceiveNo/$recSeq/$ouCode';
 
     final headers = {
       'Content-Type': 'application/json; charset=UTF-8',
@@ -604,7 +567,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   Future<void> deleteLot(String recNo, String pOu, String recSeq, String PoNo,
       String lotSeq, String PoSeq) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/c/del_lot');
+    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_del_lot');
     print('recNo $recNo');
     print('pOu $pOu');
     print('recSeq $recSeq');
@@ -955,7 +918,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   Future<void> updateLot(String lot_qty, String lot_supplier, String mfg_date,
       String OU_CODE, String RECEIVE_NO, String REC_SEQ, String lot_seq) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/c/save_lot_det');
+    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_save_lot_det');
     final response = await http.put(
       url,
       headers: {
@@ -993,7 +956,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   Future<void> updateOkLot(
       String v_rec_no, String v_rec_seq, String p_erp_ou) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/c/update_ok_lot');
+    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_update_ok_lot');
     final response = await http.put(
       url,
       headers: {
@@ -1394,7 +1357,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   String? poreject;
   Future<void> fetchPoStatus(String recSeq) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/c/check_valid_savelot/${widget.poReceiveNo}/$recSeq/${gb.P_OU_CODE}/${gb.APP_USER}';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_check_valid_savelot/${widget.poReceiveNo}/$recSeq/${gb.P_OU_CODE}/${gb.APP_USER}';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -2335,7 +2298,7 @@ class _LotDialogState extends State<LotDialog> {
 
   Future<void> genLot(String v_WMS_NO, String v_PO_NO, String v_rec_seq,
       String v_lot_qty, String OU_CODE) async {
-    final url = 'http://172.16.0.82:8888/apex/wms/c/gen_lot';
+    final url = 'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_gen_lot';
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({
       'v_WMS_NO': v_WMS_NO,
@@ -2408,7 +2371,7 @@ class _LotDialogState extends State<LotDialog> {
 
   Future<void> updateOkLot(
       String v_rec_no, String v_rec_seq, String p_erp_ou) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/c/update_ok_lot');
+    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_update_ok_lott');
     final response = await http.put(
       url,
       headers: {
@@ -2435,7 +2398,7 @@ class _LotDialogState extends State<LotDialog> {
   }
 
   Future<void> postLot(String poReceiveNo, String recSeq, String ouCode) async {
-    final url = 'http://172.16.0.82:8888/apex/wms/c/add_lot';
+    final url = 'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_add_lot';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -2482,7 +2445,7 @@ class _LotDialogState extends State<LotDialog> {
   Future<void> getLotList(
       String poReceiveNo, String recSeq, String ouCode) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/c/get_lot/$poReceiveNo/$recSeq/$ouCode';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_get_lot/$poReceiveNo/$recSeq/$ouCode';
     final headers = {
       'Content-Type': 'application/json; charset=UTF-8',
     };
@@ -2510,7 +2473,7 @@ class _LotDialogState extends State<LotDialog> {
 
   Future<void> sendGetRequestlineWMS() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/c/pull_po/${widget.poReceiveNo}';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_pull_po/${widget.poReceiveNo}';
     final headers = {'Content-Type': 'application/json; charset=UTF-8'};
 
     print('Request URL: $url');
@@ -2620,16 +2583,18 @@ class _LotDialogState extends State<LotDialog> {
                             icon: Icon(Icons.calendar_today_outlined,
                                 color: Colors.black),
                             onPressed: () async {
-                              FocusScope.of(context).unfocus();
-                              DateTime initialDate = DateTime.now();
-                              if (mfgDateController.text.isNotEmpty) {
+                              DateTime? initialDate;
+                              if (initialDateString != null) {
                                 try {
-                                  initialDate = displayFormat
-                                      .parse(mfgDateController.text);
+                                  initialDate = DateFormat('dd/MM/yyyy')
+                                      .parseStrict(initialDateString);
                                 } catch (e) {
-                                  print('Error parsing date: $e');
+                                  initialDate = DateTime.now();
                                 }
+                              } else {
+                                initialDate = DateTime.now();
                               }
+
                               final DateTime? picked = await showDatePicker(
                                 context: context,
                                 initialDate: initialDate,
@@ -2645,6 +2610,7 @@ class _LotDialogState extends State<LotDialog> {
                                   mfgDateController.text = formattedDate;
                                   isMfgDateValid = true;
                                   check = true;
+                                  checkUpdateData = true;
                                 });
                               }
                             },
@@ -2655,7 +2621,7 @@ class _LotDialogState extends State<LotDialog> {
                           ? 'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024'
                           : null,
                       errorStyle: TextStyle(
-                        fontSize: 8.0,
+                        fontSize: 10,
                         color: Colors.red,
                       ),
                     ),
@@ -2663,6 +2629,7 @@ class _LotDialogState extends State<LotDialog> {
                       setState(() {
                         check = true;
                       });
+
                       String numbersOnly = value.replaceAll('/', '');
 
                       if (numbersOnly.length > 8) {
@@ -2670,6 +2637,9 @@ class _LotDialogState extends State<LotDialog> {
                       }
 
                       String formattedDate = '';
+                      int cursorPos = mfgDateController.selection.baseOffset;
+
+                      // Format the date as the user types
                       for (int i = 0; i < numbersOnly.length; i++) {
                         if (i == 2 || i == 4) {
                           formattedDate += '/';
@@ -2677,6 +2647,7 @@ class _LotDialogState extends State<LotDialog> {
                         formattedDate += numbersOnly[i];
                       }
 
+                      // Determine if the entered date is valid
                       bool isValidDate = false;
                       if (numbersOnly.length == 8) {
                         try {
@@ -2697,12 +2668,18 @@ class _LotDialogState extends State<LotDialog> {
                       }
 
                       setState(() {
+                        isMfgDateValid = numbersOnly.isEmpty || isValidDate;
+
+                        // Create a new TextEditingValue with the updated date and position
+                        final newSelection = TextSelection.collapsed(
+                            offset: cursorPos +
+                                formattedDate.length -
+                                value.length); // Adjust cursor position
+
                         mfgDateController.value = TextEditingValue(
                           text: formattedDate,
-                          selection: TextSelection.collapsed(
-                              offset: formattedDate.length),
+                          selection: newSelection,
                         );
-                        isMfgDateValid = numbersOnly.isEmpty || isValidDate;
                       });
                     },
                     keyboardType: TextInputType.number,
@@ -2710,7 +2687,7 @@ class _LotDialogState extends State<LotDialog> {
                       FilteringTextInputFormatter.digitsOnly,
                       LengthLimitingTextInputFormatter(8),
                     ],
-                  ),
+                  )
                 ],
               );
             }
@@ -2764,6 +2741,7 @@ class _LotDialogState extends State<LotDialog> {
                                     onChanged: (value) {
                                       setState(() {
                                         check = true;
+                                        checkUpdateData = true;
                                       });
                                     },
                                     initialValue: item['lot_product_no'] ?? '',
@@ -2816,6 +2794,7 @@ class _LotDialogState extends State<LotDialog> {
                               onChanged: (value) {
                                 setState(() {
                                   check = true;
+                                  checkUpdateData = true;
                                 });
                               },
                               controller: lotSupplierController,
@@ -3251,7 +3230,7 @@ class _LotDialogState extends State<LotDialog> {
   String? poreject;
   Future<void> fetchPoStatus(String recSeq) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/c/check_valid_savelot/${widget.poReceiveNo}/$recSeq/${gb.P_OU_CODE}/${gb.APP_USER}';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_check_valid_savelot/${widget.poReceiveNo}/$recSeq/${gb.P_OU_CODE}/${gb.APP_USER}';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -3277,7 +3256,7 @@ class _LotDialogState extends State<LotDialog> {
 
   Future<void> updateLot(String lot_qty, String lot_supplier, String mfg_date,
       String OU_CODE, String RECEIVE_NO, String REC_SEQ, String lot_seq) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/c/save_lot_det');
+    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_save_lot_det');
     final response = await http.put(
       url,
       headers: {
@@ -3316,7 +3295,7 @@ class _LotDialogState extends State<LotDialog> {
 
   Future<void> deleteLot(String recNo, String pOu, String recSeq, String PoNo,
       String lotSeq, String PoSeq) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/c/del_lot');
+    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_del_lot');
     print('recNo $recNo');
     print('pOu $pOu');
     print('recSeq $recSeq');
@@ -3452,6 +3431,8 @@ class _LotDialogState extends State<LotDialog> {
 
   final NumberFormat numberFormat = NumberFormat("#,##0");
 
+  get initialDateString => null;
+
   void _showAlertDialogGenLot(BuildContext context) {
     showDialog(
       context: context,
@@ -3495,6 +3476,8 @@ class _LotDialogState extends State<LotDialog> {
     );
   }
 
+  bool checkUpdateData = false;
+
   @override
   Widget build(BuildContext context) {
     bool hasNextPage = currentPage < (dataLotList.length / itemsPerPage).ceil();
@@ -3502,7 +3485,10 @@ class _LotDialogState extends State<LotDialog> {
 
     return Scaffold(
       // backgroundColor: Color(0xFF17153B),
-      appBar: CustomAppBar(title: 'LOT Details', showExitWarning: true),
+      appBar: CustomAppBar(
+        title: 'LOT Details',
+        showExitWarning: checkUpdateData,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
@@ -3531,7 +3517,7 @@ class _LotDialogState extends State<LotDialog> {
                   ),
                 ],
               ),
-
+              SizedBox(height: 10),
               // Item Description
               TextField(
                 controller: TextEditingController(
@@ -3556,6 +3542,7 @@ class _LotDialogState extends State<LotDialog> {
                     onPressed: () {
                       int currentValue = int.parse(lotCountController.text);
                       setState(() {
+                        checkUpdateData = true;
                         lotCountController.text =
                             (currentValue > 0 ? currentValue - 1 : 0)
                                 .toString();
@@ -3584,6 +3571,7 @@ class _LotDialogState extends State<LotDialog> {
                     onPressed: () {
                       int currentValue = int.parse(lotCountController.text);
                       setState(() {
+                        checkUpdateData = true;
                         lotCountController.text = (currentValue + 1).toString();
                       });
                     },
@@ -3599,7 +3587,8 @@ class _LotDialogState extends State<LotDialog> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green),
-                      child: Text('ADD', style: TextStyle(color: Colors.white)),
+                      child: Text('ADD',
+                          style: TextStyle(color: Colors.white, fontSize: 14)),
                       onPressed: () async {
                         await postLot(
                             widget.poReceiveNo, widget.recSeq, widget.ouCode);
@@ -3616,7 +3605,7 @@ class _LotDialogState extends State<LotDialog> {
                             backgroundColor: Colors.greenAccent),
                         child: Text('GENLOT',
                             style:
-                                TextStyle(color: Colors.white, fontSize: 12)),
+                                TextStyle(color: Colors.white, fontSize: 14)),
                         onPressed: () async {
                           await genLot(
                               widget.poReceiveNo,

@@ -143,7 +143,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
 
   void fetchPDFData() async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/c/GET_PDF/${widget.poPONO}/wms/$BROWSER_LANGUAGE/$P_ERP_OU_CODE/$P_OU_CODE');
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_4_GET_PDF/${widget.poPONO}/wms/$BROWSER_LANGUAGE/$P_ERP_OU_CODE/$P_OU_CODE');
 
     try {
       final response = await http.get(url);
@@ -229,7 +229,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
 
   Future<void> sendGetRequestlineWMS() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/c/pull_po/${widget.poReceiveNo}';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_4_pull_po/${widget.poReceiveNo}';
 
     final headers = {
       'Content-Type': 'application/json; charset=UTF-8',
@@ -264,7 +264,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
   Future<void> chk_sub() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/c/Submit_ver/${widget.poReceiveNo}'));
+          'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_4_Submit_ver/${widget.poReceiveNo}'));
       print(widget.poReceiveNo);
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);

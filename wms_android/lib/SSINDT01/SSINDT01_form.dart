@@ -137,7 +137,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   String? poMessage;
   Future<void> fetchPoStatus() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/c/chk_valid_inhead/${widget.poReceiveNo}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_2_chk_valid_inhead/${widget.poReceiveNo}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}';
+
     try {
       print(url);
       final response = await http.get(Uri.parse(url));
@@ -169,8 +170,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
   Future<void> fetchwhpoType() async {
     try {
-      final response = await http
-          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/c/PO_TYPE'));
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_2_PO_TYPE'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -208,7 +209,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
   Future<void> fetchReceiveHeadData(String receiveNo) async {
     final String apiUrl =
-        "http://172.16.0.82:8888/apex/wms/c/formtest/$receiveNo";
+        "http://172.16.0.82:8888/apex/wms/SSINDT01/Step_2_formtest/$receiveNo";
 
     final Map<String, String> queryParams = {
       'RECEIVE_NO': receiveNo,
@@ -291,8 +292,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
   Future<void> cancelCode() async {
     try {
-      final response = await http.get(
-          Uri.parse('http://172.16.0.82:8888/apex/wms/c/cancel_from_list'));
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_2_cancel_from_list'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -323,27 +324,29 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
   String? pomsg;
   Future<void> cancel_from(String selectedcCode) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/c/cancel_from');
+    final url =
+        Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_2_cancel_from');
     final response = await http.put(
       url,
       headers: {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        'v_rec': widget.poReceiveNo,
-        'v_cancel': selectedcCode,
+        'V_REC': widget.poReceiveNo,
+        'V_CANCEL': selectedcCode,
         'APP_USER': gb.APP_USER,
-        'p_ou': gb.P_ERP_OU_CODE,
-        'p_erp_ou': gb.P_ERP_OU_CODE,
+        'P_OU': gb.P_ERP_OU_CODE,
+        'P_ERP_OU': gb.P_ERP_OU_CODE,
       }),
     );
+    print('Selected code before sending: $selectedcCode');
 
     print('Cancel form with data: ${jsonEncode({
-          'v_rec': widget.poReceiveNo,
-          'v_cancel': selectedcCode,
+          'V_REC': widget.poReceiveNo,
+          'V_CANCEL': selectedcCode,
           'APP_USER': gb.APP_USER,
-          'p_ou': gb.P_OU_CODE,
-          'p_erp_ou': gb.P_ERP_OU_CODE,
+          'P_OU': gb.P_OU_CODE,
+          'P_ERP_OU': gb.P_ERP_OU_CODE,
         })}');
 
     if (response.statusCode == 200) {
@@ -385,10 +388,11 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           },
           onTap: (item) {
             // Handle item selection
-            final selectedCode = item['r']?.toString() ?? '';
+            selectedcCode =
+                item['r']?.toString() ?? ''; // Update selectedcCode here
             final selectedDescription = item['d']?.toString() ?? '';
-            _CcodeController.text = '$selectedCode $selectedDescription';
-            print('$selectedCode, $selectedDescription');
+            _CcodeController.text = '$selectedcCode $selectedDescription';
+            print('$selectedcCode, $selectedDescription');
             Navigator.of(context).pop(); // Close the dialog
           },
         );
@@ -434,12 +438,12 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                     context: context,
                     content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
                     onClose: () {
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(); // Close dialog on close
                     },
                     onConfirm: () async {
                       await cancel_from(selectedcCode!).then((_) {
                         Navigator.of(context).pop();
-                        Navigator.of(context).push(
+                        Navigator.of(context).pop(
                           MaterialPageRoute(
                             builder: (context) => SSINDT01_MAIN(
                               pWareCode: widget.pWareCode,
@@ -451,8 +455,9 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                             ),
                           ),
                         );
+                        Navigator.of(context).pop();
                       }).catchError((error) {
-                        ScaffoldMessenger.of(parentContext).showSnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('An error occurred: $error'),
                           ),
@@ -479,7 +484,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       String invoiceNo,
       String poTypeCode) async {
     final url =
-        Uri.parse('http://172.16.0.82:8888/apex/wms/c/UP_FORM_PO_REMARK');
+        Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_2_UP_FORM_PO_REMARK');
     final response = await http.put(
       url,
       headers: {
@@ -487,7 +492,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       },
       body: jsonEncode({
         'RECEIVE_NO': receiveNo,
-        'OU_CODE': '000',
+        'OU_CODE': gb.P_ERP_OU_CODE,
         'PO_REMARK': poRemark,
         'RECEIVE_DATE': receiveDate,
         'INVOICE_DATE': invoiceDate,
@@ -500,7 +505,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
     print('Updating form with data: ${jsonEncode({
           'RECEIVE_NO': receiveNo,
-          'OU_CODE': '000',
+          'OU_CODE': gb.P_ERP_OU_CODE,
           'PO_REMARK': poRemark,
           'RECEIVE_DATE': receiveDate,
           'INVOICE_DATE': invoiceDate,
@@ -732,31 +737,29 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             child: GestureDetector(
               onTap: () {
                 showDialog(
-  context: context,
-  builder: (BuildContext context) {
-    return DialogStyles.customLovSearchDialog(
-      context: context,
-      headerText: 'เลือกประเภทการรับ',
-      searchController: _searchController,
-      data: poType,
-      docString: (item) => item['po_type_code'].toString(),
-      titleText: (item) => item['po_type_code'].toString(),
-      subtitleText: (item) => '', // You can add a subtitle if needed
-      onTap: (item) {
-        Navigator.of(context).pop();
-        setState(() {
-          selectedPoType = poTypeCode;
-                                                print(selectedPoType);
-                                                poTypeCodeController.text =
-                                                    poTypeCode;
-                                                print(
-                                                    poTypeCodeController.text);
-        });
-      },
-    );
-  },
-);
-
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DialogStyles.customLovSearchDialog(
+                      context: context,
+                      headerText: 'เลือกประเภทการรับ',
+                      searchController: _searchController,
+                      data: poType,
+                      docString: (item) => item['po_type_code'].toString(),
+                      titleText: (item) => item['po_type_code'].toString(),
+                      subtitleText: (item) =>
+                          '', // You can add a subtitle if needed
+                      onTap: (item) {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          selectedPoType = poTypeCode;
+                          print(selectedPoType);
+                          poTypeCodeController.text = poTypeCode;
+                          print(poTypeCodeController.text);
+                        });
+                      },
+                    );
+                  },
+                );
               },
               child: AbsorbPointer(
                 child: TextField(

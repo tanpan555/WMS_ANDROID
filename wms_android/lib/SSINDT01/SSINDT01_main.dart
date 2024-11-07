@@ -114,7 +114,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     }
 
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/SSINDT01_Card_list/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_1_Card_list/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue';
 
     try {
       final response = await http.get(Uri.parse(requestUrl));
@@ -217,7 +217,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   Future<void> fetchPoStatus(String poNo, String? receiveNo) async {
     final String receiveNoParam = receiveNo ?? 'null';
     final String apiUrl =
-        'http://172.16.0.82:8888/apex/wms/c/check_rcv/$poNo/$receiveNoParam/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_1_check_rcv/$poNo/$receiveNoParam/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}';
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
@@ -256,7 +256,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   Future<void> fetchPoStatusconform(String? receiveNo) async {
     final String receiveNoParam = receiveNo ?? 'null';
     final String apiUrl =
-        'http://172.16.0.82:8888/apex/wms/c/conform_reciveIN_refPO/${receiveNo}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_1_conform_reciveIN_refPO/${receiveNo}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}';
 
     try {
       print(apiUrl);
@@ -296,20 +296,21 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
 
   Future<void> sendPostRequest(
       String poNo, String receiveNo, String selectedwhCode) async {
-    final url = 'http://172.16.0.82:8888/apex/wms/c/create_inhead_wms';
+    final url =
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_1_create_inhead_wms';
 
     final headers = {
       'Content-Type': 'application/json',
     };
 
     final body = jsonEncode({
-      'p_po_no': poNo,
-      'p_receive_no': receiveNo,
-      'p_wh_code': selectedwhCode,
+      'P_OU_CODE': gb.P_OU_CODE,
+      'P_PO_NO': poNo,
+      'P_RECEIVE_NO': receiveNo,
+      'P_WH_CODE': selectedwhCode,
+      'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
       'APP_SESSION': gb.APP_SESSION,
       'APP_USER': gb.APP_USER,
-      'P_OU_CODE': gb.P_OU_CODE,
-      'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
     });
 
     print('headers : $headers Type : ${headers.runtimeType}');
