@@ -856,42 +856,44 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                               border: InputBorder.none,
                               filled: true,
                               fillColor: Colors.white,
-                              labelText: 'วันที่บันทึก',
+                              labelText: 'วันที่ตรวจนับ',
                               hintText: 'DD/MM/YYYY',
-                              hintStyle: const TextStyle(color: Colors.grey),
-                              labelStyle: isDateInvalid
+                              hintStyle: TextStyle(color: Colors.grey),
+                              labelStyle: isDateInvalid == true
                                   ? const TextStyle(color: Colors.red)
                                   : const TextStyle(color: Colors.black87),
                               suffixIcon: IconButton(
                                 icon: const Icon(Icons.calendar_today),
-                                onPressed: () {
+                                onPressed: () async {
                                   _selectDate(context);
                                 },
                               ),
                             ),
                             onChanged: (value) {
-                              docDate = value;
-                              isDateInvalid =
-                                  dateInputFormatter.noDateNotifier.value;
-                              print('docDate : $docDate');
-                              print('isDateInvalid : $isDateInvalid');
-                              if (docDate != docDateForCheck) {
-                                checkUpdateData = true;
-                              }
+                              setState(() {
+                                docDate = value;
+                                isDateInvalid =
+                                    dateInputFormatter.noDateNotifier.value;
+                                print('docDate : $docDate');
+                                if (docDate != docDateForCheck) {
+                                  checkUpdateData = true;
+                                }
+                              });
                             },
                           ),
-                          if (isDateInvalid == true)
-                            const Padding(
-                              padding: EdgeInsets.only(top: 4.0),
-                              child: Text(
-                                'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
+                          isDateInvalid == true
+                              ? const Padding(
+                                  padding: EdgeInsets.only(top: 4.0),
+                                  child: Text(
+                                    'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ))
+                              : const SizedBox.shrink(),
+                          const SizedBox(height: 8),
                           const SizedBox(height: 8),
                           TextFormField(
                             controller: refNoController,
