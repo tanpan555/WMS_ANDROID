@@ -196,19 +196,6 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     return '$startRecord - $endRecord';
   }
 
-  // void filterData() {
-  //   setState(() {
-  //     displayedData = data.where((item) {
-  //       final poNo = item['po_no']?.toString().toLowerCase() ?? '';
-  //       final matchesSearchQuery = poNo.contains(searchQuery.toLowerCase());
-  //       final matchesApCode =
-  //           selectedApCode == 'ทั้งหมด' || item['ap_code'] == selectedApCode;
-  //       return matchesSearchQuery && matchesApCode;
-  //     }).toList();
-  //     print(
-  //         'displayedData : $displayedData Type : ${displayedData.runtimeType}');
-  //   });
-  // }
 
   String? poStatus;
   String? poMessage;

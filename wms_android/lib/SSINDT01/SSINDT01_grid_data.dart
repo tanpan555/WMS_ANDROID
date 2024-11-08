@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -9,18 +7,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/styles.dart';
-// import 'package:wms_android/custom_drawer.dart';
 import 'SSINDT01_verify.dart';
 import 'package:wms_android/bottombar.dart';
-// import 'package:wms/test.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
-import 'package:intl/intl.dart';
-import 'package:wms_android/checkDataFormate.dart';
 
 class Ssindt01Grid extends StatefulWidget {
   final String poReceiveNo;
   final String? poPONO;
-
   final String pWareCode;
   final String pWareName;
   final String p_ou_code;
@@ -108,7 +101,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_chk_grid/${widget.poReceiveNo}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}'));
-          
+
       print(widget.poReceiveNo);
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -232,82 +225,28 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
         }
 
         if (poMessage != null && poMessage!.isNotEmpty) {
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   SnackBar(content: Text(poMessage!)),
-          // );
-
-          AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment
-                  .spaceBetween, // Space between text and button
-              children: [
-                Icon(
-                  Icons.notification_important, // Use the bell icon
-                  color: Colors.red, // Set the color to red
-                ),
-                SizedBox(width: 8),
-                Text(
-                  'แจ้งเตือน',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
+          DialogStyles.alertMessageDialog(
+            context: context,
             content: Text(poMessage!),
-            actions: <Widget>[
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+            onClose: () {
+              Navigator.of(context).pop();
+            },
+            onConfirm: () async {
+              Navigator.of(context).pop();
+            },
           );
         }
 
         if (poMessage == null && poMessage!.isEmpty) {
-          AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment
-                  .spaceBetween, // Space between text and button
-              children: [
-                Icon(
-                  Icons.notification_important, // Use the bell icon
-                  color: Colors.red, // Set the color to red
-                ),
-                SizedBox(width: 8),
-                Text(
-                  'แจ้งเตือน',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
+          DialogStyles.alertMessageDialog(
+            context: context,
             content: Text("สำเร็จ"),
-            actions: <Widget>[
-              TextButton(
-                child: Text('ตกลง'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+            onClose: () {
+              Navigator.of(context).pop();
+            },
+            onConfirm: () async {
+              Navigator.of(context).pop();
+            },
           );
         }
 
@@ -359,8 +298,9 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     }
   }
 
-  Future<void> updateReceiveQty(String rowid, String receiveQty) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_UPDATE_QTY');
+  Future<void> updateReceiveQty(String rowid, String receiveQty, String rcvlot_supplier, String rcvlot_size) async {
+    final url = Uri.parse(
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_WMS_PO_RECEIVE_DET');
     final response = await http.put(
       url,
       headers: {
@@ -369,6 +309,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       body: jsonEncode({
         'rowid': rowid,
         'receive_qty': receiveQty,
+        'rcvlot_supplier': rcvlot_supplier,
+        'rcvlot_size': rcvlot_size,
       }),
     );
 
@@ -386,7 +328,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   }
 
   Future<void> deleteReceiveQty(String recNo, String recSeq) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_del_po');
+    final url =
+        Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_del_po');
     final response = await http.delete(
       url,
       headers: {
@@ -533,7 +476,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                       style: AppStyles.ConfirmChecRecievekButtonStyle(),
                       onPressed: () {
                         final updatedQty = receiveQtyController.text;
-                        updateReceiveQty(data['rowid'], updatedQty);
+                        updateReceiveQty(data['rowid'], updatedQty, data['rcvlot_supplier'], data['rcvlot_size']);
                         Navigator.of(context).pop(); // Close the dialog
                       },
                       child: Image.asset(
@@ -567,7 +510,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   Future<void> deleteLot(String recNo, String pOu, String recSeq, String PoNo,
       String lotSeq, String PoSeq) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_del_lot');
+    final url =
+        Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_del_lot');
     print('recNo $recNo');
     print('pOu $pOu');
     print('recSeq $recSeq');
@@ -613,245 +557,6 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
-  }
-
-  void showLotDialog(BuildContext context, String item, String itemDesc,
-      String ouCode, String recSeq) async {
-    await getLotList(widget.poReceiveNo, recSeq, ouCode);
-
-    TextEditingController combinedController =
-        TextEditingController(text: '$item $itemDesc');
-    TextEditingController lotCountController = TextEditingController(text: '0');
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: false,
-      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      barrierColor: Colors.black54,
-      transitionDuration: const Duration(milliseconds: 200),
-      pageBuilder: (BuildContext context, Animation animation,
-          Animation secondaryAnimation) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Center(
-              child: Material(
-                type: MaterialType.transparency,
-                child: Dialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(
-                            'LOT Details',
-                            style: TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 20),
-                          TextField(
-                            controller: combinedController,
-                            decoration: InputDecoration(
-                              labelText: 'Item and Description',
-                              border: OutlineInputBorder(),
-                            ),
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          SizedBox(height: 16),
-                          Row(
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.remove),
-                                onPressed: () {
-                                  int currentValue =
-                                      int.parse(lotCountController.text);
-                                  setState(() {
-                                    currentValue =
-                                        currentValue > 0 ? currentValue - 1 : 0;
-                                    lotCountController.text =
-                                        currentValue.toString();
-                                  });
-                                },
-                              ),
-                              Expanded(
-                                child: TextField(
-                                  controller: lotCountController,
-                                  decoration: InputDecoration(
-                                    labelText: 'จำนวน LOT',
-                                    border: InputBorder.none,
-                                  ),
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ],
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.add),
-                                onPressed: () {
-                                  int currentValue =
-                                      int.parse(lotCountController.text);
-                                  setState(() {
-                                    currentValue++;
-                                    lotCountController.text =
-                                        currentValue.toString();
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 16),
-                          dataLotList.isNotEmpty
-                              ? SingleChildScrollView(
-                                  child: Column(
-                                    children: dataLotList.map((item) {
-                                      return Card(
-                                        elevation: 4.0,
-                                        margin:
-                                            EdgeInsets.symmetric(vertical: 8.0),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15.0),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  'Seq: ${item['lot_seq_nb']?.toString() ?? ''}'),
-                                              SizedBox(height: 8),
-                                              Text(
-                                                  'Lot QTY: ${item['lot_qty']?.toString() ?? ''}'),
-                                              SizedBox(height: 8),
-                                              Text(
-                                                  'MFG Date: ${item['mfg_date']?.toString() ?? ''}'),
-                                              SizedBox(height: 8),
-                                              Text(
-                                                  'Lot ผู้ผลิต: ${item['lot_supplier']?.toString() ?? ''}'),
-                                              SizedBox(height: 8),
-                                              Text(
-                                                  'Product No: ${item['lot_product_no']?.toString() ?? ''}',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              SizedBox(height: 16),
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  showDetailsLotDialog(
-                                                      context,
-                                                      item,
-                                                      recSeq,
-                                                      ouCode, () async {
-                                                    await getLotList(
-                                                        widget.poReceiveNo,
-                                                        recSeq,
-                                                        ouCode);
-                                                    setState(() {});
-                                                  });
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      Colors.purple,
-                                                ),
-                                                child: Text('EDIT',
-                                                    style: TextStyle(
-                                                        color: Colors.white)),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
-                                )
-                              : Text('No LOT details available',
-                                  style: TextStyle(color: Colors.grey)),
-                          SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
-                                  ),
-                                  child: Text('ADD',
-                                      style: TextStyle(color: Colors.white)),
-                                  onPressed: () async {
-                                    // await postLot(
-                                    //     widget.poReceiveNo, recSeq, ouCode);
-                                    await getLotList(
-                                        widget.poReceiveNo, recSeq, ouCode);
-                                    setState(() {});
-                                  },
-                                ),
-                              ),
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.greenAccent,
-                                  ),
-                                  child: Text('GENLOT',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 9)),
-                                  onPressed: () async {
-                                    await genLot(
-                                        widget.poReceiveNo,
-                                        widget.poPONO.toString(),
-                                        recSeq,
-                                        lotCountController.text,
-                                        ouCode);
-                                    await getLotList(
-                                        widget.poReceiveNo, recSeq, ouCode);
-                                    setState(() {});
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 16),
-                          Center(
-                            child: ElevatedButton(
-                              child: Text('OK'),
-                              onPressed: () async {
-                                Navigator.of(context).pop();
-                                await fetchPoStatus(recSeq);
-                                if (poreject == '1') {
-                                  showCustomDialog(context, widget.poReceiveNo,
-                                      recSeq, ouCode);
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-      transitionBuilder: (context, anim1, anim2, child) {
-        return FadeTransition(
-          opacity: anim1,
-          child: ScaleTransition(
-            scale: anim1,
-            child: child,
-          ),
-        );
-      },
-    );
   }
 
   void showCustomDialog(
@@ -918,7 +623,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   Future<void> updateLot(String lot_qty, String lot_supplier, String mfg_date,
       String OU_CODE, String RECEIVE_NO, String REC_SEQ, String lot_seq) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_save_lot_det');
+    final url = Uri.parse(
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_save_lot_det');
     final response = await http.put(
       url,
       headers: {
@@ -956,7 +662,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   Future<void> updateOkLot(
       String v_rec_no, String v_rec_seq, String p_erp_ou) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_update_ok_lot');
+    final url = Uri.parse(
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_update_ok_lot');
     final response = await http.put(
       url,
       headers: {
@@ -2094,10 +1801,21 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                                     itemDesc: data['item_desc']
                                                             ?.toString() ??
                                                         '',
-                                                    ouCode: data['ou_code']
+                                                    recSeq: data['rec_seq']
                                                             ?.toString() ??
                                                         '',
-                                                    recSeq: data['rec_seq']
+                                                        // lotQTY: data['lot_qty']
+                                                        //     ?.toString() ??
+                                                        // '',
+                                                        // lotSize: data['lot_Size']
+                                                        //     ?.toString() ??
+                                                        // '',
+                                                        // rowid: data['rowid']
+                                                        //     ?.toString() ??
+                                                        // '',
+                                                        // lotSupp: ['lot_SUPP']?.toString() ??
+                                                        // '',
+                                                    ouCode: data['ou_code']
                                                             ?.toString() ??
                                                         '',
                                                     poReceiveNo:
@@ -2209,7 +1927,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+// LOT DETAILS
 class LotDialog extends StatefulWidget {
   final String item;
   final String itemDesc;
@@ -2217,6 +1935,10 @@ class LotDialog extends StatefulWidget {
   final String recSeq;
   final String poReceiveNo;
   final String poPONO;
+  // final String lotQTY;
+  // final String lotSize;
+  // final String rowid;
+  // final String lotSupp;
 
   LotDialog({
     required this.item,
@@ -2225,6 +1947,10 @@ class LotDialog extends StatefulWidget {
     required this.recSeq,
     required this.poReceiveNo,
     required this.poPONO,
+    // required this.lotQTY,
+    // required this.lotSize,
+    // required this.rowid,
+    // required this.lotSupp,
   });
 
   @override
@@ -2232,13 +1958,11 @@ class LotDialog extends StatefulWidget {
 }
 
 class _LotDialogState extends State<LotDialog> {
-  late TextEditingController lotCountController =
-      TextEditingController(text: '0');
+  TextEditingController lotCountController = TextEditingController();
   String? poStatus;
   String? poMessage;
   List<Map<String, dynamic>> dataList = [];
   List<Map<String, dynamic>> dataLotList = [];
-
   int itemsPerPage = 5;
   int currentPage = 1;
   int totalItems = 0;
@@ -2315,13 +2039,13 @@ class _LotDialogState extends State<LotDialog> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         setState(() {
+          print('v_WMS_NO : $v_WMS_NO');
+          print('v_PO_NO : $v_PO_NO');
+          print('v_rec_seq : $v_rec_seq');
+          print('v_lot_qty : $v_lot_qty');
           poStatus = responseData['po_status'];
           poMessage = responseData['po_message'];
         });
-
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text(poMessage ?? "เพิ่มข้อมูลเรียบร้อย")),
-        // );
 
         AlertDialog(
           title: Row(
@@ -2369,9 +2093,89 @@ class _LotDialogState extends State<LotDialog> {
     }
   }
 
+  // Future<void> genLot(String v_WMS_NO, String v_PO_NO, String v_rec_seq,
+  //     String v_lot_qty, String v_lot_size, String v_rowid, String v_supp) async {
+  //   final url = 'http://172.16.0.82:8888/apex/wms/SSINDT01/Test_gen_lot';
+  //   final headers = {'Content-Type': 'application/json'};
+  //   final body = jsonEncode({
+  //     'v_WMS_NO': v_WMS_NO,
+  //     'v_PO_NO': v_PO_NO,
+  //     'v_rec_seq': v_rec_seq,
+  //     'v_lot_qty': v_lot_qty,
+  //     'v_lot_size': v_lot_size,
+  //     'v_rowid': v_rowid,
+  //     'v_supp': v_supp,
+  //     'OU_CODE': gb.P_ERP_OU_CODE,
+  //     'APP_USER': gb.APP_USER,
+  //   });
+  //   try {
+  //     final response =
+  //         await http.post(Uri.parse(url), headers: headers, body: body);
+
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> responseData = jsonDecode(response.body);
+  //       setState(() {
+  //         print('v_WMS_NO : $v_WMS_NO');
+  //         print('v_PO_NO : $v_PO_NO');
+  //         print('v_rec_seq : $v_rec_seq');
+  //         print('v_lot_qty : $v_lot_qty');
+  //         print('v_lot_size : $v_lot_size');
+  //         print('v_rowid : $v_rowid');
+  //         print('v_supp : $v_supp');
+  //         poStatus = responseData['po_status'];
+  //         poMessage = responseData['po_message'];
+  //       });
+
+  //       AlertDialog(
+  //         title: Row(
+  //           mainAxisAlignment:
+  //               MainAxisAlignment.spaceBetween, // Space between text and button
+  //           children: [
+  //             Icon(
+  //               Icons.notification_important, // Use the bell icon
+  //               color: Colors.red, // Set the color to red
+  //             ),
+  //             SizedBox(width: 8),
+  //             Text(
+  //               'แจ้งเตือน',
+  //               style: TextStyle(
+  //                 fontSize: 20.0,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //             IconButton(
+  //               icon: Icon(Icons.close),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         ),
+  //         content: Text(poMessage ?? ''),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: Text('ตกลง'),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+
+  //       // Call sendGetRequestlineWMS after successfully generating lot
+  //       await sendGetRequestlineWMS();
+  //     } else {
+  //       print('Failed to post data. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
+
   Future<void> updateOkLot(
       String v_rec_no, String v_rec_seq, String p_erp_ou) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_update_ok_lott');
+    final url = Uri.parse(
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_update_ok_lott');
     final response = await http.put(
       url,
       headers: {
@@ -2441,6 +2245,35 @@ class _LotDialogState extends State<LotDialog> {
       print('Error: $e');
     }
   }
+
+  // Future<void> getLotList(
+  //     String poReceiveNo, String recSeq, String ouCode) async {
+  //   final url =
+  //       'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_get_lot/$poReceiveNo/$recSeq/$ouCode';
+  //   final headers = {
+  //     'Content-Type': 'application/json; charset=UTF-8',
+  //   };
+
+  //   try {
+  //     final response = await http.get(Uri.parse(url), headers: headers);
+
+  //     if (response.statusCode == 200) {
+  //       final responseBody = utf8.decode(response.bodyBytes);
+  //       final responseData = jsonDecode(responseBody);
+
+  //       setState(() {
+  //         dataLotList =
+  //             List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+  //         currentPage = 1; // Reset to first page when new data is loaded
+  //         updatePaginatedLotList();
+  //       });
+  //     } else {
+  //       print('Failed to get data. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
 
   Future<void> getLotList(
       String poReceiveNo, String recSeq, String ouCode) async {
@@ -3256,7 +3089,8 @@ class _LotDialogState extends State<LotDialog> {
 
   Future<void> updateLot(String lot_qty, String lot_supplier, String mfg_date,
       String OU_CODE, String RECEIVE_NO, String REC_SEQ, String lot_seq) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_save_lot_det');
+    final url = Uri.parse(
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_save_lot_det');
     final response = await http.put(
       url,
       headers: {
@@ -3295,7 +3129,8 @@ class _LotDialogState extends State<LotDialog> {
 
   Future<void> deleteLot(String recNo, String pOu, String recSeq, String PoNo,
       String lotSeq, String PoSeq) async {
-    final url = Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_del_lot');
+    final url =
+        Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_del_lot');
     print('recNo $recNo');
     print('pOu $pOu');
     print('recSeq $recSeq');
@@ -3435,45 +3270,60 @@ class _LotDialogState extends State<LotDialog> {
 
   void _showAlertDialogGenLot(BuildContext context) {
     showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween, // Space between text and button
-            children: [
-              Icon(
-                Icons.notification_important, // Use the bell icon
-                color: Colors.red, // Set the color to red
-              ),
-              SizedBox(width: 8),
-              Text(
-                'แจ้งเตือน',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-          content: Text('$poMessage'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('ตกลง'),
-            ),
-          ],
-        );
-      },
-    );
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DialogStyles.alertMessageDialog(
+                      context: context,
+                      content: Text('$poMessage'),
+                      onClose: () {
+                        Navigator.of(context).pop();
+                      },
+                      onConfirm: () async {
+                        Navigator.of(context).pop();
+                      },
+                    );
+                  },
+                );
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return AlertDialog(
+    //       title: Row(
+    //         mainAxisAlignment:
+    //             MainAxisAlignment.spaceBetween, // Space between text and button
+    //         children: [
+    //           Icon(
+    //             Icons.notification_important, // Use the bell icon
+    //             color: Colors.red, // Set the color to red
+    //           ),
+    //           SizedBox(width: 8),
+    //           Text(
+    //             'แจ้งเตือน',
+    //             style: TextStyle(
+    //               fontSize: 20.0,
+    //               fontWeight: FontWeight.bold,
+    //             ),
+    //           ),
+    //           IconButton(
+    //             icon: Icon(Icons.close),
+    //             onPressed: () {
+    //               Navigator.of(context).pop();
+    //             },
+    //           ),
+    //         ],
+    //       ),
+    //       content: Text('$poMessage'),
+    //       actions: [
+    //         TextButton(
+    //           onPressed: () {
+    //             Navigator.of(context).pop();
+    //           },
+    //           child: Text('ตกลง'),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
   }
 
   bool checkUpdateData = false;
@@ -3613,13 +3463,22 @@ class _LotDialogState extends State<LotDialog> {
                               widget.recSeq,
                               lotCountController.text,
                               widget.ouCode);
+                              // await genLot(
+                              // widget.poReceiveNo,
+                              // widget.poPONO.toString(),
+                              // widget.recSeq,
+                              // lotCountController.text,
+                              // widget.lotSize,
+                              // widget.rowid,
+                              // widget.lotSupp,);
                           if (poStatus == '1') {
                             _showAlertDialogGenLot(context);
                           }
                           await getLotList(
                               widget.poReceiveNo, widget.recSeq, widget.ouCode);
-                          setState(() {});
-                        }),
+                          setState(() {lotCountController.text = dataLotList.length.toString();});
+                        }
+                        ),
                   ),
                 ],
               ),
@@ -3730,7 +3589,7 @@ class _LotDialogState extends State<LotDialog> {
     );
   }
 
-// Helper method for delete button
+// delete button
   Widget _buildDeleteButton(Map<String, dynamic> item) {
     return Container(
       decoration: BoxDecoration(
@@ -3795,7 +3654,7 @@ class _LotDialogState extends State<LotDialog> {
     );
   }
 
-// Helper method for edit button
+// dit button
   Widget _buildEditButton(Map<String, dynamic> item) {
     return Container(
       decoration: BoxDecoration(

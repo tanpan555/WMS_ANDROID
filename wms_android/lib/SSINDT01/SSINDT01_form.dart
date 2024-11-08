@@ -1,4 +1,3 @@
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -6,11 +5,9 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
-// import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_main.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_grid_data.dart';
 import 'package:wms_android/styles.dart';
-import 'SSINDT01_WARE.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 
 class Ssindt01Form extends StatefulWidget {
@@ -746,8 +743,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                       data: poType,
                       docString: (item) => item['po_type_code'].toString(),
                       titleText: (item) => item['po_type_code'].toString(),
-                      subtitleText: (item) =>
-                          '', // You can add a subtitle if needed
+                      subtitleText: (item) => '', // You can add a subtitle if needed
+                      // subtitleText: (item) => item['po_type_desc'].toString(),
                       onTap: (item) {
                         Navigator.of(context).pop();
                         setState(() {
