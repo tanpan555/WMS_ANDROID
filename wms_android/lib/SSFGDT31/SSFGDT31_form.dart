@@ -90,6 +90,11 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
   String deleteStatus = '';
   String deleteMessage = '';
 
+  String updateStatus = '';
+  String updateMessage = '';
+  String refDocType = '';
+  String refDocNo = '';
+
   final dateInputFormatter = DateInputFormatter();
   bool isDateInvalid = false;
 
@@ -121,6 +126,8 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
 
   @override
   void initState() {
+    print('doc no : ${widget.pDocNo}');
+    print('doc type : ${widget.pDocType}');
     firstLoadData();
     super.initState();
   }
@@ -173,7 +180,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_DataForm/${globals.P_ERP_OU_CODE}/${widget.pDocNo}/${widget.pDocType}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_DataForm/${globals.P_ERP_OU_CODE}/${widget.pDocNo}/${widget.pDocType}/${globals.ATTR1}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
@@ -228,8 +235,8 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
               returnStatusLovRefNoForCheck = item['ref_no'] ?? '';
               // -----------------------------
               selectLovMoDoNo = item['mo_do_no'] ?? '';
-              returnStatusLovMoDoNo = item['mo_do_no'].toString();
-              returnStatusLovMoDoNoForCheck = item['mo_do_no'].toString();
+              returnStatusLovMoDoNo = item['mo_do_no'] ?? '';
+              returnStatusLovMoDoNoForCheck = item['mo_do_no'] ?? '';
               // -----------------------------
               ouCodeController.text = ouCode;
               docNoController.text = docNo;
@@ -245,8 +252,18 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
               docDateController.text = docDate;
 
               docTypeController.text = selectLovDocType.toString();
-              moDoNoController.text = selectLovMoDoNo.toString();
-              refNoController.text = selectLovRefNo.toString();
+              moDoNoController.text = selectLovMoDoNo.toString() == ''
+                  ? '--No Value Set--'
+                  : selectLovMoDoNo.toString();
+              refNoController.text = selectLovRefNo.toString() == ''
+                  ? '--No Value Set--'
+                  : selectLovRefNo.toString();
+
+              print('selectLovDocType : $selectLovDocType');
+              print('returnStatusLovDocType : $returnStatusLovDocType');
+              print(
+                  'returnStatusLovDocTypeForCheck : $returnStatusLovDocTypeForCheck');
+              print('docTypeController : $docTypeController');
             });
           }
         } else {
@@ -265,7 +282,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
   Future<void> lovDocType() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovDocTypeFormPage/${globals.ATTR1}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_SelectLovDocType/${globals.ATTR1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -292,7 +309,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
   Future<void> lovMoDoNo() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovMoDoNo'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_SelectLovMoDoNo'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -319,7 +336,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
   Future<void> lovRefNo() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovRefNo'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_SelectLovRefNo/${globals.P_ERP_OU_CODE}/${globals.ATTR1}/${widget.pWareCode}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -346,7 +363,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
   Future<void> lovCancel() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovCancel'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_SelectLovCancel'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -379,7 +396,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
     print('pMoDoNo in selectCust   : $pMoDoNo type : ${pMoDoNo.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectCust/$pMoDoNo'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_Cust/$pMoDoNo'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
@@ -414,14 +431,15 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
     }
   }
 
-  Future<void> chkCust(String custCode, String arCode, int testChk) async {
+  Future<void> chkCust(
+      String custCode, String arCode, int testChk, String checkWhere) async {
     // cutuCode ---------------- mo do no
     // acCode ---------------------- ref no
     print('custCode  in chkCust  : $custCode');
     print('arCode  in chkCust  : $arCode');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_ChkCust/$arCode/${custCode}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_CheckCust/$custCode/$arCode'));
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
         final Map<String, dynamic> dataMessage = jsonDecode(utf8
@@ -433,10 +451,28 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
             print(
                 'pMessageErr :: $pMessageErr  type :: ${pMessageErr.runtimeType}');
             if (pMessageErr.isNotEmpty) {
-              showDialogErrorCHK(context, pMessageErr);
+              if (checkWhere == 'MONODO') {
+                if (mounted) {
+                  setState(() {
+                    selectLovMoDoNo = '';
+                    returnStatusLovMoDoNo = '';
+                    moDoNoController.clear();
+                  });
+                  showDialogErrorCHK(context, pMessageErr);
+                }
+              } else if (checkWhere == 'REFNO') {
+                if (mounted) {
+                  setState(() {
+                    selectLovRefNo = '';
+                    returnStatusLovRefNo = '';
+                    refNoController.clear();
+                  });
+                  showDialogErrorCHK(context, pMessageErr);
+                }
+              }
             }
             if (testChk == 1) {
-              saveDataFoem();
+              updateForm();
             }
           });
         }
@@ -452,7 +488,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
   Future<void> changeRefNo(String soNoForChk) async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_ChangeRefNo/$soNoForChk'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_ChangeRefNo/$soNoForChk'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
@@ -485,23 +521,23 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
     }
   }
 
-  Future<void> saveDataFoem() async {
+  Future<void> updateForm() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SaveDataForm';
+        'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_UpdateForm';
 
     final headers = {
       'Content-Type': 'application/json',
     };
 
     final body = jsonEncode({
-      'p_ou_code': globals.P_ERP_OU_CODE, // 000
+      'p_erp_ou_code': globals.P_ERP_OU_CODE, // 000
       'p_doc_no': widget.pDocNo,
       'p_doc_type': widget.pDocType,
       'p_ref_no': returnStatusLovRefNo,
       'p_mo_do_no': returnStatusLovMoDoNo,
       'p_note': note,
       'p_app_user': globals.APP_USER,
-      'p_cr_date': crDate,
+      'p_doc_date': docDate,
     });
     print('Request body: $body');
     try {
@@ -512,17 +548,24 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> dataSaveForm = jsonDecode(utf8
-            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        final Map<String, dynamic> dataUpdateForm =
+            jsonDecode(utf8.decode(response.bodyBytes));
         print(
-            'dataSaveForm : $dataSaveForm type : ${dataSaveForm.runtimeType}');
-        if (mounted) {
-          setState(() {
-            submitData();
-          });
+            'dataUpdateForm : $dataUpdateForm type : ${dataUpdateForm.runtimeType}');
+        updateStatus = dataUpdateForm['po_status'];
+        updateMessage = dataUpdateForm['po_message'];
+        refDocType = dataUpdateForm['v_ref_type'];
+        refDocNo = dataUpdateForm['v_ref_doc_no'];
+        if (updateStatus == '1') {
+          showDialogErrorCHK(context, updateMessage);
+        } else if (updateStatus == '0') {
+          if (mounted) {
+            setState(() {
+              submitData();
+            });
+          }
         }
       } else {
-        // จัดการกรณีที่ response status code ไม่ใช่ 200
         print(
             'โพสต์ข้อมูลล้มเหลว(save data form). รหัสสถานะ: ${response.statusCode}');
       }
@@ -533,17 +576,21 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
 
   Future<void> submitData() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_UpdateForm';
+        'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_SubmitForm';
 
     final headers = {
       'Content-Type': 'application/json',
     };
 
     final body = jsonEncode({
-      'pOuCode': globals.P_OU_CODE,
-      'pErpOuCode': globals.P_ERP_OU_CODE,
-      'pDocNo': docNo,
-      'pAppUser': globals.APP_USER,
+      'p_erp_ou_code': globals.P_OU_CODE,
+      'p_app_user': globals.APP_USER,
+      'p_doc_no': docNo,
+      'p_doc_type': docType,
+      'p_ref_doc_type': refDocType,
+      'p_ref_doc_no': refDocNo,
+      'p_ref_no': returnStatusLovRefNo,
+      'p_mo_do_no': returnStatusLovMoDoNo
     });
     print('Request body: $body');
     try {
@@ -613,33 +660,32 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
   Future<void> deleteForm(String cancelCode) async {
     print('cancelCode : $cancelCode');
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_DeleteForm';
+        'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_CancelForm';
 
     final headers = {
       'Content-Type': 'application/json',
     };
 
     final body = jsonEncode({
-      'p_ou_code': globals.P_OU_CODE,
-      'p_erp_ou_code': globals.P_ERP_OU_CODE,
-      'p_doc_type': widget.pDocType,
-      'p_doc_no': widget.pDocNo,
-      'p_cancel_code': cancelCode,
-      'p_app_user': globals.APP_USER,
+      'ou_code': globals.P_OU_CODE,
+      'erp_ou_code': globals.P_ERP_OU_CODE,
+      'doc_type': widget.pDocType,
+      'doc_no': widget.pDocNo,
+      'cancel_code': cancelCode,
+      'app_code': globals.APP_USER,
     });
     print('Request body: $body');
 
     try {
-      final response = await http.delete(
+      final response = await http.post(
         Uri.parse(url),
         headers: headers,
         body: body,
       );
 
       if (response.statusCode == 200) {
-        // ถอดรหัสข้อมูล JSON จาก response
-        final Map<String, dynamic> dataDelete = jsonDecode(utf8
-            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        final Map<String, dynamic> dataDelete =
+            jsonDecode(utf8.decode(response.bodyBytes));
         print('dataDelete : $dataDelete type : ${dataDelete.runtimeType}');
         if (mounted) {
           setState(() {
@@ -655,22 +701,6 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
-                  // Navigator.of(context).pushAndRemoveUntil(
-                  //   MaterialPageRoute(
-                  //       builder: (context) => SSFGDT09L_MAIN(
-                  //           pOuCode: globals.P_OU_CODE,
-                  //           pErpOuCode: globals.P_ERP_OU_CODE,
-                  //           pAttr1: globals.ATTR1)),
-                  //   (Route<dynamic> route) => false,
-                  // );
-
-                  // _navigateToPage(
-                  //     context,
-                  //     SSFGDT09L_MAIN(
-                  //       pOuCode: globals.P_OU_CODE,
-                  //       pErpOuCode: globals.P_ERP_OU_CODE,
-                  //       pAttr1: globals.ATTR1,
-                  //     ));
                 });
               }
             }
@@ -735,6 +765,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
+                            String checkWhere = 'NEXT';
                             if (isDateInvalid == false) {
                               if (docNo.isNotEmpty &&
                                   docNo != '' &&
@@ -748,6 +779,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                                       ? soNoForChk
                                       : 'null',
                                   testChk = 1,
+                                  checkWhere,
                                 );
                               }
                             }
@@ -1097,25 +1129,36 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
           headerText: 'เลขที่คำสั่งผลผลิต',
           searchController: _searchController1,
           data: dataLovMoDoNo,
-          docString: (item) =>
-              '${item['schid'] ?? ''} ${item['fg_code'] ?? ''} ${item['cust_name'] ?? ''}',
-          titleText: (item) =>
-              '${item['schid'] ?? ''} ${item['fg_code'] ?? ''}',
-          subtitleText: (item) => '${item['cust_name'] ?? ''}',
+          docString: (item) => '${item['schid']}' == ''
+              ? '${item['schid'] ?? '--No Value Set--'}'
+              : '${item['schid'] ?? ''} ${item['fg_code'] ?? ''} ${item['cust_name'] ?? ''}',
+          titleText: (item) => '${item['schid']}' == ''
+              ? '--No Value Set--'
+              : '${item['schid'] ?? ''} ${item['fg_code'] ?? ''}',
+          subtitleText: (item) =>
+              '${item['schid']}' == '' ? '' : '${item['cust_name'] ?? ''}',
           onTap: (item) {
             Navigator.of(context).pop();
             setState(() {
-              String dataCHK = '${item['schid']}';
-              selectLovMoDoNo = '${item['schid']}';
-              returnStatusLovMoDoNo = '${item['schid']}';
+              String checkWhere = 'MODONO';
+              String dataCHK =
+                  '${item['schid']}' == '' ? '' : '${item['schid']}';
+              selectLovMoDoNo = '${item['schid']}' == ''
+                  ? '--No Value Set--'
+                  : '${item['schid']}';
+              returnStatusLovMoDoNo =
+                  '${item['schid']}' == '' ? 'null' : '${item['schid']}';
               moDoNoController.text = selectLovMoDoNo.toString();
 
-              if (dataCHK != returnStatusLovRefNoForCheck) {
+              if (dataCHK !=
+                  (returnStatusLovRefNoForCheck == ''
+                      ? ''
+                      : '${item['schid']}')) {
                 checkUpdateData = true;
               } else {
                 print('returnStatusLovRefNo : '
                     '$returnStatusLovRefNo'
-                    'returnStatusLovRefNoForCheck'
+                    'returnStatusLovRefNoForCheck : '
                     '$returnStatusLovRefNoForCheck');
               }
 
@@ -1125,17 +1168,27 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                   'selectLovMoDoNo New: $selectLovMoDoNo Type : ${selectLovMoDoNo.runtimeType}');
               print(
                   'moDoNoController New: $moDoNoController Type : ${moDoNoController.runtimeType}');
-              shidForChk = '${item['schid']}';
-              selectCust(returnStatusLovMoDoNo);
+              shidForChk =
+                  '${item['schid']}' == '' ? 'null' : '${item['schid']}';
+              if (returnStatusLovMoDoNo.isNotEmpty &&
+                  returnStatusLovRefNo.isEmpty) {
+                selectCust(returnStatusLovMoDoNo);
+              }
               print('shidForChk : $shidForChk');
               print(
                   'returnStatusLovRefNoForCheck : $returnStatusLovRefNoForCheck');
               print(' checkUpdateData : $checkUpdateData');
-              chkCust(
-                shidForChk,
-                soNoForChk.isNotEmpty ? soNoForChk : 'null',
-                testChk = 0,
-              );
+              if ((returnStatusLovMoDoNo.isNotEmpty &&
+                      returnStatusLovMoDoNo != 'null') &&
+                  (returnStatusLovRefNo.isNotEmpty &&
+                      returnStatusLovRefNo != 'null')) {
+                chkCust(
+                  returnStatusLovMoDoNo,
+                  returnStatusLovRefNo,
+                  testChk = 0,
+                  checkWhere,
+                );
+              }
             });
           },
         );
@@ -1154,18 +1207,20 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
           searchController: _searchController2,
           data: dataLovRefNo,
           docString: (item) =>
-              '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}',
-          titleText: (item) =>
-              '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}',
-          subtitleText: (item) => '',
+              '${item['doc_no']} ${item['document_remark'] == 'null' ? '' : item['document_remark']}',
+          titleText: (item) => '${item['doc_no']}',
+          subtitleText: (item) => '${item['document_remark']}' == 'null'
+              ? ''
+              : '${item['document_remark']}',
           onTap: (item) {
             Navigator.of(context).pop();
             setState(() {
-              String dataCHK =
-                  '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}';
-              selectLovRefNo =
-                  '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}';
-              returnStatusLovRefNo = '${item['so_no']}';
+              String checkWhere = 'REFNO';
+              String dataCHK = '${item['doc_no']}';
+              selectLovRefNo = '${item['doc_no']}';
+              returnStatusLovRefNo = '${item['doc_no']}' == '--No Value Set--'
+                  ? 'null'
+                  : '${item['doc_no']}';
               refNoController.text = selectLovRefNo.toString();
 
               if (dataCHK != returnStatusLovRefNoForCheck) {
@@ -1177,7 +1232,23 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                   'selectLovRefNo New: $selectLovRefNo Type : ${selectLovRefNo.runtimeType}');
               print(
                   'refNoController New: $refNoController Type : ${refNoController.runtimeType}');
-              soNoForChk = '${item['so_no']}';
+              soNoForChk = '${item['doc_no']}';
+              if (returnStatusLovRefNo.isNotEmpty &&
+                  returnStatusLovRefNo != 'null' &&
+                  returnStatusLovMoDoNo.isNotEmpty) {
+                changeRefNo(returnStatusLovRefNo);
+              }
+              if ((returnStatusLovMoDoNo.isNotEmpty &&
+                      returnStatusLovMoDoNo != 'null') &&
+                  (returnStatusLovRefNo.isNotEmpty &&
+                      returnStatusLovRefNo != 'null')) {
+                chkCust(
+                  returnStatusLovMoDoNo,
+                  returnStatusLovRefNo,
+                  testChk = 0,
+                  checkWhere,
+                );
+              }
             });
           },
         );
@@ -1195,16 +1266,16 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
           headerText: 'ประเภทการจ่าย',
           searchController: _searchController3,
           data: dataLovDocType,
-          docString: (item) => '${item['doc_type']} ${item['doc_desc']}',
-          titleText: (item) => '${item['doc_type']}',
-          subtitleText: (item) => '${item['doc_desc'] ?? ''}',
+          docString: (item) => '${item['r']} ${item['d']}',
+          titleText: (item) => '${item['r']}',
+          subtitleText: (item) => '${item['d'] ?? ''}',
           onTap: (item) {
             Navigator.of(context).pop();
             setState(() {
-              String dataCHK = '${item['doc_desc']}';
-              selectLovDocType = '${item['doc_desc']}';
-              docTypeController.text = '${item['doc_desc']}';
-              returnStatusLovDocType = '${item['doc_type']}';
+              String dataCHK = '${item['d']}';
+              selectLovDocType = '${item['d']}';
+              docTypeController.text = '${item['d']}';
+              returnStatusLovDocType = '${item['r']}';
 
               if (dataCHK != returnStatusLovDocTypeForCheck) {
                 checkUpdateData = true;

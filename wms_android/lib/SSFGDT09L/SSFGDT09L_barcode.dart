@@ -366,17 +366,33 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             messageChkLocatorForm = dataChkLocatorForm['po_message'];
 
             print('poRet : $poRet');
-            print('statusChkLocatorForm : $statusChkLocatorForm');
+            print(
+                'statusChkLocatorForm : $statusChkLocatorForm type : ${statusChkLocatorForm.runtimeType}');
             print('messageChkLocatorForm : $messageChkLocatorForm');
 
-            if (statusChkLocatorForm == '0') {
+            if (statusChkLocatorForm == '1') {
+              showDialogAlert(context, messageChkLocatorForm);
+              locatorFormChk = '';
+              locatorToChk = '';
+              locatorFormChkController.clear();
+              locatorToChkController.clear();
+            } else if (statusChkLocatorForm == '0') {
               if (textForm == 'F') {
                 locatorForm = poRet;
                 locatorFormController.text = poRet;
 
                 if (locatorForm.isNotEmpty) {
-                  locatorFormChk = '';
-                  locatorFormChkController.clear();
+                  Navigator.of(context).pop();
+                  // locatorFormChk = '';
+                  // locatorFormChkController.clear();
+                  //
+                  //
+                  //
+                  //
+                  //
+                  Future.delayed(Duration(milliseconds: 200), () {
+                    FocusScope.of(context).requestFocus(lotNumberFocusNode);
+                  });
                 }
               }
               if (textForm == 'T') {
@@ -385,18 +401,11 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
 
                 if (locatorTo.isNotEmpty) {
                   Navigator.of(context).pop();
-                  locatorToChk = '';
-                  locatorToChkController.clear();
+                  // locatorToChk = '';
+                  // locatorToChkController.clear();
                 }
               }
               // Navigator.of(context).pop();
-            }
-            if (statusChkLocatorForm == '1') {
-              showDialogAlert(context, messageChkLocatorForm);
-              locatorFormChk = '';
-              locatorToChk = '';
-              locatorFormChkController.clear();
-              locatorToChkController.clear();
             }
           });
         }
@@ -1156,8 +1165,8 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                     icon: const Icon(MyIcons.close),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      locatorFormChkController.clear();
-                      locatorFormChk = '';
+                      // locatorFormChkController.clear();
+                      // locatorFormChk = '';
                     },
                   ),
                 ],
@@ -1194,8 +1203,8 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).pop();
-                          locatorFormChkController.clear();
-                          locatorFormChk = '';
+                          // locatorFormChkController.clear();
+                          // locatorFormChk = '';
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
@@ -1204,10 +1213,10 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                         child: const Text('Cancel'),
                       ),
                       ElevatedButton(
-                        onPressed: () async {
+                        onPressed: () {
                           String textForm = 'F';
-                          await chkLocatorForm(locatorFormChk, textForm);
-                          Navigator.of(context).pop(true);
+                          chkLocatorForm(locatorFormChk, textForm);
+                          // Navigator.of(context).pop();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
@@ -1223,14 +1232,15 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
           ),
         );
       },
-    ).then((value) {
-      if (value == true) {
-        Future.delayed(Duration(milliseconds: 100), () {
-          FocusScope.of(context).requestFocus(lotNumberFocusNode);
-        });
-        // FocusScope.of(context).requestFocus(lotNumberFocusNode);
-      }
-    });
+    );
+    // .then((value) {
+    //   if (value == true) {
+    //     Future.delayed(Duration(milliseconds: 100), () {
+    //       FocusScope.of(context).requestFocus(lotNumberFocusNode);
+    //     });
+    //     // FocusScope.of(context).requestFocus(lotNumberFocusNode);
+    //   }
+    // });
   }
 
   void showDialogLocatorTo(
@@ -1258,8 +1268,8 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                     icon: const Icon(MyIcons.close),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      locatorToChkController.clear();
-                      locatorToChk = '';
+                      // locatorToChkController.clear();
+                      // locatorToChk = '';
                     },
                   ),
                 ],
@@ -1296,8 +1306,8 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).pop();
-                          locatorToChkController.clear();
-                          locatorToChk = '';
+                          // locatorToChkController.clear();
+                          // locatorToChk = '';
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
