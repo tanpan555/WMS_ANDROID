@@ -345,7 +345,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   Future<void> sendGetRequestlineWMS() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_pull_po/${widget.poReceiveNo}/${gb.P_OU_CODE}';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_pull_po/${widget.poReceiveNo}/${gb.P_ERP_OU_CODE}';
     final headers = {'Content-Type': 'application/json; charset=UTF-8'};
 
     try {
@@ -2281,7 +2281,7 @@ class _LotDialogState extends State<LotDialog> {
 
   Future<void> sendGetRequestlineWMS() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_pull_po/${widget.poReceiveNo}/${gb.P_OU_CODE}';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_pull_po/${widget.poReceiveNo}/${gb.P_ERP_OU_CODE}';
     final headers = {'Content-Type': 'application/json; charset=UTF-8'};
 
     print('Request URL: $url');
