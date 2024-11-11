@@ -372,10 +372,10 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
 
             if (statusChkLocatorForm == '1') {
               showDialogAlert(context, messageChkLocatorForm);
-              locatorFormChk = '';
-              locatorToChk = '';
-              locatorFormChkController.clear();
-              locatorToChkController.clear();
+              // locatorFormChk = '';
+              // locatorToChk = '';
+              // locatorFormChkController.clear();
+              // locatorToChkController.clear();
             } else if (statusChkLocatorForm == '0') {
               if (textForm == 'F') {
                 locatorForm = poRet;

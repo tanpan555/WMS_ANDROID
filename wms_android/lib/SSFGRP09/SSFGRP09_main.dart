@@ -2042,6 +2042,8 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                               endSubCategoryController.text = '--';
                               startItemController.text = '--';
                               endItemController.text = '--';
+
+                              checkUpdateData = false;
                             });
                           },
                           style: AppStyles.ClearButtonStyle(),

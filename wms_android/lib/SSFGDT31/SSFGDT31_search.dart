@@ -121,8 +121,8 @@ class _Ssfgdt31SearchState extends State<Ssfgdt31Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
+      appBar: CustomAppBar(
+          title: 'รับคืนจากการเบิกเพื่อผลผลิต', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: isLoading
@@ -182,7 +182,7 @@ class _Ssfgdt31SearchState extends State<Ssfgdt31Search> {
                         border: InputBorder.none,
                         filled: true,
                         fillColor: Colors.white,
-                        labelText: 'วันที่เบิกจ่าย',
+                        labelText: 'วันที่รับคืน',
                         hintText: 'DD/MM/YYYY',
                         hintStyle: const TextStyle(color: Colors.grey),
                         labelStyle: isDateInvalid

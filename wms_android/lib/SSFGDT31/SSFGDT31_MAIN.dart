@@ -67,8 +67,8 @@ class _SSFGDT31_MAINState extends State<SSFGDT31_MAIN> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
+      appBar: CustomAppBar(
+          title: 'รับคืนจากการเบิกเพื่อผลผลิต', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

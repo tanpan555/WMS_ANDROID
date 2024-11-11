@@ -9,6 +9,7 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/checkDataFormate.dart';
+import 'SSFGDT31_grid.dart';
 
 class Ssfgdt31Form extends StatefulWidget {
   final String pWareCode;
@@ -230,12 +231,12 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
               returnStatusLovDocType = item['doc_type_r'] ?? '';
               returnStatusLovDocTypeForCheck = item['doc_type_r'] ?? '';
               // -----------------------------
-              selectLovRefNo = item['ref_no'] ?? '';
-              returnStatusLovRefNo = item['ref_no'] ?? '';
+              selectLovRefNo = item['ref_no'] ?? '--No Value Set--';
+              returnStatusLovRefNo = item['ref_no'] ?? 'null';
               returnStatusLovRefNoForCheck = item['ref_no'] ?? '';
               // -----------------------------
-              selectLovMoDoNo = item['mo_do_no'] ?? '';
-              returnStatusLovMoDoNo = item['mo_do_no'] ?? '';
+              selectLovMoDoNo = item['mo_do_no'] ?? '--No Value Set--';
+              returnStatusLovMoDoNo = item['mo_do_no'] ?? 'null';
               returnStatusLovMoDoNoForCheck = item['mo_do_no'] ?? '';
               // -----------------------------
               ouCodeController.text = ouCode;
@@ -252,12 +253,8 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
               docDateController.text = docDate;
 
               docTypeController.text = selectLovDocType.toString();
-              moDoNoController.text = selectLovMoDoNo.toString() == ''
-                  ? '--No Value Set--'
-                  : selectLovMoDoNo.toString();
-              refNoController.text = selectLovRefNo.toString() == ''
-                  ? '--No Value Set--'
-                  : selectLovRefNo.toString();
+              moDoNoController.text = selectLovMoDoNo.toString();
+              refNoController.text = selectLovRefNo.toString();
 
               print('selectLovDocType : $selectLovDocType');
               print('returnStatusLovDocType : $returnStatusLovDocType');
@@ -435,8 +432,8 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
       String custCode, String arCode, int testChk, String checkWhere) async {
     // cutuCode ---------------- mo do no
     // acCode ---------------------- ref no
-    print('custCode  in chkCust  : $custCode');
-    print('arCode  in chkCust  : $arCode');
+    print('custCode  in chkCust  : $custCode type : ${custCode.runtimeType}');
+    print('arCode  in chkCust  : $arCode type : ${arCode.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_CheckCust/$custCode/$arCode'));
@@ -471,14 +468,14 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                 }
               }
             }
-            if (testChk == 1) {
+            if (testChk == 1 && checkWhere == 'NEXT') {
               updateForm();
             }
           });
         }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
-        print('รหัสสถานะ: ${response.statusCode}');
+        print('chkCust รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
       print('Error: $e');
@@ -535,11 +532,11 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
       'p_doc_type': widget.pDocType,
       'p_ref_no': returnStatusLovRefNo,
       'p_mo_do_no': returnStatusLovMoDoNo,
-      'p_note': note,
+      'p_note': note.isEmpty ? 'null' : note,
       'p_app_user': globals.APP_USER,
       'p_doc_date': docDate,
     });
-    print('Request body: $body');
+    print('Request body updateForm : $body');
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -557,6 +554,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
         refDocType = dataUpdateForm['v_ref_type'];
         refDocNo = dataUpdateForm['v_ref_doc_no'];
         if (updateStatus == '1') {
+          print('updateStatus : $updateStatus');
           showDialogErrorCHK(context, updateMessage);
         } else if (updateStatus == '0') {
           if (mounted) {
@@ -583,16 +581,16 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
     };
 
     final body = jsonEncode({
-      'p_erp_ou_code': globals.P_OU_CODE,
+      'p_erp_ou_code': globals.P_ERP_OU_CODE,
       'p_app_user': globals.APP_USER,
-      'p_doc_no': docNo,
-      'p_doc_type': docType,
-      'p_ref_doc_type': refDocType,
-      'p_ref_doc_no': refDocNo,
+      'p_doc_no': widget.pDocNo,
+      'p_doc_type': widget.pDocType,
+      'p_ref_doc_type': refDocType.isEmpty ? 'null' : refDocType,
+      'p_ref_doc_no': refDocNo.isEmpty ? 'null' : refDocNo,
       'p_ref_no': returnStatusLovRefNo,
       'p_mo_do_no': returnStatusLovMoDoNo
     });
-    print('Request body: $body');
+    print('Request body submitData : $body');
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -615,31 +613,27 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
             }
             if (statusSubmit == '0') {
               checkUpdateData = false;
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //       builder: (context) => Ssfgdt09lGrid(
-              //             pWareCode: widget.pWareCode,
-              //             pAttr1: globals.ATTR1,
-              //             docNo: widget.pDocNo,
-              //             docType: widget.pDocType,
-              //             docDate: docDate,
-              //             pErpOuCode: globals.P_ERP_OU_CODE,
-              //             pOuCode: globals.P_OU_CODE,
-              //             pAppUser: globals.APP_USER,
-              //             moDoNo: returnStatusLovMoDoNo,
-              //             // test
-              //             statusCase: 'test1',
-              //           )),
-              // ).then((value) async {
-              //   // Navigator.of(context).pop();
-              //   await fetchData();
-              //   await lovDocType();
-              //   await lovMoDoNo();
-              //   await lovRefNo();
-              //   await lovCancel();
-              //   checkUpdateData = false;
-              // });
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Ssfgdt31Grid(
+                          pWareCode: widget.pWareCode,
+                          docNo: widget.pDocNo,
+                          docType: widget.pDocType,
+                          docDate: docDate,
+                          moDoNo: returnStatusLovMoDoNo,
+                          refNo: returnStatusLovRefNo,
+                          statusCase: 'test1',
+                        )),
+              ).then((value) async {
+                // Navigator.of(context).pop();
+                await fetchData();
+                await lovDocType();
+                await lovMoDoNo();
+                await lovRefNo();
+                await lovCancel();
+                checkUpdateData = false;
+              });
             }
 
             print(
@@ -650,7 +644,8 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
         }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
-        print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+        print(
+            'โพสต์ข้อมูลล้มเหลว submitData . รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
       print('Error in submit Data: $e');
@@ -742,7 +737,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'เบิกจ่าย',
+        title: 'รับคืนจากการเบิกเพื่อผลผลิต',
         showExitWarning: checkUpdateData,
       ),
       body: Padding(
@@ -774,10 +769,8 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                                   returnStatusLovDocType != '' &&
                                   returnStatusLovDocType != 'null') {
                                 chkCust(
-                                  shidForChk,
-                                  returnStatusLovRefNo.isNotEmpty
-                                      ? soNoForChk
-                                      : 'null',
+                                  returnStatusLovMoDoNo,
+                                  returnStatusLovRefNo,
                                   testChk = 1,
                                   checkWhere,
                                 );
@@ -956,25 +949,15 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                             minLines: 1,
                             maxLines: 3,
                             // overflow: TextOverflow.ellipsis,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                               filled: true,
                               fillColor: Colors.white,
-                              label: RichText(
-                                text: const TextSpan(
-                                  text: 'เลขที่คำสั่งผลผลิต',
-                                  style: TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 16,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: ' *',
-                                      style: TextStyle(
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                  ],
+                              label: Text(
+                                'เลขที่คำสั่งผลผลิต',
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 16,
                                 ),
                               ),
                               suffixIcon: Icon(
@@ -1124,44 +1107,40 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customRequiredLovSearchDialog(
+        return DialogStyles.customLovSearchDialog(
           context: context,
           headerText: 'เลขที่คำสั่งผลผลิต',
           searchController: _searchController1,
           data: dataLovMoDoNo,
-          docString: (item) => '${item['schid']}' == ''
-              ? '${item['schid'] ?? '--No Value Set--'}'
-              : '${item['schid'] ?? ''} ${item['fg_code'] ?? ''} ${item['cust_name'] ?? ''}',
-          titleText: (item) => '${item['schid']}' == ''
-              ? '--No Value Set--'
-              : '${item['schid'] ?? ''} ${item['fg_code'] ?? ''}',
+          docString: (item) =>
+              '${item['schid'] ?? '--No Value Set--'} ${item['fg_code'] ?? ''} ${item['cust_name'] ?? ''}',
+          titleText: (item) => '${item['schid'] ?? '--No Value Set--'}',
           subtitleText: (item) =>
-              '${item['schid']}' == '' ? '' : '${item['cust_name'] ?? ''}',
+              '${item['cust_name'] ?? ''}' == '--No Value Set--'
+                  ? ''
+                  : '${item['cust_name'] ?? ''}',
           onTap: (item) {
             Navigator.of(context).pop();
             setState(() {
               String checkWhere = 'MODONO';
-              String dataCHK =
-                  '${item['schid']}' == '' ? '' : '${item['schid']}';
-              selectLovMoDoNo = '${item['schid']}' == ''
-                  ? '--No Value Set--'
-                  : '${item['schid']}';
-              returnStatusLovMoDoNo =
-                  '${item['schid']}' == '' ? 'null' : '${item['schid']}';
+              String dataCHK = '${item['schid'] ?? ''}';
+              selectLovMoDoNo = '${item['schid'] ?? '--No Value Set--'}';
+              returnStatusLovMoDoNo = '${item['schid'] ?? 'null'}';
               moDoNoController.text = selectLovMoDoNo.toString();
 
-              if (dataCHK !=
-                  (returnStatusLovRefNoForCheck == ''
-                      ? ''
-                      : '${item['schid']}')) {
+              if (dataCHK != returnStatusLovMoDoNoForCheck) {
                 checkUpdateData = true;
               } else {
-                print('returnStatusLovRefNo : '
-                    '$returnStatusLovRefNo'
-                    'returnStatusLovRefNoForCheck : '
-                    '$returnStatusLovRefNoForCheck');
+                print('returnStatusLovMoDoNo : '
+                    '$returnStatusLovMoDoNo'
+                    'returnStatusLovMoDoNoForCheck : '
+                    '$returnStatusLovMoDoNoForCheck');
               }
-
+              if (selectLovMoDoNo == '--No Value Set--' &&
+                  selectLovRefNo == '--No Value Set--') {
+                custName = '';
+                custNameController.clear();
+              }
               print(
                   'returnStatusLovMoDoNo New: $returnStatusLovMoDoNo Type : ${returnStatusLovMoDoNo.runtimeType}');
               print(
@@ -1176,7 +1155,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
               }
               print('shidForChk : $shidForChk');
               print(
-                  'returnStatusLovRefNoForCheck : $returnStatusLovRefNoForCheck');
+                  'returnStatusLovMoDoNoForCheck : $returnStatusLovMoDoNoForCheck');
               print(' checkUpdateData : $checkUpdateData');
               if ((returnStatusLovMoDoNo.isNotEmpty &&
                       returnStatusLovMoDoNo != 'null') &&
@@ -1207,24 +1186,26 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
           searchController: _searchController2,
           data: dataLovRefNo,
           docString: (item) =>
-              '${item['doc_no']} ${item['document_remark'] == 'null' ? '' : item['document_remark']}',
-          titleText: (item) => '${item['doc_no']}',
-          subtitleText: (item) => '${item['document_remark']}' == 'null'
-              ? ''
-              : '${item['document_remark']}',
+              '${item['doc_no'] ?? '--No Value Set--'} ${item['document_remark'] ?? ''}',
+          titleText: (item) => '${item['doc_no'] ?? '--No Value Set--'}',
+          subtitleText: (item) => '${item['document_remark'] ?? ''}',
           onTap: (item) {
             Navigator.of(context).pop();
             setState(() {
               String checkWhere = 'REFNO';
-              String dataCHK = '${item['doc_no']}';
-              selectLovRefNo = '${item['doc_no']}';
-              returnStatusLovRefNo = '${item['doc_no']}' == '--No Value Set--'
-                  ? 'null'
-                  : '${item['doc_no']}';
+              String dataCHK = '${item['doc_no'] ?? ''}';
+              selectLovRefNo = '${item['doc_no'] ?? '--No Value Set--'}';
+              returnStatusLovRefNo = '${item['doc_no'] ?? 'null'}';
               refNoController.text = selectLovRefNo.toString();
 
               if (dataCHK != returnStatusLovRefNoForCheck) {
                 checkUpdateData = true;
+              }
+
+              if (selectLovMoDoNo == '--No Value Set--' &&
+                  selectLovRefNo == '--No Value Set--') {
+                custName = '';
+                custNameController.clear();
               }
               print(
                   'returnStatusLovRefNo New: $returnStatusLovRefNo Type : ${returnStatusLovRefNo.runtimeType}');
@@ -1232,7 +1213,6 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                   'selectLovRefNo New: $selectLovRefNo Type : ${selectLovRefNo.runtimeType}');
               print(
                   'refNoController New: $refNoController Type : ${refNoController.runtimeType}');
-              soNoForChk = '${item['doc_no']}';
               if (returnStatusLovRefNo.isNotEmpty &&
                   returnStatusLovRefNo != 'null' &&
                   returnStatusLovMoDoNo.isNotEmpty) {

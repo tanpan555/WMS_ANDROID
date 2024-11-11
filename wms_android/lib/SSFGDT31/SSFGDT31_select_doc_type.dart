@@ -169,7 +169,8 @@ class _Ssfgdt31SelectDocTypeState extends State<Ssfgdt31SelectDocType> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'เบิกจ่าย', showExitWarning: false),
+      appBar: CustomAppBar(
+          title: 'รับคืนจากการเบิกเพื่อผลผลิต', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

@@ -68,8 +68,8 @@ class _Ssfgdt31MenuState extends State<Ssfgdt31Menu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
+      appBar: CustomAppBar(
+          title: 'รับคืนจากการเบิกเพื่อผลผลิต', showExitWarning: false),
       body: Padding(
         padding: EdgeInsets.all(10.0),
         child: Column(

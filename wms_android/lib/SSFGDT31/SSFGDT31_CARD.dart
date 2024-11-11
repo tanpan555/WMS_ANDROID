@@ -46,7 +46,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
   int currentPage = 0; // หน้าปัจจุบัน
   final int itemsPerPage = 15; // จำนวนรายการต่อหน้า
   bool isLoading = true;
-
+  ScrollController _scrollController = ScrollController();
   int showRecordRRR = 0;
 
   // PDF
@@ -110,8 +110,15 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
 
   @override
   void initState() {
-    fetchData();
     super.initState();
+    fetchData();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -185,6 +192,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
     if (currentPage < totalPages() - 1) {
       setState(() {
         currentPage++;
+        scrollToTop();
       });
     }
   }
@@ -193,6 +201,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
     if (currentPage > 0) {
       setState(() {
         currentPage--;
+        scrollToTop();
       });
     }
   }
@@ -202,6 +211,12 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
     final end = start + itemsPerPage;
 
     return dataCard.sublist(start, end.clamp(0, dataCard.length));
+  }
+
+  void scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0); // เลื่อนไปยังตำแหน่งเริ่มต้น (index 0)
+    }
   }
 
   Future<void> checkStatusCard(
@@ -619,381 +634,242 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          CustomAppBar(title: 'รับคืนจากการเบิกผลิต', showExitWarning: false),
+      appBar: CustomAppBar(
+          title: 'รับคืนจากการเบิกเพื่อผลผลิต', showExitWarning: false),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: isLoading
             ? Center(child: LoadingIndicator())
             : dataCard.isEmpty
                 ? const Center(child: CenteredMessage())
-                : Column(
-                    children: [
-                      // dataCard.isEmpty
-                      // ? const Center(
-                      //     child: Column(
-                      //     mainAxisSize: MainAxisSize.min,
-                      //     mainAxisAlignment:
-                      //         MainAxisAlignment.center, // จัดกึ่งกลางในแนวตั้ง
-                      //     crossAxisAlignment:
-                      //         CrossAxisAlignment.center, // จัดกึ่งกลางในแนวนอน
-                      //     children: [
-                      //       // Text(
-                      //       //   'No Data Available',
-                      //       //   style: TextStyle(color: Colors.white),
-                      //       // ),
-                      //       Center(
-                      //         child: Text(
-                      //           'No Data Available',
-                      //           style: TextStyle(color: Colors.white),
-                      //         ),
-                      //       )
-                      //     ],
-                      //   ))
-                      Expanded(
-                        child: ListView(
-                          children: [
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics:
-                                  const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
-                              itemCount: dataCard.length,
-                              itemBuilder: (context, index) {
-                                // ดึงข้อมูลรายการจาก dataCard
-                                var item = dataCard[index];
-                                Color cardColor;
-                                String statusText;
-                                String iconImageYorN;
-                                print(item['card_status_desc']);
-                                switch (item['card_status_desc']) {
-                                  case 'ระหว่างบันทึก':
-                                    cardColor =
-                                        Color.fromRGBO(246, 250, 112, 1.0);
-                                    statusText = 'ระหว่างบันทึก';
-                                    break;
-                                  case 'ยืนยันการรับ':
-                                    cardColor =
-                                        Color.fromRGBO(146, 208, 80, 1.0);
-                                    statusText = 'ยืนยันการรับ';
-                                    break;
-                                  case 'ยกเลิก':
-                                    cardColor =
-                                        Color.fromRGBO(208, 206, 206, 1.0);
-                                    statusText = 'ยกเลิก';
-                                    break;
-                                  case 'ยืนยันการจ่าย':
-                                    cardColor =
-                                        Color.fromRGBO(255, 255, 255, 1.0);
-                                    statusText = 'ยืนยันการจ่าย';
-                                    break;
-                                  case 'ปกติ':
-                                    cardColor =
-                                        Color.fromRGBO(255, 255, 255, 1.0);
-                                    statusText = 'ยืนยันการจ่าย';
-                                    break;
-                                  case 'อ้างอิงแล้ว':
-                                    cardColor =
-                                        Color.fromRGBO(255, 255, 255, 1.0);
-                                    statusText = 'อ้างอิงแล้ว';
-                                    break;
-                                  default:
-                                    cardColor =
-                                        Color.fromRGBO(255, 255, 255, 1.0);
-                                    statusText = 'Unknown';
-                                }
+                : ListView.builder(
+                    controller: _scrollController,
+                    itemCount: getCurrentData().length + 1,
+                    itemBuilder: (context, index) {
+                      if (index < getCurrentData().length) {
+                        var item = getCurrentData()[index];
+                        Color cardColor;
+                        String statusText;
+                        String iconImageYorN;
+                        // print(item['card_status_desc']);
+                        switch (item['card_status_desc']) {
+                          case 'ระหว่างบันทึก':
+                            cardColor = Color.fromRGBO(246, 250, 112, 1.0);
+                            statusText = 'ระหว่างบันทึก';
+                            break;
+                          case 'ยืนยันการรับ':
+                            cardColor = Color.fromRGBO(146, 208, 80, 1.0);
+                            statusText = 'ยืนยันการรับ';
+                            break;
+                          case 'ยกเลิก':
+                            cardColor = Color.fromRGBO(208, 206, 206, 1.0);
+                            statusText = 'ยกเลิก';
+                            break;
+                          case 'ยืนยันการจ่าย':
+                            cardColor = Color.fromRGBO(255, 255, 255, 1.0);
+                            statusText = 'ยืนยันการจ่าย';
+                            break;
+                          case 'ปกติ':
+                            cardColor = Color.fromRGBO(255, 255, 255, 1.0);
+                            statusText = 'ยืนยันการจ่าย';
+                            break;
+                          case 'อ้างอิงแล้ว':
+                            cardColor = Color.fromRGBO(255, 255, 255, 1.0);
+                            statusText = 'อ้างอิงแล้ว';
+                            break;
+                          default:
+                            cardColor = Color.fromRGBO(255, 255, 255, 1.0);
+                            statusText = 'Unknown';
+                        }
 
-                                switch (item['qc_yn']) {
-                                  case 'Y':
-                                    iconImageYorN =
-                                        'assets/images/rt_machine_on.png';
-                                    break;
-                                  case 'N':
-                                    iconImageYorN =
-                                        'assets/images/rt_machine_off.png';
-                                    break;
-                                  default:
-                                    iconImageYorN =
-                                        'assets/images/rt_machine_off.png';
-                                }
-                                return Card(
-                                  elevation: 8.0,
-                                  margin: EdgeInsets.symmetric(vertical: 8.0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  color: Color.fromRGBO(204, 235, 252, 1.0),
-                                  child: InkWell(
-                                    onTap: () {
-                                      checkStatusCard(
-                                          item['po_no'] ?? '',
-                                          item['p_doc_no'] ?? '',
-                                          item['p_doc_type'] ?? '');
+                        switch (item['qc_yn']) {
+                          case 'Y':
+                            iconImageYorN = 'assets/images/rt_machine_on.png';
+                            break;
+                          case 'N':
+                            iconImageYorN = 'assets/images/rt_machine_off.png';
+                            break;
+                          default:
+                            iconImageYorN = 'assets/images/rt_machine_off.png';
+                        }
+                        return Card(
+                          elevation: 8.0,
+                          margin: EdgeInsets.symmetric(vertical: 8.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          color: Color.fromRGBO(204, 235, 252, 1.0),
+                          child: InkWell(
+                            onTap: () {
+                              checkStatusCard(
+                                  item['po_no'] ?? '',
+                                  item['p_doc_no'] ?? '',
+                                  item['p_doc_type'] ?? '');
 
-                                      print(
-                                          'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
-                                      print(
-                                          'p_doc_no in Card : ${item['p_doc_no']} Type : ${item['p_doc_no'].runtimeType}');
-                                      print(
-                                          'p_doc_type in Card : ${item['p_doc_type']} Type : ${item['p_doc_type'].runtimeType}');
-                                    },
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    child: Stack(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    DateTime parsedDate =
-                                                        DateFormat('dd/MM/yyyy')
-                                                            .parse(item[
-                                                                'po_date']);
-                                                    String formattedDate =
-                                                        DateFormat('dd-MM-yyyy')
-                                                            .format(parsedDate);
+                              print(
+                                  'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
+                              print(
+                                  'p_doc_no in Card : ${item['p_doc_no']} Type : ${item['p_doc_no'].runtimeType}');
+                              print(
+                                  'p_doc_type in Card : ${item['p_doc_type']} Type : ${item['p_doc_type'].runtimeType}');
+                            },
+                            borderRadius: BorderRadius.circular(15.0),
+                            child: Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            DateTime parsedDate =
+                                                DateFormat('dd/MM/yyyy')
+                                                    .parse(item['po_date']);
+                                            String formattedDate =
+                                                DateFormat('dd-MM-yyyy')
+                                                    .format(parsedDate);
 
-                                                    formattedDateDocDate =
-                                                        formattedDate;
-                                                    getPDF(
-                                                      item['p_doc_no'],
-                                                      item['p_doc_type'],
-                                                      formattedDate,
-                                                    );
-                                                  });
-                                                },
-                                                child: Container(
-                                                  width: 100,
-                                                  height: 40,
-                                                  // color: cardColor, // เปลี่ยนสีพื้นหลังที่นี่
-                                                  child: Image.asset(
-                                                    'assets/images/printer.png',
-                                                    fit: BoxFit.contain,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(height: 20.0),
-                                              Text(
-                                                '${item['po_date']} ${item['po_no']} ${item['item_stype_desc']}',
-                                                style: TextStyle(
-                                                    color: Colors.black),
-                                              ),
-                                            ],
+                                            formattedDateDocDate =
+                                                formattedDate;
+                                            getPDF(
+                                              item['p_doc_no'],
+                                              item['p_doc_type'],
+                                              formattedDate,
+                                            );
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 100,
+                                          height: 40,
+                                          // color: cardColor, // เปลี่ยนสีพื้นหลังที่นี่
+                                          child: Image.asset(
+                                            'assets/images/printer.png',
+                                            fit: BoxFit.contain,
                                           ),
                                         ),
-                                        // Positioned สำหรับสถานะ
-                                        if (statusText != 'Unknown')
-                                          Positioned(
-                                            top: 8.0,
-                                            right: 8.0,
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 12.0,
-                                                      vertical: 6.0),
-                                                  decoration: BoxDecoration(
-                                                    color: cardColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12.0),
-                                                    border: Border.all(
-                                                        color: cardColor,
-                                                        width: 2.0),
-                                                  ),
-                                                  child: Text(
-                                                    statusText,
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                                // SizedBox(height: 5.0),
-                                                SizedBox(
-                                                  width: 100,
-                                                  height: 40,
-                                                  child: Image.asset(
-                                                    iconImageYorN,
-                                                    fit: BoxFit.contain,
-                                                  ),
-                                                ),
-                                              ],
+                                      ),
+                                      SizedBox(height: 20.0),
+                                      Text(
+                                        '${item['po_date']} ${item['po_no']} ${item['item_stype_desc']}',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // Positioned สำหรับสถานะ
+                                if (statusText != 'Unknown')
+                                  Positioned(
+                                    top: 8.0,
+                                    right: 8.0,
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 12.0, vertical: 6.0),
+                                          decoration: BoxDecoration(
+                                            color: cardColor,
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                            border: Border.all(
+                                                color: cardColor, width: 2.0),
+                                          ),
+                                          child: Text(
+                                            statusText,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
+                                        ),
+                                        // SizedBox(height: 5.0),
+                                        SizedBox(
+                                          width: 100,
+                                          height: 40,
+                                          child: Image.asset(
+                                            iconImageYorN,
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                );
-                              },
+                              ],
                             ),
-                            // =======================================================  dataCard.length > 2
-                            dataCard.length > 2
-                                ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          currentPage > 0
-                                              ? ElevatedButton(
-                                                  onPressed: currentPage > 0
-                                                      ? () {
-                                                          setState(() {
-                                                            currentPage--;
-                                                          });
-                                                        }
-                                                      : null,
-                                                  style: ButtonStyles
-                                                      .previousButtonStyle,
-                                                  child: ButtonStyles
-                                                      .previousButtonContent,
-                                                )
-                                              : ElevatedButton(
-                                                  onPressed: null,
-                                                  style: DisableButtonStyles
-                                                      .disablePreviousButtonStyle,
-                                                  child: DisableButtonStyles
-                                                      .disablePreviousButtonContent,
-                                                )
-                                        ],
-                                      ),
-                                      // const SizedBox(width: 30),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Center(
-                                            child: Text(
-                                              '${(currentPage * itemsPerPage) + 1} : ${((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length)}',
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      // const SizedBox(width: 30),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          currentPage < totalPages() - 1
-                                              ? ElevatedButton(
-                                                  onPressed: currentPage <
-                                                          totalPages() - 1
-                                                      ? () {
-                                                          setState(() {
-                                                            currentPage++;
-                                                          });
-                                                        }
-                                                      : null,
-                                                  style: ButtonStyles
-                                                      .nextButtonStyle,
-                                                  child: ButtonStyles
-                                                      .nextButtonContent(),
-                                                )
-                                              : ElevatedButton(
-                                                  onPressed: null,
-                                                  style: DisableButtonStyles
-                                                      .disableNextButtonStyle,
-                                                  child: DisableButtonStyles
-                                                      .disablePreviousButtonContent,
-                                                ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                : const SizedBox.shrink(),
-                            // =======================================================  dataCard.length > 2
-                          ],
-                        ),
-                      ),
-                      // =======================================================  dataCard.length <= 2
-                      dataCard.length <= 2
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          ),
+                        );
+                      } else {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    currentPage > 0
-                                        ? ElevatedButton(
-                                            onPressed: currentPage > 0
+                                currentPage > 0
+                                    ? ElevatedButton(
+                                        onPressed: currentPage > 0
+                                            ? () {
+                                                loadPrevPage();
+                                              }
+                                            : null,
+                                        style: ButtonStyles.previousButtonStyle,
+                                        child:
+                                            ButtonStyles.previousButtonContent,
+                                      )
+                                    : ElevatedButton(
+                                        onPressed: null,
+                                        style: DisableButtonStyles
+                                            .disablePreviousButtonStyle,
+                                        child: DisableButtonStyles
+                                            .disablePreviousButtonContent,
+                                      )
+                              ],
+                            ),
+                            // const SizedBox(width: 30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    '${(currentPage * itemsPerPage) + 1} : ${((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length)}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            // const SizedBox(width: 30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                currentPage < totalPages() - 1
+                                    ? ElevatedButton(
+                                        onPressed:
+                                            currentPage < totalPages() - 1
                                                 ? () {
-                                                    setState(() {
-                                                      currentPage--;
-                                                    });
+                                                    loadNextPage();
                                                   }
                                                 : null,
-                                            style: ButtonStyles
-                                                .previousButtonStyle,
-                                            child: ButtonStyles
-                                                .previousButtonContent,
-                                          )
-                                        : ElevatedButton(
-                                            onPressed: null,
-                                            style: DisableButtonStyles
-                                                .disablePreviousButtonStyle,
-                                            child: DisableButtonStyles
-                                                .disablePreviousButtonContent,
-                                          )
-                                  ],
-                                ),
-                                // const SizedBox(width: 30),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Center(
-                                      child: Text(
-                                        '${(currentPage * itemsPerPage) + 1} : ${((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length)}',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: ButtonStyles.nextButtonStyle,
+                                        child: ButtonStyles.nextButtonContent(),
+                                      )
+                                    : ElevatedButton(
+                                        onPressed: null,
+                                        style: DisableButtonStyles
+                                            .disableNextButtonStyle,
+                                        child: DisableButtonStyles
+                                            .disablePreviousButtonContent,
                                       ),
-                                    )
-                                  ],
-                                ),
-                                // const SizedBox(width: 30),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    currentPage < totalPages() - 1
-                                        ? ElevatedButton(
-                                            onPressed:
-                                                currentPage < totalPages() - 1
-                                                    ? () {
-                                                        setState(() {
-                                                          currentPage++;
-                                                        });
-                                                      }
-                                                    : null,
-                                            style: ButtonStyles.nextButtonStyle,
-                                            child: ButtonStyles
-                                                .nextButtonContent(),
-                                          )
-                                        : ElevatedButton(
-                                            onPressed: null,
-                                            style: DisableButtonStyles
-                                                .disableNextButtonStyle,
-                                            child: DisableButtonStyles
-                                                .disablePreviousButtonContent,
-                                          ),
-                                  ],
-                                ),
                               ],
-                            )
-                          : const SizedBox.shrink(),
-                      // ======================================================= dataCard.length <= 2
-                    ],
+                            ),
+                          ],
+                        );
+                      }
+                    },
                   ),
       ),
       bottomNavigationBar: BottomBar(
