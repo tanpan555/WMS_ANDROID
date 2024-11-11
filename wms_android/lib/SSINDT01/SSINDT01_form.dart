@@ -206,7 +206,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
   Future<void> fetchReceiveHeadData(String receiveNo) async {
     final String apiUrl =
-        "http://172.16.0.82:8888/apex/wms/SSINDT01/Step_2_formtest/$receiveNo";
+        "http://172.16.0.82:8888/apex/wms/SSINDT01/Step_2_formtest/$receiveNo/${gb.P_ERP_OU_CODE}";
 
     final Map<String, String> queryParams = {
       'RECEIVE_NO': receiveNo,
@@ -489,7 +489,6 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       },
       body: jsonEncode({
         'RECEIVE_NO': receiveNo,
-        'OU_CODE': gb.P_ERP_OU_CODE,
         'PO_REMARK': poRemark,
         'RECEIVE_DATE': receiveDate,
         'INVOICE_DATE': invoiceDate,
@@ -497,12 +496,12 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
         'PO_TYPE_CODE': poTypeCode,
         'UPD_BY': gb.APP_USER,
         'UPD_DATE': updDateForm,
+        'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
       }),
     );
 
     print('Updating form with data: ${jsonEncode({
           'RECEIVE_NO': receiveNo,
-          'OU_CODE': gb.P_ERP_OU_CODE,
           'PO_REMARK': poRemark,
           'RECEIVE_DATE': receiveDate,
           'INVOICE_DATE': invoiceDate,
@@ -510,6 +509,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           'PO_TYPE_CODE': poTypeCode,
           'UPD_BY': gb.APP_USER,
           'UPD_DATE': updDateForm,
+          'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
         })}');
 
     if (response.statusCode == 200) {

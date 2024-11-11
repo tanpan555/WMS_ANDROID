@@ -181,7 +181,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     final String statusValue = valueMapping[_selectedStatusValue] ?? '0';
     try {
       final uri = url ??
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_Card_List/$selectedwhCode/$statusValue/000/${widget.docData1}/$DateSend/${widget.documentNumber}';
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_Card_List/$selectedwhCode/$statusValue/000/${widget.docData1}/$DateSend/${widget.documentNumber}/${gb.BROWSER_LANGUAGE}';
 
       // Reset currentPage if this is a new search (no url provided)
       if (url == null) {

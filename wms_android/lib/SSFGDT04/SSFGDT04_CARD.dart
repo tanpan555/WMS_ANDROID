@@ -129,7 +129,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     }
 
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}';
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}/${gb.BROWSER_LANGUAGE}';
 
     try {
       final response = await http.get(Uri.parse(requestUrl));

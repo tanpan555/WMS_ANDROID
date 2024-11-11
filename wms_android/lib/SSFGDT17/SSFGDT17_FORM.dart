@@ -513,7 +513,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   String? selectedStaff;
   Future<void> fetchStaffLIST() async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_2_STAFF_CODE/${gb.P_ERP_OU_CODE}');
+        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_2_STAFF_CODE/${gb.P_ERP_OU_CODE}/${gb.BROWSER_LANGUAGE}');
     try {
       final response = await http.get(url);
 

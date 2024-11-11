@@ -234,7 +234,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
   Future<void> fetchSaffCodeItems() async {
     final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_STAFF_CODE/${gb.P_ERP_OU_CODE}'));
+        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_STAFF_CODE/${gb.P_ERP_OU_CODE}/${gb.BROWSER_LANGUAGE}'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -390,6 +390,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
           'P_DOC_NO': po_doc_no,
           'P_ATTR1': gb.ATTR1,
           'P_DOC_TYPE': po_doc_type,
+
         }));
 
     print('Navigating to SSFGDT04_GRID with:');

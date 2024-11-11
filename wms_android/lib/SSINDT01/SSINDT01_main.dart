@@ -114,7 +114,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     }
 
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_1_Card_list/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_1_Card_list/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue/${gb.BROWSER_LANGUAGE}';
 
     try {
       final response = await http.get(Uri.parse(requestUrl));

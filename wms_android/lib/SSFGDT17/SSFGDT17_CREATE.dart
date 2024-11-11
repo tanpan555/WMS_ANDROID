@@ -49,7 +49,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> fetchwhCodes() async {
     try {
       final response = await http.get(
-          Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_WHCode'));
+          Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_WHCode/${gb.ATTR1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -78,7 +78,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> fetchLocationCodes() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_LOACATION/$selectedwhCode'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_LOACATION/$selectedwhCode/${gb.P_ERP_OU_CODE}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -161,7 +161,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> fetchDocType() async {
     try {
       final url = Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_default_doc_type');
+          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_default_doc_type/${gb.ATTR1}');
       final response = await http.get(url, headers: {
         'Content-Type': 'application/json',
       });
@@ -203,6 +203,9 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
       'V_NB_LOC_OUT': LocOUTCode,
       'APP_SESSION': currentSessionID,
       'V_DOC_TYPE_OUT': docData,
+      'p_ou': gb.P_OU_CODE,
+      'p_erp_ou': gb.P_ERP_OU_CODE,
+      'APP_USER': gb.APP_USER,
     });
 
     print('headers : $headers Type : ${headers.runtimeType}');

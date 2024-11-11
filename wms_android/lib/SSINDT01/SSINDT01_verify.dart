@@ -1,10 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/custom_appbar.dart';
-
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:wms_android/styles.dart';
@@ -229,7 +227,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
 
   Future<void> sendGetRequestlineWMS() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_4_pull_po/${widget.poReceiveNo}';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_4_pull_po/${widget.poReceiveNo}/${gb.P_OU_CODE}';
 
     final headers = {
       'Content-Type': 'application/json; charset=UTF-8',
@@ -264,7 +262,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
   Future<void> chk_sub() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_4_Submit_ver/${widget.poReceiveNo}'));
+          'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_4_Submit_ver/${widget.poReceiveNo}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}'));
       print(widget.poReceiveNo);
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -322,47 +320,21 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                   onPressed: () async {
                     await chk_sub();
                     if (poStatus == '1') {
-                      await showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Row(
-                              mainAxisAlignment: MainAxisAlignment
-                                  .spaceBetween, // Space between text and button
-                              children: [
-                                Icon(
-                                  Icons
-                                      .notification_important, // Use the bell icon
-                                  color: Colors.red, // Set the color to red
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  'แจ้งเตือน',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.close),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            ),
-                            content: Text(poMessage ?? ''),
-                            actions: <Widget>[
-                              TextButton(
-                                child: Text('ตกลง'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                      showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DialogStyles.alertMessageDialog(
+                      context: context,
+                      content:Text(poMessage ?? ''),
+                      onClose: () {
+                        Navigator.of(context).pop();
+                      },
+                      onConfirm: () async {
+                        Navigator.of(context).pop();
+                      },
+                    );
+                  },
+                );
                     } else if (poStatus == '0') {
                       showDialog(
                         context: context,
@@ -426,8 +398,8 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                 ? Center(
                     child: Text('No data available',
                         style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
                             color: Colors.white)))
                 : SingleChildScrollView(
                     padding: EdgeInsets.all(8.0),

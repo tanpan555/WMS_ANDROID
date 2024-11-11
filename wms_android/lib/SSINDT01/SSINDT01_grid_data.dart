@@ -159,6 +159,9 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     final body = jsonEncode({
       'p_po_no': widget.poPONO,
       'p_receive_no': widget.poReceiveNo,
+      'p_ou': gb.P_OU_CODE,
+      'p_erp_ou': gb.P_ERP_OU_CODE,
+      'APP_USER': gb.APP_USER,
     });
     print('Request body: $body');
 
@@ -187,9 +190,87 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     }
   }
 
-  Future<void> genLot(String v_WMS_NO, String v_PO_NO, String v_rec_seq,
-      String v_lot_qty, String OU_CODE) async {
-    final url = 'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_gen_lot';
+  // Future<void> genLot(String v_WMS_NO, String v_PO_NO, String v_rec_seq,
+  //     String v_lot_qty, String OU_CODE) async {
+  //   final url = 'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_gen_lot';
+
+  //   final headers = {
+  //     'Content-Type': 'application/json',
+  //   };
+
+  //   final body = jsonEncode({
+  //     'v_WMS_NO': v_WMS_NO,
+  //     'v_PO_NO': v_PO_NO,
+  //     'v_rec_seq': v_rec_seq,
+  //     'v_lot_qty': v_lot_qty,
+  //     'OU_CODE': OU_CODE,
+  //     'APP_USER': gb.APP_USER,
+  //   });
+
+  //   print('Request body: $body');
+
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(url),
+  //       headers: headers,
+  //       body: body,
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> responseData = jsonDecode(response.body);
+  //       if (mounted) {
+  //         setState(() {
+  //           poStatus = responseData['po_status'];
+  //           poMessage = responseData['po_message'];
+
+  //           sendGetRequestlineWMS();
+  //         });
+  //       }
+
+  //       if (poMessage != null && poMessage!.isNotEmpty) {
+  //         DialogStyles.alertMessageDialog(
+  //           context: context,
+  //           content: Text(poMessage!),
+  //           onClose: () {
+  //             Navigator.of(context).pop();
+  //           },
+  //           onConfirm: () async {
+  //             Navigator.of(context).pop();
+  //           },
+  //         );
+  //       }
+
+  //       if (poMessage == null && poMessage!.isEmpty) {
+  //         DialogStyles.alertMessageDialog(
+  //           context: context,
+  //           content: Text("สำเร็จ"),
+  //           onClose: () {
+  //             Navigator.of(context).pop();
+  //           },
+  //           onConfirm: () async {
+  //             Navigator.of(context).pop();
+  //           },
+  //         );
+  //       }
+
+  //       print('Success: $responseData');
+  //     } else {
+  //       print('Failed to post data. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
+
+  Future<void> genLot(
+    String v_WMS_NO,
+    String v_PO_NO,
+    String v_rec_seq,
+    String v_lot_qty,
+    String v_lot_size,
+    String v_rowid,
+    String v_supp,) async {
+    final url = 'http://172.16.0.82:8888/apex/wms/SSINDT01/Test_gen_lot';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -200,7 +281,10 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       'v_PO_NO': v_PO_NO,
       'v_rec_seq': v_rec_seq,
       'v_lot_qty': v_lot_qty,
-      'OU_CODE': OU_CODE,
+      'v_lot_size': v_lot_size,
+      'v_rowid': v_rowid,
+      'v_supp': v_supp,
+      'P_OU_CODE': gb.P_OU_CODE,
       'APP_USER': gb.APP_USER,
     });
 
@@ -261,7 +345,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   Future<void> sendGetRequestlineWMS() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_pull_po/${widget.poReceiveNo}';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_pull_po/${widget.poReceiveNo}/${gb.P_OU_CODE}';
     final headers = {'Content-Type': 'application/json; charset=UTF-8'};
 
     try {
@@ -339,6 +423,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       body: jsonEncode({
         'rec_no': recNo,
         'rec_seq': recSeq,
+        'p_doc_type': widget.poPONO,
         'p_erp_ou': gb.P_ERP_OU_CODE,
         'APP_USER': gb.APP_USER,
       }),
@@ -610,7 +695,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               ),
               onPressed: () async {
                 Navigator.of(context).pop();
-                await updateOkLot(poReceiveNo, recSeq, ouCode);
+                await updateOkLot(poReceiveNo, recSeq);
                 await sendGetRequestlineWMS();
                 if (mounted) {
                   setState(() {});
@@ -663,7 +748,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   }
 
   Future<void> updateOkLot(
-      String v_rec_no, String v_rec_seq, String p_erp_ou) async {
+      String v_rec_no, String v_rec_seq) async {
     final url = Uri.parse(
         'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_update_ok_lot');
     final response = await http.put(
@@ -674,14 +759,18 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       body: jsonEncode({
         'v_rec_no': v_rec_no,
         'v_rec_seq': v_rec_seq,
-        'p_erp_ou': p_erp_ou,
+        'p_erp_ou': gb.P_ERP_OU_CODE,
+        'p_ou': gb.P_OU_CODE,
+        'app_user': gb.APP_USER,
       }),
     );
 
     print('Updating form with data: ${jsonEncode({
           'v_rec_no': v_rec_no,
           'v_rec_seq': v_rec_seq,
-          'p_erp_ou': p_erp_ou,
+          'p_erp_ou': gb.P_ERP_OU_CODE,
+          'p_ou': gb.P_OU_CODE,
+          'app_user': gb.APP_USER,
         })}');
 
     if (response.statusCode == 200) {
@@ -1261,54 +1350,21 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                           );
                           return;
                         }
-
-                        // Show confirmation dialog if items are selected
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Icon(
-                                    Icons.notification_important,
-                                    color: Colors.red,
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'แจ้งเตือน',
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              ),
+                            return DialogStyles.alertMessageCheckDialog(
+                              context: context,
                               content: Text(
                                   'ต้องการลบ $selectedCount รายการหรือไม่ ?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('ยกเลิก'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    _deleteSelectedItems();
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('ตกลง'),
-                                ),
-                              ],
+                              onClose: () {
+                                Navigator.of(context).pop(); // Close the dialog
+                              },
+                              onConfirm: () {
+                                Navigator.of(context).pop();
+                                _deleteSelectedItems();
+                                Navigator.of(context).pop();
+                              },
                             );
                           },
                         );
@@ -1556,48 +1612,16 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween, // Space between text and button
-                                children: [
-                                  Icon(
-                                    Icons
-                                        .notification_important, // Use the bell icon
-                                    color: Colors.red, // Set the color to red
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'แจ้งเตือน',
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              ),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      '${poMessageGrid ?? 'No message available'}'),
-                                ],
-                              ),
-                              actions: [
-                                TextButton(
-                                  child: Text('ตกลง'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
+                            return DialogStyles.alertMessageDialog(
+                              context: context,
+                              content: Text(
+                                  '${poMessageGrid ?? 'No message available'}'),
+                              onClose: () {
+                                Navigator.of(context).pop();
+                              },
+                              onConfirm: () async {
+                                Navigator.of(context).pop();
+                              },
                             );
                           },
                         );
@@ -1724,56 +1748,24 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Row(
-                                                mainAxisAlignment: MainAxisAlignment
-                                                    .spaceBetween, // Space between text and button
-                                                children: [
-                                                  Icon(
-                                                    Icons
-                                                        .notification_important, // Use the bell icon
-                                                    color: Colors
-                                                        .red, // Set the color to red
-                                                  ),
-                                                  SizedBox(width: 8),
-                                                  Text(
-                                                    'แจ้งเตือน',
-                                                    style: TextStyle(
-                                                      fontSize: 20.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  IconButton(
-                                                    icon: Icon(Icons.close),
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                              content:
-                                                  Text('ยืนยันที่จะลบหรือไม่'),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text('ยกเลิก'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () async {
-                                                    await deleteReceiveQty(
-                                                      data['receive_no'],
-                                                      data['rec_seq']
-                                                          .toString(),
-                                                    );
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text('ตกลง'),
-                                                ),
-                                              ],
+                                            return DialogStyles
+                                                .alertMessageCheckDialog(
+                                              context: context,
+                                              content: const Text(
+                                                  'ยืนยันที่จะลบหรือไม่?'),
+                                              onClose: () {
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                              },
+                                              onConfirm: () async {
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                                // await fetchGetPo(); // Call the fetchGetPo function after confirming
+                                                await deleteReceiveQty(
+                                                  data['receive_no'],
+                                                  data['rec_seq'].toString(),
+                                                );
+                                              },
                                             );
                                           },
                                         );
@@ -1807,16 +1799,17 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                                             ?.toString() ??
                                                         '',
                                                     lotQTY: data['lot_qty']
-                                                        ?.toString() ??
-                                                    '',
+                                                            ?.toString() ??
+                                                        '',
                                                     lotSize: data['lot_Size']
-                                                        ?.toString() ??
-                                                    '',
+                                                            ?.toString() ??
+                                                        '',
                                                     rowid: data['rowid']
-                                                        ?.toString() ??
-                                                    '',
-                                                    lotSupp: ['lot_SUPP']?.toString() ??
-                                                    '',
+                                                            ?.toString() ??
+                                                        '',
+                                                    lotSupp: ['lot_supplier']
+                                                            ?.toString() ??
+                                                        '',
                                                     ouCode: data['ou_code']
                                                             ?.toString() ??
                                                         '',
@@ -1961,6 +1954,7 @@ class LotDialog extends StatefulWidget {
 
 class _LotDialogState extends State<LotDialog> {
   TextEditingController lotCountController = TextEditingController();
+  TextEditingController lotSupplierController = TextEditingController();
   String? poStatus;
   String? poMessage;
   List<Map<String, dynamic>> dataList = [];
@@ -2095,10 +2089,18 @@ class _LotDialogState extends State<LotDialog> {
   //   }
   // }
 
-  Future<void> genLot(String v_WMS_NO, String v_PO_NO, String v_rec_seq,
-      String v_lot_qty, String v_lot_size, String v_rowid, String v_supp) async {
+  Future<void> genLot(
+    String v_WMS_NO,
+    String v_PO_NO,
+    String v_rec_seq,
+    String v_lot_qty,
+    String v_lot_size,
+    String v_rowid,
+    String v_supp,
+  ) async {
     final url = 'http://172.16.0.82:8888/apex/wms/SSINDT01/Test_gen_lot';
     final headers = {'Content-Type': 'application/json'};
+    print(url);
     final body = jsonEncode({
       'v_WMS_NO': v_WMS_NO,
       'v_PO_NO': v_PO_NO,
@@ -2107,13 +2109,13 @@ class _LotDialogState extends State<LotDialog> {
       'v_lot_size': v_lot_size,
       'v_rowid': v_rowid,
       'v_supp': v_supp,
-      'OU_CODE': gb.P_ERP_OU_CODE,
+      'P_OU_CODE': gb.P_OU_CODE,
       'APP_USER': gb.APP_USER,
     });
     try {
       final response =
           await http.post(Uri.parse(url), headers: headers, body: body);
-
+      print(body);
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         setState(() {
@@ -2279,7 +2281,7 @@ class _LotDialogState extends State<LotDialog> {
 
   Future<void> sendGetRequestlineWMS() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_pull_po/${widget.poReceiveNo}';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_pull_po/${widget.poReceiveNo}/${gb.P_OU_CODE}';
     final headers = {'Content-Type': 'application/json; charset=UTF-8'};
 
     print('Request URL: $url');
@@ -2296,6 +2298,7 @@ class _LotDialogState extends State<LotDialog> {
               List<Map<String, dynamic>>.from(responseData['items'] ?? []);
         });
         print('Success: $dataList');
+        // แสดงจำนวนLOT
         lotCountController.text = dataLotList.length.toString();
       } else {
         print('Failed to get data. Status code: ${response.statusCode}');
@@ -3167,71 +3170,26 @@ class _LotDialogState extends State<LotDialog> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Icon(Icons.info_outline, color: Colors.blue, size: 24.0),
-                  SizedBox(width: 10.0),
-                  Text('แจ้งเตือน'),
-                ],
-              ),
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context)
-                      .pop(); // Close the dialog when the X is pressed
-                },
-              ),
-            ],
-          ),
+        return DialogStyles.alertMessageCheckDialog(
+          context: context,
           content: Text(
             poMessage.toString(),
-            style: TextStyle(fontSize: 16.0),
           ),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                iconColor: Colors.red,
-              ),
-              child: Column(
-                children: <Widget>[
-                  Text('ยกเลิก'),
-                ],
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                iconColor: Colors.blue,
-              ),
-              child: Column(
-                children: <Widget>[
-                  Text('ตกลง'),
-                ],
-              ),
-              onPressed: () async {
-                Navigator.pop(context, {
-                  'status': 'dialog',
-                  'poReceiveNo': widget.poReceiveNo,
-                  'recSeq': widget.recSeq,
-                  'ouCode': widget.ouCode,
-                });
-                Navigator.of(context).pop();
-                await updateOkLot(poReceiveNo, recSeq, ouCode);
-                await sendGetRequestlineWMS();
-
-                // setState(() {});
-              },
-            ),
-          ],
+          onClose: () {
+            Navigator.of(context).pop(); // Close the dialog
+          },
+          onConfirm: () async {
+            Navigator.of(context).pop();
+            Navigator.pop(context, {
+              'status': 'dialog',
+              'poReceiveNo': widget.poReceiveNo,
+              'recSeq': widget.recSeq,
+              'ouCode': widget.ouCode,
+            });
+            Navigator.of(context).pop();
+            await updateOkLot(poReceiveNo, recSeq, ouCode);
+            await sendGetRequestlineWMS();
+          },
         );
       },
     );
@@ -3257,46 +3215,6 @@ class _LotDialogState extends State<LotDialog> {
         );
       },
     );
-    // showDialog(
-    //   context: context,
-    //   builder: (BuildContext context) {
-    //     return AlertDialog(
-    //       title: Row(
-    //         mainAxisAlignment:
-    //             MainAxisAlignment.spaceBetween, // Space between text and button
-    //         children: [
-    //           Icon(
-    //             Icons.notification_important, // Use the bell icon
-    //             color: Colors.red, // Set the color to red
-    //           ),
-    //           SizedBox(width: 8),
-    //           Text(
-    //             'แจ้งเตือน',
-    //             style: TextStyle(
-    //               fontSize: 20.0,
-    //               fontWeight: FontWeight.bold,
-    //             ),
-    //           ),
-    //           IconButton(
-    //             icon: Icon(Icons.close),
-    //             onPressed: () {
-    //               Navigator.of(context).pop();
-    //             },
-    //           ),
-    //         ],
-    //       ),
-    //       content: Text('$poMessage'),
-    //       actions: [
-    //         TextButton(
-    //           onPressed: () {
-    //             Navigator.of(context).pop();
-    //           },
-    //           child: Text('ตกลง'),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
   }
 
   bool checkUpdateData = false;
@@ -3365,7 +3283,7 @@ class _LotDialogState extends State<LotDialog> {
                     onPressed: () {
                       int currentValue = int.parse(lotCountController.text);
                       setState(() {
-                        checkUpdateData = true;
+                        // checkUpdateData = true;
                         lotCountController.text =
                             (currentValue > 0 ? currentValue - 1 : 0)
                                 .toString();
@@ -3392,9 +3310,11 @@ class _LotDialogState extends State<LotDialog> {
                   IconButton(
                     icon: Icon(Icons.add, size: 50, color: Colors.white),
                     onPressed: () {
-                      int currentValue = int.parse(lotCountController.text);
+                      // int currentValue = int.parse(lotCountController.text);
+                      int currentValue =
+                          int.tryParse(lotCountController.text) ?? 0;
                       setState(() {
-                        checkUpdateData = true;
+                        // checkUpdateData = true;
                         lotCountController.text = (currentValue + 1).toString();
                       });
                     },
@@ -3437,19 +3357,21 @@ class _LotDialogState extends State<LotDialog> {
                           //     lotCountController.text,
                           //     widget.ouCode);
                           await genLot(
-                          widget.poReceiveNo,
-                          widget.poPONO.toString(),
-                          widget.recSeq,
-                          lotCountController.text,
-                          widget.lotSize,
-                          widget.rowid,
-                          widget.lotSupp,);
+                            widget.poReceiveNo,
+                            widget.poPONO,
+                            widget.recSeq,
+                            lotCountController.text,
+                            widget.lotSize,
+                            widget.rowid,
+                            lotSupplierController.text,
+                          );
                           if (poStatus == '1') {
                             _showAlertDialogGenLot(context);
                           }
                           await getLotList(
                               widget.poReceiveNo, widget.recSeq, widget.ouCode);
                           setState(() {
+                            // ลบcardแล้วแต่แสดงจำนวนLOTเป็นจำนวนเดิม
                             lotCountController.text =
                                 dataLotList.length.toString();
                           });
@@ -3552,10 +3474,18 @@ class _LotDialogState extends State<LotDialog> {
                   ],
                 ),
               ] else
-                Center(
-                  child: Text('No Data available',
-                      style: TextStyle(color: Colors.white)),
-                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 100),
+                  child: const Center(
+                    child: Text(
+                      'No Data available',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                )
             ],
           ),
         ),
@@ -3581,46 +3511,24 @@ class _LotDialogState extends State<LotDialog> {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return AlertDialog(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(Icons.notification_important, color: Colors.red),
-                    SizedBox(width: 8),
-                    Text(
-                      'แจ้งเตือน',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ],
-                ),
-                content: Text('ยืนยันที่จะลบหรือไม่'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text('ยกเลิก'),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      await deleteLot(
-                        widget.poReceiveNo,
-                        widget.ouCode,
-                        widget.recSeq,
-                        widget.poReceiveNo,
-                        item['lot_seq']?.toString() ?? '',
-                        item['po_seq']?.toString() ?? '',
-                      );
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('ตกลง'),
-                  ),
-                ],
+              return DialogStyles.alertMessageCheckDialog(
+                context: context,
+                content: const Text('ยืนยันที่จะลบหรือไม่?'),
+                onClose: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                onConfirm: () async {
+                  Navigator.of(context).pop(); // Close the dialog
+                  // await fetchGetPo(); // Call the fetchGetPo function after confirming
+                  await deleteLot(
+                    widget.poReceiveNo,
+                    widget.ouCode,
+                    widget.recSeq,
+                    widget.poReceiveNo,
+                    item['lot_seq']?.toString() ?? '',
+                    item['po_seq']?.toString() ?? '',
+                  );
+                },
               );
             },
           );
