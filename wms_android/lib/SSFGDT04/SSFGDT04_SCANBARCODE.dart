@@ -32,6 +32,7 @@ class SSFGDT04_SCANBARCODE extends StatefulWidget {
 class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
   String currentSessionID = '';
   String? selectedLocator;
+  bool isDialogShowing = false;
   List<Map<String, dynamic>> locatorBarcodeItems =
       []; // Replace with your locator values
   List<Map<String, dynamic>> barCodeItems = [];
@@ -424,7 +425,13 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
                 await fetchBarcodeData(); // Wait for the data fetching process
 
-                if (po_status == '1') {
+                if (po_status == '1' && !isDialogShowing) {
+                  setState(() {
+                    isDialogShowing =
+                        true; // Set the flag to true when the dialog is shown
+                  });
+
+                  // Show dialog
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -433,9 +440,17 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                         content: Text('$po_message'),
                         onClose: () {
                           Navigator.of(context).pop();
+                          setState(() {
+                            isDialogShowing =
+                                false; // Reset the flag when the dialog is closed
+                          });
                         },
                         onConfirm: () async {
                           Navigator.of(context).pop();
+                          setState(() {
+                            isDialogShowing =
+                                false; // Reset the flag when the dialog is confirmed
+                          });
                         },
                       );
                     },
@@ -499,7 +514,6 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                       ? _locatorBarcodeController
                       : TextEditingController(
                           text: selectedLocator ?? '-- No Value Set --'),
-
                   textAlign: TextAlign.center,
                 ),
               ),

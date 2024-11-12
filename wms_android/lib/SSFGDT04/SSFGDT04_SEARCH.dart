@@ -259,7 +259,6 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
       appBar:
           CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       body: SingleChildScrollView(
-        // padding: const EdgeInsets.all(10),
         child: Form(
           key: _formKey,
           child: Padding(
@@ -350,7 +349,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   ),
                 // const SizedBox(height: 20),
 
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -375,13 +374,19 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () {
+                        // ตรวจสอบว่า selectedDate ไม่เป็น null หรือว่าง
                         if (isDateInvalid == false) {
-                          if (selectedDate.isNotEmpty) {
-                            if (selectedDate != '') {
+                          if (selectedDate != null &&
+                              selectedDate.isNotEmpty &&
+                              selectedDate != 'null') {
+                            try {
+                              // แปลงวันที่ให้เป็นรูปแบบที่ถูกต้อง
                               String modifiedDate =
                                   selectedDate.replaceAll('-', '/');
                               DateTime parsedDate =
                                   DateFormat('dd/MM/yyyy').parse(modifiedDate);
+
+                              // แปลงวันที่กลับเป็นรูปแบบ dd-MM-yyyy
                               String formattedDate =
                                   DateFormat('dd-MM-yyyy').format(parsedDate);
 
@@ -400,7 +405,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                                     soNo: pSoNo.isEmpty ? 'null' : pSoNo,
                                     date: formattedDate.isEmpty
                                         ? 'null'
-                                        : formattedDate, // เช็คค่าของ selectedDate
+                                        : formattedDate,
                                     status: status,
                                   ),
                                 ),
@@ -408,8 +413,13 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                                 print('isDateInvalid PPPPPP $isDateInvalid');
                                 print('selectedDate PPPPPP $selectedDate');
                               });
+                            } catch (e) {
+                              // ถ้ามีข้อผิดพลาดในการแปลงวันที่ จับข้อผิดพลาดและแสดงข้อความ
+                              print('Error parsing date: $e');
+                              // สามารถเพิ่มการแจ้งเตือนหรือแสดงข้อความให้กับผู้ใช้ที่ไม่สามารถแปลงวันที่ได้
                             }
                           } else {
+                            // หาก selectedDate เป็น null หรือว่างให้ส่งค่า 'null' แทน
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -420,7 +430,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                                   pFlag: pFlag,
                                   soNo: pSoNo.isEmpty ? 'null' : pSoNo,
                                   date:
-                                      'null', // ส่งค่า 'null' เมื่อ selectedDate เป็นค่าว่างหรือ null
+                                      'null', // ส่ง 'null' เมื่อ selectedDate เป็นค่าว่างหรือ null
                                   status: status,
                                 ),
                               ),
@@ -430,11 +440,11 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                       },
                       style: AppStyles.SearchButtonStyle(),
                       child: Image.asset(
-                        'assets/images/search_color.png', // ใส่ภาพจากไฟล์ asset
-                        width: 50, // กำหนดขนาดภาพ
+                        'assets/images/search_color.png',
+                        width: 50,
                         height: 25,
                       ),
-                    ),
+                    )
                   ],
                 ),
               ],

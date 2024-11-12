@@ -37,6 +37,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   int currentPage = 0;
   final int itemsPerPage = 15;
   bool isLoading = true;
+  bool isNavigating = false;
   String? next;
   String? previous;
   String errorMessage = '';
@@ -582,17 +583,35 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                           ),
                           color: Colors.lightBlue[100],
                           child: InkWell(
-                            onTap: () {
-                              checkRCV(item['po_no'] ?? '',
-                                  item['doc_no'] ?? '', item['doc_type'] ?? '');
+                            onTap: isNavigating
+                                ? null // Disable tap if navigating
+                                : () {
+                                    setState(() {
+                                      isNavigating =
+                                          true; // Set to true to block further taps
+                                    });
 
-                              print(
-                                  'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
-                              print(
-                                  'p_doc_no in Card : ${item['doc_no']} Type : ${item['doc_no'].runtimeType}');
-                              print(
-                                  'p_doc_type in Card : ${item['doc_type']} Type : ${item['doc_type'].runtimeType}');
-                            },
+                                    // Perform navigation or any other action
+                                    checkRCV(
+                                        item['po_no'] ?? '',
+                                        item['doc_no'] ?? '',
+                                        item['doc_type'] ?? '');
+                                    print(
+                                        'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
+                                    print(
+                                        'p_doc_no in Card : ${item['doc_no']} Type : ${item['doc_no'].runtimeType}');
+                                    print(
+                                        'p_doc_type in Card : ${item['doc_type']} Type : ${item['doc_type'].runtimeType}');
+
+                                    // Simulate some action (e.g., navigating or loading data)
+                                    Future.delayed(const Duration(seconds: 2),
+                                        () {
+                                      setState(() {
+                                        isNavigating =
+                                            false; // Re-enable tap after some time (e.g., after navigation completes)
+                                      });
+                                    });
+                                  },
                             borderRadius: BorderRadius.circular(15.0),
                             child: Stack(
                               children: [
@@ -726,7 +745,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                                           ),
                                         ],
                                       ),
-                                      // const SizedBox(height: 8),
+                                      // const Spacer(),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,

@@ -332,223 +332,232 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     }
   }
 
-  void handleTap(BuildContext context, Map<String, dynamic> item) async {
-    if (selectedwhCode == null) {
-      AlertDialog(
-        title: Row(
-          children: [
-            Icon(
-              Icons.notification_important,
-              color: Colors.red,
-            ),
-            SizedBox(width: 8),
-            Text('แจ้งเตือน'),
-          ],
-        ),
-        content: Text('โปรดเลือกคลังสินค้า'),
-        actions: <Widget>[
-          TextButton(
-            child: Text('OK'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+  bool isNavigating = false; // Flag to track navigation
+
+void handleTap(BuildContext context, Map<String, dynamic> item) async {
+  // Prevent double-tapping
+  if (isNavigating) return; // If already navigating, do nothing.
+  
+  isNavigating = true; // Set flag to true when navigation starts
+  
+  if (selectedwhCode == null) {
+    AlertDialog(
+      title: Row(
+        children: [
+          Icon(
+            Icons.notification_important,
+            color: Colors.red,
           ),
+          SizedBox(width: 8),
+          Text('แจ้งเตือน'),
         ],
-      );
-      return;
-    }
-
-    final pPoNo = item['po_no'] ?? '';
-    final vReceiveNo = item['receive_no'] ?? 'null';
-
-    await fetchPoStatus(pPoNo, vReceiveNo);
-    await fetchPoStatusconform(vReceiveNo);
-
-    if (poStatus == '0' && poStep == '2') {
-      // Navigate to Form page
-      await sendPostRequest(pPoNo, vReceiveNo, selectedwhCode ?? '');
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => Ssindt01Form(
-            poReceiveNo: poReceiveNo ?? '',
-            pWareCode: widget.pWareCode ?? '',
-            pWareName: widget.pWareName,
-            p_ou_code: widget.p_ou_code,
-          ),
+      ),
+      content: Text('โปรดเลือกคลังสินค้า'),
+      actions: <Widget>[
+        TextButton(
+          child: Text('OK'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-      );
-    } else if (poStatus == '0' && poStep == '4') {
-      // Navigate to Grid page
-      await sendPostRequest(pPoNo, vReceiveNo, selectedwhCode ?? '');
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => Ssindt01Grid(
-            poReceiveNo: poReceiveNo ?? '',
-            poPONO: pPoNo,
-            pWareCode: widget.pWareCode ?? '',
-            pWareName: widget.pWareName,
-            p_ou_code: widget.p_ou_code,
-          ),
-        ),
-      );
-    } else if (poStatus == '0') {
-      // Original flow - Navigate to Form page
-      await sendPostRequest(pPoNo, vReceiveNo, selectedwhCode ?? '');
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => Ssindt01Form(
-            poReceiveNo: poReceiveNo ?? '',
-            pWareCode: widget.pWareCode ?? '',
-            pWareName: widget.pWareName,
-            p_ou_code: widget.p_ou_code,
-          ),
-        ),
-      );
-    } else if (poStatus == '1' && poStep == '9') {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return DialogStyles.alertMessageDialog(
-            context: context,
-            content: Text('${poMessage ?? 'No message available'}'),
-            onClose: () {
-              Navigator.of(context).pop();
-            },
-            onConfirm: () async {
-              Navigator.of(context).pop();
-              if (poStatusconform == '1') {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return DialogStyles.alertMessageDialog(
-                      context: context,
-                      content:
-                          Text('${poMessageconform ?? 'No message available'}'),
-                      onClose: () {
-                        Navigator.of(context).pop();
-                      },
-                      onConfirm: () async {
-                        await fetchPoStatusconform(vReceiveNo);
-                        Navigator.of(context).pop();
-                      },
-                    );
-                  },
-                );
-              }
-            },
-          );
-        },
-      );
-    } else if (poStatus == '1' && poStep == '') {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return DialogStyles.alertMessageDialog(
-            context: context,
-            content: Text('${poMessageconform ?? 'No message available'}'),
-            onClose: () {
-              Navigator.of(context).pop();
-            },
-            onConfirm: () async {
-              await fetchPoStatusconform(vReceiveNo);
-              Navigator.of(context).pop();
-            },
-          );
-        },
-      );
-    }
+      ],
+    );
+    isNavigating = false; // Reset flag when the alert is shown
+    return;
   }
 
-  Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
-    // Define a map for status values to background colors
-    Map<String, Color> statusColors = {
-      'ตรวจรับบางส่วน': const Color.fromARGB(255, 17, 109, 110),
-      'บันทึก': const Color.fromARGB(255, 118, 113, 113),
-      'รอยืนยัน': const Color.fromARGB(255, 246, 250, 112),
-      'ปกติ': const Color.fromARGB(255, 186, 186, 186),
-      'อนุมัติ': const Color.fromARGB(255, 146, 208, 80),
-    };
+  final pPoNo = item['po_no'] ?? '';
+  final vReceiveNo = item['receive_no'] ?? 'null';
 
-    Color statusColor = statusColors[item['status_desc']] ?? Colors.white;
+  await fetchPoStatus(pPoNo, vReceiveNo);
+  await fetchPoStatusconform(vReceiveNo);
 
-    TextStyle statusStyle = TextStyle(
-      color: Colors.white,
-      fontWeight: FontWeight.bold,
-    );
-
-    BoxDecoration statusDecoration = BoxDecoration(
-      color: statusColor, // Set background color from statusColors
-      borderRadius: BorderRadius.circular(12.0),
-    );
-
-    // Determine the content for card_qc
-    Widget cardQcWidget;
-    if (item['card_qc'] == '#APP_IMAGES#rt_machine_on.png') {
-      cardQcWidget = Image.asset(
-        'assets/images/rt_machine_on.png',
-        width: 64.0,
-        height: 64.0,
-      );
-    } else if (item['card_qc'] == '#APP_IMAGES#rt_machine_off.png') {
-      cardQcWidget = Image.asset(
-        'assets/images/rt_machine_off.png',
-        width: 64.0,
-        height: 64.0,
-      );
-    } else if (item['card_qc'] == 'No item') {
-      cardQcWidget = SizedBox.shrink();
-    } else {
-      cardQcWidget = Text('');
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-      child: Card(
-        color: const Color.fromRGBO(204, 235, 252, 1),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        elevation: 5,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListTile(
-              title: Text(item['ap_name'] ?? 'No Name'),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Divider(color: const Color.fromARGB(255, 0, 0, 0)),
-                  Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 12.0, vertical: 6.0),
-                        decoration: statusDecoration,
-                        child: Text(
-                          '${item['status_desc'] ?? 'No Status'}',
-                          style: statusStyle,
-                        ),
-                      ),
-                      SizedBox(width: 8.0),
-                      cardQcWidget,
-                    ],
-                  ),
-                  Text(
-                    '${item['po_date'] ?? ''} ${item['po_no'] ?? ''} \n${item['item_stype_desc'] ?? '\n'}'
-                    '${item['receive_date'] ?? ''} ${item['receive_no'] ?? ''} ${item['warehouse'] ?? ''}',
-                    style: TextStyle(color: Colors.black, fontSize: 12),
-                  ),
-                  SizedBox(height: 8.0),
-                ],
-              ),
-              contentPadding: EdgeInsets.all(16.0),
-              onTap: () => handleTap(context, item),
-            ),
-          ],
+  if (poStatus == '0' && poStep == '2') {
+    // Navigate to Form page
+    await sendPostRequest(pPoNo, vReceiveNo, selectedwhCode ?? '');
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Ssindt01Form(
+          poReceiveNo: poReceiveNo ?? '',
+          pWareCode: widget.pWareCode ?? '',
+          pWareName: widget.pWareName,
+          p_ou_code: widget.p_ou_code,
         ),
       ),
     );
+  } else if (poStatus == '0' && poStep == '4') {
+    // Navigate to Grid page
+    await sendPostRequest(pPoNo, vReceiveNo, selectedwhCode ?? '');
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Ssindt01Grid(
+          poReceiveNo: poReceiveNo ?? '',
+          poPONO: pPoNo,
+          pWareCode: widget.pWareCode ?? '',
+          pWareName: widget.pWareName,
+          p_ou_code: widget.p_ou_code,
+        ),
+      ),
+    );
+  } else if (poStatus == '0') {
+    // Original flow - Navigate to Form page
+    await sendPostRequest(pPoNo, vReceiveNo, selectedwhCode ?? '');
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Ssindt01Form(
+          poReceiveNo: poReceiveNo ?? '',
+          pWareCode: widget.pWareCode ?? '',
+          pWareName: widget.pWareName,
+          p_ou_code: widget.p_ou_code,
+        ),
+      ),
+    );
+  } else if (poStatus == '1' && poStep == '9') {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text('${poMessage ?? 'No message available'}'),
+          onClose: () {
+            Navigator.of(context).pop();
+          },
+          onConfirm: () async {
+            Navigator.of(context).pop();
+            if (poStatusconform == '1') {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return DialogStyles.alertMessageDialog(
+                    context: context,
+                    content: Text('${poMessageconform ?? 'No message available'}'),
+                    onClose: () {
+                      Navigator.of(context).pop();
+                    },
+                    onConfirm: () async {
+                      await fetchPoStatusconform(vReceiveNo);
+                      Navigator.of(context).pop();
+                    },
+                  );
+                },
+              );
+            }
+          },
+        );
+      },
+    );
+  } else if (poStatus == '1' && poStep == '') {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text('${poMessageconform ?? 'No message available'}'),
+          onClose: () {
+            Navigator.of(context).pop();
+          },
+          onConfirm: () async {
+            await fetchPoStatusconform(vReceiveNo);
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
   }
+
+  isNavigating = false; // Reset the flag when navigation is complete
+}
+
+Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
+  // Define a map for status values to background colors
+  Map<String, Color> statusColors = {
+    'ตรวจรับบางส่วน': const Color.fromARGB(255, 17, 109, 110),
+    'บันทึก': const Color.fromARGB(255, 118, 113, 113),
+    'รอยืนยัน': const Color.fromARGB(255, 246, 250, 112),
+    'ปกติ': const Color.fromARGB(255, 186, 186, 186),
+    'อนุมัติ': const Color.fromARGB(255, 146, 208, 80),
+  };
+
+  Color statusColor = statusColors[item['status_desc']] ?? Colors.white;
+
+  TextStyle statusStyle = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+  );
+
+  BoxDecoration statusDecoration = BoxDecoration(
+    color: statusColor, // Set background color from statusColors
+    borderRadius: BorderRadius.circular(12.0),
+  );
+
+  // Determine the content for card_qc
+  Widget cardQcWidget;
+  if (item['card_qc'] == '#APP_IMAGES#rt_machine_on.png') {
+    cardQcWidget = Image.asset(
+      'assets/images/rt_machine_on.png',
+      width: 64.0,
+      height: 64.0,
+    );
+  } else if (item['card_qc'] == '#APP_IMAGES#rt_machine_off.png') {
+    cardQcWidget = Image.asset(
+      'assets/images/rt_machine_off.png',
+      width: 64.0,
+      height: 64.0,
+    );
+  } else if (item['card_qc'] == 'No item') {
+    cardQcWidget = SizedBox.shrink();
+  } else {
+    cardQcWidget = Text('');
+  }
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+    child: Card(
+      color: const Color.fromRGBO(204, 235, 252, 1),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      elevation: 5,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            title: Text(item['ap_name'] ?? 'No Name'),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(color: const Color.fromARGB(255, 0, 0, 0)),
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 6.0),
+                      decoration: statusDecoration,
+                      child: Text(
+                        '${item['status_desc'] ?? 'No Status'}',
+                        style: statusStyle,
+                      ),
+                    ),
+                    SizedBox(width: 8.0),
+                    cardQcWidget,
+                  ],
+                ),
+                Text(
+                  '${item['po_date'] ?? ''} ${item['po_no'] ?? ''} \n${item['item_stype_desc'] ?? '\n'}'
+                  '${item['receive_date'] ?? ''} ${item['receive_no'] ?? ''} ${item['warehouse'] ?? ''}',
+                  style: TextStyle(color: Colors.black, fontSize: 12),
+                ),
+                SizedBox(height: 8.0),
+              ],
+            ),
+            contentPadding: EdgeInsets.all(16.0),
+            onTap: () => handleTap(context, item),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {

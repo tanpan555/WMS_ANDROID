@@ -362,13 +362,11 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ', showExitWarning: false),
-      // backgroundColor: const Color(0xFF17153B),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(10),
         child: Form(
           key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -391,7 +389,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                     ),
                   ),
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: 8),
                 GestureDetector(
                   onTap: _showDialog,
                   child: AbsorbPointer(
@@ -411,7 +409,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _documentNumberController,
                   decoration: const InputDecoration(
@@ -423,7 +421,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                   ),
                   style: const TextStyle(color: Colors.black),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
