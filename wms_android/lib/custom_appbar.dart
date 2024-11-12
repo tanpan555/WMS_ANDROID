@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'icon.dart';
+import 'styles.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -78,67 +79,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Future<bool> showExitWarningDialog(BuildContext context) async {
     return await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Row(
-                  // mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.notification_important,
-                      color: Colors.red,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'แจ้งเตือน',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-                Row(
-                  // mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: const Icon(MyIcons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            content: const Text('คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?'),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('Cancel'),
-                  ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('OK'),
-                  ),
-                ],
-              )
-            ],
-          ),
-        ) ??
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return DialogStyles.warningNotSaveDialog(
+                                    context: context,
+                                    textMessage:
+                                        'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?',
+                                    onCloseDialog: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close dialog
+                                    },
+                                    onConfirmDialog: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close dialog
+                                      Navigator.of(context)
+                                          .pop(); // Close main screen or perform desired action
+                                    },
+                                  );
+                                },
+                              ) ??
         false;
   }
 

@@ -111,7 +111,7 @@ class AppStyles {
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
-        side: const BorderSide(color: Colors.green, width: 2),
+        side: const BorderSide(color: Colors.green, width: 1.5),
       ),
       minimumSize: const Size(60, 40),
       padding: const EdgeInsets.all(0),
@@ -406,71 +406,129 @@ class DisableButtonStyles {
 class DialogStyles {
   // ---------------------------------------------------------------------  dialog แจ้งเตือนย้อนกลับ
   static AlertDialog warningNotSaveDialog({
-    required BuildContext context,
-    required String textMessage,
-    required VoidCallback onCloseDialog,
-    required VoidCallback onConfirmDialog,
-  }) {
-    return AlertDialog(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Row(
-            children: [
-              Icon(
-                Icons.notification_important,
-                color: Colors.red,
-              ),
-              SizedBox(width: 10),
-              Text(
-                'แจ้งเตือน',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(MyIcons.close),
-                onPressed: () => onCloseDialog,
-              ),
-            ],
-          ),
-        ],
-      ),
-      content: Text(textMessage),
-      // content: const Text('คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?'),
-      actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+  required BuildContext context,
+  required String textMessage,
+  required VoidCallback onCloseDialog,
+  required VoidCallback onConfirmDialog,
+}) {
+  return AlertDialog(
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Row(
           children: [
-            ElevatedButton(
-              onPressed: () => onCloseDialog,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                side: const BorderSide(color: Colors.grey),
-              ),
-              child: const Text('Cancel'),
+            Icon(
+              Icons.notification_important,
+              color: Colors.red,
             ),
-            const SizedBox(width: 4),
-            ElevatedButton(
-              onPressed: onConfirmDialog,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                side: const BorderSide(color: Colors.grey),
+            SizedBox(width: 10),
+            Text(
+              'แจ้งเตือน',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
               ),
-              child: const Text('OK'),
             ),
           ],
-        )
+        ),
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(MyIcons.close),
+              onPressed: onCloseDialog, // Directly call onCloseDialog here
+            ),
+          ],
+        ),
       ],
-    );
-  }
+    ),
+    content: Text(textMessage),
+    actions: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ElevatedButton(
+            onPressed: onCloseDialog, // Directly call onCloseDialog here
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              side: const BorderSide(color: Colors.grey),
+            ),
+            child: const Text('Cancel'),
+          ),
+          const SizedBox(width: 4),
+          ElevatedButton(
+            onPressed: onConfirmDialog, // Directly call onConfirmDialog here
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              side: const BorderSide(color: Colors.grey),
+            ),
+            child: const Text('OK'),
+          ),
+        ],
+      )
+    ],
+  );
+}
 
+  // ---------------------------------------------------------------------  dialog แจ้งเตือนย้อนกลับปุ่ม Home
+  static AlertDialog homeDialog({
+  required BuildContext context,
+  required String textMessage,
+  required VoidCallback onCloseDialog,
+  required VoidCallback onConfirmDialog,
+}) {
+  return AlertDialog(
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Row(
+          children: [
+            Icon(
+              Icons.notification_important,
+              color: Colors.red,
+            ),
+            SizedBox(width: 10),
+            Text(
+              'แจ้งเตือน',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+    content: Text(textMessage),
+    actions: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ElevatedButton(
+            onPressed: onCloseDialog, // Directly calling onCloseDialog
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              side: const BorderSide(color: Colors.grey),
+            ),
+            child: const Text('ยกเลิก'),
+          ),
+          const SizedBox(width: 4),
+          ElevatedButton(
+            onPressed: onConfirmDialog, // Directly calling onConfirmDialog
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              side: const BorderSide(color: Colors.grey),
+            ),
+            child: const Text('ตกลง'),
+          ),
+        ],
+      )
+    ],
+  );
+}
+
+  // ---------------------------------------------------------------------  dialog สาเหตุการยกเลิก
   static AlertDialog cancelDialog({
     required BuildContext context,
     required VoidCallback onCloseDialog,

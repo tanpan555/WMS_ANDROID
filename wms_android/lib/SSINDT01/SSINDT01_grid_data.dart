@@ -564,8 +564,11 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                       style: AppStyles.ConfirmChecRecievekButtonStyle(),
                       onPressed: () {
                         final updatedQty = receiveQtyController.text;
-                        updateReceiveQty(data['rowid'], updatedQty,
-                            data['rcvlot_supplier'], data['rcvlot_size']);
+                        updateReceiveQty(
+                            data['rowid'],
+                            updatedQty,
+                            data['rcvlot_supplier'].toString(),
+                            data['rcvlot_size'].toString());
                         Navigator.of(context).pop(); // Close the dialog
                       },
                       child: Image.asset(
@@ -1428,87 +1431,56 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Row(
-                                  mainAxisAlignment: MainAxisAlignment
-                                      .spaceBetween, // Space between text and button
-                                  children: [
-                                    Icon(
-                                      Icons
-                                          .notification_important, // Use the bell icon
-                                      color: Colors.red, // Set the color to red
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'แจ้งเตือน',
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.close),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                content: Text(
+                              return DialogStyles.alertMessageCheckDialog(
+                                context: context,
+                                content: const Text(
                                     'ระบบมีการบันทึกรายการทิ้งไว้ หากดึง PO จะเคลียร์รายการทั้งหมดทิ้ง, ต้องการดึง PO ใหม่หรือไม่'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text('ยกเลิก'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  TextButton(
-                                    child: Text('ตกลง'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            content: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text('complete'),
-                                                // Close icon
-                                                IconButton(
-                                                  icon: const Icon(Icons.close),
-                                                  onPressed: () async {
-                                                    Navigator.of(context).pop();
-                                                    await sendPostRequestlineWMS();
-                                                    await sendGetRequestlineWMS();
-                                                  },
-                                                ),
-                                              ],
+                                onClose: () {
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                },
+                                onConfirm: () async {
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        content: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('complete'),
+                                            // Close icon
+                                            IconButton(
+                                              icon: const Icon(Icons.close),
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                              },
                                             ),
-                                            actions: [
-                                              TextButton(
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.white,
-                                                  side: const BorderSide(
-                                                      color: Colors.grey),
-                                                ),
-                                                child: const Text('ตกลง'),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Close the dialog
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
+                                          ],
+                                        ),
+                                        // content: Text(poMessage ?? ''),
+                                        actions: [
+                                          TextButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.white,
+                                              side: const BorderSide(
+                                                  color: Colors.grey),
+                                            ),
+                                            child: const Text('ตกลง'),
+                                            onPressed: () async {
+                                              Navigator.of(context).pop();
+                                              await sendPostRequestlineWMS();
+                                              await sendGetRequestlineWMS();
+                                            },
+                                          ),
+                                        ],
                                       );
                                     },
-                                  ),
-                                ],
+                                  );
+                                },
                               );
                             },
                           );
@@ -1517,30 +1489,30 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                // title: Center(child: Text('คำเตือน')),
                                 content: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'complete',
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                                    Text('complete'),
+                                    // Close icon
                                     IconButton(
-                                      icon: Icon(Icons.close),
+                                      icon: const Icon(Icons.close),
                                       onPressed: () {
-                                        Navigator.of(context).pop();
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
                                       },
                                     ),
                                   ],
                                 ),
-                                actions: <Widget>[
+                                // content: Text(poMessage ?? ''),
+                                actions: [
                                   TextButton(
-                                    child: Text('ตกลง'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      side:
+                                          const BorderSide(color: Colors.grey),
+                                    ),
+                                    child: const Text('ตกลง'),
                                     onPressed: () async {
                                       Navigator.of(context).pop();
                                       await sendPostRequestlineWMS();
@@ -1675,10 +1647,6 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                       ),
                     ),
                     ...dataList.map((data) {
-                      // final rowColor = dataList.indexOf(data).isEven
-                      //     ? Colors.white
-                      //     : Colors.grey[100];
-
                       return InkWell(
                         child: Card(
                           elevation: 8,

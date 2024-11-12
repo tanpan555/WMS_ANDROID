@@ -848,8 +848,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                           item['doc_desc']?.toString() ??
                                           'No description',
                                       onTap: (item) {
-                                        final type =
-                                            item['doc_type'].toString();
+                                        // final type =
+                                        //     item['doc_type'].toString();
                                         final doc = item['doc_desc'].toString();
 
                                         Navigator.of(context).pop();

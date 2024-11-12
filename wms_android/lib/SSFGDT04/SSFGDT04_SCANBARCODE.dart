@@ -425,59 +425,6 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 await fetchBarcodeData(); // Wait for the data fetching process
 
                 if (po_status == '1') {
-                  // Show a popup if the status is '1'
-                  // showDialog(
-                  //   context: context,
-                  //   builder: (BuildContext context) {
-                  //     return AlertDialog(
-                  //       title: Row(
-                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //         children: [
-                  //           Row(
-                  //             children: const [
-                  //               Icon(
-                  //                 Icons
-                  //                     .notification_important, // ไอคอนแจ้งเตือน
-                  //                 color: Colors.red, // สีแดง
-                  //                 size: 30,
-                  //               ),
-                  //               SizedBox(
-                  //                 width: 8, // ระยะห่างระหว่างไอคอนกับข้อความ
-                  //               ),
-                  //               Text('แจ้งเตือน'),
-                  //             ],
-                  //           ),
-                  //           // Close icon
-                  //           IconButton(
-                  //             icon: const Icon(Icons.close),
-                  //             onPressed: () {
-                  //               Navigator.of(context).pop(); // Close the dialog
-                  //             },
-                  //           ),
-                  //         ],
-                  //       ),
-                  //       content: Column(
-                  //         mainAxisSize: MainAxisSize.min,
-                  //         crossAxisAlignment: CrossAxisAlignment.start,
-                  //         children: [
-                  //           Text('$po_message'),
-                  //         ],
-                  //       ),
-                  //       actions: [
-                  //         TextButton(
-                  //           style: ElevatedButton.styleFrom(
-                  //             backgroundColor: Colors.white,
-                  //             side: const BorderSide(color: Colors.grey),
-                  //           ),
-                  //           child: Text('ตกลง'),
-                  //           onPressed: () {
-                  //             Navigator.of(context).pop();
-                  //           },
-                  //         ),
-                  //       ],
-                  //     );
-                  //   },
-                  // );
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -508,7 +455,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                   builder: (BuildContext context) {
                     return DialogStyles.customLovSearchDialog(
                       context: context,
-                      headerText: 'ผู้รับมอบสินค้า *',
+                      headerText: 'เลือก Locator',
                       searchController: _searchController,
                       data: locatorBarcodeItems,
                       docString: (item) =>

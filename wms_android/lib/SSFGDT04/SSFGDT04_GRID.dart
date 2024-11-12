@@ -260,64 +260,71 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   }
 
   Future<void> fetchGridItems([String? url]) async {
-    if (!mounted) return; // ตรวจสอบว่าตัว component ยังถูก mount อยู่หรือไม่
-    setState(() {
-      isLoading = true;
-    });
-    final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_WMS_IN_TRAN_DETAIL/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}/${gb.P_OU_CODE}';
-    try {
-      final response = await http.get(Uri.parse(requestUrl));
-      print(requestUrl);
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final parsedResponse = json.decode(responseBody);
-        if (!mounted) return;
-        if (mounted) {
-          setState(() {
-            // ตรวจสอบข้อมูลก่อนการอัปเดต
-            if (parsedResponse is Map && parsedResponse.containsKey('items')) {
-              dataCard = parsedResponse['items'];
-            } else {
-              dataCard = [];
-            }
-            // อัปเดตและกรองข้อมูลใน gridItems
-            gridItems = List<Map<String, dynamic>>.from(
-                    parsedResponse['items'] ?? [])
-                .where((item) => !deletedItemCodes.contains(item['item_code']))
-                .toList();
-            // คำนวณจำนวน totalCards
-            int totalCards = dataCard.length;
-            List<dynamic> getCurrentPageItems() {
-              int startIndex = currentPage * itemsPerPage;
-              int endIndex = (startIndex + itemsPerPage > totalCards)
-                  ? totalCards
-                  : startIndex + itemsPerPage;
-              return dataCard.sublist(
-                  startIndex, endIndex); // ดึงเฉพาะ card ในหน้าปัจจุบัน
-            }
-
-            isLoading = false;
-          });
-        }
-      } else {
-        if (!mounted) return;
-        setState(() {
-          isLoading = false;
-          errorMessage = 'Failed to load data: ${response.statusCode}';
-        });
-      }
-    } catch (e) {
+  if (!mounted) return; // ตรวจสอบว่าตัว component ยังถูก mount อยู่หรือไม่
+  setState(() {
+    isLoading = true;
+  });
+  final String requestUrl = url ??
+      'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_WMS_IN_TRAN_DETAIL/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}/${gb.P_OU_CODE}';
+  try {
+    final response = await http.get(Uri.parse(requestUrl));
+    print(requestUrl);
+    if (response.statusCode == 200) {
+      final responseBody = utf8.decode(response.bodyBytes);
+      final parsedResponse = json.decode(responseBody);
       if (!mounted) return;
-
       if (mounted) {
         setState(() {
+          // Reset to the first page
+          currentPage = 0;
+
+          // ตรวจสอบข้อมูลก่อนการอัปเดต
+          if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+            dataCard = parsedResponse['items'];
+          } else {
+            dataCard = [];
+          }
+          
+          // อัปเดตและกรองข้อมูลใน gridItems
+          gridItems = List<Map<String, dynamic>>.from(
+                  parsedResponse['items'] ?? [])
+              .where((item) => !deletedItemCodes.contains(item['item_code']))
+              .toList();
+
+          // คำนวณจำนวน totalCards
+          int totalCards = dataCard.length;
+
+          List<dynamic> getCurrentPageItems() {
+            int startIndex = currentPage * itemsPerPage;
+            int endIndex = (startIndex + itemsPerPage > totalCards)
+                ? totalCards
+                : startIndex + itemsPerPage;
+            return dataCard.sublist(
+                startIndex, endIndex); // ดึงเฉพาะ card ในหน้าปัจจุบัน
+          }
+
           isLoading = false;
-          errorMessage = 'Error occurred: $e';
         });
       }
+    } else {
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+        errorMessage = 'Failed to load data: ${response.statusCode}';
+      });
+    }
+  } catch (e) {
+    if (!mounted) return;
+
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+        errorMessage = 'Error occurred: $e';
+      });
     }
   }
+}
+
 
   String? getLink(List<dynamic> links, String rel) {
     final link =
@@ -481,8 +488,6 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     return Scaffold(
       appBar:
           CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
-      // backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-      // endDrawer: CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

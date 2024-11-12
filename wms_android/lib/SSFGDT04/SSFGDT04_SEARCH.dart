@@ -50,7 +50,6 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   bool noDate = false;
   bool chkDate = false;
   bool isLoading = false;
-  int _cursorPosition = 0;
   String? initialFormattedDate;
   final dateInputFormatter = DateInputFormatter();
   bool isDateInvalid = false;

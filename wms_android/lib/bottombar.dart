@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:wms_android/login.dart';
+import 'styles.dart';
 
 // SideSheet implementation
 void showSideSheet({
@@ -78,35 +79,18 @@ class _BottomBarState extends State<BottomBar> {
       case 0:
         if (widget.currentPage == 'show') {
           bool? confirmResult = await showDialog<bool>(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Row(
-                  children: [
-                    Icon(
-                      Icons.notification_important, // Use the bell icon
-                      color: Colors.red, // Set the color to red
-                    ),
-                    SizedBox(
-                        width:
-                            8), // Add some space between the icon and the text
-                    Text('แจ้งเตือน'), // Title text
-                  ],
-                ),
-                content: Text('ยืนยันที่จะย้อนกลับไปหน้าแรกหรือไม่'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: Text('ยกเลิก'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: Text('ตกลง'),
-                  ),
-                ],
-              );
-            },
-          );
+  context: context,
+  builder: (BuildContext context) {
+    return DialogStyles.homeDialog(
+      context: context,
+      textMessage: 'ยืนยันที่จะย้อนกลับไปหน้าแรกหรือไม่',
+      onCloseDialog: () => Navigator.of(context).pop(false),
+      onConfirmDialog: () => Navigator.of(context).pop(true),
+    );
+  },
+);
+
+
 
           if (confirmResult == true) {
             setState(() {
