@@ -444,9 +444,9 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   }
 
   Future<void> getLotList(
-      String poReceiveNo, String recSeq, String ouCode) async {
+      String poReceiveNo, String recSeq) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_get_lot/$poReceiveNo/$recSeq/$ouCode';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_get_lot/$poReceiveNo/$recSeq/${gb.P_ERP_OU_CODE}';
 
     final headers = {
       'Content-Type': 'application/json; charset=UTF-8',
@@ -634,7 +634,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
         print('Status: $poStatus');
         print('Message: $poMessage');
       }
-      await getLotList(widget.poReceiveNo, recSeq, pOu);
+      await getLotList(widget.poReceiveNo, recSeq);
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
@@ -1079,7 +1079,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
         children: info.entries.map((entry) {
           return Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 3.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,

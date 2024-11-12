@@ -58,7 +58,7 @@ class _LotDialogState extends State<LotDialog> {
     if (endIndex > dataLotList.length) {
       endIndex = dataLotList.length;
     }
-
+    
     setState(() {
       paginatedLotList = dataLotList.sublist(startIndex, endIndex);
       totalItems = dataLotList.length;
@@ -97,10 +97,11 @@ class _LotDialogState extends State<LotDialog> {
     super.initState();
     print('poReceiveNo: ${widget.poReceiveNo}');
     print('poPONO: ${widget.poPONO}');
-    getLotList(widget.poReceiveNo, widget.recSeq, widget.ouCode);
+    getLotList(widget.poReceiveNo, widget.recSeq);
     sendGetRequestlineWMS();
     print('======================================');
     print(widget.ouCode);
+    lotCountController.text = widget.lotQTY == '' ? '0' :  widget.lotQTY;
   }
 
   // Future<void> genLot(String v_WMS_NO, String v_PO_NO, String v_rec_seq,
@@ -278,15 +279,17 @@ class _LotDialogState extends State<LotDialog> {
         'v_rec_no': v_rec_no,
         'v_rec_seq': v_rec_seq,
         'p_ou': gb.P_OU_CODE,
+        'p_erp_ou': gb.P_ERP_OU_CODE,
         'app_user': gb.APP_USER,
       }),
     );
 
     print('Updating form with data: ${jsonEncode({
           'v_rec_no': v_rec_no,
-          'v_rec_seq': v_rec_seq,
-          'p_ou': gb.P_OU_CODE,
-          'app_user': gb.APP_USER,
+        'v_rec_seq': v_rec_seq,
+        'p_ou': gb.P_OU_CODE,
+        'p_erp_ou': gb.P_ERP_OU_CODE,
+        'app_user': gb.APP_USER,
         })}');
 
     if (response.statusCode == 200) {
@@ -342,9 +345,10 @@ class _LotDialogState extends State<LotDialog> {
   }
 
   Future<void> getLotList(
-      String poReceiveNo, String recSeq, String ouCode) async {
+      String poReceiveNo, String recSeq) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_get_lot/$poReceiveNo/$recSeq/$ouCode';
+        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_get_lot/$poReceiveNo/$recSeq/${gb.P_ERP_OU_CODE}';
+    print(url);
     final headers = {
       'Content-Type': 'application/json; charset=UTF-8',
     };
@@ -391,7 +395,7 @@ class _LotDialogState extends State<LotDialog> {
         print('Success: $dataList');
 
         // แสดงจำนวนLOT
-        lotCountController.text = dataLotList.length.toString();
+        // lotCountController.text = dataLotList.length.toString();
       } else {
         print('Failed to get data. Status code: ${response.statusCode}');
       }
@@ -694,7 +698,6 @@ class _LotDialogState extends State<LotDialog> {
                             TextFormField(
                               onChanged: (value) {
                                 setState(() {
-                                  check = true;
                                   checkUpdateData = true;
                                 });
                               },
@@ -731,7 +734,6 @@ class _LotDialogState extends State<LotDialog> {
                                             lotQtyController.text,
                                             lotSupplierController.text,
                                             mfgDateController.text,
-                                            ou_code,
                                             recNo,
                                             recSeq,
                                             lotSeq,
@@ -745,8 +747,8 @@ class _LotDialogState extends State<LotDialog> {
                                       : null,
                                   child: Image.asset(
                                     'assets/images/check-mark.png',
-                                    width: 45.0,
-                                    height: 45.0,
+                                    width: 25.0,
+                                    height: 25.0,
                                   ),
                                 ),
                               ],
@@ -1127,8 +1129,7 @@ class _LotDialogState extends State<LotDialog> {
     }
   }
 
-  Future<void> updateLot(String lot_qty, String lot_supplier, String mfg_date,
-      String OU_CODE, String RECEIVE_NO, String REC_SEQ, String lot_seq) async {
+  Future<void> updateLot(String lot_qty, String lot_supplier, String mfg_date, String receiveNo, String rec_seq, String lot_seq) async {
     final url = Uri.parse(
         'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_save_lot_det');
     final response = await http.put(
@@ -1140,11 +1141,11 @@ class _LotDialogState extends State<LotDialog> {
         'lot_qty': lot_qty,
         'lot_supplier': lot_supplier,
         'mfg_date': mfg_date,
-        'OU_CODE': OU_CODE,
-        'RECEIVE_NO': RECEIVE_NO,
-        'REC_SEQ': REC_SEQ,
+        'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
+        'RECEIVE_NO': receiveNo,
+        'REC_SEQ': rec_seq,
         'lot_seq': lot_seq,
-        'APP_USER': gb.APP_USER,
+        // 'APP_USER': gb.APP_USER,
       }),
     );
 
@@ -1152,9 +1153,9 @@ class _LotDialogState extends State<LotDialog> {
           'lot_qty': lot_qty,
           'lot_supplier': lot_supplier,
           'mfg_date': mfg_date,
-          'OU_CODE': OU_CODE,
-          'RECEIVE_NO': RECEIVE_NO,
-          'REC_SEQ': REC_SEQ,
+          'P_ERP_OU_CODE': gb.P_ERP_OU_CODE,
+          'RECEIVE_NO': receiveNo,
+          'REC_SEQ': rec_seq,
           'lot_seq': lot_seq,
         })}');
 
@@ -1201,7 +1202,7 @@ class _LotDialogState extends State<LotDialog> {
         print('Status: $poStatus');
         print('Message: $poMessage');
       }
-      await getLotList(widget.poReceiveNo, recSeq, pOu);
+      await getLotList(widget.poReceiveNo, recSeq);
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
@@ -1302,7 +1303,7 @@ class _LotDialogState extends State<LotDialog> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                    child: Text('OK'),
+                    child: Text('SAVE'),
                     onPressed: () async {
                       await fetchPoStatus(widget.recSeq);
                       if (poreject == '1') {
@@ -1401,10 +1402,9 @@ class _LotDialogState extends State<LotDialog> {
                       child: Text('ADD',
                           style: TextStyle(color: Colors.white, fontSize: 14)),
                       onPressed: () async {
-                        await postLot(
-                            widget.poReceiveNo, widget.recSeq);
+                        await postLot(widget.poReceiveNo, widget.recSeq);
                         await getLotList(
-                            widget.poReceiveNo, widget.recSeq, widget.ouCode);
+                            widget.poReceiveNo, widget.recSeq);
                         setState(() {});
                       },
                     ),
@@ -1437,11 +1437,11 @@ class _LotDialogState extends State<LotDialog> {
                             _showAlertDialogGenLot(context);
                           }
                           await getLotList(
-                              widget.poReceiveNo, widget.recSeq, widget.ouCode);
+                              widget.poReceiveNo, widget.recSeq);
                           setState(() {
                             // ลบcardแล้วแต่แสดงจำนวนLOTเป็นจำนวนเดิม
-                            lotCountController.text =
-                                dataLotList.length.toString();
+                            // lotCountController.text =
+                            //     dataLotList.length.toString();
                           });
                         }),
                   ),
@@ -1625,7 +1625,7 @@ class _LotDialogState extends State<LotDialog> {
             widget.ouCode,
             () async {
               await getLotList(
-                  widget.poReceiveNo, widget.recSeq, widget.ouCode);
+                  widget.poReceiveNo, widget.recSeq);
               setState(() {});
             },
           );
