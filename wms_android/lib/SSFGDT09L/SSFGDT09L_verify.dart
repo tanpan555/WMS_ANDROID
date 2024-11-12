@@ -527,7 +527,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                   child: Container(
                     padding: const EdgeInsets.all(12.0),
                     decoration: BoxDecoration(
-                      color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
+                      color: Colors.lightBlue[100], // พื้นหลังสีเหลืองอ่อน
                       border: Border.all(
                         color: Colors.black, // ขอบสีดำ
                         width: 2.0, // ความกว้างของขอบ 2.0

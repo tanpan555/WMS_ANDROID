@@ -75,7 +75,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
   String? LH_Doc_Type;
   String? LH_Ware;
   String? LH_CAR_ID;
-  String? LH_Doc_No;
+  // String? LH_Doc_No;
   String? LH_Doc_Date;
   String? LH_INVOICE_NO;
   String? LH_DOC_TYPE;
@@ -404,6 +404,8 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
   }
 
   Future<void> getPDF(String docNo, String docType, String docDate) async {
+    print(
+        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${pFlag}/$pDsPdf');
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${pFlag}/$pDsPdf'));
@@ -520,6 +522,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
   }
 
   Future<void> _launchUrl(String pErpDocNo, String pDocType) async {
+    print('&LH_Doc_No=$LH_DOC_NO');
     final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
         '&_repName=/WMS/SSFGOD02A5'
         '&_repFormat=pdf'
@@ -551,7 +554,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
         '&LH_Doc_Type=$LH_Doc_Type'
         '&LH_Ware=$LH_Ware'
         '&LH_CAR_ID=$LH_CAR_ID'
-        '&LH_Doc_No=$LH_Doc_No'
+        '&LH_Doc_No=$LH_DOC_NO'
         '&LH_Doc_Date=$LH_Doc_Date'
         '&LH_INVOICE_NO=$LH_INVOICE_NO'
         '&LB_SEQ=$LB_SEQ'
@@ -609,7 +612,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
         '&LH_Doc_Type=$LH_Doc_Type'
         '&LH_Ware=$LH_Ware'
         '&LH_CAR_ID=$LH_CAR_ID'
-        '&LH_Doc_No=$LH_Doc_No'
+        '&LH_Doc_No=$LH_DOC_NO'
         '&LH_Doc_Date=$LH_Doc_Date'
         '&LH_INVOICE_NO=$LH_INVOICE_NO'
         '&LB_SEQ=$LB_SEQ'

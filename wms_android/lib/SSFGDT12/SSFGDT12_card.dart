@@ -8,6 +8,7 @@ import 'package:wms_android/loading.dart';
 import 'package:wms_android/centered_message.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
+import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'SSFGDT12_form.dart';
 
 class Ssfgdt12Card extends StatefulWidget {
@@ -40,10 +41,10 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
   List<dynamic> displayedData = [];
   String data_null = 'null';
 
-  bool isCardDisabled = false;
   bool isLoading = true;
-  int currentPage = 0; // หน้าปัจจุบัน
-  final int itemsPerPage = 15; // จำนวนรายการต่อหน้า
+  bool isCardDisabled = false;
+  int currentPage = 0;
+  final int itemsPerPage = 15;
 
   ScrollController _scrollController = ScrollController();
 
@@ -83,7 +84,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
     }
 
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_1_SelectDataCard/${widget.pErpOuCode}/${widget.docNo.isNotEmpty ? widget.docNo : 'null'}/${widget.status}/${widget.browser_language}';
+        'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_1_SelectDataCard/${globals.P_ERP_OU_CODE}/${widget.docNo.isNotEmpty ? widget.docNo : 'null'}/${widget.status}/${globals.BROWSER_LANGUAGE}';
 
     try {
       final response = await http.get(Uri.parse(requestUrl));
@@ -183,243 +184,348 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
       appBar: CustomAppBar(title: 'ผลการตรวจนับ', showExitWarning: false),
       body: Padding(
         padding: EdgeInsets.all(10.0),
-        child: isLoading
-            ? Center(child: LoadingIndicator())
-            : displayedData.isEmpty
-                ? const Center(child: CenteredMessage())
-                : ListView.builder(
-                    controller: _scrollController,
-                    itemCount: getCurrentData().length + 1,
-                    itemBuilder: (context, index) {
-                      if (index < getCurrentData().length) {
-                        var item = getCurrentData()[index];
+        child: Column(
+          children: [
+            Expanded(
+              child: isLoading
+                  ? Center(child: LoadingIndicator())
+                  : displayedData.isEmpty
+                      ? const Center(child: CenteredMessage())
+                      : SingleChildScrollView(
+                          controller: _scrollController,
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: getCurrentData().length + 1,
+                            itemBuilder: (context, index) {
+                              if (index < getCurrentData().length) {
+                                var item = getCurrentData()[index];
 
-                        Color cardColor;
-                        String statusText;
-                        String iconImageYorN;
-                        switch (item['status']) {
-                          ////      WMS คลังวัตถุดิบ
-                          case 'N':
-                            // iconData = Icons.arrow_circle_right_outlined;
-                            cardColor = Color.fromRGBO(246, 250, 112, 1.0);
-                            statusText = 'รอตรวจนับ';
-                            break;
-                          case 'T':
-                            // iconData = Icons.arrow_circle_right_outlined;
-                            cardColor = Color.fromRGBO(208, 206, 206, 1.0);
-                            statusText = 'กำลังตรวจนับ';
-                            break;
-                          case 'X':
-                            // iconData = Icons.arrow_circle_right_outlined;
-                            cardColor = Color.fromRGBO(146, 208, 80, 1.0);
-                            statusText = 'ยืนยันตรวจนับแล้ว';
-                            break;
-                          case 'A':
-                            // iconData = Icons.arrow_circle_right_outlined;
-                            cardColor = Color.fromRGBO(208, 206, 206, 1.0);
-                            statusText = 'กำลังปรับปรุงจำนวน/มูลค่า';
-                            break;
-                          case 'B':
-                            // iconData = Icons.arrow_circle_right_outlined;
-                            cardColor = Color.fromRGBO(146, 208, 80, 1.0);
-                            statusText = 'ยืนยันปรับปรุงจำนวน/มูลค่าแล้ว';
-                            break;
-                          default:
-                            // iconData = Icons.help; // Default icon
-                            cardColor = Colors.grey;
-                            statusText = 'Unknown';
-                        }
-                        switch (item['status']) {
-                          ////      WMS คลังวัตถุดิบ
-                          case 'N':
-                            iconImageYorN = 'assets/images/rt_machine_off.png';
-                            break;
-                          case 'X':
-                            iconImageYorN = 'assets/images/rt_machine_on.png';
-                            break;
-                          default:
-                            iconImageYorN = 'assets/images/rt_machine_off.png';
-                        }
+                                Color cardColor;
+                                String statusText;
+                                String iconImageYorN;
+                                switch (item['status']) {
+                                  ////      WMS คลังวัตถุดิบ
+                                  case 'N':
+                                    // iconData = Icons.arrow_circle_right_outlined;
+                                    cardColor =
+                                        Color.fromRGBO(246, 250, 112, 1.0);
+                                    statusText = 'รอตรวจนับ';
+                                    break;
+                                  case 'T':
+                                    // iconData = Icons.arrow_circle_right_outlined;
+                                    cardColor =
+                                        Color.fromRGBO(208, 206, 206, 1.0);
+                                    statusText = 'กำลังตรวจนับ';
+                                    break;
+                                  case 'X':
+                                    // iconData = Icons.arrow_circle_right_outlined;
+                                    cardColor =
+                                        Color.fromRGBO(146, 208, 80, 1.0);
+                                    statusText = 'ยืนยันตรวจนับแล้ว';
+                                    break;
+                                  case 'A':
+                                    // iconData = Icons.arrow_circle_right_outlined;
+                                    cardColor =
+                                        Color.fromRGBO(208, 206, 206, 1.0);
+                                    statusText = 'กำลังปรับปรุงจำนวน/มูลค่า';
+                                    break;
+                                  case 'B':
+                                    // iconData = Icons.arrow_circle_right_outlined;
+                                    cardColor =
+                                        Color.fromRGBO(146, 208, 80, 1.0);
+                                    statusText =
+                                        'ยืนยันปรับปรุงจำนวน/มูลค่าแล้ว';
+                                    break;
+                                  default:
+                                    // iconData = Icons.help; // Default icon
+                                    cardColor = Colors.grey;
+                                    statusText = 'Unknown';
+                                }
+                                switch (item['status']) {
+                                  ////      WMS คลังวัตถุดิบ
+                                  case 'N':
+                                    iconImageYorN =
+                                        'assets/images/rt_machine_off.png';
+                                    break;
+                                  case 'X':
+                                    iconImageYorN =
+                                        'assets/images/rt_machine_on.png';
+                                    break;
+                                  default:
+                                    iconImageYorN =
+                                        'assets/images/rt_machine_off.png';
+                                }
 
-                        return Card(
-                          elevation: 8.0,
-                          margin: const EdgeInsets.symmetric(vertical: 8.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          color: const Color.fromRGBO(204, 235, 252, 1.0),
-                          child: InkWell(
-                            onTap: isCardDisabled
-                                ? null
-                                : () async {
-                                    setState(() {
-                                      isCardDisabled = true;
-                                    });
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Ssfgdt12Form(
-                                          docNo: item['doc_no'],
-                                          pErpOuCode: widget.pErpOuCode,
-                                          browser_language:
-                                              widget.browser_language,
-                                          wareCode:
-                                              item['ware_code'] ?? 'ware_code',
-                                          pWareCode: widget.pWareCode,
-                                          p_attr1: widget.p_attr1,
-                                        ),
-                                      ),
-                                    ).then((value) async {
-                                      setState(() {
-                                        isCardDisabled = false;
-                                      });
-                                    });
-                                  },
-                            borderRadius: BorderRadius.circular(15.0),
-                            child: Stack(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        item['doc_no'] ?? '',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18.0),
-                                      ),
-                                      SizedBox(height: 10.0),
-                                      item['ware_code'] == null
-                                          ? Text(
-                                              '${item['doc_date'] ?? ''} ${item['doc_no'] ?? ''}',
-                                              style: TextStyle(
-                                                  fontSize: 14.0,
-                                                  color: Colors.black54),
-                                            )
-                                          : Text(
-                                              '${item['doc_date'] ?? ''} ${item['doc_no'] ?? ''} ${item['ware_code'] ?? ''}',
-                                              style: TextStyle(
-                                                  fontSize: 14.0,
-                                                  color: Colors.black54),
-                                            ),
-                                    ],
+                                return Card(
+                                  elevation: 8.0,
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
                                   ),
-                                ),
-                                Positioned(
-                                  top: 8.0,
-                                  right: 8.0,
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 12.0, vertical: 6.0),
-                                        decoration: BoxDecoration(
-                                          color: cardColor,
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                          border: Border.all(
-                                              color: cardColor, width: 2.0),
-                                        ),
-                                        child: Text(
-                                          statusText,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
+                                  color:
+                                      const Color.fromRGBO(204, 235, 252, 1.0),
+                                  child: InkWell(
+                                    onTap: isCardDisabled
+                                        ? null
+                                        : () async {
+                                            setState(() {
+                                              isCardDisabled = true;
+                                            });
+                                            await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Ssfgdt12Form(
+                                                  docNo: item['doc_no'],
+                                                  pErpOuCode: widget.pErpOuCode,
+                                                  browser_language:
+                                                      widget.browser_language,
+                                                  wareCode: item['ware_code'] ??
+                                                      'ware_code',
+                                                  pWareCode: widget.pWareCode,
+                                                  p_attr1: widget.p_attr1,
+                                                ),
+                                              ),
+                                            ).then((value) async {
+                                              setState(() {
+                                                isCardDisabled = false;
+                                              });
+                                            });
+                                          },
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    child: Stack(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                item['doc_no'] ?? '',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18.0),
+                                              ),
+                                              SizedBox(height: 10.0),
+                                              item['ware_code'] == null
+                                                  ? Text(
+                                                      '${item['doc_date'] ?? ''} ${item['doc_no'] ?? ''}',
+                                                      style: TextStyle(
+                                                          fontSize: 14.0,
+                                                          color:
+                                                              Colors.black54),
+                                                    )
+                                                  : Text(
+                                                      '${item['doc_date'] ?? ''} ${item['doc_no'] ?? ''} ${item['ware_code'] ?? ''}',
+                                                      style: TextStyle(
+                                                          fontSize: 14.0,
+                                                          color:
+                                                              Colors.black54),
+                                                    ),
+                                            ],
                                           ),
                                         ),
-                                      ),
-                                      // SizedBox(height: 5.0),
-                                      SizedBox(
-                                        width: 100,
-                                        height: 40,
-                                        child: Image.asset(
-                                          iconImageYorN,
-                                          fit: BoxFit.contain,
+                                        Positioned(
+                                          top: 8.0,
+                                          right: 8.0,
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 12.0,
+                                                    vertical: 6.0),
+                                                decoration: BoxDecoration(
+                                                  color: cardColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12.0),
+                                                  border: Border.all(
+                                                      color: cardColor,
+                                                      width: 2.0),
+                                                ),
+                                                child: Text(
+                                                  statusText,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                              // SizedBox(height: 5.0),
+                                              SizedBox(
+                                                width: 100,
+                                                height: 40,
+                                                child: Image.asset(
+                                                  iconImageYorN,
+                                                  fit: BoxFit.contain,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      } else {
-                        // displayedData.length <= 3
-                        // ?
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                currentPage > 0
-                                    ? ElevatedButton(
-                                        onPressed: currentPage > 0
-                                            ? () {
-                                                loadPrevPage();
-                                              }
-                                            : null,
-                                        style: ButtonStyles.previousButtonStyle,
-                                        child:
-                                            ButtonStyles.previousButtonContent,
-                                      )
-                                    : ElevatedButton(
-                                        onPressed: null,
-                                        style: DisableButtonStyles
-                                            .disablePreviousButtonStyle,
-                                        child: DisableButtonStyles
-                                            .disablePreviousButtonContent,
-                                      )
-                              ],
-                            ),
-                            // const SizedBox(width: 30),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Center(
-                                  child: Text(
-                                    '${(currentPage * itemsPerPage) + 1} - ${((currentPage + 1) * itemsPerPage).clamp(1, displayedData.length)}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                                      ],
                                     ),
                                   ),
-                                )
-                              ],
-                            ),
-                            // const SizedBox(width: 30),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                currentPage < totalPages() - 1
-                                    ? ElevatedButton(
-                                        onPressed:
-                                            currentPage < totalPages() - 1
-                                                ? () {
-                                                    loadNextPage();
-                                                  }
-                                                : null,
-                                        style: ButtonStyles.nextButtonStyle,
-                                        child: ButtonStyles.nextButtonContent(),
+                                );
+                              } else {
+                                // displayedData.length <= 3
+                                // ?
+                                return getCurrentData().length > 3
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              currentPage > 0
+                                                  ? ElevatedButton(
+                                                      onPressed: currentPage > 0
+                                                          ? () {
+                                                              loadPrevPage();
+                                                            }
+                                                          : null,
+                                                      style: ButtonStyles
+                                                          .previousButtonStyle,
+                                                      child: ButtonStyles
+                                                          .previousButtonContent,
+                                                    )
+                                                  : ElevatedButton(
+                                                      onPressed: null,
+                                                      style: DisableButtonStyles
+                                                          .disablePreviousButtonStyle,
+                                                      child: DisableButtonStyles
+                                                          .disablePreviousButtonContent,
+                                                    )
+                                            ],
+                                          ),
+                                          // const SizedBox(width: 30),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Center(
+                                                child: Text(
+                                                  '${(currentPage * itemsPerPage) + 1} - ${displayedData.isNotEmpty ? ((currentPage + 1) * itemsPerPage).clamp(1, displayedData.length) : 0}',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          // const SizedBox(width: 30),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              currentPage < totalPages() - 1
+                                                  ? ElevatedButton(
+                                                      onPressed: currentPage <
+                                                              totalPages() - 1
+                                                          ? () {
+                                                              loadNextPage();
+                                                            }
+                                                          : null,
+                                                      style: ButtonStyles
+                                                          .nextButtonStyle,
+                                                      child: ButtonStyles
+                                                          .nextButtonContent(),
+                                                    )
+                                                  : ElevatedButton(
+                                                      onPressed: null,
+                                                      style: DisableButtonStyles
+                                                          .disableNextButtonStyle,
+                                                      child: DisableButtonStyles
+                                                          .disablePreviousButtonContent,
+                                                    ),
+                                            ],
+                                          ),
+                                        ],
                                       )
-                                    : ElevatedButton(
-                                        onPressed: null,
-                                        style: DisableButtonStyles
-                                            .disableNextButtonStyle,
-                                        child: DisableButtonStyles
-                                            .disablePreviousButtonContent,
-                                      ),
-                              ],
-                            ),
-                          ],
-                        );
-                        // : const SizedBox.shrink(),
-                      }
-                    },
-                  ),
+                                    : const SizedBox.shrink();
+                              }
+                            },
+                          ),
+                        ),
+            ),
+            !isLoading && getCurrentData().length > 0
+                ? getCurrentData().length <= 3
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              currentPage > 0
+                                  ? ElevatedButton(
+                                      onPressed: currentPage > 0
+                                          ? () {
+                                              loadPrevPage();
+                                            }
+                                          : null,
+                                      style: ButtonStyles.previousButtonStyle,
+                                      child: ButtonStyles.previousButtonContent,
+                                    )
+                                  : ElevatedButton(
+                                      onPressed: null,
+                                      style: DisableButtonStyles
+                                          .disablePreviousButtonStyle,
+                                      child: DisableButtonStyles
+                                          .disablePreviousButtonContent,
+                                    )
+                            ],
+                          ),
+                          // const SizedBox(width: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Text(
+                                  '${(currentPage * itemsPerPage) + 1} - ${displayedData.isNotEmpty ? ((currentPage + 1) * itemsPerPage).clamp(1, displayedData.length) : 0}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          // const SizedBox(width: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              currentPage < totalPages() - 1
+                                  ? ElevatedButton(
+                                      onPressed: currentPage < totalPages() - 1
+                                          ? () {
+                                              loadNextPage();
+                                            }
+                                          : null,
+                                      style: ButtonStyles.nextButtonStyle,
+                                      child: ButtonStyles.nextButtonContent(),
+                                    )
+                                  : ElevatedButton(
+                                      onPressed: null,
+                                      style: DisableButtonStyles
+                                          .disableNextButtonStyle,
+                                      child: DisableButtonStyles
+                                          .disablePreviousButtonContent,
+                                    ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : const SizedBox.shrink()
+                : const SizedBox.shrink(),
+          ],
+        ),
       ),
       bottomNavigationBar: const BottomBar(
         currentPage: 'show',

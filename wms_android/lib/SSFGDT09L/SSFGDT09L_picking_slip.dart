@@ -63,7 +63,7 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
   Future<void> fetchData([String? url]) async {
     isLoading = true;
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO}';
+        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO.isEmpty ? 'null' : widget.pMoDoNO}';
     try {
       final response = await http.get(Uri.parse(requestUrl));
 

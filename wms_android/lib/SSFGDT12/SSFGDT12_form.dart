@@ -9,6 +9,7 @@ import 'package:wms_android/loading.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/checkDataFormate.dart';
+import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'SSFGDT12_grid.dart';
 
 class Ssfgdt12Form extends StatefulWidget {
@@ -128,7 +129,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
     isLoading = true;
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_2_SelectDataForm/${widget.pErpOuCode}/${widget.docNo}/${widget.browser_language}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_2_SelectDataForm/${globals.P_ERP_OU_CODE}/${widget.docNo}/${globals.BROWSER_LANGUAGE}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
@@ -191,7 +192,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   Future<void> selectNbCountStaff(String nbStaffCountName) async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_2_Select_nbCountStaffName/${widget.pErpOuCode}/${widget.docNo}/$nbStaffCountName'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_2_Select_nbCountStaffName/${globals.P_ERP_OU_CODE}/${widget.docNo}/$nbStaffCountName'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =

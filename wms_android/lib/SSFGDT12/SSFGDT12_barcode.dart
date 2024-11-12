@@ -187,7 +187,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
   Future<void> fetchDataBarcode() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_4_BarcodeSelectDataBarcode/${widget.pErpOuCode}/${widget.docNo}/${widget.pWareCode}/$appUser/${dataLocator.isNotEmpty ? dataLocator : 'null'}/$barcodeTextString')); // ตรวจสอบให้แน่ใจว่า URL ถูกต้อง
+          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_4_BarcodeSelectDataBarcode/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.pWareCode}/${globals.APP_USER}/${dataLocator.isNotEmpty ? dataLocator : 'null'}/$barcodeTextString')); // ตรวจสอบให้แน่ใจว่า URL ถูกต้อง
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
         final Map<String, dynamic> dataBarcode =
@@ -614,6 +614,8 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
                         countQuantityBarcodeController.clear();
                         locatorCodeBarcodeController.clear();
                         // dataGradeStatuslist.clear();
+
+                        FocusScope.of(context).requestFocus(_focusNode);
                       });
                     },
                     style: AppStyles.cancelButtonStyle(),

@@ -232,11 +232,7 @@ class _Ssfgdt31SearchState extends State<Ssfgdt31Search> {
                               dataLovStatusController.text = 'ทั้งหมด';
                               dateController.clear();
                               pSoNoController.clear();
-
-                              print('selectedItem : $selectedItem');
-                              print('statusDESC : $statusDESC');
-                              print(
-                                  'dataLovStatusController : $dataLovStatusController');
+                              isDateInvalid = false;
                             });
                           },
                           style: AppStyles.EraserButtonStyle(),

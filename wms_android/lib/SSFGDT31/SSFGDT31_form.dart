@@ -181,7 +181,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_DataForm/${globals.P_ERP_OU_CODE}/${widget.pDocNo}/${widget.pDocType}/${globals.ATTR1}'));
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_2_DataForm/${globals.P_ERP_OU_CODE}/${widget.pDocNo}/${widget.pDocType}/${globals.ATTR1}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
@@ -279,7 +279,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
   Future<void> lovDocType() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_SelectLovDocType/${globals.ATTR1}'));
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_2_SelectLovDocType/${globals.ATTR1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -306,7 +306,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
   Future<void> lovMoDoNo() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_SelectLovMoDoNo'));
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_2_SelectLovMoDoNo'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -333,7 +333,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
   Future<void> lovRefNo() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_SelectLovRefNo/${globals.P_ERP_OU_CODE}/${globals.ATTR1}/${widget.pWareCode}'));
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_2_SelectLovRefNo/${globals.P_ERP_OU_CODE}/${globals.ATTR1}/${widget.pWareCode}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -360,7 +360,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
   Future<void> lovCancel() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_SelectLovCancel'));
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_2_SelectLovCancel'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -393,7 +393,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
     print('pMoDoNo in selectCust   : $pMoDoNo type : ${pMoDoNo.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_Cust/$pMoDoNo'));
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_2_Cust/$pMoDoNo'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
@@ -436,7 +436,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
     print('arCode  in chkCust  : $arCode type : ${arCode.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_CheckCust/$custCode/$arCode'));
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_2_CheckCust/$custCode/$arCode'));
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
         final Map<String, dynamic> dataMessage = jsonDecode(utf8
@@ -485,7 +485,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
   Future<void> changeRefNo(String soNoForChk) async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_ChangeRefNo/$soNoForChk'));
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_2_ChangeRefNo/$soNoForChk'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
@@ -520,7 +520,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
 
   Future<void> updateForm() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_UpdateForm';
+        '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_2_UpdateForm';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -574,7 +574,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
 
   Future<void> submitData() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_SubmitForm';
+        '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_2_SubmitForm';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -655,7 +655,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
   Future<void> deleteForm(String cancelCode) async {
     print('cancelCode : $cancelCode');
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_2_CancelForm';
+        '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_2_CancelForm';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -1150,7 +1150,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
               shidForChk =
                   '${item['schid']}' == '' ? 'null' : '${item['schid']}';
               if (returnStatusLovMoDoNo.isNotEmpty &&
-                  returnStatusLovRefNo.isEmpty) {
+                  returnStatusLovRefNo == 'null') {
                 selectCust(returnStatusLovMoDoNo);
               }
               print('shidForChk : $shidForChk');

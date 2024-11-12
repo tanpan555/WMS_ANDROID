@@ -10,6 +10,7 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/centered_message.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
+import 'SSFGDT31_picking_slip.dart';
 
 class Ssfgdt31Grid extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจากเลือ lov
@@ -70,9 +71,11 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
   }
 
   Future<void> fetchData([String? url]) async {
+    print(
+        '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_3_DataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}');
     isLoading = true;
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_3_DataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}';
+        '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_3_DataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}';
     try {
       final response = await http.get(Uri.parse(requestUrl));
 
@@ -93,10 +96,10 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
             prevLink = getLink(links, 'prev');
             countData = parsedResponse['count'];
             urlLoad = url ??
-                'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_3_DataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}';
+                '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_3_DataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}';
             if (url.toString().isNotEmpty) {
               extractLastNumberFromUrl(url.toString() ==
-                      'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_3_DataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}'
+                      '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_3_DataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}'
                   ? 'null'
                   : url.toString());
             }
@@ -111,10 +114,11 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
       } else {
         if (mounted) {
           setState(() {
-            print('Failed to load data: ${response.statusCode}');
+            print('Failed to load data fetchData: ${response.statusCode}');
           });
         }
-        print('HTTP Error: ${response.statusCode} - ${response.reasonPhrase}');
+        print(
+            'HTTP Error fetchData : ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
       // Handle exceptions that may occur
@@ -187,7 +191,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
   Future<void> countDataGridCard(bool checking) async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_3_CountDataGrid/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}'));
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_3_CountDataGrid/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}'));
 
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
@@ -218,7 +222,8 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
         }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
-        print('ดึงข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+        print(
+            'ดึงข้อมูลล้มเหลว.countDataGridCard  รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
       print('Error countDataGridCard: $e');
@@ -249,11 +254,11 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
 
       if (multiplication >= limitPage) {
         lastURL =
-            'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_3_DataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}';
+            '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_3_DataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}';
 
         if (lastURL != '') {
           print(
-              'โหลดหน้าสุดท้าย : http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_3_DataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}');
+              'โหลดหน้าสุดท้าย : ${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_3_DataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}');
           fetchData(lastURL);
           countDataGridCard(true);
         }
@@ -269,7 +274,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
       int packQty, String itemCode, String packCode, String rowID) async {
     print('packQty in updatePackQty: $packQty type : ${packQty.runtimeType}');
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_UpdatePackQty';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_UpdatePackQty';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -308,7 +313,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
 
   Future<void> deleteCard(String pSeq, String pItemCode) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_deleteCardGrid';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_deleteCardGrid';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -366,7 +371,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
 
   Future<void> deleteCardAll() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_DeleteCardAll';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_DeleteCardAll';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -434,20 +439,17 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // การเรียกใช้งาน
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => Ssfgdt09lPickingSlip(
-                    //             pErpOuCode: globals.P_ERP_OU_CODE,
-                    //             pOuCode: globals.P_OU_CODE,
-                    //             pMoDoNO: widget.moDoNo,
-                    //             pDocNo: widget.docNo,
-                    //           )),
-                    // ).then((value) async {
-                    //   showRecordRRR = 0;
-                    //   await fetchData(urlLoad);
-                    // });
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Ssfgdt09lPickingSlip(
+                                pMoDoNO: widget.moDoNo,
+                                pDocNo: widget.docNo,
+                              )),
+                    ).then((value) async {
+                      showRecordRRR = 0;
+                      await fetchData(urlLoad);
+                    });
                   },
                   style: AppStyles.cancelButtonStyle(),
                   child: Text(
@@ -494,17 +496,16 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        flex: 5,
+                        // flex: 5,
                         child: Container(
                           padding: const EdgeInsets.all(12.0),
                           decoration: BoxDecoration(
-                            color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
+                            color: Colors.yellow[200],
                             border: Border.all(
-                              color: Colors.black, // ขอบสีดำ
-                              width: 2.0, // ความกว้างของขอบ 2.0
+                              color: Colors.black,
+                              width: 2.0,
                             ),
-                            borderRadius: BorderRadius.circular(
-                                8.0), // เพิ่มมุมโค้งให้กับ Container
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: Center(
                             child: Text(
@@ -518,31 +519,31 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                           ),
                         ),
                       ),
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                          padding: const EdgeInsets.all(12.0),
-                          decoration: BoxDecoration(
-                            color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
-                            border: Border.all(
-                              color: Colors.black, // ขอบสีดำ
-                              width: 2.0, // ความกว้างของขอบ 2.0
-                            ),
-                            borderRadius: BorderRadius.circular(
-                                8.0), // เพิ่มมุมโค้งให้กับ Container
-                          ),
-                          child: Center(
-                            child: Text(
-                              widget.moDoNo,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Expanded(
+                      //   flex: 3,
+                      //   child: Container(
+                      //     padding: const EdgeInsets.all(12.0),
+                      //     decoration: BoxDecoration(
+                      //       color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
+                      //       border: Border.all(
+                      //         color: Colors.black, // ขอบสีดำ
+                      //         width: 2.0, // ความกว้างของขอบ 2.0
+                      //       ),
+                      //       borderRadius: BorderRadius.circular(
+                      //           8.0), // เพิ่มมุมโค้งให้กับ Container
+                      //     ),
+                      //     child: Center(
+                      //       child: Text(
+                      //         widget.moDoNo,
+                      //         style: TextStyle(
+                      //           color: Colors.black,
+                      //           fontWeight: FontWeight.bold,
+                      //           fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                   const SizedBox(height: 8),

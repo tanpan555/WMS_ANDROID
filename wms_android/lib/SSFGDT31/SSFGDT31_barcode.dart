@@ -7,9 +7,8 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:wms_android/icon.dart';
 import 'package:wms_android/styles.dart';
-import 'SSFGDT09L_reason.dart';
 
-class Ssfgdt09lBarcode extends StatefulWidget {
+class Ssfgdt31Barcode extends StatefulWidget {
   final String pWareCode;
   final String pErpOuCode;
   final String pOuCode;
@@ -19,7 +18,7 @@ class Ssfgdt09lBarcode extends StatefulWidget {
   final String pDocType;
   final String pDocDate;
   final String pMoDoNO;
-  Ssfgdt09lBarcode({
+  Ssfgdt31Barcode({
     required this.pWareCode,
     required this.pErpOuCode,
     required this.pOuCode,
@@ -32,10 +31,10 @@ class Ssfgdt09lBarcode extends StatefulWidget {
     Key? key,
   }) : super(key: key);
   @override
-  _Ssfgdt09lBarcodeState createState() => _Ssfgdt09lBarcodeState();
+  _Ssfgdt31BarcodeState createState() => _Ssfgdt31BarcodeState();
 }
 
-class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
+class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
   String barCode = '';
   String locatorForm = '';
   String itemCode = '';
@@ -63,8 +62,6 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
   String messageSubmitAddline = '';
 
   String previousValue = '';
-  String dataLocatorForSaveDataForm = '';
-  String dataLocatorForSaveDataTo = '';
 
   bool chkShowDialogcomfirmMessage = false;
 
@@ -382,7 +379,6 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
               if (textForm == 'F') {
                 locatorForm = poRet;
                 locatorFormController.text = poRet;
-                dataLocatorForSaveDataForm = textInput;
 
                 if (locatorForm.isNotEmpty) {
                   Navigator.of(context).pop();
@@ -401,7 +397,6 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
               if (textForm == 'T') {
                 locatorTo = poRet;
                 locatorToController.text = poRet;
-                dataLocatorForSaveDataTo = textInput;
 
                 if (locatorTo.isNotEmpty) {
                   Navigator.of(context).pop();
@@ -547,7 +542,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   child: Container(
                     padding: const EdgeInsets.all(12.0),
                     decoration: BoxDecoration(
-                      color: Colors.lightBlue[100], // พื้นหลังสีเหลืองอ่อน
+                      color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
                       border: Border.all(
                         color: Colors.black, // ขอบสีดำ
                         width: 2.0, // ความกว้างของขอบ 2.0
@@ -987,47 +982,47 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Ssfgdt09lReason(
-                                    pOuCode: widget.pOuCode,
-                                    pErpOuCode: widget.pErpOuCode,
-                                    pDocNo: widget.pDocNo,
-                                    pMoDoNO: widget.pMoDoNO,
-                                    pItemCode: itemCode,
-                                    pQty: quantity,
-                                    pBarcode: barCode,
-                                    pLotNo: lotNo,
-                                  )),
-                        ).then((value) {
-                          // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                          Navigator.of(context).pop();
-                          chkShowDialogcomfirmMessage = false;
-                          barCode = '';
-                          locatorForm = '';
-                          itemCode = '';
-                          lotNo = '';
-                          quantity = '';
-                          locatorTo = '';
-                          lotQty = '';
-                          lotUnit = '';
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => Ssfgdt09lReason(
+                        //             pOuCode: widget.pOuCode,
+                        //             pErpOuCode: widget.pErpOuCode,
+                        //             pDocNo: widget.pDocNo,
+                        //             pMoDoNO: widget.pMoDoNO,
+                        //             pItemCode: itemCode,
+                        //             pQty: quantity,
+                        //             pBarcode: barCode,
+                        //             pLotNo: lotNo,
+                        //           )),
+                        // ).then((value) {
+                        //   // เมื่อกลับมาหน้าเดิม เรียก fetchData
+                        //   Navigator.of(context).pop();
+                        //   chkShowDialogcomfirmMessage = false;
+                        //   barCode = '';
+                        //   locatorForm = '';
+                        //   itemCode = '';
+                        //   lotNo = '';
+                        //   quantity = '';
+                        //   locatorTo = '';
+                        //   lotQty = '';
+                        //   lotUnit = '';
 
-                          statusFetchDataBarcode = '';
-                          messageFetchDataBarcode = '';
-                          valIDFetchDataBarcode = '';
+                        //   statusFetchDataBarcode = '';
+                        //   messageFetchDataBarcode = '';
+                        //   valIDFetchDataBarcode = '';
 
-                          barcodeController.clear();
-                          locatorFormController.clear();
-                          itemCodeController.clear();
-                          lotNoController.clear();
-                          quantityController.clear();
-                          locatorToController.clear();
-                          lotQtyController.clear();
-                          lotUnitController.clear();
+                        //   barcodeController.clear();
+                        //   locatorFormController.clear();
+                        //   itemCodeController.clear();
+                        //   lotNoController.clear();
+                        //   quantityController.clear();
+                        //   locatorToController.clear();
+                        //   lotQtyController.clear();
+                        //   lotUnitController.clear();
 
-                          barcodeFocusNode.requestFocus();
-                        });
+                        //   barcodeFocusNode.requestFocus();
+                        // });
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -1169,13 +1164,6 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                     icon: const Icon(MyIcons.close),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      if (locatorForm.isNotEmpty &&
-                          locatorFormChk.isEmpty &&
-                          dataLocatorForSaveDataForm.isNotEmpty) {
-                        setState(() {
-                          locatorFormChk = dataLocatorForSaveDataForm;
-                        });
-                      }
                       // locatorFormChkController.clear();
                       // locatorFormChk = '';
                     },
@@ -1214,13 +1202,6 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).pop();
-                          if (locatorForm.isNotEmpty &&
-                              locatorFormChk.isEmpty &&
-                              dataLocatorForSaveDataForm.isNotEmpty) {
-                            setState(() {
-                              locatorFormChk = dataLocatorForSaveDataForm;
-                            });
-                          }
                           // locatorFormChkController.clear();
                           // locatorFormChk = '';
                         },
@@ -1286,13 +1267,6 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                     icon: const Icon(MyIcons.close),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      if (locatorTo.isNotEmpty &&
-                          locatorToChk.isEmpty &&
-                          dataLocatorForSaveDataTo.isNotEmpty) {
-                        setState(() {
-                          locatorToChk = dataLocatorForSaveDataTo;
-                        });
-                      }
                       // locatorToChkController.clear();
                       // locatorToChk = '';
                     },
@@ -1331,13 +1305,6 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                       ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).pop();
-                          if (locatorTo.isNotEmpty &&
-                              locatorToChk.isEmpty &&
-                              dataLocatorForSaveDataTo.isNotEmpty) {
-                            setState(() {
-                              locatorToChk = dataLocatorForSaveDataTo;
-                            });
-                          }
                           // locatorToChkController.clear();
                           // locatorToChk = '';
                         },
