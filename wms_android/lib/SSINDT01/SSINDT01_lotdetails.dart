@@ -1250,6 +1250,7 @@ class _LotDialogState extends State<LotDialog> {
               'recSeq': widget.recSeq,
               'ouCode': widget.ouCode,
             });
+            Navigator.of(context).pop();
             await updateOkLot(poReceiveNo, recSeq);
             await sendGetRequestlineWMS();
           },

@@ -1050,7 +1050,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                           fillColor: const Color.fromARGB(255, 255, 255, 255),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(
-                            vertical: 14,
+                            vertical: 18,
                             horizontal: 0,
                           ),
                         ),
@@ -1113,7 +1113,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                         fillColor: const Color.fromARGB(255, 255, 255, 255),
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.symmetric(
-                          vertical: 14,
+                          vertical: 18,
                           horizontal: 10.0,
                         ),
                       ),
