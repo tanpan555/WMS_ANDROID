@@ -65,7 +65,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
   Future<void> fetchlocatorItems() async {
     final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_4_LOCATOR_BARCODE/${gb.P_ERP_OU_CODE}/${gb.P_WARE_CODE}'));
+        '${gb.IP_API}/apex/wms/SSFGDT04/Step_4_LOCATOR_BARCODE/${gb.P_ERP_OU_CODE}/${gb.P_WARE_CODE}'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -114,7 +114,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
   Future<void> fetchBarcodeData() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_4_scan_validate_NonePObar/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/$pBarcode';
+        '${gb.IP_API}/apex/wms/SSFGDT04/Step_4_scan_validate_NonePObar/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/$pBarcode';
     try {
       final response = await http.get(Uri.parse(url));
 
@@ -151,8 +151,8 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
   String? poMessage;
 
   Future<void> scan_INmove_Location(String? lcbarcode) async {
-    const url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_4_scan_INmove_location';
+    final url =
+        '${gb.IP_API}/apex/wms/SSFGDT04/Step_4_scan_INmove_location';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -193,53 +193,6 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
         // ตรวจสอบสถานะ po_status เพื่อแสดง popup หรือเคลียร์ข้อมูลตามที่คุณต้องการ
         if (poStatus == '0') {
-          // แสดง popup แจ้งเตือนและเคลียร์ค่าที่หน้าจอ
-          // showDialog(
-          //   context: context,
-          //   builder: (BuildContext context) {
-          //     return AlertDialog(
-          //       title: Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //         children: [
-          //           Row(
-          //             children: const [
-          //               Icon(
-          //                 Icons.check_box, // ไอคอนแจ้งเตือน
-          //                 color: Colors.green, // สีแดง
-          //                 size: 30,
-          //               ),
-          //               SizedBox(
-          //                 width: 8, // ระยะห่างระหว่างไอคอนกับข้อความ
-          //               ),
-          //               Text('Update'),
-          //             ],
-          //           ),
-          //           // Close icon
-          //           IconButton(
-          //             icon: const Icon(Icons.close),
-          //             onPressed: () {
-          //               Navigator.of(context).pop(); // Close the dialog
-          //             },
-          //           ),
-          //         ],
-          //       ),
-          //       content: Text('Update Locator Complete. $poMessage'),
-          //       actions: [
-          //         TextButton(
-          //           style: ElevatedButton.styleFrom(
-          //             backgroundColor: Colors.white,
-          //             side: const BorderSide(color: Colors.grey),
-          //           ),
-          //           child: const Text('ตกลง'),
-          //           onPressed: () {
-          //             Navigator.of(context).pop();
-          //             clearScreen(); // ฟังก์ชันสำหรับเคลียร์ค่าที่หน้าจอ
-          //           },
-          //         ),
-          //       ],
-          //     );
-          //   },
-          // );
           showDialog(
             context: context,
             builder: (BuildContext context) {

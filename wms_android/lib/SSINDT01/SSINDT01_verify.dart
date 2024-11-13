@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -6,8 +5,6 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:wms_android/styles.dart';
-import 'dart:developer';
-import 'SSINDT01_main.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -56,7 +53,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
     // chk_sub();
     // fetchPDFData();
 
-    reportServer = 'http://172.16.0.82:8888/jri/report?&_repName=/$reportname'
+    reportServer = '${gb.IP_API}/jri/report?&_repName=/$reportname'
         '&_repFormat=pdf&_dataSource=wms'
         '&_outFilename=$erp_doc_no.pdf'
         '&_repLocale=en_US';
@@ -73,7 +70,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
 
   Future<void> _launchUrl() async {
     print(widget.poReceiveNo);
-    final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
+    final uri = Uri.parse('${gb.IP_API}/jri/report?'
         '&_repName=/WMS/$reportname'
         '&_repFormat=pdf'
         '&_dataSource=wms'
@@ -141,7 +138,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
 
   void fetchPDFData() async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_4_GET_PDF/${widget.poPONO}/wms/$BROWSER_LANGUAGE/$P_ERP_OU_CODE/$P_OU_CODE');
+        '${gb.IP_API}/apex/wms/SSINDT01/Step_4_GET_PDF/${widget.poPONO}/wms/$BROWSER_LANGUAGE/$P_ERP_OU_CODE/$P_OU_CODE');
 
     try {
       final response = await http.get(url);
@@ -152,7 +149,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
         revNo = data['P_RECEIVE_NO'];
 
         reportServer =
-            'http://172.16.0.82:8888/jri/report?&_repName=/$reportname'
+            '${gb.IP_API}/jri/report?&_repName=/$reportname'
             '&_repFormat=pdf&_dataSource=wms'
             '&_outFilename=${widget.poReceiveNo}.pdf'
             '&_repLocale=en_US';
@@ -227,7 +224,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
 
   Future<void> sendGetRequestlineWMS() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_4_pull_po/${widget.poReceiveNo}/${gb.P_OU_CODE}';
+        '${gb.IP_API}/apex/wms/SSINDT01/Step_4_pull_po/${widget.poReceiveNo}/${gb.P_OU_CODE}';
 
     final headers = {
       'Content-Type': 'application/json; charset=UTF-8',
@@ -262,7 +259,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
   Future<void> chk_sub() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_4_Submit_ver/${widget.poReceiveNo}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}'));
+          '${gb.IP_API}/apex/wms/SSINDT01/Step_4_Submit_ver/${widget.poReceiveNo}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}'));
       print(widget.poReceiveNo);
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);

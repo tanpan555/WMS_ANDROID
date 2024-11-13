@@ -41,9 +41,9 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_TMP_IN_LOC/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}'));
+          '${gb.IP_API}/apex/wms/SSFGPC04/Step_2_TMP_IN_LOC/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}'));
       print(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_TMP_IN_LOC/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}'));
+          '${gb.IP_API}/apex/wms/SSFGPC04/Step_2_TMP_IN_LOC/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);

@@ -104,79 +104,6 @@ class _LotDialogState extends State<LotDialog> {
     lotCountController.text = widget.lotQTY == '' ? '0' :  widget.lotQTY;
   }
 
-  // Future<void> genLot(String v_WMS_NO, String v_PO_NO, String v_rec_seq,
-  //     String v_lot_qty, String OU_CODE) async {
-  //   final url = 'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_gen_lot';
-  //   final headers = {'Content-Type': 'application/json'};
-  //   final body = jsonEncode({
-  //     'v_WMS_NO': v_WMS_NO,
-  //     'v_PO_NO': v_PO_NO,
-  //     'v_rec_seq': v_rec_seq,
-  //     'v_lot_qty': v_lot_qty,
-  //     'OU_CODE': OU_CODE,
-  //     'APP_USER': gb.APP_USER,
-  //   });
-  //   try {
-  //     final response =
-  //         await http.post(Uri.parse(url), headers: headers, body: body);
-
-  //     if (response.statusCode == 200) {
-  //       final Map<String, dynamic> responseData = jsonDecode(response.body);
-  //       setState(() {
-  //         print('v_WMS_NO : $v_WMS_NO');
-  //         print('v_PO_NO : $v_PO_NO');
-  //         print('v_rec_seq : $v_rec_seq');
-  //         print('v_lot_qty : $v_lot_qty');
-  //         poStatus = responseData['po_status'];
-  //         poMessage = responseData['po_message'];
-  //       });
-
-  //       AlertDialog(
-  //         title: Row(
-  //           mainAxisAlignment:
-  //               MainAxisAlignment.spaceBetween, // Space between text and button
-  //           children: [
-  //             Icon(
-  //               Icons.notification_important, // Use the bell icon
-  //               color: Colors.red, // Set the color to red
-  //             ),
-  //             SizedBox(width: 8),
-  //             Text(
-  //               'แจ้งเตือน',
-  //               style: TextStyle(
-  //                 fontSize: 20.0,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //             ),
-  //             IconButton(
-  //               icon: Icon(Icons.close),
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //               },
-  //             ),
-  //           ],
-  //         ),
-  //         content: Text(poMessage ?? ''),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             child: Text('ตกลง'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //         ],
-  //       );
-
-  //       // Call sendGetRequestlineWMS after successfully generating lot
-  //       await sendGetRequestlineWMS();
-  //     } else {
-  //       print('Failed to post data. Status code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error: $e');
-  //   }
-  // }
-
   Future<void> genLot(
     String v_WMS_NO,
     String v_PO_NO,
@@ -186,7 +113,7 @@ class _LotDialogState extends State<LotDialog> {
     String v_rowid,
     String v_supp,
   ) async {
-    final url = 'http://172.16.0.82:8888/apex/wms/SSINDT01/Test_gen_lot';
+    final url = '${gb.IP_API}/apex/wms/SSINDT01/Test_gen_lot';
     final headers = {'Content-Type': 'application/json'};
     print(url);
     final body = jsonEncode({
@@ -269,7 +196,7 @@ class _LotDialogState extends State<LotDialog> {
     String v_rec_seq,
   ) async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_update_ok_lot');
+        '${gb.IP_API}/apex/wms/SSINDT01/Step_3_update_ok_lot');
     final response = await http.put(
       url,
       headers: {
@@ -300,7 +227,7 @@ class _LotDialogState extends State<LotDialog> {
   }
 
   Future<void> postLot(String poReceiveNo, String recSeq) async {
-    final url = 'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_add_lot';
+    final url = '${gb.IP_API}/apex/wms/SSINDT01/Step_3_add_lot';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -347,7 +274,7 @@ class _LotDialogState extends State<LotDialog> {
   Future<void> getLotList(
       String poReceiveNo, String recSeq) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_get_lot/$poReceiveNo/$recSeq/${gb.P_ERP_OU_CODE}';
+        '${gb.IP_API}/apex/wms/SSINDT01/Step_3_get_lot/$poReceiveNo/$recSeq/${gb.P_ERP_OU_CODE}';
     print(url);
     final headers = {
       'Content-Type': 'application/json; charset=UTF-8',
@@ -376,7 +303,7 @@ class _LotDialogState extends State<LotDialog> {
 
   Future<void> sendGetRequestlineWMS() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_pull_po/${widget.poReceiveNo}/${gb.P_ERP_OU_CODE}';
+        '${gb.IP_API}/apex/wms/SSINDT01/Step_3_pull_po/${widget.poReceiveNo}/${gb.P_ERP_OU_CODE}';
     final headers = {'Content-Type': 'application/json; charset=UTF-8'};
 
     print('Request URL: $url');
@@ -1105,7 +1032,7 @@ class _LotDialogState extends State<LotDialog> {
   String? poreject;
   Future<void> fetchPoStatus(String recSeq) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_check_valid_savelot/${widget.poReceiveNo}/$recSeq/${gb.P_OU_CODE}/${gb.APP_USER}';
+        '${gb.IP_API}/apex/wms/SSINDT01/Step_3_check_valid_savelot/${widget.poReceiveNo}/$recSeq/${gb.P_OU_CODE}/${gb.APP_USER}';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -1131,7 +1058,7 @@ class _LotDialogState extends State<LotDialog> {
 
   Future<void> updateLot(String lot_qty, String lot_supplier, String mfg_date, String receiveNo, String rec_seq, String lot_seq) async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_save_lot_det');
+        '${gb.IP_API}/apex/wms/SSINDT01/Step_3_save_lot_det');
     final response = await http.put(
       url,
       headers: {
@@ -1171,7 +1098,7 @@ class _LotDialogState extends State<LotDialog> {
   Future<void> deleteLot(String recNo, String pOu, String recSeq, String PoNo,
       String lotSeq, String PoSeq) async {
     final url =
-        Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_3_del_lot');
+        Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_3_del_lot');
     print('recNo $recNo');
     print('pOu $pOu');
     print('recSeq $recSeq');

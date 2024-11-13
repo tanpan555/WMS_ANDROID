@@ -130,7 +130,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     }
 
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}/${gb.BROWSER_LANGUAGE}';
+        '${gb.IP_API}/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}/${gb.BROWSER_LANGUAGE}';
 
     try {
       final response = await http.get(Uri.parse(requestUrl));
@@ -223,9 +223,9 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     print('pReceiveNo $pReceiveNo Type: ${pReceiveNo.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_check_RCVdirect_validate/${widget.pWareCode}/${widget.pErpOuCode}/$pReceiveNo'));
+          '${gb.IP_API}/apex/wms/SSFGDT04/Step_1_check_RCVdirect_validate/${widget.pWareCode}/${widget.pErpOuCode}/$pReceiveNo'));
       print(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_check_RCVdirect_validate/${widget.pWareCode}/${widget.pErpOuCode}/$pReceiveNo'));
+          '${gb.IP_API}/apex/wms/SSFGDT04/Step_1_check_RCVdirect_validate/${widget.pWareCode}/${widget.pErpOuCode}/$pReceiveNo'));
       if (response.statusCode == 200) {
         final Map<String, dynamic> dataStatusCard =
             jsonDecode(utf8.decode(response.bodyBytes));
@@ -285,7 +285,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     print('get_po_type: $getErpDocType');
     try {
       final uri = Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_get_INHead_WMS/'
+          '${gb.IP_API}/apex/wms/SSFGDT04/Step_1_get_INHead_WMS/'
           '${gb.APP_USER}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}/'
           '$getErpDocType/$vErpDocNo');
       final response = await http.get(uri);
@@ -378,7 +378,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     poDocType = 'FGI03';
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_GET_PDF/$poDocType/$poDocNo/${gb.P_DS_PDF}/${gb.BROWSER_LANGUAGE}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}/${gb.APP_SESSION}/${widget.pFlag}'));
+          '${gb.IP_API}/apex/wms/SSFGDT04/Step_1_GET_PDF/$poDocType/$poDocNo/${gb.P_DS_PDF}/${gb.BROWSER_LANGUAGE}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}/${gb.APP_SESSION}/${widget.pFlag}'));
 
       print('Response body: ${response.body}'); // แสดงข้อมูลที่ได้รับจาก API
 
@@ -446,7 +446,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   }
 
   Future<void> _launchUrl(String poDocNo) async {
-    final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
+    final uri = Uri.parse('${gb.IP_API}/jri/report?'
         '&_repName=/WMS/SSFGOD01'
         '&_repFormat=pdf'
         '&_dataSource=${gb.P_DS_PDF}'
@@ -494,7 +494,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     if (!await launchUrl(uri)) {
       throw Exception('Could not launch $uri');
     }
-    print('http://172.16.0.82:8888/jri/report?'
+    print('${gb.IP_API}/jri/report?'
         '&_repName=/WMS/SSFGOD01'
         '&_repFormat=pdf'
         '&_dataSource=${gb.P_DS_PDF}'

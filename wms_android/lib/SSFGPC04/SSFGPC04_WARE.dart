@@ -50,7 +50,7 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
     });
 
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_1_TMP_IN_WH/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}';
+        '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_TMP_IN_WH/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}';
 
     try {
       final response = await http.get(Uri.parse(requestUrl));
@@ -138,7 +138,7 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
   }
 
   Future<void> nextPage() async {
-    const url = 'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_next';
+    final url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_2_next';
 
     final headers = {
       'Content-Type': 'application/json',

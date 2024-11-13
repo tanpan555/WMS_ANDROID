@@ -147,10 +147,10 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
     try {
       final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_form/${gb.P_ERP_OU_CODE}/${widget.po_doc_type}/${widget.po_doc_no}',
+        '${gb.IP_API}/apex/wms/SSFGDT04/Step_2_form/${gb.P_ERP_OU_CODE}/${widget.po_doc_type}/${widget.po_doc_no}',
       ));
       print(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_form/${gb.P_ERP_OU_CODE}/${widget.po_doc_type}/${widget.po_doc_no}',
+        '${gb.IP_API}/apex/wms/SSFGDT04/Step_2_form/${gb.P_ERP_OU_CODE}/${widget.po_doc_type}/${widget.po_doc_no}',
       ));
       print('Response status code: ${response.statusCode}');
 
@@ -212,7 +212,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
   Future<void> fetchDocTypeItems() async {
     final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_TYPE/${gb.ATTR1}'));
+        '${gb.IP_API}/apex/wms/SSFGDT04/Step_2_TYPE/${gb.ATTR1}'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -234,7 +234,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
   Future<void> fetchSaffCodeItems() async {
     final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_STAFF_CODE/${gb.P_ERP_OU_CODE}/${gb.BROWSER_LANGUAGE}'));
+        '${gb.IP_API}/apex/wms/SSFGDT04/Step_2_STAFF_CODE/${gb.P_ERP_OU_CODE}/${gb.BROWSER_LANGUAGE}'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -252,7 +252,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   Future<void> fetchRefReceiveItems() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_REFRECEIVE/${gb.ATTR1}/${widget.pWareCode}'));
+          '${gb.IP_API}/apex/wms/SSFGDT04/Step_2_REFRECEIVE/${gb.ATTR1}/${widget.pWareCode}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -276,7 +276,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
   Future<void> fetchRefNoItems() async {
     final response = await http.get(
-        Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_REF_NO'));
+        Uri.parse('${gb.IP_API}/apex/wms/SSFGDT04/Step_2_REF_NO'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -293,7 +293,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
   Future<void> fetchCancelItems() async {
     final response = await http.get(
-        Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_CANCEL'));
+        Uri.parse('${gb.IP_API}/apex/wms/SSFGDT04/Step_2_CANCEL'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -310,7 +310,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
   Future<void> save_INHeadNonePO_WMS(String? po_doc_no) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_validateSave_INHeadNonePO_WMS/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${gb.APP_USER}';
+        '${gb.IP_API}/apex/wms/SSFGDT04/Step_2_validateSave_INHeadNonePO_WMS/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${gb.APP_USER}';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -371,7 +371,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     print(
         'update called with po_doc_type: $po_doc_type, po_doc_no: $po_doc_no');
     final url =
-        Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_wms_ith');
+        Uri.parse('${gb.IP_API}/apex/wms/SSFGDT04/Step_2_wms_ith');
     final response = await http.put(url,
         headers: {
           'Content-Type': 'application/json',
@@ -416,7 +416,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     String selectedCancelCode,
   ) async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_2_cancel_INHeadNonePO_WMS');
+        '${gb.IP_API}/apex/wms/SSFGDT04/Step_2_cancel_INHeadNonePO_WMS');
     final response = await http.put(url,
         headers: {
           'Content-Type': 'application/json',

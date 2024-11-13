@@ -207,7 +207,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
 
   Future<void> fetchUpdate(String? itemCode, String? poPackCode,
       String? poPackQty, String? rowid) async {
-    const url = 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_set_pack_QTY';
+    final url = '${gb.IP_API}/apex/wms/SSFGDT04/Step_3_set_pack_QTY';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -265,7 +265,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     isLoading = true;
   });
   final String requestUrl = url ??
-      'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_WMS_IN_TRAN_DETAIL/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}/${gb.P_OU_CODE}';
+      '${gb.IP_API}/apex/wms/SSFGDT04/Step_3_WMS_IN_TRAN_DETAIL/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}/${gb.P_OU_CODE}';
   try {
     final response = await http.get(Uri.parse(requestUrl));
     print(requestUrl);
@@ -360,7 +360,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   }
 
   Future<void> fetchGetPo() async {
-    const url = 'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_GET_PO';
+    final url = '${gb.IP_API}/apex/wms/SSFGDT04/Step_3_GET_PO';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -410,7 +410,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     print(poSeq);
     print(poItemCode);
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_delete_DTL_WMS');
+        '${gb.IP_API}/apex/wms/SSFGDT04/Step_3_delete_DTL_WMS');
     final response = await http.delete(
       url,
       headers: {
@@ -452,7 +452,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     // print('po_status $poQcPass Type: ${poQcPass.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_3_set_qc/${gb.P_ERP_OU_CODE}/${widget.po_doc_type}/${widget.po_doc_no}'));
+          '${gb.IP_API}/apex/wms/SSFGDT04/Step_3_set_qc/${gb.P_ERP_OU_CODE}/${widget.po_doc_type}/${widget.po_doc_no}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> setQC =

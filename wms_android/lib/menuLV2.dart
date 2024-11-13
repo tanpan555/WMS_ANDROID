@@ -46,7 +46,7 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
     print('=======================================');
     print(gb.ATTR1);
     print(
-        'http://172.16.0.82:8888/apex/wms/c/menu_level_2/${widget.sessionID}/${widget.menu_id}');
+        '${globals.IP_API}/apex/wms/c/menu_level_2/${widget.sessionID}/${widget.menu_id}');
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -59,7 +59,7 @@ class _TestMenuLv2State extends State<TestMenuLv2> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/c/menu_level_2/${widget.sessionID}/${widget.menu_id}'));
+          '${globals.IP_API}/apex/wms/c/menu_level_2/${widget.sessionID}/${widget.menu_id}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);

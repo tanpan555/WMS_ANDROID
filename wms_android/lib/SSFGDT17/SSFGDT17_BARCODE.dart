@@ -128,7 +128,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   Future<void> fetchLocationCodes() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_3_LOCATOR_LOV/$ERP_OU_CODE/${widget.selectedwhCode}'));
+          '${gb.IP_API}/apex/wms/SSFGDT17/Step_3_LOCATOR_LOV/$ERP_OU_CODE/${widget.selectedwhCode}'));
       print('$ERP_OU_CODE ${widget.selectedwhCode}');
 
       if (response.statusCode == 200) {
@@ -188,7 +188,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
 
   void fetchBarcodeData() async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_3_scan_validate_xferBarcode/'
+        '${gb.IP_API}/apex/wms/SSFGDT17/Step_3_scan_validate_xferBarcode/'
         '$ERP_OU_CODE/'
         '${widget.po_doc_no}/${BARCODE.text}/${widget.selectedwhCode}/$selectedLocCode/${widget.whOUTCode}/${widget.LocOUTCode}/$APP_USER');
 
@@ -359,7 +359,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   Future<void> chk_validateSave() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_3_validateSave_confXfer_WMS/${widget.po_doc_no}/${gb.P_ERP_OU_CODE}'));
+          '${gb.IP_API}/apex/wms/SSFGDT17/Step_3_validateSave_confXfer_WMS/${widget.po_doc_no}/${gb.P_ERP_OU_CODE}'));
       print(widget.po_doc_no);
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -569,13 +569,6 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
               fetchBarcodeData();
             },
           ),
-          // Positioned(
-          //   right: 8,
-          //   child: IconButton(
-          //     icon: Icon(Icons.qr_code_scanner),
-          //     onPressed: _scanQRCode,
-          //   ),
-          // ),
         ],
       ),
     );

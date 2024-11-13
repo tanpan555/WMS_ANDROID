@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:wms_android/ICON.dart';
 import 'package:wms_android/SSFGDT17/SSFGD17_VERIFY.dart';
@@ -52,6 +51,8 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
 
   int pageSize = 15; // Number of records per page
   int currentPage = 1; // Current page number
+  
+  bool isNavigating = false;
 
   @override
   void initState() {
@@ -60,10 +61,8 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     currentSessionID = SessionManager().sessionID;
     selectedwhCode = widget.pWareCode;
     print(selectedwhCode);
-    // _dateController.text = selectedDate != null ? DateFormat('dd/MM/yyyy').format(selectedDate!) : '';
     _dateController.text = widget.dateController;
     _selectedStatusValue = widget.selectedValue;
-    // fixedValue = widget.selectedValue;
     print('fixedValue: $fixedValue');
     docNumberFilter = widget.documentNumber;
     print('=====================');
@@ -181,8 +180,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     final String statusValue = valueMapping[_selectedStatusValue] ?? '0';
     try {
       final uri = url ??
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_Card_List/$selectedwhCode/$statusValue/000/${widget.docData1}/$DateSend/${widget.documentNumber}/${gb.BROWSER_LANGUAGE}';
-
+          '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_Card_List/$selectedwhCode/$statusValue/${gb.P_ERP_OU_CODE}/${widget.docData1}/$DateSend/${widget.documentNumber}/${gb.BROWSER_LANGUAGE}';
       // Reset currentPage if this is a new search (no url provided)
       if (url == null) {
         currentPage = 1;
@@ -240,7 +238,6 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
 
     TextStyle statusStyle = TextStyle(
       color: Colors.black,
-      // fontWeight: FontWeight.bold,
     );
 
     BoxDecoration statusDecoration = BoxDecoration(
@@ -305,82 +302,93 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
                 ],
               ),
               onTap: () async {
-                print('${item['doc_no'] ?? 'No doc_no'} ');
-                print('${item['doc_type'] ?? 'No doc_type'} ');
-                doc_no = item['doc_no'];
-                doc_out = item['doc_type'];
-                await chk_validate();
-                await chk_validate_inhead();
-                print('poStatusinhead: $poStatusinhead');
-                // print('$poStatus $poMessage $goToStep');
+                if (isNavigating) return;
 
-                if (poStatus == '1') {
-                  print(poMessage);
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return DialogStyles.alertMessageDialog(
-                        context: context,
-                        content: Text('${poMessage ?? 'No message available'}'),
-                        onClose: () {
-                          Navigator.of(context).pop();
-                        },
-                        onConfirm: () async {
-                          Navigator.of(context).pop();
-                        },
-                      );
-                    },
-                  );
-                } else if (poStatus == '0') {
-                  if (goToStep == '2') {
-                    print('ไปหน้า Form');
-                    if (poStatusinhead == '0') {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SSFGDT17_FORM(
-                            po_doc_no: doc_no ?? '',
-                            po_doc_type: doc_out,
-                            LocCode: '',
-                            selectedwhCode: '',
-                            selectedLocCode: '',
-                            whOUTCode: '',
-                            LocOUTCode: '',
-                            pWareCode: '',
+                setState(() {
+                  isNavigating = true;
+                });
+
+                try {
+                  print('${item['doc_no'] ?? 'No doc_no'} ');
+                  print('${item['doc_type'] ?? 'No doc_type'} ');
+                  doc_no = item['doc_no'];
+                  doc_out = item['doc_type'];
+                  await chk_validate();
+                  await chk_validate_inhead();
+                  print('poStatusinhead: $poStatusinhead');
+
+                  if (poStatus == '1') {
+                    print(poMessage);
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return DialogStyles.alertMessageDialog(
+                          context: context,
+                          content: Text('${poMessage ?? 'No message available'}'),
+                          onClose: () {
+                            Navigator.of(context).pop();
+                          },
+                          onConfirm: () async {
+                            Navigator.of(context).pop();
+                          },
+                        );
+                      },
+                    );
+                  } else if (poStatus == '0') {
+                    if (goToStep == '2') {
+                      print('ไปหน้า Form');
+                      if (poStatusinhead == '0') {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SSFGDT17_FORM(
+                              po_doc_no: doc_no ?? '',
+                              po_doc_type: doc_out,
+                              LocCode: '',
+                              selectedwhCode: '',
+                              selectedLocCode: '',
+                              whOUTCode: '',
+                              LocOUTCode: '',
+                              pWareCode: '',
+                            ),
                           ),
-                        ),
-                      );
-                    }
-                  } else if (goToStep == '3') {
-                    print('ไปหน้า barcode');
-                    if (poStatusinhead == '0') {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SSFGDT17_BARCODE(
-                            po_doc_no: doc_no ?? '',
-                            po_doc_type: doc_out,
-                            LocCode: '',
-                            selectedwhCode: '',
-                            selectedLocCode: '',
-                            whOUTCode: '',
-                            LocOUTCode: '',
+                        );
+                      }
+                    } else if (goToStep == '3') {
+                      print('ไปหน้า barcode');
+                      if (poStatusinhead == '0') {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SSFGDT17_BARCODE(
+                              po_doc_no: doc_no ?? '',
+                              po_doc_type: doc_out,
+                              LocCode: '',
+                              selectedwhCode: '',
+                              selectedLocCode: '',
+                              whOUTCode: '',
+                              LocOUTCode: '',
+                            ),
                           ),
-                        ),
-                      );
-                    }
-                  } else if (goToStep == '4') {
-                    print('ไปหน้ายืนยัน');
-                    if (poStatusinhead == '0') {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SSFGD17_VERIFY(
-                            po_doc_no: doc_no ?? '',
-                            po_doc_type: doc_out,
-                            selectedwhCode: '',
+                        );
+                      }
+                    } else if (goToStep == '4') {
+                      print('ไปหน้ายืนยัน');
+                      if (poStatusinhead == '0') {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SSFGD17_VERIFY(
+                              po_doc_no: doc_no ?? '',
+                              po_doc_type: doc_out,
+                              selectedwhCode: '',
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      }
                     }
                   }
+                } finally {
+                  setState(() {
+                    isNavigating = false;
+                  });
                 }
               },
             ),
@@ -397,7 +405,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
   Future<void> chk_validate() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_check_TFLOCDirect_validate/$doc_no/$doc_out/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}'));
+          '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_check_TFLOCDirect_validate/$doc_no/$doc_out/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);
@@ -426,7 +434,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
   Future<void> chk_validate_inhead() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_get_INHeadXfer_WMS/$doc_no/$doc_out/${widget.pWareCode}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}/${gb.APP_USER}'));
+          '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_get_INHeadXfer_WMS/$doc_no/$doc_out/${widget.pWareCode}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}/${gb.APP_USER}'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final jsonData = json.decode(responseBody);

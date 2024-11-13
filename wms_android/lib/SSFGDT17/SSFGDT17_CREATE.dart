@@ -1,14 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_FORM.dart';
 import 'package:wms_android/custom_appbar.dart';
-// import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/main.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:wms_android/styles.dart';
 
@@ -49,7 +45,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> fetchwhCodes() async {
     try {
       final response = await http.get(
-          Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_WHCode/${gb.ATTR1}'));
+          Uri.parse('${gb.IP_API}/apex/wms/SSFGDT17/Step_1_WHCode/${gb.ATTR1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -78,7 +74,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> fetchLocationCodes() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_LOACATION/$selectedwhCode/${gb.P_ERP_OU_CODE}'));
+          '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_LOACATION/$selectedwhCode/${gb.P_ERP_OU_CODE}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -106,7 +102,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> fetchwhOUTCodes() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_WH_OUT/${gb.P_ERP_OU_CODE}/${gb.ATTR1}'));
+          '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_WH_OUT/${gb.P_ERP_OU_CODE}/${gb.ATTR1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -134,7 +130,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> fetchLocationOutCodes() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_LOCATION_OUT/${gb.ATTR1}/${gb.P_ERP_OU_CODE}'));
+          '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_LOCATION_OUT/${gb.ATTR1}/${gb.P_ERP_OU_CODE}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -161,7 +157,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> fetchDocType() async {
     try {
       final url = Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_default_doc_type/${gb.ATTR1}');
+          '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_default_doc_type/${gb.ATTR1}');
       final response = await http.get(url, headers: {
         'Content-Type': 'application/json',
       });
@@ -190,7 +186,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> create_NewINXfer_WMS(
       String LocCode, String whOUTCode, String LocOUTCode) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_create_NewINXfer_WMS';
+        '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_create_NewINXfer_WMS';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -419,14 +415,13 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     Function(Map<String, dynamic>?) onChanged,
     String label,
   ) {
-    String displayText = 'เลือก Location ต้นทาง'; // Default text
+// Default text
     if (selectedValue != null) {
       final selectedItem = items.firstWhere(
         (item) => item['location_code'] == selectedValue,
         orElse: () => null,
       );
       if (selectedItem != null) {
-        displayText = selectedItem['location_name'];
       }
     }
 
@@ -447,7 +442,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Text(
-                  displayText = 'Select Location',
+                  'Select Location',
                   style: TextStyle(color: Colors.black),
                   overflow: TextOverflow
                       .visible, // Allow text to be visible when scrolling
@@ -610,14 +605,13 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     Function(Map<String, dynamic>?) onChanged,
     String label,
   ) {
-    String displayText = 'เลือก Location ต้นทาง'; // Default text
+// Default text
     if (selectedValue != null) {
       final selectedItem = items.firstWhere(
         (item) => item['location_code'] == selectedValue,
         orElse: () => null,
       );
       if (selectedItem != null) {
-        displayText = selectedItem['location_name'];
       }
     }
 
@@ -638,7 +632,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Text(
-                  displayText = 'เลือก Location ปลายทาง',
+                  'เลือก Location ปลายทาง',
                   style: TextStyle(color: Colors.black),
                   overflow: TextOverflow.visible,
                 ),

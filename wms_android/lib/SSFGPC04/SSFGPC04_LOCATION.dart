@@ -58,7 +58,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_IN_LOCATION/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}'));
+          '${gb.IP_API}/apex/wms/SSFGPC04/Step_2_IN_LOCATION/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -109,8 +109,8 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
   }
 
   Future<void> fetchCheck(String? loc, String? wareCode) async {
-    const url =
-        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_PU_INS_TMP_LOC_SEL';
+    final url =
+        '${gb.IP_API}/apex/wms/SSFGPC04/Step_2_PU_INS_TMP_LOC_SEL';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -158,7 +158,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
   String message = '';
   Future<void> deleteData(String? wareCode) async {
     final String url =
-        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_2_PU_INS_TMP_LOC_SEL';
+        '${gb.IP_API}/apex/wms/SSFGPC04/Step_2_PU_INS_TMP_LOC_SEL';
 
     try {
       final response = await http.delete(

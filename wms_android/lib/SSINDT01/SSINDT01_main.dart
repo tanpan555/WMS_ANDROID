@@ -29,7 +29,6 @@ class SSINDT01_MAIN extends StatefulWidget {
     required this.apCode,
     required this.documentNumber,
   }) : super(key: key);
-  // const Ssindt01Card({super.key});
   @override
   _SSINDT01_MAINState createState() => _SSINDT01_MAINState();
 }
@@ -114,7 +113,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     }
 
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_1_Card_list/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue/${gb.BROWSER_LANGUAGE}';
+        '${gb.IP_API}/apex/wms/SSINDT01/Step_1_Card_list/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue/${gb.BROWSER_LANGUAGE}';
 
     try {
       final response = await http.get(Uri.parse(requestUrl));
@@ -204,7 +203,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   Future<void> fetchPoStatus(String poNo, String? receiveNo) async {
     final String receiveNoParam = receiveNo ?? 'null';
     final String apiUrl =
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_1_check_rcv/$poNo/$receiveNoParam/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}';
+        '${gb.IP_API}/apex/wms/SSINDT01/Step_1_check_rcv/$poNo/$receiveNoParam/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}';
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
@@ -243,7 +242,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   Future<void> fetchPoStatusconform(String? receiveNo) async {
     final String receiveNoParam = receiveNo ?? 'null';
     final String apiUrl =
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_1_conform_reciveIN_refPO/${receiveNo}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}';
+        '${gb.IP_API}/apex/wms/SSINDT01/Step_1_conform_reciveIN_refPO/${receiveNo}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}';
 
     try {
       print(apiUrl);
@@ -284,7 +283,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   Future<void> sendPostRequest(
       String poNo, String receiveNo, String selectedwhCode) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_1_create_inhead_wms';
+        '${gb.IP_API}/apex/wms/SSINDT01/Step_1_create_inhead_wms';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -379,7 +378,7 @@ void handleTap(BuildContext context, Map<String, dynamic> item) async {
       MaterialPageRoute(
         builder: (context) => Ssindt01Form(
           poReceiveNo: poReceiveNo ?? '',
-          pWareCode: widget.pWareCode ?? '',
+          pWareCode: widget.pWareCode,
           pWareName: widget.pWareName,
           p_ou_code: widget.p_ou_code,
         ),
@@ -393,7 +392,7 @@ void handleTap(BuildContext context, Map<String, dynamic> item) async {
         builder: (context) => Ssindt01Grid(
           poReceiveNo: poReceiveNo ?? '',
           poPONO: pPoNo,
-          pWareCode: widget.pWareCode ?? '',
+          pWareCode: widget.pWareCode,
           pWareName: widget.pWareName,
           p_ou_code: widget.p_ou_code,
         ),
@@ -406,7 +405,7 @@ void handleTap(BuildContext context, Map<String, dynamic> item) async {
       MaterialPageRoute(
         builder: (context) => Ssindt01Form(
           poReceiveNo: poReceiveNo ?? '',
-          pWareCode: widget.pWareCode ?? '',
+          pWareCode: widget.pWareCode,
           pWareName: widget.pWareName,
           p_ou_code: widget.p_ou_code,
         ),

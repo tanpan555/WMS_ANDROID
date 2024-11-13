@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:wms_android/SSFGDT17/SSFGDT17_CREATE.dart';
-import 'package:wms_android/SSFGDT17/SSFGDT17_SEARCH.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/main.dart';
@@ -72,7 +70,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
 
   Future<void> getList() async {
     final url = Uri.parse(
-        "http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_4_Verify_Card/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}");
+        "${gb.IP_API}/apex/wms/SSFGDT17/Step_4_Verify_Card/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}");
     print(url);
 
     try {
@@ -116,7 +114,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
 
   Future<void> fetchData() async {
     final url = Uri.parse(
-        "http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_4_verify_form/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}");
+        "${gb.IP_API}/apex/wms/SSFGDT17/Step_4_verify_form/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}");
 
     try {
       final http.Response response = await http.get(url);
@@ -152,7 +150,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
 
   Future<void> updateItem() async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_4_update_card_item_verify');
+        '${gb.IP_API}/apex/wms/SSFGDT17/Step_4_update_card_item_verify');
     final response = await http.put(
       url,
       headers: {
@@ -188,7 +186,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
 
   Future<void> deleteItem() async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_4_delete_item_verify');
+        '${gb.IP_API}/apex/wms/SSFGDT17/Step_4_delete_item_verify');
     print(Doc_type);
     print(doc_no);
     print(req);
@@ -230,7 +228,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
   Future<void> chk_validateSave() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_4_inteface_XFer2ERP/${widget.po_doc_no}/${gb.P_ERP_OU_CODE}/${gb.ATTR1}'));
+          '${gb.IP_API}/apex/wms/SSFGDT17/Step_4_inteface_XFer2ERP/${widget.po_doc_no}/${gb.P_ERP_OU_CODE}/${gb.ATTR1}'));
       print(widget.po_doc_no);
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -266,7 +264,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
     itemCodeController.text = item['item_code'] ?? '';
     lotNoController.text = item['lots_no'] ?? '';
     locCodeController.text = item['location_code'] ?? '';
-    packQtyController.text = item['pack_qty'].toString() ?? '';
+    packQtyController.text = item['pack_qty'].toString();
     toLocController.text = item['to_loc'] ?? '';
     rowid = item['rowid'] ?? '';
     Doc_type = item['doc_type'] ?? '';
@@ -557,89 +555,6 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
                   )
                 ],
               ),
-
-              // SizedBox(
-              //   width: 365,
-              //   height: 75,
-              //   child: Container(
-              //     padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-              //     margin: const EdgeInsets.only(bottom: 8.0),
-              //     decoration: BoxDecoration(
-              //       color: Colors.grey[300],
-              //       borderRadius: BorderRadius.circular(8.0),
-              //     ),
-              //     child: TextFormField(
-              //       style: const TextStyle(
-              //         color: Colors.black87,
-              //       ),
-              //       controller: NB_WARE_CODEController,
-              //       decoration: const InputDecoration(
-              //         labelText: 'Warehouse ต้นทาง',
-              //         labelStyle: TextStyle(
-              //           color: Colors.black87,
-              //         ),
-              //         border: InputBorder.none,
-              //       ),
-              //       readOnly: true,
-              //     ),
-              //   ),
-              // ),
-              // const SizedBox(height: 8.0),
-              // SizedBox(
-              //   width: 365,
-              //   height: 75,
-              //   child: Container(
-              //     padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-              //     margin: const EdgeInsets.only(bottom: 8.0),
-              //     decoration: BoxDecoration(
-              //       color: Colors.grey[300],
-              //       borderRadius: BorderRadius.circular(8.0),
-              //     ),
-              //     child: TextFormField(
-              //       style: const TextStyle(
-              //         color: Colors.black87,
-              //       ),
-              //       controller: NB_TO_WHController,
-              //       decoration: const InputDecoration(
-              //         labelText: 'Warehouse ปลายทาง',
-              //         labelStyle: TextStyle(
-              //           color: Colors.black87,
-              //         ),
-              //         border: InputBorder.none,
-              //       ),
-              //       readOnly: true,
-              //     ),
-              //   ),
-              // ),
-              // const SizedBox(height: 8.0),
-              // SizedBox(
-              //   width: 365,
-              //   height: 75,
-              //   child: Container(
-              //     padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-              //     margin: const EdgeInsets.only(bottom: 8.0),
-              //     decoration: BoxDecoration(
-              //       color: Colors.grey[300],
-              //       borderRadius: BorderRadius.circular(8.0),
-              //     ),
-              //     child: TextFormField(
-              //       style: const TextStyle(
-              //         color: Colors.black87,
-              //       ),
-              //       controller: CR_DATEController,
-              //       decoration: const InputDecoration(
-              //         labelText: 'วันที่บันทึกโอน',
-              //         labelStyle: TextStyle(
-              //           color: Colors.black87,
-
-              //         ),
-              //         suffixIcon: Icon(Icons.calendar_today, color: Colors.black),
-              //         border: InputBorder.none,
-              //       ),
-              //       readOnly: true,
-              //     ),
-              //   ),
-              // ),
               const SizedBox(height: 16.0),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.4,

@@ -246,7 +246,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     }
     try {
       final response = await http.get(
-          Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_GROUP'));
+          Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_GROUP'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -282,7 +282,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_GROUP_E/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'));
+          '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_GROUP_E/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -320,7 +320,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     }
     try {
       final response = await http
-          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_CAT'
+          .get(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_CAT'
               '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
               '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'));
 
@@ -358,7 +358,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_CAT_E'
+          '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_CAT_E'
           '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
           '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
           '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'));
@@ -399,7 +399,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_SUB_CAT'
+          '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_SUB_CAT'
           '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
           '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'));
 
@@ -437,7 +437,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_SUB_CAT_E'
+          '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_SUB_CAT_E'
           '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
           '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
           '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'));
@@ -478,7 +478,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     }
     try {
       final response = await http.get(
-          Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_BRAND'));
+          Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_BRAND'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -514,7 +514,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_BRAND_E/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'));
+          '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_BRAND_E/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -552,7 +552,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_ITM'
+          '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_ITM'
           '/${gb.BROWSER_LANGUAGE}'
           '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
           '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
@@ -597,7 +597,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_ITM_E'
+          '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_ITM_E'
           '/${gb.BROWSER_LANGUAGE}'
           '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
           '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
@@ -644,7 +644,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   String? v_alt;
   String? v_alt2;
   Future<void> process() async {
-    const url = 'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_3_process_new';
+    final url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_process_new';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -727,35 +727,16 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                           backgroundColor: Colors.white,
                           side: const BorderSide(color: Colors.grey),
                         ),
-                        // onPressed: () {
-                        //   Navigator.of(context).pop();
-                        // },
                         onPressed: () {
-                          // cancel_INHeadNonePO_WMS(
-                          //         selectedCancelCode!)
-                          //     .then((_) {
                           Navigator.of(context).pop();
                           Navigator.of(context).pop(
                             MaterialPageRoute(
                               builder: (context) => SSFGPC04_MAIN(
-                                  //   pWareCode: gb.P_WARE_CODE,
-                                  //   pErpOuCode: gb.P_ERP_OU_CODE,
                                   ),
                             ),
                           );
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
-                          // }).catchError(
-                          //         (error) {
-                          //   ScaffoldMessenger
-                          //           .of(context)
-                          //       .showSnackBar(
-                          //     SnackBar(
-                          //       content: Text(
-                          //           'An error occurred: $error'),
-                          //     ),
-                          //   );
-                          // });
                         },
                         child: Text('OK'),
                       ),
@@ -1233,7 +1214,6 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
                                     returnStartGroup = returnCode;
                                     displayStartGroup = doc;
                                     startGroupController.text =
@@ -1393,7 +1373,6 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
                                     returnEndGroup = returnCode;
                                     displayEndGroup = doc;
                                     endGroupController.text =
@@ -1552,7 +1531,6 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
                                     returnStartCategory = returnCode;
                                     displayStartCategory = doc;
                                     startCategoryController.text =
@@ -1707,7 +1685,6 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                                   isLoading = true;
                                   Navigator.of(context).pop();
                                   setState(() {
-                                    String dataCheck = returnCode;
                                     returnEndCategory = returnCode;
                                     displayEndCategory = doc;
                                     endCategoryController.text =

@@ -1,16 +1,13 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:math';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Ensure you import intl for DateFormat
 import 'package:wms_android/SSFGDT17/SSFGDT17_MAIN.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
-import 'package:wms_android/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:wms_android/styles.dart';
 import 'package:flutter/services.dart'; // Add this import
+import 'package:wms_android/Global_Parameter.dart' as gb;
 
 class SSFGDT17_SEARCH extends StatefulWidget {
   final String pWareCode;
@@ -81,7 +78,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
 
   Future<void> fetchDocType() async {
     final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_default_doc_type'));
+        '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_default_doc_type/${gb.ATTR1}'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
@@ -95,6 +92,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
       throw Exception('Failed to load data');
     }
   }
+
 
   void _showProductTypeDialog() {
     showDialog(
@@ -197,7 +195,6 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
       appBar: CustomAppBar(title: 'Move Locator', showExitWarning: false),
       // backgroundColor: const Color(0xFF17153B),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(10),
         child: Form(
           key: _formKey,
           child: Padding(
@@ -222,7 +219,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 TextField(
                   controller: _documentNumberController,
                   decoration: InputDecoration(
@@ -234,7 +231,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                   ),
                   style: TextStyle(color: Colors.black),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 TextField(
                   controller: _dateController,
                   decoration: InputDecoration(
@@ -368,7 +365,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                       )
                     : const SizedBox.shrink(),
 
-                const SizedBox(height: 8),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

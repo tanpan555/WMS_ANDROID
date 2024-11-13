@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://172.16.0.82:8888/apex/wms/login_wms/process'),
+        Uri.parse('${globals.IP_API}/apex/wms/login_wms/process'),
         body: {
           'P_USERNAME': username,
           'P_PASSWORD': password,

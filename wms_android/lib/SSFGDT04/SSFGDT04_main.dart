@@ -36,7 +36,7 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_1_ware_code/${gb.P_ERP_OU_CODE}/${gb.ATTR1}'));
+          '${gb.IP_API}/apex/wms/SSFGDT04/Step_1_ware_code/${gb.P_ERP_OU_CODE}/${gb.ATTR1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);

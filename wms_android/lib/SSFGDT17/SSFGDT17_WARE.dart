@@ -36,7 +36,7 @@ class _SSFGDT17_WAREState extends State<SSFGDT17_WARE> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_1_whcode/${gb.ATTR1}/${gb.P_ERP_OU_CODE}'));
+          '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_whcode/${gb.ATTR1}/${gb.P_ERP_OU_CODE}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -112,7 +112,7 @@ class _SSFGDT17_WAREState extends State<SSFGDT17_WARE> {
                                         builder: (context) => SSFGDT17_MENU(
                                           pWareCode: item['ware_code'],
                                           pWareName: item['ware_name'],
-                                          p_ou_code: widget.p_ou_code,
+                                          p_ou_code: gb.P_ERP_OU_CODE,
                                         ),
                                       ),
                                     );

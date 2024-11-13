@@ -1,13 +1,9 @@
 import 'dart:convert';
-
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wms_android/SSFGDT04/SSFGDT04_main.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_BARCODE.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_MENU.dart';
 import 'package:wms_android/custom_appbar.dart';
-// import 'package:wms_android/custom_drawer.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/main.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
@@ -111,8 +107,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     final DateTime? picked = await showDatePicker(
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       context: context,
-      initialDate: selectedDate ??
-          DateTime.now(), // Fallback to current date if selectedDate is null
+      initialDate: selectedDate, // Fallback to current date if selectedDate is null
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
@@ -133,7 +128,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
 
   Future<void> chk_validateSave() async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_2_validateSave_INHeadXfer_WMS/$P_OU_CODE/$ERP_OU_CODE/${widget.po_doc_no}/$APP_USER');
+        '${gb.IP_API}/apex/wms/SSFGDT17/Step_2_validateSave_INHeadXfer_WMS/$P_OU_CODE/$ERP_OU_CODE/${widget.po_doc_no}/$APP_USER');
 
     final headers = {
       'Content-Type': 'application/json',
@@ -186,7 +181,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   Future<void> cancelCode() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_2_cancel_list'));
+          '${gb.IP_API}/apex/wms/SSFGDT17/Step_2_cancel_list'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -241,6 +236,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     );
   }
 
+bool isDialogShowing = false;
   void showCancelDialog(BuildContext parentContext) {
     showDialog(
       context: parentContext,
@@ -320,7 +316,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   String? pomsg;
   Future<void> cancel_from(String selectedcCode) async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_2_cancel_INHeadXfer_WMS');
+        '${gb.IP_API}/apex/wms/SSFGDT17/Step_2_cancel_INHeadXfer_WMS');
     final response = await http.put(
       url,
       headers: {
@@ -407,7 +403,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => SSFGDT17_BARCODE(
-                            po_doc_no: widget.po_doc_no ?? '',
+                            po_doc_no: widget.po_doc_no,
                             po_doc_type: widget.po_doc_type,
                             LocCode: widget.LocCode,
                             selectedwhCode: widget.selectedwhCode,
@@ -481,7 +477,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   String? selectedREF_NO;
   Future<void> fetchREF_NOLIST() async {
     final url =
-        Uri.parse('http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_2_REF_NO');
+        Uri.parse('${gb.IP_API}/apex/wms/SSFGDT17/Step_2_REF_NO');
     try {
       final response = await http.get(url);
 
@@ -513,7 +509,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   String? selectedStaff;
   Future<void> fetchStaffLIST() async {
     final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT17/Step_2_STAFF_CODE/${gb.P_ERP_OU_CODE}/${gb.BROWSER_LANGUAGE}');
+        '${gb.IP_API}/apex/wms/SSFGDT17/Step_2_STAFF_CODE/${gb.P_ERP_OU_CODE}/${gb.BROWSER_LANGUAGE}');
     try {
       final response = await http.get(url);
 

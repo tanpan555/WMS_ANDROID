@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false, //remove the debug banner
       initialRoute: '/login',
       theme: ThemeData().copyWith(
         scaffoldBackgroundColor: const Color(0xFF17153B),
@@ -95,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
     print('sessionID in Main : $sessionID Type : ${sessionID.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/c/menu_level_1/${globals.APP_SESSION}'));
+          '${globals.IP_API}/apex/wms/c/menu_level_1/${globals.APP_SESSION}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);

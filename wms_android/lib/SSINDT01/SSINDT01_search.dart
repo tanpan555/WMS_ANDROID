@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_main.dart';
 import 'package:wms_android/custom_appbar.dart';
@@ -62,7 +61,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
   Future<void> fetchApCodes() async {
     try {
       final response = await http
-          .get(Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_1_AP_CODE'));
+          .get(Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_1_AP_CODE'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);

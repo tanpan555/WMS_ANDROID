@@ -82,31 +82,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
       });
     }
   }
-
-  // Future<void> _selectDate(BuildContext context) async {
-  //   DateTime? pickedDate = await showDatePicker(
-  //     context: context,
-  //     initialDate: DateTime.now(),
-  //     firstDate: DateTime(2000),
-  //     lastDate: DateTime(2101),
-  //     initialEntryMode: DatePickerEntryMode.calendarOnly,
-  //   );
-
-  //   if (pickedDate != null) {
-  //     String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
-  //     if (mounted) {
-  //       setState(() {
-  //         _dateController.text = formattedDate;
-  //         selectedDate = _dateController.text;
-
-  //         // Reset error flags since date is selected from the picker
-  //         chkDate = false;
-  //         noDate = false;
-  //       });
-  //     }
-  //   }
-  // }
-
+  
   Future<void> _selectDate(
       BuildContext context, String? initialDateString) async {
     DateTime? initialDate;

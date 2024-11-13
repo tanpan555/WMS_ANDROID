@@ -90,7 +90,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
 
   Future<void> fetchGridItems() async {
     final response = await http.get(Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_5_WMS_IN_TRAN_DETAIL/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}/${gb.P_OU_CODE}'));
+        '${gb.IP_API}/apex/wms/SSFGDT04/Step_5_WMS_IN_TRAN_DETAIL/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}/${gb.P_OU_CODE}'));
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
       final data = jsonDecode(responseBody);
@@ -147,7 +147,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
     print(vTypeComplete);
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_5_Inteface_NonePO_WMS2ERP/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${gb.APP_USER}'));
+          '${gb.IP_API}/apex/wms/SSFGDT04/Step_5_Inteface_NonePO_WMS2ERP/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${gb.APP_USER}'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final data = json.decode(responseBody);
@@ -172,7 +172,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
     // po_doc_type = 'FGI03';
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT04/Step_5_GET_PDF/${gb.P_DS_PDF}/${gb.BROWSER_LANGUAGE}/${widget.po_doc_no}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}/${gb.APP_SESSION}/${gb.FLAG}'));
+          '${gb.IP_API}/apex/wms/SSFGDT04/Step_5_GET_PDF/${gb.P_DS_PDF}/${gb.BROWSER_LANGUAGE}/${widget.po_doc_no}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}/${gb.APP_SESSION}/${gb.FLAG}'));
 
       print('Response body: ${response.body}'); // แสดงข้อมูลที่ได้รับจาก API
 
@@ -238,7 +238,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
   }
 
   Future<void> _launchUrl(String poDocNo) async {
-    final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
+    final uri = Uri.parse('${gb.IP_API}/jri/report?'
         '&_repName=/WMS/SSFGOD01'
         '&_repFormat=pdf'
         '&_dataSource=${gb.P_DS_PDF}'
@@ -284,7 +284,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
     if (!await launchUrl(uri)) {
       throw Exception('Could not launch $uri');
     }
-    print('http://172.16.0.82:8888/jri/report?'
+    print('${gb.IP_API}/jri/report?'
         '&_repName=/WMS/SSFGOD01'
         '&_repFormat=pdf'
         '&_dataSource=${gb.P_DS_PDF}'

@@ -134,7 +134,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   String? poMessage;
   Future<void> fetchPoStatus() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_2_chk_valid_inhead/${widget.poReceiveNo}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}';
+        '${gb.IP_API}/apex/wms/SSINDT01/Step_2_chk_valid_inhead/${widget.poReceiveNo}/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}';
 
     try {
       print(url);
@@ -168,7 +168,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   Future<void> fetchwhpoType() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_2_PO_TYPE'));
+          '${gb.IP_API}/apex/wms/SSINDT01/Step_2_PO_TYPE'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -206,7 +206,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
   Future<void> fetchReceiveHeadData(String receiveNo) async {
     final String apiUrl =
-        "http://172.16.0.82:8888/apex/wms/SSINDT01/Step_2_formtest/$receiveNo/${gb.P_ERP_OU_CODE}";
+        "${gb.IP_API}/apex/wms/SSINDT01/Step_2_formtest/$receiveNo/${gb.P_ERP_OU_CODE}";
 
     final Map<String, String> queryParams = {
       'RECEIVE_NO': receiveNo,
@@ -290,7 +290,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   Future<void> cancelCode() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSINDT01/Step_2_cancel_from_list'));
+          '${gb.IP_API}/apex/wms/SSINDT01/Step_2_cancel_from_list'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -322,7 +322,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   String? pomsg;
   Future<void> cancel_from(String selectedcCode) async {
     final url =
-        Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_2_cancel_from');
+        Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_2_cancel_from');
     final response = await http.put(
       url,
       headers: {
@@ -481,7 +481,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       String invoiceNo,
       String poTypeCode) async {
     final url =
-        Uri.parse('http://172.16.0.82:8888/apex/wms/SSINDT01/Step_2_UP_FORM_PO_REMARK');
+        Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_2_UP_FORM_PO_REMARK');
     final response = await http.put(
       url,
       headers: {

@@ -59,7 +59,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_1_IN_WAREHOUSE/${gb.APP_SESSION}/${gb.P_ERP_OU_CODE}'));
+          '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_IN_WAREHOUSE/${gb.APP_SESSION}/${gb.P_ERP_OU_CODE}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -106,8 +106,8 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
   }
 
   Future<void> fetchCheck(String? wareCode) async {
-    const url =
-        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
+    final url =
+        '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
   String message = '';
   Future<void> deleteData(String? wareCode) async {
     final String url =
-        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
+        '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
 
     try {
       final response = await http.delete(
