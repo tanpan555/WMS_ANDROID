@@ -7,7 +7,7 @@ import 'dart:ui';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import '../styles.dart';
 import 'package:flutter/services.dart';
-import 'package:wms_android/checkDataFormate.dart';
+import '../TextFormFieldCheckDate.dart';
 
 class SSFGDT04_SEARCH extends StatefulWidget {
   final String pWareCode;
@@ -26,11 +26,11 @@ class SSFGDT04_SEARCH extends StatefulWidget {
 class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   int pFlag = 1;
-  String pSoNo = 'null';
+  String? pSoNo;
   String selectedItem =
       'ระหว่างบันทึก'; // Ensure this value exists in dropdownItems
   String status = '1'; // Default status
-  String selectedDate = 'null'; // Allow null for the date
+  String? selectedDate; // Allow null for the date
   String appUser = gb.APP_USER;
   TextEditingController _dateController = TextEditingController();
   TextEditingController _controller = TextEditingController();
@@ -42,17 +42,16 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
     'ยืนยันการรับ',
     'ระหว่างบันทึก',
   ];
-  final dateRegExp =
-      RegExp(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$");
 
-  bool dateColorCheck = false;
-  bool monthColorCheck = false;
+  // bool dateColorCheck = false;
+  // bool monthColorCheck = false;
   bool noDate = false;
   bool chkDate = false;
   bool isLoading = false;
-  String? initialFormattedDate;
+  // String? initialFormattedDate;
   final dateInputFormatter = DateInputFormatter();
   bool isDateInvalid = false;
+  final ValueNotifier<bool> isDateInvalidNotifier = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -265,51 +264,16 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   },
                 ),
                 const SizedBox(height: 8),
-                TextFormField(
+                CustomTextFormField(
                   controller: _dateController,
+                  labelText: 'วันที่ส่งสินค้า',
                   keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(8),
-                    dateInputFormatter,
-                  ],
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelText: 'วันที่ส่งสินค้า',
-                    hintText: 'DD/MM/YYYY',
-                    hintStyle: const TextStyle(color: Colors.grey),
-                    labelStyle: isDateInvalid
-                        ? const TextStyle(color: Colors.red)
-                        : const TextStyle(color: Colors.black87),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.calendar_today),
-                      onPressed: () {
-                        _selectDate(context);
-                      },
-                    ),
-                  ),
                   onChanged: (value) {
-                    setState(() {
-                      selectedDate = value;
-                      isDateInvalid = dateInputFormatter.noDateNotifier.value;
-                    });
-                    print('isDateInvalid : $isDateInvalid');
+                    selectedDate = value;
+                    print('วันที่: $selectedDate');
                   },
+                  isDateInvalidNotifier: isDateInvalidNotifier,
                 ),
-                if (isDateInvalid == true)
-                  const Padding(
-                    padding: EdgeInsets.only(top: 4.0),
-                    child: Text(
-                      'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -328,7 +292,8 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                           chkDate = false; // Reset status to default
 
                           // Clear date error when delete button is pressed
-                          isDateInvalid = false;
+                          isDateInvalidNotifier.value =
+                              false; // Update the notifier
                         });
                       },
                       style: AppStyles.EraserButtonStyle(),
@@ -339,14 +304,13 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     ElevatedButton(
                       onPressed: () {
                         // ตรวจสอบว่า selectedDate ไม่เป็น null หรือว่าง
-                        if (isDateInvalid == false) {
-                          if (selectedDate != 'null' &&
-                              selectedDate.isNotEmpty &&
-                              selectedDate != 'null') {
+                        if (!isDateInvalid) {
+                          if (selectedDate != null &&
+                              selectedDate!.isNotEmpty) {
                             try {
                               // แปลงวันที่ให้เป็นรูปแบบที่ถูกต้อง
                               String modifiedDate =
-                                  selectedDate.replaceAll('-', '/');
+                                  selectedDate!.replaceAll('-', '/');
                               DateTime parsedDate =
                                   DateFormat('dd/MM/yyyy').parse(modifiedDate);
 
@@ -366,7 +330,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                                     pWareCode: widget.pWareCode,
                                     pAppUser: appUser,
                                     pFlag: pFlag,
-                                    soNo: pSoNo.isEmpty ? 'null' : pSoNo,
+                                    soNo: pSoNo ?? '',
                                     date: formattedDate.isEmpty
                                         ? 'null'
                                         : formattedDate,
@@ -374,11 +338,10 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                                   ),
                                 ),
                               ).then((value) async {
-                                print('isDateInvalid PPPPPP $isDateInvalid');
-                                print('selectedDate PPPPPP $selectedDate');
+                                print('isDateInvalid $isDateInvalid');
+                                print('selectedDate $selectedDate');
                               });
                             } catch (e) {
-                              // ถ้ามีข้อผิดพลาดในการแปลงวันที่ จับข้อผิดพลาดและแสดงข้อความ
                               print('Error parsing date: $e');
                               // สามารถเพิ่มการแจ้งเตือนหรือแสดงข้อความให้กับผู้ใช้ที่ไม่สามารถแปลงวันที่ได้
                             }
@@ -392,7 +355,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                                   pWareCode: widget.pWareCode,
                                   pAppUser: appUser,
                                   pFlag: pFlag,
-                                  soNo: pSoNo.isEmpty ? 'null' : pSoNo,
+                                  soNo: pSoNo ?? '',
                                   date:
                                       'null', // ส่ง 'null' เมื่อ selectedDate เป็นค่าว่างหรือ null
                                   status: status,

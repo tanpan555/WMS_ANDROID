@@ -5,3 +5,7 @@
 
 **หน้า SCANBARCODE
 Barcode : A999999
+
+**หน้า SEARCH
+กรณีดาวน์โหลดเอกสาร PDF
+เลขที่เอกสาร : PORNTIP.Y
