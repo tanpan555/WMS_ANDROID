@@ -44,6 +44,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
   String P_RECEIVE_NO = '';
   String? report;
   String? allreport;
+  bool isDialogShowing = false;
 
   @override
   void initState() {
@@ -315,6 +316,12 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () async {
+                    if (isDialogShowing) return;
+
+                    setState(() {
+                      isDialogShowing =
+                          true; // Set flag to true when a dialog is about to be shown
+                    });
                     await chk_sub();
                     if (poStatus == '1') {
                       showDialog(
@@ -325,9 +332,17 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                       content:Text(poMessage ?? ''),
                       onClose: () {
                         Navigator.of(context).pop();
+                        setState(() {
+                                isDialogShowing =
+                                    false; // Reset the flag when the first dialog is closed
+                              });
                       },
                       onConfirm: () async {
                         Navigator.of(context).pop();
+                        setState(() {
+                                isDialogShowing =
+                                    false; // Reset the flag when the first dialog is closed
+                              });
                       },
                     );
                   },

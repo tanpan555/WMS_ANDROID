@@ -167,8 +167,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
   Future<void> fetchwhpoType() async {
     try {
-      final response = await http.get(Uri.parse(
-          '${gb.IP_API}/apex/wms/SSINDT01/Step_2_PO_TYPE'));
+      final response = await http
+          .get(Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_2_PO_TYPE'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -289,8 +289,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
   Future<void> cancelCode() async {
     try {
-      final response = await http.get(Uri.parse(
-          '${gb.IP_API}/apex/wms/SSINDT01/Step_2_cancel_from_list'));
+      final response = await http.get(
+          Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_2_cancel_from_list'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -321,8 +321,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
   String? pomsg;
   Future<void> cancel_from(String selectedcCode) async {
-    final url =
-        Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_2_cancel_from');
+    final url = Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_2_cancel_from');
     final response = await http.put(
       url,
       headers: {
@@ -362,13 +361,14 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     }
   }
 
+//ค้นหาสาเหตุการยกเลิก
   void searchDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return DialogStyles.customLovSearchDialog(
           context: context,
-          headerText: 'เลือกสาเหตุยกเลิก',
+          headerText: 'เลือกสาเหตุการยกเลิก',
           searchController: _searchController,
           data: cCode,
           docString: (item) {
@@ -397,6 +397,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     );
   }
 
+  bool isDialogShowing = false;
+// สาเหตุการยกเลิก
   void showCancelDialog(BuildContext parentContext) {
     showDialog(
       context: parentContext,
@@ -404,13 +406,25 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
         return DialogStyles.cancelDialog(
           context: context,
           controller: _CcodeController,
+          // cancel button
           onCloseDialog: () {
             Navigator.of(context).pop();
           },
           onTap: searchDialog, // Open search dialog
+          // OK button
           onConfirmDialog: () async {
+            if (isDialogShowing) return;
+
+            setState(() {
+              isDialogShowing =
+                  true; // Set flag to true when a dialog is about to be shown
+            });
             await cancel_from(selectedcCode ?? '');
             if (selectedcCode == null) {
+              setState(() {
+                isDialogShowing =
+                    false; // Reset the flag when the first dialog is closed
+              });
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -468,7 +482,10 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           },
         );
       },
-    );
+    ).then((_) {
+      // ลบค่าที่ค้นหาเมื่อ popup ถูกปิด ไม่ว่าจะกดไอคอนหรือกดที่อื่น
+      _CcodeController.clear();
+    });
   }
 
   final String updDateForm = DateFormat('MM/dd/yyyy').format(DateTime.now());
@@ -743,7 +760,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                       data: poType,
                       docString: (item) => item['po_type_code'].toString(),
                       titleText: (item) => item['po_type_code'].toString(),
-                      subtitleText: (item) => '', // You can add a subtitle if needed
+                      subtitleText: (item) =>
+                          '', // You can add a subtitle if needed
                       // subtitleText: (item) => item['po_type_desc'].toString(),
                       onTap: (item) {
                         Navigator.of(context).pop();

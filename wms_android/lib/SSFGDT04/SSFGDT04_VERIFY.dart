@@ -380,7 +380,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                             onConfirm: () async {
                               Navigator.of(context)
                                   .pop(); // Close the first dialog
-
+                                
                               // Wait for a moment to ensure the first dialog is fully closed
                               await Future.delayed(Duration(milliseconds: 100));
 
@@ -453,7 +453,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                   },
                   style: AppStyles.ConfirmbuttonStyle(),
                   child: Text(
-                    'CONFIRM',
+                    'Confirm',
                     style: AppStyles.ConfirmbuttonTextStyle(),
                   ),
                 )

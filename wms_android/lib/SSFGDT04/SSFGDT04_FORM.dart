@@ -102,6 +102,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   bool chkDate = false;
   int _cursorPosition = 0;
   bool checkUpdateData = false;
+  bool isDialogShowing = false;
 
   bool check = false;
   void checkIfHasData() {
@@ -211,8 +212,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   }
 
   Future<void> fetchDocTypeItems() async {
-    final response = await http.get(Uri.parse(
-        '${gb.IP_API}/apex/wms/SSFGDT04/Step_2_TYPE/${gb.ATTR1}'));
+    final response = await http.get(
+        Uri.parse('${gb.IP_API}/apex/wms/SSFGDT04/Step_2_TYPE/${gb.ATTR1}'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -275,8 +276,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   }
 
   Future<void> fetchRefNoItems() async {
-    final response = await http.get(
-        Uri.parse('${gb.IP_API}/apex/wms/SSFGDT04/Step_2_REF_NO'));
+    final response = await http
+        .get(Uri.parse('${gb.IP_API}/apex/wms/SSFGDT04/Step_2_REF_NO'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -292,8 +293,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   }
 
   Future<void> fetchCancelItems() async {
-    final response = await http.get(
-        Uri.parse('${gb.IP_API}/apex/wms/SSFGDT04/Step_2_CANCEL'));
+    final response = await http
+        .get(Uri.parse('${gb.IP_API}/apex/wms/SSFGDT04/Step_2_CANCEL'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -370,8 +371,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   ) async {
     print(
         'update called with po_doc_type: $po_doc_type, po_doc_no: $po_doc_no');
-    final url =
-        Uri.parse('${gb.IP_API}/apex/wms/SSFGDT04/Step_2_wms_ith');
+    final url = Uri.parse('${gb.IP_API}/apex/wms/SSFGDT04/Step_2_wms_ith');
     final response = await http.put(url,
         headers: {
           'Content-Type': 'application/json',
@@ -390,7 +390,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
           'P_DOC_NO': po_doc_no,
           'P_ATTR1': gb.ATTR1,
           'P_DOC_TYPE': po_doc_type,
-
         }));
 
     print('Navigating to SSFGDT04_GRID with:');
@@ -556,7 +555,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                             .customLovSearchDialog(
                                           context: context,
                                           headerText:
-                                              'สาเหตุการยกเลิก', // Set header text
+                                              'เลือกสาเหตุการยกเลิก', // Set header text
                                           searchController:
                                               _searchController, // Pass search controller
                                           data:
@@ -604,9 +603,19 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                     });
                                   },
                                   onConfirmDialog: () async {
+                                    if (isDialogShowing) return;
+
+                                    setState(() {
+                                      isDialogShowing =
+                                          true; // Set flag to true when a dialog is about to be shown
+                                    });
                                     await cancel_INHeadNonePO_WMS(
                                         selectedCancelCode ?? '');
                                     if (selectedCancelCode == null) {
+                                      setState(() {
+                                        isDialogShowing =
+                                            false; // Reset the flag when the first dialog is closed
+                                      });
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext context) {

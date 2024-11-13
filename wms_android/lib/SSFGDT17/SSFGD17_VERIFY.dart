@@ -38,6 +38,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
   String? pack_qty = '';
   String? to_loc = '';
   int? req;
+  bool isDialogShowing = false;
 
   List<Map<String, dynamic>> items = [];
 
@@ -185,8 +186,8 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
   }
 
   Future<void> deleteItem() async {
-    final url = Uri.parse(
-        '${gb.IP_API}/apex/wms/SSFGDT17/Step_4_delete_item_verify');
+    final url =
+        Uri.parse('${gb.IP_API}/apex/wms/SSFGDT17/Step_4_delete_item_verify');
     print(Doc_type);
     print(doc_no);
     print(req);
@@ -434,6 +435,12 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
                     ),
                     ElevatedButton(
                       onPressed: () async {
+                        if (isDialogShowing) return;
+
+                        setState(() {
+                          isDialogShowing =
+                              true; // Set flag to true when a dialog is about to be shown
+                        });
                         await chk_validateSave();
                         if (poStatus == '0') {
                           showDialog(
@@ -445,6 +452,10 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
                                     'การบันทึก และส่งข้อมูลเข้า ERP สมบูรณ์'),
                                 onClose: () {
                                   Navigator.of(context).pop();
+                                  setState(() {
+                                    isDialogShowing =
+                                        false; // Reset the flag when the first dialog is closed
+                                  });
                                 },
                                 onConfirm: () async {
                                   Navigator.of(context).pop();

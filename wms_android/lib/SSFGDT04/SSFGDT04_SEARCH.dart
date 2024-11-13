@@ -82,24 +82,13 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
       });
     }
   }
-  
+
   Future<void> _selectDate(
-      BuildContext context, String? initialDateString) async {
-    DateTime? initialDate;
-
-    if (initialDateString != null) {
-      try {
-        initialDate = DateFormat('dd/MM/yyyy').parseStrict(initialDateString);
-      } catch (e) {
-        initialDate = DateTime.now();
-      }
-    } else {
-      initialDate = DateTime.now();
-    }
-
+    BuildContext context,
+  ) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: initialDate,
+      initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
       initialEntryMode: DatePickerEntryMode.calendarOnly,
@@ -109,8 +98,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
       String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
       if (mounted) {
         setState(() {
-          noDate = false;
-          chkDate = false;
+          isDateInvalid = false;
           _dateController.text = formattedDate;
           selectedDate = _dateController.text;
         });
@@ -276,7 +264,6 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     });
                   },
                 ),
-
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _dateController,
@@ -299,7 +286,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.calendar_today),
                       onPressed: () {
-                        _selectDate(context, selectedDate);
+                        _selectDate(context);
                       },
                     ),
                   ),
@@ -323,8 +310,6 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                       ),
                     ),
                   ),
-                // const SizedBox(height: 20),
-
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

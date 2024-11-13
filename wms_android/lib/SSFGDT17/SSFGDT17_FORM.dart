@@ -107,7 +107,8 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     final DateTime? picked = await showDatePicker(
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       context: context,
-      initialDate: selectedDate, // Fallback to current date if selectedDate is null
+      initialDate:
+          selectedDate, // Fallback to current date if selectedDate is null
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
@@ -180,8 +181,8 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
 
   Future<void> cancelCode() async {
     try {
-      final response = await http.get(Uri.parse(
-          '${gb.IP_API}/apex/wms/SSFGDT17/Step_2_cancel_list'));
+      final response = await http
+          .get(Uri.parse('${gb.IP_API}/apex/wms/SSFGDT17/Step_2_cancel_list'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -236,7 +237,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     );
   }
 
-bool isDialogShowing = false;
+  bool isDialogShowing = false;
   void showCancelDialog(BuildContext parentContext) {
     showDialog(
       context: parentContext,
@@ -247,10 +248,20 @@ bool isDialogShowing = false;
             Navigator.of(context).pop(); // Close the dialog
           },
           onConfirmDialog: () async {
+            if (isDialogShowing) return;
+
+            setState(() {
+              isDialogShowing =
+                  true; // Set flag to true when a dialog is about to be shown
+            });
             // Perform your cancellation logic here
             await cancel_from(selectedcCode ?? '');
 
             if (selectedcCode == '') {
+              setState(() {
+                isDialogShowing =
+                    false; // Reset the flag when the first dialog is closed
+              });
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -476,8 +487,7 @@ bool isDialogShowing = false;
   List<Map<String, dynamic>> REF_NOItems = [];
   String? selectedREF_NO;
   Future<void> fetchREF_NOLIST() async {
-    final url =
-        Uri.parse('${gb.IP_API}/apex/wms/SSFGDT17/Step_2_REF_NO');
+    final url = Uri.parse('${gb.IP_API}/apex/wms/SSFGDT17/Step_2_REF_NO');
     try {
       final response = await http.get(url);
 
@@ -538,36 +548,36 @@ bool isDialogShowing = false;
   }
 
   void _showStaffDialog() {
-  final TextEditingController _searchController = TextEditingController();
+    final TextEditingController _searchController = TextEditingController();
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return DialogStyles.customLovSearchDialog(
-        context: context,
-        headerText: 'เลือกผู้บันทึก', // Title for the dialog
-        searchController: _searchController,
-        data: StaffItems,
-        docString: (item) => item['r']?.toLowerCase() ?? '', // Document string
-        titleText: (item) => item['r'] ?? 'No code', // Title text
-        subtitleText: (item) => item['emp_name'] ?? '', // Subtitle text
-        onTap: (item) {
-          final staffCode = item['r'];
-          final empName = item['emp_name'] ?? '';
-          selectedStaff = staffCode; // Update the selected staff code
-          STAFF_CODE.text = empName; // Update the text controller
-          Navigator.of(context).pop(); // Close the dialog
-        },
-      );
-    },
-  ).then((_) {
-    // This code runs after the dialog is closed
-    setState(() {
-      // Force rebuild to reflect the selected staff in the dropdown or other UI element
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'เลือกผู้บันทึก', // Title for the dialog
+          searchController: _searchController,
+          data: StaffItems,
+          docString: (item) =>
+              item['r']?.toLowerCase() ?? '', // Document string
+          titleText: (item) => item['r'] ?? 'No code', // Title text
+          subtitleText: (item) => item['emp_name'] ?? '', // Subtitle text
+          onTap: (item) {
+            final staffCode = item['r'];
+            final empName = item['emp_name'] ?? '';
+            selectedStaff = staffCode; // Update the selected staff code
+            STAFF_CODE.text = empName; // Update the text controller
+            Navigator.of(context).pop(); // Close the dialog
+          },
+        );
+      },
+    ).then((_) {
+      // This code runs after the dialog is closed
+      setState(() {
+        // Force rebuild to reflect the selected staff in the dropdown or other UI element
+      });
     });
-  });
-}
-
+  }
 
   Widget _buildDropStaffdownSearch() {
     return Padding(
