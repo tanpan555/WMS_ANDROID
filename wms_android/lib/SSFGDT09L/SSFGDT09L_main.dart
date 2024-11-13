@@ -51,7 +51,7 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
     isLoading = true;
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SelectWareCode/${widget.pAttr1}/${widget.pErpOuCode}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SelectWareCode/${globals.ATTR1}/${globals.P_ERP_OU_CODE}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);

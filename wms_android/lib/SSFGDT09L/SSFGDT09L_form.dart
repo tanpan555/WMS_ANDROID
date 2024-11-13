@@ -180,7 +180,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     }
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectDataForm/${widget.pErpOuCode}/${widget.pDocType}/${widget.pDocNo}/${widget.pAttr1}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectDataForm/${globals.P_ERP_OU_CODE}/${widget.pDocType}/${widget.pDocNo}/${globals.ATTR1}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
@@ -272,7 +272,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   Future<void> lovDocType() async {
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovDocTypeFormPage/${widget.pAttr1}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovDocTypeFormPage/${globals.ATTR1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -502,7 +502,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     };
 
     final body = jsonEncode({
-      'p_ou_code': widget.pErpOuCode, // 000
+      'p_ou_code': globals.P_ERP_OU_CODE, // 000
       'p_doc_no': widget.pDocNo,
       'p_doc_type': widget.pDocType,
       'p_ref_no': returnStatusLovRefNo,
@@ -549,7 +549,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
     final body = jsonEncode({
       'pOuCode': widget.pOuCode,
-      'pErpOuCode': widget.pErpOuCode,
+      'pErpOuCode': globals.P_ERP_OU_CODE,
       'pDocNo': docNo,
       'pAppUser': globals.APP_USER,
     });
@@ -582,11 +582,11 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                 MaterialPageRoute(
                     builder: (context) => Ssfgdt09lGrid(
                           pWareCode: widget.pWareCode,
-                          pAttr1: widget.pAttr1,
+                          pAttr1: globals.ATTR1,
                           docNo: widget.pDocNo,
                           docType: widget.pDocType,
                           docDate: docDate,
-                          pErpOuCode: widget.pErpOuCode,
+                          pErpOuCode: globals.P_ERP_OU_CODE,
                           pOuCode: widget.pOuCode,
                           pAppUser: globals.APP_USER,
                           moDoNo: returnStatusLovMoDoNo,

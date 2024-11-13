@@ -63,7 +63,7 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
   Future<void> fetchData([String? url]) async {
     isLoading = true;
     final String requestUrl = url ??
-        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO.isEmpty ? 'null' : widget.pMoDoNO}';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${globals.P_ERP_OU_CODE}/${globals.P_OU_CODE}/${widget.pMoDoNO.isEmpty ? 'null' : widget.pMoDoNO}';
     try {
       final response = await http.get(Uri.parse(requestUrl));
 
@@ -83,10 +83,10 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
             nextLink = getLink(links, 'next');
             prevLink = getLink(links, 'prev');
             urlLoad = url ??
-                '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO}';
+                '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${globals.P_ERP_OU_CODE}/${globals.P_OU_CODE}/${widget.pMoDoNO}';
             if (url.toString().isNotEmpty) {
               extractLastNumberFromUrl(url.toString() ==
-                      '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO}'
+                      '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${globals.P_ERP_OU_CODE}/${globals.P_OU_CODE}/${widget.pMoDoNO}'
                   ? 'null'
                   : url.toString());
             }

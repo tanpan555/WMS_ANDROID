@@ -60,7 +60,7 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
     isLoading = true;
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SelectLovDocType/${widget.pAttr1}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SelectLovDocType/${globals.ATTR1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -100,8 +100,8 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
     };
 
     final body = jsonEncode({
-      'p_ou_code': widget.pOuCode,
-      'p_erp_ou_code': widget.pErpOuCode,
+      'p_ou_code': globals.P_OU_CODE,
+      'p_erp_ou_code': globals.P_ERP_OU_CODE,
       'p_app_session': globals.APP_SESSION,
       'p_ware_code': widget.pWareCode,
       'p_doc_type': docTypeLovR,
@@ -143,11 +143,11 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
                   context,
                   Ssfgdt09lForm(
                     pWareCode: widget.pWareCode,
-                    pAttr1: widget.pAttr1,
+                    pAttr1: globals.ATTR1,
                     pDocNo: poDocNo,
                     pDocType: poDocType,
-                    pOuCode: widget.pOuCode,
-                    pErpOuCode: widget.pErpOuCode,
+                    pOuCode: globals.P_OU_CODE,
+                    pErpOuCode: globals.P_ERP_OU_CODE,
                   ));
             }
           });

@@ -173,18 +173,18 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
     try {
       final String endpoint = widget.pItemCode != '' &&
               widget.pItemCode.isNotEmpty
-          ? '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${widget.pOuCode}/${widget.pMoDoNO}/$reasonRpLocR/${widget.pItemCode}'
-          : '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${widget.pOuCode}/${widget.pMoDoNO}/$reasonRpLocR/$dataNull';
+          ? '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${globals.P_OU_CODE}/${widget.pMoDoNO}/$reasonRpLocR/${widget.pItemCode}'
+          : '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${globals.P_OU_CODE}/${widget.pMoDoNO}/$reasonRpLocR/$dataNull';
 
       print('Fetching data from: $endpoint');
 
       final response = await http.get(Uri.parse(endpoint));
       // final response = await http.get(Uri.parse(
-      //     '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${widget.pOuCode}/${widget.pMoDoNO}/$reasonRpLocR/${widget.pItemCode}')),
+      //     '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${globals.P_OU_CODE}/${widget.pMoDoNO}/$reasonRpLocR/${widget.pItemCode}')),
 
       //     :
       //     final response = await http.get(Uri.parse(
-      //     '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${widget.pOuCode}/${widget.pMoDoNO}/$reasonRpLocR/${widget.pItemCode}'));
+      //     '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${globals.P_OU_CODE}/${widget.pMoDoNO}/$reasonRpLocR/${widget.pItemCode}'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -220,7 +220,7 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
     };
 
     final body = jsonEncode({
-      'pErpOuCode': widget.pErpOuCode.isNotEmpty ? widget.pErpOuCode : 'null',
+      'pErpOuCode': globals.P_ERP_OU_CODE,
       'pDocNo': widget.pDocNo.isNotEmpty ? widget.pDocNo : 'null',
       'pBarcode': widget.pBarcode.isNotEmpty ? widget.pBarcode : 'null',
       'pItemCode': widget.pItemCode.isNotEmpty ? widget.pItemCode : 'null',

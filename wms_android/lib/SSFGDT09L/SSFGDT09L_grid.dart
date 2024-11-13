@@ -83,7 +83,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   Future<void> fetchData([String? url]) async {
     isLoading = true;
     final String requestUrl = url ??
-        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docType}/${widget.docNo}';
     try {
       final response = await http.get(Uri.parse(requestUrl));
 
@@ -104,10 +104,10 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
             prevLink = getLink(links, 'prev');
             countData = parsedResponse['count'];
             urlLoad = url ??
-                '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}';
+                '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docType}/${widget.docNo}';
             if (url.toString().isNotEmpty) {
               extractLastNumberFromUrl(url.toString() ==
-                      '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}'
+                      '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docType}/${widget.docNo}'
                   ? 'null'
                   : url.toString());
             }
@@ -260,11 +260,11 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
 
       if (multiplication >= limitPage) {
         lastURL =
-            '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}?offset=$multiplication';
+            '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docType}/${widget.docNo}?offset=$multiplication';
 
         if (lastURL != '') {
           print(
-              'โหลดหน้าสุดท้าย : ${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}?offset=$multiplication');
+              'โหลดหน้าสุดท้าย : ${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docType}/${widget.docNo}?offset=$multiplication');
           fetchData(lastURL);
           countDataGridCard(true);
         }
@@ -449,8 +449,8 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => Ssfgdt09lPickingSlip(
-                                pErpOuCode: widget.pErpOuCode,
-                                pOuCode: widget.pOuCode,
+                                pErpOuCode: globals.P_ERP_OU_CODE,
+                                pOuCode: globals.P_OU_CODE,
                                 pMoDoNO: widget.moDoNo,
                                 pDocNo: widget.docNo,
                               )),
@@ -473,8 +473,8 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => Ssfgdt09lVerify(
-                                pErpOuCode: widget.pErpOuCode,
-                                pOuCode: widget.pOuCode,
+                                pErpOuCode: globals.P_ERP_OU_CODE,
+                                pOuCode: globals.P_OU_CODE,
                                 docNo: widget.docNo,
                                 docType: widget.docType,
                                 docDate: widget.docDate,
@@ -572,8 +572,8 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                 MaterialPageRoute(
                                     builder: (context) => Ssfgdt09lBarcode(
                                           pWareCode: widget.pWareCode,
-                                          pErpOuCode: widget.pErpOuCode,
-                                          pOuCode: widget.pOuCode,
+                                          pErpOuCode: globals.P_ERP_OU_CODE,
+                                          pOuCode: globals.P_OU_CODE,
                                           pAttr1: widget.pAttr1,
                                           pAppUser: widget.pAppUser,
                                           pDocNo: widget.docNo,

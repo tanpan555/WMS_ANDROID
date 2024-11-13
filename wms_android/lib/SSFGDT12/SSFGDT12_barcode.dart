@@ -339,7 +339,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
               Container(
                 padding: const EdgeInsets.all(12.0),
                 decoration: BoxDecoration(
-                  color: Colors.yellow[200],
+                  color: Colors.yellow[100],
                   border: Border.all(
                     color: Colors.black,
                     width: 2.0,

@@ -132,7 +132,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
   Future<void> fetchData([String? url]) async {
     isLoading = true;
     final String requestUrl = url ??
-        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docNo}/${widget.docType}';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}';
     try {
       final response = await http.get(Uri.parse(requestUrl));
 
@@ -152,10 +152,10 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
             nextLink = getLink(links, 'next');
             prevLink = getLink(links, 'prev');
             urlLoad = url ??
-                '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docNo}/${widget.docType}';
+                '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}';
             if (url.toString().isNotEmpty) {
               extractLastNumberFromUrl(url.toString() ==
-                      '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docNo}/${widget.docType}'
+                      '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}'
                   ? 'null'
                   : url.toString());
             }
@@ -244,7 +244,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
     };
 
     final body = jsonEncode({
-      'p_erp_ou_code': widget.pErpOuCode,
+      'p_erp_ou_code': globals.P_ERP_OU_CODE,
       'p_doc_no': widget.docNo,
       'p_app_user': globals.APP_USER,
     });
@@ -299,7 +299,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
 
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_GET_PDF/${widget.docType}/$date2/$poErpDocNo/$flag/${widget.pWareCode}/${globals.APP_SESSION}/${globals.APP_USER}/${globals.P_DS_PDF}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_GET_PDF/${widget.docType}/$date2/$poErpDocNo/$flag/${widget.pWareCode}/${globals.APP_SESSION}/${globals.APP_USER}/${globals.P_DS_PDF}/${globals.BROWSER_LANGUAGE}'));
 
       print('Response body: ${response.body}'); // แสดงข้อมูลที่ได้รับจาก API
 
@@ -1109,8 +1109,8 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                         MaterialPageRoute(
                             builder: (context) => SSFGDT09L_MAIN(
                                   pAttr1: globals.ATTR1,
-                                  pErpOuCode: widget.pErpOuCode,
-                                  pOuCode: widget.pOuCode,
+                                  pErpOuCode: globals.P_ERP_OU_CODE,
+                                  pOuCode: globals.P_OU_CODE,
                                 )),
                       ).then((value) {
                         fetchData();
@@ -1143,8 +1143,8 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                             MaterialPageRoute(
                                 builder: (context) => SSFGDT09L_MAIN(
                                       pAttr1: globals.ATTR1,
-                                      pErpOuCode: widget.pErpOuCode,
-                                      pOuCode: widget.pOuCode,
+                                      pErpOuCode: globals.P_ERP_OU_CODE,
+                                      pOuCode: globals.P_OU_CODE,
                                     )),
                           ).then((value) {
                             fetchData();

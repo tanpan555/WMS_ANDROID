@@ -177,7 +177,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
     };
 
     final body = jsonEncode({
-      'p_erp_ou_code': widget.pErpOuCode,
+      'p_erp_ou_code': globals.P_ERP_OU_CODE,
       'p_doc_no': widget.pDocNo,
       'p_schid': widget.pMoDoNO,
       'p_lot_no': lotNo,
@@ -284,7 +284,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
   }
 
   Future<void> chkQuantity() async {
-    print('pErpOuCode : ${widget.pErpOuCode}');
+    print('pErpOuCode : ${globals.P_ERP_OU_CODE}');
     print('pDocNo : ${widget.pDocNo}');
     print('pWareCode : ${widget.pWareCode}');
     print('locatorForm : $locatorForm');
@@ -301,7 +301,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
     };
 
     final body = jsonEncode({
-      'pErpOuCode': widget.pErpOuCode,
+      'pErpOuCode': globals.P_ERP_OU_CODE,
       'pDocNo': widget.pDocNo,
       'pWareCode': widget.pWareCode,
       'pFormLocation': locatorForm.isNotEmpty ? locatorForm : 'null',
@@ -353,7 +353,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
     print('textForm : $textForm');
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ChkLocatorForm/${widget.pErpOuCode}/${widget.pWareCode}/${widget.pDocNo}/${textInput.isNotEmpty ? textInput : 'mull'}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ChkLocatorForm/${globals.P_ERP_OU_CODE}/${widget.pWareCode}/${widget.pDocNo}/${textInput.isNotEmpty ? textInput : 'mull'}'));
 
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
@@ -430,7 +430,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
     };
 
     final body = jsonEncode({
-      'pErpOuCode': widget.pErpOuCode,
+      'pErpOuCode': globals.P_ERP_OU_CODE,
       'pDocNo': widget.pDocNo,
       'pBarcode': barCode,
       'pItemCode': itemCode,
@@ -867,7 +867,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
       // String messageDelete,
       ) {
     print('11111111111111111111111111111111');
-    print('pErpOuCode : ${widget.pErpOuCode}');
+    print('pErpOuCode : ${globals.P_ERP_OU_CODE}');
     print('pDocNo : ${widget.pDocNo}');
     if (chkShowDialogcomfirmMessage == false) {
       chkShowDialogcomfirmMessage = true;
@@ -991,7 +991,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                           MaterialPageRoute(
                               builder: (context) => Ssfgdt09lReason(
                                     pOuCode: widget.pOuCode,
-                                    pErpOuCode: widget.pErpOuCode,
+                                    pErpOuCode: globals.P_ERP_OU_CODE,
                                     pDocNo: widget.pDocNo,
                                     pMoDoNO: widget.pMoDoNO,
                                     pItemCode: itemCode,

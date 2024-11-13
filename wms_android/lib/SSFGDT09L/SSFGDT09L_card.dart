@@ -150,7 +150,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     }
     print('URL : $url ');
     final String requestUrl = url ??
-        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${widget.pErpOuCode}/${widget.pAttr1}/${widget.pAppUser}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${globals.P_ERP_OU_CODE}/${globals.ATTR1}/${globals.APP_USER}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}';
 
     try {
       final response = await http.get(Uri.parse(requestUrl));
@@ -193,7 +193,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     print('po_status $pReceiveNo Type: ${pReceiveNo.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_check_ISSDirect_validate/${widget.pOuCode}/${widget.pErpOuCode}/$pReceiveNo'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_check_ISSDirect_validate/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/$pReceiveNo'));
 
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
@@ -302,7 +302,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     print('pDocType $pDocType Type: ${pDocType.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_INHEAD/${widget.pOuCode}/${widget.pErpOuCode}/$sessionID/$pDocNo/$pDocType/${widget.pAppUser}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_INHEAD/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${globals.APP_SESSION}/$pDocNo/$pDocType/${globals.APP_USER}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> dataGetInHead =
@@ -364,14 +364,14 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
             context,
             MaterialPageRoute(
               builder: (context) => Ssfgdt09lForm(
-                  pWareCode: widget.pErpOuCode,
+                  pWareCode: globals.P_ERP_OU_CODE,
                   pAttr1: widget.pAttr1,
                   // pDocNo: 'RMO1-WMS-24090028',
                   // pDocType: 'RMO1',
                   pDocNo: pDocNoGetInHead,
                   pDocType: pDocTypeGetInHead,
-                  pOuCode: widget.pOuCode,
-                  pErpOuCode: widget.pErpOuCode),
+                  pOuCode: globals.P_OU_CODE,
+                  pErpOuCode: globals.P_ERP_OU_CODE),
             ),
           ).then((value) async {
             setState(() {
@@ -390,8 +390,8 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                 docNo: pDocNoGetInHead,
                 docType: pDocTypeGetInHead,
                 docDate: formattedDateDocDate,
-                pErpOuCode: widget.pErpOuCode,
-                pOuCode: widget.pOuCode,
+                pErpOuCode: globals.P_ERP_OU_CODE,
+                pOuCode: globals.P_OU_CODE,
                 pAppUser: globals.APP_USER,
                 moDoNo: '230303001',
                 // test
@@ -408,8 +408,8 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
             context,
             MaterialPageRoute(
               builder: (context) => Ssfgdt09lVerify(
-                pOuCode: widget.pOuCode,
-                pErpOuCode: widget.pErpOuCode,
+                pOuCode: globals.P_OU_CODE,
+                pErpOuCode: globals.P_ERP_OU_CODE,
                 docNo: pDocNoGetInHead,
                 docType: pDocTypeGetInHead,
                 docDate: formattedDateDocDate,
@@ -433,7 +433,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   Future<void> getPDF(String docNo, String docType, String docDate) async {
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${widget.pErpOuCode}/${widget.pAppUser}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${widget.pFlag}/$pDsPdf'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/${globals.BROWSER_LANGUAGE}/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${widget.pWareCode}/${globals.APP_SESSION}/$docType/$docDate/$docNo/${widget.pFlag}/${globals.P_DS_PDF}'));
 
       debugPrint('Response body: ${response.body}');
       print('docNo in get pdf : $docNo');

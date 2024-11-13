@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/loading.dart';
 import 'package:wms_android/centered_message.dart';
-import 'SSFGDT12_main.dart';
+// import 'SSFGDT12_main.dart';
 import 'SSFGDT12_barcode.dart';
 
 class Ssfgdt12Grid extends StatefulWidget {
@@ -251,7 +251,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     int vCouQty,
   ) {
     if (vCouQty == 0) {
-      showDialogconfirm();
+      showDialogconfirm(context);
     } else {
       showDialogCONFIRMCOUNT();
     }
@@ -441,6 +441,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                             ElevatedButton(
                               onPressed: () {
                                 showDialogconfirmCancel(
+                                  context,
                                   widget.docNo,
                                 );
                               },
@@ -1695,89 +1696,20 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     );
   }
 
-  void showDialogconfirm() {
+  void showDialogconfirm(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.notification_important,
-                      color: Colors.red,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'แจ้งเตือน',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            content: const SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Text('ต้องการยืนยันตรวจนับ หรือไม่ !!!'),
-                  ],
-                ),
-              ),
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      submitData(conditionNull);
-                      // Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text(
-                      'OK',
-                    ),
-                  ),
-                ],
-              )
-            ],
-          );
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: const Text('ต้องการยืนยันตรวจนับ หรือไม่ !!!'),
+          onClose: () => Navigator.of(context).pop(),
+          onConfirm: () {
+            submitData(conditionNull);
+          },
+        );
+      },
+    );
   }
 
   void showDialogCONFIRMCOUNT() {
@@ -1830,17 +1762,32 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                   TextFormField(
                     controller: dataLovStatusConfirmSubmitController,
                     readOnly: true,
+                    minLines: 1,
+                    maxLines: 5,
                     onTap: () => showDialogSelectDataStatusConfirmSubmit(),
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
                       filled: true,
                       fillColor: Colors.white,
-                      labelText: 'ประเภทรายการ',
-                      labelStyle: const TextStyle(
-                        color: Colors.black87,
+                      label: RichText(
+                        text: const TextSpan(
+                          text: 'สถานะ',
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 16,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: ' *',
+                              style: TextStyle(
+                                color: Colors.red,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      suffixIcon: Icon(
+                      suffixIcon: const Icon(
                         Icons.arrow_drop_down,
                         color: Color.fromARGB(255, 113, 113, 113),
                       ),
@@ -1984,14 +1931,20 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                 if (statusSubmit == '0')
                   ElevatedButton(
                     onPressed: () {
-                      _navigateToPage(
-                          context,
-                          SSFGDT12_MAIN(
-                            p_attr1: widget.p_attr1,
-                            pErpOuCode: widget.pErpOuCode,
-                          )
-                          //
-                          );
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      //   _navigateToPage(
+                      //       context,
+                      //       SSFGDT12_MAIN(
+                      //         p_attr1: widget.p_attr1,
+                      //         pErpOuCode: widget.pErpOuCode,
+                      //       )
+                      //       //
+                      //       );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -2007,84 +1960,23 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     );
   }
 
-  void showDialogconfirmCancel(String pDocNO) {
+  void showDialogconfirmCancel(
+    BuildContext context,
+    String pDocNO,
+  ) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.notification_important,
-                      color: Colors.red,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'แจ้งเตือน',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            content: const SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Text('ต้องการยกเลิกยืนยันตรวจนับ หรือไม่ !!!'),
-                  ],
-                ),
-              ),
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text(
-                      'Cancel',
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      cancelGrid(pDocNO);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text(
-                      'OK',
-                    ),
-                  ),
-                ],
-              )
-            ],
-          );
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: const Text('ต้องการยกเลิกยืนยันตรวจนับ หรือไม่ !!!'),
+          onClose: () => Navigator.of(context).pop(),
+          onConfirm: () {
+            cancelGrid(pDocNO);
+          },
+        );
+      },
+    );
   }
 
   void showDialogCancelSucceed(
@@ -2201,10 +2093,23 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'สถานะ',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                          RichText(
+                            text: const TextSpan(
+                              text: 'สถานะ',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                              ),
+                              children: const [
+                                TextSpan(
+                                  text: ' *',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           IconButton(
                             icon: const Icon(Icons.close),
