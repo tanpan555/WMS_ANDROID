@@ -8,6 +8,7 @@ import 'SSFGDT04_FORM.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../styles.dart';
 import '../loading.dart';
+import '../centered_message.dart';
 
 class SSFGDT04_CARD extends StatefulWidget {
   final int pFlag;
@@ -53,7 +54,8 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   String pDocTypeGetInHead = '';
   String broeserLanguage = gb.BROWSER_LANGUAGE;
   String pDsPdf = gb.P_DS_PDF;
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController _singleChildScrollController = ScrollController();
+  final ScrollController _listViewScrollController = ScrollController();
 
   // PDF
   String? V_DS_PDF;
@@ -113,6 +115,13 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     fetchData();
   }
 
+  @override
+  void dispose() {
+    _singleChildScrollController.dispose();
+    _listViewScrollController.dispose();
+    super.dispose();
+  }
+
   void _navigateToPage(BuildContext context, Widget page) {
     Navigator.push(
       context,
@@ -121,25 +130,21 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   }
 
   Future<void> fetchData([String? url]) async {
-    if (!mounted) return; // ตรวจสอบว่าตัว component ยังถูก mount อยู่หรือไม่
-
     if (mounted) {
       setState(() {
         isLoading = true;
       });
     }
-
+    print('URL : $url ');
     final String requestUrl = url ??
         '${gb.IP_API}/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}/${gb.BROWSER_LANGUAGE}';
 
     try {
       final response = await http.get(Uri.parse(requestUrl));
-      print(requestUrl);
+
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final parsedResponse = json.decode(responseBody);
-
-        if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
 
         if (mounted) {
           setState(() {
@@ -148,48 +153,30 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
             } else {
               dataCard = [];
             }
-            int totalCards = dataCard.length;
-            List<dynamic> getCurrentPageItems() {
-              int startIndex = currentPage * itemsPerPage;
-              int endIndex = (startIndex + itemsPerPage > totalCards)
-                  ? totalCards
-                  : startIndex + itemsPerPage;
-              return dataCard.sublist(
-                  startIndex, endIndex); // ดึงเฉพาะ card ในหน้าปัจจุบัน
-            }
-
-            filterData(); // เรียกใช้ filterData เมื่อมีการเปลี่ยนหน้า
             isLoading = false;
           });
         }
       } else {
-        if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
-
-        // Handle HTTP error responses
         if (mounted) {
           setState(() {
-            isLoading = false;
-            errorMessage = 'Failed to load data: ${response.statusCode}';
+            print('Failed to load data: ${response.statusCode}');
           });
         }
+        print('HTTP Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
-      if (!mounted) return; // ตรวจสอบอีกครั้งก่อนเรียก setState
-
-      // Handle exceptions that may occur
       if (mounted) {
+        isLoading = false;
         setState(() {
-          isLoading = false;
-          errorMessage = 'Error occurred: $e';
+          print('Error occurred: $e');
         });
       }
+      print('Exception: $e');
     }
   }
 
-  String? getLink(List<dynamic> links, String rel) {
-    final link =
-        links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
-    return link != null ? link['href'] : null;
+  int totalPages() {
+    return (dataCard.length / itemsPerPage).ceil(); // คำนวณจำนวนหน้าทั้งหมด
   }
 
   void _loadPrevPage() {
@@ -212,9 +199,16 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     }
   }
 
+  List<dynamic> getCurrentData() {
+    final start = currentPage * itemsPerPage;
+    final end = start + itemsPerPage;
+
+    return dataCard.sublist(start, end.clamp(0, dataCard.length));
+  }
+
   void _scrollToTop() {
-    if (_scrollController.hasClients) {
-      _scrollController.jumpTo(0); // เลื่อนไปยังตำแหน่งเริ่มต้น (index 0)
+    if (_singleChildScrollController.hasClients) {
+      _singleChildScrollController.jumpTo(0); // Scroll to the top
     }
   }
 
@@ -374,8 +368,8 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   }
 
   Future<void> getPDF(String poDocNo, String poDocType) async {
-    poDocNo = '67020001';
-    poDocType = 'FGI03';
+    // poDocNo = '67020001';
+    // poDocType = 'FGI03';
     try {
       final response = await http.get(Uri.parse(
           '${gb.IP_API}/apex/wms/SSFGDT04/Step_1_GET_PDF/$poDocType/$poDocNo/${gb.P_DS_PDF}/${gb.BROWSER_LANGUAGE}/${gb.P_ERP_OU_CODE}/${gb.APP_USER}/${gb.APP_SESSION}/${widget.pFlag}'));
@@ -433,7 +427,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
             LB_PALLET_QTY = dataPDF['LB_PALLET_QTY'] ?? '';
             LH_MO_DO_NO = dataPDF['LH_MO_DO_NO'] ?? '';
 
-            _launchUrl(poDocNo);
+            _launchUrl('$poDocType' '-' '$poDocNo');
           });
         }
       } else {
@@ -541,283 +535,401 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
 
   @override
   Widget build(BuildContext context) {
-    int totalCards = dataCard.length;
-    bool hasPreviousPage = currentPage > 0;
-    bool hasNextPage = (currentPage + 1) * itemsPerPage < totalCards;
-
     return Scaffold(
-      // backgroundColor: const Color(0xFF17153B),
       appBar:
           CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: isLoading
-            ? Center(child: LoadingIndicator())
-            // ? const Center(child: CircularProgressIndicator())
-            : dataCard.isEmpty
-                ? const Center(
-                    child: Text(
-                      'No data found',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                : ListView.builder(
-                    controller: _scrollController,
-                    itemCount: itemsPerPage + 1, // +1 for the pagination row
-                    itemBuilder: (context, index) {
-                      if (index < itemsPerPage) {
-                        int actualIndex = (currentPage * itemsPerPage) + index;
+        child: Column(
+          children: [
+            Expanded(
+                child: isLoading
+                    ? Center(child: LoadingIndicator())
+                    : dataCard.isEmpty
+                        ? const Center(child: CenteredMessage())
+                        : SingleChildScrollView(
+                            controller: _singleChildScrollController,
+                            child: ListView.builder(
+                              controller: _listViewScrollController,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: getCurrentData().length + 1,
+                              itemBuilder: (context, index) {
+                                if (index < getCurrentData().length) {
+                                  var item = getCurrentData()[index];
+                                  return Card(
+                                    elevation: 8.0,
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    color: Colors.lightBlue[100],
+                                    child: InkWell(
+                                      onTap: isNavigating
+                                          ? null // Disable tap if navigating
+                                          : () {
+                                              setState(() {
+                                                isNavigating =
+                                                    true; // Set to true to block further taps
+                                              });
 
-                        // Check if we have reached the end of the data
-                        if (actualIndex >= dataCard.length) {
-                          return const SizedBox.shrink();
-                        }
+                                              // Perform navigation or any other action
+                                              checkRCV(
+                                                  item['po_no'] ?? '',
+                                                  item['doc_no'] ?? '',
+                                                  item['doc_type'] ?? '');
+                                              print(
+                                                  'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
+                                              print(
+                                                  'p_doc_no in Card : ${item['doc_no']} Type : ${item['doc_no'].runtimeType}');
+                                              print(
+                                                  'p_doc_type in Card : ${item['doc_type']} Type : ${item['doc_type'].runtimeType}');
 
-                        final item = dataCard[actualIndex];
-
-                        return Card(
-                          elevation: 8.0,
-                          margin: const EdgeInsets.symmetric(vertical: 8.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                                              // Simulate some action (e.g., navigating or loading data)
+                                              Future.delayed(
+                                                  const Duration(seconds: 2),
+                                                  () {
+                                                setState(() {
+                                                  isNavigating =
+                                                      false; // Re-enable tap after some time (e.g., after navigation completes)
+                                                });
+                                              });
+                                            },
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      child: Stack(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  item['ap_name'] ?? 'No Name',
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 17,
+                                                    color: Color.fromARGB(
+                                                        255, 0, 0, 0),
+                                                  ),
+                                                ),
+                                                const Divider(
+                                                    color: Colors.black26,
+                                                    thickness: 1),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 12.0,
+                                                        vertical: 6.0,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        color: (() {
+                                                          switch (item[
+                                                              'card_status_desc']) {
+                                                            case 'ระหว่างบันทึก':
+                                                              return const Color
+                                                                  .fromRGBO(246,
+                                                                  250, 112, 1);
+                                                            case 'ยืนยันการรับ':
+                                                              return const Color
+                                                                  .fromRGBO(146,
+                                                                  208, 80, 1);
+                                                            case 'ยกเลิก':
+                                                              return const Color
+                                                                  .fromRGBO(208,
+                                                                  206, 206, 1);
+                                                            case 'ทั้งหมด':
+                                                            default:
+                                                              return const Color
+                                                                  .fromARGB(
+                                                                  255,
+                                                                  255,
+                                                                  255,
+                                                                  255);
+                                                          }
+                                                        })(),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                      ),
+                                                      child: Text(
+                                                        item[
+                                                            'card_status_desc'],
+                                                        style: const TextStyle(
+                                                          fontSize: 15,
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 8),
+                                                    Center(
+                                                      child: (() {
+                                                        if (item['card_qc'] ==
+                                                            '#APP_IMAGES#rt_machine_on.png') {
+                                                          return Image.asset(
+                                                            'assets/images/rt_machine_on.png',
+                                                            width: 50,
+                                                            height: 50,
+                                                          );
+                                                        } else if (item[
+                                                                'card_qc'] ==
+                                                            '#APP_IMAGES#rt_machine_off.png') {
+                                                          return Image.asset(
+                                                            'assets/images/rt_machine_off.png',
+                                                            width: 50,
+                                                            height: 50,
+                                                          );
+                                                        } else if (item[
+                                                                'card_qc'] ==
+                                                            '') {
+                                                          return const SizedBox
+                                                              .shrink();
+                                                        } else {
+                                                          return const Text('');
+                                                        }
+                                                      })(),
+                                                    ),
+                                                    const SizedBox(width: 8),
+                                                    Center(
+                                                      child:
+                                                          item['status'] != null
+                                                              ? Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: const Color
+                                                                        .fromARGB(
+                                                                        72,
+                                                                        145,
+                                                                        144,
+                                                                        144),
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(5),
+                                                                  ),
+                                                                  child:
+                                                                      TextButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      getPDF(
+                                                                          item[
+                                                                              'doc_no'],
+                                                                          item[
+                                                                              'doc_type']);
+                                                                    },
+                                                                    child: item['status'] ==
+                                                                            'พิมพ์'
+                                                                        ? Image
+                                                                            .asset(
+                                                                            'assets/images/printer.png',
+                                                                            width:
+                                                                                30,
+                                                                            height:
+                                                                                30,
+                                                                          )
+                                                                        : Text(
+                                                                            item['status']!,
+                                                                            style:
+                                                                                const TextStyle(
+                                                                              fontSize: 15,
+                                                                              color: Color.fromARGB(137, 0, 0, 0),
+                                                                              fontWeight: FontWeight.bold,
+                                                                            ),
+                                                                          ),
+                                                                  ),
+                                                                )
+                                                              : const SizedBox
+                                                                  .shrink(),
+                                                    ),
+                                                  ],
+                                                ),
+                                                // const Spacer(),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 12.0,
+                                                        vertical: 6.0,
+                                                      ),
+                                                      child: Text(
+                                                        '${item['po_date']} ${item['po_no']} ${item['item_stype_desc'] ?? ''}',
+                                                        style: const TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.black87,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return getCurrentData().length > 3
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                currentPage > 0
+                                                    ? ElevatedButton(
+                                                        onPressed:
+                                                            currentPage > 0
+                                                                ? () {
+                                                                    _loadPrevPage();
+                                                                  }
+                                                                : null,
+                                                        style: ButtonStyles
+                                                            .previousButtonStyle,
+                                                        child: ButtonStyles
+                                                            .previousButtonContent,
+                                                      )
+                                                    : ElevatedButton(
+                                                        onPressed: null,
+                                                        style: DisableButtonStyles
+                                                            .disablePreviousButtonStyle,
+                                                        child: DisableButtonStyles
+                                                            .disablePreviousButtonContent,
+                                                      )
+                                              ],
+                                            ),
+                                            // const SizedBox(width: 30),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Center(
+                                                  child: Text(
+                                                    '${(currentPage * itemsPerPage) + 1} - ${dataCard.isNotEmpty ? ((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length) : 0}',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            // const SizedBox(width: 30),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                currentPage < totalPages() - 1
+                                                    ? ElevatedButton(
+                                                        onPressed: currentPage <
+                                                                totalPages() - 1
+                                                            ? () {
+                                                                _loadNextPage();
+                                                              }
+                                                            : null,
+                                                        style: ButtonStyles
+                                                            .nextButtonStyle,
+                                                        child: ButtonStyles
+                                                            .nextButtonContent(),
+                                                      )
+                                                    : ElevatedButton(
+                                                        onPressed: null,
+                                                        style: DisableButtonStyles
+                                                            .disableNextButtonStyle,
+                                                        child: DisableButtonStyles
+                                                            .disablePreviousButtonContent,
+                                                      ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox.shrink();
+                                }
+                              },
+                            ))),
+            !isLoading && getCurrentData().length > 0
+                ? getCurrentData().length <= 3
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              currentPage > 0
+                                  ? ElevatedButton(
+                                      onPressed: currentPage > 0
+                                          ? () {
+                                              _loadPrevPage();
+                                            }
+                                          : null,
+                                      style: ButtonStyles.previousButtonStyle,
+                                      child: ButtonStyles.previousButtonContent,
+                                    )
+                                  : ElevatedButton(
+                                      onPressed: null,
+                                      style: DisableButtonStyles
+                                          .disablePreviousButtonStyle,
+                                      child: DisableButtonStyles
+                                          .disablePreviousButtonContent,
+                                    )
+                            ],
                           ),
-                          color: Colors.lightBlue[100],
-                          child: InkWell(
-                            onTap: isNavigating
-                                ? null // Disable tap if navigating
-                                : () {
-                                    setState(() {
-                                      isNavigating =
-                                          true; // Set to true to block further taps
-                                    });
-
-                                    // Perform navigation or any other action
-                                    checkRCV(
-                                        item['po_no'] ?? '',
-                                        item['doc_no'] ?? '',
-                                        item['doc_type'] ?? '');
-                                    print(
-                                        'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
-                                    print(
-                                        'p_doc_no in Card : ${item['doc_no']} Type : ${item['doc_no'].runtimeType}');
-                                    print(
-                                        'p_doc_type in Card : ${item['doc_type']} Type : ${item['doc_type'].runtimeType}');
-
-                                    // Simulate some action (e.g., navigating or loading data)
-                                    Future.delayed(const Duration(seconds: 2),
-                                        () {
-                                      setState(() {
-                                        isNavigating =
-                                            false; // Re-enable tap after some time (e.g., after navigation completes)
-                                      });
-                                    });
-                                  },
-                            borderRadius: BorderRadius.circular(15.0),
-                            child: Stack(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        item['ap_name'] ?? 'No Name',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 17,
-                                          color: Color.fromARGB(255, 0, 0, 0),
-                                        ),
-                                      ),
-                                      const Divider(
-                                          color: Colors.black26, thickness: 1),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 12.0,
-                                              vertical: 6.0,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: (() {
-                                                switch (
-                                                    item['card_status_desc']) {
-                                                  case 'ระหว่างบันทึก':
-                                                    return const Color.fromRGBO(
-                                                        246, 250, 112, 1);
-                                                  case 'ยืนยันการรับ':
-                                                    return const Color.fromRGBO(
-                                                        146, 208, 80, 1);
-                                                  case 'ยกเลิก':
-                                                    return const Color.fromRGBO(
-                                                        208, 206, 206, 1);
-                                                  case 'ทั้งหมด':
-                                                  default:
-                                                    return const Color.fromARGB(
-                                                        255, 255, 255, 255);
-                                                }
-                                              })(),
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                            ),
-                                            child: Text(
-                                              item['card_status_desc'],
-                                              style: const TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Center(
-                                            child: (() {
-                                              if (item['card_qc'] ==
-                                                  '#APP_IMAGES#rt_machine_on.png') {
-                                                return Image.asset(
-                                                  'assets/images/rt_machine_on.png',
-                                                  width: 50,
-                                                  height: 50,
-                                                );
-                                              } else if (item['card_qc'] ==
-                                                  '#APP_IMAGES#rt_machine_off.png') {
-                                                return Image.asset(
-                                                  'assets/images/rt_machine_off.png',
-                                                  width: 50,
-                                                  height: 50,
-                                                );
-                                              } else if (item['card_qc'] ==
-                                                  '') {
-                                                return const SizedBox.shrink();
-                                              } else {
-                                                return const Text('');
-                                              }
-                                            })(),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Center(
-                                            child: item['status'] != null
-                                                ? Container(
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          const Color.fromARGB(
-                                                              72,
-                                                              145,
-                                                              144,
-                                                              144),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                    ),
-                                                    child: TextButton(
-                                                      onPressed: () {
-                                                        getPDF(item['doc_no'],
-                                                            item['doc_type']);
-                                                      },
-                                                      child: item['status'] ==
-                                                              'พิมพ์'
-                                                          ? Image.asset(
-                                                              'assets/images/printer.png',
-                                                              width: 30,
-                                                              height: 30,
-                                                            )
-                                                          : Text(
-                                                              item['status']!,
-                                                              style:
-                                                                  const TextStyle(
-                                                                fontSize: 15,
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        137,
-                                                                        0,
-                                                                        0,
-                                                                        0),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                    ),
-                                                  )
-                                                : const SizedBox.shrink(),
-                                          ),
-                                        ],
-                                      ),
-                                      // const Spacer(),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 12.0,
-                                              vertical: 6.0,
-                                            ),
-                                            child: Text(
-                                              '${item['po_date']} ${item['po_no']} ${item['item_stype_desc'] ?? ''}',
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black87,
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ],
+                          // const SizedBox(width: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Text(
+                                  '${(currentPage * itemsPerPage) + 1} - ${dataCard.isNotEmpty ? ((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length) : 0}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ],
-                            ),
+                              )
+                            ],
                           ),
-                        );
-                      } else {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Previous Button
-                            hasPreviousPage
-                                ? ElevatedButton(
-                                    onPressed: _loadPrevPage,
-                                    style: ButtonStyles.previousButtonStyle,
-                                    child: ButtonStyles.previousButtonContent,
-                                  )
-                                : ElevatedButton(
-                                    onPressed: null,
-                                    style:
-                                        ButtonStyles.disablePreviousButtonStyle,
-                                    child: ButtonStyles
-                                        .disablePreviousButtonContent,
-                                  ),
-
-                            // Page Indicator
-                            Text(
-                              '${(currentPage * itemsPerPage) + 1}-${(currentPage + 1) * itemsPerPage > totalCards ? totalCards : (currentPage + 1) * itemsPerPage}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-
-                            // Next Button
-                            hasNextPage
-                                ? ElevatedButton(
-                                    onPressed: _loadNextPage,
-                                    style: ButtonStyles.nextButtonStyle,
-                                    child: ButtonStyles.nextButtonContent(),
-                                  )
-                                : ElevatedButton(
-                                    onPressed: null,
-                                    style: ButtonStyles.disableNextButtonStyle,
-                                    child: ButtonStyles
-                                        .disablePreviousButtonContent,
-                                  ),
-                          ],
-                        );
-                      }
-                    },
-                  ),
+                          // const SizedBox(width: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              currentPage < totalPages() - 1
+                                  ? ElevatedButton(
+                                      onPressed: currentPage < totalPages() - 1
+                                          ? () {
+                                              _loadNextPage();
+                                            }
+                                          : null,
+                                      style: ButtonStyles.nextButtonStyle,
+                                      child: ButtonStyles.nextButtonContent(),
+                                    )
+                                  : ElevatedButton(
+                                      onPressed: null,
+                                      style: DisableButtonStyles
+                                          .disableNextButtonStyle,
+                                      child: DisableButtonStyles
+                                          .disablePreviousButtonContent,
+                                    ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : const SizedBox.shrink()
+                : const SizedBox.shrink(),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );
