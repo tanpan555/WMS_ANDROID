@@ -359,12 +359,15 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                           _controller.clear();
                           _dateController.clear();
                           _statusController.text =
-                              'ทั้งหมด'; // กำหนดค่าเริ่มต้นให้กับ DropdownButtonFormField
-                          selectedDate = 'null'; // Set selectedDate to null
-                          selectedItem = 'ทั้งหมด'; // Reset to a valid value
+                              'ทั้งหมด'; // Set the default for dropdown
+                          selectedDate = 'null'; // Reset selectedDate to null
+                          selectedItem = 'ทั้งหมด'; // Reset dropdown selection
                           status = '0';
                           noDate = false;
                           chkDate = false; // Reset status to default
+
+                          // Clear date error when delete button is pressed
+                          isDateInvalid = false;
                         });
                       },
                       style: AppStyles.EraserButtonStyle(),
@@ -376,7 +379,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                       onPressed: () {
                         // ตรวจสอบว่า selectedDate ไม่เป็น null หรือว่าง
                         if (isDateInvalid == false) {
-                          if (selectedDate != null &&
+                          if (selectedDate != 'null' &&
                               selectedDate.isNotEmpty &&
                               selectedDate != 'null') {
                             try {

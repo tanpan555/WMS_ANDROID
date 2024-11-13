@@ -35,6 +35,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
   String pDsPdf = gb.P_DS_PDF;
   int currentPage = 0;
   final int itemsPerPage = 5;
+  bool isDialogShowing = false;
 
   bool get hasPreviousPage => currentPage > 0;
   bool get hasNextPage => (currentPage + 1) * itemsPerPage < gridItems.length;
@@ -352,7 +353,16 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
+                    // Prevent multiple dialogs from showing simultaneously
+                    if (isDialogShowing) return;
+
+                    setState(() {
+                      isDialogShowing =
+                          true; // Set flag to true when a dialog is about to be shown
+                    });
+
                     await chk_IntefaceNonePO();
+
                     if (poStatus == '0') {
                       showDialog(
                         context: context,
@@ -362,6 +372,10 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                             content: Text('$poErpDocNo'),
                             onClose: () {
                               Navigator.of(context).pop();
+                              setState(() {
+                                isDialogShowing =
+                                    false; // Reset the flag when the first dialog is closed
+                              });
                             },
                             onConfirm: () async {
                               Navigator.of(context)
@@ -380,6 +394,10 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                     onClose: () {
                                       Navigator.of(context)
                                           .pop(); // Close the second dialog
+                                      setState(() {
+                                        isDialogShowing =
+                                            false; // Reset the flag when the second dialog is closed
+                                      });
                                     },
                                     onConfirm: () async {
                                       Navigator.of(context)
@@ -416,9 +434,17 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                             content: Text(poMessage ?? ''),
                             onClose: () {
                               Navigator.of(context).pop();
+                              setState(() {
+                                isDialogShowing =
+                                    false; // Reset the flag when the dialog is closed
+                              });
                             },
                             onConfirm: () async {
                               Navigator.of(context).pop();
+                              setState(() {
+                                isDialogShowing =
+                                    false; // Reset the flag when the dialog is closed
+                              });
                             },
                           );
                         },
@@ -430,7 +456,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                     'CONFIRM',
                     style: AppStyles.ConfirmbuttonTextStyle(),
                   ),
-                ),
+                )
               ],
             ),
             const SizedBox(height: 10),

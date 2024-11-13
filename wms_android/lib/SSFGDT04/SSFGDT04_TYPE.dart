@@ -27,12 +27,12 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
   String? pDocTypeCreateNewINXferWMS;
   String? selectedDocType;
   String? selectedDocDesc;
+  bool isNavigating = false;
 
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    // setData();
     super.initState();
     fetchStatusItems();
   }
@@ -268,73 +268,87 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        // เรียกใช้ฟังก์ชันเพื่อสร้างเอกสารใหม่
-                        await create_NewINXfer_WMS(selectedDocType ?? '');
+                   ElevatedButton(
+  onPressed: () async {
+    // Check if navigation is already in progress
+    if (isNavigating) return;
+    
+    setState(() {
+      isNavigating = true; // Set the flag to true to indicate navigation is happening
+    });
 
-                        // ตรวจสอบว่า form ได้รับการตรวจสอบแล้วหรือไม่
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
+    try {
+      // Call function to create a new document
+      await create_NewINXfer_WMS(selectedDocType ?? '');
 
-                          // ตรวจสอบว่า poStatus เป็น 0 เพื่อไปยังหน้าฟอร์ม
-                          if (poStatus == '0') {
-                            await create_NewINXfer_WMS(selectedDocType);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SSFGDT04_FORM(
-                                  po_doc_no: po_doc_no, // ส่งค่า po_doc_no
-                                  po_doc_type:
-                                      po_doc_type, // ส่งค่า po_doc_type
-                                  pWareCode: widget.pWareCode,
-                                ),
-                              ),
-                            );
-                          } else if (poStatus == '1') {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return DialogStyles.alertMessageDialog(
-                                  context: context,
-                                  content: Text('$poMessage'),
-                                  onClose: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  onConfirm: () async {
-                                    // await fetchPoStatusconform(vReceiveNo);
-                                    Navigator.of(context).pop();
-                                  },
-                                );
-                              },
-                            );
-                          }
-                        } else {
-                          // แสดงข้อความแจ้งเตือนหากไม่ได้เลือกข้อมูล
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return DialogStyles.alertMessageDialog(
-                                context: context,
-                                content: Text('$poMessage'),
-                                onClose: () {
-                                  Navigator.of(context).pop();
-                                },
-                                onConfirm: () async {
-                                  // await fetchPoStatusconform(vReceiveNo);
-                                  Navigator.of(context).pop();
-                                },
-                              );
-                            },
-                          );
-                        }
-                      },
-                      style: AppStyles.ConfirmbuttonStyle(),
-                      child: Text(
-                        'CONFIRM',
-                        style: AppStyles.ConfirmbuttonTextStyle(),
-                      ),
-                    ),
+      // Check if form is validated
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+
+        // Check poStatus for form navigation
+        if (poStatus == '0') {
+          await create_NewINXfer_WMS(selectedDocType);
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SSFGDT04_FORM(
+                po_doc_no: po_doc_no, // Pass po_doc_no
+                po_doc_type: po_doc_type, // Pass po_doc_type
+                pWareCode: widget.pWareCode,
+              ),
+            ),
+          );
+        } else if (poStatus == '1') {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return DialogStyles.alertMessageDialog(
+                context: context,
+                content: Text('$poMessage'),
+                onClose: () {
+                  Navigator.of(context).pop();
+                },
+                onConfirm: () async {
+                  // Handle confirmation actions
+                  Navigator.of(context).pop();
+                },
+              );
+            },
+          );
+        }
+      } else {
+        // Show alert message if form is not valid
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return DialogStyles.alertMessageDialog(
+              context: context,
+              content: Text('$poMessage'),
+              onClose: () {
+                Navigator.of(context).pop();
+              },
+              onConfirm: () async {
+                // Handle confirmation actions
+                Navigator.of(context).pop();
+              },
+            );
+          },
+        );
+      }
+    } finally {
+      setState(() {
+        isNavigating = false; // Reset the flag when navigation is done
+      });
+    }
+  },
+  style: AppStyles.ConfirmbuttonStyle(),
+  child: Text(
+    'CONFIRM',
+    style: AppStyles.ConfirmbuttonTextStyle(),
+  ),
+)
+
                   ],
                 ),
               ],
