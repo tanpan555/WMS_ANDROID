@@ -84,7 +84,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
     }
 
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_1_SelectDataCard/${globals.P_ERP_OU_CODE}/${widget.docNo.isNotEmpty ? widget.docNo : 'null'}/${widget.status}/${globals.BROWSER_LANGUAGE}';
+        '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_1_SelectDataCard/${globals.P_ERP_OU_CODE}/${widget.docNo.isNotEmpty ? widget.docNo : 'null'}/${widget.status}/${globals.BROWSER_LANGUAGE}';
 
     try {
       final response = await http.get(Uri.parse(requestUrl));

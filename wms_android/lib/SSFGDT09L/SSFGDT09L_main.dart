@@ -5,6 +5,7 @@ import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/loading.dart';
 import 'package:wms_android/centered_message.dart';
+import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'SSFGDT09L_menu.dart';
 
 class SSFGDT09L_MAIN extends StatefulWidget {
@@ -50,7 +51,7 @@ class _SSFGDT09L_MAINState extends State<SSFGDT09L_MAIN> {
     isLoading = true;
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SelectWareCode/${widget.pAttr1}/${widget.pErpOuCode}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SelectWareCode/${widget.pAttr1}/${widget.pErpOuCode}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);

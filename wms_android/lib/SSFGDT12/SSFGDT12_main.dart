@@ -46,7 +46,7 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
     isLoading = true;
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_1_SelectWareCode/${globals.P_ERP_OU_CODE}/${globals.ATTR1}'));
+          '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_1_SelectWareCode/${globals.P_ERP_OU_CODE}/${globals.ATTR1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);

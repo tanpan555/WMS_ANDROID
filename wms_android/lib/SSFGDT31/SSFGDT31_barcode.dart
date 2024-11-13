@@ -167,7 +167,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
   Future<void> fetchData() async {
     print('lotNo : $lotNo type : ${lotNo.runtimeType}');
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ScanBarcode';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ScanBarcode';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -291,7 +291,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
     print(
         'EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ChkQuantity';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ChkQuantity';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -350,7 +350,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
     print('textForm : $textForm');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ChkLocatorForm/${widget.pErpOuCode}/${widget.pWareCode}/${widget.pDocNo}/${textInput.isNotEmpty ? textInput : 'mull'}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ChkLocatorForm/${widget.pErpOuCode}/${widget.pWareCode}/${widget.pDocNo}/${textInput.isNotEmpty ? textInput : 'mull'}'));
 
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
@@ -418,8 +418,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
   }
 
   Future<void> submitAddLine() async {
-    final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_AddLine';
+    final url = '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_AddLine';
 
     final headers = {
       'Content-Type': 'application/json',

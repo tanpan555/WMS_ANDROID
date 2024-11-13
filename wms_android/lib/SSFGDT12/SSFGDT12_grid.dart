@@ -105,7 +105,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   Future<void> fetchData([String? url]) async {
     isLoading = true;
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectDataGridCard/${globals.P_ERP_OU_CODE}/${widget.docNo}/${globals.BROWSER_LANGUAGE}';
+        '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectDataGridCard/${globals.P_ERP_OU_CODE}/${widget.docNo}/${globals.BROWSER_LANGUAGE}';
     try {
       final response = await http.get(Uri.parse(requestUrl));
 
@@ -125,10 +125,10 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
             nextLink = getLink(links, 'next');
             prevLink = getLink(links, 'prev');
             urlLoad = url ??
-                'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectDataGridCard/${globals.P_ERP_OU_CODE}/${widget.docNo}';
+                '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectDataGridCard/${globals.P_ERP_OU_CODE}/${widget.docNo}';
             if (url.toString().isNotEmpty) {
               extractLastNumberFromUrl(url.toString() ==
-                      'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectDataGridCard/${globals.P_ERP_OU_CODE}/${widget.docNo}'
+                      '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectDataGridCard/${globals.P_ERP_OU_CODE}/${widget.docNo}'
                   ? 'null'
                   : url.toString());
             }
@@ -212,7 +212,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   Future<void> checkData() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_CheckDataGrid/${globals.P_ERP_OU_CODE}/${widget.docNo}'));
+          '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_3_CheckDataGrid/${globals.P_ERP_OU_CODE}/${widget.docNo}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> dataBarcodeList =
@@ -259,7 +259,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
 
   Future<void> submitData(String condition) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_SubmitData';
+        '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_3_SubmitData';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -311,7 +311,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   Future<void> updateDataGridDetail(int updatedCountQty, String updatedRemark,
       String erp_ou_code, String doc_no, int seq) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_UpdateDataGridCrad';
+        '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_3_UpdateDataGridCrad';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -352,7 +352,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
 
   Future<void> cancelGrid(String pDocNO) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_CancelGrid';
+        '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_3_CancelGrid';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -398,7 +398,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   Future<void> selectStatusForCheck() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectStatusForCheck/${widget.docNo}'));
+          '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectStatusForCheck/${widget.docNo}'));
 
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response

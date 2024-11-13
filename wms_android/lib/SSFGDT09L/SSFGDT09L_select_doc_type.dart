@@ -60,7 +60,7 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
     isLoading = true;
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SelectLovDocType/${widget.pAttr1}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SelectLovDocType/${widget.pAttr1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -93,7 +93,7 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
 
   Future<void> chkCreateCard() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_CreateNewINHead';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_CreateNewINHead';
 
     final headers = {
       'Content-Type': 'application/json',

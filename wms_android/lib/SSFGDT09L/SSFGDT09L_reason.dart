@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
+import 'package:wms_android/Global_Parameter.dart' as globals;
 
 class Ssfgdt09lReason extends StatefulWidget {
   // final String pWareCode;
@@ -139,7 +140,7 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
   Future<void> selectLovReason() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovReason'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovReason'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -172,18 +173,18 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
     try {
       final String endpoint = widget.pItemCode != '' &&
               widget.pItemCode.isNotEmpty
-          ? 'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${widget.pOuCode}/${widget.pMoDoNO}/$reasonRpLocR/${widget.pItemCode}'
-          : 'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${widget.pOuCode}/${widget.pMoDoNO}/$reasonRpLocR/$dataNull';
+          ? '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${widget.pOuCode}/${widget.pMoDoNO}/$reasonRpLocR/${widget.pItemCode}'
+          : '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${widget.pOuCode}/${widget.pMoDoNO}/$reasonRpLocR/$dataNull';
 
       print('Fetching data from: $endpoint');
 
       final response = await http.get(Uri.parse(endpoint));
       // final response = await http.get(Uri.parse(
-      //     'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${widget.pOuCode}/${widget.pMoDoNO}/$reasonRpLocR/${widget.pItemCode}')),
+      //     '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${widget.pOuCode}/${widget.pMoDoNO}/$reasonRpLocR/${widget.pItemCode}')),
 
       //     :
       //     final response = await http.get(Uri.parse(
-      //     'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${widget.pOuCode}/${widget.pMoDoNO}/$reasonRpLocR/${widget.pItemCode}'));
+      //     '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_SelectLovLot/${widget.pOuCode}/${widget.pMoDoNO}/$reasonRpLocR/${widget.pItemCode}'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -212,8 +213,7 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
   }
 
   Future<void> submitAddLine() async {
-    final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_AddLine';
+    final url = '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_AddLine';
 
     final headers = {
       'Content-Type': 'application/json',

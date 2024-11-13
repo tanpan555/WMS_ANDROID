@@ -180,7 +180,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectDataForm/${widget.pErpOuCode}/${widget.pDocType}/${widget.pDocNo}/${widget.pAttr1}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectDataForm/${widget.pErpOuCode}/${widget.pDocType}/${widget.pDocNo}/${widget.pAttr1}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
@@ -272,7 +272,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   Future<void> lovDocType() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovDocTypeFormPage/${widget.pAttr1}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovDocTypeFormPage/${widget.pAttr1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -299,7 +299,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   Future<void> lovMoDoNo() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovMoDoNo'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovMoDoNo'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -326,7 +326,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   Future<void> lovRefNo() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovRefNo'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovRefNo'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -353,7 +353,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   Future<void> lovCancel() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovCancel'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectLovCancel'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -386,7 +386,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     print('pMoDoNo in selectCust   : $pMoDoNo type : ${pMoDoNo.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectCust/$pMoDoNo'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SelectCust/$pMoDoNo'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
@@ -428,7 +428,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     print('arCode  in chkCust  : $arCode');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_ChkCust/$arCode/${custCode}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_ChkCust/$arCode/${custCode}'));
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
         final Map<String, dynamic> dataMessage = jsonDecode(utf8
@@ -460,7 +460,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   Future<void> changeRefNo(String soNoForChk) async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_ChangeRefNo/$soNoForChk'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_ChangeRefNo/$soNoForChk'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
@@ -495,7 +495,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
   Future<void> saveDataFoem() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SaveDataForm';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_SaveDataForm';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -541,7 +541,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
   Future<void> submitData() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_UpdateForm';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_UpdateForm';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -623,7 +623,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   Future<void> deleteForm(String cancelCode) async {
     print('cancelCode : $cancelCode');
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_DeleteForm';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_2_DeleteForm';
 
     final headers = {
       'Content-Type': 'application/json',

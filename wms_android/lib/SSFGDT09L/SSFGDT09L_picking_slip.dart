@@ -63,7 +63,7 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
   Future<void> fetchData([String? url]) async {
     isLoading = true;
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO.isEmpty ? 'null' : widget.pMoDoNO}';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO.isEmpty ? 'null' : widget.pMoDoNO}';
     try {
       final response = await http.get(Uri.parse(requestUrl));
 
@@ -83,10 +83,10 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
             nextLink = getLink(links, 'next');
             prevLink = getLink(links, 'prev');
             urlLoad = url ??
-                'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO}';
+                '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO}';
             if (url.toString().isNotEmpty) {
               extractLastNumberFromUrl(url.toString() ==
-                      'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO}'
+                      '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_PickingSilp/${widget.pErpOuCode}/${widget.pOuCode}/${widget.pMoDoNO}'
                   ? 'null'
                   : url.toString());
             }
@@ -170,7 +170,7 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
   Future<void> getPDF() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_GET_PDF/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.pMoDoNO}/${globals.BROWSER_LANGUAGE}/${globals.P_DS_PDF}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_GET_PDF/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.pMoDoNO}/${globals.BROWSER_LANGUAGE}/${globals.P_DS_PDF}'));
 
       print('Response body: ${response.body}'); // แสดงข้อมูลที่ได้รับจาก API
 
@@ -209,7 +209,7 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
   }
 
   Future<void> _launchUrl() async {
-    final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
+    final uri = Uri.parse('${globals.IP_API}/jri/report?'
         '&_repName=/WMS/WMS_SSFGDT09L_Picking_Slip'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
@@ -233,7 +233,7 @@ class _Ssfgdt09lPickingSlipState extends State<Ssfgdt09lPickingSlip> {
     if (!await launchUrl(uri)) {
       throw Exception('Could not launch $uri');
     }
-    print('http://172.16.0.82:8888/jri/report?'
+    print('${globals.IP_API}/jri/report?'
         '&_repName=/WMS/SSFGOD02A5'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'

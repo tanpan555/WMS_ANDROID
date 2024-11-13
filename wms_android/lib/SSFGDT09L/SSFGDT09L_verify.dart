@@ -132,7 +132,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
   Future<void> fetchData([String? url]) async {
     isLoading = true;
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docNo}/${widget.docType}';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docNo}/${widget.docType}';
     try {
       final response = await http.get(Uri.parse(requestUrl));
 
@@ -152,10 +152,10 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
             nextLink = getLink(links, 'next');
             prevLink = getLink(links, 'prev');
             urlLoad = url ??
-                'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docNo}/${widget.docType}';
+                '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docNo}/${widget.docType}';
             if (url.toString().isNotEmpty) {
               extractLastNumberFromUrl(url.toString() ==
-                      'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docNo}/${widget.docType}'
+                      '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docNo}/${widget.docType}'
                   ? 'null'
                   : url.toString());
             }
@@ -237,8 +237,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
   }
 
   Future<void> submitData() async {
-    final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_Submit';
+    final url = '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_Submit';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -300,7 +299,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
 
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_GET_PDF/${widget.docType}/$date2/$poErpDocNo/$flag/${widget.pWareCode}/${globals.APP_SESSION}/${globals.APP_USER}/${globals.P_DS_PDF}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_GET_PDF/${widget.docType}/$date2/$poErpDocNo/$flag/${widget.pWareCode}/${globals.APP_SESSION}/${globals.APP_USER}/${globals.P_DS_PDF}'));
 
       print('Response body: ${response.body}'); // แสดงข้อมูลที่ได้รับจาก API
 
@@ -370,7 +369,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
   }
 
   Future<void> _launchUrl(String pDocNo) async {
-    final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
+    final uri = Uri.parse('${globals.IP_API}/jri/report?'
         '&_repName=/WMS/SSFGOD02A5'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
@@ -421,7 +420,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
     if (!await launchUrl(uri)) {
       throw Exception('Could not launch $uri');
     }
-    print('http://172.16.0.82:8888/jri/report?'
+    print('${globals.IP_API}/jri/report?'
         '&_repName=/WMS/SSFGOD02A5'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'

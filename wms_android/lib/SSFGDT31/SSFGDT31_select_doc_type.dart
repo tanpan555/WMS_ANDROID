@@ -55,7 +55,7 @@ class _Ssfgdt31SelectDocTypeState extends State<Ssfgdt31SelectDocType> {
     isLoading = true;
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_1_SelectLovDocType/${globals.ATTR1}'));
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_SelectLovDocType/${globals.ATTR1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -87,8 +87,7 @@ class _Ssfgdt31SelectDocTypeState extends State<Ssfgdt31SelectDocType> {
   }
 
   Future<void> chkCreateCard() async {
-    final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_1_CreateDoc';
+    final url = '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_CreateDoc';
 
     final headers = {
       'Content-Type': 'application/json',

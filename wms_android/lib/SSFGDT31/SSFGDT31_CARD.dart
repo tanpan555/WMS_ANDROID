@@ -135,7 +135,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
       });
     }
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_1_DataCard/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${globals.ATTR1}/${widget.pWareCode}/${widget.pStatusDESC}/${widget.pDocDate}/${widget.pSoNo}';
+        '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_DataCard/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${globals.ATTR1}/${widget.pWareCode}/${widget.pStatusDESC}/${widget.pDocDate}/${widget.pSoNo}';
 
     try {
       final response = await http.get(Uri.parse(requestUrl));
@@ -155,7 +155,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
             print('dataCard : $dataCard');
             print('ATTR1 : ${globals.ATTR1}');
             print(
-                'URL : http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_1_DataCard/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${globals.ATTR1}/${widget.pWareCode}/${widget.pStatusDESC}/${widget.pDocDate}/${widget.pSoNo}');
+                'URL : ${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_DataCard/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${globals.ATTR1}/${widget.pWareCode}/${widget.pStatusDESC}/${widget.pDocDate}/${widget.pSoNo}');
           });
         }
       } else {
@@ -224,7 +224,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
     print('po_status $pReceiveNo Type: ${pReceiveNo.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_check_ISSDirect_validate/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/$pReceiveNo'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_check_ISSDirect_validate/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/$pReceiveNo'));
 
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
@@ -295,7 +295,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
     print('pDocType $pDocType Type: ${pDocType.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_INHEAD/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/$sessionID/$pDocNo/$pDocType/${globals.APP_USER}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_INHEAD/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/$sessionID/$pDocNo/$pDocType/${globals.APP_USER}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> dataGetInHead =
@@ -405,10 +405,10 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
 
   Future<void> getPDF(String docNo, String docType, String docDate) async {
     print(
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${pFlag}/$pDsPdf');
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${pFlag}/$pDsPdf');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${pFlag}/$pDsPdf'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${pFlag}/$pDsPdf'));
 
       print('Response body: ${response.body}');
       print('docNo in get pdf : $docNo');
@@ -523,7 +523,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
 
   Future<void> _launchUrl(String pErpDocNo, String pDocType) async {
     print('&LH_Doc_No=$LH_DOC_NO');
-    final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
+    final uri = Uri.parse('${globals.IP_API}/jri/report?'
         '&_repName=/WMS/SSFGOD02A5'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
@@ -581,7 +581,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
     }
     print('pErpDocNo : $pErpDocNo');
     print('pDocType : $pDocType');
-    print('http://172.16.0.82:8888/jri/report?'
+    print('${globals.IP_API}/jri/report?'
         '&_repName=/WMS/SSFGOD02A5'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'

@@ -311,7 +311,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovDate/${globals.P_ERP_OU_CODE}'));
+          '${globals.IP_API}/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovDate/${globals.P_ERP_OU_CODE}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -349,7 +349,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovDocNo/${globals.P_ERP_OU_CODE}/${returnLovDate.isNotEmpty ? updatedStringLovDate : 'null'}'));
+          '${globals.IP_API}/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovDocNo/${globals.P_ERP_OU_CODE}/${returnLovDate.isNotEmpty ? updatedStringLovDate : 'null'}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -385,7 +385,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartWareCode/${globals.APP_USER}'));
+          '${globals.IP_API}/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartWareCode/${globals.APP_USER}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -421,7 +421,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovEndWareCode/${globals.APP_USER}/${returnStartWareCode.isNotEmpty ? returnStartWareCode : 'null'}'));
+          '${globals.IP_API}/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovEndWareCode/${globals.APP_USER}/${returnStartWareCode.isNotEmpty ? returnStartWareCode : 'null'}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -476,7 +476,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartLoc/${globals.P_ERP_OU_CODE}'
+          '${globals.IP_API}/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartLoc/${globals.P_ERP_OU_CODE}'
           '/${returnStartWareCode.isNotEmpty ? returnStartWareCode : 'null'}'
           '/${returnEndWareCode.isNotEmpty ? returnEndWareCode : 'null'}'));
 
@@ -520,7 +520,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SeletLovEndLoc'
+          '${globals.IP_API}/apex/wms/SSFGRP09/SSFGRP09_Step_1_SeletLovEndLoc'
           '/${globals.P_ERP_OU_CODE}'
           '/${returnStartLoc.isNotEmpty ? returnStartLoc : 'null'}'
           '/${returnStartWareCode.isNotEmpty ? returnStartWareCode : 'null'}'
@@ -579,7 +579,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartGroup'));
+          '${globals.IP_API}/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartGroup'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -615,7 +615,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovEndGroup/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'));
+          '${globals.IP_API}/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovEndGroup/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -664,7 +664,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartCategory'
+          '${globals.IP_API}/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartCategory'
           '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
           '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'));
 
@@ -708,7 +708,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovEndCategory'
+          '${globals.IP_API}/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovEndCategory'
           '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
           '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
           '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'));
@@ -767,7 +767,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartSubCategory'
+          '${globals.IP_API}/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartSubCategory'
           '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
           '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
           '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
@@ -813,7 +813,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovEndSubCategory'
+          '${globals.IP_API}/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovEndSubCategory'
           '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
           '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
           '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
@@ -874,7 +874,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartItem'
+          '${globals.IP_API}/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovStartItem'
           '/${globals.BROWSER_LANGUAGE}'
           '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
           '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
@@ -923,7 +923,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovEndItem'
+          '${globals.IP_API}/apex/wms/SSFGRP09/SSFGRP09_Step_1_SelectLovEndItem'
           '/${globals.BROWSER_LANGUAGE}'
           '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
           '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
@@ -993,7 +993,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     isLoading = true;
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGRP09/SSFGRP09_Step_1_GET_PDF'
+          '${globals.IP_API}/apex/wms/SSFGRP09/SSFGRP09_Step_1_GET_PDF'
           '/${globals.BROWSER_LANGUAGE}'
           '/${returnStartWareCode.isNotEmpty ? returnStartWareCode : 'null'}'
           '/${returnEndWareCode.isNotEmpty ? returnEndWareCode : 'null'}'
@@ -1097,7 +1097,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
   }
 
   Future<void> _launchUrl() async {
-    final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
+    final uri = Uri.parse('${globals.IP_API}/jri/report?'
         '&_repName=/WMS/WMS_SSFGRP09'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
@@ -1187,7 +1187,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     if (!await launchUrl(uri)) {
       throw Exception('Could not launch $uri');
     }
-    print('http://172.16.0.82:8888/jri/report?'
+    print('${globals.IP_API}/jri/report?'
         '&_repName=/WMS/WMS_SSFGRP09'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'

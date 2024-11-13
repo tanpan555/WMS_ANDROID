@@ -132,7 +132,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
   Future<void> fetchDataLocator() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_4_BarcodeSelsectLocator/${widget.pWareCode}'));
+          '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_4_BarcodeSelsectLocator/${widget.pWareCode}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -160,7 +160,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
   Future<void> fetchDataGradeStatus() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_4_BarcodeSelectGradeStatus'));
+          '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_4_BarcodeSelectGradeStatus'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -187,7 +187,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
   Future<void> fetchDataBarcode() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_4_BarcodeSelectDataBarcode/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.pWareCode}/${globals.APP_USER}/${dataLocator.isNotEmpty ? dataLocator : 'null'}/$barcodeTextString')); // ตรวจสอบให้แน่ใจว่า URL ถูกต้อง
+          '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_4_BarcodeSelectDataBarcode/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.pWareCode}/${globals.APP_USER}/${dataLocator.isNotEmpty ? dataLocator : 'null'}/$barcodeTextString')); // ตรวจสอบให้แน่ใจว่า URL ถูกต้อง
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
         final Map<String, dynamic> dataBarcode =
@@ -225,7 +225,7 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
 
   Future<void> submitBarcode() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT12/SSFGDT12_Step_4_SubmitBarcode';
+        '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_4_SubmitBarcode';
 
     final headers = {
       'Content-Type': 'application/json',

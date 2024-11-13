@@ -150,7 +150,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     }
     print('URL : $url ');
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${widget.pErpOuCode}/${widget.pAttr1}/${widget.pAppUser}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${widget.pErpOuCode}/${widget.pAttr1}/${widget.pAppUser}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}';
 
     try {
       final response = await http.get(Uri.parse(requestUrl));
@@ -193,7 +193,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     print('po_status $pReceiveNo Type: ${pReceiveNo.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_check_ISSDirect_validate/${widget.pOuCode}/${widget.pErpOuCode}/$pReceiveNo'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_check_ISSDirect_validate/${widget.pOuCode}/${widget.pErpOuCode}/$pReceiveNo'));
 
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
@@ -302,7 +302,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     print('pDocType $pDocType Type: ${pDocType.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_INHEAD/${widget.pOuCode}/${widget.pErpOuCode}/$sessionID/$pDocNo/$pDocType/${widget.pAppUser}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_INHEAD/${widget.pOuCode}/${widget.pErpOuCode}/$sessionID/$pDocNo/$pDocType/${widget.pAppUser}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> dataGetInHead =
@@ -433,7 +433,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   Future<void> getPDF(String docNo, String docType, String docDate) async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${widget.pErpOuCode}/${widget.pAppUser}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${widget.pFlag}/$pDsPdf'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${widget.pErpOuCode}/${widget.pAppUser}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${widget.pFlag}/$pDsPdf'));
 
       debugPrint('Response body: ${response.body}');
       print('docNo in get pdf : $docNo');
@@ -549,7 +549,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   }
 
   Future<void> _launchUrl(String pErpDocNo, String pDocType) async {
-    final uri = Uri.parse('http://172.16.0.82:8888/jri/report?'
+    final uri = Uri.parse('${globals.IP_API}/jri/report?'
         '&_repName=/WMS/SSFGOD02A5'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
@@ -607,7 +607,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     }
     print('pErpDocNo : $pErpDocNo');
     print('pDocType : $pDocType');
-    print('http://172.16.0.82:8888/jri/report?'
+    print('${globals.IP_API}/jri/report?'
         '&_repName=/WMS/SSFGOD02A5'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'

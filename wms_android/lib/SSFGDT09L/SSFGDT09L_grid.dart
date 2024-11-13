@@ -83,7 +83,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   Future<void> fetchData([String? url]) async {
     isLoading = true;
     final String requestUrl = url ??
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}';
     try {
       final response = await http.get(Uri.parse(requestUrl));
 
@@ -104,10 +104,10 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
             prevLink = getLink(links, 'prev');
             countData = parsedResponse['count'];
             urlLoad = url ??
-                'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}';
+                '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}';
             if (url.toString().isNotEmpty) {
               extractLastNumberFromUrl(url.toString() ==
-                      'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}'
+                      '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}'
                   ? 'null'
                   : url.toString());
             }
@@ -198,7 +198,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   Future<void> countDataGridCard(bool checking) async {
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_CountDataGridCard/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_CountDataGridCard/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}'));
 
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
@@ -260,11 +260,11 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
 
       if (multiplication >= limitPage) {
         lastURL =
-            'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}?offset=$multiplication';
+            '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}?offset=$multiplication';
 
         if (lastURL != '') {
           print(
-              'โหลดหน้าสุดท้าย : http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}?offset=$multiplication');
+              'โหลดหน้าสุดท้าย : ${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_SelectDataGrid/${widget.pOuCode}/${widget.pErpOuCode}/${widget.docType}/${widget.docNo}?offset=$multiplication');
           fetchData(lastURL);
           countDataGridCard(true);
         }
@@ -280,7 +280,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
       int packQty, String itemCode, String packCode, String rowID) async {
     print('packQty in updatePackQty: $packQty type : ${packQty.runtimeType}');
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_UpdatePackQty';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_UpdatePackQty';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -319,7 +319,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
 
   Future<void> deleteCard(String pSeq, String pItemCode) async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_deleteCardGrid';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_deleteCardGrid';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -377,7 +377,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
 
   Future<void> deleteCardAll() async {
     final url =
-        'http://172.16.0.82:8888/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_DeleteCardAll';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_DeleteCardAll';
 
     final headers = {
       'Content-Type': 'application/json',

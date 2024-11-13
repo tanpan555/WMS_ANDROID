@@ -38,7 +38,7 @@ class _SSFGDT31_MAINState extends State<SSFGDT31_MAIN> {
     isLoading = true;
     try {
       final response = await http.get(Uri.parse(
-          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_1_WareCode/${globals.ATTR1}/${globals.P_ERP_OU_CODE}'));
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_WareCode/${globals.ATTR1}/${globals.P_ERP_OU_CODE}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
