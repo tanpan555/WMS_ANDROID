@@ -26,15 +26,14 @@ class SSFGDT04_SEARCH extends StatefulWidget {
 class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   int pFlag = 1;
-  String pSoNo = '';
+  String? pSoNo;
+  DateTime? selectedDate;
   String selectedItem = 'ระหว่างบันทึก'; // Ensure this value exists in dropdownItems
   String status = '1'; // Default status
-  String selectedDate = ''; // Allow null for the date
   String appUser = gb.APP_USER;
   TextEditingController _dateController = TextEditingController();
   TextEditingController _soNoController = TextEditingController();
   TextEditingController _statusController = TextEditingController();
-  final String sDateFormat = "dd-MM-yyyy";
   final List<dynamic> dropdownItems = [
     'ทั้งหมด',
     'ยกเลิก',
@@ -73,29 +72,6 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
         _statusController.text = 'ระหว่างบันทึก';
         isLoading = false;
       });
-    }
-  }
-
-  Future<void> _selectDate(
-    BuildContext context,
-  ) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-    );
-
-    if (pickedDate != null) {
-      String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
-      if (mounted) {
-        setState(() {
-          isDateInvalid = false;
-          _dateController.text = formattedDate;
-          selectedDate = _dateController.text;
-        });
-      }
     }
   }
 
@@ -212,7 +188,6 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       appBar:
           CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       body: SingleChildScrollView(
@@ -263,11 +238,17 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   labelText: 'วันที่ส่งสินค้า',
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
-                    selectedDate = value;
+                    try {
+                      selectedDate = DateFormat('dd/MM/yyyy').parse(value);
+                    } catch (e) {
+                      selectedDate = null; // Set to null if parsing fails
+                      print('Invalid date format: $value');
+                    }
                     print('วันที่: $selectedDate');
                   },
                   isDateInvalidNotifier: isDateInvalidNotifier,
                 ),
+
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -277,7 +258,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                         setState(() {
                           pSoNo = '';
                           status = '0';
-                          selectedDate = '';
+                          selectedDate = null;
                           selectedItem = 'ทั้งหมด';
                           _statusController.text = 'ทั้งหมด';
                           _soNoController.clear();
@@ -293,57 +274,37 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     ElevatedButton(
                       onPressed: () {
                         if (isDateInvalidNotifier.value == false) {
-                          if (selectedDate.isNotEmpty) {
-                            if (selectedDate != '') {
-                              String modifiedDate =
-                                  selectedDate.replaceAll('-', '/');
-                              DateTime parsedDate =
-                                  DateFormat('dd/MM/yyyy').parse(modifiedDate);
-                              String formattedDate =
-                                  DateFormat('dd-MM-yyyy').format(parsedDate);
+                          pSoNo = _soNoController.text.isNotEmpty
+                              ? _soNoController.text
+                              : null;
 
-                              setState(() {
-                                selectedDate = formattedDate;
-                              });
+                          String formattedDate = selectedDate != null
+                              ? DateFormat('dd-MM-yyyy').format(selectedDate!)
+                              : 'null';
 
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SSFGDT04_CARD(
-                                        pErpOuCode: widget.pErpOuCode,
-                                        pWareCode: widget.pWareCode,
-                                        pAppUser: appUser,
-                                        pFlag: pFlag,
-                                        status: status,
-                                        soNo: pSoNo == '' ? 'null' : pSoNo,
-                                        date: formattedDate == ''
-                                            ? 'null'
-                                            : formattedDate)),
-                              ).then((value) async {
-                                print('isDateInvalid $isDateInvalid');
-                                print('selectedDate $selectedDate');
-                              });
-                            }
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SSFGDT04_CARD(
-                                      pErpOuCode: widget.pErpOuCode,
-                                      pWareCode: widget.pWareCode,
-                                      pAppUser: appUser,
-                                      pFlag: pFlag,
-                                      status: status,
-                                      soNo: pSoNo == '' ? 'null' : pSoNo,
-                                      date: 'null')),
-                            ).then((value) async {});
-                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SSFGDT04_CARD(
+                                pErpOuCode: widget.pErpOuCode,
+                                pWareCode: widget.pWareCode,
+                                pAppUser: appUser,
+                                pFlag: pFlag,
+                                status: status,
+                                soNo: pSoNo ?? 'null',
+                                date: formattedDate,
+                              ),
+                            ),
+                          ).then((value) async {
+                            print('isDateInvalid $isDateInvalid');
+                            print('selectedDate $selectedDate');
+                          });
                         }
                       },
                       style: AppStyles.SearchButtonStyle(),
                       child: Image.asset(
-                        'assets/images/search_color.png', // ใส่ภาพจากไฟล์ asset
-                        width: 50, // กำหนดขนาดภาพ
+                        'assets/images/search_color.png',
+                        width: 50,
                         height: 25,
                       ),
                     ),

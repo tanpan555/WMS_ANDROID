@@ -468,7 +468,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                         readOnly: true),
                   )),
                   _buildDropStaffdownSearch(),
-                  _buildTextField(PO_REMARK, 'หมายเหตุ'),
+                  _buildTextFormField(PO_REMARK, 'หมายเหตุ'),
                   GestureDetector(
                       child: AbsorbPointer(
                     child: _buildTextField(REF_ERP, 'เลขที่เอกสาร ERP',
@@ -782,6 +782,34 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
           filled: true,
           fillColor: readOnly ? Colors.grey[300] : Colors.white,
           border: InputBorder.none,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextFormField(TextEditingController controller, String label,
+      {bool readOnly = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: TextField(
+        minLines: 2,
+        maxLines: 5,
+        controller: controller,
+        style: TextStyle(color: Colors.black),
+        readOnly: readOnly,
+        onChanged: (value) {
+          setState(() {
+            checkUpdateData = true;
+          });
+        },
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.black),
+          filled: true,
+          fillColor: readOnly ? Colors.grey[300] : Colors.white,
+          border: InputBorder.none,
+          floatingLabelBehavior: FloatingLabelBehavior
+                                    .always,
         ),
       ),
     );

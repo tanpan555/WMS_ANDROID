@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:wms_android/styles.dart';
 import 'package:flutter/services.dart'; // Add this import
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import '../TextFormFieldCheckDate.dart';
 
 class SSFGDT17_SEARCH extends StatefulWidget {
   final String pWareCode;
@@ -19,15 +20,17 @@ class SSFGDT17_SEARCH extends StatefulWidget {
 
 class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
   final _formKey = GlobalKey<FormState>();
-  final _dateController = TextEditingController();
-  final TextEditingController _selectedProductTypeController =
-      TextEditingController(text: 'ปกติ'); // Controller for product type
+  String? docType;
   DateTime? _selectedDate;
   String? selectedValue;
+  final _dateController = TextEditingController();
+  final TextEditingController _documentNumberController = TextEditingController();
+  final TextEditingController _selectedProductTypeController = TextEditingController(text: 'ปกติ'); // Controller for product type
   final List<String> statusItems = ['ทั้งหมด', 'ปกติ', 'ยกเลิก', 'รับโอนแล้ว'];
-  String? docData;
-  String? docData1;
-  bool isDateValid = true;
+  
+  final ValueNotifier<bool> isDateInvalidNotifier = ValueNotifier<bool>(false);
+  final dateInputFormatter = DateInputFormatter();
+  bool isDateInvalid = false;
 
   @override
   void initState() {
@@ -36,12 +39,12 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
     fetchDocType();
   }
 
-  final TextEditingController _documentNumberController =
-      TextEditingController();
 
   @override
   void dispose() {
     _dateController.dispose();
+    _documentNumberController.dispose();
+    _selectedProductTypeController.dispose();
     super.dispose();
   }
 
@@ -52,28 +55,11 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
     _selectedProductTypeController.text = 'ทั้งหมด';
     if (mounted) {
       setState(() {
-        isDateValid = true;
+        isDateInvalidNotifier.value = false;
         selectedValue = 'ทั้งหมด';
         _selectedDate = null;
       });
     }
-  }
-
-  String formatDate(String input) {
-    if (input.length == 8) {
-      // Attempt to parse the input string as a date in ddMMyyyy format
-      final day = int.tryParse(input.substring(0, 2));
-      final month = int.tryParse(input.substring(2, 4));
-      final year = int.tryParse(input.substring(4, 8));
-      if (day != null && month != null && year != null) {
-        final date = DateTime(year, month, day);
-        if (date.year == year && date.month == month && date.day == day) {
-          // Return the formatted date if valid
-          return DateFormat('dd/MM/yyyy').format(date);
-        }
-      }
-    }
-    return input; // Return original input if invalid
   }
 
   Future<void> fetchDocType() async {
@@ -84,15 +70,14 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
       final Map<String, dynamic> data = json.decode(response.body);
       if (mounted) {
         setState(() {
-          docData1 = data['DOC_TYPE'];
+          docType = data['DOC_TYPE'];
         });
       }
-      print('Fetched docData1: $docData1');
+      print('Fetched docType: $docType');
     } else {
       throw Exception('Failed to load data');
     }
   }
-
 
   void _showProductTypeDialog() {
     showDialog(
@@ -230,140 +215,28 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                     fillColor: Colors.white,
                   ),
                   style: TextStyle(color: Colors.black),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _dateController,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    labelText: 'วันที่โอน',
-                    hintText: 'DD/MM/YYYY',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    labelStyle: TextStyle(
-                      color: isDateValid == false
-                          ? Colors.red
-                          : Colors
-                              .black, // Change label color based on validity
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.calendar_today_outlined,
-                          color: Colors.black),
-                      onPressed: () async {
-                        DateTime? selectedDate = await showDatePicker(
-                          initialEntryMode: DatePickerEntryMode.calendarOnly,
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2101),
-                        );
-                        if (selectedDate != null) {
-                          setState(() {
-                            _selectedDate = selectedDate;
-                            _dateController.text =
-                                DateFormat('dd/MM/yyyy').format(selectedDate);
-                            isDateValid =
-                                true; // Reset validity when a date is picked
-                          });
-                        }
-                      },
-                    ),
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(10),
-                    FilteringTextInputFormatter.allow(
-                        RegExp(r'[0-9/]')), // Allow only numbers and slashes
-                  ],
                   onChanged: (value) {
-                    // Remove all slashes for processing
-                    String numbersOnly = value.replaceAll('/', '');
-
-                    // Limit the length of the input to 8 digits
-                    if (numbersOnly.length > 8) {
-                      numbersOnly = numbersOnly.substring(0, 8);
-                    }
-
-                    // Track the current cursor position
-                    final oldCursorPosition =
-                        _dateController.selection.baseOffset;
-
-                    // Format the value with slashes
-                    String formattedValue = '';
-                    for (int i = 0; i < numbersOnly.length; i++) {
-                      if (i == 2 || i == 4) {
-                        formattedValue += '/'; // Add slashes after DD and MM
-                      }
-                      formattedValue += numbersOnly[i];
-                    }
-
-                    // Calculate new cursor position
-                    int newCursorPosition = oldCursorPosition;
-                    if (oldCursorPosition <= formattedValue.length) {
-                      // Adjust the cursor position based on slashes added
-                      if (oldCursorPosition > 2 && oldCursorPosition <= 4) {
-                        newCursorPosition++;
-                      } else if (oldCursorPosition > 4) {
-                        newCursorPosition += 2;
-                      }
-                    }
-
-                    // Update the controller with new text and adjusted cursor position
-                    _dateController.value = TextEditingValue(
-                      text: formattedValue,
-                      selection:
-                          TextSelection.collapsed(offset: newCursorPosition),
-                    );
-
-                    // Validate the date
-                    if (numbersOnly.length == 8) {
-                      try {
-                        final day = int.parse(numbersOnly.substring(0, 2));
-                        final month = int.parse(numbersOnly.substring(2, 4));
-                        final year = int.parse(numbersOnly.substring(4, 8));
-
-                        final date = DateTime(year, month, day);
-
-                        // Check if the day, month, and year are valid
-                        if (date.day == day &&
-                            date.month == month &&
-                            date.year == year) {
-                          setState(() {
-                            isDateValid = true; // Valid date
-                            _selectedDate = date; // Update selected date
-                          });
-                        } else {
-                          throw Exception('Invalid date');
-                        }
-                      } catch (e) {
-                        setState(() {
-                          isDateValid = false; // Invalid date
-                        });
-                      }
-                    } else {
-                      setState(() {
-                        isDateValid =
-                            false; // Invalid length (not 8 digits yet)
-                      });
-                    }
+                    setState(() {
+                      docType = value.toUpperCase();
+                    });
                   },
                 ),
-
-// Validation message display logic
-                isDateValid == false
-                    ? const Padding(
-                        padding: EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 11,
-                          ),
-                        ),
-                      )
-                    : const SizedBox.shrink(),
+                const SizedBox(height: 8),
+                CustomTextFormField(
+                  controller: _dateController,
+                  labelText: 'วันที่โอน',
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    try {
+                      _selectedDate = DateFormat('dd/MM/yyyy').parse(value);
+                    } catch (e) {
+                      _selectedDate = null; // Set to null if parsing fails
+                      print('Invalid date format: $value');
+                    }
+                    print('วันที่: $_selectedDate');
+                  },
+                  isDateInvalidNotifier: isDateInvalidNotifier,
+                ),
 
                 const SizedBox(height: 20),
                 Row(
@@ -378,39 +251,39 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                     const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () {
-                        final documentNumber =
+                        if (isDateInvalidNotifier.value == false) {
+                          final documentNumber =
                             _documentNumberController.text.isEmpty
                                 ? 'null'
                                 : _documentNumberController.text;
-                        final selectedDate = _selectedDate == null
-                            ? 'null'
-                            : DateFormat('dd/MM/yyyy').format(_selectedDate!);
 
-                        // Debugging output
-                        print(selectedValue);
-                        print(documentNumber);
-                        print('date ${_dateController.text}');
-                        print(
-                            'docData1: $docData1'); // Ensure docData1 is correctly fetched
-                        if (isDateValid == false) {
-                        } else {
+                          String formattedDate = _selectedDate != null
+                              ? DateFormat('dd-MM-yyyy').format(_selectedDate!)
+                              : 'null';
+
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => SSFGDT17_MAIN(
-                                  pWareCode: widget.pWareCode,
-                                  selectedValue: selectedValue,
-                                  documentNumber: documentNumber,
-                                  dateController: selectedDate,
-                                  docData1: docData1 ?? '' // Handle null case
-                                  ),
+                                pWareCode: widget.pWareCode,
+                                selectedValue: selectedValue,
+                                documentNumber: documentNumber,
+                                dateController: formattedDate,
+                                docType: docType ?? '',
+                              ),
                             ),
-                          );
+                          ).then((value) async {
+                            print('isDateInvalid $isDateInvalid');
+                            print('selectedDate $_selectedDate');
+                          });
                         }
                       },
-                      child: Image.asset('assets/images/search_color.png',
-                          width: 50, height: 25),
                       style: AppStyles.SearchButtonStyle(),
+                      child: Image.asset(
+                        'assets/images/search_color.png',
+                        width: 50,
+                        height: 25,
+                      ),
                     ),
                   ],
                 ),

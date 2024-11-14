@@ -18,7 +18,7 @@ class SSFGDT17_MAIN extends StatefulWidget {
   final String? selectedValue;
   final String documentNumber;
   final String dateController;
-  final String docData1;
+  final String docType;
 
   const SSFGDT17_MAIN({
     Key? key,
@@ -26,7 +26,7 @@ class SSFGDT17_MAIN extends StatefulWidget {
     this.selectedValue,
     required this.documentNumber,
     required this.dateController,
-    required this.docData1,
+    required this.docType,
   }) : super(key: key);
 
   @override
@@ -46,6 +46,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
   String? docNumberFilter;
   final TextEditingController _docNumberController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   String? DateSend;
   int showRecordRRR = 0;
 
@@ -66,7 +67,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     print('fixedValue: $fixedValue');
     docNumberFilter = widget.documentNumber;
     print('=====================');
-    print(widget.docData1);
+    print(widget.docType);
     print(widget.documentNumber);
     print(widget.dateController);
     print(_dateController.text);
@@ -82,6 +83,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
   void dispose() {
     _docNumberController.dispose();
     _dateController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -108,7 +110,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
       if (mounted) {
         setState(() {
           currentPage++;
-          isLoading = true;
+          _scrollToTop();
         });
       }
       data_card_list(nextLink);
@@ -120,10 +122,16 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
       if (mounted) {
         setState(() {
           currentPage--;
-          isLoading = true;
+          _scrollToTop();
         });
       }
       data_card_list(prevLink);
+    }
+  }
+
+  void _scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0); // Scroll to the top
     }
   }
 
@@ -180,7 +188,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     final String statusValue = valueMapping[_selectedStatusValue] ?? '0';
     try {
       final uri = url ??
-          '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_Card_List/$selectedwhCode/$statusValue/${gb.P_ERP_OU_CODE}/${widget.docData1}/$DateSend/${widget.documentNumber}/${gb.BROWSER_LANGUAGE}';
+          '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_Card_List/$selectedwhCode/$statusValue/${gb.P_ERP_OU_CODE}/${widget.docType}/$DateSend/${widget.documentNumber}/${gb.BROWSER_LANGUAGE}';
       // Reset currentPage if this is a new search (no url provided)
       if (url == null) {
         currentPage = 1;

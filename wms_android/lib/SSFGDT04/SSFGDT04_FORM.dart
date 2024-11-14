@@ -837,13 +837,13 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return DialogStyles.customLovSearchDialog(
+                                    return DialogStyles
+                                        .customRequiredLovSearchDialog(
                                       context: context,
-                                      headerText: 'ประเภทการรับ *',
+                                      headerText: 'ประเภทการรับ',
                                       searchController: _searchController,
                                       data: docTypeItems,
                                       docString: (item) {
-                                        // Define the search text extraction
                                         final typeString =
                                             item['doc_type'].toString();
                                         final docString =
@@ -857,8 +857,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                           item['doc_desc']?.toString() ??
                                           'No description',
                                       onTap: (item) {
-                                        // final type =
-                                        //     item['doc_type'].toString();
                                         final doc = item['doc_desc'].toString();
 
                                         Navigator.of(context).pop();
@@ -1197,9 +1195,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return DialogStyles.customLovSearchDialog(
+                                    return DialogStyles.customRequiredLovSearchDialog(
                                       context: context,
-                                      headerText: 'ผู้รับมอบสินค้า *',
+                                      headerText: 'ผู้รับมอบสินค้า',
                                       searchController: _searchController,
                                       data: saffCodeItems,
                                       docString: (item) =>

@@ -39,9 +39,6 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   final int itemsPerPage = 15;
   bool isLoading = true;
   bool isNavigating = false;
-  String? next;
-  String? previous;
-  String errorMessage = '';
 
   List<dynamic> dataCard = [];
   List<dynamic> displayedData = [];
@@ -130,6 +127,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   }
 
   Future<void> fetchData([String? url]) async {
+    if (!mounted) return;
     if (mounted) {
       setState(() {
         isLoading = true;
