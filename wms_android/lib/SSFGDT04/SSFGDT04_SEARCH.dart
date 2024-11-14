@@ -26,14 +26,13 @@ class SSFGDT04_SEARCH extends StatefulWidget {
 class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   int pFlag = 1;
-  String? pSoNo;
-  String selectedItem =
-      'ระหว่างบันทึก'; // Ensure this value exists in dropdownItems
+  String pSoNo = '';
+  String selectedItem = 'ระหว่างบันทึก'; // Ensure this value exists in dropdownItems
   String status = '1'; // Default status
-  String? selectedDate; // Allow null for the date
+  String selectedDate = ''; // Allow null for the date
   String appUser = gb.APP_USER;
   TextEditingController _dateController = TextEditingController();
-  TextEditingController _controller = TextEditingController();
+  TextEditingController _soNoController = TextEditingController();
   TextEditingController _statusController = TextEditingController();
   final String sDateFormat = "dd-MM-yyyy";
   final List<dynamic> dropdownItems = [
@@ -43,15 +42,10 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
     'ระหว่างบันทึก',
   ];
 
-  // bool dateColorCheck = false;
-  // bool monthColorCheck = false;
-  bool noDate = false;
-  bool chkDate = false;
   bool isLoading = false;
-  // String? initialFormattedDate;
+  final ValueNotifier<bool> isDateInvalidNotifier = ValueNotifier<bool>(false);
   final dateInputFormatter = DateInputFormatter();
   bool isDateInvalid = false;
-  final ValueNotifier<bool> isDateInvalidNotifier = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -67,7 +61,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   @override
   void dispose() {
     _dateController.dispose();
-    _controller.dispose();
+    _soNoController.dispose();
     _statusController.dispose();
     super.dispose();
   }
@@ -248,7 +242,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
-                  controller: _controller,
+                  controller: _soNoController,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     labelText: 'เลขที่เอกสาร',
@@ -281,19 +275,14 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          _controller.clear();
-                          _dateController.clear();
-                          _statusController.text =
-                              'ทั้งหมด'; // Set the default for dropdown
-                          selectedDate = 'null'; // Reset selectedDate to null
-                          selectedItem = 'ทั้งหมด'; // Reset dropdown selection
+                          pSoNo = '';
                           status = '0';
-                          noDate = false;
-                          chkDate = false; // Reset status to default
-
-                          // Clear date error when delete button is pressed
-                          isDateInvalidNotifier.value =
-                              false; // Update the notifier
+                          selectedDate = '';
+                          selectedItem = 'ทั้งหมด';
+                          _statusController.text = 'ทั้งหมด';
+                          _soNoController.clear();
+                          _dateController.clear();
+                          isDateInvalidNotifier.value = false;
                         });
                       },
                       style: AppStyles.EraserButtonStyle(),
@@ -303,18 +292,13 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () {
-                        // ตรวจสอบว่า selectedDate ไม่เป็น null หรือว่าง
-                        if (!isDateInvalid) {
-                          if (selectedDate != null &&
-                              selectedDate!.isNotEmpty) {
-                            try {
-                              // แปลงวันที่ให้เป็นรูปแบบที่ถูกต้อง
+                        if (isDateInvalidNotifier.value == false) {
+                          if (selectedDate.isNotEmpty) {
+                            if (selectedDate != '') {
                               String modifiedDate =
-                                  selectedDate!.replaceAll('-', '/');
+                                  selectedDate.replaceAll('-', '/');
                               DateTime parsedDate =
                                   DateFormat('dd/MM/yyyy').parse(modifiedDate);
-
-                              // แปลงวันที่กลับเป็นรูปแบบ dd-MM-yyyy
                               String formattedDate =
                                   DateFormat('dd-MM-yyyy').format(parsedDate);
 
@@ -325,53 +309,44 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SSFGDT04_CARD(
-                                    pErpOuCode: widget.pErpOuCode,
-                                    pWareCode: widget.pWareCode,
-                                    pAppUser: appUser,
-                                    pFlag: pFlag,
-                                    soNo: pSoNo ?? '',
-                                    date: formattedDate.isEmpty
-                                        ? 'null'
-                                        : formattedDate,
-                                    status: status,
-                                  ),
-                                ),
+                                    builder: (context) => SSFGDT04_CARD(
+                                        pErpOuCode: widget.pErpOuCode,
+                                        pWareCode: widget.pWareCode,
+                                        pAppUser: appUser,
+                                        pFlag: pFlag,
+                                        status: status,
+                                        soNo: pSoNo == '' ? 'null' : pSoNo,
+                                        date: formattedDate == ''
+                                            ? 'null'
+                                            : formattedDate)),
                               ).then((value) async {
                                 print('isDateInvalid $isDateInvalid');
                                 print('selectedDate $selectedDate');
                               });
-                            } catch (e) {
-                              print('Error parsing date: $e');
-                              // สามารถเพิ่มการแจ้งเตือนหรือแสดงข้อความให้กับผู้ใช้ที่ไม่สามารถแปลงวันที่ได้
                             }
                           } else {
-                            // หาก selectedDate เป็น null หรือว่างให้ส่งค่า 'null' แทน
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SSFGDT04_CARD(
-                                  pErpOuCode: widget.pErpOuCode,
-                                  pWareCode: widget.pWareCode,
-                                  pAppUser: appUser,
-                                  pFlag: pFlag,
-                                  soNo: pSoNo ?? '',
-                                  date:
-                                      'null', // ส่ง 'null' เมื่อ selectedDate เป็นค่าว่างหรือ null
-                                  status: status,
-                                ),
-                              ),
+                                  builder: (context) => SSFGDT04_CARD(
+                                      pErpOuCode: widget.pErpOuCode,
+                                      pWareCode: widget.pWareCode,
+                                      pAppUser: appUser,
+                                      pFlag: pFlag,
+                                      status: status,
+                                      soNo: pSoNo == '' ? 'null' : pSoNo,
+                                      date: 'null')),
                             ).then((value) async {});
                           }
                         }
                       },
                       style: AppStyles.SearchButtonStyle(),
                       child: Image.asset(
-                        'assets/images/search_color.png',
-                        width: 50,
+                        'assets/images/search_color.png', // ใส่ภาพจากไฟล์ asset
+                        width: 50, // กำหนดขนาดภาพ
                         height: 25,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ],
