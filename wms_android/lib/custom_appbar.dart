@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'icon.dart';
 import 'styles.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -79,25 +78,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Future<bool> showExitWarningDialog(BuildContext context) async {
     return await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return DialogStyles.warningNotSaveDialog(
-                                    context: context,
-                                    textMessage:
-                                        'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?',
-                                    onCloseDialog: () {
-                                      Navigator.of(context)
-                                          .pop(); // Close dialog
-                                    },
-                                    onConfirmDialog: () {
-                                      Navigator.of(context)
-                                          .pop(); // Close dialog
-                                      Navigator.of(context)
-                                          .pop(); // Close main screen or perform desired action
-                                    },
-                                  );
-                                },
-                              ) ??
+          context: context,
+          builder: (BuildContext context) {
+            return DialogStyles.warningNotSaveDialog(
+              context: context,
+              textMessage: 'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?',
+              onCloseDialog: () {
+                Navigator.of(context).pop(); // Close dialog
+              },
+              onConfirmDialog: () {
+                Navigator.of(context).pop(); // Close dialog
+                Navigator.of(context)
+                    .pop(); // Close main screen or perform desired action
+              },
+            );
+          },
+        ) ??
         false;
   }
 

@@ -218,63 +218,13 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.notification_important,
-                    color: Colors.red,
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    'แจ้งเตือน',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    messageAlert,
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ตกลง'),
-                      ),
-                    ],
-                  )
-                ])),
-          ),
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () => Navigator.of(context).pop(),
+          onConfirm: () {
+            Navigator.of(context).pop();
+          },
         );
       },
     );
@@ -283,120 +233,28 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
   void showDialogSelectDocType() {
     showDialog(
       context: context,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey, // สีของเส้น
-                            width: 1.0, // ความหนาของเส้น
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'ประเภทเอกสาร',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics:
-                                const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
-                            itemCount: dataLovDocType.length,
-                            itemBuilder: (context, index) {
-                              // ดึงข้อมูลรายการจาก dataCard
-                              var item = dataLovDocType[index];
-
-                              // return GestureDetector(
-                              //   onTap: () {
-                              //     setState(() {
-                              //       dataLocator = item['location_code'];
-                              //     });
-                              //   },
-                              //   child: SizedBox(
-                              //     child: Text('${item['location_code']}'),
-                              //   ),
-                              // );
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
-                                      width: 2.0, // ความหนาของขอบ
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                        10.0), // ทำให้ขอบมีความโค้ง
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                      vertical:
-                                          8.0), // เพิ่ม padding ด้านซ้าย-ขวา และ ด้านบน-ล่าง
-                                  child: Text(
-                                    item['d'],
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      // fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    docTypeLovD = item['d'];
-                                    docTypeLovR = item['r'];
-                                    dataLovDocTypeController.text = docTypeLovD;
-                                    // -----------------------------------------
-                                    print(
-                                        'dataLovDocTypeController New: $dataLovDocTypeController Type : ${dataLovDocTypeController.runtimeType}');
-                                    print(
-                                        'docTypeLovD New: $docTypeLovD Type : ${docTypeLovD.runtimeType}');
-                                    print(
-                                        'docTypeLovR New: $docTypeLovR Type : ${docTypeLovR.runtimeType}');
-                                  });
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    )
-
-                    // ช่องค้นหา
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customSelectLovDialog(
+          context: context,
+          headerText: 'ประเภทเอกสาร',
+          data: dataLovDocType,
+          displayItem: (item) => '${item['d'] ?? ''}',
+          onTap: (item) {
+            Navigator.of(context).pop();
+            setState(() {
+              docTypeLovD = item['d'];
+              docTypeLovR = item['r'];
+              dataLovDocTypeController.text = docTypeLovD;
+              // -----------------------------------------
+              print(
+                  'dataLovDocTypeController New: $dataLovDocTypeController Type : ${dataLovDocTypeController.runtimeType}');
+              print(
+                  'docTypeLovD New: $docTypeLovD Type : ${docTypeLovD.runtimeType}');
+              print(
+                  'docTypeLovR New: $docTypeLovR Type : ${docTypeLovR.runtimeType}');
+            });
+          },
         );
       },
     );

@@ -11,6 +11,7 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/centered_message.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'SSFGDT31_picking_slip.dart';
+import 'SSFGDT31_barcode.dart';
 
 class Ssfgdt31Grid extends StatefulWidget {
   final String pWareCode; // ware code ที่มาจากเลือ lov
@@ -19,7 +20,8 @@ class Ssfgdt31Grid extends StatefulWidget {
   final String docDate;
   final String moDoNo;
   final String refNo;
-  final String statusCase;
+  final String refDocNo;
+  final String refDocType;
   Ssfgdt31Grid({
     Key? key,
     required this.pWareCode,
@@ -28,7 +30,8 @@ class Ssfgdt31Grid extends StatefulWidget {
     required this.docDate,
     required this.moDoNo,
     required this.refNo,
-    required this.statusCase,
+    required this.refDocNo,
+    required this.refDocType,
   }) : super(key: key);
   @override
   _Ssfgdt31GridState createState() => _Ssfgdt31GridState();
@@ -58,9 +61,11 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
 
   @override
   void initState() {
+    super.initState();
     fetchData();
     countDataGridCard(true);
-    super.initState();
+    print('doc no : ${widget.docNo}');
+    print('doc type : ${widget.docType}');
   }
 
   void _navigateToPage(BuildContext context, Widget page) {
@@ -557,24 +562,22 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                           ElevatedButton(
                             style: ButtonStyles.createButtonStyle,
                             onPressed: () async {
-                              // await Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //       builder: (context) => Ssfgdt09lBarcode(
-                              //             pWareCode: widget.pWareCode,
-                              //             pErpOuCode: globals.P_ERP_OU_CODE,
-                              //             pOuCode: globals.P_OU_CODE,
-                              //             pAttr1: widget.pAttr1,
-                              //             pAppUser: widget.pAppUser,
-                              //             pDocNo: widget.docNo,
-                              //             pDocType: widget.docType,
-                              //             pDocDate: widget.docDate,
-                              //             pMoDoNO: widget.moDoNo,
-                              //           )),
-                              // ).then((value) async {
-                              //   // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                              //   await countDataGridCard(false);
-                              // });
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Ssfgdt31Barcode(
+                                    pWareCode: widget.pWareCode,
+                                    pDocNo: widget.docNo,
+                                    pDocType: widget.docType,
+                                    pDocDate: widget.docDate,
+                                    pMoDoNO: widget.moDoNo,
+                                    refDocNo: widget.refDocNo.toString(),
+                                    refDocType: widget.refDocType.toString(),
+                                  ),
+                                ),
+                              ).then((value) async {
+                                await countDataGridCard(false);
+                              });
                             },
                             child: ButtonStyles.createButtonContent(),
                           ),

@@ -66,8 +66,6 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
     },
   ];
   final ValueNotifier<bool> isDateInvalidNotifier = ValueNotifier<bool>(false);
-  final dateInputFormatter = DateInputFormatter();
-  bool isDateInvalid = false;
 
   bool isLoading = false;
 
@@ -92,29 +90,6 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
         dataLovStatusController.text = 'ระหว่างบันทึก';
         isLoading = false;
       });
-    }
-  }
-
-  Future<void> _selectDate(
-    BuildContext context,
-  ) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-    );
-
-    if (pickedDate != null) {
-      String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
-      if (mounted) {
-        setState(() {
-          isDateInvalid = false;
-          dateController.text = formattedDate;
-          selectedDate = dateController.text;
-        });
-      }
     }
   }
 
@@ -187,70 +162,8 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                       },
                       isDateInvalidNotifier: isDateInvalidNotifier,
                     ),
-                    // SizedBox(height: 20),
-                    // ValueListenableBuilder<bool>(
-                    //   valueListenable: isDateInvalidNotifier,
-                    //   builder: (context, isDateInvalid, child) {
-                    //     return ElevatedButton(
-                    //       onPressed: isDateInvalid
-                    //           ? null
-                    //           : () {
-                    //               print(
-                    //                   'วันที่ที่เลือก: ${dateController.text}');
-                    //             },
-                    //       child: Text('Submit'),
-                    //     );
-                    //   },
-                    // ),
-                    // TextFormField(
-                    //   controller: dateController,
-                    //   keyboardType: TextInputType.number,
-                    //   inputFormatters: [
-                    //     FilteringTextInputFormatter.digitsOnly,
-                    //     LengthLimitingTextInputFormatter(8),
-                    //     dateInputFormatter,
-                    //   ],
-                    //   decoration: InputDecoration(
-                    //     border: InputBorder.none,
-                    //     filled: true,
-                    //     fillColor: Colors.white,
-                    //     labelText: 'วันที่เบิกจ่าย',
-                    //     hintText: 'DD/MM/YYYY',
-                    //     hintStyle: const TextStyle(color: Colors.grey),
-                    //     labelStyle: isDateInvalid
-                    //         ? const TextStyle(color: Colors.red)
-                    //         : const TextStyle(color: Colors.black87),
-                    //     suffixIcon: IconButton(
-                    //       icon: const Icon(Icons.calendar_today),
-                    //       onPressed: () {
-                    //         _selectDate(context);
-                    //       },
-                    //     ),
-                    //   ),
-                    //   onChanged: (value) {
-                    //     setState(() {
-                    //       selectedDate = value;
-                    //       isDateInvalid =
-                    //           dateInputFormatter.noDateNotifier.value;
-                    //     });
-                    //     print('isDateInvalid : $isDateInvalid');
-                    //   },
-                    // ),
-                    // if (isDateInvalid == true)
-                    //   const Padding(
-                    //     padding: EdgeInsets.only(top: 4.0),
-                    //     child: Text(
-                    //       'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                    //       style: TextStyle(
-                    //         color: Colors.red,
-                    //         fontWeight: FontWeight.bold,
-                    //         fontSize: 12,
-                    //       ),
-                    //     ),
-                    //   ),
-                    const SizedBox(height: 20),
-
                     //////////////////////////////////////////////////////////////
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -269,8 +182,8 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                           },
                           style: AppStyles.EraserButtonStyle(),
                           child: Image.asset(
-                            'assets/images/eraser_red.png', // ใส่ภาพจากไฟล์ asset
-                            width: 50, // กำหนดขนาดภาพ
+                            'assets/images/eraser_red.png',
+                            width: 50,
                             height: 25,
                           ),
                         ),
@@ -296,28 +209,6 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Ssfgdt09lCard(
-                                            pErpOuCode: widget.pErpOuCode,
-                                            pWareCode: widget.pWareCode,
-                                            pOuCode: widget.pOuCode,
-                                            pAttr1: widget.pAttr1,
-                                            pAppUser: appUser,
-                                            pFlag: pFlag,
-                                            pStatusDESC: statusDESC,
-                                            pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                                            pDocDate: formattedDate == ''
-                                                ? 'null'
-                                                : formattedDate)),
-                                  ).then((value) async {
-                                    print(
-                                        'isDateInvalid PPPPPP $isDateInvalid');
-                                    print('selectedDate PPPPPP $selectedDate');
-                                  });
-                                }
-                              } else {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
                                       builder: (context) => Ssfgdt09lCard(
                                           pErpOuCode: widget.pErpOuCode,
                                           pWareCode: widget.pWareCode,
@@ -327,15 +218,35 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                                           pFlag: pFlag,
                                           pStatusDESC: statusDESC,
                                           pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                                          pDocDate: 'null')),
+                                          pDocDate: formattedDate == ''
+                                              ? 'null'
+                                              : formattedDate),
+                                    ),
+                                  ).then((value) async {});
+                                }
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Ssfgdt09lCard(
+                                        pErpOuCode: widget.pErpOuCode,
+                                        pWareCode: widget.pWareCode,
+                                        pOuCode: widget.pOuCode,
+                                        pAttr1: widget.pAttr1,
+                                        pAppUser: appUser,
+                                        pFlag: pFlag,
+                                        pStatusDESC: statusDESC,
+                                        pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                                        pDocDate: 'null'),
+                                  ),
                                 ).then((value) async {});
                               }
                             }
                           },
                           style: AppStyles.SearchButtonStyle(),
                           child: Image.asset(
-                            'assets/images/search_color.png', // ใส่ภาพจากไฟล์ asset
-                            width: 50, // กำหนดขนาดภาพ
+                            'assets/images/search_color.png',
+                            width: 50,
                             height: 25,
                           ),
                         ),
@@ -354,101 +265,28 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
   void showDialogSelectDataStatus() {
     showDialog(
       context: context,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey,
-                            width: 1.0,
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'ประเภทรายการ',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: dropdownItems.length,
-                            itemBuilder: (context, index) {
-                              var item = dropdownItems[index];
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey,
-                                      width: 2.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0, vertical: 8.0),
-                                  child: Text(
-                                    item['d'],
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    selectedItem = item['d'];
-                                    statusDESC = item['r'];
-                                    dataLovStatusController.text = selectedItem;
-                                    // -----------------------------------------
-                                    print(
-                                        'dataLovStatusController New: $dataLovStatusController Type : ${dataLovStatusController.runtimeType}');
-                                    print(
-                                        'selectedItem New: $selectedItem Type : ${selectedItem.runtimeType}');
-                                    print(
-                                        'statusDESC New: $statusDESC Type : ${statusDESC.runtimeType}');
-                                  });
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    )
-
-                    // ช่องค้นหา
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customSelectLovDialog(
+          context: context,
+          headerText: 'ประเภทรายการ',
+          data: dropdownItems,
+          displayItem: (item) => '${item['d'] ?? ''}',
+          onTap: (item) {
+            Navigator.of(context).pop();
+            setState(() {
+              selectedItem = item['d'];
+              statusDESC = item['r'];
+              dataLovStatusController.text = selectedItem;
+              // -----------------------------------------
+              print(
+                  'dataLovStatusController New: $dataLovStatusController Type : ${dataLovStatusController.runtimeType}');
+              print(
+                  'selectedItem New: $selectedItem Type : ${selectedItem.runtimeType}');
+              print(
+                  'statusDESC New: $statusDESC Type : ${statusDESC.runtimeType}');
+            });
+          },
         );
       },
     );

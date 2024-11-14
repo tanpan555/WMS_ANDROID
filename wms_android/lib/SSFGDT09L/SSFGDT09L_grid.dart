@@ -1179,167 +1179,52 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
     );
   }
 
-  void showDialogComfirmDelete(BuildContext context, String pSeq,
-      String pItemCode, String messageDelete) {
+  void showDialogComfirmDelete(
+    BuildContext context,
+    String pSeq,
+    String pItemCode,
+    String messageDelete,
+  ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.notification_important,
-                      color: Colors.red,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'แจ้งเตือน',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            content: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    Text(
-                      messageDelete,
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
-              ),
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('Cancel'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (messageDelete == 'ต้องการลบรายการหรือไม่ ?') {
-                        print('case Delete One');
-                        deleteCard(pSeq, pItemCode);
-                      }
-                      if (messageDelete ==
-                          'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม่ ?') {
-                        print('case Delete All');
-                        deleteCardAll();
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('OK'),
-                  ),
-                ],
-              )
-            ]);
+        return DialogStyles.alertMessageCheckDialog(
+          context: context,
+          content: Text(messageDelete),
+          onClose: () => Navigator.of(context).pop(),
+          onConfirm: () {
+            if (messageDelete == 'ต้องการลบรายการหรือไม่ ?') {
+              print('case Delete One');
+              deleteCard(pSeq, pItemCode);
+            }
+            if (messageDelete == 'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม่ ?') {
+              print('case Delete All');
+              deleteCardAll();
+            }
+          },
+        );
       },
     );
   }
 
   void showDialogMessageDelete(
     BuildContext context,
-    String messageDelete,
+    String messageAlert,
   ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.notification_important,
-                    color: Colors.red,
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    'แจ้งเตือน',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    messageDelete,
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ตกลง'),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+          onConfirm: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
         );
       },
     );
@@ -1393,7 +1278,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                           onPressed: () {
                             if (CheckDataPackQty.toString() !=
                                 packQty.toString()) {
-                              showExitWarningDialog();
+                              showExitWarningDialog(context);
                             } else {
                               Navigator.of(context).pop(false);
                               fetchData(urlLoad);
@@ -1541,84 +1426,21 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
     // }
   }
 
-  void showExitWarningDialog() {
-    showDialog(
+  Future<bool> showExitWarningDialog(BuildContext context) async {
+    return await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.notification_important,
-                      color: Colors.red,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'แจ้งเตือน',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop(false);
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            content: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    Text(
-                      'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่',
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
-              ),
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('Cancel'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(true);
-                      Navigator.of(context).pop(true);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('OK'),
-                  ),
-                ],
-              )
-            ]);
+        return DialogStyles.warningNotSaveDialog(
+          context: context,
+          textMessage: 'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?',
+          onCloseDialog: () {
+            Navigator.of(context).pop();
+          },
+          onConfirmDialog: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+        );
       },
     );
   }

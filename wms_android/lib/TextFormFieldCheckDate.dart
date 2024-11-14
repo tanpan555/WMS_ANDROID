@@ -120,57 +120,78 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
 class DateInputFormatter extends TextInputFormatter {
   ValueNotifier<bool> noDateNotifier = ValueNotifier<bool>(false);
-  String day = '';
-  String month = '';
-  String year = '';
 
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    String text = newValue.text;
-    text = text.replaceAll(RegExp(r'[^0-9]'), '');
-    int cursorPosition = newValue.selection.baseOffset;
-    int additionalOffset = 0;
+    String text = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
 
+    // Limit length to 8 characters (DDMMYYYY)
+    if (text.length > 8) {
+      text = text.substring(0, 8);
+    }
+
+    int oldCursorPosition = oldValue.selection.baseOffset;
+
+    // Update noDateNotifier based on text length and validity
     if (text.isEmpty) {
       noDateNotifier.value = false;
     } else if (text.length <= 7) {
       noDateNotifier.value = true;
     } else if (text.length == 8) {
-      day = text.substring(0, 2);
-      month = text.substring(2, 4);
-      year = text.substring(4, 8);
+      String day = text.substring(0, 2);
+      String month = text.substring(2, 4);
+      String year = text.substring(4, 8);
       noDateNotifier.value = !isValidDate(day, month, year);
     } else {
       noDateNotifier.value = false;
     }
 
-    if (text.length > 2 && text.length <= 4) {
-      text = text.substring(0, 2) + '/' + text.substring(2);
-      if (cursorPosition > 2) {
-        additionalOffset++;
-      }
-    } else if (text.length > 4 && text.length <= 8) {
-      text = text.substring(0, 2) +
+    // Format date text with slashes
+    String formattedText = _formatDate(text);
+
+    // Calculate new cursor position based on changes and slashes
+    int newCursorPosition = _calculateNewCursorPosition(
+        oldCursorPosition, oldValue.text, formattedText);
+
+    // Ensure cursor position is within text length
+    newCursorPosition = newCursorPosition.clamp(0, formattedText.length);
+
+    return TextEditingValue(
+      text: formattedText,
+      selection: TextSelection.collapsed(offset: newCursorPosition),
+    );
+  }
+
+  String _formatDate(String text) {
+    if (text.length > 4) {
+      return text.substring(0, 2) +
           '/' +
           text.substring(2, 4) +
           '/' +
           text.substring(4);
-      if (cursorPosition > 2) {
-        additionalOffset++;
+    } else if (text.length > 2) {
+      return text.substring(0, 2) + '/' + text.substring(2);
+    }
+    return text;
+  }
+
+  int _calculateNewCursorPosition(
+      int oldPosition, String oldText, String newText) {
+    if (oldText.length < newText.length) {
+      if (oldPosition == 2 || oldPosition == 5) {
+        return oldPosition + 2;
+      } else {
+        return oldPosition + 1;
       }
-      if (cursorPosition > 4) {
-        additionalOffset++;
+    } else if (oldText.length > newText.length) {
+      if (oldPosition == 3 || oldPosition == 6) {
+        return oldPosition - 1;
+      } else {
+        return oldPosition;
       }
     }
-
-    print('data text : $text');
-
-    return TextEditingValue(
-      text: text,
-      selection:
-          TextSelection.collapsed(offset: cursorPosition + additionalOffset),
-    );
+    return oldPosition;
   }
 
   bool isValidDate(String day, String month, String year) {
@@ -206,18 +227,6 @@ class DateInputFormatter extends TextInputFormatter {
   }
 
   bool isLeapYear(int year) {
-    if (year % 4 == 0) {
-      if (year % 100 == 0) {
-        if (year % 400 == 0) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return true;
-      }
-    } else {
-      return false;
-    }
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
   }
 }

@@ -14,12 +14,16 @@ class Ssfgdt31Barcode extends StatefulWidget {
   final String pDocType;
   final String pDocDate;
   final String pMoDoNO;
+  final String refDocNo;
+  final String refDocType;
   Ssfgdt31Barcode({
     required this.pWareCode,
     required this.pDocNo,
     required this.pDocType,
     required this.pDocDate,
     required this.pMoDoNO,
+    required this.refDocNo,
+    required this.refDocType,
     Key? key,
   }) : super(key: key);
   @override
@@ -60,7 +64,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
   bool chkShowDialogcomfirmMessage = false;
 
   FocusNode barcodeFocusNode = FocusNode();
-  FocusNode lotNumberFocusNode = FocusNode();
+  // FocusNode lotNumberFocusNode = FocusNode();
   FocusNode quantityFocusNode = FocusNode();
   TextEditingController barcodeController = TextEditingController();
   TextEditingController locatorFormController = TextEditingController();
@@ -77,7 +81,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
   @override
   void dispose() {
     quantityFocusNode.dispose();
-    lotNumberFocusNode.dispose();
+    // lotNumberFocusNode.dispose();
     barcodeFocusNode.dispose();
     barcodeController.dispose();
     locatorFormController.dispose();
@@ -101,6 +105,8 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
   @override
   void initState() {
     super.initState();
+    print('doc no : ${widget.pDocNo}');
+    print('doc type : ${widget.pDocType}');
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(barcodeFocusNode);
@@ -110,16 +116,19 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
       if (!barcodeFocusNode.hasFocus) {
         if (mounted) {
           setState(() {
-            if (barCode.contains(' ')) {
-              List<String> parts = barCode.split(' ');
-              lotNo = parts.sublist(1).join(' ');
-              lotNoController.text = lotNo;
-            } else {
-              lotNo = barCode;
-              lotNoController.text = lotNo;
-            }
+            // if (barCode.contains(' ')) {
+            //   List<String> parts = barCode.split(' ');
+            //   lotNo = parts.sublist(1).join(' ');
+            //   lotNoController.text = lotNo;
+            // } else {
+            //   lotNo = barCode;
+            //   lotNoController.text = lotNo;
+            // }
 
-            if (barCode.isNotEmpty && lotNo.isNotEmpty) {
+            // if (barCode.isNotEmpty && lotNo.isNotEmpty) {
+            //   fetchData();
+            // }
+            if (barCode.isNotEmpty) {
               fetchData();
             }
           });
@@ -127,25 +136,25 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
       }
     });
 
-    lotNumberFocusNode.addListener(() {
-      if (!lotNumberFocusNode.hasFocus) {
-        if (mounted) {
-          setState(() {
-            if (barCode.isNotEmpty && lotNo.isNotEmpty) {
-              fetchData();
-            }
-          });
-        }
-      }
-    });
+    // lotNumberFocusNode.addListener(() {
+    //   if (!lotNumberFocusNode.hasFocus) {
+    //     if (mounted) {
+    //       setState(() {
+    //         if (barCode.isNotEmpty && lotNo.isNotEmpty) {
+    //           fetchData();
+    //         }
+    //       });
+    //     }
+    //   }
+    // });
 
     quantityFocusNode.addListener(() {
       if (!quantityFocusNode.hasFocus) {
         if (mounted) {
           setState(() {
-            if (quantity.isNotEmpty && barCode.isNotEmpty && lotNo.isNotEmpty) {
-              chkQuantity();
-            }
+            chkQuantity();
+            // if (quantity.isNotEmpty && barCode.isNotEmpty && lotNo.isNotEmpty) {
+            // }
             // if (barCode != '' &&
             //     lotNo != '' &&
             //     quantity != '' &&
@@ -161,7 +170,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
   Future<void> fetchData() async {
     print('lotNo : $lotNo type : ${lotNo.runtimeType}');
     final url =
-        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ScanBarcode';
+        '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_5_ScanBarcode';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -169,10 +178,18 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
 
     final body = jsonEncode({
       'p_erp_ou_code': globals.P_ERP_OU_CODE,
-      'p_doc_no': widget.pDocNo,
-      'p_schid': widget.pMoDoNO,
-      'p_lot_no': lotNo,
       'p_app_user': globals.APP_USER,
+      'p_doc_no': widget.pDocNo,
+      'p_doc_type': widget.pDocType,
+      'p_barcode': barCode.isEmpty ? 'null' : barCode,
+      'p_lot_f': locatorForm.isEmpty ? 'null' : locatorForm,
+      'p_lot_t': locatorTo.isEmpty ? 'null' : locatorTo,
+      'p_ref_doc_no': widget.refDocNo.toString().isEmpty
+          ? 'null'
+          : widget.refDocNo.toString(),
+      'p_ref_doc_type': widget.refDocType.toString().isEmpty
+          ? 'null'
+          : widget.refDocType.toString(),
     });
     print('Request body: $body');
     try {
@@ -191,38 +208,27 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
           setState(() {
             statusFetchDataBarcode = dataBarcode['po_status'];
             messageFetchDataBarcode = dataBarcode['po_message'];
-            valIDFetchDataBarcode = dataBarcode['po_valid'];
+            // valIDFetchDataBarcode = dataBarcode['po_valid'];
 
-            if (dataBarcode['po_status'] == '1' &&
-                dataBarcode['po_valid'] != 'N') {
+            if (dataBarcode['po_status'] == '1') {
               showDialogAlertMessage(context, messageFetchDataBarcode);
-            } else if (dataBarcode['po_status'] == '1' &&
-                dataBarcode['po_valid'] == 'N') {
-              changeData(
-                dataBarcode['po_item_code'] ?? '',
-                dataBarcode['po_lot_number'] ?? '',
-                dataBarcode['po_quantity'] ?? '',
-                dataBarcode['po_curr_loc'] ?? '',
-                dataBarcode['po_bal_lot'] ?? '',
-                dataBarcode['po_bal_qty'] ?? '',
-              );
             } else if (dataBarcode['po_status'] == '0') {
-              itemCode = dataBarcode['po_item_code'];
-              lotNo = dataBarcode['po_lot_number'];
-              quantity = dataBarcode['po_quantity'];
-              locatorTo = dataBarcode['po_curr_loc'];
-              controlLot = dataBarcode['po_control_lot'];
-              lotQty = dataBarcode['po_bal_lot']; // ====== รวมรายการจ่าย
-              lotUnit = dataBarcode['po_bal_qty']; //--- รวมจำนวนจ่าย
+              itemCode = dataBarcode['po_item_code'] ?? '';
+              lotNo = dataBarcode['po_lot_number'] ?? '';
+              // quantity = dataBarcode['po_quantity'];
+              locatorTo = dataBarcode['po_curr_loc'] ?? '';
+              // controlLot = dataBarcode['po_control_lot'] ?? '';
+              lotQty = dataBarcode['po_bal_lot'] ?? ''; // ====== รวมรายการจ่าย
+              lotUnit = dataBarcode['po_bal_qty'] ?? ''; //--- รวมจำนวนจ่าย
 
               itemCodeController.text = itemCode;
               lotNoController.text = lotNo;
-              quantityController.text = dataBarcode['po_quantity'];
+              // quantityController.text = dataBarcode['po_quantity'];
               locatorToController.text = locatorTo;
               lotQtyController.text = lotQty == '' ? '0' : lotQty;
               lotUnitController.text = lotUnit == '' ? '0' : lotUnit;
 
-              chkQuantity();
+              // chkQuantity();
 
               print('controlLot : $controlLot');
             }
@@ -236,10 +242,10 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
         }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
-        print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+        print(' fetchData. รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
+      print('fetchData Error: $e');
     }
   }
 
@@ -282,23 +288,20 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
     print('itemCode : $itemCode');
     print('lotNo : $lotNo');
     print('quantity : $quantity');
-    print(
-        'EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
-    final url =
-        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ChkQuantity';
+    final url = '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_5_GET_DET';
 
     final headers = {
       'Content-Type': 'application/json',
     };
 
     final body = jsonEncode({
-      'pErpOuCode': globals.P_ERP_OU_CODE,
-      'pDocNo': widget.pDocNo,
-      'pWareCode': widget.pWareCode,
-      'pFormLocation': locatorForm.isNotEmpty ? locatorForm : 'null',
-      'pItemCode': itemCode.isNotEmpty ? itemCode : 'null',
-      'pLotNo': lotNo.isNotEmpty ? lotNo : 'null',
-      'pNewQty': quantity.isNotEmpty ? quantity : 'null',
+      'p_erp_ou_code': globals.P_ERP_OU_CODE,
+      'p_were_code': widget.pWareCode,
+      'p_doc_no': widget.pDocNo,
+      'p_lot_f': locatorForm.isNotEmpty ? locatorForm : 'null',
+      'p_item_code': itemCode.isNotEmpty ? itemCode : 'null',
+      'p_lot_no': lotNo.isNotEmpty ? lotNo : 'null',
+      'p_quantity': quantity.isNotEmpty ? quantity : 'null',
     });
     print('Request body: $body');
     try {
@@ -309,9 +312,8 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
       );
 
       if (response.statusCode == 200) {
-        // ถอดรหัสข้อมูล JSON จาก response
-        final Map<String, dynamic> dataChkQuantity = jsonDecode(utf8
-            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        final Map<String, dynamic> dataChkQuantity =
+            jsonDecode(utf8.decode(response.bodyBytes));
         print(
             'dataChkQuantity : $dataChkQuantity type : ${dataChkQuantity.runtimeType}');
         if (mounted) {
@@ -321,8 +323,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
             print('statusChkQuantity : $statusChkQuantity');
             print('messageChkQuantity : $messageChkQuantity');
             if (statusChkQuantity == '0') {
-              String textMessage =
-                  'ต้องการยืนยันการสร้างรายการเบิกจ่าย หรือไม่ ?';
+              String textMessage = 'ต้องการยืนยันการสร้างรายการรับ หรือไม่ ?';
               showDialogcomfirmAddLine(context, textMessage);
             }
             if (statusChkQuantity == '1') {
@@ -331,7 +332,6 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
           });
         }
       } else {
-        // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
@@ -384,9 +384,9 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
                   //
                   //
                   //
-                  Future.delayed(Duration(milliseconds: 200), () {
-                    FocusScope.of(context).requestFocus(lotNumberFocusNode);
-                  });
+                  // Future.delayed(Duration(milliseconds: 200), () {
+                  //   FocusScope.of(context).requestFocus(lotNumberFocusNode);
+                  // });
                 }
               }
               if (textForm == 'T') {
@@ -414,23 +414,23 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
   }
 
   Future<void> submitAddLine() async {
-    final url = '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_AddLine';
+    final url = '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_5_AddLine';
 
     final headers = {
       'Content-Type': 'application/json',
     };
 
     final body = jsonEncode({
-      'pErpOuCode': globals.P_ERP_OU_CODE,
-      'pDocNo': widget.pDocNo,
-      'pBarcode': barCode,
-      'pItemCode': itemCode,
-      'pLotNo': lotNo,
-      'pQty': quantity,
-      'pReason': 'null',
-      'pRemark': 'null',
-      'pPdLocation': 'null',
-      'pReplaceLot': 'null',
+      'p_erp_ou_code': globals.P_ERP_OU_CODE,
+      'p_app_user': globals.APP_USER,
+      'p_doc_no': widget.pDocNo,
+      'p_barcode': barCode,
+      'p_item_code': itemCode.isEmpty ? 'null' : itemCode,
+      'p_lot_no': lotNo.isEmpty ? 'null' : lotNo,
+      'p_quantity': quantity,
+      'p_lot_f': locatorForm.isEmpty ? 'null' : locatorForm,
+      'p_lot_t': locatorTo.isEmpty ? 'null' : locatorTo,
+      'p_doc_type': widget.pDocType,
     });
     print('Request body: $body');
     try {
@@ -631,12 +631,12 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
             // --------------------------------------------------------------------------------------------------
             TextFormField(
               controller: lotNoController,
-              focusNode: lotNumberFocusNode,
+              // focusNode: lotNumberFocusNode,
               onChanged: (value) {
                 lotNo = value;
-                if (barCode.isNotEmpty && lotNo.isNotEmpty) {
-                  fetchData();
-                }
+                // if (barCode.isNotEmpty && lotNo.isNotEmpty) {
+                //   fetchData();
+                // }
               },
               decoration: const InputDecoration(
                 border: InputBorder.none,
@@ -650,48 +650,49 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
             ),
             const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
-            controlLot == 'Y'
-                ? GestureDetector(
-                    child: AbsorbPointer(
-                      child: TextFormField(
-                        controller: quantityController,
-                        readOnly: true,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          filled: true,
-                          fillColor: Colors.grey[300],
-                          labelText: 'Quantity',
-                          labelStyle: const TextStyle(
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                : TextFormField(
-                    controller: quantityController,
-                    focusNode: quantityFocusNode,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: 'Quantity',
-                      labelStyle: TextStyle(
-                        color: Colors.black87,
-                      ),
-                    ),
-                    onChanged: (value) {
-                      setState(
-                        () {
-                          quantity = value;
-                          if (quantity.isNotEmpty &&
-                              barCode.isNotEmpty &&
-                              lotNo.isNotEmpty) {
-                            chkQuantity();
-                          }
-                        },
-                      );
-                    }),
+            // controlLot == 'Y'
+            //     ? GestureDetector(
+            //         child: AbsorbPointer(
+            //           child: TextFormField(
+            //             controller: quantityController,
+            //             readOnly: true,
+            //             decoration: InputDecoration(
+            //               border: InputBorder.none,
+            //               filled: true,
+            //               fillColor: Colors.grey[300],
+            //               labelText: 'Quantity',
+            //               labelStyle: const TextStyle(
+            //                 color: Colors.black87,
+            //               ),
+            //             ),
+            //           ),
+            //         ),
+            //       )
+            //     :
+            TextFormField(
+                controller: quantityController,
+                focusNode: quantityFocusNode,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  filled: true,
+                  fillColor: Colors.white,
+                  labelText: 'Quantity',
+                  labelStyle: TextStyle(
+                    color: Colors.black87,
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(
+                    () {
+                      quantity = value;
+                      // if (quantity.isNotEmpty &&
+                      //     barCode.isNotEmpty &&
+                      //     lotNo.isNotEmpty) {
+                      //   chkQuantity();
+                      // }
+                    },
+                  );
+                }),
             const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
             TextFormField(

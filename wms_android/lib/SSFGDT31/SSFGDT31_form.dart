@@ -623,7 +623,8 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                           docDate: docDate,
                           moDoNo: returnStatusLovMoDoNo,
                           refNo: returnStatusLovRefNo,
-                          statusCase: 'test1',
+                          refDocNo: refDocNo,
+                          refDocType: refDocType,
                         )),
               ).then((value) async {
                 // Navigator.of(context).pop();
@@ -918,7 +919,6 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                                     ),
                                   ))
                               : const SizedBox.shrink(),
-                          const SizedBox(height: 8),
                           const SizedBox(height: 8),
                           TextFormField(
                             controller: refNoController,

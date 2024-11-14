@@ -53,6 +53,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
   String flag = '1';
 
   bool isLoading = false;
+  bool checkComfrim = false;
   String? nextLink = '';
   String? prevLink = '';
 
@@ -480,9 +481,17 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    submitData(); // รอ check จาก rujxyho ก่อน **************************************************
-                  },
+                  onPressed: checkComfrim
+                      ? null
+                      : () async {
+                          setState(() {
+                            checkComfrim = true;
+                          });
+                          await submitData();
+                          setState(() {
+                            checkComfrim = false;
+                          });
+                        },
                   style: AppStyles.ConfirmbuttonStyle(),
                   child: Text(
                     'CONFIRM',
@@ -933,65 +942,13 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.notification_important,
-                    color: Colors.red,
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    'แจ้งเตือน',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    messageAlert,
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ตกลง'),
-                      ),
-                    ],
-                  )
-                ])),
-          ),
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () => Navigator.of(context).pop(),
+          onConfirm: () {
+            Navigator.of(context).pop();
+          },
         );
       },
     );
@@ -1005,70 +962,17 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  // Icon(
-                  //   Icons.notification_important,
-                  //   color: Colors.red,
-                  // ),
-                  // SizedBox(width: 10),
-                  Text(
-                    'แจ้งเตือน',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    poErpDocNo,
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          // Navigator.of(context).pop();
-                          setState(() {
-                            String messageText = 'ต้องการพิมพ์เอกสารหรือไม่ ?';
-                            showDialogCheckPrint(context, poTypeComplete,
-                                poErpDocNo, messageText);
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ตกลง'),
-                      ),
-                    ],
-                  )
-                ])),
-          ),
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(poErpDocNo),
+          onClose: () => Navigator.of(context).pop(),
+          onConfirm: () {
+            setState(() {
+              String messageText = 'ต้องการพิมพ์เอกสารหรือไม่ ?';
+              showDialogCheckPrint(
+                  context, poTypeComplete, poErpDocNo, messageText);
+            });
+          },
         );
       },
     );
@@ -1079,98 +983,25 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  // Icon(
-                  //   Icons.notification_important,
-                  //   color: Colors.red,
-                  // ),
-                  // SizedBox(width: 10),
-                  Text(
-                    'แจ้งเตือน',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      // Navigator.of(context).pop();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SSFGDT09L_MAIN(
-                                  pAttr1: globals.ATTR1,
-                                  pErpOuCode: globals.P_ERP_OU_CODE,
-                                  pOuCode: globals.P_OU_CODE,
-                                )),
-                      ).then((value) {
-                        fetchData();
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    messageText,
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          // Navigator.of(context).pop();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SSFGDT09L_MAIN(
-                                      pAttr1: globals.ATTR1,
-                                      pErpOuCode: globals.P_ERP_OU_CODE,
-                                      pOuCode: globals.P_OU_CODE,
-                                    )),
-                          ).then((value) {
-                            fetchData();
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('Cancel'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Navigator.of(context).pop();
-                          getPDF(poErpDocNo, poTypeComplete);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  )
-                ])),
-          ),
+        return DialogStyles.alertMessageCheckDialog(
+          context: context,
+          content: Text(messageText),
+          onClose: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SSFGDT09L_MAIN(
+                        pAttr1: globals.ATTR1,
+                        pErpOuCode: globals.P_ERP_OU_CODE,
+                        pOuCode: globals.P_OU_CODE,
+                      )),
+            ).then((value) {
+              fetchData();
+            });
+          },
+          onConfirm: () {
+            getPDF(poErpDocNo, poTypeComplete);
+          },
         );
       },
     );
