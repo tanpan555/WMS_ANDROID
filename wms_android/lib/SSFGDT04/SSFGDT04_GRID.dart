@@ -205,6 +205,249 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     );
   }
 
+  Widget _buildInfoRow1(Map<String, String> info) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: info.entries.map((entry) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Key
+                  Container(
+                    height: 30,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      entry.key,
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
+                      ),
+                      softWrap: false,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  SizedBox(width: 18),
+
+                  Container(
+                    constraints: BoxConstraints(
+                      minWidth: 80,
+                      maxWidth: 160,
+                    ),
+                    height: 30,
+                    child: TextField(
+                      controller: TextEditingController(text: entry.value),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromARGB(255, 255, 255, 255),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 10.0,
+                        ),
+                      ),
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
+                      ),
+                      textAlign: TextAlign.right,
+                      readOnly: true,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow2(Map<String, String> info) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: info.entries.map((entry) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Key
+                  Container(
+                    height: 30,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      entry.key,
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
+                      ),
+                      softWrap: false,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  SizedBox(width: 18),
+
+                  Container(
+                    constraints: BoxConstraints(
+                      minWidth: 80,
+                      maxWidth: 160,
+                    ),
+                    height: 30,
+                    child: TextField(
+                      controller: TextEditingController(text: entry.value),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromARGB(255, 255, 255, 255),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 10.0,
+                        ),
+                      ),
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
+                      ),
+                      textAlign: TextAlign.left,
+                      readOnly: true,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow3(Map<String, String> info) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: info.entries.map((entry) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Key
+                  Container(
+                    height: 30,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      entry.key,
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
+                      ),
+                      softWrap: false,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  SizedBox(width: 18),
+
+                  Container(
+                    constraints: BoxConstraints(
+                      minWidth: 80,
+                      maxWidth: 160,
+                    ),
+                    height: 30,
+                    child: TextField(
+                      controller: TextEditingController(text: entry.value),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromARGB(255, 255, 255, 255),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 18,
+                          horizontal: 10.0,
+                        ),
+                      ),
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
+                      ),
+                      textAlign: TextAlign.left,
+                      readOnly: true,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow4(Map<String, String> info) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: info.entries.map((entry) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 28),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Key
+                  Container(
+                    height: 30,
+                    // alignment: Alignment.centerLeft,
+                    child: Text(
+                      entry.key,
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
+                      ),
+                      softWrap: false,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  SizedBox(width: 18),
+
+                  Container(
+                    constraints: BoxConstraints(
+                      minWidth: 80,
+                      maxWidth: 160,
+                    ),
+                    height: 50,
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        entry.value,
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 14,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
   Future<void> fetchUpdate(String? itemCode, String? poPackCode,
       String? poPackQty, String? rowid) async {
     final url = '${gb.IP_API}/apex/wms/SSFGDT04/Step_3_set_pack_QTY';
@@ -260,71 +503,70 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   }
 
   Future<void> fetchGridItems([String? url]) async {
-  if (!mounted) return; // ตรวจสอบว่าตัว component ยังถูก mount อยู่หรือไม่
-  setState(() {
-    isLoading = true;
-  });
-  final String requestUrl = url ??
-      '${gb.IP_API}/apex/wms/SSFGDT04/Step_3_WMS_IN_TRAN_DETAIL/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}/${gb.P_OU_CODE}';
-  try {
-    final response = await http.get(Uri.parse(requestUrl));
-    print(requestUrl);
-    if (response.statusCode == 200) {
-      final responseBody = utf8.decode(response.bodyBytes);
-      final parsedResponse = json.decode(responseBody);
-      if (!mounted) return;
-      if (mounted) {
+    if (!mounted) return; // ตรวจสอบว่าตัว component ยังถูก mount อยู่หรือไม่
+    setState(() {
+      isLoading = true;
+    });
+    final String requestUrl = url ??
+        '${gb.IP_API}/apex/wms/SSFGDT04/Step_3_WMS_IN_TRAN_DETAIL/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}/${gb.P_OU_CODE}';
+    try {
+      final response = await http.get(Uri.parse(requestUrl));
+      print(requestUrl);
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final parsedResponse = json.decode(responseBody);
+        if (!mounted) return;
+        if (mounted) {
+          setState(() {
+            // Reset to the first page
+            currentPage = 0;
+
+            // ตรวจสอบข้อมูลก่อนการอัปเดต
+            if (parsedResponse is Map && parsedResponse.containsKey('items')) {
+              dataCard = parsedResponse['items'];
+            } else {
+              dataCard = [];
+            }
+
+            // อัปเดตและกรองข้อมูลใน gridItems
+            gridItems = List<Map<String, dynamic>>.from(
+                    parsedResponse['items'] ?? [])
+                .where((item) => !deletedItemCodes.contains(item['item_code']))
+                .toList();
+
+            // คำนวณจำนวน totalCards
+            int totalCards = dataCard.length;
+
+            List<dynamic> getCurrentPageItems() {
+              int startIndex = currentPage * itemsPerPage;
+              int endIndex = (startIndex + itemsPerPage > totalCards)
+                  ? totalCards
+                  : startIndex + itemsPerPage;
+              return dataCard.sublist(
+                  startIndex, endIndex); // ดึงเฉพาะ card ในหน้าปัจจุบัน
+            }
+
+            isLoading = false;
+          });
+        }
+      } else {
+        if (!mounted) return;
         setState(() {
-          // Reset to the first page
-          currentPage = 0;
-
-          // ตรวจสอบข้อมูลก่อนการอัปเดต
-          if (parsedResponse is Map && parsedResponse.containsKey('items')) {
-            dataCard = parsedResponse['items'];
-          } else {
-            dataCard = [];
-          }
-          
-          // อัปเดตและกรองข้อมูลใน gridItems
-          gridItems = List<Map<String, dynamic>>.from(
-                  parsedResponse['items'] ?? [])
-              .where((item) => !deletedItemCodes.contains(item['item_code']))
-              .toList();
-
-          // คำนวณจำนวน totalCards
-          int totalCards = dataCard.length;
-
-          List<dynamic> getCurrentPageItems() {
-            int startIndex = currentPage * itemsPerPage;
-            int endIndex = (startIndex + itemsPerPage > totalCards)
-                ? totalCards
-                : startIndex + itemsPerPage;
-            return dataCard.sublist(
-                startIndex, endIndex); // ดึงเฉพาะ card ในหน้าปัจจุบัน
-          }
-
           isLoading = false;
+          errorMessage = 'Failed to load data: ${response.statusCode}';
         });
       }
-    } else {
+    } catch (e) {
       if (!mounted) return;
-      setState(() {
-        isLoading = false;
-        errorMessage = 'Failed to load data: ${response.statusCode}';
-      });
-    }
-  } catch (e) {
-    if (!mounted) return;
 
-    if (mounted) {
-      setState(() {
-        isLoading = false;
-        errorMessage = 'Error occurred: $e';
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          errorMessage = 'Error occurred: $e';
+        });
+      }
     }
   }
-}
-
 
   String? getLink(List<dynamic> links, String rel) {
     final link =
@@ -409,8 +651,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     print(poDocTpye);
     print(poSeq);
     print(poItemCode);
-    final url = Uri.parse(
-        '${gb.IP_API}/apex/wms/SSFGDT04/Step_3_delete_DTL_WMS');
+    final url =
+        Uri.parse('${gb.IP_API}/apex/wms/SSFGDT04/Step_3_delete_DTL_WMS');
     final response = await http.delete(
       url,
       headers: {
@@ -704,7 +946,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                     child: Stack(
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.all(16.0),
+                                          padding: const EdgeInsets.all(8),
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
                                             mainAxisAlignment:
@@ -724,206 +966,27 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                                   color: Colors.black26,
                                                   thickness: 1),
                                               const SizedBox(height: 8),
-                                              Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Expanded(
-                                                        flex: 1,
-                                                        child: Text(
-                                                          'จำนวนรับ :',
-                                                          textAlign:
-                                                              TextAlign.right,
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 8),
-                                                      Expanded(
-                                                        flex: 1,
-                                                        child: Container(
-                                                          color: Colors.white,
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                            vertical: 2,
-                                                            horizontal: 8,
-                                                          ),
-                                                          child: Text(
-                                                            // Format the number if it's not null, else display an empty string
-                                                            item['pack_qty'] !=
-                                                                    null
-                                                                ? NumberFormat(
-                                                                        '#,###')
-                                                                    .format(item[
-                                                                        'pack_qty'])
-                                                                : '',
-                                                            textAlign:
-                                                                TextAlign.end,
-                                                            style: TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .normal,
-                                                              color:
-                                                                  Colors.black,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(height: 4),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Expanded(
-                                                        flex: 1,
-                                                        child: Text(
-                                                          'จำนวน Pallet :',
-                                                          textAlign:
-                                                              TextAlign.right,
-                                                          style: TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 8),
-                                                      Expanded(
-                                                        flex: 1,
-                                                        child: Container(
-                                                          color: Colors
-                                                              .white, // กำหนดสีพื้นหลังที่ต้องการ
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                            vertical: 2,
-                                                            horizontal: 8,
-                                                          ), // เพิ่ม padding รอบๆข้อความ
-                                                          child: Text(
-                                                            item['count_qty'] ??
-                                                                '',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .normal,
-                                                              color:
-                                                                  Colors.black,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(height: 4),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Expanded(
-                                                        flex: 1,
-                                                        child: Text(
-                                                          'จำนวนรวม :',
-                                                          textAlign:
-                                                              TextAlign.right,
-                                                          style: TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 8),
-                                                      Expanded(
-                                                        flex: 1,
-                                                        child: Container(
-                                                          color: Colors
-                                                              .white, // กำหนดสีพื้นหลังที่ต้องการ
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                            vertical: 2,
-                                                            horizontal: 8,
-                                                          ), // เพิ่ม padding รอบๆข้อความ
-                                                          child: Text(
-                                                            item['count_qty_in'] ??
-                                                                '',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .normal,
-                                                              color:
-                                                                  Colors.black,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(height: 4),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .start, // จัดตำแหน่งหลักไปทางซ้าย
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start, // จัดตำแหน่งข้ามไปทางซ้าย
-                                                    children: [
-                                                      Expanded(
-                                                        flex: 1,
-                                                        child: Text(
-                                                          'Item Desc :',
-                                                          textAlign:
-                                                              TextAlign.right,
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 8),
-                                                      Expanded(
-                                                        flex: 1,
-                                                        child: Container(
-                                                          color: Colors
-                                                              .white, // กำหนดสีพื้นหลังที่ต้องการ
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                            vertical: 2,
-                                                            horizontal: 8,
-                                                          ), // เพิ่ม padding รอบๆข้อความ
-                                                          child: Text(
-                                                            item['nb_item_name'] ??
-                                                                '',
-                                                            style: TextStyle(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .normal,
-                                                              color:
-                                                                  Colors.black,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
+                                              _buildInfoRow1({
+                                                'จำนวนรับ :': item[
+                                                            'pack_qty'] !=
+                                                        null
+                                                    ? NumberFormat('#,###')
+                                                        .format(
+                                                            item['pack_qty'])
+                                                    : '',
+                                              }),
+                                              _buildInfoRow2({
+                                                'จำนวน Pallet :':
+                                                    item['count_qty'] ?? '',
+                                              }),
+                                              _buildInfoRow3({
+                                                'จำนวนรวม :':
+                                                    item['count_qty_in'] ?? '',
+                                              }),
+                                              _buildInfoRow4({
+                                                'Item Desc :':
+                                                    item['nb_item_name'] ?? '',
+                                              }),
                                               const SizedBox(height: 8),
                                               // Row with delete and edit buttons
                                               Row(
