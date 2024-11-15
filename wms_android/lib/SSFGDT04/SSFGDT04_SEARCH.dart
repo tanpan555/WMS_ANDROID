@@ -111,7 +111,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            'ประเภทรายการ',
+                            'เลือกประเภทรายการ',
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),

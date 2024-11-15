@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../custom_appbar.dart';
 import '../bottombar.dart';
 import 'package:http/http.dart' as http;
@@ -92,25 +93,20 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                             Flexible(
                               flex: 1,
                               child: Container(
-                                color: Colors.grey[300], // สีพื้นหลังเทาอ่อน
-                                padding: const EdgeInsets.all(
-                                    2), // เพิ่ม padding ภายใน
+                                color: Colors.grey[300],
+                                padding: const EdgeInsets.all(2),
                                 child: TextFormField(
-                                  enabled: false, // ช่องแรกที่แก้ไขไม่ได้
-                                  textAlign: TextAlign.right, // ชิดขวา
+                                  enabled: false,
+                                  textAlign: TextAlign.right,
                                   decoration: const InputDecoration(
-                                    labelText: 'seq',
-                                    labelStyle: TextStyle(
-                                        color:
-                                            Colors.black), // สีตัวหนังสือสีดำ
+                                    labelText: ' seq',
+                                    labelStyle: TextStyle(color: Colors.black),
                                     border: InputBorder.none,
                                   ),
-                                  initialValue: item['seq']?.toString() ??
-                                      '', // แปลงค่า int เป็น String
+                                  initialValue: item['seq']?.toString() ?? '',
                                   style: const TextStyle(
                                     color: Colors.black,
-                                    fontWeight:
-                                        FontWeight.bold, // สีตัวหนังสือในช่อง
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
@@ -119,24 +115,20 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                             Expanded(
                               flex: 2,
                               child: Container(
-                                color: Colors.grey[300], // สีพื้นหลังเทาอ่อน
-                                padding: const EdgeInsets.all(
-                                    2), // เพิ่ม padding ภายใน
+                                color: Colors.grey[300],
+                                padding: const EdgeInsets.all(2),
                                 child: TextFormField(
-                                  enabled: false, // ช่องที่สองที่แก้ไขไม่ได้
+                                  enabled: false,
+                                  textAlign: TextAlign.right,
                                   decoration: const InputDecoration(
-                                    labelText: 'item',
-                                    labelStyle: TextStyle(
-                                        color:
-                                            Colors.black), // สีตัวหนังสือสีดำ
+                                    labelText: ' item',
+                                    labelStyle: TextStyle(color: Colors.black),
                                     border: InputBorder.none,
                                   ),
-                                  initialValue: item['item_code'] ??
-                                      '', // ข้อมูลในช่องที่สอง
+                                  initialValue: item['item_code'] ?? '',
                                   style: const TextStyle(
                                       color: Colors.black,
-                                      fontWeight: FontWeight
-                                          .bold), // สีตัวหนังสือในช่อง
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
@@ -144,12 +136,32 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                         ),
                         const SizedBox(height: 10),
                         TextFormField(
+                          textAlign: TextAlign.right,
                           controller: quantityController,
                           keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter
+                                .digitsOnly, // Allows only numbers
+                          ],
                           decoration: const InputDecoration(
                             labelText: 'จำนวนรับ',
                             border: OutlineInputBorder(),
                           ),
+                          validator: (value) {
+                            // Check if the field is empty
+                            if (value == null || value.isEmpty) {
+                              return 'กรุณากรอกจำนวนรับ';
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            // Clear the value from the card when empty
+                            if (value.isEmpty) {
+                              setState(() {
+                                item['pack_qty'] = null;
+                              });
+                            }
+                          },
                         ),
                       ],
                     ),
@@ -171,6 +183,9 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                 ),
                 onPressed: () async {
                   if (quantityController.text.isEmpty) {
+                    setState(() {
+                      item['pack_qty'] = null; // Clear the quantity on card
+                    });
                     Navigator.of(context).pop();
                     return;
                   }
@@ -240,6 +255,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                     ),
                     height: 30,
                     child: TextField(
+                      enabled: false,
                       controller: TextEditingController(text: entry.value),
                       decoration: InputDecoration(
                         filled: true,
@@ -302,6 +318,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                     ),
                     height: 30,
                     child: TextField(
+                      enabled: false,
                       controller: TextEditingController(text: entry.value),
                       decoration: InputDecoration(
                         filled: true,
@@ -364,6 +381,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                     ),
                     height: 30,
                     child: TextField(
+                      enabled: false,
                       controller: TextEditingController(text: entry.value),
                       decoration: InputDecoration(
                         filled: true,

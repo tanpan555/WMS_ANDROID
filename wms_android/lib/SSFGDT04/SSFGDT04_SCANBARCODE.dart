@@ -415,63 +415,70 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
 
           // const SizedBox(height: 5),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 0),
-            child: GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return DialogStyles.customLovSearchDialog(
-                      context: context,
-                      headerText: 'เลือก Locator',
-                      searchController: _searchController,
-                      data: locatorBarcodeItems,
-                      docString: (item) =>
-                          '${item['lcbarcode'] ?? ''} ${item['location_code'] ?? ''} ${item['location_name'] ?? ''}',
-                      titleText: (item) => '${item['lcbarcode'] ?? ''}',
-                      subtitleText: (item) =>
-                          '${item['location_code'] ?? ''} ${item['location_name'] ?? ''}',
-                      onTap: (item) {
-                        setState(() {
-                          // selectedLocator = docString;
-                          selectedLocator = item['lcbarcode'].toString();
-                          _locatorBarcodeController.text =
-                              item['lcbarcode'].toString();
-                          fetchlocatorItems();
-                          // Call the API after setting the selected locator
-                        });
-                        Navigator.of(context).pop();
-                        scan_INmove_Location(item['lcbarcode']);
-                      },
-                    );
-                  },
-                ).then((_) {
-                  // ลบค่าที่ค้นหาเมื่อ popup ถูกปิด ไม่ว่าจะกดไอคอนหรือกดที่อื่น
-                  _searchController.clear();
-                });
-              },
-              child: AbsorbPointer(
-                child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Locator',
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelStyle: TextStyle(color: Colors.black),
-                    border: InputBorder.none,
-                    suffixIcon: Icon(
-                      Icons.arrow_drop_down,
-                      color: Color.fromARGB(255, 113, 113, 113),
-                    ),
-                  ),
-                  controller: _locatorBarcodeController.text.isNotEmpty
-                      ? _locatorBarcodeController
-                      : TextEditingController(
-                          text: selectedLocator ?? '-- No Value Set --'),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
+  padding: const EdgeInsets.symmetric(horizontal: 0),
+  child: GestureDetector(
+    onTap: () {
+      // Add "-- No Value Set --" to the beginning of locatorBarcodeItems temporarily
+      final updatedLocatorBarcodeItems = [
+        {'lcbarcode': '-- No Value Set --', 'location_code': '', 'location_name': ''},
+        ...locatorBarcodeItems
+      ];
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return DialogStyles.customLovSearchDialog(
+            context: context,
+            headerText: 'เลือก Locator',
+            searchController: _searchController,
+            data: updatedLocatorBarcodeItems,
+            docString: (item) =>
+                '${item['lcbarcode'] ?? ''} ${item['location_code'] ?? ''} ${item['location_name'] ?? ''}',
+            titleText: (item) => '${item['lcbarcode'] ?? ''}',
+            subtitleText: (item) =>
+                '${item['location_code'] ?? ''} ${item['location_name'] ?? ''}',
+            onTap: (item) {
+              setState(() {
+                selectedLocator = item['lcbarcode'] == '-- No Value Set --'
+                    ? '-- No Value Set --'
+                    : item['lcbarcode'].toString();
+                _locatorBarcodeController.text = selectedLocator!;
+
+                if (item['lcbarcode'] != '-- No Value Set --') {
+                  fetchlocatorItems(); // Call the API only if a real locator is selected
+                  scan_INmove_Location(item['lcbarcode']);
+                }
+              });
+              Navigator.of(context).pop();
+            },
+          );
+        },
+      ).then((_) {
+        _searchController.clear(); // Clear the search field when the popup closes
+      });
+    },
+    child: AbsorbPointer(
+      child: TextField(
+        decoration: const InputDecoration(
+          labelText: 'Locator',
+          filled: true,
+          fillColor: Colors.white,
+          labelStyle: TextStyle(color: Colors.black),
+          border: InputBorder.none,
+          suffixIcon: Icon(
+            Icons.arrow_drop_down,
+            color: Color.fromARGB(255, 113, 113, 113),
           ),
+        ),
+        controller: _locatorBarcodeController.text.isNotEmpty
+            ? _locatorBarcodeController
+            : TextEditingController(text: selectedLocator ?? '-- No Value Set --'),
+        textAlign: TextAlign.center,
+      ),
+    ),
+  ),
+),
+
 
           // Lot Number //
           Padding(
