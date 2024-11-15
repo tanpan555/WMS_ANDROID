@@ -8,7 +8,7 @@ import 'package:wms_android/loading.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/styles.dart';
-import 'package:wms_android/TextFormFieldCheckDate.dart';
+import 'package:wms_android/checkDataFormate.dart';
 import 'SSFGDT31_grid.dart';
 
 class Ssfgdt31Form extends StatefulWidget {

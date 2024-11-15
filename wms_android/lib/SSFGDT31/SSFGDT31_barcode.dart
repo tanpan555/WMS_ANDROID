@@ -10,6 +10,10 @@ import 'package:wms_android/styles.dart';
 
 class Ssfgdt31Barcode extends StatefulWidget {
   final String pWareCode;
+  final String pErpOuCode;
+  final String pOuCode;
+  final String pAttr1;
+  final String pAppUser;
   final String pDocNo;
   final String pDocType;
   final String pDocDate;
@@ -18,6 +22,10 @@ class Ssfgdt31Barcode extends StatefulWidget {
   final String refDocType;
   Ssfgdt31Barcode({
     required this.pWareCode,
+    required this.pErpOuCode,
+    required this.pOuCode,
+    required this.pAttr1,
+    required this.pAppUser,
     required this.pDocNo,
     required this.pDocType,
     required this.pDocDate,
@@ -58,8 +66,6 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
   String messageSubmitAddline = '';
 
   String previousValue = '';
-  String dataLocatorForSaveDataForm = '';
-  String dataLocatorForSaveDataTo = '';
 
   bool chkShowDialogcomfirmMessage = false;
 
@@ -177,7 +183,14 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
     };
 
     final body = jsonEncode({
+<<<<<<< HEAD
       'p_erp_ou_code': globals.P_ERP_OU_CODE,
+=======
+      'p_erp_ou_code': widget.pErpOuCode,
+      'p_doc_no': widget.pDocNo,
+      'p_schid': widget.pMoDoNO,
+      'p_lot_no': lotNo,
+>>>>>>> parent of b50f351 (แก้ไขไฟล์ checkDataFormate ---> TextFormFieldCheckDate)
       'p_app_user': globals.APP_USER,
       'p_doc_no': widget.pDocNo,
       'p_doc_type': widget.pDocType,
@@ -281,7 +294,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
   }
 
   Future<void> chkQuantity() async {
-    print('pErpOuCode : ${globals.P_ERP_OU_CODE}');
+    print('pErpOuCode : ${widget.pErpOuCode}');
     print('pDocNo : ${widget.pDocNo}');
     print('pWareCode : ${widget.pWareCode}');
     print('locatorForm : $locatorForm');
@@ -295,6 +308,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
     };
 
     final body = jsonEncode({
+<<<<<<< HEAD
       'p_erp_ou_code': globals.P_ERP_OU_CODE,
       'p_were_code': widget.pWareCode,
       'p_doc_no': widget.pDocNo,
@@ -302,6 +316,15 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
       'p_item_code': itemCode.isNotEmpty ? itemCode : 'null',
       'p_lot_no': lotNo.isNotEmpty ? lotNo : 'null',
       'p_quantity': quantity.isNotEmpty ? quantity : 'null',
+=======
+      'pErpOuCode': widget.pErpOuCode,
+      'pDocNo': widget.pDocNo,
+      'pWareCode': widget.pWareCode,
+      'pFormLocation': locatorForm.isNotEmpty ? locatorForm : 'null',
+      'pItemCode': itemCode.isNotEmpty ? itemCode : 'null',
+      'pLotNo': lotNo.isNotEmpty ? lotNo : 'null',
+      'pNewQty': quantity.isNotEmpty ? quantity : 'null',
+>>>>>>> parent of b50f351 (แก้ไขไฟล์ checkDataFormate ---> TextFormFieldCheckDate)
     });
     print('Request body: $body');
     try {
@@ -344,7 +367,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
     print('textForm : $textForm');
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ChkLocatorForm/${globals.P_ERP_OU_CODE}/${widget.pWareCode}/${widget.pDocNo}/${textInput.isNotEmpty ? textInput : 'mull'}'));
+          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_4_ChkLocatorForm/${widget.pErpOuCode}/${widget.pWareCode}/${widget.pDocNo}/${textInput.isNotEmpty ? textInput : 'mull'}'));
 
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
@@ -373,7 +396,6 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
               if (textForm == 'F') {
                 locatorForm = poRet;
                 locatorFormController.text = poRet;
-                dataLocatorForSaveDataForm = textInput;
 
                 if (locatorForm.isNotEmpty) {
                   Navigator.of(context).pop();
@@ -392,7 +414,6 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
               if (textForm == 'T') {
                 locatorTo = poRet;
                 locatorToController.text = poRet;
-                dataLocatorForSaveDataTo = textInput;
 
                 if (locatorTo.isNotEmpty) {
                   Navigator.of(context).pop();
@@ -421,6 +442,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
     };
 
     final body = jsonEncode({
+<<<<<<< HEAD
       'p_erp_ou_code': globals.P_ERP_OU_CODE,
       'p_app_user': globals.APP_USER,
       'p_doc_no': widget.pDocNo,
@@ -431,6 +453,18 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
       'p_lot_f': locatorForm.isEmpty ? 'null' : locatorForm,
       'p_lot_t': locatorTo.isEmpty ? 'null' : locatorTo,
       'p_doc_type': widget.pDocType,
+=======
+      'pErpOuCode': widget.pErpOuCode,
+      'pDocNo': widget.pDocNo,
+      'pBarcode': barCode,
+      'pItemCode': itemCode,
+      'pLotNo': lotNo,
+      'pQty': quantity,
+      'pReason': 'null',
+      'pRemark': 'null',
+      'pPdLocation': 'null',
+      'pReplaceLot': 'null',
+>>>>>>> parent of b50f351 (แก้ไขไฟล์ checkDataFormate ---> TextFormFieldCheckDate)
     });
     print('Request body: $body');
     try {
@@ -537,7 +571,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
                   child: Container(
                     padding: const EdgeInsets.all(12.0),
                     decoration: BoxDecoration(
-                      color: Colors.lightBlue[100], // พื้นหลังสีเหลืองอ่อน
+                      color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
                       border: Border.all(
                         color: Colors.black, // ขอบสีดำ
                         width: 2.0, // ความกว้างของขอบ 2.0
@@ -859,7 +893,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
       // String messageDelete,
       ) {
     print('11111111111111111111111111111111');
-    print('pErpOuCode : ${globals.P_ERP_OU_CODE}');
+    print('pErpOuCode : ${widget.pErpOuCode}');
     print('pDocNo : ${widget.pDocNo}');
     if (chkShowDialogcomfirmMessage == false) {
       chkShowDialogcomfirmMessage = true;
@@ -983,7 +1017,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
                         //   MaterialPageRoute(
                         //       builder: (context) => Ssfgdt09lReason(
                         //             pOuCode: widget.pOuCode,
-                        //             pErpOuCode: globals.P_ERP_OU_CODE,
+                        //             pErpOuCode: widget.pErpOuCode,
                         //             pDocNo: widget.pDocNo,
                         //             pMoDoNO: widget.pMoDoNO,
                         //             pItemCode: itemCode,
@@ -1160,13 +1194,6 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
                     icon: const Icon(MyIcons.close),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      if (locatorForm.isNotEmpty &&
-                          locatorFormChk.isEmpty &&
-                          dataLocatorForSaveDataForm.isNotEmpty) {
-                        setState(() {
-                          locatorFormChk = dataLocatorForSaveDataForm;
-                        });
-                      }
                       // locatorFormChkController.clear();
                       // locatorFormChk = '';
                     },
@@ -1205,13 +1232,6 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
                       ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).pop();
-                          if (locatorForm.isNotEmpty &&
-                              locatorFormChk.isEmpty &&
-                              dataLocatorForSaveDataForm.isNotEmpty) {
-                            setState(() {
-                              locatorFormChk = dataLocatorForSaveDataForm;
-                            });
-                          }
                           // locatorFormChkController.clear();
                           // locatorFormChk = '';
                         },
@@ -1277,13 +1297,6 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
                     icon: const Icon(MyIcons.close),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      if (locatorTo.isNotEmpty &&
-                          locatorToChk.isEmpty &&
-                          dataLocatorForSaveDataTo.isNotEmpty) {
-                        setState(() {
-                          locatorToChk = dataLocatorForSaveDataTo;
-                        });
-                      }
                       // locatorToChkController.clear();
                       // locatorToChk = '';
                     },
@@ -1322,13 +1335,6 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
                       ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).pop();
-                          if (locatorTo.isNotEmpty &&
-                              locatorToChk.isEmpty &&
-                              dataLocatorForSaveDataTo.isNotEmpty) {
-                            setState(() {
-                              locatorToChk = dataLocatorForSaveDataTo;
-                            });
-                          }
                           // locatorToChkController.clear();
                           // locatorToChk = '';
                         },

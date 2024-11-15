@@ -148,10 +148,9 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
         isLoading = true;
       });
     }
-    print(
-        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${globals.P_ERP_OU_CODE}/${globals.ATTR1}/${globals.APP_USER}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}/${globals.BROWSER_LANGUAGE}');
+    print('URL : $url ');
     final String requestUrl = url ??
-        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${globals.P_ERP_OU_CODE}/${globals.ATTR1}/${globals.APP_USER}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}/${globals.BROWSER_LANGUAGE}';
+        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_SearchCard/${globals.P_ERP_OU_CODE}/${globals.ATTR1}/${globals.APP_USER}/${widget.pStatusDESC}/${widget.pSoNo}/${widget.pDocDate}';
 
     try {
       final response = await http.get(Uri.parse(requestUrl));
