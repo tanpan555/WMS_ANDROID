@@ -462,69 +462,11 @@ class DialogStyles {
                 backgroundColor: Colors.white,
                 side: const BorderSide(color: Colors.grey),
               ),
-              child: const Text('Cancel'),
-            ),
-            const SizedBox(width: 4),
-            ElevatedButton(
-              onPressed: onConfirmDialog, // Directly call onConfirmDialog here
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                side: const BorderSide(color: Colors.grey),
-              ),
-              child: const Text('OK'),
-            ),
-          ],
-        )
-      ],
-    );
-  }
-
-  // ---------------------------------------------------------------------  dialog แจ้งเตือนย้อนกลับปุ่ม Home
-  static AlertDialog homeDialog({
-    required BuildContext context,
-    required String textMessage,
-    required VoidCallback onCloseDialog,
-    required VoidCallback onConfirmDialog,
-  }) {
-    return AlertDialog(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Row(
-            children: [
-              Icon(
-                Icons.notification_important,
-                color: Colors.red,
-              ),
-              SizedBox(width: 10),
-              Text(
-                'แจ้งเตือน',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-      content: Text(textMessage),
-      actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ElevatedButton(
-              onPressed: onCloseDialog, // Directly calling onCloseDialog
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                side: const BorderSide(color: Colors.grey),
-              ),
               child: const Text('ยกเลิก'),
             ),
             const SizedBox(width: 4),
             ElevatedButton(
-              onPressed: onConfirmDialog, // Directly calling onConfirmDialog
+              onPressed: onConfirmDialog, // Directly call onConfirmDialog here
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 side: const BorderSide(color: Colors.grey),
@@ -601,7 +543,7 @@ class DialogStyles {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('Cancel'),
+                    child: const Text('ยกเลิก'),
                   ),
                   ElevatedButton(
                     onPressed: onConfirmDialog,
@@ -609,7 +551,7 @@ class DialogStyles {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('OK'),
+                    child: const Text('ตกลง'),
                   ),
                 ],
               ),
@@ -1123,12 +1065,12 @@ class ElevatedButtonStyle {
       onPressed: onPressed,
       style: ButtonStyle(
         backgroundColor:
-            MaterialStateProperty.all(const Color.fromARGB(255, 255, 255, 255)),
-        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+            WidgetStateProperty.all(const Color.fromARGB(255, 255, 255, 255)),
+        shape: WidgetStateProperty.all(RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         )),
-        minimumSize: MaterialStateProperty.all(const Size(60, 40)),
-        padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+        minimumSize: WidgetStateProperty.all(const Size(60, 40)),
+        padding: WidgetStateProperty.all(const EdgeInsets.all(0)),
       ),
       child: Image.asset(
         'assets/images/right.png',

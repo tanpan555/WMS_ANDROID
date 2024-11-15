@@ -10,6 +10,7 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:wms_android/styles.dart';
+// import '../TextFormFieldCheckDate.dart';
 
 class SSFGDT17_FORM extends StatefulWidget {
   final String po_doc_no;
@@ -41,7 +42,7 @@ class SSFGDT17_FORM extends StatefulWidget {
 
 class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   String currentSessionID = '';
-  late DateTime selectedDate;
+  DateTime? selectedDate;
   final ERP_OU_CODE = gb.P_ERP_OU_CODE;
   final P_OU_CODE = gb.P_OU_CODE;
   final APP_USER = gb.APP_USER;
@@ -64,6 +65,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   bool isDateValid = true;
 
   bool checkUpdateData = false;
+  final ValueNotifier<bool> isDateInvalidNotifier = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -117,7 +119,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
         setState(() {
           isDateValid = true;
           selectedDate = picked;
-          CR_DATE.text = DateFormat('dd/MM/yyyy').format(selectedDate);
+          CR_DATE.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
           // Update CR_DATE with the selected date
         });
       }
@@ -714,6 +716,21 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // CustomTextFormField(
+        //           controller: controller,
+        //           labelText: 'วันที่บันทึก',
+        //           keyboardType: TextInputType.number,
+        //           onChanged: (value) {
+        //             try {
+        //               selectedDate = DateFormat('dd/MM/yyyy').parse(value);
+        //             } catch (e) {
+        //               selectedDate = null; // Set to null if parsing fails
+        //               print('Invalid date format: $value');
+        //             }
+        //             print('วันที่: $selectedDate');
+        //           },
+        //           isDateInvalidNotifier: isDateInvalidNotifier,
+        //         )
         TextField(
           controller: controller,
           style: const TextStyle(color: Colors.black),

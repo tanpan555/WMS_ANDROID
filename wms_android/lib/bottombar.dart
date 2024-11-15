@@ -81,7 +81,7 @@ class _BottomBarState extends State<BottomBar> {
           bool? confirmResult = await showDialog<bool>(
   context: context,
   builder: (BuildContext context) {
-    return DialogStyles.homeDialog(
+    return DialogStyles.warningNotSaveDialog(
       context: context,
       textMessage: 'ยืนยันที่จะย้อนกลับไปหน้าแรกหรือไม่',
       onCloseDialog: () => Navigator.of(context).pop(false),

@@ -28,7 +28,8 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   int pFlag = 1;
   String? pSoNo;
   DateTime? selectedDate;
-  String selectedItem = 'ระหว่างบันทึก'; // Ensure this value exists in dropdownItems
+  String selectedItem =
+      'ระหว่างบันทึก'; // Ensure this value exists in dropdownItems
   String status = '1'; // Default status
   String appUser = gb.APP_USER;
   TextEditingController _dateController = TextEditingController();
@@ -248,7 +249,6 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                   },
                   isDateInvalidNotifier: isDateInvalidNotifier,
                 ),
-
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

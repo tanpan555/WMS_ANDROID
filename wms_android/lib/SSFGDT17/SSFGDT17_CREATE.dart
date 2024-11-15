@@ -376,25 +376,30 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
                   ],
                   controlsBuilder:
                       (BuildContext context, ControlsDetails controls) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        TextButton(
-                          onPressed: controls.onStepCancel,
-                          child: const Text('ย้อนกลับ'),
-                        ),
-                        SizedBox(width: 8.0),
-                        ElevatedButton(
-                          onPressed: controls.onStepContinue,
-                          child: Text(
-                            _currentStep == 2 ? 'สร้าง' : 'ต่อไป',
-                            style: TextStyle(color: Colors.white),
+                    return Padding(
+                      padding:
+                          const EdgeInsets.only(top: 8), // เพิ่มระยะห่างด้านบน
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          TextButton(
+                            onPressed: controls.onStepCancel,
+                            child: const Text('ย้อนกลับ'),
                           ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 103, 58, 183),
+                          SizedBox(width: 8.0),
+                          ElevatedButton(
+                            onPressed: controls.onStepContinue,
+                            child: Text(
+                              _currentStep == 2 ? 'สร้าง' : 'ต่อไป',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Color.fromARGB(255, 103, 58, 183),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     );
                   },
                 ),

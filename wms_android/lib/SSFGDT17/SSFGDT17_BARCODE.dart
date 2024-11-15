@@ -327,7 +327,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
                       20), // ปรับรูปร่างมุมให้โค้งมน (ถ้าต้องการ)
                 ),
               ),
-              child: Text('Cancel'),
+              child: Text('ยกเลิก'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -340,7 +340,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
                       20), // ปรับรูปร่างมุมให้โค้งมน (ถ้าต้องการ)
                 ),
               ),
-              child: Text('OK'),
+              child: Text('ตกลง'),
               onPressed: () {
                 // First, close the current dialog
                 Navigator.of(context).pop();

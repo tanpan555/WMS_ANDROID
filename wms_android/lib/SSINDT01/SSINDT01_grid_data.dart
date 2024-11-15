@@ -526,7 +526,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                 children: <Widget>[
                   Icon(Icons.cancel, color: Colors.red),
                   SizedBox(width: 5.0),
-                  Text('Cancel'),
+                  Text('ยกเลิก'),
                 ],
               ),
               onPressed: () {

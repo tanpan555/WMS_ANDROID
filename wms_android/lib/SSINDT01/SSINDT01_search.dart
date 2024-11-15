@@ -99,8 +99,6 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
   }
 
   void _showProductTypeDialog() {
-    TextEditingController _productTypeSearchController =
-        TextEditingController(); // Controller for search field
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -110,42 +108,33 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
           ),
           child: StatefulBuilder(
             builder: (context, setState) {
-              // Filter the product type list based on search query
-              List<String> filteredProductTypes = statusItems.where((item) {
-                final query = _productTypeSearchController.text.toLowerCase();
-                return item.toLowerCase().contains(query);
-              }).toList();
-
               return Container(
                 padding: const EdgeInsets.all(16),
-                height: 300, // Adjust the height as needed
+                height: 300,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Title and Close Button
                     Container(
                       decoration: const BoxDecoration(
                         border: Border(
                           bottom: BorderSide(
-                            color: Colors.grey, // Color of the line
-                            width: 1.0, // Thickness of the line
+                            color: Colors.grey,
+                            width: 1.0,
                           ),
                         ),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'เลือกประเภทสินค้า', // Title
+                          const Text(
+                            'เลือกประเภทสินค้า',
                             style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           IconButton(
-                            icon: Icon(Icons.close),
+                            icon: const Icon(Icons.close),
                             onPressed: () {
-                              Navigator.of(context).pop(); // Close the dialog
+                              Navigator.of(context).pop();
                             },
                           ),
                         ],
@@ -153,42 +142,28 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                     ),
                     const SizedBox(height: 10),
                     Expanded(
-                      child: filteredProductTypes.isEmpty
-                          ? Center(
-                              child: Text(
-                                'ไม่พบข้อมูล', // Message when no data found
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize:
-                                        16), // Adjust text size for no data message
+                      child: ListView.builder(
+                        itemCount: statusItems.length,
+                        itemBuilder: (context, index) {
+                          var item = statusItems[index];
+                          return ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
-                            )
-                          : ListView.builder(
-                              itemCount: filteredProductTypes.length,
-                              itemBuilder: (context, index) {
-                                final item = filteredProductTypes[index];
-                                return Container(
-                                  height:
-                                      52, // Set a fixed height for each item
-                                  margin: const EdgeInsets.only(bottom: 8),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.black),
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Align(
-                                    alignment: Alignment
-                                        .centerLeft, // Align text to center-left
-                                    child: ListTile(
-                                      contentPadding: EdgeInsets.symmetric(
-                                          horizontal:
-                                              16), // Adjust padding for better alignment
-                                      title: Text(
-                                        item,
-                                        style: TextStyle(
-                                            fontSize:
-                                                14), // Adjust text size for each list item
-                                      ),
-                                      onTap: () {
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: Text(
+                                item,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ),
+                            onTap: () {
                                         setState(() {
                                           _selectedValue =
                                               item; // Update the selection
@@ -198,12 +173,10 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                                         Navigator.of(context)
                                             .pop(); // Close the dialog
                                       },
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                    )
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               );
