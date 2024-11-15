@@ -37,6 +37,7 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
   String messageChkCreate = '';
   String poDocType = '';
   String poDocNo = '';
+  bool isNextDisabled = false;
 
   bool isLoading = false;
 
@@ -139,16 +140,23 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
 
               print('poDocType : $poDocType Type : ${poDocType.runtimeType}');
 
-              _navigateToPage(
-                  context,
-                  Ssfgdt09lForm(
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Ssfgdt09lForm(
                     pWareCode: widget.pWareCode,
                     pAttr1: globals.ATTR1,
                     pDocNo: poDocNo,
                     pDocType: poDocType,
                     pOuCode: globals.P_OU_CODE,
                     pErpOuCode: globals.P_ERP_OU_CODE,
-                  ));
+                  ),
+                ),
+              ).then((value) async {
+                setState(() {
+                  isNextDisabled = false;
+                });
+              });
             }
           });
         }
@@ -166,11 +174,11 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
       appBar: CustomAppBar(title: 'เบิกจ่าย', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            isLoading
-                ? Center(child: LoadingIndicator())
-                : TextFormField(
+        child: isLoading
+            ? Center(child: LoadingIndicator())
+            : Column(
+                children: [
+                  TextFormField(
                     controller: dataLovDocTypeController,
                     readOnly: true,
                     onTap: () => showDialogSelectDocType(),
@@ -188,22 +196,27 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
                       ),
                     ),
                   ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    chkCreateCard();
-                  },
-                  style: AppStyles.ConfirmbuttonStyle(),
-                  child: Text('CONFIRM',
-                      style: AppStyles.ConfirmbuttonTextStyle()),
-                ),
-              ],
-            ),
-          ],
-        ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: isNextDisabled
+                            ? null
+                            : () {
+                                setState(() {
+                                  isNextDisabled = true;
+                                });
+                                chkCreateCard();
+                              },
+                        style: AppStyles.ConfirmbuttonStyle(),
+                        child: Text('CONFIRM',
+                            style: AppStyles.ConfirmbuttonTextStyle()),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
       ),
       bottomNavigationBar: const BottomBar(
         currentPage: 'not_show',

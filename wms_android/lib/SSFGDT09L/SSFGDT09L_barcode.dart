@@ -144,17 +144,17 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
       }
     });
 
-    lotNumberFocusNode.addListener(() {
-      if (!lotNumberFocusNode.hasFocus) {
-        if (mounted) {
-          setState(() {
-            if (barCode.isNotEmpty && lotNo.isNotEmpty) {
-              fetchData();
-            }
-          });
-        }
-      }
-    });
+    // lotNumberFocusNode.addListener(() {
+    //   if (!lotNumberFocusNode.hasFocus) {
+    //     if (mounted) {
+    //       setState(() {
+    //         if (barCode.isNotEmpty && lotNo.isNotEmpty) {
+    //           fetchData();
+    //         }
+    //       });
+    //     }
+    //   }
+    // });
 
     quantityFocusNode.addListener(() {
       if (!quantityFocusNode.hasFocus) {
@@ -695,7 +695,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
             TextFormField(
               controller: lotNoController,
               focusNode: lotNumberFocusNode,
-              onChanged: (value) {
+              onFieldSubmitted: (value) {
                 lotNo = value;
                 if (barCode.isNotEmpty && lotNo.isNotEmpty) {
                   fetchData();

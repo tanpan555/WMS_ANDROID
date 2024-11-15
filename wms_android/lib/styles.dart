@@ -247,6 +247,15 @@ class ButtonStyles {
     ],
   );
 
+  static final ButtonStyle NextButtonStyle = ElevatedButton.styleFrom(
+    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    minimumSize: const Size(60, 40),
+    padding: const EdgeInsets.all(0),
+  );
+
   // --------------------------------------------------------------------------------------------------------------- disable
 
   static final ButtonStyle disableNextButtonStyle = ElevatedButton.styleFrom(
@@ -406,127 +415,127 @@ class DisableButtonStyles {
 class DialogStyles {
   // ---------------------------------------------------------------------  dialog แจ้งเตือนย้อนกลับ
   static AlertDialog warningNotSaveDialog({
-  required BuildContext context,
-  required String textMessage,
-  required VoidCallback onCloseDialog,
-  required VoidCallback onConfirmDialog,
-}) {
-  return AlertDialog(
-    title: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Row(
-          children: [
-            Icon(
-              Icons.notification_important,
-              color: Colors.red,
-            ),
-            SizedBox(width: 10),
-            Text(
-              'แจ้งเตือน',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            IconButton(
-              icon: const Icon(MyIcons.close),
-              onPressed: onCloseDialog, // Directly call onCloseDialog here
-            ),
-          ],
-        ),
-      ],
-    ),
-    content: Text(textMessage),
-    actions: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+    required BuildContext context,
+    required String textMessage,
+    required VoidCallback onCloseDialog,
+    required VoidCallback onConfirmDialog,
+  }) {
+    return AlertDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ElevatedButton(
-            onPressed: onCloseDialog, // Directly call onCloseDialog here
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              side: const BorderSide(color: Colors.grey),
-            ),
-            child: const Text('Cancel'),
+          const Row(
+            children: [
+              Icon(
+                Icons.notification_important,
+                color: Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'แจ้งเตือน',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 4),
-          ElevatedButton(
-            onPressed: onConfirmDialog, // Directly call onConfirmDialog here
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              side: const BorderSide(color: Colors.grey),
-            ),
-            child: const Text('OK'),
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(MyIcons.close),
+                onPressed: onCloseDialog, // Directly call onCloseDialog here
+              ),
+            ],
           ),
         ],
-      )
-    ],
-  );
-}
+      ),
+      content: Text(textMessage),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              onPressed: onCloseDialog, // Directly call onCloseDialog here
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
+              child: const Text('Cancel'),
+            ),
+            const SizedBox(width: 4),
+            ElevatedButton(
+              onPressed: onConfirmDialog, // Directly call onConfirmDialog here
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
+              child: const Text('OK'),
+            ),
+          ],
+        )
+      ],
+    );
+  }
 
   // ---------------------------------------------------------------------  dialog แจ้งเตือนย้อนกลับปุ่ม Home
   static AlertDialog homeDialog({
-  required BuildContext context,
-  required String textMessage,
-  required VoidCallback onCloseDialog,
-  required VoidCallback onConfirmDialog,
-}) {
-  return AlertDialog(
-    title: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Row(
-          children: [
-            Icon(
-              Icons.notification_important,
-              color: Colors.red,
-            ),
-            SizedBox(width: 10),
-            Text(
-              'แจ้งเตือน',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-    content: Text(textMessage),
-    actions: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+    required BuildContext context,
+    required String textMessage,
+    required VoidCallback onCloseDialog,
+    required VoidCallback onConfirmDialog,
+  }) {
+    return AlertDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ElevatedButton(
-            onPressed: onCloseDialog, // Directly calling onCloseDialog
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              side: const BorderSide(color: Colors.grey),
-            ),
-            child: const Text('ยกเลิก'),
-          ),
-          const SizedBox(width: 4),
-          ElevatedButton(
-            onPressed: onConfirmDialog, // Directly calling onConfirmDialog
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              side: const BorderSide(color: Colors.grey),
-            ),
-            child: const Text('ตกลง'),
+          const Row(
+            children: [
+              Icon(
+                Icons.notification_important,
+                color: Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'แจ้งเตือน',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                ),
+              ),
+            ],
           ),
         ],
-      )
-    ],
-  );
-}
+      ),
+      content: Text(textMessage),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              onPressed: onCloseDialog, // Directly calling onCloseDialog
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
+              child: const Text('ยกเลิก'),
+            ),
+            const SizedBox(width: 4),
+            ElevatedButton(
+              onPressed: onConfirmDialog, // Directly calling onConfirmDialog
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
+              child: const Text('ตกลง'),
+            ),
+          ],
+        )
+      ],
+    );
+  }
 
   // ---------------------------------------------------------------------  dialog สาเหตุการยกเลิก
   static AlertDialog cancelDialog({
@@ -880,15 +889,44 @@ class DialogStyles {
                 ),
                 const SizedBox(height: 10),
                 // ช่องค้นหา
-                TextField(
-                  controller: searchController,
-                  decoration: const InputDecoration(
-                    hintText: 'ค้นหา',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (query) {
-                    setState(() {}); // อัปเดตข้อมูลเมื่อมีการค้นหา
-                  },
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: searchController,
+                        decoration: InputDecoration(
+                          hintText: 'ค้นหา',
+                          border: const OutlineInputBorder(),
+                          suffixIcon: searchController.text.isNotEmpty
+                              ? GestureDetector(
+                                  onTap: () {
+                                    searchController.clear();
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    width: 3,
+                                    height: 3,
+                                    padding: EdgeInsets.all(0),
+                                    margin: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: const Icon(
+                                      MyIcons.close,
+                                      size: 15,
+                                      color: Color(0xFF676767),
+                                    ),
+                                  ),
+                                )
+                              : null,
+                        ),
+                        onChanged: (query) {
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 10),
                 Expanded(
@@ -990,15 +1028,44 @@ class DialogStyles {
                   ],
                 ),
                 const SizedBox(height: 10),
-                TextField(
-                  controller: searchController,
-                  decoration: const InputDecoration(
-                    hintText: 'ค้นหา',
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (query) {
-                    setState(() {}); // อัปเดตข้อมูลเมื่อมีการค้นหา
-                  },
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: searchController,
+                        decoration: InputDecoration(
+                          hintText: 'ค้นหา',
+                          border: const OutlineInputBorder(),
+                          suffixIcon: searchController.text.isNotEmpty
+                              ? GestureDetector(
+                                  onTap: () {
+                                    searchController.clear();
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    width: 3,
+                                    height: 3,
+                                    padding: EdgeInsets.all(0),
+                                    margin: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: const Icon(
+                                      MyIcons.close,
+                                      size: 15,
+                                      color: Color(0xFF676767),
+                                    ),
+                                  ),
+                                )
+                              : null,
+                        ),
+                        onChanged: (query) {
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 10),
                 Expanded(
@@ -1046,4 +1113,43 @@ class DialogStyles {
       ),
     );
   }
+}
+
+class ElevatedButtonStyle {
+  static ElevatedButton nextpage({
+    required VoidCallback? onPressed,
+  }) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ButtonStyle(
+        backgroundColor:
+            MaterialStateProperty.all(const Color.fromARGB(255, 255, 255, 255)),
+        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        )),
+        minimumSize: MaterialStateProperty.all(const Size(60, 40)),
+        padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+      ),
+      child: Image.asset(
+        'assets/images/right.png',
+        width: 25,
+        height: 25,
+      ),
+    );
+  }
+
+  // // ปุ่ม Cancel Page
+  // static ElevatedButton cancelpage({
+  //   required VoidCallback? onPressed,
+  // }) {
+  //   return ElevatedButton(
+  //     onPressed: onPressed,
+  //     style: AppStyles.CancelButtonStyle(),
+  //     child: Image.asset(
+  //       'assets/images/DDDD.png',
+  //       width: 25,
+  //       height: 25,
+  //     ),
+  //   );
+  // }
 }

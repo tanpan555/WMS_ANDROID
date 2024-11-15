@@ -437,17 +437,21 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
         if (mounted) {
           setState(() {
             pMessageErr = dataMessage['p_message_err'];
-            print(
-                'pMessageErr :: $pMessageErr  type :: ${pMessageErr.runtimeType}');
-            if (pMessageErr.isNotEmpty) {
-              isNextDisabled = false;
-              showDialogErrorCHK(context, pMessageErr);
-            }
-            if (testChk == 1) {
-              saveDataFoem();
-            }
           });
         }
+        if (pMessageErr.isNotEmpty) {
+          if (mounted) {
+            setState(() {
+              isNextDisabled = false;
+            });
+          }
+          showDialogErrorCHK(context, dataMessage['p_message_err'].toString());
+        }
+        if (testChk == 1) {
+          saveDataFoem();
+        }
+        print(
+            'pMessageErr :: $pMessageErr  type :: ${pMessageErr.runtimeType}');
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
         print('รหัสสถานะ: ${response.statusCode}');
@@ -600,8 +604,11 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                 await lovMoDoNo();
                 await lovRefNo();
                 await lovCancel();
-                checkUpdateData = false;
-                isNextDisabled = false;
+                setState(() {
+                  checkUpdateData = false;
+                  isNextDisabled = false;
+                  isLoading = false;
+                });
               });
             }
 
@@ -729,68 +736,119 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
           children: [
             isLoading
                 ? const SizedBox.shrink()
-                // : dataForm.isEmpty
-                //     ? const SizedBox.shrink()
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          showDialogLovCancel();
-                        },
-                        style: AppStyles.NextButtonStyle(),
-                        child: Text('ยกเลิก',
-                            style: AppStyles.CancelbuttonTextStyle()),
-                      ),
+                : docNo.isEmpty
+                    ? const SizedBox.shrink()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              showDialogLovCancel();
+                            },
+                            style: AppStyles.NextButtonStyle(),
+                            child: Text('ยกเลิก',
+                                style: AppStyles.CancelbuttonTextStyle()),
+                          ),
 
-                      // const Spacer(),
-                      ElevatedButton(
-                        onPressed: isNextDisabled
-                            ? null
-                            : () {
-                                setState(() {
-                                  if (isDateInvalid == false) {
-                                    isNextDisabled = true;
-                                    if (crDate.isEmpty) {
-                                      isDateInvalid = true;
-                                    } else {
-                                      if (docNo.isNotEmpty &&
-                                          docNo != '' &&
-                                          docNo != 'null' &&
-                                          returnStatusLovDocType.isNotEmpty &&
-                                          returnStatusLovDocType != '' &&
-                                          returnStatusLovDocType != 'null' &&
-                                          crDate.isNotEmpty &&
-                                          crDate != '' &&
-                                          crDate != 'null' &&
-                                          returnStatusLovMoDoNo.isNotEmpty &&
-                                          returnStatusLovMoDoNo != '' &&
-                                          returnStatusLovMoDoNo != 'null') {
-                                        chkCust(
-                                          shidForChk,
-                                          returnStatusLovRefNo.isNotEmpty
-                                              ? soNoForChk
-                                              : 'null',
-                                          testChk = 1,
-                                        );
+                          // const Spacer(),
+                          ElevatedButtonStyle.nextpage(
+                            onPressed: isNextDisabled
+                                ? null
+                                : () async {
+                                    if (isDateInvalid == false) {
+                                      setState(() {
+                                        isNextDisabled = true;
+                                        isFirstLoad = true;
+                                      });
+                                      if (crDate.isEmpty) {
+                                        isDateInvalid = true;
                                       } else {
-                                        showDialogErrorCHK(context,
-                                            'ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
-                                        isNextDisabled = false;
+                                        if (docNo.isNotEmpty &&
+                                            docNo != '' &&
+                                            docNo != 'null' &&
+                                            returnStatusLovDocType.isNotEmpty &&
+                                            returnStatusLovDocType != '' &&
+                                            returnStatusLovDocType != 'null' &&
+                                            crDate.isNotEmpty &&
+                                            crDate != '' &&
+                                            crDate != 'null' &&
+                                            returnStatusLovMoDoNo.isNotEmpty &&
+                                            returnStatusLovMoDoNo != '' &&
+                                            returnStatusLovMoDoNo != 'null') {
+                                          chkCust(
+                                            shidForChk,
+                                            returnStatusLovRefNo.isNotEmpty
+                                                ? soNoForChk
+                                                : 'null',
+                                            testChk = 1,
+                                          );
+                                        } else {
+                                          setState(() {
+                                            isLoading = false;
+                                          });
+                                          await showDialogErrorCHK(context,
+                                              'ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
+                                          setState(() {
+                                            isNextDisabled = false;
+                                          });
+                                        }
                                       }
                                     }
-                                  }
-                                });
-                              },
-                        style: AppStyles.NextButtonStyle(),
-                        child: Image.asset(
-                          'assets/images/right.png', // ใส่ภาพจากไฟล์ asset
-                          width: 25, // กำหนดขนาดภาพ
-                          height: 25,
-                        ),
+                                  },
+                          ),
+                          // ElevatedButton(
+                          //   onPressed: isNextDisabled
+                          //       ? null
+                          //       : () async {
+                          //           if (isDateInvalid == false) {
+                          //             setState(() {
+                          //               isNextDisabled = true;
+                          //               isFirstLoad = true;
+                          //             });
+                          //             if (crDate.isEmpty) {
+                          //               isDateInvalid = true;
+                          //             } else {
+                          //               if (docNo.isNotEmpty &&
+                          //                   docNo != '' &&
+                          //                   docNo != 'null' &&
+                          //                   returnStatusLovDocType.isNotEmpty &&
+                          //                   returnStatusLovDocType != '' &&
+                          //                   returnStatusLovDocType != 'null' &&
+                          //                   crDate.isNotEmpty &&
+                          //                   crDate != '' &&
+                          //                   crDate != 'null' &&
+                          //                   returnStatusLovMoDoNo.isNotEmpty &&
+                          //                   returnStatusLovMoDoNo != '' &&
+                          //                   returnStatusLovMoDoNo != 'null') {
+                          //                 chkCust(
+                          //                   shidForChk,
+                          //                   returnStatusLovRefNo.isNotEmpty
+                          //                       ? soNoForChk
+                          //                       : 'null',
+                          //                   testChk = 1,
+                          //                 );
+                          //               } else {
+                          //                 setState(() {
+                          //                   isLoading = false;
+                          //                 });
+                          //                 await showDialogErrorCHK(context,
+                          //                     'ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
+                          //                 setState(() {
+                          //                   isNextDisabled = false;
+                          //                 });
+                          //               }
+                          //             }
+                          //           }
+                          //         },
+                          //   style: AppStyles.NextButtonStyle(),
+                          //   child: Image.asset(
+                          //     'assets/images/right.png',
+                          //     width: 25,
+                          //     height: 25,
+                          //   ),
+                          // ),
+                        ],
                       ),
-                    ],
-                  ),
             const SizedBox(height: 10),
             // -----------------------------
             Expanded(
@@ -1248,17 +1306,19 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     );
   }
 
-  void showDialogErrorCHK(
+  Future<void> showDialogErrorCHK(
     BuildContext context,
     String messageAlert,
-  ) {
+  ) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return DialogStyles.alertMessageDialog(
           context: context,
           content: Text(messageAlert),
-          onClose: () => Navigator.of(context).pop(),
+          onClose: () {
+            Navigator.of(context).pop();
+          },
           onConfirm: () {
             Navigator.of(context).pop();
           },
