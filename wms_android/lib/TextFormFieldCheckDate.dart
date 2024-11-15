@@ -25,7 +25,7 @@ class CustomTextFormField extends StatefulWidget {
     this.prefixIcon,
     this.onChanged,
     required this.isDateInvalidNotifier,
-    this.showBorder = true,
+    this.showBorder = false,
   }) : super(key: key);
 
   @override
