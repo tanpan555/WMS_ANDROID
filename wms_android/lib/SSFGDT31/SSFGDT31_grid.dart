@@ -279,17 +279,17 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
       int packQty, String itemCode, String packCode, String rowID) async {
     print('packQty in updatePackQty: $packQty type : ${packQty.runtimeType}');
     final url =
-        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_UpdatePackQty';
+        '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_3_UpdatePackQTY';
 
     final headers = {
       'Content-Type': 'application/json',
     };
 
     final body = jsonEncode({
-      'pack_qty': packQty,
-      'item_code': itemCode,
-      'pack_code': packCode,
-      'rowid': rowID,
+      'p_pack_qty': packQty,
+      'p_item_code': itemCode,
+      'p_pack_code': packCode,
+      'p_rowid': rowID,
     });
     print('Request body: $body');
 
@@ -307,12 +307,13 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
             // fetchData();
           });
         }
-        print('Success: $responseData');
+        print('Success updatePackQty : $responseData');
       } else {
-        print('Failed to post data. Status code: ${response.statusCode}');
+        print(
+            'Failed to post data updatePackQty . Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print(' Error: $e');
+      print(' Error updatePackQty: $e');
     }
   }
 
