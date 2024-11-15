@@ -13,6 +13,7 @@ class CustomTextFormField extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final ValueNotifier<bool> isDateInvalidNotifier;
   final bool showBorder;
+  final bool showAsterisk;
 
   const CustomTextFormField({
     Key? key,
@@ -26,6 +27,7 @@ class CustomTextFormField extends StatefulWidget {
     this.onChanged,
     required this.isDateInvalidNotifier,
     this.showBorder = false,
+    this.showAsterisk = false,
   }) : super(key: key);
 
   @override
@@ -71,21 +73,32 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                 dateInputFormatter,
               ],
               decoration: InputDecoration(
-                // border: InputBorder.none,
                 border: widget.showBorder
                     ? OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
-                      ) // Apply border if showBorder is true
-                    : InputBorder.none, // No border if showBorder is false
-
+                      )
+                    : InputBorder.none,
                 filled: true,
                 fillColor: Colors.white,
-                labelText: widget.labelText,
+                label: RichText(
+                  text: TextSpan(
+                    text: widget.labelText ?? '',
+                    style: TextStyle(
+                      color: isDateInvalid ? Colors.red : Colors.black87,
+                      fontSize: 16,
+                    ),
+                    children: widget.showAsterisk
+                        ? [
+                            TextSpan(
+                              text: ' *',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ]
+                        : [],
+                  ),
+                ),
                 hintText: 'DD/MM/YYYY',
                 hintStyle: const TextStyle(color: Colors.grey),
-                labelStyle: isDateInvalid
-                    ? const TextStyle(color: Colors.red)
-                    : const TextStyle(color: Colors.black87),
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.calendar_today),
                   onPressed: () {
