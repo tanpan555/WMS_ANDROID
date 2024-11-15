@@ -12,6 +12,7 @@ class CustomTextFormField extends StatefulWidget {
   final IconData? prefixIcon;
   final ValueChanged<String>? onChanged;
   final ValueNotifier<bool> isDateInvalidNotifier;
+  final bool showBorder;
 
   const CustomTextFormField({
     Key? key,
@@ -24,6 +25,7 @@ class CustomTextFormField extends StatefulWidget {
     this.prefixIcon,
     this.onChanged,
     required this.isDateInvalidNotifier,
+    this.showBorder = true,
   }) : super(key: key);
 
   @override
@@ -69,7 +71,13 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                 dateInputFormatter,
               ],
               decoration: InputDecoration(
-                border: InputBorder.none,
+                // border: InputBorder.none,
+                border: widget.showBorder
+                    ? OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ) // Apply border if showBorder is true
+                    : InputBorder.none, // No border if showBorder is false
+
                 filled: true,
                 fillColor: Colors.white,
                 labelText: widget.labelText,

@@ -8,6 +8,7 @@ import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import '../TextFormFieldCheckDate.dart';
 
 // LOT DETAILS
 class LotDialog extends StatefulWidget {
@@ -50,6 +51,8 @@ class _LotDialogState extends State<LotDialog> {
   int currentPage = 1;
   int totalItems = 0;
   List<Map<String, dynamic>> paginatedLotList = [];
+  DateTime? selectedDate;
+  final ValueNotifier<bool> isDateInvalidNotifier = ValueNotifier<bool>(false);
 
   // Add these methods for pagination control
   void updatePaginatedLotList() {
@@ -397,129 +400,146 @@ class _LotDialogState extends State<LotDialog> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextFormField(
-                    controller: mfgDateController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: 'MFG Date',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(1.0),
-                      ),
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                      suffixIcon: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.calendar_today_outlined,
-                                color: Colors.black),
-                            onPressed: () async {
-                              DateTime? initialDate;
-                              if (initialDateString != null) {
-                                try {
-                                  initialDate = DateFormat('dd/MM/yyyy')
-                                      .parseStrict(initialDateString);
-                                } catch (e) {
-                                  initialDate = DateTime.now();
-                                }
-                              } else {
-                                initialDate = DateTime.now();
-                              }
+                  // TextFormField(
+                  //   controller: mfgDateController,
+                  //   decoration: InputDecoration(
+                  //     filled: true,
+                  //     fillColor: Colors.white,
+                  //     labelText: 'MFG Date',
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(1.0),
+                  //     ),
+                  //     contentPadding:
+                  //         EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                  //     suffixIcon: Row(
+                  //       mainAxisSize: MainAxisSize.min,
+                  //       children: [
+                  //         IconButton(
+                  //           icon: Icon(Icons.calendar_today_outlined,
+                  //               color: Colors.black),
+                  //           onPressed: () async {
+                  //             DateTime? initialDate;
+                  //             if (initialDateString != null) {
+                  //               try {
+                  //                 initialDate = DateFormat('dd/MM/yyyy')
+                  //                     .parseStrict(initialDateString);
+                  //               } catch (e) {
+                  //                 initialDate = DateTime.now();
+                  //               }
+                  //             } else {
+                  //               initialDate = DateTime.now();
+                  //             }
 
-                              final DateTime? picked = await showDatePicker(
-                                context: context,
-                                initialDate: initialDate,
-                                firstDate: DateTime(2000),
-                                lastDate: DateTime(2101),
-                                initialEntryMode:
-                                    DatePickerEntryMode.calendarOnly,
-                              );
-                              if (picked != null) {
-                                String formattedDate =
-                                    displayFormat.format(picked);
-                                setState(() {
-                                  mfgDateController.text = formattedDate;
-                                  isMfgDateValid = true;
-                                  check = true;
-                                  checkUpdateData = true;
-                                });
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                      errorText: !isMfgDateValid
-                          ? 'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024'
-                          : null,
-                      errorStyle: TextStyle(
-                        fontSize: 10,
-                        color: Colors.red,
-                      ),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        check = true;
-                      });
+                  //             final DateTime? picked = await showDatePicker(
+                  //               context: context,
+                  //               initialDate: initialDate,
+                  //               firstDate: DateTime(2000),
+                  //               lastDate: DateTime(2101),
+                  //               initialEntryMode:
+                  //                   DatePickerEntryMode.calendarOnly,
+                  //             );
+                  //             if (picked != null) {
+                  //               String formattedDate =
+                  //                   displayFormat.format(picked);
+                  //               setState(() {
+                  //                 mfgDateController.text = formattedDate;
+                  //                 isMfgDateValid = true;
+                  //                 check = true;
+                  //                 checkUpdateData = true;
+                  //               });
+                  //             }
+                  //           },
+                  //         ),
+                  //       ],
+                  //     ),
+                  //     errorText: !isMfgDateValid
+                  //         ? 'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024'
+                  //         : null,
+                  //     errorStyle: TextStyle(
+                  //       fontSize: 10,
+                  //       color: Colors.red,
+                  //     ),
+                  //   ),
+                  //   onChanged: (value) {
+                  //     setState(() {
+                  //       check = true;
+                  //     });
 
-                      String numbersOnly = value.replaceAll('/', '');
+                  //     String numbersOnly = value.replaceAll('/', '');
 
-                      if (numbersOnly.length > 8) {
-                        numbersOnly = numbersOnly.substring(0, 8);
-                      }
+                  //     if (numbersOnly.length > 8) {
+                  //       numbersOnly = numbersOnly.substring(0, 8);
+                  //     }
 
-                      String formattedDate = '';
-                      int cursorPos = mfgDateController.selection.baseOffset;
+                  //     String formattedDate = '';
+                  //     int cursorPos = mfgDateController.selection.baseOffset;
 
-                      // Format the date as the user types
-                      for (int i = 0; i < numbersOnly.length; i++) {
-                        if (i == 2 || i == 4) {
-                          formattedDate += '/';
-                        }
-                        formattedDate += numbersOnly[i];
-                      }
+                  //     // Format the date as the user types
+                  //     for (int i = 0; i < numbersOnly.length; i++) {
+                  //       if (i == 2 || i == 4) {
+                  //         formattedDate += '/';
+                  //       }
+                  //       formattedDate += numbersOnly[i];
+                  //     }
 
-                      // Determine if the entered date is valid
-                      bool isValidDate = false;
-                      if (numbersOnly.length == 8) {
-                        try {
-                          final day = int.parse(numbersOnly.substring(0, 2));
-                          final month = int.parse(numbersOnly.substring(2, 4));
-                          final year = int.parse(numbersOnly.substring(4, 8));
+                  //     // Determine if the entered date is valid
+                  //     bool isValidDate = false;
+                  //     if (numbersOnly.length == 8) {
+                  //       try {
+                  //         final day = int.parse(numbersOnly.substring(0, 2));
+                  //         final month = int.parse(numbersOnly.substring(2, 4));
+                  //         final year = int.parse(numbersOnly.substring(4, 8));
 
-                          final date = DateTime(year, month, day);
+                  //         final date = DateTime(year, month, day);
 
-                          if (date.year == year &&
-                              date.month == month &&
-                              date.day == day) {
-                            isValidDate = true;
-                          }
-                        } catch (e) {
-                          isValidDate = false;
-                        }
-                      }
+                  //         if (date.year == year &&
+                  //             date.month == month &&
+                  //             date.day == day) {
+                  //           isValidDate = true;
+                  //         }
+                  //       } catch (e) {
+                  //         isValidDate = false;
+                  //       }
+                  //     }
 
-                      setState(() {
-                        isMfgDateValid = numbersOnly.isEmpty || isValidDate;
+                  //     setState(() {
+                  //       isMfgDateValid = numbersOnly.isEmpty || isValidDate;
 
-                        // Create a new TextEditingValue with the updated date and position
-                        final newSelection = TextSelection.collapsed(
-                            offset: cursorPos +
-                                formattedDate.length -
-                                value.length); // Adjust cursor position
+                  //       // Create a new TextEditingValue with the updated date and position
+                  //       final newSelection = TextSelection.collapsed(
+                  //           offset: cursorPos +
+                  //               formattedDate.length -
+                  //               value.length); // Adjust cursor position
 
-                        mfgDateController.value = TextEditingValue(
-                          text: formattedDate,
-                          selection: newSelection,
-                        );
-                      });
-                    },
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(8),
-                    ],
-                  )
+                  //       mfgDateController.value = TextEditingValue(
+                  //         text: formattedDate,
+                  //         selection: newSelection,
+                  //       );
+                  //     });
+                  //   },
+                  //   keyboardType: TextInputType.number,
+                  //   inputFormatters: [
+                  //     FilteringTextInputFormatter.digitsOnly,
+                  //     LengthLimitingTextInputFormatter(8),
+                  //   ],
+                  // )
+                  CustomTextFormField(
+  controller: mfgDateController,
+  labelText: 'MFG Date',
+  keyboardType: TextInputType.number,
+  onChanged: (value) {
+    try {
+      selectedDate = DateFormat('dd/MM/yyyy').parse(value);
+    } catch (e) {
+      selectedDate = null; // Set to null if parsing fails
+      print('Invalid date format: $value');
+    }
+    print('วันที่: $selectedDate');
+  },
+  isDateInvalidNotifier: isDateInvalidNotifier,
+  showBorder: true, // Set to false if you don't want the border
+),
+
                 ],
               );
             }

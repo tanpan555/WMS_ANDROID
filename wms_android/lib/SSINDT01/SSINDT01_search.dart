@@ -215,147 +215,31 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
   }
 
   void _showDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // Adjust the height as needed
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title and Close Button
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'เลือกผู้ขาย', // Title
-                            style: TextStyle(
-                              fontSize:
-                                  18, // Same font size as the search TextField
-                              fontWeight:
-                                  FontWeight.bold, // Consistent bold style
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return DialogStyles.customLovSearchDialog(
+        context: context,
+        headerText: 'เลือกผู้ขาย', // Dialog title
+        searchController: _searchController,
+        data: apCodes,
+        docString: (item) => '${item['ap_code']} ${item['ap_name']}',
+        titleText: (item) => item['ap_code'],
+        subtitleText: (item) => item['ap_name'],
+        onTap: (item) {
+          setState(() {
+            selectedApCode = item['ap_code']; // Update selected code
+            _selectedApCodeController.text = item['ap_name']; // Update display text
+          });
+          Navigator.of(context).pop(); // Close the dialog after selection
+        },
+      );
+    },
+  ).then((_) {
+    _searchController.clear(); // Clear search field after closing
+  });
+}
 
-                    // Search TextField
-                    TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical:
-                              10, // Same vertical padding for consistent height
-                          horizontal: 10, // Padding inside the TextField
-                        ),
-                        hintStyle: TextStyle(
-                          fontSize: 18, // Same font size as the title
-                        ),
-                      ),
-                      style: TextStyle(
-                        fontSize: 18, // Same font size as the title
-                      ),
-                      onChanged: (query) {
-                        setState(() {});
-                      },
-                    ),
-                    const SizedBox(height: 10),
-
-                    // List of Filtered Items
-                    Expanded(
-                      child: Builder(builder: (context) {
-                        // Filter apCodes based on search query for both ap_code and ap_name
-                        final filteredApCodes = apCodes.where((item) {
-                          final apCode = item['ap_code'].toLowerCase();
-                          final apName = item['ap_name'].toLowerCase();
-                          final searchQuery =
-                              _searchController.text.toLowerCase();
-
-                          // Check if searchQuery matches either ap_code or ap_name
-                          return apCode.contains(searchQuery) ||
-                              apName.contains(searchQuery);
-                        }).toList();
-
-                        if (filteredApCodes.isEmpty) {
-                          return Center(
-                            child: Text(
-                              'No data found', // Show message when no data is found
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
-                            ),
-                          );
-                        }
-
-                        return ListView.builder(
-                          itemCount: filteredApCodes.length,
-                          itemBuilder: (context, index) {
-                            final item = filteredApCodes[index];
-                            final apCode = item['ap_code'];
-                            final apName = item['ap_name'];
-
-                            return Container(
-                              margin: const EdgeInsets.only(
-                                  bottom: 8), // Add margin between items
-                              padding: const EdgeInsets.all(
-                                  8), // Padding inside the container
-                              child: ListTile(
-                                title: Text(
-                                  apCode,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                subtitle: Text(
-                                  apName,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    selectedApCode =
-                                        apCode; // Set selected code
-                                    _selectedApCodeController.text =
-                                        apName; // Update the controller's text
-                                  });
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
-                                },
-                              ),
-                            );
-                          },
-                        );
-                      }),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

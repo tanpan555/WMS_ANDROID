@@ -490,7 +490,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     print(widget.poReceiveNo);
     final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
     final Uri url = Uri.parse('${gb.IP_API}/jri/r' +
-        'eport?&_repName=/WMS/WMS_SSINDT01&_repFormat=pdf&_dataSource=wms&_outFilename=WM-D01-$timestamp.pdf&_repLocale=en_US&P_RECEIVE_NO=${widget.poReceiveNo}&P_OU_CODE=000&P_ITEM=');
+        'eport?&_repName=/WMS/WMS_SSINDT01&_repFormat=pdf&_dataSource=wms&_outFilename=${widget.poReceiveNo}.pdf&_repLocale=en_US&P_RECEIVE_NO=${widget.poReceiveNo}&P_OU_CODE=${gb.P_ERP_OU_CODE}&P_ITEM=');
     print(url);
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
@@ -1614,8 +1614,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                                             ?.toString() ??
                                                         '',
                                                     lotSupp: ['lot_supplier']
-                                                            ?.toString() ??
-                                                        '',
+                                                            .toString(),
                                                     ouCode: data['ou_code']
                                                             ?.toString() ??
                                                         '',
