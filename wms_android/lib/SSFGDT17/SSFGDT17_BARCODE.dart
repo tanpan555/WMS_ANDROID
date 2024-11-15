@@ -8,7 +8,6 @@ import 'package:wms_android/main.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:http/http.dart' as http;
 import 'package:wms_android/Global_Parameter.dart' as gb;
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:wms_android/styles.dart';
 
 class SSFGDT17_BARCODE extends StatefulWidget {
@@ -278,7 +277,6 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
                       subtitleText: (item) =>
                           '${item['location_name']}', // Customize subtitle text
                       onTap: (item) {
-                        final code = item['r']?.toString() ?? '';
                         final name = item['location_name']?.toString() ?? '';
                         // Handle item selection
                         Navigator.of(context).pop(); // Close the dialog

@@ -44,8 +44,8 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
 
   Future<void> fetchwhCodes() async {
     try {
-      final response = await http.get(
-          Uri.parse('${gb.IP_API}/apex/wms/SSFGDT17/Step_1_WHCode/${gb.ATTR1}'));
+      final response = await http.get(Uri.parse(
+          '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_WHCode/${gb.ATTR1}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -130,7 +130,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   Future<void> fetchLocationOutCodes() async {
     try {
       final response = await http.get(Uri.parse(
-          '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_LOCATION_OUT/${gb.ATTR1}/${gb.P_ERP_OU_CODE}'));
+          '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_LOCATION_OUT/$selectedwhOUTCode/${gb.P_ERP_OU_CODE}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -185,8 +185,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
 
   Future<void> create_NewINXfer_WMS(
       String LocCode, String whOUTCode, String LocOUTCode) async {
-    final url =
-        '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_create_NewINXfer_WMS';
+    final url = '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_create_NewINXfer_WMS';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -409,57 +408,56 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   }
 
   Widget buildLocationDropdown(
-  BuildContext context,
-  List<dynamic> items,
-  String? selectedValue,
-  Function(Map<String, dynamic>?) onChanged,
-  String label,
-) {
-  // Find the selected item based on selectedValue
-  String displayText = 'Select Location'; // Default text
-  if (selectedValue != null) {
-    final selectedItem = items.firstWhere(
-      (item) => item['location_code'] == selectedValue,
-      orElse: () => null,
-    );
-    if (selectedItem != null) {
-      displayText = selectedItem['location_name'] ?? 'Select Location';
+    BuildContext context,
+    List<dynamic> items,
+    String? selectedValue,
+    Function(Map<String, dynamic>?) onChanged,
+    String label,
+  ) {
+    // Find the selected item based on selectedValue
+    String displayText = 'Select Location'; // Default text
+    if (selectedValue != null) {
+      final selectedItem = items.firstWhere(
+        (item) => item['location_code'] == selectedValue,
+        orElse: () => null,
+      );
+      if (selectedItem != null) {
+        displayText = selectedItem['location_name'] ?? 'Select Location';
+      }
     }
-  }
 
-  return GestureDetector(
-    onTap: () {
-      _showDialog1(context, items, selectedValue, onChanged, label);
-    },
-    child: InputDecorator(
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(),
-        labelStyle: TextStyle(color: Colors.black, fontSize: 16),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Text(
-                displayText, // Display location_name or "Select Location"
-                style: TextStyle(color: Colors.black),
-                overflow: TextOverflow.visible,
+    return GestureDetector(
+      onTap: () {
+        _showDialog1(context, items, selectedValue, onChanged, label);
+      },
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+          labelStyle: TextStyle(color: Colors.black, fontSize: 16),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Text(
+                  displayText, // Display location_name or "Select Location"
+                  style: TextStyle(color: Colors.black),
+                  overflow: TextOverflow.visible,
+                ),
               ),
             ),
-          ),
-          Icon(
-            Icons.arrow_drop_down,
-            color: Colors.grey,
-          ),
-        ],
+            Icon(
+              Icons.arrow_drop_down,
+              color: Colors.grey,
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   void _showDialog1(
     BuildContext context,
@@ -608,15 +606,16 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
     String label,
   ) {
 // Default text
+    String displayText = 'เลือก Location ปลายทาง'; // Default text
     if (selectedValue != null) {
       final selectedItem = items.firstWhere(
         (item) => item['location_code'] == selectedValue,
         orElse: () => null,
       );
       if (selectedItem != null) {
+        displayText = selectedItem['location_name'] ?? 'Select Location';
       }
     }
-
     return GestureDetector(
       onTap: () {
         _showDialog3(context, items, selectedValue, onChanged, label);
@@ -634,7 +633,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Text(
-                  'เลือก Location ปลายทาง',
+                  displayText, // Display location_name or "Select Location"
                   style: TextStyle(color: Colors.black),
                   overflow: TextOverflow.visible,
                 ),
