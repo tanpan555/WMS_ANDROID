@@ -694,7 +694,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                                                         }
                                                       })(),
                                                     ),
-                                                    const SizedBox(width: 8),
+                                                    const Spacer(),
                                                     Center(
                                                       child:
                                                           item['status'] != null
