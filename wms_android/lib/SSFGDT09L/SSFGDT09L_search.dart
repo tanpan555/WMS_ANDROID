@@ -7,7 +7,7 @@ import 'package:wms_android/loading.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
-import 'package:wms_android/checkDataFormate.dart';
+import 'package:wms_android/TextFormFieldCheckDate.dart';
 import 'SSFGDT09L_card.dart';
 
 class Ssfgdt09lSearch extends StatefulWidget {
@@ -65,12 +65,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
       'r': 'ยกเลิก',
     },
   ];
-<<<<<<< HEAD
   final ValueNotifier<bool> isDateInvalidNotifier = ValueNotifier<bool>(false);
-=======
-  final dateInputFormatter = DateInputFormatter();
-  bool isDateInvalid = false;
->>>>>>> parent of b50f351 (แก้ไขไฟล์ checkDataFormate ---> TextFormFieldCheckDate)
 
   bool isLoading = false;
 
@@ -156,57 +151,17 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                     //////////////////////////////////////////////////////////////
                     const SizedBox(height: 8),
 
-                    TextFormField(
+                    CustomTextFormField(
                       controller: dateController,
+                      labelText: 'วันที่สอบ',
+                      // hintText: 'DD/MM/YYYY',
                       keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(8),
-                        dateInputFormatter,
-                      ],
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'วันที่เบิกจ่าย',
-                        hintText: 'DD/MM/YYYY',
-                        hintStyle: const TextStyle(color: Colors.grey),
-                        labelStyle: isDateInvalid
-                            ? const TextStyle(color: Colors.red)
-                            : const TextStyle(color: Colors.black87),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.calendar_today),
-                          onPressed: () {
-                            _selectDate(context);
-                          },
-                        ),
-                      ),
                       onChanged: (value) {
-                        setState(() {
-                          selectedDate = value;
-                          isDateInvalid =
-                              dateInputFormatter.noDateNotifier.value;
-                        });
-                        print('isDateInvalid : $isDateInvalid');
+                        selectedDate = value;
+                        print('วันที่ที่กรอก: $selectedDate');
                       },
+                      isDateInvalidNotifier: isDateInvalidNotifier,
                     ),
-<<<<<<< HEAD
-=======
-                    if (isDateInvalid == true)
-                      const Padding(
-                        padding: EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    const SizedBox(height: 20),
-
->>>>>>> parent of b50f351 (แก้ไขไฟล์ checkDataFormate ---> TextFormFieldCheckDate)
                     //////////////////////////////////////////////////////////////
                     const SizedBox(height: 20),
                     Row(
@@ -222,7 +177,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                               dataLovStatusController.text = 'ทั้งหมด';
                               dateController.clear();
                               pSoNoController.clear();
-                              isDateInvalid = false;
+                              isDateInvalidNotifier.value = false;
                             });
                           },
                           style: AppStyles.EraserButtonStyle(),
@@ -236,7 +191,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                         //////////////////////////////////////////////////////
                         ElevatedButton(
                           onPressed: () {
-                            if (isDateInvalid == false) {
+                            if (isDateInvalidNotifier.value == false) {
                               if (selectedDate.isNotEmpty) {
                                 if (selectedDate != '') {
                                   String modifiedDate =
