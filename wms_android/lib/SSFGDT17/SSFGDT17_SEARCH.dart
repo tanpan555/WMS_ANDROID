@@ -79,7 +79,8 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
     }
   }
 
-  void _showProductTypeDialog() {
+
+void _showProductTypeDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -87,71 +88,62 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            height: 300, // Adjust the height as needed
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Title and Close Button with bottom line
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Colors.grey, // Color of the line
-                        width: 1.0, // Thickness of the line
-                      ),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'เลือกประเภทรายการ', // Title
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                height: 300,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
                           ),
                         ),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.close),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'เลือกประเภทรายการ',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-
-                // List of Items with black frame around each item
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: statusItems.length,
-                    itemBuilder: (context, index) {
-                      final item = statusItems[index];
-
-                      return Container(
-                        height: 52,
-                        margin: const EdgeInsets.only(bottom: 8),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Colors.black,
-                              width: 1.0), // Black border around each item
-                          borderRadius: BorderRadius.circular(
-                              16.0), // Rounded corners (optional)
-                        ),
-                        child: Align(
-                          alignment:
-                              Alignment.centerLeft, // Align text to center-left
-                          child: ListTile(
-                            title: Text(
-                              item,
-                              // overflow: TextOverflow.ellipsis,
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 14),
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: statusItems.length,
+                        itemBuilder: (context, index) {
+                          var item = statusItems[index];
+                          return ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: Text(
+                                item,
+                                style: const TextStyle(fontSize: 16),
+                              ),
                             ),
                             onTap: () {
                               setState(() {
@@ -160,20 +152,20 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                               });
                               Navigator.of(context).pop();
                             },
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
         );
       },
     );
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

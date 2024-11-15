@@ -409,55 +409,57 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
   }
 
   Widget buildLocationDropdown(
-    BuildContext context,
-    List<dynamic> items,
-    String? selectedValue,
-    Function(Map<String, dynamic>?) onChanged,
-    String label,
-  ) {
-// Default text
-    if (selectedValue != null) {
-      final selectedItem = items.firstWhere(
-        (item) => item['location_code'] == selectedValue,
-        orElse: () => null,
-      );
-      if (selectedItem != null) {
-      }
+  BuildContext context,
+  List<dynamic> items,
+  String? selectedValue,
+  Function(Map<String, dynamic>?) onChanged,
+  String label,
+) {
+  // Find the selected item based on selectedValue
+  String displayText = 'Select Location'; // Default text
+  if (selectedValue != null) {
+    final selectedItem = items.firstWhere(
+      (item) => item['location_code'] == selectedValue,
+      orElse: () => null,
+    );
+    if (selectedItem != null) {
+      displayText = selectedItem['location_name'] ?? 'Select Location';
     }
+  }
 
-    return GestureDetector(
-      onTap: () {
-        _showDialog1(context, items, selectedValue, onChanged, label);
-      },
-      child: InputDecorator(
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(),
-          labelStyle: TextStyle(color: Colors.black, fontSize: 16),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Text(
-                  'Select Location',
-                  style: TextStyle(color: Colors.black),
-                  overflow: TextOverflow
-                      .visible, // Allow text to be visible when scrolling
-                ),
+  return GestureDetector(
+    onTap: () {
+      _showDialog1(context, items, selectedValue, onChanged, label);
+    },
+    child: InputDecorator(
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(),
+        labelStyle: TextStyle(color: Colors.black, fontSize: 16),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Text(
+                displayText, // Display location_name or "Select Location"
+                style: TextStyle(color: Colors.black),
+                overflow: TextOverflow.visible,
               ),
             ),
-            Icon(
-              Icons.arrow_drop_down,
-              color: Colors.grey,
-            ),
-          ],
-        ),
+          ),
+          Icon(
+            Icons.arrow_drop_down,
+            color: Colors.grey,
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   void _showDialog1(
     BuildContext context,

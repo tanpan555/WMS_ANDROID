@@ -578,36 +578,28 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
       });
     });
   }
-
+  
   Widget _buildDropStaffdownSearch() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: GestureDetector(
         onTap: () {
-          _showStaffDialog(); // Show the dialog on tap
+          _showStaffDialog(); // Show dialog on tap
         },
-        child: InputDecorator(
-          decoration: InputDecoration(
-            labelText: "ผู้บันทึก",
-            filled: true,
-            fillColor: Colors.white,
-            border: InputBorder.none,
-            labelStyle: TextStyle(fontSize: 16, color: Colors.black),
-          ),
-          child: Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween, // Align text and arrow
-            children: [
-              Text(
-                STAFF_CODE.text, // Default placeholder text
-                style: TextStyle(fontSize: 16),
+        child: AbsorbPointer(
+          child: TextField(
+              decoration: InputDecoration(
+                labelText: 'ผู้บันทึก',
+                filled: true,
+                fillColor: Colors.white,
+                labelStyle: TextStyle(color: Colors.black),
+                border: InputBorder.none,
+                suffixIcon: Icon(
+                  Icons.arrow_drop_down,
+                  color: Color.fromARGB(255, 113, 113, 113),
+                ),
               ),
-              Icon(
-                Icons.arrow_drop_down, // Dropdown arrow icon
-                color: Colors.grey,
-              ),
-            ],
-          ),
+              controller: STAFF_CODE),
         ),
       ),
     );
@@ -619,110 +611,21 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // Adjust height as needed
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'เลือกเลขที่เอกสารอ้างอิง',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        setState(() {}); // Update UI on text change
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          // Filter REF_NOItems based on the search query
-                          final filteredItems = REF_NOItems.where((item) {
-                            final soNo = item['so_no']?.toLowerCase() ?? '';
-                            final searchQuery =
-                                _searchController.text.toLowerCase();
-                            return soNo.contains(searchQuery);
-                          }).toList();
-
-                          if (filteredItems.isEmpty) {
-                            return Center(
-                              child: Text(
-                                'No data found',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            );
-                          }
-
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final soNo = item['so_no'];
-                              final arName = item['ar_name'];
-
-                              return ListTile(
-                                title: Text(
-                                  soNo,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                subtitle: Text(
-                                  arName ?? '',
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 12),
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    selectedREF_NO =
-                                        soNo; // Update the selected item
-                                    MO_DO_NO.text =
-                                        soNo; // Update the text controller
-                                  });
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'เลือกเลขที่เอกสารอ้างอิง',
+          searchController: _searchController,
+          data: REF_NOItems,
+          docString: (item) => item['so_no'] ?? '',
+          titleText: (item) => item['so_no'] ?? '',
+          subtitleText: (item) => item['ar_name'] ?? '',
+          onTap: (item) {
+            setState(() {
+              selectedREF_NO = item['so_no']; // Update the selected item
+              MO_DO_NO.text = item['so_no']; // Update the text controller
+            });
+            Navigator.of(context).pop(); // Close the dialog
+          },
         );
       },
     );
@@ -735,29 +638,20 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
         onTap: () {
           _showRefNoDialog(); // Show dialog on tap
         },
-        child: InputDecorator(
-          decoration: InputDecoration(
-            labelText: "เลขที่เอกสารอ้างอิง",
-            // hintText: "Select Item",
-            hintStyle: TextStyle(fontSize: 12.0),
-            filled: true,
-            fillColor: Colors.white,
-            border: InputBorder.none,
-          ),
-          child: Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween, // Align text and arrow
-            children: [
-              Text(
-                selectedREF_NO ?? '', // Default placeholder text
-                style: TextStyle(fontSize: 16),
+        child: AbsorbPointer(
+          child: TextField(
+              decoration: InputDecoration(
+                labelText: 'อ้างอิง SO',
+                filled: true,
+                fillColor: Colors.white,
+                labelStyle: TextStyle(color: Colors.black),
+                border: InputBorder.none,
+                suffixIcon: Icon(
+                  Icons.arrow_drop_down,
+                  color: Color.fromARGB(255, 113, 113, 113),
+                ),
               ),
-              Icon(
-                Icons.arrow_drop_down, // Dropdown arrow icon
-                color: Colors.grey,
-              ),
-            ],
-          ),
+              controller: MO_DO_NO),
         ),
       ),
     );
@@ -808,175 +702,136 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
           filled: true,
           fillColor: readOnly ? Colors.grey[300] : Colors.white,
           border: InputBorder.none,
-          floatingLabelBehavior: FloatingLabelBehavior
-                                    .always,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextimportantField(
-      TextEditingController controller, String label,
-      {bool readOnly = false}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: TextField(
-        controller: controller,
-        style: TextStyle(color: Colors.black),
-        readOnly: readOnly,
-        onChanged: (value) {
-          setState(() {
-            checkUpdateData = true;
-          });
-        },
-        decoration: InputDecoration(
-          labelText: null,
-          labelStyle: TextStyle(color: Colors.black),
-          filled: true,
-          fillColor: readOnly ? Colors.grey[300] : Colors.white,
-          border: InputBorder.none,
-          label: RichText(
-            text: TextSpan(
-              text: label,
-              style: TextStyle(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: '*',
-                  style: TextStyle(color: Colors.red),
-                ),
-              ],
-            ),
-          ),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
         ),
       ),
     );
   }
 
   Widget _buildDateTextField(TextEditingController controller, String label) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextField(
-            controller: controller,
-            style: const TextStyle(color: Colors.black),
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              // Allow only digits (numbers)
-              FilteringTextInputFormatter.digitsOnly,
-            ],
-            onChanged: (value) {
-              setState(() {
-                checkUpdateData = true;
-              });
-              if (value.isNotEmpty) {
-                String numbersOnly =
-                    value.replaceAll('/', ''); // Remove existing slashes
-                if (numbersOnly.length > 8) {
-                  numbersOnly =
-                      numbersOnly.substring(0, 8); // Restrict to 8 characters
-                }
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: controller,
+          style: const TextStyle(color: Colors.black),
+          keyboardType: TextInputType.number,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+          ],
+          onChanged: (value) {
+            setState(() {
+              checkUpdateData = true;
+            });
+            
+            // Track the cursor position
+            int cursorPosition = controller.selection.baseOffset;
 
-                // Format the input as dd/MM/yyyy
-                String formattedValue = '';
-                for (int i = 0; i < numbersOnly.length; i++) {
-                  if (i == 2 || i == 4) {
-                    formattedValue += '/'; // Add slashes after dd and MM
+            if (value.isNotEmpty) {
+              String numbersOnly = value.replaceAll('/', '');
+              if (numbersOnly.length > 8) {
+                numbersOnly = numbersOnly.substring(0, 8);
+              }
+
+              // Format the input as dd/MM/yyyy
+              String formattedValue = '';
+              int insertCursorPosition = cursorPosition;
+              for (int i = 0; i < numbersOnly.length; i++) {
+                if (i == 2 || i == 4) {
+                  formattedValue += '/';
+                  if (i < cursorPosition) {
+                    insertCursorPosition++; // Adjust cursor position for slashes
                   }
-                  formattedValue += numbersOnly[i];
                 }
+                formattedValue += numbersOnly[i];
+              }
 
-                // Update the controller text with the formatted value
-                controller.value = TextEditingValue(
-                  text: formattedValue,
-                  selection: TextSelection.collapsed(
-                      offset: formattedValue.length), // Set cursor to the end
-                );
+              // Update the controller text with the formatted value
+              controller.value = TextEditingValue(
+                text: formattedValue,
+                selection: TextSelection.collapsed(offset: insertCursorPosition),
+              );
 
-                // Validate the date
-                if (numbersOnly.length == 8) {
-                  try {
-                    final day = int.parse(numbersOnly.substring(0, 2));
-                    final month = int.parse(numbersOnly.substring(2, 4));
-                    final year = int.parse(numbersOnly.substring(4, 8));
+              // Validate the date
+              if (numbersOnly.length == 8) {
+                try {
+                  final day = int.parse(numbersOnly.substring(0, 2));
+                  final month = int.parse(numbersOnly.substring(2, 4));
+                  final year = int.parse(numbersOnly.substring(4, 8));
 
-                    // Create a DateTime object
-                    final date = DateTime(year, month, day);
+                  final date = DateTime(year, month, day);
 
-                    // Check if the date is valid
-                    if (date.day == day &&
-                        date.month == month &&
-                        date.year == year) {
-                      setState(() {
-                        isDateValid = true; // Valid date
-                        selectedDate = date; // Store the selected date
-                        CR_DATE.text = DateFormat('dd/MM/yyyy').format(date);
-                      });
-                    } else {
-                      throw Exception('Invalid date');
-                    }
-                  } catch (e) {
-                    print('Error parsing date: $e');
+                  if (date.day == day && date.month == month && date.year == year) {
                     setState(() {
-                      isDateValid = false; // Invalid date
+                      isDateValid = true;
+                      selectedDate = date;
+                      CR_DATE.text = DateFormat('dd/MM/yyyy').format(date);
                     });
+                  } else {
+                    throw Exception('Invalid date');
                   }
-                } else {
+                } catch (e) {
+                  print('Error parsing date: $e');
                   setState(() {
-                    isDateValid = false; // Input is incomplete
+                    isDateValid = false;
                   });
                 }
               } else {
                 setState(() {
-                  isDateValid = false; // No input
+                  isDateValid = false;
                 });
               }
-            },
-            decoration: InputDecoration(
-              hintText: 'DD/MM/YYYY',
-              hintStyle: const TextStyle(color: Colors.grey),
-              label: RichText(
-                text: TextSpan(
-                  text: label,
-                  style: const TextStyle(color: Colors.black),
-                  children: const [
-                    TextSpan(
-                      text: ' *',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ],
-                ),
-              ),
-              filled: true,
-              fillColor: Colors.white,
-              border: InputBorder.none,
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.calendar_today_outlined,
-                    color: Colors.black),
-                onPressed: () async {
-                  _selectDate(context); // Opens the date picker
-                },
+            } else {
+              setState(() {
+                isDateValid = false;
+              });
+            }
+          },
+          decoration: InputDecoration(
+            hintText: 'DD/MM/YYYY',
+            hintStyle: const TextStyle(color: Colors.grey),
+            label: RichText(
+              text: TextSpan(
+                text: label,
+                style: const TextStyle(color: Colors.black,fontSize: 16),
+                children: const [
+                  TextSpan(
+                    text: ' *',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ],
               ),
             ),
+            filled: true,
+            fillColor: Colors.white,
+            border: InputBorder.none,
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.calendar_today_outlined, color: Colors.black),
+              onPressed: () async {
+                _selectDate(context);
+              },
+            ),
           ),
-
-// Show error message if the date is invalid
-          isDateValid == false
-              ? const Padding(
-                  padding: EdgeInsets.only(top: 4.0),
-                  child: Text(
-                    'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
+        ),
+        // Show error message if the date is invalid
+        isDateValid == false
+            ? const Padding(
+                padding: EdgeInsets.only(top: 4.0),
+                child: Text(
+                  'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
                   ),
-                )
-              : const SizedBox.shrink(),
-        ],
-      ),
-    );
-  }
+                ),
+              )
+            : const SizedBox.shrink(),
+      ],
+    ),
+  );
+}
+
 }

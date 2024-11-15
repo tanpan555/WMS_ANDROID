@@ -6,6 +6,7 @@ import 'package:wms_android/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:wms_android/styles.dart';
+import '../centered_message.dart';
 
 class SSFGD17_VERIFY extends StatefulWidget {
   final String po_doc_no;
@@ -463,7 +464,6 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
                                   Navigator.of(context).pop();
                                   Navigator.of(context).pop();
                                   Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
                                 },
                               );
                             },
@@ -570,12 +570,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.4,
                 child: items.isEmpty
-                    ? const Center(
-                        child: Text(
-                          'no data available',
-                          style: TextStyle(fontSize: 18.0, color: Colors.white),
-                        ),
-                      )
+                    ? const Center(child: CenteredMessage())
                     : ListView.builder(
                         controller: _scrollController,
                         itemCount: (_displayLimit < items.length)

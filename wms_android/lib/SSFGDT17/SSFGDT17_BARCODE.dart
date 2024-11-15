@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wms_android/SSFGDT17/SSFGD17_VERIFY.dart';
@@ -58,6 +57,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
       TextEditingController(text: widget.LocOUTCode ?? ' ');
   late final TextEditingController BAL_LOT = TextEditingController();
   late final TextEditingController BAL_QTY = TextEditingController();
+  TextEditingController _searchController = TextEditingController();
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
@@ -260,61 +260,88 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
             ],
           ),
           content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                DropdownSearch<Map<String, dynamic>>(
-                  items: locCode
-                      .map((item) => item as Map<String, dynamic>)
-                      .toList(),
-                  selectedItem: locCode.isNotEmpty ? locCode.first : null,
-                  itemAsString: (item) => item['r'] ?? '',
-                  onChanged: (value) {
-                    setState(() {
-                      selectedLocCode = value?['r'];
-                    });
-                  },
-                  dropdownBuilder: (context, item) {
-                    if (item == null) {
-                      return Text('เลือก Location ต้นทาง');
-                    }
-                    return ListTile(
-                      title: Text(item['r'] ?? ''),
-                      subtitle: Text(item['location_name'] ?? ''),
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DialogStyles.customLovSearchDialog(
+                      context: context,
+                      headerText:
+                          'เลือก Location ต้นทาง', // Customize the header text
+                      searchController: _searchController,
+                      data: locCode, // List of items to search
+                      docString: (item) => item['r']
+                          .toString(), // Customize the docString function
+                      titleText: (item) =>
+                          item['r'].toString(), // Customize the title text
+                      subtitleText: (item) =>
+                          '${item['location_name']}', // Customize subtitle text
+                      onTap: (item) {
+                        final code = item['r']?.toString() ?? '';
+                        final name = item['location_name']?.toString() ?? '';
+                        // Handle item selection
+                        Navigator.of(context).pop(); // Close the dialog
+                        setState(() {
+                          // selectedLocCode = code;
+                          selectedLocCode = '$name';
+                          LOCATOR_FROM.text = selectedLocCode ?? '';
+                        });
+                      },
                     );
                   },
-                  dropdownDecoratorProps: DropDownDecoratorProps(
-                    dropdownSearchDecoration: InputDecoration(
-                      labelText: "เลือก Location ต้นทาง",
-                      border: OutlineInputBorder(),
-                      labelStyle: TextStyle(color: Colors.black, fontSize: 16),
-                      hintStyle: TextStyle(color: Colors.black),
+                ).then((_) {
+                  // Clear the search field after the dialog is closed
+                  _searchController.clear();
+                });
+              },
+              child: AbsorbPointer(
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: 'เลือก Location ต้นทาง',
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelStyle: TextStyle(color: Colors.black),
+                    // border: InputBorder.none,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: BorderSide(
+                            color:
+                                Colors.black)), // Set the border color to black
+                    suffixIcon: Icon(
+                      Icons.arrow_drop_down,
+                      color: Color.fromARGB(255, 113, 113, 113),
                     ),
                   ),
-                  popupProps: PopupProps.menu(
-                    showSearchBox: true,
-                    searchFieldProps: TextFieldProps(
-                      decoration: InputDecoration(
-                        hintText: "ค้นหาตำแหน่ง",
-                        hintStyle: TextStyle(color: Colors.black),
-                      ),
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    constraints: BoxConstraints(
-                      maxHeight: 250,
-                    ),
-                  ),
+                  controller: LOCATOR_FROM,
+                  minLines: 1,
+                  maxLines: 2,
                 ),
-              ],
+              ),
             ),
           ),
           actions: <Widget>[
             TextButton(
+              style: TextButton.styleFrom(
+                side: BorderSide(color: Colors.grey), // กำหนดสีของเส้นขอบ
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      20), // ปรับรูปร่างมุมให้โค้งมน (ถ้าต้องการ)
+                ),
+              ),
               child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
+              style: TextButton.styleFrom(
+                side: BorderSide(color: Colors.grey), // กำหนดสีของเส้นขอบ
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      20), // ปรับรูปร่างมุมให้โค้งมน (ถ้าต้องการ)
+                ),
+              ),
               child: Text('OK'),
               onPressed: () {
                 // First, close the current dialog

@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:wms_android/styles.dart';
 import '../loading.dart';
+import '../centered_message.dart';
 
 class SSFGDT17_MAIN extends StatefulWidget {
   final String pWareCode;
@@ -218,8 +219,8 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
       }
     } catch (e) {
       if (mounted) {
-        setState(() {
-          isLoading = false; // Hide loading indicator on error
+          isLoading = false; 
+        setState(() {// Hide loading indicator on error
           errorMessage = e.toString();
         });
       }
@@ -487,12 +488,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
                               ),
                             )
                           : data.isEmpty
-                              ? const Center(
-                                  child: Text(
-                                    'No Data Available',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                )
+                              ? const Center(child: CenteredMessage())
                               : ListView(
                                   children: [
                                     ...data
