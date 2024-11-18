@@ -204,7 +204,7 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
 
                                 Color cardColor;
                                 String statusText;
-                                String iconImageYorN;
+                                // String iconImageYorN;
                                 switch (item['status']) {
                                   ////      WMS คลังวัตถุดิบ
                                   case 'N':
@@ -243,133 +243,59 @@ class _Ssfgdt12CardState extends State<Ssfgdt12Card> {
                                     cardColor = Colors.grey;
                                     statusText = 'Unknown';
                                 }
-                                switch (item['status']) {
-                                  ////      WMS คลังวัตถุดิบ
-                                  case 'N':
-                                    iconImageYorN =
-                                        'assets/images/rt_machine_off.png';
-                                    break;
-                                  case 'X':
-                                    iconImageYorN =
-                                        'assets/images/rt_machine_on.png';
-                                    break;
-                                  default:
-                                    iconImageYorN =
-                                        'assets/images/rt_machine_off.png';
-                                }
+                                // switch (item['status']) {
+                                //   ////      WMS คลังวัตถุดิบ
+                                //   case 'N':
+                                //     iconImageYorN =
+                                //         'assets/images/rt_machine_off.png';
+                                //     break;
+                                //   case 'X':
+                                //     iconImageYorN =
+                                //         'assets/images/rt_machine_on.png';
+                                //     break;
+                                //   default:
+                                //     iconImageYorN =
+                                //         'assets/images/rt_machine_off.png';
+                                // }
 
-                                return Card(
-                                  elevation: 8.0,
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  color:
-                                      const Color.fromRGBO(204, 235, 252, 1.0),
-                                  child: InkWell(
-                                    onTap: isCardDisabled
-                                        ? null
-                                        : () async {
+                                return CardStyles.cardPage(
+                                  showON: item['status'] == 'X' ? true : false,
+                                  headerText: item['doc_no'] ?? '',
+                                  isShowPrint: false,
+                                  colorStatus: cardColor,
+                                  statusCard: statusText,
+                                  onCard: isCardDisabled
+                                      ? null
+                                      : () async {
+                                          setState(() {
+                                            isCardDisabled = true;
+                                          });
+                                          await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Ssfgdt12Form(
+                                                docNo: item['doc_no'],
+                                                pErpOuCode: widget.pErpOuCode,
+                                                browser_language:
+                                                    widget.browser_language,
+                                                wareCode: item['ware_code'] ??
+                                                    'ware_code',
+                                                pWareCode: widget.pWareCode,
+                                                p_attr1: widget.p_attr1,
+                                              ),
+                                            ),
+                                          ).then((value) async {
                                             setState(() {
-                                              isCardDisabled = true;
+                                              isCardDisabled = false;
                                             });
-                                            await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Ssfgdt12Form(
-                                                  docNo: item['doc_no'],
-                                                  pErpOuCode: widget.pErpOuCode,
-                                                  browser_language:
-                                                      widget.browser_language,
-                                                  wareCode: item['ware_code'] ??
-                                                      'ware_code',
-                                                  pWareCode: widget.pWareCode,
-                                                  p_attr1: widget.p_attr1,
-                                                ),
-                                              ),
-                                            ).then((value) async {
-                                              setState(() {
-                                                isCardDisabled = false;
-                                              });
-                                            });
-                                          },
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    child: Stack(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                item['doc_no'] ?? '',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18.0),
-                                              ),
-                                              SizedBox(height: 10.0),
-                                              item['ware_code'] == null
-                                                  ? Text(
-                                                      '${item['doc_date'] ?? ''} ${item['doc_no'] ?? ''}',
-                                                      style: TextStyle(
-                                                          fontSize: 14.0,
-                                                          color:
-                                                              Colors.black54),
-                                                    )
-                                                  : Text(
-                                                      '${item['doc_date'] ?? ''} ${item['doc_no'] ?? ''} ${item['ware_code'] ?? ''}',
-                                                      style: TextStyle(
-                                                          fontSize: 14.0,
-                                                          color:
-                                                              Colors.black54),
-                                                    ),
-                                            ],
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 8.0,
-                                          right: 8.0,
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 12.0,
-                                                    vertical: 6.0),
-                                                decoration: BoxDecoration(
-                                                  color: cardColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          12.0),
-                                                  border: Border.all(
-                                                      color: cardColor,
-                                                      width: 2.0),
-                                                ),
-                                                child: Text(
-                                                  statusText,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                              // SizedBox(height: 5.0),
-                                              SizedBox(
-                                                width: 100,
-                                                height: 40,
-                                                child: Image.asset(
-                                                  iconImageYorN,
-                                                  fit: BoxFit.contain,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                          });
+                                        },
+                                  onPrint: () {
+                                    print('Print tapped!');
+                                  },
+                                  titleText:
+                                      '${item['doc_date'] ?? ''} ${item['doc_no'] ?? ''} ${item['ware_code'] ?? ''}',
                                 );
                               } else {
                                 // displayedData.length <= 3

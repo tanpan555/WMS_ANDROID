@@ -205,7 +205,7 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                                   setState(() {
                                     selectedDate = formattedDate;
                                   });
-
+                                  String pSoNoRP = pSoNo.replaceAll(' ', '');
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -217,14 +217,23 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                                           pAppUser: appUser,
                                           pFlag: pFlag,
                                           pStatusDESC: statusDESC,
-                                          pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                                          pSoNo:
+                                              pSoNoRP == '' ? 'null' : pSoNoRP,
                                           pDocDate: formattedDate == ''
                                               ? 'null'
                                               : formattedDate),
                                     ),
-                                  ).then((value) async {});
+                                  ).then((value) async {
+                                    if (pSoNoRP == '') {
+                                      setState(() {
+                                        pSoNo = '';
+                                        pSoNoController.text = '';
+                                      });
+                                    }
+                                  });
                                 }
                               } else {
+                                String pSoNoRP = pSoNo.replaceAll(' ', '');
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -236,10 +245,17 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                                         pAppUser: appUser,
                                         pFlag: pFlag,
                                         pStatusDESC: statusDESC,
-                                        pSoNo: pSoNo == '' ? 'null' : pSoNo,
+                                        pSoNo: pSoNoRP == '' ? 'null' : pSoNoRP,
                                         pDocDate: 'null'),
                                   ),
-                                ).then((value) async {});
+                                ).then((value) async {
+                                  if (pSoNoRP == '') {
+                                    setState(() {
+                                      pSoNo = '';
+                                      pSoNoController.text = '';
+                                    });
+                                  }
+                                });
                               }
                             }
                           },

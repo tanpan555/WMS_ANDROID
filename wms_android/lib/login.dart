@@ -280,8 +280,9 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              TextButton(
-                                onPressed: _forgotPassword,
+                              const TextButton(
+                                // onPressed: _forgotPassword,
+                                onPressed: null,
                                 child: Text(
                                   'Forgot Password?',
                                   style: TextStyle(

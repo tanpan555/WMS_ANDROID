@@ -657,7 +657,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                                   // MainAxisAlignment.spaceBetween,
                                                   children: [
                                                     const Text(
-                                                      'Item : ',
+                                                      'LOT NO : ',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
@@ -665,9 +665,9 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                                     ),
                                                     CustomContainerStyles
                                                         .styledContainer(
-                                                      item['item_code'],
+                                                      item['lots_no'],
                                                       child: Text(
-                                                        item['item_code'] ?? '',
+                                                        item['lots_no'] ?? '',
                                                         style: const TextStyle(
                                                             fontSize: 14.0),
                                                       ),
@@ -682,7 +682,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                                   // MainAxisAlignment.spaceBetween,
                                                   children: [
                                                     const Text(
-                                                      'Lot No : ',
+                                                      'จำนวนรับ : ',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
@@ -690,10 +690,14 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                                     ),
                                                     CustomContainerStyles
                                                         .styledContainer(
-                                                      item[
-                                                          'lots_no'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                      item['pack_qty']
+                                                          .toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
                                                       child: Text(
-                                                        item['lots_no'] ?? '',
+                                                        NumberFormat(
+                                                                '#,###,###,###,###,###')
+                                                            .format(item[
+                                                                    'pack_qty'] ??
+                                                                ''),
                                                         style: const TextStyle(
                                                             fontSize: 14.0),
                                                       ),
@@ -716,7 +720,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                                         //         .start,
                                                         children: [
                                                           const Text(
-                                                            'จำนวนที่จ่าย : ',
+                                                            'Item : ',
                                                             style: TextStyle(
                                                                 fontWeight:
                                                                     FontWeight
@@ -725,14 +729,11 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                                           ),
                                                           CustomContainerStyles
                                                               .styledContainer(
-                                                            item['pack_qty']
-                                                                .toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                            item[
+                                                                'item_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
                                                             child: Text(
-                                                              NumberFormat(
-                                                                      '#,###,###,###,###,###')
-                                                                  .format(item[
-                                                                          'pack_qty'] ??
-                                                                      ''),
+                                                              item['item_code'] ??
+                                                                  '',
                                                               style:
                                                                   const TextStyle(
                                                                       fontSize:
@@ -753,7 +754,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                                         //         .end,
                                                         children: [
                                                           const Text(
-                                                            'Pack : ',
+                                                            'จำนวนจ่าย : ',
                                                             style: TextStyle(
                                                                 fontWeight:
                                                                     FontWeight
@@ -762,11 +763,15 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                                           ),
                                                           CustomContainerStyles
                                                               .styledContainer(
-                                                            item[
-                                                                'pack_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                            item['old_pack_qty']
+                                                                .toString(),
                                                             child: Text(
-                                                              item['pack_code'] ??
-                                                                  '',
+                                                              NumberFormat(
+                                                                      '#,###,###,###,###,###')
+                                                                  .format(int.tryParse(
+                                                                          item['old_pack_qty']
+                                                                              .toString()) ??
+                                                                      0),
                                                               style:
                                                                   const TextStyle(
                                                                       fontSize:
@@ -778,6 +783,32 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                                     ),
                                                   )
                                                 ],
+                                              ),
+                                              const SizedBox(height: 4.0),
+                                              SizedBox(
+                                                child: Row(
+                                                  // mainAxisAlignment:
+                                                  // MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    const Text(
+                                                      'Pack : ',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.0),
+                                                    ),
+                                                    CustomContainerStyles
+                                                        .styledContainer(
+                                                      item[
+                                                          'pack_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                      child: Text(
+                                                        item['pack_code'] ?? '',
+                                                        style: const TextStyle(
+                                                            fontSize: 14.0),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                               const SizedBox(height: 4.0),
                                               SizedBox(
@@ -820,9 +851,9 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                                     CustomContainerStyles
                                                         .styledContainer(
                                                       item[
-                                                          'pd_location'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                          'ATTRIBUTE1'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
                                                       child: Text(
-                                                        item['pd_location'] ??
+                                                        item['ATTRIBUTE1'] ??
                                                             '',
                                                         style: const TextStyle(
                                                             fontSize: 14.0),
@@ -851,9 +882,9 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                                       child:
                                                           CustomContainerStyles
                                                               .styledContainer(
-                                                        item['reason_mismatch'],
+                                                        item['ATTRIBUTE2'],
                                                         child: Text(
-                                                          item['reason_mismatch'] ??
+                                                          item['ATTRIBUTE2'] ??
                                                               '',
                                                           style:
                                                               const TextStyle(
@@ -885,9 +916,9 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                                     CustomContainerStyles
                                                         .styledContainer(
                                                       item[
-                                                          'attribute3'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                          'ATTRIBUTE3'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
                                                       child: Text(
-                                                        item['attribute3'] ??
+                                                        item['ATTRIBUTE3'] ??
                                                             '',
                                                         style: const TextStyle(
                                                             fontSize: 14.0),
@@ -912,9 +943,9 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                                     CustomContainerStyles
                                                         .styledContainer(
                                                       item[
-                                                          'attribute4'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                                          'ATTRIBUTE4'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
                                                       child: Text(
-                                                        item['attribute4'] ??
+                                                        item['ATTRIBUTE4'] ??
                                                             '',
                                                         style: const TextStyle(
                                                             fontSize: 14.0),
@@ -961,6 +992,8 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                                         context,
                                                         item['seq'],
                                                         item['pack_qty'],
+                                                        item['old_pack_qty'] ??
+                                                            0,
                                                         item['nb_item_name'] ??
                                                             '',
                                                         item['rowid'] ?? '',
@@ -1343,6 +1376,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
     BuildContext context,
     int seq,
     int packQty,
+    int oldPackQTY,
     String nbItemName,
     String rowID,
     String itemCode,
@@ -1352,6 +1386,10 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
         NumberFormat('#,###,###,###,###,###').format(packQty);
     TextEditingController packQtyController =
         TextEditingController(text: formattedSysQty.toString());
+    String formattedOldPackQTY =
+        NumberFormat('#,###,###,###,###,###').format(oldPackQTY);
+    TextEditingController oldPackQtyController =
+        TextEditingController(text: formattedOldPackQTY.toString());
     String formattedSeq = NumberFormat('#,###,###,###,###,###').format(seq);
     TextEditingController seqController =
         TextEditingController(text: formattedSeq);
@@ -1448,13 +1486,34 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                     ),
                     const SizedBox(height: 8.0),
                     TextFormField(
-                      controller: packQtyController,
+                      controller: oldPackQtyController,
+                      readOnly: true,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black)),
                         filled: true,
                         fillColor: Colors.white,
                         labelText: 'จำนวนที่จ่าย',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                      ),
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.right,
+                      onChanged: (value) {
+                        // CheckDataPackQty = value;
+                      },
+                    ),
+                    const SizedBox(height: 8.0),
+                    TextFormField(
+                      controller: packQtyController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black)),
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'จำนวนรับ',
                         labelStyle: TextStyle(
                           color: Colors.black87,
                         ),
@@ -1473,18 +1532,29 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                         ElevatedButton(
                           style: AppStyles.ConfirmChecRecievekButtonStyle(),
                           onPressed: () async {
-                            int updatedPackQty = int.tryParse(packQtyController
-                                    .text
-                                    .replaceAll(',', '')) ??
-                                packQty;
+                            if (mounted) {
+                              // setState(() async {
+                              int A = int.tryParse(packQtyController.text) ?? 0;
+                              int B = int.tryParse(oldPackQTY.toString()) ?? 0;
 
-                            Navigator.of(context).pop(true);
-                            await updatePackQty(
-                                updatedPackQty, itemCode, packCode, rowID);
-                            await fetchData(urlLoad);
-                            setState(() {});
-                            print('updatedPackQty : $updatedPackQty');
-                            print('packQtyController : $packQtyController');
+                              if (A > B) {
+                                showDialogError(context,
+                                    'จำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!');
+                              } else {
+                                int updatedPackQty = int.tryParse(
+                                        packQtyController.text
+                                            .replaceAll(',', '')) ??
+                                    packQty;
+
+                                Navigator.of(context).pop(true);
+                                await updatePackQty(
+                                    updatedPackQty, itemCode, packCode, rowID);
+                                await fetchData(urlLoad);
+                                print('updatedPackQty : $updatedPackQty');
+                                print('packQtyController : $packQtyController');
+                              }
+                              // });
+                            }
                           },
                           child: Image.asset(
                             'assets/images/check-mark.png',
@@ -1533,6 +1603,27 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
     //     print('result : กดออกจากข้างนอก');
     //   }
     // }
+  }
+
+  Future<void> showDialogError(
+    BuildContext context,
+    String messageAlert,
+  ) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () {
+            Navigator.of(context).pop();
+          },
+          onConfirm: () {
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
   }
 
   void showExitWarningDialog() {

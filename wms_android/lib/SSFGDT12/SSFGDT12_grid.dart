@@ -125,10 +125,10 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
             nextLink = getLink(links, 'next');
             prevLink = getLink(links, 'prev');
             urlLoad = url ??
-                '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectDataGridCard/${globals.P_ERP_OU_CODE}/${widget.docNo}';
+                '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectDataGridCard/${globals.P_ERP_OU_CODE}/${widget.docNo}/${globals.BROWSER_LANGUAGE}';
             if (url.toString().isNotEmpty) {
               extractLastNumberFromUrl(url.toString() ==
-                      '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectDataGridCard/${globals.P_ERP_OU_CODE}/${widget.docNo}'
+                      '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_3_SelectDataGridCard/${globals.P_ERP_OU_CODE}/${widget.docNo}/${globals.BROWSER_LANGUAGE}'
                   ? 'null'
                   : url.toString());
             }
