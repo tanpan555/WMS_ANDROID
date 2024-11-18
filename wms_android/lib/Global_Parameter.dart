@@ -6,7 +6,7 @@ library wms_android.globals;
 String APP_USER = 'SS-STAFF';
 String P_OU_CODE = '';
 String P_ERP_OU_CODE = '';
-String BROWSER_LANGUAGE = 'EN';
+String BROWSER_LANGUAGE = 'TH';
 String Raw_Material = 'Raw Material';
 String Finishing = 'Finishing';
 String P_DS_PDF = 'wms';
