@@ -1095,3 +1095,133 @@ class ElevatedButtonStyle {
   //   );
   // }
 }
+
+class CardStyles {
+  static Card cardPage({
+    bool? showON,
+    String? headerText,
+    required bool isShowPrint,
+    required Color? colorStatus,
+    required String? statusCard,
+    required VoidCallback? onCard,
+    required VoidCallback? onPrint,
+    required String? titleText,
+  }) {
+    return Card(
+      elevation: 8.0,
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      color: Colors.lightBlue[100],
+      child: InkWell(
+        onTap: onCard,
+        borderRadius: BorderRadius.circular(15.0),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    headerText.toString(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 17,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                  ),
+                  headerText.toString().isNotEmpty
+                      ? const Divider(color: Colors.black, thickness: 1)
+                      : const SizedBox.shrink(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        // mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                              vertical: 6.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: colorStatus,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text(
+                              statusCard.toString(),
+                              style: const TextStyle(
+                                fontSize: 15,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          if (showON = true) ...[
+                            Image.asset(
+                              'assets/images/rt_machine_on.png',
+                              width: 50,
+                              height: 50,
+                            )
+                          ] else if (showON = false) ...[
+                            Image.asset(
+                              'assets/images/rt_machine_off.png',
+                              width: 50,
+                              height: 50,
+                            )
+                          ] else ...[
+                            const SizedBox.shrink()
+                          ],
+                          const SizedBox(width: 8),
+                        ],
+                      ),
+                      Row(
+                        // mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          isShowPrint
+                              ? InkWell(
+                                  onTap: onPrint,
+                                  child: Container(
+                                    width: 30,
+                                    height: 30,
+                                    child: Image.asset(
+                                      'assets/images/printer.png',
+                                      // fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox.shrink()
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0,
+                          vertical: 6.0,
+                        ),
+                        child: Text(
+                          titleText.toString(),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
