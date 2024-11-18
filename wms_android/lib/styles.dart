@@ -1074,8 +1074,8 @@ class ElevatedButtonStyle {
       ),
       child: Image.asset(
         'assets/images/right.png',
-        width: 25,
-        height: 25,
+        width: 20,
+        height: 20,
       ),
     );
   }

@@ -11,6 +11,7 @@ import 'SSINDT01_form.dart';
 import 'dart:async';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import '../loading.dart';
+import '../centered_message.dart';
 
 class SSINDT01_MAIN extends StatefulWidget {
   final String pWareCode;
@@ -168,7 +169,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       if (mounted) {
         setState(() {
           currentPage++;
-          isLoading = true;
+          // isLoading = true;
         });
       }
       fetchWareCodes(nextLink);
@@ -180,7 +181,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       if (mounted) {
         setState(() {
           currentPage--;
-          isLoading = true;
+          // isLoading = true;
         });
       }
       fetchWareCodes(prevLink);
@@ -574,22 +575,9 @@ Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
                 if (isPortrait) const SizedBox(height: 4),
                 Expanded(
                   child: isLoading
-                      // ? const Center(child: CircularProgressIndicator())
                       ? Center(child: LoadingIndicator())
-                      : errorMessage.isNotEmpty
-                          ? Center(
-                              child: Text(
-                                'Error: $errorMessage',
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            )
                           : data.isEmpty
-                              ? const Center(
-                                  child: Text(
-                                    'No Data Available',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                )
+                              ? const Center(child: CenteredMessage())
                               : ListView(
                                   children: [
                                     // Build the list items

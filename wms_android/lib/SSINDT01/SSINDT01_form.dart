@@ -1115,6 +1115,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               : const SizedBox.shrink(),
           const SizedBox(height: 8.0),
           TextFormField(
+            minLines: 2,
+                              maxLines: 5,
             onChanged: (value) {
               setState(() {
                 checkUpdateData = true;
@@ -1127,6 +1129,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                 filled: true,
                 fillColor: Colors.white,
                 border: InputBorder.none,
+                floatingLabelBehavior: FloatingLabelBehavior
+                                    .always,
                 labelStyle: TextStyle(color: Colors.black),
                 labelText: 'หมายเหตุ'),
           ),
@@ -1151,7 +1155,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                   readOnly: true,
                 ),
               ),
-              const SizedBox(width: 16.0),
+              const SizedBox(width: 8),
               Expanded(
                 child: TextFormField(
                   style: const TextStyle(
@@ -1205,7 +1209,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             ),
             readOnly: true,
           ),
-          const SizedBox(height: 16.0),
+          const SizedBox(height: 8),
           TextFormField(
             style: const TextStyle(
               color: Colors.black87,
@@ -1222,7 +1226,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             ),
             readOnly: true,
           ),
-          const SizedBox(height: 16.0),
+          const SizedBox(height: 8),
           GestureDetector(
             onTap: () {
               // Add your custom logic when the TextFormField is tapped
@@ -1250,7 +1254,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               ),
             ),
           ),
-          const SizedBox(height: 16.0),
+          const SizedBox(height: 8),
           TextFormField(
             style: const TextStyle(
               color: Colors.black87,
