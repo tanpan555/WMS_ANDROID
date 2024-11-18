@@ -44,6 +44,9 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   String? next;
   String? previous;
   String errorMessage = '';
+   final ScrollController _singleChildScrollController = ScrollController();
+  final ScrollController _listViewScrollController = ScrollController();
+
 
   @override
   void initState() {
@@ -52,6 +55,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     fetchSetQC();
     _docNoController = TextEditingController(text: widget.po_doc_no);
   }
+
 
   Future<void> _showEditDialog(
       BuildContext context, Map<String, dynamic> item) async {
@@ -553,16 +557,16 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                 .toList();
 
             // คำนวณจำนวน totalCards
-            int totalCards = dataCard.length;
+            // int totalCards = dataCard.length;
 
-            List<dynamic> getCurrentPageItems() {
-              int startIndex = currentPage * itemsPerPage;
-              int endIndex = (startIndex + itemsPerPage > totalCards)
-                  ? totalCards
-                  : startIndex + itemsPerPage;
-              return dataCard.sublist(
-                  startIndex, endIndex); // ดึงเฉพาะ card ในหน้าปัจจุบัน
-            }
+            // List<dynamic> getCurrentPageItems() {
+            //   int startIndex = currentPage * itemsPerPage;
+            //   int endIndex = (startIndex + itemsPerPage > totalCards)
+            //       ? totalCards
+            //       : startIndex + itemsPerPage;
+            //   return dataCard.sublist(
+            //       startIndex, endIndex); // ดึงเฉพาะ card ในหน้าปัจจุบัน
+            // }
 
             isLoading = false;
           });
@@ -584,6 +588,10 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
         });
       }
     }
+  }
+
+  int totalPages() {
+    return (dataCard.length / itemsPerPage).ceil(); // คำนวณจำนวนหน้าทั้งหมด
   }
 
   String? getLink(List<dynamic> links, String rel) {
@@ -612,10 +620,16 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     }
   }
 
-  final ScrollController _scrollController = ScrollController();
+  List<dynamic> getCurrentData() {
+    final start = currentPage * itemsPerPage;
+    final end = start + itemsPerPage;
+
+    return dataCard.sublist(start, end.clamp(0, dataCard.length));
+  }
+
   void _scrollToTop() {
-    if (_scrollController.hasClients) {
-      _scrollController.jumpTo(0); // เลื่อนไปยังตำแหน่งเริ่มต้น (index 0)
+    if (_singleChildScrollController.hasClients) {
+      _singleChildScrollController.jumpTo(0); // Scroll to the top
     }
   }
 
@@ -737,14 +751,16 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   @override
   void dispose() {
     _docNoController.dispose();
+    _singleChildScrollController.dispose();
+    _listViewScrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    int totalCards = dataCard.length;
-    bool hasPreviousPage = currentPage > 0;
-    bool hasNextPage = (currentPage + 1) * itemsPerPage < totalCards;
+    // int totalCards = dataCard.length;
+    // bool hasPreviousPage = currentPage > 0;
+    // bool hasNextPage = (currentPage + 1) * itemsPerPage < totalCards;
     return Scaffold(
       appBar:
           CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
@@ -876,6 +892,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
             const SizedBox(height: 16),
             Expanded(
               child: SingleChildScrollView(
+                controller: _singleChildScrollController,
                 // child: _buildCards(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -936,20 +953,20 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             // itemCount: gridItems.length,
-                            controller: _scrollController,
-                            itemCount:
-                                itemsPerPage + 1, // +1 for the pagination row
+                            controller: _listViewScrollController,
+                            itemCount: getCurrentData().length + 1, // +1 for the pagination row
                             itemBuilder: (context, index) {
-                              if (index < itemsPerPage) {
-                                int actualIndex =
-                                    (currentPage * itemsPerPage) + index;
+                              if (index < getCurrentData().length) {
+                                var item = getCurrentData()[index];
+                                // int actualIndex =
+                                //     (currentPage * itemsPerPage) + index;
 
-                                // Check if we have reached the end of the data
-                                if (actualIndex >= dataCard.length) {
-                                  return const SizedBox.shrink();
-                                }
+                                // // Check if we have reached the end of the data
+                                // if (actualIndex >= dataCard.length) {
+                                //   return const SizedBox.shrink();
+                                // }
 
-                                final item = dataCard[actualIndex];
+                                // final item = dataCard[actualIndex];
 
                                 return Card(
                                   elevation: 8.0,
@@ -967,7 +984,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                           padding: const EdgeInsets.all(8),
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment:
+                                              mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
                                               Center(
@@ -1088,116 +1105,84 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                   ),
                                 );
                               } else {
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    // Previous Button
-                                    hasPreviousPage
-                                        ? ElevatedButton.icon(
-                                            onPressed: _loadPrevPage,
-                                            icon: const Icon(
-                                              Icons.arrow_back_ios_rounded,
-                                              color: Colors.black,
-                                              size: 20.0,
-                                            ),
-                                            label: const Text(
-                                              'Previous',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 13,
-                                              ),
-                                            ),
-                                            style:
-                                                AppStyles.PreviousButtonStyle(),
-                                          )
-                                        : ElevatedButton.icon(
-                                            onPressed: null,
-                                            icon: const Icon(
-                                              Icons.arrow_back_ios_rounded,
-                                              color:
-                                                  Color.fromARGB(0, 23, 21, 59),
-                                              size: 20.0,
-                                            ),
-                                            label: const Text(
-                                              'Previous',
-                                              style: TextStyle(
-                                                color: Color.fromARGB(
-                                                    0, 255, 255, 255),
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 13,
-                                              ),
-                                            ),
-                                            style: AppStyles
-                                                .DisablePreviousButtonStyle(),
-                                          ),
-
-                                    // Page Indicator
-                                    Text(
-                                      '${(currentPage * itemsPerPage) + 1}-${(currentPage + 1) * itemsPerPage > totalCards ? totalCards : (currentPage + 1) * itemsPerPage}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-
-                                    // Next Button
-                                    hasNextPage
-                                        ? ElevatedButton(
-                                            onPressed: _loadNextPage,
-                                            style: AppStyles
-                                                .NextRecordDataButtonStyle(),
-                                            child: const Row(
-                                              mainAxisSize: MainAxisSize.min,
+                                return getCurrentData().length > 3
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
                                               children: [
-                                                Text(
-                                                  'Next',
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13,
-                                                  ),
-                                                ),
-                                                SizedBox(width: 7),
-                                                Icon(
-                                                  Icons
-                                                      .arrow_forward_ios_rounded,
-                                                  color: Colors.black,
-                                                  size: 20.0,
-                                                ),
+                                                currentPage > 0
+                                                    ? ElevatedButton(
+                                                        onPressed:
+                                                            currentPage > 0
+                                                                ? () {
+                                                                    _loadPrevPage();
+                                                                  }
+                                                                : null,
+                                                        style: ButtonStyles
+                                                            .previousButtonStyle,
+                                                        child: ButtonStyles
+                                                            .previousButtonContent,
+                                                      )
+                                                    : ElevatedButton(
+                                                        onPressed: null,
+                                                        style: DisableButtonStyles
+                                                            .disablePreviousButtonStyle,
+                                                        child: DisableButtonStyles
+                                                            .disablePreviousButtonContent,
+                                                      )
                                               ],
                                             ),
-                                          )
-                                        : ElevatedButton(
-                                            onPressed: null,
-                                            style: AppStyles
-                                                .DisableNextRecordDataButtonStyle(),
-                                            child: const Row(
-                                              mainAxisSize: MainAxisSize.min,
+                                            // const SizedBox(width: 30),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
-                                                Text(
-                                                  'Next',
-                                                  style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        0, 23, 21, 59),
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13,
+                                                Center(
+                                                  child: Text(
+                                                    '${(currentPage * itemsPerPage) + 1} - ${dataCard.isNotEmpty ? ((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length) : 0}',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
                                                   ),
-                                                ),
-                                                SizedBox(width: 7),
-                                                Icon(
-                                                  Icons
-                                                      .arrow_forward_ios_rounded,
-                                                  color: Color.fromARGB(
-                                                      0, 23, 21, 59),
-                                                  size: 20.0,
-                                                ),
+                                                )
                                               ],
                                             ),
-                                          ),
-                                  ],
-                                );
+                                            // const SizedBox(width: 30),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                currentPage < totalPages() - 1
+                                                    ? ElevatedButton(
+                                                        onPressed: currentPage <
+                                                                totalPages() - 1
+                                                            ? () {
+                                                                _loadNextPage();
+                                                              }
+                                                            : null,
+                                                        style: ButtonStyles
+                                                            .nextButtonStyle,
+                                                        child: ButtonStyles
+                                                            .nextButtonContent(),
+                                                      )
+                                                    : ElevatedButton(
+                                                        onPressed: null,
+                                                        style: DisableButtonStyles
+                                                            .disableNextButtonStyle,
+                                                        child: DisableButtonStyles
+                                                            .disablePreviousButtonContent,
+                                                      ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox.shrink();
                               }
                             },
                           ),
@@ -1205,6 +1190,75 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                 ),
               ),
             ),
+            !isLoading && getCurrentData().length > 0
+                ? getCurrentData().length <= 3
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              currentPage > 0
+                                  ? ElevatedButton(
+                                      onPressed: currentPage > 0
+                                          ? () {
+                                              _loadPrevPage();
+                                            }
+                                          : null,
+                                      style: ButtonStyles.previousButtonStyle,
+                                      child: ButtonStyles.previousButtonContent,
+                                    )
+                                  : ElevatedButton(
+                                      onPressed: null,
+                                      style: DisableButtonStyles
+                                          .disablePreviousButtonStyle,
+                                      child: DisableButtonStyles
+                                          .disablePreviousButtonContent,
+                                    )
+                            ],
+                          ),
+                          // const SizedBox(width: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Text(
+                                  '${(currentPage * itemsPerPage) + 1} - ${dataCard.isNotEmpty ? ((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length) : 0}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          // const SizedBox(width: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              currentPage < totalPages() - 1
+                                  ? ElevatedButton(
+                                      onPressed: currentPage < totalPages() - 1
+                                          ? () {
+                                              _loadNextPage();
+                                            }
+                                          : null,
+                                      style: ButtonStyles.nextButtonStyle,
+                                      child: ButtonStyles.nextButtonContent(),
+                                    )
+                                  : ElevatedButton(
+                                      onPressed: null,
+                                      style: DisableButtonStyles
+                                          .disableNextButtonStyle,
+                                      child: DisableButtonStyles
+                                          .disablePreviousButtonContent,
+                                    ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : const SizedBox.shrink()
+                : const SizedBox.shrink(),
           ],
         ),
       ),
