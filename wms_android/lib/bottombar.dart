@@ -69,48 +69,54 @@ class _BottomBarState extends State<BottomBar> {
   String sessionID = '';
 
   Future<void> _onItemTapped(int index) async {
-    setState(() {
-      sessionID = globals.APP_SESSION;
-      print(
-          'sessionID in BottomBar : $sessionID Type : ${sessionID.runtimeType}');
-    });
+    if (mounted) {
+      setState(() {
+        sessionID = globals.APP_SESSION;
+        print(
+            'sessionID in BottomBar : $sessionID Type : ${sessionID.runtimeType}');
+      });
+    }
 
     switch (index) {
       case 0:
         if (widget.currentPage == 'show') {
           bool? confirmResult = await showDialog<bool>(
-  context: context,
-  builder: (BuildContext context) {
-    return DialogStyles.warningNotSaveDialog(
-      context: context,
-      textMessage: 'ยืนยันที่จะย้อนกลับไปหน้าแรกหรือไม่',
-      onCloseDialog: () => Navigator.of(context).pop(false),
-      onConfirmDialog: () => Navigator.of(context).pop(true),
-    );
-  },
-);
-
-
+            context: context,
+            builder: (BuildContext context) {
+              return DialogStyles.warningNotSaveDialog(
+                context: context,
+                textMessage: 'ยืนยันที่จะย้อนกลับไปหน้าแรกหรือไม่',
+                onCloseDialog: () => Navigator.of(context).pop(false),
+                onConfirmDialog: () => Navigator.of(context).pop(true),
+              );
+            },
+          );
 
           if (confirmResult == true) {
+            if (mounted) {
+              setState(() {
+                _selectedIndex = index;
+              });
+              Navigator.popUntil(context, (route) => route.isFirst);
+            }
+          }
+        } else {
+          // For 'not_show' or any other value
+          if (mounted) {
             setState(() {
               _selectedIndex = index;
             });
             Navigator.popUntil(context, (route) => route.isFirst);
           }
-        } else {
-          // For 'not_show' or any other value
-          setState(() {
-            _selectedIndex = index;
-          });
-          Navigator.popUntil(context, (route) => route.isFirst);
         }
         break;
       case 1:
-        setState(() {
-          _selectedIndex = index;
-        });
-        _showRightDrawer(context);
+        if (mounted) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          _showRightDrawer(context);
+        }
         break;
     }
   }

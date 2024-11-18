@@ -561,6 +561,93 @@ class DialogStyles {
       ),
     );
   }
+
+// --------------------------- Dialog ที่มีช่อง TextFormField ----
+  static AlertDialog displayTextFormField({
+    required BuildContext context,
+    required VoidCallback onCloseDialog,
+    required VoidCallback? onConfirmDialog,
+    required ValueChanged<String> onChanged,
+    required TextEditingController controller,
+    required String headTextDialog,
+    required String labelText,
+  }) {
+    return AlertDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            headTextDialog,
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 16.0,
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: onCloseDialog,
+          ),
+        ],
+      ),
+      content: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: controller,
+                onChanged: onChanged,
+                minLines: 1,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                  labelText: labelText,
+                  labelStyle: const TextStyle(
+                    color: Colors.black87,
+                  ),
+                  suffixIcon: const Icon(
+                    Icons.arrow_drop_down,
+                    color: Color.fromARGB(255, 113, 113, 113),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: onCloseDialog,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ยกเลิก',
+                        style: TextStyle(color: Colors.black)),
+                  ),
+                  ElevatedButton(
+                    onPressed: onConfirmDialog,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ตกลง',
+                        style: TextStyle(color: Colors.black)),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   // ---------------------------------------------------------------------  alertMessageDialog
 
   static AlertDialog alertMessageDialog({
@@ -788,6 +875,110 @@ class DialogStyles {
     );
   }
 
+  static Dialog customRequiredSelectLovDialog({
+    required BuildContext context,
+    required String? headerText,
+    required List<dynamic> data,
+    required String Function(Map<String, dynamic> item) displayItem,
+    // required VoidCallback onClose,
+    required void Function(Map<String, dynamic> item) onTap,
+  }) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: StatefulBuilder(
+        builder: (context, setState) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            height: 300,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.grey,
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          text: headerText,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                          ),
+                          children: const [
+                            TextSpan(
+                              text: ' *',
+                              style: TextStyle(
+                                color: Colors.red,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(MyIcons.close),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          // searchController.clear();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          var item = data[index];
+                          return ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 8.0),
+                                child: Text(
+                                  displayItem(item),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              onTap: () => onTap(item));
+                        },
+                      ),
+                    ],
+                  ),
+                )
+
+                // ช่องค้นหา
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   static Dialog customLovSearchDialog({
     required BuildContext context,
     required String? headerText,
@@ -964,7 +1155,7 @@ class DialogStyles {
                       icon: const Icon(MyIcons.close),
                       onPressed: () {
                         Navigator.of(context).pop();
-                        searchController.clear();
+                        // searchController.clear();
                       },
                     ),
                   ],
@@ -1074,8 +1265,8 @@ class ElevatedButtonStyle {
       ),
       child: Image.asset(
         'assets/images/right.png',
-        width: 20,
-        height: 20,
+        width: 25,
+        height: 25,
       ),
     );
   }

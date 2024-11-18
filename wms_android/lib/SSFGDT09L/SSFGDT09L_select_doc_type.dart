@@ -210,7 +210,7 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
                                 chkCreateCard();
                               },
                         style: AppStyles.ConfirmbuttonStyle(),
-                        child: Text('CONFIRM',
+                        child: Text('ยืนยัน',
                             style: AppStyles.ConfirmbuttonTextStyle()),
                       ),
                     ],

@@ -494,7 +494,7 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
                         },
                   style: AppStyles.ConfirmbuttonStyle(),
                   child: Text(
-                    'CONFIRM',
+                    'ยืนยัน',
                     style: AppStyles.ConfirmbuttonTextStyle(),
                   ),
                 ),

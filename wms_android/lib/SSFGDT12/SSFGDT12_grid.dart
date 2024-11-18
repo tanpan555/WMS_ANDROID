@@ -482,7 +482,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                               },
                               style: AppStyles.ConfirmbuttonStyle(),
                               child: Text(
-                                'Confirm',
+                                'ยืนยัน',
                                 style: AppStyles.ConfirmbuttonTextStyle(),
                               ),
                             ),
@@ -1442,7 +1442,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                             if (checkCountQTY.toString() !=
                                     count_qty.toString() ||
                                 checkRemake != remark) {
-                              showExitWarningDialog();
+                              showExitWarningDialog(context);
                             } else {
                               Navigator.of(context).pop(false);
                               fetchData(urlLoad);
@@ -1730,7 +1730,11 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                   SizedBox(width: 10),
                   Text(
                     'แจ้งเตือน',
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
                   ),
                 ],
               ),
@@ -1806,7 +1810,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                           side: const BorderSide(color: Colors.grey),
                         ),
                         child: const Text(
-                          'Cancel',
+                          'ยกเลิก',
                         ),
                       ),
                       const SizedBox(
@@ -1821,7 +1825,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                           side: const BorderSide(color: Colors.grey),
                         ),
                         child: const Text(
-                          'OK',
+                          'ตกลง',
                         ),
                       ),
                     ],
@@ -2002,7 +2006,11 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                     // SizedBox(width: 10),
                     Text(
                       'แจ้งเตือน',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                      ),
                     ),
                   ],
                 ),
@@ -2055,7 +2063,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       side: const BorderSide(color: Colors.grey),
                     ),
                     child: const Text(
-                      'OK',
+                      'ตกลง',
                     ),
                   ),
                 ],
@@ -2068,217 +2076,48 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
   void showDialogSelectDataStatusConfirmSubmit() {
     showDialog(
       context: context,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey, // สีของเส้น
-                            width: 1.0, // ความหนาของเส้น
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          RichText(
-                            text: const TextSpan(
-                              text: 'สถานะ',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                              ),
-                              children: const [
-                                TextSpan(
-                                  text: ' *',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics:
-                                const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
-                            itemCount: dropdownStatusSubmit.length,
-                            itemBuilder: (context, index) {
-                              // ดึงข้อมูลรายการจาก dataCard
-                              var item = dropdownStatusSubmit[index];
-
-                              // return GestureDetector(
-                              //   onTap: () {
-                              //     setState(() {
-                              //       dataLocator = item['location_code'];
-                              //     });
-                              //   },
-                              //   child: SizedBox(
-                              //     child: Text('${item['location_code']}'),
-                              //   ),
-                              // );
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
-                                      width: 2.0, // ความหนาของขอบ
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                        10.0), // ทำให้ขอบมีความโค้ง
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                      vertical:
-                                          8.0), // เพิ่ม padding ด้านซ้าย-ขวา และ ด้านบน-ล่าง
-                                  child: Text(
-                                    item['d'].toString(),
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      // fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    selectedStatusSubmit = item['d'];
-                                    statusCondition = item['r'];
-                                    dataLovStatusConfirmSubmitController.text =
-                                        selectedStatusSubmit;
-                                    // -----------------------------------------
-                                    print(
-                                        'dataLovStatusConfirmSubmitController New: $dataLovStatusConfirmSubmitController Type : ${dataLovStatusConfirmSubmitController.runtimeType}');
-                                    print(
-                                        'selectedStatusSubmit New: $selectedStatusSubmit Type : ${selectedStatusSubmit.runtimeType}');
-                                    print(
-                                        'statusCondition New: $statusCondition Type : ${statusCondition.runtimeType}');
-                                  });
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    )
-
-                    // ช่องค้นหา
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customSelectLovDialog(
+          context: context,
+          headerText: 'สถานะ',
+          data: dropdownStatusSubmit,
+          displayItem: (item) => '${item['d'] ?? ''}',
+          onTap: (item) {
+            Navigator.of(context).pop();
+            setState(() {
+              selectedStatusSubmit = item['d'];
+              statusCondition = item['r'];
+              dataLovStatusConfirmSubmitController.text = selectedStatusSubmit;
+              // -----------------------------------------
+              print(
+                  'dataLovStatusConfirmSubmitController New: $dataLovStatusConfirmSubmitController Type : ${dataLovStatusConfirmSubmitController.runtimeType}');
+              print(
+                  'selectedStatusSubmit New: $selectedStatusSubmit Type : ${selectedStatusSubmit.runtimeType}');
+              print(
+                  'statusCondition New: $statusCondition Type : ${statusCondition.runtimeType}');
+            });
+          },
         );
       },
     );
   }
 
-  void showExitWarningDialog() {
-    showDialog(
+  Future<bool> showExitWarningDialog(BuildContext context) async {
+    return await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.notification_important,
-                      color: Colors.red,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'แจ้งเตือน',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop(false);
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            content: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    Text(
-                      'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่',
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
-              ),
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('Cancel'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(true);
-                      Navigator.of(context).pop(true);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('OK'),
-                  ),
-                ],
-              )
-            ]);
+        return DialogStyles.warningNotSaveDialog(
+          context: context,
+          textMessage: 'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?',
+          onCloseDialog: () {
+            Navigator.of(context).pop();
+          },
+          onConfirmDialog: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+        );
       },
     );
   }

@@ -248,53 +248,53 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
 
   void setDataFirstLoad() {
     // ----------------------------- Start Ware Code
-    displayStartWareCode = '--';
+    displayStartWareCode = 'ทั้งหมด';
     returnStartWareCode = 'null';
-    startWareCodeController.text = '--';
+    startWareCodeController.text = 'ทั้งหมด';
     // ----------------------------- End Ware Code
-    displayEndWareCode = '--';
+    displayEndWareCode = 'ทั้งหมด';
     returnEndWareCode = 'null';
-    endWareCodeController.text = '--';
+    endWareCodeController.text = 'ทั้งหมด';
     // ----------------------------- Start Loc
-    displayStartLoc = '--';
+    displayStartLoc = 'ทั้งหมด';
     returnStartLoc = 'null';
-    startLocController.text = '--';
+    startLocController.text = 'ทั้งหมด';
     // ----------------------------- End Loc
-    displayEndLoc = '--';
+    displayEndLoc = 'ทั้งหมด';
     returnEndLoc = 'null';
-    endLocController.text = '--';
+    endLocController.text = 'ทั้งหมด';
     // ----------------------------- Start Group
-    displayStartGroup = '--';
+    displayStartGroup = 'ทั้งหมด';
     returnStartGroup = 'null';
-    startGroupController.text = '--';
+    startGroupController.text = 'ทั้งหมด';
     // ----------------------------- End Group
-    displayEndGroup = '--';
+    displayEndGroup = 'ทั้งหมด';
     returnEndGroup = 'null';
-    endGroupController.text = '--';
+    endGroupController.text = 'ทั้งหมด';
     // ----------------------------- Start Category
-    displayStartCategory = '--';
+    displayStartCategory = 'ทั้งหมด';
     returnStartCategory = 'null';
-    startCategoryController.text = '--';
+    startCategoryController.text = 'ทั้งหมด';
     // ----------------------------- End Category
-    displayEndCategory = '--';
+    displayEndCategory = 'ทั้งหมด';
     returnEndCategory = 'null';
-    endCategoryController.text = '--';
+    endCategoryController.text = 'ทั้งหมด';
     // ----------------------------- Start Sub Category
-    displayStartSubCategory = '--';
+    displayStartSubCategory = 'ทั้งหมด';
     returnStartSubCategory = 'null';
-    startSubCategoryController.text = '--';
+    startSubCategoryController.text = 'ทั้งหมด';
     // ----------------------------- End Sub Category
-    displayEndSubCategory = '--';
+    displayEndSubCategory = 'ทั้งหมด';
     returnEndSubCategory = 'null';
-    endSubCategoryController.text = '--';
+    endSubCategoryController.text = 'ทั้งหมด';
     // ----------------------------- Start Item
-    displayStartItem = '--';
+    displayStartItem = 'ทั้งหมด';
     returnStartItem = 'null';
-    startItemController.text = '--';
+    startItemController.text = 'ทั้งหมด';
     // ----------------------------- End Item
-    displayEndItem = '--';
+    displayEndItem = 'ทั้งหมด';
     returnEndItem = 'null';
-    endItemController.text = '--';
+    endItemController.text = 'ทั้งหมด';
   }
 
   Future<void> selectLovDate() async {
@@ -432,7 +432,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndWareCode =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-            if (check == '0' && displayEndWareCode != '--') {
+            if (check == '0' && displayEndWareCode != 'ทั้งหมด') {
               var match = dataLovEndWareCode.firstWhere(
                 (element) =>
                     element['someKey'].toString() == displayEndWareCode,
@@ -447,9 +447,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             }
 
             if (check == '1') {
-              displayEndWareCode = '--';
+              displayEndWareCode = 'ทั้งหมด';
               returnEndWareCode = 'null';
-              endWareCodeController.text = '--';
+              endWareCodeController.text = 'ทั้งหมด';
             }
             if (isFirstLoad == false) {
               if (mounted) {
@@ -490,9 +490,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
             if (check == '1') {
-              displayStartLoc = '--';
+              displayStartLoc = 'ทั้งหมด';
               returnStartLoc = 'null';
-              startLocController.text = '--';
+              startLocController.text = 'ทั้งหมด';
             }
 
             if (isFirstLoad == false) {
@@ -535,7 +535,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndLoc =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-            if (check == '0' && displayEndLoc != '--') {
+            if (check == '0' && displayEndLoc != 'ทั้งหมด') {
               var match = dataLovEndLoc.firstWhere(
                 (element) => element['someKey'].toString() == displayEndLoc,
                 orElse: () => {'someKey': displayStartLoc},
@@ -549,9 +549,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             }
 
             if (check == '1') {
-              displayEndLoc = '--';
+              displayEndLoc = 'ทั้งหมด';
               returnEndLoc = 'null';
-              endLocController.text = '--';
+              endLocController.text = 'ทั้งหมด';
             }
 
             if (isFirstLoad == false) {
@@ -626,7 +626,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndGroup =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-            if (check == '0' && displayEndGroup != '--') {
+            if (check == '0' && displayEndGroup != 'ทั้งหมด') {
               var match = dataLovEndGroup.firstWhere(
                 (element) => element['someKey'].toString() == displayEndGroup,
                 orElse: () => {'someKey': displayStartGroup},
@@ -678,9 +678,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
             if (check == '1') {
-              displayStartCategory = '--';
+              displayStartCategory = 'ทั้งหมด';
               returnStartCategory = 'null';
-              startCategoryController.text = '--';
+              startCategoryController.text = 'ทั้งหมด';
             }
 
             if (isFirstLoad == false) {
@@ -722,7 +722,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-            if (check == '0' && displayEndCategory != '--') {
+            if (check == '0' && displayEndCategory != 'ทั้งหมด') {
               var match = dataLovEndCategory.firstWhere(
                 (element) =>
                     element['someKey'].toString() == displayEndCategory,
@@ -737,9 +737,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             }
 
             if (check == '1') {
-              displayEndCategory = '--';
+              displayEndCategory = 'ทั้งหมด';
               returnEndCategory = 'null';
-              endCategoryController.text = '--';
+              endCategoryController.text = 'ทั้งหมด';
             }
 
             if (isFirstLoad == false) {
@@ -783,9 +783,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
             if (check == '1') {
-              displayStartSubCategory = '--';
+              displayStartSubCategory = 'ทั้งหมด';
               returnStartSubCategory = 'null';
-              startSubCategoryController.text = '--';
+              startSubCategoryController.text = 'ทั้งหมด';
             }
 
             if (isFirstLoad == false) {
@@ -829,7 +829,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndSubCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-            if (check == '0' && displayEndSubCategory != '--') {
+            if (check == '0' && displayEndSubCategory != 'ทั้งหมด') {
               var match = dataLovEndSubCategory.firstWhere(
                 (element) =>
                     element['someKey'].toString() == displayEndSubCategory,
@@ -844,9 +844,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             }
 
             if (check == '1') {
-              displayEndSubCategory = '--';
+              displayEndSubCategory = 'ทั้งหมด';
               returnEndSubCategory = 'null';
-              endSubCategoryController.text = '--';
+              endSubCategoryController.text = 'ทั้งหมด';
             }
 
             if (isFirstLoad == false) {
@@ -893,9 +893,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
             if (check == '1') {
-              displayStartItem = '--';
+              displayStartItem = 'ทั้งหมด';
               returnStartItem = 'null';
-              startItemController.text = '--';
+              startItemController.text = 'ทั้งหมด';
             }
 
             if (isFirstLoad == false) {
@@ -942,7 +942,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             dataLovEndItem =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-            if (check == '0' && displayEndItem != '') {
+            if (check == '0' && displayEndItem != 'ทั้งหมด') {
               var match = dataLovEndItem.firstWhere(
                 (element) => element['someKey'].toString() == displayEndItem,
                 orElse: () => {'someKey': displayStartItem},
@@ -956,9 +956,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             }
 
             if (check == '1') {
-              displayEndItem = '--';
+              displayEndItem = 'ทั้งหมด';
               returnEndItem = 'null';
-              endItemController.text = '--';
+              endItemController.text = 'ทั้งหมด';
             }
 
             if (isFirstLoad == true) {
@@ -1999,20 +1999,20 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           onPressed: () async {
                             setState(() {
                               selectedRadio = '1';
-                              displayLovDate = '--';
-                              displayLovDocNo = '--';
-                              displayStartWareCode = '--';
-                              displayEndWareCode = '--';
-                              displayStartLoc = '--';
-                              displayEndLoc = '--';
-                              displayStartGroup = '--';
-                              displayEndGroup = '--';
-                              displayStartCategory = '--';
-                              displayEndCategory = '--';
-                              displayStartSubCategory = '--';
-                              displayEndSubCategory = '--';
-                              displayStartItem = '--';
-                              displayEndItem = '--';
+                              displayLovDate = 'ทั้งหมด';
+                              displayLovDocNo = 'ทั้งหมด';
+                              displayStartWareCode = 'ทั้งหมด';
+                              displayEndWareCode = 'ทั้งหมด';
+                              displayStartLoc = 'ทั้งหมด';
+                              displayEndLoc = 'ทั้งหมด';
+                              displayStartGroup = 'ทั้งหมด';
+                              displayEndGroup = 'ทั้งหมด';
+                              displayStartCategory = 'ทั้งหมด';
+                              displayEndCategory = 'ทั้งหมด';
+                              displayStartSubCategory = 'ทั้งหมด';
+                              displayEndSubCategory = 'ทั้งหมด';
+                              displayStartItem = 'ทั้งหมด';
+                              displayEndItem = 'ทั้งหมด';
                               returnLovDate = 'null';
                               returnLovDocNo = 'null';
                               returnStartWareCode = 'null';
@@ -2028,20 +2028,20 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                               returnStartItem = 'null';
                               returnEndItem = 'null';
 
-                              dateController.text = '--';
-                              docNoController.text = '--';
-                              startWareCodeController.text = '--';
-                              endWareCodeController.text = '--';
-                              startLocController.text = '--';
-                              endLocController.text = '--';
-                              startGroupController.text = '--';
-                              endGroupController.text = '--';
-                              startCategoryController.text = '--';
-                              endCategoryController.text = '--';
-                              startSubCategoryController.text = '--';
-                              endSubCategoryController.text = '--';
-                              startItemController.text = '--';
-                              endItemController.text = '--';
+                              dateController.text = 'ทั้งหมด';
+                              docNoController.text = 'ทั้งหมด';
+                              startWareCodeController.text = 'ทั้งหมด';
+                              endWareCodeController.text = 'ทั้งหมด';
+                              startLocController.text = 'ทั้งหมด';
+                              endLocController.text = 'ทั้งหมด';
+                              startGroupController.text = 'ทั้งหมด';
+                              endGroupController.text = 'ทั้งหมด';
+                              startCategoryController.text = 'ทั้งหมด';
+                              endCategoryController.text = 'ทั้งหมด';
+                              startSubCategoryController.text = 'ทั้งหมด';
+                              endSubCategoryController.text = 'ทั้งหมด';
+                              startItemController.text = 'ทั้งหมด';
+                              endItemController.text = 'ทั้งหมด';
 
                               checkUpdateData = false;
                             });
@@ -2144,6 +2144,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 displayLovDocNo = '';
                 returnLovDocNo = '';
                 docNoController.clear();
+                searchController1.clear();
                 isLoading = false;
               }
               print(
@@ -2212,7 +2213,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           docString: (item) =>
               '${item['ware_code'] ?? ''} ${item['ware_name'] ?? ''}',
           titleText: (item) => '${item['ware_code'] ?? ''}' == 'null'
-              ? '--No Value Set--'
+              ? 'ทั้งหมด'
               : '${item['ware_code'] ?? ''}',
           subtitleText: (item) =>
               '${item['ware_name'] ?? ''}' == '--No Value Set--'
@@ -2224,14 +2225,17 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             setState(() {
               returnStartWareCode = '${item['ware_code'] ?? ''}';
               displayStartWareCode = '${item['ware_code'] ?? ''}' == 'null'
-                  ? '--'
+                  ? 'ทั้งหมด'
                   : '${item['ware_code'] ?? ''}';
               startWareCodeController.text = displayStartWareCode.toString();
               if (mounted) {
                 if (returnStartWareCode.isNotEmpty) {
                   selectLovEndWareCode('0');
+                  searchController4.clear;
                   selectLovStartLoc('1');
+                  searchController5.clear;
                   selectLovEndLoc('1');
+                  searchController6.clear;
                 }
               }
               isLoading = false;
@@ -2265,7 +2269,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           docString: (item) =>
               '${item['ware_code'] ?? ''} ${item['ware_name'] ?? ''}',
           titleText: (item) => '${item['ware_code'] ?? ''}' == 'null'
-              ? '--No Value Set--'
+              ? 'ทั้งหมด'
               : '${item['ware_code'] ?? ''}',
           subtitleText: (item) =>
               '${item['ware_name'] ?? ''}' == '--No Value Set--'
@@ -2277,16 +2281,18 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             setState(() {
               returnEndWareCode = '${item['ware_code'] ?? ''}';
               displayEndWareCode = '${item['ware_code'] ?? ''}' == 'null'
-                  ? '--'
+                  ? 'ทั้งหมด'
                   : '${item['ware_code'] ?? ''}';
               print('ware_code : ${item['ware_code'] ?? ''}');
               endWareCodeController.text = displayEndWareCode.toString();
               if (returnStartLoc.isNotEmpty) {
-                // selectLovStartLoc();
+                selectLovStartLoc('1');
+                searchController5.clear;
                 // displayStartLoc = '--';
                 // returnStartLoc = 'null';
                 // startLocController.text = '--';
-                // selectLovEndLoc();
+                selectLovEndLoc('1');
+                searchController6.clear;
                 // displayEndLoc = '--';
                 // returnEndLoc = 'null';
                 // endLocController.text = '--';
@@ -2322,7 +2328,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           docString: (item) =>
               '${item['location_code'] ?? ''} ${item['location_name'] ?? ''}',
           titleText: (item) => '${item['location_code'] ?? ''}' == 'null'
-              ? '--No Value Set--'
+              ? 'ทั้งหมด'
               : '${item['location_code'] ?? ''}',
           subtitleText: (item) =>
               '${item['location_name'] ?? ''}' == '--No Value Set--'
@@ -2334,11 +2340,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             setState(() {
               returnStartLoc = '${item['location_code'] ?? ''}';
               displayStartLoc = '${item['location_code'] ?? ''}' == 'null'
-                  ? '--'
+                  ? 'ทั้งหมด'
                   : '${item['location_code'] ?? ''}';
               startLocController.text = displayStartLoc.toString();
               if (returnEndWareCode.isNotEmpty) {
                 selectLovEndLoc('0');
+                searchController6.clear;
                 isLoading = false;
               }
               // -----------------------------------------
@@ -2371,7 +2378,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           docString: (item) =>
               '${item['location_code'] ?? ''} ${item['location_name'] ?? ''}',
           titleText: (item) => '${item['location_code'] ?? ''}' == 'null'
-              ? '--No Value Set--'
+              ? 'ทั้งหมด'
               : '${item['location_code'] ?? ''}',
           subtitleText: (item) =>
               '${item['location_name'] ?? ''}' == '--No Value Set--'
@@ -2382,7 +2389,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             setState(() {
               returnEndLoc = '${item['location_code'] ?? ''}';
               displayEndLoc = '${item['location_code'] ?? ''}' == 'null'
-                  ? '--'
+                  ? 'ทั้งหมด'
                   : '${item['location_code'] ?? ''}';
               endLocController.text = displayEndLoc.toString();
               // -----------------------------------------
@@ -2415,7 +2422,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           docString: (item) =>
               '${item['group_code'] ?? ''} ${item['group_name'] ?? ''}',
           titleText: (item) => '${item['group_code'] ?? ''}' == 'null'
-              ? '--No Value Set--'
+              ? 'ทั้งหมด'
               : '${item['group_code'] ?? ''}',
           subtitleText: (item) =>
               '${item['group_name'] ?? ''}' == '--No Value Set--'
@@ -2427,17 +2434,24 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             setState(() {
               returnStartGroup = '${item['group_code'] ?? ''}';
               displayStartGroup = '${item['group_code'] ?? ''}' == 'null'
-                  ? '--'
+                  ? 'ทั้งหมด'
                   : '${item['group_code'] ?? ''}';
               startGroupController.text = displayStartGroup.toString();
               if (returnStartGroup.isNotEmpty) {
                 selectLovEndGroup('0');
+                searchController8.clear;
                 selectLovStartCategory('1');
+                searchController9.clear;
                 selectLovEndCategory('1');
+                searchController10.clear;
                 selectLovStartSubCategory('1');
+                searchController11.clear;
                 selectLovEndSubCategory('1');
+                searchController12.clear;
                 selectLovStartItem('1');
+                searchController13.clear;
                 selectLovEndItem('1');
+                searchController14.clear;
                 isLoading = false;
               }
               // -----------------------------------------
@@ -2470,7 +2484,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           docString: (item) =>
               '${item['group_code'] ?? ''} ${item['group_name'] ?? ''}',
           titleText: (item) => '${item['group_code'] ?? ''}' == 'null'
-              ? '--No Value Set--'
+              ? 'ทั้งหมด'
               : '${item['group_code'] ?? ''}',
           subtitleText: (item) =>
               '${item['group_name'] ?? ''}' == '--No Value Set--'
@@ -2482,16 +2496,22 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             setState(() {
               returnEndGroup = '${item['group_code'] ?? ''}';
               displayEndGroup = '${item['group_code'] ?? ''}' == 'null'
-                  ? '--'
+                  ? 'ทั้งหมด'
                   : '${item['group_code'] ?? ''}';
               endGroupController.text = displayEndGroup.toString();
               if (returnEndGroup.isNotEmpty) {
                 selectLovStartCategory('1');
+                searchController9.clear;
                 selectLovEndCategory('1');
+                searchController10.clear;
                 selectLovStartSubCategory('1');
+                searchController11.clear;
                 selectLovEndSubCategory('1');
+                searchController12.clear;
                 selectLovStartItem('1');
+                searchController13.clear;
                 selectLovEndItem('1');
+                searchController14.clear;
                 isLoading = false;
               }
               // -----------------------------------------
@@ -2524,7 +2544,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           docString: (item) =>
               '${item['category_code'] ?? ''} ${item['category_desc'] ?? ''}',
           titleText: (item) => '${item['category_code'] ?? ''}' == 'null'
-              ? '--No Value Set--'
+              ? 'ทั้งหมด'
               : '${item['category_code'] ?? ''}',
           subtitleText: (item) =>
               '${item['category_desc'] ?? ''}' == '--No Value Set--'
@@ -2536,15 +2556,20 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             setState(() {
               returnStartCategory = '${item['category_code'] ?? ''}';
               displayStartCategory = '${item['category_code'] ?? ''}' == 'null'
-                  ? '--'
+                  ? 'ทั้งหมด'
                   : '${item['category_code'] ?? ''}';
               startCategoryController.text = displayStartCategory.toString();
               if (returnStartCategory.isNotEmpty) {
                 selectLovEndCategory('0');
+                searchController10.clear;
                 selectLovStartSubCategory('1');
+                searchController11.clear;
                 selectLovEndSubCategory('1');
+                searchController12.clear;
                 selectLovStartItem('1');
+                searchController13.clear;
                 selectLovEndItem('1');
+                searchController14.clear;
                 isLoading = false;
               }
               // -----------------------------------------
@@ -2577,7 +2602,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           docString: (item) =>
               '${item['category_code'] ?? ''} ${item['category_desc'] ?? ''}',
           titleText: (item) => '${item['category_code'] ?? ''}' == 'null'
-              ? '--No Value Set--'
+              ? 'ทั้งหมด'
               : '${item['category_code'] ?? ''}',
           subtitleText: (item) =>
               '${item['category_desc'] ?? ''}' == '--No Value Set--'
@@ -2589,14 +2614,18 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             setState(() {
               returnEndCategory = '${item['category_code'] ?? ''}';
               displayEndCategory = '${item['category_code'] ?? ''}' == 'null'
-                  ? '--'
+                  ? 'ทั้งหมด'
                   : '${item['category_code'] ?? ''}';
               endCategoryController.text = displayEndCategory.toString();
               if (returnEndCategory.isNotEmpty) {
                 selectLovStartSubCategory('1');
+                searchController11.clear;
                 selectLovEndSubCategory('1');
+                searchController12.clear;
                 selectLovStartItem('1');
+                searchController13.clear;
                 selectLovEndItem('1');
+                searchController14.clear;
                 isLoading = false;
               }
               // -----------------------------------------
@@ -2629,7 +2658,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           docString: (item) =>
               '${item['sub_cat_code'] ?? ''} ${item['sub_cat_desc'] ?? ''}',
           titleText: (item) => '${item['sub_cat_code'] ?? ''}' == 'null'
-              ? '--No Value Set--'
+              ? 'ทั้งหมด'
               : '${item['sub_cat_code'] ?? ''}',
           subtitleText: (item) =>
               '${item['sub_cat_desc'] ?? ''}' == '--No Value Set--'
@@ -2642,14 +2671,17 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               returnStartSubCategory = '${item['sub_cat_code'] ?? ''}';
               displayStartSubCategory =
                   '${item['sub_cat_code'] ?? ''}' == 'null'
-                      ? '--'
+                      ? 'ทั้งหมด'
                       : '${item['sub_cat_code'] ?? ''}';
               startSubCategoryController.text =
                   displayStartSubCategory.toString();
               if (returnStartSubCategory.isNotEmpty) {
                 selectLovEndSubCategory('0');
+                searchController12.clear;
                 selectLovStartItem('1');
+                searchController13.clear;
                 selectLovEndItem('1');
+                searchController14.clear;
                 isLoading = false;
               }
               // -----------------------------------------
@@ -2682,7 +2714,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           docString: (item) =>
               '${item['sub_cat_code'] ?? ''} ${item['sub_cat_desc'] ?? ''}',
           titleText: (item) => '${item['sub_cat_code'] ?? ''}' == 'null'
-              ? '--No Value Set--'
+              ? 'ทั้งหมด'
               : '${item['sub_cat_code'] ?? ''}',
           subtitleText: (item) =>
               '${item['sub_cat_desc'] ?? ''}' == '--No Value Set--'
@@ -2694,12 +2726,14 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             setState(() {
               returnEndSubCategory = '${item['sub_cat_code'] ?? ''}';
               displayEndSubCategory = '${item['sub_cat_code'] ?? ''}' == 'null'
-                  ? '--'
+                  ? 'ทั้งหมด'
                   : '${item['sub_cat_code'] ?? ''}';
               endSubCategoryController.text = displayEndSubCategory.toString();
               if (returnEndSubCategory.isNotEmpty) {
                 selectLovStartItem('1');
+                searchController13.clear;
                 selectLovEndItem('1');
+                searchController14.clear;
                 isLoading = false;
               }
               // -----------------------------------------
@@ -2732,7 +2766,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           docString: (item) =>
               '${item['item_code'] ?? ''} ${item['name'] ?? ''}',
           titleText: (item) => '${item['item_code'] ?? ''}' == 'null'
-              ? '--No Value Set--'
+              ? 'ทั้งหมด'
               : '${item['item_code'] ?? ''}',
           subtitleText: (item) => '${item['name'] ?? ''}' == '--No Value Set--'
               ? ''
@@ -2743,11 +2777,12 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             setState(() {
               returnStartItem = '${item['item_code'] ?? ''}';
               displayStartItem = '${item['item_code'] ?? ''}' == 'null'
-                  ? '--'
+                  ? 'ทั้งหมด'
                   : '${item['item_code'] ?? ''}';
               startItemController.text = displayStartItem.toString();
               if (returnStartItem.isNotEmpty) {
                 selectLovEndItem('0');
+                searchController14.clear;
                 isLoading = false;
               }
               // -----------------------------------------
@@ -2780,7 +2815,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           docString: (item) =>
               '${item['item_code'] ?? ''} ${item['name'] ?? ''}',
           titleText: (item) => '${item['item_code'] ?? ''}' == 'null'
-              ? '--No Value Set--'
+              ? 'ทั้งหมด'
               : '${item['item_code'] ?? ''}',
           subtitleText: (item) => '${item['name'] ?? ''}' == '--No Value Set--'
               ? ''
@@ -2790,7 +2825,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             setState(() {
               returnEndItem = item['item_code'] ?? '';
               displayEndItem = '${item['item_code'] ?? ''}' == 'null'
-                  ? '--'
+                  ? 'ทั้งหมด'
                   : '${item['item_code'] ?? ''}';
               endItemController.text = displayEndItem.toString();
               // -----------------------------------------

@@ -738,6 +738,10 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                   //     iconImageYorN =
                                   //         'assets/images/rt_machine_off.png';
                                   // }
+                                  // return Padding(
+                                  //     padding: const EdgeInsets.only(
+                                  //         top: 10.0, bottom: 20.0),
+                                  //     child:
                                   return CardStyles.cardPage(
                                     showON: item['qc_yn'] == 'Y'
                                         ? true
@@ -790,6 +794,7 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                                     titleText:
                                         '${item['po_date'] ?? ''} ${item['po_no'] ?? ''} ${item['item_stype_desc'] ?? ''}',
                                   );
+                                  // );
                                 } else {
                                   // displayedData.length <= 3
                                   // ?

@@ -412,65 +412,15 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.notification_important,
-                    color: Colors.red,
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    'แจ้งเตือน',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    messageAlert,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ตกลง'),
-                      ),
-                    ],
-                  )
-                ])),
-          ),
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () {
+            Navigator.of(context).pop();
+          },
+          onConfirm: () {
+            Navigator.of(context).pop();
+          },
         );
       },
     );
@@ -479,120 +429,28 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
   void showDialogSelectLovReason() {
     showDialog(
       context: context,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey, // สีของเส้น
-                            width: 1.0, // ความหนาของเส้น
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Reason',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics:
-                                const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
-                            itemCount: dataLovReason.length,
-                            itemBuilder: (context, index) {
-                              // ดึงข้อมูลรายการจาก dataCard
-                              var item = dataLovReason[index];
-
-                              // return GestureDetector(
-                              //   onTap: () {
-                              //     setState(() {
-                              //       dataLocator = item['location_code'];
-                              //     });
-                              //   },
-                              //   child: SizedBox(
-                              //     child: Text('${item['location_code']}'),
-                              //   ),
-                              // );
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
-                                      width: 2.0, // ความหนาของขอบ
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                        10.0), // ทำให้ขอบมีความโค้ง
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                      vertical:
-                                          8.0), // เพิ่ม padding ด้านซ้าย-ขวา และ ด้านบน-ล่าง
-                                  child: Text(
-                                    item['d'],
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      // fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    reasonLovD = item['d'];
-                                    reasonLovR = item['r'];
-                                    dataLovReasonController.text = reasonLovD;
-                                    // -----------------------------------------
-                                    print(
-                                        'dataLovReasonController New: $dataLovReasonController Type : ${dataLovReasonController.runtimeType}');
-                                    print(
-                                        'reasonLovD New: $reasonLovD Type : ${reasonLovD.runtimeType}');
-                                    print(
-                                        'reasonLovR New: $reasonLovR Type : ${reasonLovR.runtimeType}');
-                                  });
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    )
-
-                    // ช่องค้นหา
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customSelectLovDialog(
+          context: context,
+          headerText: 'Reason',
+          data: dataLovReason,
+          displayItem: (item) => '${item['d'] ?? ''}',
+          onTap: (item) {
+            Navigator.of(context).pop();
+            setState(() {
+              reasonLovD = item['d'];
+              reasonLovR = item['r'];
+              dataLovReasonController.text = reasonLovD;
+              // -----------------------------------------
+              print(
+                  'dataLovReasonController New: $dataLovReasonController Type : ${dataLovReasonController.runtimeType}');
+              print(
+                  'reasonLovD New: $reasonLovD Type : ${reasonLovD.runtimeType}');
+              print(
+                  'reasonLovR New: $reasonLovR Type : ${reasonLovR.runtimeType}');
+            });
+          },
         );
       },
     );
@@ -601,121 +459,28 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
   void showDialogSelectLovReplaceLocation() {
     showDialog(
       context: context,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey, // สีของเส้น
-                            width: 1.0, // ความหนาของเส้น
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Replace Location',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics:
-                                const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
-                            itemCount: dropdownItemsReasonRpLoc.length,
-                            itemBuilder: (context, index) {
-                              // ดึงข้อมูลรายการจาก dataCard
-                              var item = dropdownItemsReasonRpLoc[index];
-
-                              // return GestureDetector(
-                              //   onTap: () {
-                              //     setState(() {
-                              //       dataLocator = item['location_code'];
-                              //     });
-                              //   },
-                              //   child: SizedBox(
-                              //     child: Text('${item['location_code']}'),
-                              //   ),
-                              // );
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
-                                      width: 2.0, // ความหนาของขอบ
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                        10.0), // ทำให้ขอบมีความโค้ง
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                      vertical:
-                                          8.0), // เพิ่ม padding ด้านซ้าย-ขวา และ ด้านบน-ล่าง
-                                  child: Text(
-                                    item['d'].toString(),
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      // fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    reasonRpLocD = item['d'];
-                                    reasonRpLocR = item['r'];
-                                    dataLovReplaceLocationController.text =
-                                        reasonRpLocD;
-                                    // -----------------------------------------
-                                    print(
-                                        'dataLovReplaceLocationController New: $dataLovReplaceLocationController Type : ${dataLovReplaceLocationController.runtimeType}');
-                                    print(
-                                        'reasonRpLocD New: $reasonRpLocD Type : ${reasonRpLocD.runtimeType}');
-                                    print(
-                                        'reasonRpLocR New: $reasonRpLocR Type : ${reasonRpLocR.runtimeType}');
-                                  });
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    )
-
-                    // ช่องค้นหา
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customSelectLovDialog(
+          context: context,
+          headerText: 'Replace Location',
+          data: dropdownItemsReasonRpLoc,
+          displayItem: (item) => '${item['d'] ?? ''}',
+          onTap: (item) {
+            Navigator.of(context).pop();
+            setState(() {
+              reasonRpLocD = item['d'];
+              reasonRpLocR = item['r'];
+              dataLovReplaceLocationController.text = reasonRpLocD;
+              // -----------------------------------------
+              print(
+                  'dataLovReplaceLocationController New: $dataLovReplaceLocationController Type : ${dataLovReplaceLocationController.runtimeType}');
+              print(
+                  'reasonRpLocD New: $reasonRpLocD Type : ${reasonRpLocD.runtimeType}');
+              print(
+                  'reasonRpLocR New: $reasonRpLocR Type : ${reasonRpLocR.runtimeType}');
+            });
+          },
         );
       },
     );
@@ -724,121 +489,28 @@ class _Ssfgdt09lReasonState extends State<Ssfgdt09lReason> {
   void showDialogSelectLovReplaceLot() {
     showDialog(
       context: context,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey, // สีของเส้น
-                            width: 1.0, // ความหนาของเส้น
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Replace LOT',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics:
-                                const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
-                            itemCount: dataLovReasonLot.length,
-                            itemBuilder: (context, index) {
-                              // ดึงข้อมูลรายการจาก dataCard
-                              var item = dataLovReasonLot[index];
-
-                              // return GestureDetector(
-                              //   onTap: () {
-                              //     setState(() {
-                              //       dataLocator = item['location_code'];
-                              //     });
-                              //   },
-                              //   child: SizedBox(
-                              //     child: Text('${item['location_code']}'),
-                              //   ),
-                              // );
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey, // สีของขอบทั้ง 4 ด้าน
-                                      width: 2.0, // ความหนาของขอบ
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                        10.0), // ทำให้ขอบมีความโค้ง
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                      vertical:
-                                          8.0), // เพิ่ม padding ด้านซ้าย-ขวา และ ด้านบน-ล่าง
-                                  child: Text(
-                                    item['d'],
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      // fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    reasonRpLotD = item['d'];
-                                    reasonRpLotR = item['r'];
-                                    dataLovReplaceLotController.text =
-                                        reasonRpLotD;
-                                    // -----------------------------------------
-                                    print(
-                                        'dataLovReplaceLotController New: $dataLovReplaceLotController Type : ${dataLovReplaceLotController.runtimeType}');
-                                    print(
-                                        'reasonRpLotD New: $reasonRpLotD Type : ${reasonRpLotD.runtimeType}');
-                                    print(
-                                        'reasonRpLotR New: $reasonRpLotR Type : ${reasonRpLotR.runtimeType}');
-                                  });
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    )
-
-                    // ช่องค้นหา
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customSelectLovDialog(
+          context: context,
+          headerText: 'Replace LOT',
+          data: dataLovReasonLot,
+          displayItem: (item) => '${item['d'] ?? ''}',
+          onTap: (item) {
+            Navigator.of(context).pop();
+            setState(() {
+              reasonRpLotD = item['d'];
+              reasonRpLotR = item['r'];
+              dataLovReplaceLotController.text = reasonRpLotD;
+              // -----------------------------------------
+              print(
+                  'dataLovReplaceLotController New: $dataLovReplaceLotController Type : ${dataLovReplaceLotController.runtimeType}');
+              print(
+                  'reasonRpLotD New: $reasonRpLotD Type : ${reasonRpLotD.runtimeType}');
+              print(
+                  'reasonRpLotR New: $reasonRpLotR Type : ${reasonRpLotR.runtimeType}');
+            });
+          },
         );
       },
     );
