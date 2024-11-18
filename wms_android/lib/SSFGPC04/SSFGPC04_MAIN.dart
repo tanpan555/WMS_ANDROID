@@ -8,9 +8,9 @@ import '../styles.dart';
 import 'SSFGPC04_WARE.dart';
 
 class SSFGPC04_MAIN extends StatefulWidget {
-  const SSFGPC04_MAIN({
-    Key? key,
-  }) : super(key: key);
+  final String? v_nb_doc_no;
+
+  const SSFGPC04_MAIN({Key? key, this.v_nb_doc_no}) : super(key: key);
   @override
   _SSFGPC04_MAINState createState() => _SSFGPC04_MAINState();
 }
@@ -28,8 +28,9 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
   String selectedDate = 'null'; // Allow null for the date
   String pSoNo = 'null';
   TextEditingController _dateController = TextEditingController();
-  TextEditingController _docNoController = TextEditingController();
+  // TextEditingController _docNoController = TextEditingController();
   TextEditingController _noteController = TextEditingController();
+  late TextEditingController _docNoController;
 
   final String sDateFormat = "dd-MM-yyyy";
   final dateRegExp =
@@ -45,6 +46,15 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
   void initState() {
     super.initState();
     _dateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+    _docNoController = TextEditingController(
+      text: widget.v_nb_doc_no ?? 'AUTO',
+    );
+  }
+
+  @override
+  void dispose() {
+    _docNoController.dispose();
+    super.dispose();
   }
 
   Future<void> _selectDate(

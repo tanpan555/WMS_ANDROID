@@ -145,39 +145,15 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              Icon(
-                Icons.notification_important, // ไอคอนแจ้งเตือน
-                color: Colors.red, // สีแดง
-                size: 30,
-              ),
-              SizedBox(width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
-              Text('แจ้งเตือน'),
-              Spacer(),
-              IconButton(
-                icon: Icon(Icons.close, color: Colors.black), // ไอคอนปิด
-                onPressed: () {
-                  Navigator.of(context).pop(); // ปิด popup
-                },
-              ),
-            ],
-          ),
-          content:
-              const Text('กรุณาระบุข้อมูล รหัสคลังสินค้า'),
-          actions: [
-            TextButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                side: const BorderSide(color: Colors.grey),
-              ),
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text('กรุณาระบุข้อมูล รหัสคลังสินค้า'),
+          onClose: () {
+            Navigator.of(context).pop();
+          },
+          onConfirm: () async {
+            Navigator.of(context).pop();
+          },
         );
       },
     );
@@ -187,50 +163,17 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            children: [
-              Icon(
-                Icons.notification_important, // ไอคอนแจ้งเตือน
-                color: Colors.red, // สีแดง
-                size: 30,
-              ),
-              SizedBox(width: 8), // ระยะห่างระหว่างไอคอนกับข้อความ
-              Text('แจ้งเตือน'),
-              Spacer(),
-              IconButton(
-                icon: Icon(Icons.close, color: Colors.black), // ไอคอนปิด
-                onPressed: () {
-                  Navigator.of(context).pop(); // ปิด popup
-                },
-              ),
-            ],
-          ),
-          content: const Text('Please Confirm to process !!!'),
-          actions: [
-            TextButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                side: const BorderSide(color: Colors.grey),
-              ),
-              onPressed: () {
-                // process();
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                side: const BorderSide(color: Colors.grey),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                process(); // Proceed with processing
-              },
-              child: const Text('OK'),
-            ),
-          ],
+        return DialogStyles.alertMessageCheckDialog(
+          context: context,
+          content:
+              const Text('Please Confirm to process !!!'), // เนื้อหาใน popup
+          onClose: () {
+            Navigator.of(context).pop(); // ปิด dialog
+          },
+          onConfirm: () {
+            Navigator.of(context).pop(); // ปิด dialog
+            process(); // ดำเนินการ process
+          },
         );
       },
     );
@@ -245,8 +188,8 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
       }
     }
     try {
-      final response = await http.get(
-          Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_GROUP'));
+      final response = await http
+          .get(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_GROUP'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -319,8 +262,8 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
       }
     }
     try {
-      final response = await http
-          .get(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_CAT'
+      final response =
+          await http.get(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_CAT'
               '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
               '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'));
 
@@ -477,8 +420,8 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
       }
     }
     try {
-      final response = await http.get(
-          Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_BRAND'));
+      final response = await http
+          .get(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_BRAND'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -707,7 +650,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                           side: const BorderSide(color: Colors.grey),
                         ),
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          // Navigator.of(context).pop();
                         },
                         child: Text('ตกลง'),
                       ),
@@ -729,14 +672,15 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
-                          Navigator.of(context).pop(
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) => SSFGPC04_MAIN(
-                                  ),
+                              builder: (context) =>
+                                  SSFGPC04_MAIN(v_nb_doc_no: v_nb_doc_no),
                             ),
                           );
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
                         },
                         child: Text('OK'),
                       ),
@@ -1093,7 +1037,6 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                             } else {
                               showConfirmationDialog();
                               // Call process() if items are selected
-                              
                             }
                           },
                           style: AppStyles.ConfirmbuttonStyle(),
@@ -1128,153 +1071,66 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'จาก กลุ่มสินค้า',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            searchStartGroupController.clear();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    // ช่องค้นหา
-                    TextField(
-                      controller: searchStartGroupController,
-                      decoration: const InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final filteredItems = dataLovStartGroup.where((item) {
-                            final docString =
-                                '${item['group_code'] ?? ''} ${item['group_name'] ?? ''}'
-                                    .toLowerCase();
-                            final searchQuery = searchStartGroupController.text
-                                .trim()
-                                .toLowerCase();
-                            return docString.contains(searchQuery);
-                          }).toList();
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'จาก กลุ่มสินค้า',
+          searchController: searchStartGroupController,
+          data: dataLovStartGroup,
+          docString: (item) =>
+              '${item['group_code'] ?? ''} ${item['group_name'] ?? ''}',
+          titleText: (item) => '${item['group_code'] ?? ''}',
+          subtitleText: (item) => '${item['group_name'] ?? ''}',
+          onTap: (item) {
+            final returnCode = '${item['group_code'] ?? ''}';
+            final doc = '${item['group_code'] ?? ''}';
 
-                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-                          if (filteredItems.isEmpty) {
-                            return const Center(
-                              child: Text('No data found'),
-                            );
-                          }
+            Navigator.of(context).pop();
+            setState(() {
+              returnStartGroup = returnCode;
+              displayStartGroup = doc;
+              startGroupController.text = displayStartGroup.toString();
+              if (returnStartGroup.isNotEmpty) {
+                selectLovEndGroup();
+                displayEndGroup = '';
+                returnEndGroup = '';
+                endGroupController.clear();
+                selectLovStartCategory();
+                displayStartCategory = '';
+                returnStartCategory = '';
+                startCategoryController.clear();
+                selectLovEndCategory();
+                displayEndCategory = '';
+                returnEndCategory = '';
+                endCategoryController.clear();
+                selectLovStartSubCategory();
+                displayStartSubCategory = '';
+                returnStartSubCategory = '';
+                startSubCategoryController.clear();
+                selectLovEndSubCategory();
+                displayEndSubCategory = '';
+                returnEndSubCategory = '';
+                endSubCategoryController.clear();
+                selectLovStartItem();
+                displayStartItem = '';
+                returnStartItem = '';
+                startItemController.clear();
+                selectLovEndItem();
+                displayEndItem = '';
+                returnEndItem = '';
+                endItemController.clear();
+              }
+              searchStartGroupController.clear();
+            });
 
-                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final doc = '${item['group_code'] ?? ''}';
-                              final returnCode = '${item['group_code'] ?? ''}';
-
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  '${item['group_code'] ?? ''}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text('${item['group_name'] ?? ''}'),
-                                onTap: () {
-                                  isLoading = true;
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    returnStartGroup = returnCode;
-                                    displayStartGroup = doc;
-                                    startGroupController.text =
-                                        displayStartGroup.toString();
-                                    if (returnStartGroup.isNotEmpty) {
-                                      selectLovEndGroup();
-                                      displayEndGroup = '';
-                                      returnEndGroup = '';
-                                      endGroupController.clear();
-                                      selectLovStartCategory();
-                                      displayStartCategory = '';
-                                      returnStartCategory = '';
-                                      startCategoryController.clear();
-                                      selectLovEndCategory();
-                                      displayEndCategory = '';
-                                      returnEndCategory = '';
-                                      endCategoryController.clear();
-                                      selectLovStartSubCategory();
-                                      displayStartSubCategory = '';
-                                      returnStartSubCategory = '';
-                                      startSubCategoryController.clear();
-                                      selectLovEndSubCategory();
-                                      displayEndSubCategory = '';
-                                      returnEndSubCategory = '';
-                                      endSubCategoryController.clear();
-                                      selectLovStartItem();
-                                      displayStartItem = '';
-                                      returnStartItem = '';
-                                      startItemController.clear();
-                                      selectLovEndItem();
-                                      displayEndItem = '';
-                                      returnEndItem = '';
-                                      endItemController.clear();
-                                      isLoading = false;
-                                    }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
-                                    // -----------------------------------------
-                                    print(
-                                        'startGroupController New: $startGroupController Type : ${startGroupController.runtimeType}');
-                                    print(
-                                        'doc New: $doc Type : ${doc.runtimeType}');
-                                    print(
-                                        'displayStartGroup New: $displayStartGroup Type : ${displayStartGroup.runtimeType}');
-                                    print(
-                                        'returnStartGroup New: $returnStartGroup Type : ${returnStartGroup.runtimeType}');
-                                  });
-                                  searchStartGroupController.clear();
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+            // Debug log
+            print(
+                'startGroupController New: $startGroupController Type : ${startGroupController.runtimeType}');
+            print('doc New: $doc Type : ${doc.runtimeType}');
+            print(
+                'displayStartGroup New: $displayStartGroup Type : ${displayStartGroup.runtimeType}');
+            print(
+                'returnStartGroup New: $returnStartGroup Type : ${returnStartGroup.runtimeType}');
+          },
         );
       },
     );
