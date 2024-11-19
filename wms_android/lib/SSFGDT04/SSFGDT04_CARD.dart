@@ -600,8 +600,9 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                                           Padding(
                                             padding: const EdgeInsets.all(16.0),
                                             child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                MainAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   item['ap_name'] ?? 'No Name',

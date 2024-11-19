@@ -1135,7 +1135,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
 
                                     // Page Indicator
                                     Text(
-                                      '${(currentPage * itemsPerPage) + 1}-${(currentPage + 1) * itemsPerPage > totalCards ? totalCards : (currentPage + 1) * itemsPerPage}',
+                                      '${(currentPage * itemsPerPage) + 1} - ${(currentPage + 1) * itemsPerPage > totalCards ? totalCards : (currentPage + 1) * itemsPerPage}',
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,

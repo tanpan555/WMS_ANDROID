@@ -187,23 +187,6 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     }
   }
 
-  String formatDate(String input) {
-    if (input.length == 8) {
-      // Attempt to parse the input string as a date in ddMMyyyy format
-      final day = int.tryParse(input.substring(0, 2));
-      final month = int.tryParse(input.substring(2, 4));
-      final year = int.tryParse(input.substring(4, 8));
-      if (day != null && month != null && year != null) {
-        final date = DateTime(year, month, day);
-        if (date.year == year && date.month == month && date.day == day) {
-          // Return the formatted date if valid
-          return DateFormat('dd/MM/yyyy').format(date);
-        }
-      }
-    }
-    return input; // Return original input if invalid
-  }
-
   Future<void> fetchReceiveHeadData(String receiveNo) async {
     final String apiUrl =
         "${gb.IP_API}/apex/wms/SSINDT01/Step_2_formtest/$receiveNo/${gb.P_ERP_OU_CODE}";
@@ -566,9 +549,9 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
   Future<void> _selectReceiveDate(BuildContext context) async {
     DateTime initialDate = DateTime.now();
-    if (receiveDate.isNotEmpty) {
+    if (invoiceDate.isNotEmpty) {
       try {
-        initialDate = apiFormat.parse(receiveDate);
+        initialDate = apiFormat.parse(invoiceDate);
       } catch (e) {
         print('Error parsing date: $e');
       }
@@ -586,7 +569,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
         setState(() {
           receiveDate = apiFormat.format(picked);
           receiveDateController.text = DateFormat('dd/MM/yyyy').format(picked);
-          isDateValid = true; // Add this line to set isDateValid to true
+          isDateValid = true;
         });
       }
     }
@@ -671,7 +654,8 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                     onPressed: _isButtonDisabled
                         ? null // Disable the button when it is pressed
                         : () async {
-                            if (isDateValid == false) {
+                            if (isDateValid == false ||
+                                isInvoiceDateValid == false) {
                               return;
                             }
 
@@ -807,22 +791,25 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           TextFormField(
             controller: receiveDateController,
             decoration: InputDecoration(
-              label: Row(
-                children: [
-                  const Text(
-                    'วันที่ตรวจรับ',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(width: 2),
-                  Text(
-                    '*',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ],
+              label: RichText(
+                text: TextSpan(
+                  text: 'วันที่ตรวจรับ', // ชื่อ label
+                  style: isDateValid == false
+                      ? const TextStyle(color: Colors.red)
+                      : const TextStyle(color: Colors.black87),
+                  children: [
+                    TextSpan(
+                      text: ' *', // เพิ่มเครื่องหมาย *
+                      style: TextStyle(
+                        color: Colors.red, // สีแดงสำหรับ *
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              hintText: 'DD/MM/YYYY',
               filled: true,
               fillColor: Colors.white,
+              hintText: 'DD/MM/YYYY',
               border: InputBorder.none,
               labelStyle: TextStyle(color: Colors.black),
               hintStyle: TextStyle(color: Colors.grey),
@@ -834,6 +821,10 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             style: TextStyle(color: Colors.black),
             readOnly: false,
             onChanged: (value) {
+              setState(() {
+                checkUpdateData = true;
+              });
+
               // Get current cursor position and text
               final cursorPosition = receiveDateController.selection.start;
               final text = value.replaceAll('/', '');
@@ -854,11 +845,12 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                 }
 
                 // Calculate new cursor position
-                int newPosition = cursorPosition;
-                if (cursorPosition > 2) newPosition--;
-                if (cursorPosition > 5) newPosition--;
-                if (newPosition > formattedText.length)
+                int newPosition = cursorPosition - 1;
+                if (newPosition > 2) newPosition++;
+                if (newPosition > 5) newPosition++;
+                if (newPosition > formattedText.length) {
                   newPosition = formattedText.length;
+                }
 
                 receiveDateController.value = TextEditingValue(
                   text: formattedText,
@@ -880,10 +872,13 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
               // Calculate new cursor position
               int newPosition = cursorPosition;
-              if (cursorPosition > 2) newPosition++;
-              if (cursorPosition > 5) newPosition++;
-              if (newPosition > formattedText.length)
+              if (cursorPosition >= 2 && formattedText.length > 2)
+                newPosition++;
+              if (cursorPosition >= 5 && formattedText.length > 5)
+                newPosition++;
+              if (newPosition > formattedText.length) {
                 newPosition = formattedText.length;
+              }
 
               // Validate date if complete
               if (numbers.length == 8) {
@@ -917,7 +912,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             keyboardType: TextInputType.number,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(10),
+              LengthLimitingTextInputFormatter(8),
             ],
           ),
           isDateValid == false
@@ -983,18 +978,21 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           TextFormField(
             controller: invoiceDateController,
             decoration: InputDecoration(
-              label: Row(
-                children: [
-                  const Text(
-                    'วันที่ใบแจ้งหนี้',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(width: 2),
-                  Text(
-                    '*',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ],
+              label: RichText(
+                text: TextSpan(
+                  text: 'วันที่ใบแจ้งหนี้', // ชื่อ label
+                  style: isInvoiceDateValid == false
+                      ? const TextStyle(color: Colors.red)
+                      : const TextStyle(color: Colors.black87),
+                  children: [
+                    TextSpan(
+                      text: ' *', // เพิ่มเครื่องหมาย *
+                      style: TextStyle(
+                        color: Colors.red, // สีแดงสำหรับ *
+                      ),
+                    ),
+                  ],
+                ),
               ),
               filled: true,
               fillColor: Colors.white,
@@ -1034,11 +1032,12 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                 }
 
                 // Calculate new cursor position
-                int newPosition = cursorPosition;
-                if (cursorPosition > 2) newPosition--;
-                if (cursorPosition > 5) newPosition--;
-                if (newPosition > formattedText.length)
+                int newPosition = cursorPosition - 1;
+                if (newPosition > 2) newPosition++;
+                if (newPosition > 5) newPosition++;
+                if (newPosition > formattedText.length) {
                   newPosition = formattedText.length;
+                }
 
                 invoiceDateController.value = TextEditingValue(
                   text: formattedText,
@@ -1060,10 +1059,13 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
               // Calculate new cursor position
               int newPosition = cursorPosition;
-              if (cursorPosition > 2) newPosition++;
-              if (cursorPosition > 5) newPosition++;
-              if (newPosition > formattedText.length)
+              if (cursorPosition >= 2 && formattedText.length > 2)
+                newPosition++;
+              if (cursorPosition >= 5 && formattedText.length > 5)
+                newPosition++;
+              if (newPosition > formattedText.length) {
                 newPosition = formattedText.length;
+              }
 
               // Validate date if complete
               if (numbers.length == 8) {
@@ -1097,7 +1099,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             keyboardType: TextInputType.number,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(10),
+              LengthLimitingTextInputFormatter(8),
             ],
           ),
           isInvoiceDateValid == false
@@ -1115,8 +1117,6 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               : const SizedBox.shrink(),
           const SizedBox(height: 8.0),
           TextFormField(
-            minLines: 2,
-                              maxLines: 5,
             onChanged: (value) {
               setState(() {
                 checkUpdateData = true;
@@ -1129,10 +1129,11 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                 filled: true,
                 fillColor: Colors.white,
                 border: InputBorder.none,
-                floatingLabelBehavior: FloatingLabelBehavior
-                                    .always,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
                 labelStyle: TextStyle(color: Colors.black),
                 labelText: 'หมายเหตุ'),
+            minLines: 2,
+            maxLines: 5,
           ),
           const SizedBox(height: 8.0),
           Row(

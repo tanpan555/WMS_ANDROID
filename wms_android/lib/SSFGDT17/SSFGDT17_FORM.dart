@@ -390,8 +390,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                 ),
               ),
               const Spacer(),
-              ElevatedButton(
-                style: AppStyles.NextButtonStyle(),
+              ElevatedButtonStyle.nextpage(
                 onPressed: () async {
                   if (CR_DATE.text.isEmpty || isDateValid == false) {
                     showDialog(
@@ -431,11 +430,6 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                     }
                   }
                 },
-                child: Image.asset(
-                  'assets/images/right.png',
-                  width: 20.0,
-                  height: 20.0,
-                ),
               ),
               const SizedBox(width: 8.0),
             ],
@@ -719,6 +713,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
         // CustomTextFormField(
         //           controller: controller,
         //           labelText: 'วันที่บันทึก',
+        //          showAsterisk = ture
         //           keyboardType: TextInputType.number,
         //           onChanged: (value) {
         //             try {
@@ -825,7 +820,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
             fillColor: Colors.white,
             border: InputBorder.none,
             suffixIcon: IconButton(
-              icon: const Icon(Icons.calendar_today_outlined, color: Colors.black),
+              icon: const Icon(Icons.calendar_today, color: Colors.black),
               onPressed: () async {
                 _selectDate(context);
               },
