@@ -281,7 +281,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                           String formattedDate = selectedDate != null
                               ? DateFormat('dd-MM-yyyy').format(selectedDate!)
                               : 'null';
-
+                          String soNoRP = _soNoController.text.replaceAll(' ', '');
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -291,11 +291,17 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                                 pAppUser: appUser,
                                 pFlag: pFlag,
                                 status: status,
-                                soNo: pSoNo ?? 'null',
+                                soNo: soNoRP == '' ? 'null' :soNoRP,
                                 date: formattedDate,
                               ),
                             ),
                           ).then((value) async {
+                            if (soNoRP == '') {
+                                      setState(() {
+                                        pSoNo = '';
+                                        _soNoController.text = '';
+                                      });
+                                    }
                             print('isDateInvalid $isDateInvalid');
                             print('selectedDate $selectedDate');
                           });

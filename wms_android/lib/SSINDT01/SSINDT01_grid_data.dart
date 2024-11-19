@@ -488,7 +488,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   Future<void> _launchUrl() async {
     print(widget.poReceiveNo);
-    final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+    // final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
     final Uri url = Uri.parse('${gb.IP_API}/jri/r' +
         'eport?&_repName=/WMS/WMS_SSINDT01&_repFormat=pdf&_dataSource=wms&_outFilename=${widget.poReceiveNo}.pdf&_repLocale=en_US&P_RECEIVE_NO=${widget.poReceiveNo}&P_OU_CODE=${gb.P_ERP_OU_CODE}&P_ITEM=');
     print(url);
@@ -1547,8 +1547,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                       iconSize: 20.0,
                                       icon: Image.asset(
                                         'assets/images/bin.png',
-                                        width: 45.0,
-                                        height: 45.0,
+                                        width: 30,
+                                        height: 30,
                                       ),
                                       onPressed: () {
                                         showDialog(
@@ -1654,8 +1654,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                             iconSize: 20.0,
                                             icon: Image.asset(
                                               'assets/images/edit.png',
-                                              width: 45.0,
-                                              height: 45.0,
+                                              width: 30,
+                                              height: 30,
                                             ),
                                             onPressed: () async {
                                               _showDetailsDialog(data);

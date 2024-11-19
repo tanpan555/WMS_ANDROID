@@ -24,10 +24,12 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
   DateTime? _selectedDate;
   String? selectedValue;
   final _dateController = TextEditingController();
-  final TextEditingController _documentNumberController = TextEditingController();
-  final TextEditingController _selectedProductTypeController = TextEditingController(text: 'ปกติ'); // Controller for product type
+  final TextEditingController _documentNumberController =
+      TextEditingController();
+  final TextEditingController _selectedProductTypeController =
+      TextEditingController(text: 'ปกติ'); // Controller for product type
   final List<String> statusItems = ['ทั้งหมด', 'ปกติ', 'ยกเลิก', 'รับโอนแล้ว'];
-  
+
   final ValueNotifier<bool> isDateInvalidNotifier = ValueNotifier<bool>(false);
   final dateInputFormatter = DateInputFormatter();
   bool isDateInvalid = false;
@@ -38,7 +40,6 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
     selectedValue = 'ปกติ';
     fetchDocType();
   }
-
 
   @override
   void dispose() {
@@ -79,8 +80,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
     }
   }
 
-
-void _showProductTypeDialog() {
+  void _showProductTypeDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -165,7 +165,7 @@ void _showProductTypeDialog() {
       },
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -209,7 +209,7 @@ void _showProductTypeDialog() {
                   style: TextStyle(color: Colors.black),
                   onChanged: (value) {
                     setState(() {
-                      docType = value.toUpperCase();
+                      _documentNumberController.text = value.toUpperCase();
                     });
                   },
                 ),
@@ -229,7 +229,6 @@ void _showProductTypeDialog() {
                   },
                   isDateInvalidNotifier: isDateInvalidNotifier,
                 ),
-
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -245,26 +244,34 @@ void _showProductTypeDialog() {
                       onPressed: () {
                         if (isDateInvalidNotifier.value == false) {
                           final documentNumber =
-                            _documentNumberController.text.isEmpty
-                                ? 'null'
-                                : _documentNumberController.text;
+                              _documentNumberController.text.isEmpty
+                                  ? 'null'
+                                  : _documentNumberController.text;
 
                           String formattedDate = _selectedDate != null
                               ? DateFormat('dd-MM-yyyy').format(_selectedDate!)
                               : 'null';
-
+                          String docnum = _documentNumberController.text.replaceAll(' ', '');
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => SSFGDT17_MAIN(
                                 pWareCode: widget.pWareCode,
                                 selectedValue: selectedValue,
-                                documentNumber: documentNumber,
+                                documentNumber: docnum == '' ? 'null' :docnum,
                                 dateController: formattedDate,
                                 docType: docType ?? '',
                               ),
                             ),
                           ).then((value) async {
+                            if (docnum == '') {
+                                      setState(() {
+                                        // pSoNo = '';
+                                        _documentNumberController.text = '';
+                                      });
+                                    }
+                            print('documentNumber $documentNumber');
+                            print('docType $docType');
                             print('isDateInvalid $isDateInvalid');
                             print('selectedDate $_selectedDate');
                           });

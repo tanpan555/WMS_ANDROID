@@ -69,7 +69,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     docNumberFilter = widget.documentNumber;
     print('=====================');
     print(widget.docType);
-    print(widget.documentNumber);
+    print('documentNumber $widget.documentNumber');
     print(widget.dateController);
     print(_dateController.text);
 

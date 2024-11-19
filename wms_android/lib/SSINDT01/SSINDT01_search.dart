@@ -276,6 +276,11 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                     fillColor: Colors.white,
                   ),
                   style: const TextStyle(color: Colors.black),
+                  onChanged: (value) {
+                        setState(() {
+                          _documentNumberController.text = value.toUpperCase();
+                        });
+                      },
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -298,7 +303,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                         print('selectedApCode $selectedApCode');
                         print(_selectedValue);
                         print(documentNumber);
-
+                        String docNum = _documentNumberController.text.replaceAll(' ', '');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -308,10 +313,16 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                               p_ou_code: widget.p_ou_code,
                               selectedValue: _selectedValue ?? 'ทั้งหมด',
                               apCode: selectedApCode ?? '',
-                              documentNumber: documentNumber,
+                              documentNumber: docNum  == '' ? 'null' : docNum,
                             ),
                           ),
-                        );
+                        ).then((value) async {
+                                    if (docNum == '') {
+                                      setState(() {
+                                        _documentNumberController.text = '';
+                                      });
+                                    }
+                                  });
                       },
                       style: AppStyles.SearchButtonStyle(),
                       child: Image.asset('assets/images/search_color.png',
