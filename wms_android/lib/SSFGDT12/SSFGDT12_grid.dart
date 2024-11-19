@@ -1716,12 +1716,38 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        return DialogStyles.displayTextFormFieldAndMessage(
+          context: context,
+          controller: dataLovStatusConfirmSubmitController,
+          headTextDialog: 'แจ้งเตือน',
+          labelText: 'สถานะ',
+          message: 'ตรวจพบสินค้าที่ไม่ระบุจำนวนตรวจนับ',
+          onTap: () => showDialogSelectDataStatusConfirmSubmit(),
+          onCloseDialog: () {
+            Navigator.of(context).pop();
+          },
+          onConfirmDialog: () {
+            submitData(statusCondition);
+          },
+        );
+      },
+    );
+  }
+
+  void checkStatusSubmit(
+    BuildContext context,
+    String statusSubmit,
+    String messageSubmit,
+  ) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
         return AlertDialog(
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+              const Row(
                 children: [
                   Icon(
                     Icons.notification_important,
@@ -1739,163 +1765,28 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   IconButton(
                     icon: Icon(Icons.close),
                     onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'ตรวจพบสินค้าที่ไม่ระบุจำนวนตรวจนับ',
-                    // style: TextStyle(fontSize: 12),
-                  ),
-                  const SizedBox(height: 10),
-                  ////////////////////////////////////
-                  TextFormField(
-                    controller: dataLovStatusConfirmSubmitController,
-                    readOnly: true,
-                    minLines: 1,
-                    maxLines: 5,
-                    onTap: () => showDialogSelectDataStatusConfirmSubmit(),
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      label: RichText(
-                        text: const TextSpan(
-                          text: 'สถานะ',
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 16,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: ' *',
-                              style: TextStyle(
-                                color: Colors.red,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      suffixIcon: const Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text(
-                          'ยกเลิก',
-                        ),
-                      ),
-                      const SizedBox(
-                          width: 8), // Add some spacing between buttons
-                      ElevatedButton(
-                        onPressed: () {
-                          submitData(statusCondition);
-                          // Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text(
-                          'ตกลง',
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void checkStatusSubmit(
-    BuildContext context,
-    String statusSubmit,
-    String messageSubmit,
-  ) {
-    // IconData iconData;
-    // Color textColor;
-    // String statusText;
-
-    // switch (statusSubmit) {
-    //   case '0':
-    //     iconData = '';
-    //     // iconData = Icons.check_circle;
-    //     textColor = Colors.black;
-    //     statusText = 'Success';
-    //     break;
-    //   case '1':
-    //     iconData = Icons.notification_important;
-    //     textColor = Colors.red;
-    //     statusText = 'Error';
-    //     break;
-    //   default:
-    //     iconData = Icons.help;
-    //     textColor = Colors.grey;
-    //     statusText = 'Unknown';
-    // }
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  if (statusSubmit == '1') ...[
-                    Icon(
-                      Icons.notification_important,
-                      color: Colors.red,
-                    ),
-                    SizedBox(width: 10),
-                  ],
-                  Text(
-                    'แจ้งเตือน',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
+                      if (statusSubmit == '1') {
+                        Navigator.of(context).pop();
+                      } else {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                        //   _navigateToPage(
+                        //       context,
+                        //       SSFGDT12_MAIN(
+                        //         p_attr1: widget.p_attr1,
+                        //         pErpOuCode: widget.pErpOuCode,
+                        //       )
+                        //       //
+                        //       );
+                      }
                     },
                   ),
                 ],
@@ -1910,7 +1801,6 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                   const SizedBox(height: 10),
                   Text(
                     messageSubmit,
-                    // style: TextStyle(color: textColor),
                   ),
                   const SizedBox(height: 10),
                 ],
@@ -1954,7 +1844,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('OK'),
+                    child: const Text('ตกลง'),
                   ),
               ],
             )
@@ -1990,87 +1880,38 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     String vChkStatusCancel,
   ) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    // Icon(
-                    //   Icons.notification_important,
-                    //   color: Colors.red,
-                    // ),
-                    // SizedBox(width: 10),
-                    Text(
-                      'แจ้งเตือน',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            content: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Text(messageCancel),
-                  ],
-                ),
-              ),
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                      // fetchData();
-                      // _navigateToPage(
-                      //     context,
-                      //     SSFGDT12_MAIN(
-                      //       p_attr1: widget.p_attr1,
-                      //       pErpOuCode: widget.pErpOuCode,
-                      //     )
-                      //     //
-                      //     );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text(
-                      'ตกลง',
-                    ),
-                  ),
-                ],
-              )
-            ],
-          );
-        });
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return DialogStyles.alertMessageNotIconDialog(
+          context: context,
+          content: Text(messageCancel),
+          onClose: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+          onConfirm: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            // fetchData();
+            // _navigateToPage(
+            //     context,
+            //     SSFGDT12_MAIN(
+            //       p_attr1: widget.p_attr1,
+            //       pErpOuCode: widget.pErpOuCode,
+            //     )
+            //     //
+            //     );
+          },
+        );
+      },
+    );
   }
 
   void showDialogSelectDataStatusConfirmSubmit() {
@@ -2078,7 +1919,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customSelectLovDialog(
+        return DialogStyles.customRequiredSelectLovDialog(
           context: context,
           headerText: 'สถานะ',
           data: dropdownStatusSubmit,

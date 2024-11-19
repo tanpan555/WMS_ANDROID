@@ -648,6 +648,106 @@ class DialogStyles {
     );
   }
 
+  static AlertDialog displayTextFormFieldAndMessage({
+    required BuildContext context,
+    required VoidCallback onCloseDialog,
+    required VoidCallback onTap,
+    required VoidCallback? onConfirmDialog,
+    required TextEditingController controller,
+    required String headTextDialog,
+    required String labelText,
+    required String message,
+  }) {
+    return AlertDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            headTextDialog,
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 16.0,
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: onCloseDialog,
+          ),
+        ],
+      ),
+      content: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(message),
+              TextFormField(
+                controller: controller,
+                readOnly: true,
+                minLines: 1,
+                maxLines: 5,
+                onTap: onTap,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black)),
+                  filled: true,
+                  fillColor: Colors.white,
+                  label: RichText(
+                    text: TextSpan(
+                      text: labelText,
+                      style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 16,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: ' *',
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  suffixIcon: const Icon(
+                    Icons.arrow_drop_down,
+                    color: Color.fromARGB(255, 113, 113, 113),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: onCloseDialog,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ยกเลิก',
+                        style: TextStyle(color: Colors.black)),
+                  ),
+                  ElevatedButton(
+                    onPressed: onConfirmDialog,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ตกลง',
+                        style: TextStyle(color: Colors.black)),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   // ---------------------------------------------------------------------  alertMessageDialog
 
   static AlertDialog alertMessageDialog({
@@ -667,6 +767,67 @@ class DialogStyles {
                 color: Colors.red,
               ),
               SizedBox(width: 10),
+              Text(
+                'แจ้งเตือน',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(MyIcons.close),
+                onPressed: onClose,
+              ),
+            ],
+          ),
+        ],
+      ),
+      content: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: content,
+        ),
+      ),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              onPressed: onConfirm,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
+              child: const Text('ตกลง'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  static AlertDialog alertMessageNotIconDialog({
+    required BuildContext context,
+    required Widget content,
+    required VoidCallback onClose,
+    required VoidCallback onConfirm,
+  }) {
+    return AlertDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Row(
+            children: [
+              // Icon(
+              //   Icons.notification_important,
+              //   color: Colors.red,
+              // ),
+              // SizedBox(width: 10),
               Text(
                 'แจ้งเตือน',
                 style: TextStyle(

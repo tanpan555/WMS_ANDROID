@@ -278,6 +278,11 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
   Future<void> updatePackQty(
       int packQty, String itemCode, String packCode, String rowID) async {
     print('packQty in updatePackQty: $packQty type : ${packQty.runtimeType}');
+    print(
+        'itemCode in updatePackQty: $itemCode type : ${itemCode.runtimeType}');
+    print(
+        'packCode in updatePackQty: $packCode type : ${packCode.runtimeType}');
+    print('rowID in updatePackQty: $rowID type : ${rowID.runtimeType}');
     final url =
         '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_3_UpdatePackQTY';
 
@@ -1485,25 +1490,30 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                       ],
                     ),
                     const SizedBox(height: 8.0),
-                    TextFormField(
-                      controller: oldPackQtyController,
-                      readOnly: true,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)),
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'จำนวนที่จ่าย',
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
+                    GestureDetector(
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: oldPackQtyController,
+                          readOnly: true,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black)),
+                            filled: true,
+                            fillColor: Colors.white,
+                            labelText: 'จำนวนที่จ่าย',
+                            labelStyle: TextStyle(
+                              color: Colors.black87,
+                            ),
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 16.0),
+                          ),
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.right,
+                          onChanged: (value) {
+                            // CheckDataPackQty = value;
+                          },
                         ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                       ),
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.right,
-                      onChanged: (value) {
-                        // CheckDataPackQty = value;
-                      },
                     ),
                     const SizedBox(height: 8.0),
                     TextFormField(
@@ -1536,7 +1546,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                               // setState(() async {
                               int A = int.tryParse(packQtyController.text) ?? 0;
                               int B = int.tryParse(oldPackQTY.toString()) ?? 0;
-
+                              print('$A & $B');
                               if (A > B) {
                                 showDialogError(context,
                                     'จำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!');

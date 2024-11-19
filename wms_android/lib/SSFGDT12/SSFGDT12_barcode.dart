@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
-import 'package:wms_android/icon.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 
 class Ssfgdt12Barcode extends StatefulWidget {
@@ -647,85 +646,23 @@ class _Ssfgdt12BarcodeState extends State<Ssfgdt12Barcode> {
     );
   }
 
-  void showExitAlertDialog(String message) async {
-    await showDialog(
+  void showExitAlertDialog(
+    // BuildContext context,
+    String messageAlert,
+  ) {
+    showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Row(
-                  children: [
-                    Icon(
-                      Icons.notification_important,
-                      color: Colors.red,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'แจ้งเตือน',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(MyIcons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            content: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    Text(
-                      message,
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
-              ),
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     Navigator.of(context).pop(false);
-                  //   },
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: Colors.white,
-                  //     side: const BorderSide(color: Colors.grey),
-                  //   ),
-                  //   child: const Text('Cancel'),
-                  // ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('OK'),
-                  ),
-                ],
-              )
-            ]);
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () {
+            Navigator.of(context).pop();
+          },
+          onConfirm: () {
+            Navigator.of(context).pop();
+          },
+        );
       },
     );
     FocusScope.of(context).requestFocus(_focusNode);

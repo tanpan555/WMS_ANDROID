@@ -83,7 +83,7 @@ class _SSFGDT12_MAINState extends State<SSFGDT12_MAIN> {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               margin: const EdgeInsets.only(bottom: 8.0),
               color: Colors.grey[300],
-              child: Center(
+              child: const Center(
                 child: Text(
                   'เลือกคลังปฏิบัติงาน',
                   style: TextStyle(
