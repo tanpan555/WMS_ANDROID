@@ -324,21 +324,21 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
 
   Future<void> deleteCard(String pSeq, String pItemCode) async {
     final url =
-        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_deleteCardGrid';
+        '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_3_DeleteCard';
 
     final headers = {
       'Content-Type': 'application/json',
     };
 
     final body = jsonEncode({
-      'pErpOuCode': globals.P_ERP_OU_CODE,
-      'pDocType': widget.docType,
-      'pDocNo': widget.docNo,
-      'pSeq': pSeq,
-      'pItemCode': pItemCode,
-      'pAppUser': globals.APP_USER,
+      'p_erp_ou_code': globals.P_ERP_OU_CODE,
+      'p_app_user': globals.APP_USER,
+      'p_doc_no': widget.docNo,
+      'p_doc_type': widget.docType,
+      'p_seq': pSeq,
+      'p_item_code': pItemCode,
     });
-    print('Request body: $body');
+    print('deleteCard Request body: $body');
 
     try {
       final response = await http.delete(
@@ -354,8 +354,8 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
         print('dataDelete : $dataDelete type : ${dataDelete.runtimeType}');
         if (mounted) {
           setState(() {
-            deleteStatus = dataDelete['po_status'];
-            deleteMessage = dataDelete['po_message'];
+            deleteStatus = dataDelete['v_po_status'];
+            deleteMessage = dataDelete['v_po_message'];
 
             if (deleteStatus == '1') {
               showDialogMessageDelete(context, deleteMessage);
@@ -373,16 +373,16 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
         }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
-        print('ลบข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+        print('ลบข้อมูลล้มเหลว.deleteCard รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
+      print('Error deleteCard : $e');
     }
   }
 
   Future<void> deleteCardAll() async {
     final url =
-        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_3_DeleteCardAll';
+        '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_3_DeleteCardAll';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -390,11 +390,11 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
 
     final body = jsonEncode({
       'p_erp_ou_code': globals.P_ERP_OU_CODE,
-      'p_doc_type': widget.docType,
       'p_doc_no': widget.docNo,
+      'p_doc_type': widget.docType,
       'p_app_user': globals.APP_USER,
     });
-    print('Request body: $body');
+    print('deleteCardAll Request body: $body');
 
     try {
       final response = await http.delete(
@@ -410,8 +410,8 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
         print('dataDelete : $dataDelete type : ${dataDelete.runtimeType}');
         if (mounted) {
           setState(() {
-            deleteCardAllStatus = dataDelete['po_status'];
-            deleteCardAllMessage = dataDelete['po_message'];
+            deleteCardAllStatus = dataDelete['v_po_status'];
+            deleteCardAllMessage = dataDelete['v_po_message'];
 
             if (deleteCardAllStatus == '1') {
               showDialogMessageDelete(context, deleteCardAllMessage);
@@ -429,7 +429,8 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
         }
       } else {
         // จัดการกรณีที่ response status code ไม่ใช่ 200
-        print('ลบข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+        print(
+            'ลบข้อมูลล้มเหลว. deleteCardAll รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
       print('Error Delete ALl: $e');
@@ -601,13 +602,9 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                 setState(() {
                                   String messageDelete =
                                       'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม่ ?';
-                                  String dataTest = 'test';
-                                  showDialogComfirmDelete(
-                                    context,
-                                    dataTest,
-                                    dataTest,
-                                    messageDelete,
-                                  );
+                                  // String dataTest = 'test';
+                                  showDialogDeleteCardAll(
+                                      context, messageDelete);
                                 });
                               }
                             },
@@ -970,15 +967,13 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                                       setState(() {
                                                         String messageDelete =
                                                             'ต้องการลบรายการหรือไม่ ?';
-
-                                                        showDialogComfirmDelete(
-                                                          context,
-                                                          item['seq']
-                                                              .toString(),
-                                                          item['item_code'] ??
-                                                              '',
-                                                          messageDelete,
-                                                        );
+                                                        showDialogDeleteCardOneRow(
+                                                            context,
+                                                            messageDelete,
+                                                            item['seq']
+                                                                .toString(),
+                                                            item['item_code'] ??
+                                                                '');
                                                       });
                                                     },
                                                     child: Container(
@@ -1211,172 +1206,6 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
     );
   }
 
-  void showDialogComfirmDelete(BuildContext context, String pSeq,
-      String pItemCode, String messageDelete) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.notification_important,
-                      color: Colors.red,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'แจ้งเตือน',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            content: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    Text(
-                      messageDelete,
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
-              ),
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('Cancel'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (messageDelete == 'ต้องการลบรายการหรือไม่ ?') {
-                        print('case Delete One');
-                        deleteCard(pSeq, pItemCode);
-                      }
-                      if (messageDelete ==
-                          'ต้องการลบรายการในหน้าจอนี้ทั้งหมดหรือไม่ ?') {
-                        print('case Delete All');
-                        deleteCardAll();
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('OK'),
-                  ),
-                ],
-              )
-            ]);
-      },
-    );
-  }
-
-  void showDialogMessageDelete(
-    BuildContext context,
-    String messageDelete,
-  ) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.notification_important,
-                    color: Colors.red,
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    'แจ้งเตือน',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    messageDelete,
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ตกลง'),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   void showDetailsDialog(
     BuildContext context,
     int seq,
@@ -1430,7 +1259,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                           onPressed: () {
                             if (CheckDataPackQty.toString() !=
                                 packQty.toString()) {
-                              showExitWarningDialog();
+                              showExitWarningDialog(context);
                             } else {
                               Navigator.of(context).pop(false);
                               fetchData(urlLoad);
@@ -1636,84 +1465,84 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
     );
   }
 
-  void showExitWarningDialog() {
+  Future<void> showDialogMessageDelete(
+    BuildContext context,
+    String messageAlert,
+  ) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.notification_important,
-                      color: Colors.red,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'แจ้งเตือน',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop(false);
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            content: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    Text(
-                      'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่',
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
-              ),
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('Cancel'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(true);
-                      Navigator.of(context).pop(true);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    child: const Text('OK'),
-                  ),
-                ],
-              )
-            ]);
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+          onConfirm: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> showDialogDeleteCardOneRow(BuildContext context,
+      String messageAlert, String seqS, String item) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.alertMessageCheckDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () {
+            Navigator.of(context).pop();
+          },
+          onConfirm: () {
+            deleteCard(seqS, item);
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> showDialogDeleteCardAll(
+    BuildContext context,
+    String messageAlert,
+  ) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.alertMessageCheckDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () {
+            Navigator.of(context).pop();
+          },
+          onConfirm: () {
+            deleteCardAll();
+          },
+        );
+      },
+    );
+  }
+
+  Future<bool> showExitWarningDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.warningNotSaveDialog(
+          context: context,
+          textMessage: 'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?',
+          onCloseDialog: () {
+            Navigator.of(context).pop();
+          },
+          onConfirmDialog: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+        );
       },
     );
   }

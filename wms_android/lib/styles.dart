@@ -44,7 +44,7 @@ class AppStyles {
     return ElevatedButton.styleFrom(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(5.0),
       ),
       minimumSize: const Size(70, 40),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -1426,8 +1426,8 @@ class ElevatedButtonStyle {
       ),
       child: Image.asset(
         'assets/images/right.png',
-        width: 20,
-        height: 20,
+        width: 25,
+        height: 25,
       ),
     );
   }
