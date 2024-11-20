@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGPC04_LOC.dart';
+import '../loading.dart';
+import '../centered_message.dart';
 
 class SSFGPC04_WARE extends StatefulWidget {
   final List<Map<String, dynamic>> selectedItems;
@@ -252,16 +254,10 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: widget.selectedItems.isEmpty
-                  ? Center(
-                      child: Text(
-                        'No data found',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white, // เปลี่ยนเป็นสีที่ต้องการ
-                        ),
-                      ),
-                    )
+              child: isLoading
+                    ? Center(child: LoadingIndicator())
+                    : widget.selectedItems.isEmpty
+                  ? const Center(child: CenteredMessage())
                   : ListView.builder(
                       controller: _scrollController,
                       itemCount: itemsPerPage + 1, // +1 for the pagination row
@@ -348,7 +344,7 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
 
                               // Page Indicator
                               Text(
-                                '${(currentPage * itemsPerPage) + 1}-${(currentPage + 1) * itemsPerPage > totalCards ? totalCards : (currentPage + 1) * itemsPerPage}',
+                                '${(currentPage * itemsPerPage) + 1} - ${(currentPage + 1) * itemsPerPage > totalCards ? totalCards : (currentPage + 1) * itemsPerPage}',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,

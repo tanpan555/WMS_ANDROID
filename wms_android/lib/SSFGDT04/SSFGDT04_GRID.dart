@@ -420,7 +420,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
               padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Key
                   Container(

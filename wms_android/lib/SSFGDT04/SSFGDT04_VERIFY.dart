@@ -333,6 +333,252 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
     super.dispose();
   }
 
+  Widget _buildInfoRow1(Map<String, String> info) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: info.entries.map((entry) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Key
+                  Container(
+                    height: 30,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      entry.key,
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
+                      ),
+                      softWrap: false,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  SizedBox(width: 18),
+
+                  Container(
+                    constraints: BoxConstraints(
+                      minWidth: 80,
+                      maxWidth: 160,
+                    ),
+                    height: 30,
+                    child: TextField(
+                      enabled: false,
+                      controller: TextEditingController(text: entry.value),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromARGB(255, 255, 255, 255),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 10.0,
+                        ),
+                      ),
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
+                      ),
+                      textAlign: TextAlign.right,
+                      readOnly: true,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow2(Map<String, String> info) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: info.entries.map((entry) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Key
+                  Container(
+                    height: 30,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      entry.key,
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
+                      ),
+                      softWrap: false,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  SizedBox(width: 18),
+
+                  Container(
+                    constraints: BoxConstraints(
+                      minWidth: 80,
+                      maxWidth: 160,
+                    ),
+                    height: 30,
+                    child: TextField(
+                      enabled: false,
+                      controller: TextEditingController(text: entry.value),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromARGB(255, 255, 255, 255),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 10.0,
+                        ),
+                      ),
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
+                      ),
+                      textAlign: TextAlign.left,
+                      readOnly: true,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow3(Map<String, String> info) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: info.entries.map((entry) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Key
+                  Container(
+                    height: 30,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      entry.key,
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
+                      ),
+                      softWrap: false,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  SizedBox(width: 18),
+
+                  Container(
+                    constraints: BoxConstraints(
+                      minWidth: 80,
+                      maxWidth: 160,
+                    ),
+                    height: 30,
+                    child: TextField(
+                      enabled: false,
+                      controller: TextEditingController(text: entry.value),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromARGB(255, 255, 255, 255),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 18,
+                          horizontal: 10.0,
+                        ),
+                      ),
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
+                      ),
+                      textAlign: TextAlign.left,
+                      readOnly: true,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow4(Map<String, String> info) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: info.entries.map((entry) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 28),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Key
+                  Container(
+                    height: 30,
+                    // alignment: Alignment.centerLeft,
+                    child: Text(
+                      entry.key,
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 14,
+                      ),
+                      softWrap: false,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  SizedBox(width: 18),
+
+                  Container(
+                    constraints: BoxConstraints(
+                      minWidth: 80,
+                      maxWidth: 160,
+                    ),
+                    height: 50,
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        entry.value,
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 14,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     int totalCards = gridItems.length;
@@ -380,7 +626,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                             onConfirm: () async {
                               Navigator.of(context)
                                   .pop(); // Close the first dialog
-                                
+
                               // Wait for a moment to ensure the first dialog is fully closed
                               await Future.delayed(Duration(milliseconds: 100));
 
@@ -422,8 +668,9 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                 },
                               );
                               setState(() {
-                        isDialogShowing = false; // รีเซ็ตสถานะหลังจากปิด dialog
-                      });
+                                isDialogShowing =
+                                    false; // รีเซ็ตสถานะหลังจากปิด dialog
+                              });
                             },
                           );
                         },
@@ -551,118 +798,151 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
 
                                 final item = gridItems[actualIndex];
                                 return Card(
+                                  elevation: 8,
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
                                   color: Colors.lightBlue[100],
-                                  elevation: 4,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    child: Stack(
                                       children: [
-                                        Center(
-                                          child: Text(
-                                            item['item_code'] ?? '',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                        const Divider(
-                                            color: Colors.black26,
-                                            thickness: 1),
-                                        const SizedBox(height: 8),
-                                        Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                const Text(
-                                                  'จำนวนรับ :',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    fontSize: 14,
+                                        Padding(
+                                          padding: const EdgeInsets.all(8),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Center(
+                                                child: Text(
+                                                  item['item_code'] ?? '',
+                                                  style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
+                                                    fontSize: 20,
                                                   ),
+                                                  textAlign: TextAlign.center,
                                                 ),
-                                                const SizedBox(width: 8),
-                                                CustomContainerStyles
-                                                    .styledContainer(
-                                                  item['pack_qty']
-                                                      ?.toString(), // Passing the 'pack_qty' as the itemValue
-                                                  child: Text(
-                                                    item['pack_qty'] != null &&
-                                                            item['pack_qty'] !=
-                                                                ''
-                                                        ? NumberFormat('#,###')
-                                                            .format(item[
-                                                                'pack_qty'])
-                                                        : '',
-                                                    textAlign: TextAlign.left,
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                const Text(
-                                                  'จำนวน Pallet :',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                CustomContainerStyles
-                                                    .styledContainer(
-                                                  item['count_qty']
-                                                      ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                  child: Text(
+                                              ),
+                                              const Divider(
+                                                  color: Colors.black26,
+                                                  thickness: 1),
+                                              const SizedBox(height: 8),
+                                              _buildInfoRow1({
+                                                'จำนวนรับ :': item[
+                                                            'pack_qty'] !=
+                                                        null
+                                                    ? NumberFormat('#,###')
+                                                        .format(
+                                                            item['pack_qty'])
+                                                    : '',
+                                              }),
+                                              _buildInfoRow2({
+                                                'จำนวน Pallet :':
                                                     item['count_qty'] ?? '',
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                const Text(
-                                                  'จำนวนรวม :',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                CustomContainerStyles
-                                                    .styledContainer(
-                                                  item['count_qty_in']
-                                                      ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                  child: Text(
+                                              }),
+                                              _buildInfoRow3({
+                                                'จำนวนรวม :':
                                                     item['count_qty_in'] ?? '',
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                              }),
+                                              _buildInfoRow4({
+                                                'Item Desc :':
+                                                    item['nb_item_name'] ?? '',
+                                              }),
+                                              // Column(
+                                              //   children: [
+                                              //     Row(
+                                              //       mainAxisAlignment:
+                                              //           MainAxisAlignment.start,
+                                              //       children: [
+                                              //         const Text(
+                                              //           'จำนวนรับ :',
+                                              //           textAlign: TextAlign.left,
+                                              //           style: TextStyle(
+                                              //             fontSize: 14,
+                                              //             fontWeight: FontWeight.bold,
+                                              //           ),
+                                              //         ),
+                                              //         const SizedBox(width: 8),
+                                              //         CustomContainerStyles
+                                              //             .styledContainer(
+                                              //           item['pack_qty']
+                                              //               ?.toString(), // Passing the 'pack_qty' as the itemValue
+                                              //           child: Text(
+                                              //             item['pack_qty'] != null &&
+                                              //                     item['pack_qty'] !=
+                                              //                         ''
+                                              //                 ? NumberFormat('#,###')
+                                              //                     .format(item[
+                                              //                         'pack_qty'])
+                                              //                 : '',
+                                              //             textAlign: TextAlign.left,
+                                              //             style: const TextStyle(
+                                              //               fontSize: 14,
+                                              //               fontWeight:
+                                              //                   FontWeight.normal,
+                                              //               color: Colors.black,
+                                              //             ),
+                                              //           ),
+                                              //         ),
+                                              //       ],
+                                              //     ),
+                                              //     const SizedBox(height: 4),
+                                              //     Row(
+                                              //       mainAxisAlignment:
+                                              //           MainAxisAlignment.start,
+                                              //       children: [
+                                              //         const Text(
+                                              //           'จำนวน Pallet :',
+                                              //           textAlign: TextAlign.left,
+                                              //           style: TextStyle(
+                                              //               fontSize: 14,
+                                              //               fontWeight:
+                                              //                   FontWeight.bold),
+                                              //         ),
+                                              //         const SizedBox(width: 8),
+                                              //         CustomContainerStyles
+                                              //             .styledContainer(
+                                              //           item['count_qty']
+                                              //               ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                              //           child: Text(
+                                              //             item['count_qty'] ?? '',
+                                              //             style: const TextStyle(
+                                              //                 fontSize: 14.0),
+                                              //           ),
+                                              //         ),
+                                              //       ],
+                                              //     ),
+                                              //     const SizedBox(height: 4),
+                                              //     Row(
+                                              //       mainAxisAlignment:
+                                              //           MainAxisAlignment.start,
+                                              //       children: [
+                                              //         const Text(
+                                              //           'จำนวนรวม :',
+                                              //           textAlign: TextAlign.left,
+                                              //           style: TextStyle(
+                                              //               fontSize: 14,
+                                              //               fontWeight:
+                                              //                   FontWeight.bold),
+                                              //         ),
+                                              //         const SizedBox(width: 8),
+                                              //         CustomContainerStyles
+                                              //             .styledContainer(
+                                              //           item['count_qty_in']
+                                              //               ?.toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
+                                              //           child: Text(
+                                              //             item['count_qty_in'] ?? '',
+                                              //             style: const TextStyle(
+                                              //                 fontSize: 14.0),
+                                              //           ),
+                                              //         ),
+                                              //       ],
+                                              //     ),
+                                              //   ],
+                                              // ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
