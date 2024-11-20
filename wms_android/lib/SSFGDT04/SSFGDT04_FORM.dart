@@ -106,6 +106,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   bool isDialogShowing = false;
   bool isDateInvalid = false;
   bool isNextDisabled = false;
+  bool isNavigating = false;
   final dateInputFormatter = DateInputFormatter();
 
   bool check = false;
@@ -722,69 +723,75 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                         // const SizedBox(width: 10), // ระยะห่างระหว่างปุ่ม
                         // ปุ่ม ถัดไป //
                         ElevatedButtonStyle.nextpage(
-  // style: AppStyles.NextButtonStyle(),
-  onPressed: isDateInvalid
-      ? null // ปิดปุ่มหากวันที่ไม่ถูกต้อง
-      : () async {
-          if (_docDateController.text.isEmpty || isDateInvalid) {
-            setState(() {
-              chkDate = true;
-            });
-            return;
-          }
+                          onPressed: isDateInvalid
+                              ? null // ปิดปุ่มหากวันที่ไม่ถูกต้อง
+                              : () async {
+                                  if (_docDateController.text.isEmpty ||
+                                      isDateInvalid) {
+                                    setState(() {
+                                      chkDate = true;
+                                    });
+                                    return;
+                                  }
 
-          setState(() {
-            isNextDisabled = true;
-          });
+                                  if (isNavigating)
+                                    return; // ป้องกันการนำทางซ้ำ
 
-          try {
-            await update(widget.po_doc_type, widget.po_doc_no);
-            await save_INHeadNonePO_WMS(selectedValue ?? '');
-            checkUpdateData = false;
+                                  setState(() {
+                                    isNextDisabled = true;
+                                    isNavigating = true; // กำหนดสถานะกำลังนำทาง
+                                  });
 
-            if (poStatus == '0') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SSFGDT04_GRID(
-                    po_doc_no: widget.po_doc_no,
-                    po_doc_type: widget.po_doc_type,
-                    pWareCode: widget.pWareCode,
-                    p_ref_no: _refNoController.text,
-                    mo_do_no: _moDoNoController.text,
-                  ),
-                ),
-              ).then((_) => setState(() {}));
-            } else if (poStatus == '1') {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return DialogStyles.alertMessageDialog(
-                    context: context,
-                    content: Text('$poMessage'),
-                    onClose: () {
-                      Navigator.of(context).pop();
-                    },
-                    onConfirm: () async {
-                      Navigator.of(context).pop();
-                    },
-                  );
-                },
-              );
-            }
-          } finally {
-            setState(() {
-              isNextDisabled = false; // เปิดปุ่มใหม่หลังการทำงาน
-            });
-          }
-        },
-  // child: Image.asset(
-  //   'assets/images/right.png', // เปลี่ยนเส้นทางของรูปภาพตามต้องการ
-  //   width: 20,
-  //   height: 20,
-  // ),
-),
+                                  try {
+                                    await update(
+                                        widget.po_doc_type, widget.po_doc_no);
+                                    await save_INHeadNonePO_WMS(
+                                        selectedValue ?? '');
+                                    checkUpdateData = false;
 
+                                    if (poStatus == '0') {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SSFGDT04_GRID(
+                                            po_doc_no: widget.po_doc_no,
+                                            po_doc_type: widget.po_doc_type,
+                                            pWareCode: widget.pWareCode,
+                                            p_ref_no: _refNoController.text,
+                                            mo_do_no: _moDoNoController.text,
+                                          ),
+                                        ),
+                                      ).then((_) {
+                                        setState(
+                                            () {}); // รีเฟรชสถานะเมื่อกลับมาจากหน้าใหม่
+                                      });
+                                    } else if (poStatus == '1') {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return DialogStyles
+                                              .alertMessageDialog(
+                                            context: context,
+                                            content: Text('$poMessage'),
+                                            onClose: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            onConfirm: () async {
+                                              Navigator.of(context).pop();
+                                            },
+                                          );
+                                        },
+                                      );
+                                    }
+                                  } finally {
+                                    setState(() {
+                                      isNextDisabled = false;
+                                      isNavigating =
+                                          false; // ปิดสถานะกำลังนำทาง
+                                    });
+                                  }
+                                },
+                        )
                       ],
                     ),
                   ),
@@ -1049,66 +1056,72 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 //         ))
                                 //     : const SizedBox.shrink(),
                                 TextFormField(
-  controller: _docDateController,
-  keyboardType: TextInputType.number,
-  inputFormatters: [
-    FilteringTextInputFormatter.digitsOnly,
-    LengthLimitingTextInputFormatter(8),
-    dateInputFormatter, // ใช้ตัวจัดรูปแบบวันที่ที่คุณสร้าง
-  ],
-  decoration: InputDecoration(
-    border: InputBorder.none,
-    filled: true,
-    fillColor: Colors.white,
-    label: RichText(
-      text: TextSpan(
-        text: 'วันที่บันทึก',
-        style: isDateInvalid
-            ? const TextStyle(color: Colors.red)
-            : const TextStyle(color: Colors.black87),
-        children: [
-          TextSpan(
-            text: ' *',
-            style: const TextStyle(color: Colors.red),
-          ),
-        ],
-      ),
-    ),
-    hintText: 'DD/MM/YYYY',
-    hintStyle: const TextStyle(color: Colors.grey),
-    labelStyle: isDateInvalid
-        ? const TextStyle(color: Colors.red)
-        : const TextStyle(color: Colors.black87),
-    suffixIcon: IconButton(
-      icon: const Icon(Icons.calendar_today),
-      onPressed: () async {
-        _selectDate(context);
-      },
-    ),
-  ),
-  onChanged: (value) {
-    setState(() {
-      docDate = value;
-      isDateInvalid = dateInputFormatter.noDateNotifier.value; // ตรวจสอบจาก formatter
-      if (docDate != _docDateController.text) {
-        checkUpdateData = true;
-      }
-    });
-  },
-),
-
-                          isDateInvalid == true
-                              ? const Padding(
-                                  padding: EdgeInsets.only(top: 4.0),
-                                  child: Text(
-                                    'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
+                                  controller: _docDateController,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    LengthLimitingTextInputFormatter(8),
+                                    dateInputFormatter, // ใช้ตัวจัดรูปแบบวันที่ที่คุณสร้าง
+                                  ],
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    label: RichText(
+                                      text: TextSpan(
+                                        text: 'วันที่บันทึก',
+                                        style: isDateInvalid
+                                            ? const TextStyle(color: Colors.red)
+                                            : const TextStyle(
+                                                color: Colors.black87),
+                                        children: [
+                                          TextSpan(
+                                            text: ' *',
+                                            style: const TextStyle(
+                                                color: Colors.red),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ))
-                              : const SizedBox.shrink(),
+                                    hintText: 'DD/MM/YYYY',
+                                    hintStyle:
+                                        const TextStyle(color: Colors.grey),
+                                    labelStyle: isDateInvalid
+                                        ? const TextStyle(color: Colors.red)
+                                        : const TextStyle(
+                                            color: Colors.black87),
+                                    suffixIcon: IconButton(
+                                      icon: const Icon(Icons.calendar_today),
+                                      onPressed: () async {
+                                        _selectDate(context);
+                                      },
+                                    ),
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      docDate = value;
+                                      isDateInvalid = dateInputFormatter
+                                          .noDateNotifier
+                                          .value; // ตรวจสอบจาก formatter
+                                      if (docDate != _docDateController.text) {
+                                        checkUpdateData = true;
+                                      }
+                                    });
+                                  },
+                                ),
+
+                                isDateInvalid == true
+                                    ? const Padding(
+                                        padding: EdgeInsets.only(top: 4.0),
+                                        child: Text(
+                                          'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ))
+                                    : const SizedBox.shrink(),
                               ],
                             ),
                           ),

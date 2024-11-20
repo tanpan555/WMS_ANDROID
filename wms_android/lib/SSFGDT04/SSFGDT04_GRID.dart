@@ -44,6 +44,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
   String? next;
   String? previous;
   String errorMessage = '';
+  bool isDialogShowing = false;
 
   @override
   void initState() {
@@ -758,8 +759,17 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
+                    if (isDialogShowing)
+                      return; // ถ้า dialog กำลังแสดงอยู่ ให้ไม่ทำงานต่อ
+
+                    setState(() {
+                      isDialogShowing =
+                          true; // ตั้งค่าตัวแปรเป็น true เมื่อกำลังแสดง dialog
+                    });
+
                     if (gridItems.isNotEmpty) {
-                      showDialog(
+                      // แสดง dialog
+                      await showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return DialogStyles.alertMessageCheckDialog(
@@ -767,20 +777,23 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                             content: const Text(
                                 'ระบบมีการบันทึกรายการทิ้งไว้ หากดึง ใบผลิต จะเคลียร์รายการทั้งหมดทิ้ง, ต้องการดึงใบผลิตใหม่หรือไม่'),
                             onClose: () {
-                              Navigator.of(context).pop(); // Close the dialog
+                              Navigator.of(context).pop(); // ปิด dialog
                             },
                             onConfirm: () async {
-                              Navigator.of(context).pop(); // Close the dialog
-                              await fetchGetPo(); // Call the fetchGetPo function after confirming
+                              Navigator.of(context).pop(); // ปิด dialog
+                              await fetchGetPo(); // เรียกฟังก์ชันหลังจากยืนยัน
                             },
                           );
                         },
                       );
+
+                      setState(() {
+                        isDialogShowing = false; // รีเซ็ตสถานะหลังจากปิด dialog
+                      });
                     } else {
                       await fetchGetPo();
                       if (poStatus == '0') {
-                        // Show a warning for duplicate data
-                        showDialog(
+                        await showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
@@ -789,17 +802,14 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(poMessage ?? ''),
-                                  // Close icon
                                   IconButton(
                                     icon: const Icon(Icons.close),
                                     onPressed: () {
-                                      Navigator.of(context)
-                                          .pop(); // Close the dialog
+                                      Navigator.of(context).pop(); // ปิด dialog
                                     },
                                   ),
                                 ],
                               ),
-                              // content: Text(poMessage ?? ''),
                               actions: [
                                 TextButton(
                                   style: ElevatedButton.styleFrom(
@@ -808,31 +818,39 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                   ),
                                   child: const Text('ตกลง'),
                                   onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(); // Close the dialog
+                                    Navigator.of(context).pop(); // ปิด dialog
                                   },
                                 ),
                               ],
                             );
                           },
                         );
+
+                        setState(() {
+                          isDialogShowing =
+                              false; // รีเซ็ตสถานะหลังจากปิด dialog
+                        });
                       } else if (poStatus == '1') {
-                        showDialog(
+                        await showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return DialogStyles.alertMessageDialog(
                               context: context,
                               content: Text(poMessage ?? ''),
                               onClose: () {
-                                Navigator.of(context).pop();
+                                Navigator.of(context).pop(); // ปิด dialog
                               },
                               onConfirm: () async {
-                                // await fetchPoStatusconform(vReceiveNo);
-                                Navigator.of(context).pop();
+                                Navigator.of(context).pop(); // ปิด dialog
                               },
                             );
                           },
                         );
+
+                        setState(() {
+                          isDialogShowing =
+                              false; // รีเซ็ตสถานะหลังจากปิด dialog
+                        });
                       }
                     }
                   },

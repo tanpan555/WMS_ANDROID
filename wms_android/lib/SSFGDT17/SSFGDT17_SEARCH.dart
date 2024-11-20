@@ -23,6 +23,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
   String? docType;
   DateTime? _selectedDate;
   String? selectedValue;
+  String? documentNumber;
   final _dateController = TextEditingController();
   final TextEditingController _documentNumberController =
       TextEditingController();
@@ -209,7 +210,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                   style: TextStyle(color: Colors.black),
                   onChanged: (value) {
                     setState(() {
-                      _documentNumberController.text = value.toUpperCase();
+                      documentNumber = value.toUpperCase();
                     });
                   },
                 ),

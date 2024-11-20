@@ -39,6 +39,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
   String errorMessage = '';
   String? _selectedValue = 'ทั้งหมด';
   String? selectedApCode = 'ทั้งหมด'; // Initialize with 'ทั้งหมด'
+  String? documentNumber;
 
   final TextEditingController _documentNumberController =
       TextEditingController();
@@ -278,7 +279,7 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                   style: const TextStyle(color: Colors.black),
                   onChanged: (value) {
                         setState(() {
-                          _documentNumberController.text = value.toUpperCase();
+                          documentNumber = value.toUpperCase();
                         });
                       },
                 ),

@@ -340,28 +340,22 @@ void handleTap(BuildContext context, Map<String, dynamic> item) async {
   
   isNavigating = true; // Set flag to true when navigation starts
   
-  if (selectedwhCode == null) {
-    AlertDialog(
-      title: Row(
-        children: [
-          Icon(
-            Icons.notification_important,
-            color: Colors.red,
-          ),
-          SizedBox(width: 8),
-          Text('แจ้งเตือน'),
-        ],
-      ),
-      content: Text('โปรดเลือกคลังสินค้า'),
-      actions: <Widget>[
-        TextButton(
-          child: Text('OK'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
-    );
+  if (selectedwhCode == null) { 
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return DialogStyles.alertMessageDialog(
+        context: context,
+        content: const Text('โปรดเลือกคลังสินค้า'),
+        onClose: () {
+          Navigator.of(context).pop();
+        },
+        onConfirm: () {
+          Navigator.of(context).pop();
+        },
+      );
+    },
+  );
     isNavigating = false; // Reset flag when the alert is shown
     return;
   }

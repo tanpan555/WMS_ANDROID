@@ -421,10 +421,16 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                   );
                                 },
                               );
+                              setState(() {
+                        isDialogShowing = false; // รีเซ็ตสถานะหลังจากปิด dialog
+                      });
                             },
                           );
                         },
                       );
+                      setState(() {
+                        isDialogShowing = false; // รีเซ็ตสถานะหลังจากปิด dialog
+                      });
                     } else if (poStatus == '1') {
                       showDialog(
                         context: context,
@@ -449,6 +455,9 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                           );
                         },
                       );
+                      setState(() {
+                        isDialogShowing = false; // รีเซ็ตสถานะหลังจากปิด dialog
+                      });
                     }
                   },
                   style: AppStyles.ConfirmbuttonStyle(),
