@@ -101,6 +101,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
 
   bool isLoading = false;
   bool isFirstLoad = true;
+  bool isNextDisabled = false;
 
   bool checkUpdateData = false;
 
@@ -454,6 +455,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                     selectLovMoDoNo = '';
                     returnStatusLovMoDoNo = '';
                     moDoNoController.clear();
+                    isNextDisabled = false;
                   });
                   showDialogErrorCHK(context, pMessageErr);
                 }
@@ -463,12 +465,12 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                     selectLovRefNo = '';
                     returnStatusLovRefNo = '';
                     refNoController.clear();
+                    isNextDisabled = false;
                   });
                   showDialogErrorCHK(context, pMessageErr);
                 }
               }
-            }
-            if (testChk == 1 && checkWhere == 'NEXT') {
+            } else if (testChk == 1 && checkWhere == 'NEXT') {
               updateForm();
             }
           });
@@ -610,6 +612,11 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
 
             if (statusSubmit == '1') {
               showDialogErrorCHK(context, messageSubmit);
+              if (mounted) {
+                setState(() {
+                  isNextDisabled = false;
+                });
+              }
             }
             if (statusSubmit == '0') {
               checkUpdateData = false;
@@ -634,6 +641,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                 await lovRefNo();
                 await lovCancel();
                 checkUpdateData = false;
+                isNextDisabled = false;
               });
             }
 
@@ -758,33 +766,30 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                         child: Text('ยกเลิก',
                             style: AppStyles.CancelbuttonTextStyle()),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            String checkWhere = 'NEXT';
-                            if (isDateInvalid == false) {
-                              if (docNo.isNotEmpty &&
-                                  docNo != '' &&
-                                  docNo != 'null' &&
-                                  returnStatusLovDocType.isNotEmpty &&
-                                  returnStatusLovDocType != '' &&
-                                  returnStatusLovDocType != 'null') {
-                                chkCust(
-                                  returnStatusLovMoDoNo,
-                                  returnStatusLovRefNo,
-                                  testChk = 1,
-                                  checkWhere,
-                                );
-                              }
-                            }
-                          });
-                        },
-                        style: AppStyles.NextButtonStyle(),
-                        child: Image.asset(
-                          'assets/images/right.png',
-                          width: 25,
-                          height: 25,
-                        ),
+                      ElevatedButtonStyle.nextpage(
+                        onPressed: isNextDisabled
+                            ? null
+                            : () {
+                                if (isDateInvalid == false) {
+                                  setState(() {
+                                    isNextDisabled = true;
+                                  });
+                                  String checkWhere = 'NEXT';
+                                  if (docNo.isNotEmpty &&
+                                      docNo != '' &&
+                                      docNo != 'null' &&
+                                      returnStatusLovDocType.isNotEmpty &&
+                                      returnStatusLovDocType != '' &&
+                                      returnStatusLovDocType != 'null') {
+                                    chkCust(
+                                      returnStatusLovMoDoNo,
+                                      returnStatusLovRefNo,
+                                      testChk = 1,
+                                      checkWhere,
+                                    );
+                                  }
+                                }
+                              },
                       ),
                     ],
                   ),
@@ -1214,8 +1219,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
               print(
                   'refNoController New: $refNoController Type : ${refNoController.runtimeType}');
               if (returnStatusLovRefNo.isNotEmpty &&
-                  returnStatusLovRefNo != 'null' &&
-                  returnStatusLovMoDoNo.isNotEmpty) {
+                  returnStatusLovRefNo != 'null') {
                 changeRefNo(returnStatusLovRefNo);
               }
               if ((returnStatusLovMoDoNo.isNotEmpty &&

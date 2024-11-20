@@ -508,7 +508,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  flex: 5,
+                  // flex: 5,
                   child: Container(
                     padding: const EdgeInsets.all(12.0),
                     decoration: BoxDecoration(
@@ -532,31 +532,31 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
                     ),
                   ),
                 ),
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    padding: const EdgeInsets.all(12.0),
-                    decoration: BoxDecoration(
-                      color: Colors.lightBlue[100], // พื้นหลังสีเหลืองอ่อน
-                      border: Border.all(
-                        color: Colors.black, // ขอบสีดำ
-                        width: 2.0, // ความกว้างของขอบ 2.0
-                      ),
-                      borderRadius: BorderRadius.circular(
-                          8.0), // เพิ่มมุมโค้งให้กับ Container
-                    ),
-                    child: Center(
-                      child: Text(
-                        widget.pMoDoNO,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                // Expanded(
+                //   flex: 3,
+                //   child: Container(
+                //     padding: const EdgeInsets.all(12.0),
+                //     decoration: BoxDecoration(
+                //       color: Colors.lightBlue[100], // พื้นหลังสีเหลืองอ่อน
+                //       border: Border.all(
+                //         color: Colors.black, // ขอบสีดำ
+                //         width: 2.0, // ความกว้างของขอบ 2.0
+                //       ),
+                //       borderRadius: BorderRadius.circular(
+                //           8.0), // เพิ่มมุมโค้งให้กับ Container
+                //     ),
+                //     child: Center(
+                //       child: Text(
+                //         widget.pMoDoNO,
+                //         style: const TextStyle(
+                //           color: Colors.black,
+                //           fontWeight: FontWeight.bold,
+                //           fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
             const SizedBox(height: 10),

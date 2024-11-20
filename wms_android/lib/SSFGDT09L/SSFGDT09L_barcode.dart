@@ -512,6 +512,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   itemCode = '';
                   lotNo = '';
                   quantity = '';
+                  quantityDisplay = '';
                   locatorTo = '';
                   lotQty = '';
                   lotUnit = '';
@@ -525,6 +526,7 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
                   itemCodeController.clear();
                   lotNoController.clear();
                   quantityController.clear();
+                  quantityDisPlayController.clear();
                   locatorToController.clear();
                   lotQtyController.clear();
                   lotUnitController.clear();

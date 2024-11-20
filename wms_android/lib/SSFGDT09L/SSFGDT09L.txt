@@ -9,7 +9,36 @@
 เลข Barcode WereCode  001-01-001
 
 เลข Barcode WereCode  005-01-001
-                                                                                                                                                                                                                                                
+ 
+
+เมื่อแสกน Barcode  
+
+หาก Barcode มีช่องว่าง(“ ”) เช่น TKA230-48-A 2209301529 
+
+ให้นำค่าหลังมาใส่ในช่อง Lot NO => 2209301529 
+
+ถ้าไม่มีช่องว่าง เช่น 1808030126-EKC185-58-A 
+
+ให้นำค่าไปใส่ในช่อง Lot NO => 1808030126-EKC185-58-A 
+
+ 
+
+เมื่อแก้ไขช่อง Lot NO ->  scan_validate_Issue  
+
+ถ้า PO_STATUS = 0 
+
+ให้นำค่าที่ได้ ใส่ไอเทมตามที่กำหนดไว้ 
+
+po_item_code	=>	Item Code 
+
+po_lot_number	=>	Lot Number 
+
+po_quantity	=>	Quantity 
+
+po_curr_loc	=>	Current Locator 
+
+po_bal_lot	=>	รวมรายการจ่าย 
+
 po_bal_qty	=>	รวมจำนวนจ่าย 
 
 ถ้า PO_STATUS = 1 และ PO_VALID = N 

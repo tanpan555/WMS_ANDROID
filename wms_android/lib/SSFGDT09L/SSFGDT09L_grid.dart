@@ -65,6 +65,8 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   String countDataGridCardNUMBER2 = '';
   String statusCountDataGridCard = '';
   String messageCountDataGridCard = '';
+  bool isCheckDisDelete = false;
+  bool isCheckDisEdit = false;
 
   @override
   void initState() {
@@ -639,360 +641,60 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                               itemBuilder: (context, index) {
                                 final item = dataCard[
                                     index]; // ดึงข้อมูลแต่ละรายการจาก dataCard
-                                return Card(
-                                  elevation: 8.0,
-                                  margin: EdgeInsets.symmetric(vertical: 8.0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  color: Color.fromRGBO(204, 235, 252, 1.0),
-                                  child: InkWell(
-                                    onTap: () {},
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    child: Stack(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'Item : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item['item_code'],
-                                                      child: Text(
-                                                        item['item_code'] ?? '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4.0),
-                                              SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'Lot No : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item[
-                                                          'lots_no'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                      child: Text(
-                                                        item['lots_no'] ?? '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4.0),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Expanded(
-                                                    flex: 6,
-                                                    child: SizedBox(
-                                                      child: Row(
-                                                        // mainAxisAlignment:
-                                                        //     MainAxisAlignment
-                                                        //         .start,
-                                                        children: [
-                                                          const Text(
-                                                            'จำนวนที่จ่าย : ',
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 14.0),
-                                                          ),
-                                                          CustomContainerStyles
-                                                              .styledContainer(
-                                                            item['pack_qty']
-                                                                .toString(), // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                            child: Text(
-                                                              NumberFormat(
-                                                                      '#,###,###,###,###,###')
-                                                                  .format(item[
-                                                                          'pack_qty'] ??
-                                                                      ''),
-                                                              style:
-                                                                  const TextStyle(
-                                                                      fontSize:
-                                                                          14.0),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  // const SizedBox(width: 4.0),
-                                                  Expanded(
-                                                    flex: 4,
-                                                    child: SizedBox(
-                                                      child: Row(
-                                                        // mainAxisAlignment:
-                                                        //     MainAxisAlignment
-                                                        //         .end,
-                                                        children: [
-                                                          const Text(
-                                                            'Pack : ',
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 14.0),
-                                                          ),
-                                                          CustomContainerStyles
-                                                              .styledContainer(
-                                                            item[
-                                                                'pack_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                            child: Text(
-                                                              item['pack_code'] ??
-                                                                  '',
-                                                              style:
-                                                                  const TextStyle(
-                                                                      fontSize:
-                                                                          14.0),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              const SizedBox(height: 4.0),
-                                              SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'Location : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item[
-                                                          'location_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                      child: Text(
-                                                        item['location_code'] ??
-                                                            '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4.0),
-                                              SizedBox(
-                                                child: Row(
-                                                  children: [
-                                                    const Text(
-                                                      'PD Location : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item[
-                                                          'pd_location'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                      child: Text(
-                                                        item['pd_location'] ??
-                                                            '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4.0),
-                                              SizedBox(
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisSize: MainAxisSize
-                                                      .min, // ให้ Row ใช้ขนาดที่จำเป็น
-                                                  children: [
-                                                    const Text(
-                                                      'Reason : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    Flexible(
-                                                      // ใช้ Flexible แทน Expanded เพื่อให้ขยายตามขนาดที่จำเป็น
-                                                      child:
-                                                          CustomContainerStyles
-                                                              .styledContainer(
-                                                        item['reason_mismatch'],
-                                                        child: Text(
-                                                          item['reason_mismatch'] ??
-                                                              '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                          softWrap:
-                                                              true, // เปิดให้ตัดบรรทัดเมื่อความยาวเกิน
-                                                          overflow: TextOverflow
-                                                              .visible, // แสดงข้อความทั้งหมด
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4.0),
-                                              SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'ใช้แทนจุด : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item[
-                                                          'attribute3'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                      child: Text(
-                                                        item['attribute3'] ??
-                                                            '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4.0),
-                                              SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'Replace Lot# : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item[
-                                                          'attribute4'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                      child: Text(
-                                                        item['attribute4'] ??
-                                                            '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const SizedBox(height: 20.0),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        String messageDelete =
-                                                            'ต้องการลบรายการหรือไม่ ?';
+                                return CardStyles.cardGridPageSSFGDT09L(
+                                  isCanDeleteCard: true,
+                                  isCanEditDetail: true,
+                                  // lableHeader: 'Item',
+                                  dataHeaderCard: item['item_code'] ?? '',
+                                  labelDetail1: 'Lot No',
+                                  dataDetail1: item['lots_no'] ?? '',
+                                  labelDetail2: 'จำนวนที่จ่าย',
+                                  dataDetail2: item['pack_qty'],
+                                  labelDetail3: 'Pack',
+                                  dataDetail3: item['pack_code'] ?? '',
+                                  labelDetail4: 'Location',
+                                  dataDetail4: item['location_code'] ?? '',
+                                  labelDetail5: 'PD Location',
+                                  dataDetail5: item['pd_location'] ?? '',
+                                  labelDetail6: 'Reason',
+                                  dataDetail6: item['reason_mismatch'] ?? '',
+                                  labelDetail7: 'ใช้แทนจุด',
+                                  dataDetail7: item['attribute3'] ?? '',
+                                  labelDetail8: 'Replace Lot#',
+                                  dataDetail8: item['attribute4'] ?? '',
+                                  onTapDelete: isCheckDisDelete
+                                      ? null
+                                      : () {
+                                          setState(() {
+                                            isCheckDisDelete = true;
+                                          });
+                                          String messageDelete =
+                                              'ต้องการลบรายการหรือไม่ ?';
 
-                                                        showDialogComfirmDelete(
-                                                          context,
-                                                          item['seq']
-                                                              .toString(),
-                                                          item['item_code'] ??
-                                                              '',
-                                                          messageDelete,
-                                                        );
-                                                      });
-                                                    },
-                                                    child: Container(
-                                                      width: 30,
-                                                      height: 30,
-                                                      // color: cardColor, // เปลี่ยนสีพื้นหลังที่นี่
-                                                      child: Image.asset(
-                                                        'assets/images/bin.png',
-                                                        fit: BoxFit.contain,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  InkWell(
-                                                    onTap: () {
-                                                      showDetailsDialog(
-                                                        context,
-                                                        item['seq'],
-                                                        item['pack_qty'],
-                                                        item['nb_item_name'] ??
-                                                            '',
-                                                        item['rowid'] ?? '',
-                                                        // item['nb_pack_name'] ?? '',
-                                                        item['item_code'] ?? '',
-                                                        item['pack_code'] ?? '',
-                                                      );
-                                                    },
-                                                    child: Container(
-                                                      width: 30,
-                                                      height: 30,
-                                                      // color: cardColor, // เปลี่ยนสีพื้นหลังที่นี่
-                                                      child: Image.asset(
-                                                        'assets/images/edit (1).png',
-                                                        fit: BoxFit.contain,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                          showDialogComfirmDelete(
+                                            context,
+                                            item['seq'].toString(),
+                                            item['item_code'] ?? '',
+                                            messageDelete,
+                                          );
+                                        },
+                                  onTapEditDetail: isCheckDisEdit
+                                      ? null
+                                      : () {
+                                          setState(() {
+                                            isCheckDisEdit = true;
+                                          });
+                                          showDetailsDialog(
+                                            context,
+                                            item['seq'],
+                                            item['pack_qty'],
+                                            item['nb_item_name'] ?? '',
+                                            item['rowid'] ?? '',
+                                            // item['nb_pack_name'] ?? '',
+                                            item['item_code'] ?? '',
+                                            item['pack_code'] ?? '',
+                                          );
+                                        },
                                 );
                               },
                             ),
@@ -1187,6 +889,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
   ) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return DialogStyles.alertMessageCheckDialog(
           context: context,
@@ -1266,6 +969,7 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
             ),
             child: Container(
               padding: EdgeInsets.all(16.0),
+              // margin: EdgeInsets.only(top: 0.0, right: 30.0),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -1279,7 +983,13 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                             if (CheckDataPackQty.toString() !=
                                 packQty.toString()) {
                               showExitWarningDialog(context);
+                              setState(() {
+                                isCheckDisEdit = false;
+                              });
                             } else {
+                              setState(() {
+                                isCheckDisEdit = false;
+                              });
                               Navigator.of(context).pop(false);
                               fetchData(urlLoad);
                             }
@@ -1364,6 +1074,9 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                         ElevatedButton(
                           style: AppStyles.ConfirmChecRecievekButtonStyle(),
                           onPressed: () async {
+                            setState(() {
+                              isCheckDisEdit = false;
+                            });
                             int updatedPackQty = int.tryParse(packQtyController
                                     .text
                                     .replaceAll(',', '')) ??

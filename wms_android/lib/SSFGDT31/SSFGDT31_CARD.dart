@@ -135,7 +135,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
       });
     }
     final String requestUrl = url ??
-        '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_DataCard/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${globals.ATTR1}/${widget.pWareCode}/${widget.pStatusDESC}/${widget.pDocDate}/${widget.pSoNo}';
+        '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_DataCard/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${globals.ATTR1}/${widget.pWareCode}/${widget.pStatusDESC}/${widget.pDocDate}/${widget.pSoNo}/${globals.BROWSER_LANGUAGE}';
 
     try {
       final response = await http.get(Uri.parse(requestUrl));
@@ -155,7 +155,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
             print('dataCard : $dataCard');
             print('ATTR1 : ${globals.ATTR1}');
             print(
-                'URL : ${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_DataCard/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${globals.ATTR1}/${widget.pWareCode}/${widget.pStatusDESC}/${widget.pDocDate}/${widget.pSoNo}');
+                'URL : ${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_DataCard/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${globals.ATTR1}/${widget.pWareCode}/${widget.pStatusDESC}/${widget.pDocDate}/${widget.pSoNo}/${globals.BROWSER_LANGUAGE}');
           });
         }
       } else {
