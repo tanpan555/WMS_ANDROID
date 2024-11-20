@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'icon.dart';
 
 class AppColors {
@@ -1566,6 +1567,596 @@ class CardStyles {
                           ),
                         ),
                       )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Card cardGridPageSSFGDT09L({
+    required bool isCanDeleteCard,
+    required bool isCanEditDetail,
+    required VoidCallback? onTapDelete,
+    required VoidCallback? onTapEditDetail,
+    // required String lableHeader,
+    required String labelDetail1,
+    required String labelDetail2,
+    required String labelDetail3,
+    required String labelDetail4,
+    required String labelDetail5,
+    required String labelDetail6,
+    required String labelDetail7,
+    required String labelDetail8,
+    required String dataHeaderCard,
+    required String dataDetail1,
+    required int dataDetail2,
+    required String dataDetail3,
+    required String dataDetail4,
+    required String dataDetail5,
+    required String dataDetail6,
+    required String dataDetail7,
+    required String dataDetail8,
+  }) {
+    return Card(
+      elevation: 8.0,
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      color: const Color.fromRGBO(204, 235, 252, 1.0),
+      child: InkWell(
+        onTap: () {},
+        borderRadius: BorderRadius.circular(15.0),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Text(
+                        //   '$lableHeader : ',
+                        //   style: const TextStyle(
+                        //       fontWeight: FontWeight.bold, fontSize: 14.0),
+                        // ),
+                        Text(
+                          dataHeaderCard,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(color: Colors.black, thickness: 1),
+                  const SizedBox(height: 4.0),
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Text(
+                          '$labelDetail1 : ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14.0),
+                        ),
+                        CustomContainerStyles.styledContainer(
+                          dataDetail1,
+                          child: Text(
+                            dataDetail1,
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 6,
+                        child: SizedBox(
+                          child: Row(
+                            children: [
+                              Text(
+                                '$labelDetail2 : ',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.0),
+                              ),
+                              CustomContainerStyles.styledContainer(
+                                dataDetail2.toString(),
+                                child: Text(
+                                  NumberFormat('#,###,###,###,###,###')
+                                      .format(dataDetail2),
+                                  style: const TextStyle(fontSize: 14.0),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 4,
+                        child: SizedBox(
+                          child: Row(
+                            children: [
+                              Text(
+                                '$labelDetail3 : ',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.0),
+                              ),
+                              CustomContainerStyles.styledContainer(
+                                dataDetail3,
+                                child: Text(
+                                  dataDetail3,
+                                  style: const TextStyle(fontSize: 14.0),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 4.0),
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Text(
+                          '$labelDetail4 : ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14.0),
+                        ),
+                        CustomContainerStyles.styledContainer(
+                          dataDetail4,
+                          child: Text(
+                            dataDetail4,
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Text(
+                          '$labelDetail5 : ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14.0),
+                        ),
+                        CustomContainerStyles.styledContainer(
+                          dataDetail5,
+                          child: Text(
+                            dataDetail5,
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  SizedBox(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '$labelDetail6 : ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14.0),
+                        ),
+                        Flexible(
+                          child: CustomContainerStyles.styledContainer(
+                            dataDetail6,
+                            child: Text(
+                              dataDetail6,
+                              style: const TextStyle(fontSize: 14.0),
+                              softWrap: true,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Text(
+                          '$labelDetail7 : ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14.0),
+                        ),
+                        CustomContainerStyles.styledContainer(
+                          dataDetail7,
+                          child: Text(
+                            dataDetail7,
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Text(
+                          '$labelDetail8 : ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14.0),
+                        ),
+                        CustomContainerStyles.styledContainer(
+                          dataDetail8,
+                          child: Text(
+                            dataDetail8,
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      isCanDeleteCard
+                          ? InkWell(
+                              onTap: onTapDelete,
+                              child: Container(
+                                width: 30,
+                                height: 30,
+                                child: Image.asset(
+                                  'assets/images/bin.png',
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                      isCanEditDetail
+                          ? InkWell(
+                              onTap: onTapEditDetail,
+                              child: Container(
+                                width: 30,
+                                height: 30,
+                                child: Image.asset(
+                                  'assets/images/edit (1).png',
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Card cardGridPageSSFGDT31({
+    required bool isCanDeleteCard,
+    required bool isCanEditDetail,
+    required VoidCallback? onTapDelete,
+    required VoidCallback? onTapEditDetail,
+    // required String lableHeader,
+    required String labelDetail1,
+    required String labelDetail2,
+    required String labelDetail3,
+    required String labelDetail4,
+    required String labelDetail5,
+    required String labelDetail6,
+    required String labelDetail7,
+    required String labelDetail8,
+    required String labelDetail9,
+    required String dataHeaderCard,
+    required String dataDetail1,
+    required int dataDetail2,
+    required int dataDetail3,
+    required String dataDetail4,
+    required String dataDetail5,
+    required String dataDetail6,
+    required String dataDetail7,
+    required String dataDetail8,
+    required String dataDetail9,
+  }) {
+    return Card(
+      elevation: 8.0,
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      color: const Color.fromRGBO(204, 235, 252, 1.0),
+      child: InkWell(
+        onTap: () {},
+        borderRadius: BorderRadius.circular(15.0),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Text(
+                        //   '$lableHeader : ',
+                        //   style: const TextStyle(
+                        //       fontWeight: FontWeight.bold, fontSize: 14.0),
+                        // ),
+                        Text(
+                          dataHeaderCard,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(color: Colors.black, thickness: 1),
+                  const SizedBox(height: 4.0),
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Text(
+                          '$labelDetail1 : ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14.0),
+                        ),
+                        CustomContainerStyles.styledContainer(
+                          dataDetail1,
+                          child: Text(
+                            dataDetail1,
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: SizedBox(
+                          child: Row(
+                            children: [
+                              Text(
+                                '$labelDetail2 : ',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.0),
+                              ),
+                              CustomContainerStyles.styledContainer(
+                                dataDetail2.toString(),
+                                child: Text(
+                                  NumberFormat('#,###,###,###,###,###')
+                                      .format(dataDetail2),
+                                  style: const TextStyle(fontSize: 14.0),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 5,
+                        child: SizedBox(
+                          child: Row(
+                            children: [
+                              Text(
+                                '$labelDetail3 : ',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.0),
+                              ),
+                              CustomContainerStyles.styledContainer(
+                                dataDetail3.toString(),
+                                child: Text(
+                                  NumberFormat('#,###,###,###,###,###')
+                                      .format(dataDetail3),
+                                  style: const TextStyle(fontSize: 14.0),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 4.0),
+                  // SizedBox(
+                  //         child: Row(
+                  //           children: [
+                  //             Text(
+                  //               '$labelDetail3 : ',
+                  //               style: const TextStyle(
+                  //                   fontWeight: FontWeight.bold,
+                  //                   fontSize: 14.0),
+                  //             ),
+                  //             CustomContainerStyles.styledContainer(
+                  //               dataDetail3,
+                  //               child: Text(
+                  //                 dataDetail3,
+                  //                 style: const TextStyle(fontSize: 14.0),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  // const SizedBox(height: 4.0),
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Text(
+                          '$labelDetail4 : ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14.0),
+                        ),
+                        CustomContainerStyles.styledContainer(
+                          dataDetail4,
+                          child: Text(
+                            dataDetail4,
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Text(
+                          '$labelDetail5 : ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14.0),
+                        ),
+                        CustomContainerStyles.styledContainer(
+                          dataDetail5,
+                          child: Text(
+                            dataDetail5,
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  SizedBox(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '$labelDetail6 : ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14.0),
+                        ),
+                        Flexible(
+                          child: CustomContainerStyles.styledContainer(
+                            dataDetail6,
+                            child: Text(
+                              dataDetail6,
+                              style: const TextStyle(fontSize: 14.0),
+                              softWrap: true,
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Text(
+                          '$labelDetail7 : ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14.0),
+                        ),
+                        CustomContainerStyles.styledContainer(
+                          dataDetail7,
+                          child: Text(
+                            dataDetail7,
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Text(
+                          '$labelDetail8 : ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14.0),
+                        ),
+                        CustomContainerStyles.styledContainer(
+                          dataDetail8,
+                          child: Text(
+                            dataDetail8,
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  SizedBox(
+                    child: Row(
+                      children: [
+                        Text(
+                          '$labelDetail9 : ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14.0),
+                        ),
+                        CustomContainerStyles.styledContainer(
+                          dataDetail9,
+                          child: Text(
+                            dataDetail9,
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      isCanDeleteCard
+                          ? InkWell(
+                              onTap: onTapDelete,
+                              child: Container(
+                                width: 30,
+                                height: 30,
+                                child: Image.asset(
+                                  'assets/images/bin.png',
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                      isCanEditDetail
+                          ? InkWell(
+                              onTap: onTapEditDetail,
+                              child: Container(
+                                width: 30,
+                                height: 30,
+                                child: Image.asset(
+                                  'assets/images/edit (1).png',
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
                     ],
                   ),
                 ],
