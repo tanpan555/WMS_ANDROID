@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:ui';
-import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wms_android/styles.dart';
@@ -17,6 +16,9 @@ class Ssfgdt31Verify extends StatefulWidget {
   final String docType;
   final String docDate;
   final String moDoNo;
+  final String refNo;
+  final String refDocNo;
+  final String refDocType;
   final String pWareCode;
   Ssfgdt31Verify({
     Key? key,
@@ -24,6 +26,9 @@ class Ssfgdt31Verify extends StatefulWidget {
     required this.docType,
     required this.docDate,
     required this.moDoNo,
+    required this.refNo,
+    required this.refDocNo,
+    required this.refDocType,
     required this.pWareCode,
   }) : super(key: key);
   @override
@@ -57,17 +62,9 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
   String? PROGRAM_ID;
   String? P_WARE;
   String? P_SESSION;
-  String? P_DOC_TYPE;
-  String? P_ERP_DOC_NO;
-// ---------------------------- S ---------------------------- \\
-  String? S_DOC_TYPE;
-  String? S_DOC_DATE;
-  String? S_DOC_NO;
-  String? E_DOC_TYPE;
-  String? E_DOC_DATE;
-  String? E_DOC_NO;
+  String? v_filename;
   String? FLAG;
-// ---------------------------- LH ---------------------------- \\
+  // --------------------------- LH ------------------------ \\
   String? LH_PAGE;
   String? LH_DATE;
   String? LH_AR_NAME;
@@ -78,7 +75,7 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
   String? LH_DOC_NO;
   String? LH_DOC_DATE;
   String? LH_INVOICE_NO;
-// ---------------------------- LB ---------------------------- \\
+
   String? LB_SEQ;
   String? LB_ITEM_CODE;
   String? LB_ITEM_NAME;
@@ -87,8 +84,10 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
   String? LB_LOTS_PRODUCT;
   String? LB_MO_NO;
   String? LB_TRAN_Qty;
-  String? LB_ATTRIBUTE1;
-// ---------------------------- LT ---------------------------- \\
+  String? LB_WEIGHT;
+  String? LB_PD_LOCATION;
+  String? LB_USED_TOTAL;
+
   String? LT_NOTE;
   String? LT_TOTAL_QTY;
   String? LT_ISSUE;
@@ -120,7 +119,7 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
   Future<void> fetchData([String? url]) async {
     isLoading = true;
     final String requestUrl = url ??
-        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}';
+        '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_6_GridCard/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}';
     try {
       final response = await http.get(Uri.parse(requestUrl));
 
@@ -140,10 +139,10 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
             nextLink = getLink(links, 'next');
             prevLink = getLink(links, 'prev');
             urlLoad = url ??
-                '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}';
+                '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_6_GridCard/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}';
             if (url.toString().isNotEmpty) {
               extractLastNumberFromUrl(url.toString() ==
-                      '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_SelectDetailCard/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}'
+                      '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_6_GridCard/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}'
                   ? 'null'
                   : url.toString());
             }
@@ -225,7 +224,7 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
   }
 
   Future<void> submitData() async {
-    final url = '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_Submit';
+    final url = '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_6_Submit';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -233,8 +232,9 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
 
     final body = jsonEncode({
       'p_erp_ou_code': globals.P_ERP_OU_CODE,
-      'p_doc_no': widget.docNo,
       'p_app_user': globals.APP_USER,
+      'p_doc_no': widget.docNo,
+      'p_doc_type': widget.docType,
     });
     print('Request body: $body');
     try {
@@ -266,8 +266,7 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
 
             if (poStatusSubmit == '1') {
               showDialogAlert(context, poMessageSubmit);
-            }
-            if (poStatusSubmit == '0') {
+            } else if (poStatusSubmit == '0') {
               showDialogPoDocNo(context, poTypeComplete, poErpDocNo);
             }
           });
@@ -282,12 +281,11 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
   }
 
   Future<void> getPDF(String poErpDocNo, String poTypeComplete) async {
-    String date1 = widget.docDate;
-    String date2 = date1.replaceAll('/', '-');
-
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_5_GET_PDF/${widget.docType}/$date2/$poErpDocNo/$flag/${widget.pWareCode}/${globals.APP_SESSION}/${globals.APP_USER}/${globals.P_DS_PDF}/${globals.BROWSER_LANGUAGE}'));
+          'http://172.16.0.82:8888/apex/wms/SSFGDT31/SSFGDT31_Step_6_GET_PDF/'
+          '${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${widget.pWareCode}/'
+          '${globals.APP_SESSION}/${widget.docType}/${globals.BROWSER_LANGUAGE}/${globals.P_DS_PDF}'));
 
       print('Response body: ${response.body}'); // แสดงข้อมูลที่ได้รับจาก API
 
@@ -297,7 +295,7 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
             .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
         print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
         if (mounted) {
-          setState(() {
+          setState(() async {
             V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
             LIN_ID = dataPDF['LIN_ID'] ?? '';
             OU_CODE = dataPDF['OU_CODE'] ?? '';
@@ -307,13 +305,7 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
             PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
             P_WARE = dataPDF['P_WARE'] ?? '';
             P_SESSION = dataPDF['P_SESSION'] ?? '';
-
-            S_DOC_TYPE = dataPDF['S_DOC_TYPE'] ?? '';
-            S_DOC_DATE = dataPDF['S_DOC_DATE'] ?? '';
-            S_DOC_NO = dataPDF['S_DOC_NO'] ?? '';
-            E_DOC_TYPE = dataPDF['E_DOC_TYPE'] ?? '';
-            E_DOC_DATE = dataPDF['E_DOC_DATE'] ?? '';
-            E_DOC_NO = dataPDF['E_DOC_NO'] ?? '';
+            v_filename = dataPDF['v_filename'] ?? '';
             FLAG = dataPDF['FLAG'] ?? '';
 
             LH_PAGE = dataPDF['LH_PAGE'] ?? '';
@@ -322,6 +314,7 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
             LH_LOGISTIC_COMP = dataPDF['LH_LOGISTIC_COMP'] ?? '';
             LH_DOC_TYPE = dataPDF['LH_DOC_TYPE'] ?? '';
             LH_WARE = dataPDF['LH_WARE'] ?? '';
+            LH_CAR_ID = dataPDF['LH_CAR_ID'] ?? '';
             LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
             LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
             LH_INVOICE_NO = dataPDF['LH_INVOICE_NO'] ?? '';
@@ -331,10 +324,12 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
             LB_ITEM_NAME = dataPDF['LB_ITEM_NAME'] ?? '';
             LB_LOCATION = dataPDF['LB_LOCATION'] ?? '';
             LB_UMS = dataPDF['LB_UMS'] ?? '';
+            LB_LOTS_PRODUCT = dataPDF['LB_LOTS_PRODUCT'] ?? '';
             LB_MO_NO = dataPDF['LB_MO_NO'] ?? '';
             LB_TRAN_Qty = dataPDF['LB_TRAN_Qty'] ?? '';
-            LB_ATTRIBUTE1 = dataPDF['LB_ATTRIBUTE1'] ?? '';
-
+            LB_WEIGHT = dataPDF['LB_WEIGHT'] ?? '';
+            LB_PD_LOCATION = dataPDF['LB_PD_LOCATION'] ?? '';
+            LB_USED_TOTAL = dataPDF['LB_USED_TOTAL'] ?? '';
             LT_NOTE = dataPDF['LT_NOTE'] ?? '';
             LT_TOTAL_QTY = dataPDF['LT_TOTAL_QTY'] ?? '';
             LT_ISSUE = dataPDF['LT_ISSUE'] ?? '';
@@ -344,7 +339,12 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
             LT_BILL = dataPDF['LT_BILL'] ?? '';
             LT_CHECK = dataPDF['LT_CHECK'] ?? '';
 
-            // _launchUrl(poErpDocNo);
+            await _launchUrl(poErpDocNo);
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
           });
         }
       } else {
@@ -358,10 +358,10 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
 
   Future<void> _launchUrl(String pDocNo) async {
     final uri = Uri.parse('${globals.IP_API}/jri/report?'
-        '&_repName=/WMS/SSFGOD02A5'
+        '&_repName=/WMS/SSFGDT31_REPORT'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
-        '&_outFilename=$pDocNo.pdf'
+        '&_outFilename=${widget.docType}-${widget.docNo}.pdf'
         '&_repLocale=en_US'
         '&LIN_ID=$LIN_ID'
         '&OU_CODE=$OU_CODE'
@@ -371,89 +371,43 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
         '&PROGRAM_ID=$PROGRAM_ID'
         '&P_WARE=$P_WARE'
         '&P_SESSION=$P_SESSION'
-        '&S_DOC_TYPE=$S_DOC_TYPE'
-        '&S_DOC_DATE=$S_DOC_DATE'
-        '&S_DOC_NO=$S_DOC_NO'
-        '&E_DOC_TYPE=$E_DOC_TYPE'
-        '&E_DOC_DATE=$E_DOC_DATE'
+        '&P_DOC_TYPE=${widget.docType}'
+        '&P_ERP_DOC_NO=$pDocNo'
         '&FLAG=$FLAG'
         '&LH_PAGE=$LH_PAGE'
         '&LH_DATE=$LH_DATE'
         '&LH_AR_NAME=$LH_AR_NAME'
         '&LH_LOGISTIC_COMP=$LH_LOGISTIC_COMP'
-        '&LH_DOC_TYPE=$LH_DOC_TYPE'
-        '&LH_WARE=$LH_WARE'
+        '&LH_Doc_Type=$LH_DOC_TYPE'
+        '&LH_Ware=$LH_WARE'
         '&LH_CAR_ID=$LH_CAR_ID'
-        '&LH_DOC_NO=$LH_DOC_NO'
-        '&LH_DOC_DATE=$LH_DOC_DATE'
+        '&LH_Doc_No=$LH_DOC_NO'
+        '&LH_Doc_Date=$LH_DOC_DATE'
         '&LH_INVOICE_NO=$LH_INVOICE_NO'
         '&LB_SEQ=$LB_SEQ'
-        '&LB_ITEM_CODE=$LB_ITEM_CODE'
-        '&LB_ITEM_NAME=$LB_ITEM_NAME'
-        '&LB_LOCATION=$LB_LOCATION'
-        '&LB_UMS=$LB_UMS'
+        '&LB_Item_Code=$LB_ITEM_CODE'
+        '&LB_Item_Name=$LB_ITEM_NAME'
+        '&LB_Location=$LB_LOCATION'
+        '&LB_Ums=$LB_UMS'
         '&LB_LOTS_PRODUCT=$LB_LOTS_PRODUCT'
         '&LB_MO_NO=$LB_MO_NO'
         '&LB_TRAN_Qty=$LB_TRAN_Qty'
-        '&LB_ATTRIBUTE1=$LB_ATTRIBUTE1'
+        '&LB_WEIGHT=$LB_WEIGHT'
+        '&LB_PD_LOCATION=$LB_PD_LOCATION'
+        '&LB_USED_TOTAL=$LB_USED_TOTAL'
         '&LT_NOTE=$LT_NOTE'
-        '&LT_TOTAL_QTY=$LT_TOTAL_QTY'
+        '&lt_total_qty=$LT_TOTAL_QTY'
         '&LT_ISSUE=$LT_ISSUE'
         '&LT_APPROVE=$LT_APPROVE'
         '&LT_OUT=$LT_OUT'
         '&LT_RECEIVE=$LT_RECEIVE'
-        '&LT_BILL=$LT_BILL');
+        '&LT_BILL=$LT_BILL'
+        '&LT_CHECK=$LT_CHECK');
 
     print(uri);
     if (!await launchUrl(uri)) {
       throw Exception('Could not launch $uri');
     }
-    print('${globals.IP_API}/jri/report?'
-        '&_repName=/WMS/SSFGOD02A5'
-        '&_repFormat=pdf'
-        '&_dataSource=${globals.P_DS_PDF}'
-        '&_outFilename=$pDocNo.pdf'
-        '&_repLocale=en_US'
-        '&LIN_ID=$LIN_ID'
-        '&OU_CODE=$OU_CODE'
-        '&PROGRAM_NAME=$PROGRAM_NAME'
-        '&CURRENT_DATE=$CURRENT_DATE'
-        '&USER_ID=$USER_ID'
-        '&PROGRAM_ID=$PROGRAM_ID'
-        '&P_WARE=$P_WARE'
-        '&P_SESSION=$P_SESSION'
-        '&S_DOC_TYPE=$S_DOC_TYPE'
-        '&S_DOC_DATE=$S_DOC_DATE'
-        '&S_DOC_NO=$S_DOC_NO'
-        '&E_DOC_TYPE=$E_DOC_TYPE'
-        '&E_DOC_DATE=$E_DOC_DATE'
-        '&FLAG=$FLAG'
-        '&LH_PAGE=$LH_PAGE'
-        '&LH_DATE=$LH_DATE'
-        '&LH_AR_NAME=$LH_AR_NAME'
-        '&LH_LOGISTIC_COMP=$LH_LOGISTIC_COMP'
-        '&LH_DOC_TYPE=$LH_DOC_TYPE'
-        '&LH_WARE=$LH_WARE'
-        '&LH_CAR_ID=$LH_CAR_ID'
-        '&LH_DOC_NO=$LH_DOC_NO'
-        '&LH_DOC_DATE=$LH_DOC_DATE'
-        '&LH_INVOICE_NO=$LH_INVOICE_NO'
-        '&LB_SEQ=$LB_SEQ'
-        '&LB_ITEM_CODE=$LB_ITEM_CODE'
-        '&LB_ITEM_NAME=$LB_ITEM_NAME'
-        '&LB_LOCATION=$LB_LOCATION'
-        '&LB_UMS=$LB_UMS'
-        '&LB_LOTS_PRODUCT=$LB_LOTS_PRODUCT'
-        '&LB_MO_NO=$LB_MO_NO'
-        '&LB_TRAN_Qty=$LB_TRAN_Qty'
-        '&LB_ATTRIBUTE1=$LB_ATTRIBUTE1'
-        '&LT_NOTE=$LT_NOTE'
-        '&LT_TOTAL_QTY=$LT_TOTAL_QTY'
-        '&LT_ISSUE=$LT_ISSUE'
-        '&LT_APPROVE=$LT_APPROVE'
-        '&LT_OUT=$LT_OUT'
-        '&LT_RECEIVE=$LT_RECEIVE'
-        '&LT_BILL=$LT_BILL');
   }
 
   @override
@@ -467,6 +421,32 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                Expanded(
+                  // flex: 5,
+                  child: Container(
+                    padding: const EdgeInsets.all(12.0),
+                    decoration: BoxDecoration(
+                      color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
+                      border: Border.all(
+                        color: Colors.black, // ขอบสีดำ
+                        width: 2.0, // ความกว้างของขอบ 2.0
+                      ),
+                      borderRadius: BorderRadius.circular(
+                          8.0), // เพิ่มมุมโค้งให้กับ Container
+                    ),
+                    child: Center(
+                      child: Text(
+                        widget.docNo,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4.0),
                 ElevatedButton(
                   onPressed: checkComfrim
                       ? null
@@ -489,429 +469,323 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
               ],
             ),
             const SizedBox(height: 10),
-            Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                    padding: const EdgeInsets.all(12.0),
-                    decoration: BoxDecoration(
-                      color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
-                      border: Border.all(
-                        color: Colors.black, // ขอบสีดำ
-                        width: 2.0, // ความกว้างของขอบ 2.0
-                      ),
-                      borderRadius: BorderRadius.circular(
-                          8.0), // เพิ่มมุมโค้งให้กับ Container
-                    ),
-                    child: Center(
-                      child: Text(
-                        widget.docNo,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    padding: const EdgeInsets.all(12.0),
-                    decoration: BoxDecoration(
-                      color: Colors.lightBlue[100], // พื้นหลังสีเหลืองอ่อน
-                      border: Border.all(
-                        color: Colors.black, // ขอบสีดำ
-                        width: 2.0, // ความกว้างของขอบ 2.0
-                      ),
-                      borderRadius: BorderRadius.circular(
-                          8.0), // เพิ่มมุมโค้งให้กับ Container
-                    ),
-                    child: Center(
-                      child: Text(
-                        widget.moDoNo,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            // Row(
+            //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Expanded(
+            //       // flex: 5,
+            //       child: Container(
+            //         padding: const EdgeInsets.all(12.0),
+            //         decoration: BoxDecoration(
+            //           color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
+            //           border: Border.all(
+            //             color: Colors.black, // ขอบสีดำ
+            //             width: 2.0, // ความกว้างของขอบ 2.0
+            //           ),
+            //           borderRadius: BorderRadius.circular(
+            //               8.0), // เพิ่มมุมโค้งให้กับ Container
+            //         ),
+            //         child: Center(
+            //           child: Text(
+            //             widget.docNo,
+            //             style: const TextStyle(
+            //               color: Colors.black,
+            //               fontWeight: FontWeight.bold,
+            //               fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            // Expanded(
+            //   flex: 3,
+            //   child: Container(
+            //     padding: const EdgeInsets.all(12.0),
+            //     decoration: BoxDecoration(
+            //       color: Colors.lightBlue[100], // พื้นหลังสีเหลืองอ่อน
+            //       border: Border.all(
+            //         color: Colors.black, // ขอบสีดำ
+            //         width: 2.0, // ความกว้างของขอบ 2.0
+            //       ),
+            //       borderRadius: BorderRadius.circular(
+            //           8.0), // เพิ่มมุมโค้งให้กับ Container
+            //     ),
+            //     child: Center(
+            //       child: Text(
+            //         widget.moDoNo,
+            //         style: TextStyle(
+            //           color: Colors.black,
+            //           fontWeight: FontWeight.bold,
+            //           fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            //   ],
+            // ),
 
-            const SizedBox(height: 10),
+            // const SizedBox(height: 4),
             // --------------------------------------------------------------------
             Expanded(
-              child: isLoading
-                  ? Center(child: LoadingIndicator())
-                  : dataCard.isEmpty
-                      ? const Center(child: CenteredMessage())
-                      : ListView(
+              child: ListView(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(3.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 65,
+                          padding: const EdgeInsets.only(
+                              top: 10.0, right: 5.0, left: 5.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            // border: Border.all(
+                            //   color: Colors.black,
+                            //   width: 2.0,
+                            // ),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Stack(
+                            children: [
+                              const Positioned(
+                                top: 0,
+                                left: 0,
+                                child: Text(
+                                  'เลขที่เอกสารอ้างอิง',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    // fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              Center(
+                                child: Text(
+                                  widget.refNo == 'null' ? '' : widget.refNo,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    // fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
                           children: [
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics:
-                                  const NeverScrollableScrollPhysics(), // เพื่อให้ทำงานร่วมกับ ListView ด้านนอกได้
-                              itemCount: dataCard
-                                  .length, // ใช้ length ของ dataCard แทนการใช้ map
-                              itemBuilder: (context, index) {
-                                final item = dataCard[
-                                    index]; // ดึงข้อมูลแต่ละรายการจาก dataCard
-
-                                return Card(
-                                  elevation: 8.0,
-                                  margin: EdgeInsets.symmetric(vertical: 8.0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  color: Color.fromRGBO(204, 235, 252, 1.0),
-                                  child: InkWell(
-                                    onTap: () {},
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    child: Stack(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'Item : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item[
-                                                          'item_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                      child: Text(
-                                                        item['item_code'] ?? '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              // ------------------------------------------------------------------------\\
-                                              const SizedBox(height: 4.0),
-                                              // ------------------------------------------------------------------------\\
-                                              SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'Lot No. : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item[
-                                                          'lots_no'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                      child: Text(
-                                                        item['lots_no'] ?? '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              // ------------------------------------------------------------------------\\
-                                              const SizedBox(height: 4.0),
-                                              // ------------------------------------------------------------------------\\
-                                              SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'Locator : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item[
-                                                          'location_code'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                      child: Text(
-                                                        item['location_code'] ??
-                                                            '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              // ------------------------------------------------------------------------\\
-                                              const SizedBox(height: 4.0),
-                                              // ------------------------------------------------------------------------\\
-                                              SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'จำนวนที่จ่าย : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item['pack_qty']
-                                                          ?.toString(),
-                                                      child: Text(
-                                                        item['pack_qty'] != null
-                                                            ? NumberFormat(
-                                                                    '#,###,###,###,###,###.##')
-                                                                .format(item[
-                                                                    'pack_qty'])
-                                                            : '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              // ------------------------------------------------------------------------\\
-                                              const SizedBox(height: 4.0),
-                                              // ------------------------------------------------------------------------\\
-                                              SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'PD Location : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item[
-                                                          'pd_location'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                      child: Text(
-                                                        item['pd_location'] ??
-                                                            '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              // ------------------------------------------------------------------------\\
-                                              const SizedBox(height: 4.0),
-                                              // ------------------------------------------------------------------------\\
-                                              SizedBox(
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    const SizedBox(
-                                                      child: Text(
-                                                        'Reason : ',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      child:
-                                                          CustomContainerStyles
-                                                              .styledContainer(
-                                                        item['reason_mismatch'],
-                                                        child: Text(
-                                                          item['reason_mismatch'] ??
-                                                              '',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      14.0),
-                                                          softWrap:
-                                                              true, // เปิดให้ตัดบรรทัด
-                                                          overflow: TextOverflow
-                                                              .visible, // แสดงข้อความทั้งหมด
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              // ------------------------------------------------------------------------\\
-                                              const SizedBox(height: 4.0),
-                                              // ------------------------------------------------------------------------\\
-                                              SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'ใช้แทนจุด : ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item[
-                                                          'attribute3'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                      child: Text(
-                                                        item['attribute3'] ??
-                                                            '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              // ------------------------------------------------------------------------\\
-                                              const SizedBox(height: 4.0),
-                                              // ------------------------------------------------------------------------\\
-                                              SizedBox(
-                                                child: Row(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      'Replace Lot# ',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    CustomContainerStyles
-                                                        .styledContainer(
-                                                      item[
-                                                          'attribute4'], // ค่าที่ใช้ในการตรวจสอบสีพื้นหลัง
-                                                      child: Text(
-                                                        item['attribute4'] ??
-                                                            '',
-                                                        style: const TextStyle(
-                                                            fontSize: 14.0),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              // ------------------------------------------------------------------------\\
-                                              const SizedBox(height: 4.0),
-                                              // ------------------------------------------------------------------------\\
-                                            ],
-                                          ),
-                                        )
-                                      ],
+                            Expanded(
+                              // flex: 5,
+                              child: Container(
+                                height: 65,
+                                padding: const EdgeInsets.only(
+                                    top: 10.0, right: 5.0, left: 5.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  // border: Border.all(
+                                  //   color: Colors.black,
+                                  //   width: 2.0,
+                                  // ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    const Positioned(
+                                      top: 0,
+                                      left: 0,
+                                      child: Text(
+                                        'เลขที่คำสั่งผลิต',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          // fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
+                                    Center(
+                                      child: Text(
+                                        widget.moDoNo == 'null'
+                                            ? ''
+                                            : widget.moDoNo,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          // fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                            // =======================================================  dataCard.length > 1
-                            dataCard.isNotEmpty
-                                ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          prevLink != null
-                                              ? ElevatedButton(
-                                                  onPressed: prevLink != null
-                                                      ? loadPrevPage
-                                                      : null,
-                                                  style: ButtonStyles
-                                                      .previousButtonStyle,
-                                                  child: ButtonStyles
-                                                      .previousButtonContent,
-                                                )
-                                              : ElevatedButton(
-                                                  onPressed: prevLink != null
-                                                      ? loadPrevPage
-                                                      : null,
-                                                  style: DisableButtonStyles
-                                                      .disablePreviousButtonStyle,
-                                                  child: DisableButtonStyles
-                                                      .disablePreviousButtonContent,
-                                                )
-                                        ],
+                            const SizedBox(width: 4),
+                            Expanded(
+                              // flex: 5,
+                              child: Container(
+                                height: 65,
+                                padding: const EdgeInsets.only(
+                                    top: 10.0, right: 5.0, left: 5.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  // border: Border.all(
+                                  //   color: Colors.black,
+                                  //   width: 2.0,
+                                  // ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    const Positioned(
+                                      top: 0,
+                                      left: 0,
+                                      child: Text(
+                                        'วันที่บันทึก',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          // fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                        ),
                                       ),
-                                      // const SizedBox(width: 30),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Center(
-                                            child: Text(
-                                              '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? dataCard.length : showRecordRRR + dataCard.length}',
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          )
-                                        ],
+                                    ),
+                                    Center(
+                                      child: Text(
+                                        widget.docDate,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          // fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
                                       ),
-                                      // const SizedBox(width: 30),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          nextLink != null
-                                              ? ElevatedButton(
-                                                  onPressed: nextLink != null
-                                                      ? loadNextPage
-                                                      : null,
-                                                  style: ButtonStyles
-                                                      .nextButtonStyle,
-                                                  child: ButtonStyles
-                                                      .nextButtonContent(),
-                                                )
-                                              : ElevatedButton(
-                                                  onPressed: null,
-                                                  style: DisableButtonStyles
-                                                      .disableNextButtonStyle,
-                                                  child: DisableButtonStyles
-                                                      .disablePreviousButtonContent,
-                                                ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                : const SizedBox.shrink(),
-                            // =======================================================  dataCard.length > 1
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         ),
+                      ],
+                    ),
+                  ),
+                  isLoading
+                      ? Center(child: LoadingIndicator())
+                      : dataCard.isEmpty
+                          ? const Center(child: CenteredMessage())
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: dataCard.length,
+                              itemBuilder: (context, index) {
+                                final item = dataCard[index];
+
+                                return CardStyles.cardGridPageSSFGDT31(
+                                    isCanDeleteCard: false,
+                                    isCanEditDetail: false,
+                                    // lableHeader: 'Item',
+                                    dataHeaderCard: item['item_code'] ?? '',
+                                    labelDetail1: 'Lot No',
+                                    dataDetail1: item['lots_no'] ?? '',
+                                    labelDetail2: 'จำนวนรับ',
+                                    dataDetail2: item['pack_qty'],
+                                    labelDetail3: 'จำนวนจ่าย',
+                                    dataDetail3: int.tryParse(
+                                            item['old_pack_qty'] ?? '0') ??
+                                        0,
+                                    labelDetail4: 'Pack',
+                                    dataDetail4: item['pack_code'] ?? '',
+                                    labelDetail5: 'Location',
+                                    dataDetail5: item['location_code'] ?? '',
+                                    labelDetail6: 'PD Location',
+                                    dataDetail6: item['ATTRIBUTE1'] ?? '',
+                                    labelDetail7: 'Reason',
+                                    dataDetail7: item['ATTRIBUTE2'] ?? '',
+                                    labelDetail8: 'ใช้แทนจุด',
+                                    dataDetail8: item['ATTRIBUTE3'] ?? '',
+                                    labelDetail9: 'Replace Lot#',
+                                    dataDetail9: item['attribute4'] ?? '',
+                                    onTapDelete: null,
+                                    onTapEditDetail: null);
+                              },
+                            ),
+                  // =======================================================  dataCard.length > 1
+                  dataCard.isNotEmpty
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                prevLink != null
+                                    ? ElevatedButton(
+                                        onPressed: prevLink != null
+                                            ? loadPrevPage
+                                            : null,
+                                        style: ButtonStyles.previousButtonStyle,
+                                        child:
+                                            ButtonStyles.previousButtonContent,
+                                      )
+                                    : ElevatedButton(
+                                        onPressed: prevLink != null
+                                            ? loadPrevPage
+                                            : null,
+                                        style: DisableButtonStyles
+                                            .disablePreviousButtonStyle,
+                                        child: DisableButtonStyles
+                                            .disablePreviousButtonContent,
+                                      )
+                              ],
+                            ),
+                            // const SizedBox(width: 30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? dataCard.length : showRecordRRR + dataCard.length}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            // const SizedBox(width: 30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                nextLink != null
+                                    ? ElevatedButton(
+                                        onPressed: nextLink != null
+                                            ? loadNextPage
+                                            : null,
+                                        style: ButtonStyles.nextButtonStyle,
+                                        child: ButtonStyles.nextButtonContent(),
+                                      )
+                                    : ElevatedButton(
+                                        onPressed: null,
+                                        style: DisableButtonStyles
+                                            .disableNextButtonStyle,
+                                        child: DisableButtonStyles
+                                            .disablePreviousButtonContent,
+                                      ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
+                  // =======================================================  dataCard.length > 1
+                ],
+              ),
             ),
           ],
         ),
@@ -948,14 +822,23 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
   ) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return DialogStyles.alertMessageDialog(
           context: context,
           content: Text(poErpDocNo),
-          onClose: () => Navigator.of(context).pop(),
+          onClose: () {
+            setState(() {
+              Navigator.of(context).pop();
+              String messageText = 'ต้องการพิมพ์เอกสารการรับคืนหรือไม่ ?';
+              showDialogCheckPrint(
+                  context, poTypeComplete, poErpDocNo, messageText);
+            });
+          },
           onConfirm: () {
             setState(() {
-              String messageText = 'ต้องการพิมพ์เอกสารหรือไม่ ?';
+              Navigator.of(context).pop();
+              String messageText = 'ต้องการพิมพ์เอกสารการรับคืนหรือไม่ ?';
               showDialogCheckPrint(
                   context, poTypeComplete, poErpDocNo, messageText);
             });
@@ -969,25 +852,20 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
       String poErpDocNo, String messageText) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return DialogStyles.alertMessageCheckDialog(
           context: context,
           content: Text(messageText),
           onClose: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //       builder: (context) => SSFGDT09L_MAIN(
-            //             pAttr1: globals.ATTR1,
-            //             pErpOuCode: globals.P_ERP_OU_CODE,
-            //             pOuCode: globals.P_OU_CODE,
-            //           )),
-            // ).then((value) {
-            //   fetchData();
-            // });
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
           },
-          onConfirm: () {
-            getPDF(poErpDocNo, poTypeComplete);
+          onConfirm: () async {
+            await getPDF(poErpDocNo, poTypeComplete);
           },
         );
       },

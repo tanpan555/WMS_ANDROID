@@ -600,8 +600,8 @@ class DialogStyles {
               TextFormField(
                 controller: controller,
                 onChanged: onChanged,
-                minLines: 1,
-                maxLines: 3,
+                // minLines: 1,
+                // maxLines: 3,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black),
@@ -611,10 +611,6 @@ class DialogStyles {
                   labelText: labelText,
                   labelStyle: const TextStyle(
                     color: Colors.black87,
-                  ),
-                  suffixIcon: const Icon(
-                    Icons.arrow_drop_down,
-                    color: Color.fromARGB(255, 113, 113, 113),
                   ),
                 ),
               ),

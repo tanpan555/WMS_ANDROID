@@ -112,29 +112,29 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
       FocusScope.of(context).requestFocus(barcodeFocusNode);
     });
 
-    barcodeFocusNode.addListener(() {
-      if (!barcodeFocusNode.hasFocus) {
-        if (mounted) {
-          setState(() {
-            // if (barCode.contains(' ')) {
-            //   List<String> parts = barCode.split(' ');
-            //   lotNo = parts.sublist(1).join(' ');
-            //   lotNoController.text = lotNo;
-            // } else {
-            //   lotNo = barCode;
-            //   lotNoController.text = lotNo;
-            // }
+    // barcodeFocusNode.addListener(() {
+    //   if (!barcodeFocusNode.hasFocus) {
+    // if (mounted) {
+    //   setState(() {
+    // if (barCode.contains(' ')) {
+    //   List<String> parts = barCode.split(' ');
+    //   lotNo = parts.sublist(1).join(' ');
+    //   lotNoController.text = lotNo;
+    // } else {
+    //   lotNo = barCode;
+    //   lotNoController.text = lotNo;
+    // }
 
-            // if (barCode.isNotEmpty && lotNo.isNotEmpty) {
-            //   fetchData();
-            // }
-            if (barCode.isNotEmpty) {
-              fetchData();
-            }
-          });
-        }
-      }
-    });
+    // if (barCode.isNotEmpty && lotNo.isNotEmpty) {
+    //   fetchData();
+    // }
+    // if (barCode.isNotEmpty) {
+    //   fetchData();
+    // }
+    //   });
+    // }
+    //   }
+    // });
 
     // lotNumberFocusNode.addListener(() {
     //   if (!lotNumberFocusNode.hasFocus) {
@@ -148,23 +148,23 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
     //   }
     // });
 
-    quantityFocusNode.addListener(() {
-      if (!quantityFocusNode.hasFocus) {
-        if (mounted) {
-          setState(() {
-            chkQuantity();
-            // if (quantity.isNotEmpty && barCode.isNotEmpty && lotNo.isNotEmpty) {
-            // }
-            // if (barCode != '' &&
-            //     lotNo != '' &&
-            //     quantity != '' &&
-            //     statusFetchDataBarcode == '0') {
-            //   chkQuantity();
-            // }
-          });
-        }
-      }
-    });
+    // quantityFocusNode.addListener(() {
+    //   if (!quantityFocusNode.hasFocus) {
+    // if (mounted) {
+    //   setState(() {
+    // chkQuantity();
+    // if (quantity.isNotEmpty && barCode.isNotEmpty && lotNo.isNotEmpty) {
+    // }
+    // if (barCode != '' &&
+    //     lotNo != '' &&
+    //     quantity != '' &&
+    //     statusFetchDataBarcode == '0') {
+    //   chkQuantity();
+    // }
+    //   });
+    // }
+    //   }
+    // });
   }
 
   Future<void> fetchData() async {
@@ -564,22 +564,6 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
             TextFormField(
               controller: barcodeController,
               focusNode: barcodeFocusNode,
-              onChanged: (value) {
-                barCode = value;
-                // if (!_barcodeFocusNode.hasFocus) {
-                //   setState(() {
-                //     // barCode = barcodeController.text;
-                //     if (barCode.contains(' ')) {
-                //       List<String> parts = barCode.split(' ');
-                //       lotNo = parts.sublist(1).join(' ');
-                //       lotNoController.text = lotNo;
-                //     } else {
-                //       lotNo = barCode;
-                //       lotNoController.text = lotNo;
-                //     }
-                //   });
-                // }
-              },
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 filled: true,
@@ -589,6 +573,26 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
                   color: Colors.black87,
                 ),
               ),
+              onFieldSubmitted: (value) {
+                barCode = value;
+                setState(() {
+                  if (barCode.contains(' ')) {
+                    List<String> parts = barCode.split(' ');
+                    lotNo = parts.sublist(1).join(' ');
+                    lotNoController.text = lotNo;
+                  } else {
+                    lotNo = barCode;
+                    lotNoController.text = lotNo;
+                  }
+
+                  // if (barCode.isNotEmpty && lotNo.isNotEmpty) {
+                  //   fetchData();
+                  // }
+                });
+                if (barCode.isNotEmpty && lotNo.isNotEmpty) {
+                  fetchData();
+                }
+              },
             ),
             const SizedBox(height: 8),
             // --------------------------------------------------------------------------------------------------
@@ -672,6 +676,11 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
             TextFormField(
                 controller: quantityController,
                 focusNode: quantityFocusNode,
+                keyboardType:
+                    TextInputType.number, // ตั้งค่าแป้นพิมพ์ให้เป็นแบบตัวเลข
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly, // รับเฉพาะตัวเลข
+                ],
                 decoration: const InputDecoration(
                   border: InputBorder.none,
                   filled: true,
@@ -681,15 +690,13 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
                     color: Colors.black87,
                   ),
                 ),
-                onChanged: (value) {
+                onFieldSubmitted: (value) {
                   setState(
                     () {
                       quantity = value;
-                      // if (quantity.isNotEmpty &&
-                      //     barCode.isNotEmpty &&
-                      //     lotNo.isNotEmpty) {
-                      //   chkQuantity();
-                      // }
+                      if (barCode.isNotEmpty && lotNo.isNotEmpty) {
+                        chkQuantity();
+                      }
                     },
                   );
                 }),

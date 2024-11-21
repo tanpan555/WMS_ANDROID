@@ -11,6 +11,9 @@ import 'package:intl/intl.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/loading.dart';
 import 'package:wms_android/centered_message.dart';
+import 'SSFGDT31_form.dart';
+import 'SSFGDT31_grid.dart';
+import 'SSFGDT31_verify.dart';
 
 class Ssfgdt31Card extends StatefulWidget {
   final String pStatusDESC; // สถานะที่เลือก
@@ -49,7 +52,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
   ScrollController _scrollController = ScrollController();
   int showRecordRRR = 0;
 
-  // PDF
+  // ---------------------------- P ---------------------------- \\
   String? V_DS_PDF;
   String? LIN_ID;
   String? OU_CODE;
@@ -59,54 +62,40 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
   String? PROGRAM_ID;
   String? P_WARE;
   String? P_SESSION;
-
-  String? S_DOC_TYPE;
-  String? S_DOC_DATE;
-  String? S_DOC_NO;
-  String? E_DOC_TYPE;
-  String? E_DOC_DATE;
-  String? E_DOC_NO;
+  String? v_filename;
   String? FLAG;
-
+  // --------------------------- LH ------------------------ \\
   String? LH_PAGE;
   String? LH_DATE;
   String? LH_AR_NAME;
   String? LH_LOGISTIC_COMP;
-  String? LH_Doc_Type;
-  String? LH_Ware;
-  String? LH_CAR_ID;
-  // String? LH_Doc_No;
-  String? LH_Doc_Date;
-  String? LH_INVOICE_NO;
   String? LH_DOC_TYPE;
   String? LH_WARE;
+  String? LH_CAR_ID;
   String? LH_DOC_NO;
   String? LH_DOC_DATE;
+  String? LH_INVOICE_NO;
+
+  String? LB_SEQ;
   String? LB_ITEM_CODE;
   String? LB_ITEM_NAME;
   String? LB_LOCATION;
   String? LB_UMS;
-
-  String? LB_SEQ;
-  String? LB_Item_Code;
-  String? LB_Item_Name;
-  String? LB_Location;
-  String? LB_Ums;
   String? LB_LOTS_PRODUCT;
   String? LB_MO_NO;
   String? LB_TRAN_Qty;
-  String? LB_ATTRIBUTE1;
-  String? LB_TRAN_QTY;
+  String? LB_WEIGHT;
+  String? LB_PD_LOCATION;
+  String? LB_USED_TOTAL;
 
   String? LT_NOTE;
-  String? lt_total_qty;
+  String? LT_TOTAL_QTY;
   String? LT_ISSUE;
   String? LT_APPROVE;
   String? LT_OUT;
   String? LT_RECEIVE;
   String? LT_BILL;
   String? LT_CHECK;
-  String? LT_TOTAL_QTY;
 
   @override
   void initState() {
@@ -350,53 +339,40 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
     if (poStatus == '0') {
       switch (goToStep) {
         case '2':
-        // return _navigateToPage(
-        //     context,
-        //     Ssfgdt09lForm(
-        //         pWareCode: globals.P_ERP_OU_CODE,
-        //         pAttr1: widget.pAttr1,
-        //         // pDocNo: 'RMO1-WMS-24090028',
-        //         // pDocType: 'RMO1',
-        //         pDocNo: pDocNoGetInHead,
-        //         pDocType: pDocTypeGetInHead,
-        //         pOuCode: globals.P_OU_CODE,
-        //         pErpOuCode: globals.P_ERP_OU_CODE));
+          return _navigateToPage(
+            context,
+            Ssfgdt31Form(
+              pWareCode: widget.pWareCode,
+              pDocNo: pDocNoGetInHead,
+              pDocType: pDocTypeGetInHead,
+            ),
+          );
         case '3':
-        // return _navigateToPage(
-        //     context,
-        // Ssfgdt09lGrid(
-        //   pWareCode: globals.P_ERP_OU_CODE,
-        //   pAttr1: widget.pAttr1,
-        //   // docNo: 'RMO1-WMS-24090028',
-        //   // docType: 'RMO1',
-        //   docNo: pDocNoGetInHead,
-        //   docType: pDocTypeGetInHead,
-        //   docDate: formattedDateDocDate,
-        //   pErpOuCode: globals.P_ERP_OU_CODE,
-        //   pOuCode: globals.P_OU_CODE,
-        //   pAppUser: globals.APP_USER,
-        //   moDoNo: '230303001',
-        //   // test
-        //   statusCase: 'test3',
-        // ));
+          return _navigateToPage(
+              context,
+              Ssfgdt31Grid(
+                pWareCode: widget.pWareCode,
+                docNo: pDocNoGetInHead,
+                docType: pDocTypeGetInHead,
+                docDate: formattedDateDocDate,
+                moDoNo: '',
+                refNo: '',
+                refDocNo: '',
+                refDocType: '',
+              ));
         case '4':
-        // return _navigateToPage(
-        //     context,
-        //     Ssfgdt09lGrid(
-        //       pWareCode: globals.P_ERP_OU_CODE,
-        //       pAttr1: widget.pAttr1,
-        //       // docNo: 'RMO1-WMS-24090028',
-        //       // docType: 'RMO1',
-        //       docNo: pDocNoGetInHead,
-        //       docType: pDocTypeGetInHead,
-        //       docDate: formattedDateDocDate,
-        //       pErpOuCode: globals.P_ERP_OU_CODE,
-        //       pOuCode: globals.P_OU_CODE,
-        //       pAppUser: globals.APP_USER,
-        //       moDoNo: '230303001',
-        //       // test
-        //       statusCase: 'test4',
-        //     ));
+          return _navigateToPage(
+              context,
+              Ssfgdt31Verify(
+                docNo: pDocNoGetInHead,
+                docType: pDocTypeGetInHead,
+                docDate: formattedDateDocDate,
+                moDoNo: '',
+                refNo: '',
+                refDocNo: '',
+                refDocType: '',
+                pWareCode: widget.pWareCode,
+              ));
         default:
           return null;
       }
@@ -404,11 +380,11 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
   }
 
   Future<void> getPDF(String docNo, String docType, String docDate) async {
-    print(
-        '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${pFlag}/$pDsPdf');
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_PDF/$broeserLanguage/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${widget.pWareCode}/$sessionID/$docType/$docDate/$docNo/${pFlag}/$pDsPdf'));
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_GET_PDF/'
+          '${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${widget.pWareCode}/'
+          '${globals.APP_SESSION}/$docType/${globals.BROWSER_LANGUAGE}/${globals.P_DS_PDF}'));
 
       print('Response body: ${response.body}');
       print('docNo in get pdf : $docNo');
@@ -421,68 +397,18 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
         print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
         if (mounted) {
           setState(() {
-            // V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
-            // LIN_ID = dataPDF['LIN_ID'] ?? '';
-            // OU_CODE = dataPDF['OU_CODE'] ?? '';
-            // PROGRAM_NAME = dataPDF['PROGRAM_NAME'] ?? '';
-            // CURRENT_DATE = dataPDF['CURRENT_DATE'] ?? '';
-            // USER_ID = dataPDF['USER_ID'] ?? '';
-            // PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
-            // P_WARE = dataPDF['P_WARE'] ?? '';
-            // P_SESSION = dataPDF['P_SESSION'] ?? '';
-
-            // S_DOC_TYPE = dataPDF['S_DOC_TYPE'] ?? '';
-            // S_DOC_DATE = dataPDF['S_DOC_DATE'] ?? '';
-            // S_DOC_NO = dataPDF['S_DOC_NO'] ?? '';
-            // E_DOC_TYPE = dataPDF['E_DOC_TYPE'] ?? '';
-            // E_DOC_DATE = dataPDF['E_DOC_DATE'] ?? '';
-            // E_DOC_NO = dataPDF['E_DOC_NO'] ?? '';
-            // FLAG = dataPDF['FLAG'] ?? '';
-
-            // LH_PAGE = dataPDF['LH_PAGE'] ?? '';
-            // LH_DATE = dataPDF['LH_DATE'] ?? '';
-            // LH_AR_NAME = dataPDF['LH_AR_NAME'] ?? '';
-            // LH_LOGISTIC_COMP = dataPDF['LH_LOGISTIC_COMP'] ?? '';
-            // // LH_DOC_TYPE = dataPDF['LH_DOC_TYPE'] ?? '';
-            // // LH_WARE = dataPDF['LH_WARE'] ?? '';
-            // LH_CAR_ID = dataPDF['LH_CAR_ID'] ?? '';
-            // // LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
-            // // LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
-            // LH_INVOICE_NO = dataPDF['LH_INVOICE_NO'] ?? '';
-
-            // LB_SEQ = dataPDF['LB_SEQ'] ?? '';
-            // // LB_ITEM_CODE = dataPDF['LB_ITEM_CODE'] ?? '';
-            // // LB_ITEM_NAME = dataPDF['LB_ITEM_NAME'] ?? '';
-            // // LB_LOCATION = dataPDF['LB_LOCATION'] ?? '';
-            // // LB_UMS = dataPDF['LB_UMS'] ?? '';
-            // // LB_LOTS_PRODUCT = item['LB_LOTS_PRODUCT'] ?? '';
-            // // LB_MO_NO = item['LB_MO_NO'] ?? '';          ////-------////
-            // // LB_TRAN_QTY = dataPDF['LB_TRAN_QTY'] ?? '';
-            // // LB_ATTRIBUTE1 = item['LB_ATTRIBUTE1'] ?? '';
-            // LT_NOTE = dataPDF['LT_NOTE'] ?? '';
-            // // LT_TOTAL_QTY = dataPDF['LT_TOTAL_QTY'] ?? '';
-            // LT_ISSUE = dataPDF['LT_ISSUE'] ?? '';
-            // LT_APPROVE = dataPDF['LT_APPROVE'] ?? '';
-            // LT_OUT = dataPDF['LT_OUT'] ?? '';
-            // LT_RECEIVE = dataPDF['LT_RECEIVE'] ?? '';
-            // LT_BILL = dataPDF['LT_BILL'] ?? '';
-            // LT_CHECK = dataPDF['LT_CHECK'] ?? '';
-
             V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
             LIN_ID = dataPDF['LIN_ID'] ?? '';
             OU_CODE = dataPDF['OU_CODE'] ?? '';
             PROGRAM_NAME = dataPDF['PROGRAM_NAME'] ?? '';
             CURRENT_DATE = dataPDF['CURRENT_DATE'] ?? '';
+            USER_ID = dataPDF['USER_ID'] ?? '';
             PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
             P_WARE = dataPDF['P_WARE'] ?? '';
             P_SESSION = dataPDF['P_SESSION'] ?? '';
-            S_DOC_TYPE = dataPDF['S_DOC_TYPE'] ?? '';
-            S_DOC_DATE = dataPDF['S_DOC_DATE'] ?? '';
-            S_DOC_NO = dataPDF['S_DOC_NO'] ?? '';
-            E_DOC_TYPE = dataPDF['E_DOC_TYPE'] ?? '';
-            E_DOC_DATE = dataPDF['E_DOC_DATE'] ?? '';
-            E_DOC_NO = dataPDF['E_DOC_NO'] ?? '';
+            v_filename = dataPDF['v_filename'] ?? '';
             FLAG = dataPDF['FLAG'] ?? '';
+
             LH_PAGE = dataPDF['LH_PAGE'] ?? '';
             LH_DATE = dataPDF['LH_DATE'] ?? '';
             LH_AR_NAME = dataPDF['LH_AR_NAME'] ?? '';
@@ -493,6 +419,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
             LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
             LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
             LH_INVOICE_NO = dataPDF['LH_INVOICE_NO'] ?? '';
+
             LB_SEQ = dataPDF['LB_SEQ'] ?? '';
             LB_ITEM_CODE = dataPDF['LB_ITEM_CODE'] ?? '';
             LB_ITEM_NAME = dataPDF['LB_ITEM_NAME'] ?? '';
@@ -500,8 +427,10 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
             LB_UMS = dataPDF['LB_UMS'] ?? '';
             LB_LOTS_PRODUCT = dataPDF['LB_LOTS_PRODUCT'] ?? '';
             LB_MO_NO = dataPDF['LB_MO_NO'] ?? '';
-            LB_TRAN_QTY = dataPDF['LB_TRAN_QTY'] ?? '';
-            LB_ATTRIBUTE1 = dataPDF['LB_ATTRIBUTE1'] ?? '';
+            LB_TRAN_Qty = dataPDF['LB_TRAN_Qty'] ?? '';
+            LB_WEIGHT = dataPDF['LB_WEIGHT'] ?? '';
+            LB_PD_LOCATION = dataPDF['LB_PD_LOCATION'] ?? '';
+            LB_USED_TOTAL = dataPDF['LB_USED_TOTAL'] ?? '';
             LT_NOTE = dataPDF['LT_NOTE'] ?? '';
             LT_TOTAL_QTY = dataPDF['LT_TOTAL_QTY'] ?? '';
             LT_ISSUE = dataPDF['LT_ISSUE'] ?? '';
@@ -510,6 +439,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
             LT_RECEIVE = dataPDF['LT_RECEIVE'] ?? '';
             LT_BILL = dataPDF['LT_BILL'] ?? '';
             LT_CHECK = dataPDF['LT_CHECK'] ?? '';
+
             _launchUrl(docNo, docType);
           });
         }
@@ -524,12 +454,11 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
   Future<void> _launchUrl(String pErpDocNo, String pDocType) async {
     print('&LH_Doc_No=$LH_DOC_NO');
     final uri = Uri.parse('${globals.IP_API}/jri/report?'
-        '&_repName=/WMS/SSFGOD02A5'
+        '&_repName=/WMS/SSFGDT31_REPORT'
         '&_repFormat=pdf'
         '&_dataSource=${globals.P_DS_PDF}'
-        '&_outFilename=$pErpDocNo.pdf'
+        '&_outFilename=$pDocType-$pErpDocNo.pdf'
         '&_repLocale=en_US'
-        '&V_DS_PDF=$V_DS_PDF'
         '&LIN_ID=$LIN_ID'
         '&OU_CODE=$OU_CODE'
         '&PROGRAM_NAME=$PROGRAM_NAME'
@@ -540,34 +469,30 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
         '&P_SESSION=$P_SESSION'
         '&P_DOC_TYPE=$pDocType'
         '&P_ERP_DOC_NO=$pErpDocNo'
-        '&S_DOC_TYPE=$S_DOC_TYPE'
-        '&S_DOC_DATE=$S_DOC_DATE'
-        '&S_DOC_NO=$S_DOC_NO'
-        '&E_DOC_TYPE=$E_DOC_TYPE'
-        '&E_DOC_DATE=$E_DOC_DATE'
-        '&E_DOC_NO=$E_DOC_NO'
         '&FLAG=$FLAG'
         '&LH_PAGE=$LH_PAGE'
         '&LH_DATE=$LH_DATE'
         '&LH_AR_NAME=$LH_AR_NAME'
         '&LH_LOGISTIC_COMP=$LH_LOGISTIC_COMP'
-        '&LH_Doc_Type=$LH_Doc_Type'
-        '&LH_Ware=$LH_Ware'
+        '&LH_Doc_Type=$LH_DOC_TYPE'
+        '&LH_Ware=$LH_WARE'
         '&LH_CAR_ID=$LH_CAR_ID'
         '&LH_Doc_No=$LH_DOC_NO'
-        '&LH_Doc_Date=$LH_Doc_Date'
+        '&LH_Doc_Date=$LH_DOC_DATE'
         '&LH_INVOICE_NO=$LH_INVOICE_NO'
         '&LB_SEQ=$LB_SEQ'
-        '&LB_Item_Code=$LB_Item_Code'
-        '&LB_Item_Name=$LB_Item_Name'
-        '&LB_Location=$LB_Location'
-        '&LB_Ums=$LB_Ums'
+        '&LB_Item_Code=$LB_ITEM_CODE'
+        '&LB_Item_Name=$LB_ITEM_NAME'
+        '&LB_Location=$LB_LOCATION'
+        '&LB_Ums=$LB_UMS'
         '&LB_LOTS_PRODUCT=$LB_LOTS_PRODUCT'
         '&LB_MO_NO=$LB_MO_NO'
         '&LB_TRAN_Qty=$LB_TRAN_Qty'
-        '&LB_ATTRIBUTE1=$LB_ATTRIBUTE1'
+        '&LB_WEIGHT=$LB_WEIGHT'
+        '&LB_PD_LOCATION=$LB_PD_LOCATION'
+        '&LB_USED_TOTAL=$LB_USED_TOTAL'
         '&LT_NOTE=$LT_NOTE'
-        '&lt_total_qty=$lt_total_qty'
+        '&lt_total_qty=$LT_TOTAL_QTY'
         '&LT_ISSUE=$LT_ISSUE'
         '&LT_APPROVE=$LT_APPROVE'
         '&LT_OUT=$LT_OUT'
@@ -581,57 +506,6 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
     }
     print('pErpDocNo : $pErpDocNo');
     print('pDocType : $pDocType');
-    print('${globals.IP_API}/jri/report?'
-        '&_repName=/WMS/SSFGOD02A5'
-        '&_repFormat=pdf'
-        '&_dataSource=${globals.P_DS_PDF}'
-        '&_outFilename=$pErpDocNo.pdf'
-        '&_repLocale=en_US'
-        '&V_DS_PDF=$V_DS_PDF'
-        '&LIN_ID=$LIN_ID'
-        '&OU_CODE=$OU_CODE'
-        '&PROGRAM_NAME=$PROGRAM_NAME'
-        '&CURRENT_DATE=$CURRENT_DATE'
-        '&USER_ID=$USER_ID'
-        '&PROGRAM_ID=$PROGRAM_ID'
-        '&P_WARE=$P_WARE'
-        '&P_SESSION=$P_SESSION'
-        '&P_DOC_TYPE=$pDocType'
-        '&P_ERP_DOC_NO=$pErpDocNo'
-        '&S_DOC_TYPE=$S_DOC_TYPE'
-        '&S_DOC_DATE=$S_DOC_DATE'
-        '&S_DOC_NO=$S_DOC_NO'
-        '&E_DOC_TYPE=$E_DOC_TYPE'
-        '&E_DOC_DATE=$E_DOC_DATE'
-        '&E_DOC_NO=$E_DOC_NO'
-        '&FLAG=$FLAG'
-        '&LH_PAGE=$LH_PAGE'
-        '&LH_DATE=$LH_DATE'
-        '&LH_AR_NAME=$LH_AR_NAME'
-        '&LH_LOGISTIC_COMP=$LH_LOGISTIC_COMP'
-        '&LH_Doc_Type=$LH_Doc_Type'
-        '&LH_Ware=$LH_Ware'
-        '&LH_CAR_ID=$LH_CAR_ID'
-        '&LH_Doc_No=$LH_DOC_NO'
-        '&LH_Doc_Date=$LH_Doc_Date'
-        '&LH_INVOICE_NO=$LH_INVOICE_NO'
-        '&LB_SEQ=$LB_SEQ'
-        '&LB_Item_Code=$LB_Item_Code'
-        '&LB_Item_Name=$LB_Item_Name'
-        '&LB_Location=$LB_Location'
-        '&LB_Ums=$LB_Ums'
-        '&LB_LOTS_PRODUCT=$LB_LOTS_PRODUCT'
-        '&LB_MO_NO=$LB_MO_NO'
-        '&LB_TRAN_Qty=$LB_TRAN_Qty'
-        '&LB_ATTRIBUTE1=$LB_ATTRIBUTE1'
-        '&LT_NOTE=$LT_NOTE'
-        '&lt_total_qty=$lt_total_qty'
-        '&LT_ISSUE=$LT_ISSUE'
-        '&LT_APPROVE=$LT_APPROVE'
-        '&LT_OUT=$LT_OUT'
-        '&LT_RECEIVE=$LT_RECEIVE'
-        '&LT_BILL=$LT_BILL'
-        '&LT_CHECK=$LT_CHECK');
   }
 
   @override

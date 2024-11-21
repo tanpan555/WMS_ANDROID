@@ -324,6 +324,9 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
             docType: widget.docType,
             docDate: widget.docDate,
             moDoNo: widget.moDoNo,
+            refNo: widget.refNo,
+            refDocNo: widget.refDocNo,
+            refDocType: widget.refDocType,
             pWareCode: widget.pWareCode,
           ),
         ),
@@ -974,6 +977,9 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                         IconButton(
                           icon: const Icon(Icons.close),
                           onPressed: () {
+                            setState(() {
+                              isCheckDisEdit = false;
+                            });
                             if (CheckDataPackQty.toString() !=
                                 packQty.toString()) {
                               showExitWarningDialog(context);
@@ -1041,26 +1047,45 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                         child: TextFormField(
                           controller: oldPackQtyController,
                           readOnly: true,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black)),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
                             filled: true,
-                            fillColor: Colors.white,
+                            fillColor: Colors.grey[300],
                             labelText: 'จำนวนที่จ่าย',
-                            labelStyle: TextStyle(
+                            labelStyle: const TextStyle(
                               color: Colors.black87,
                             ),
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 16.0),
                           ),
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.right,
-                          onChanged: (value) {
-                            // CheckDataPackQty = value;
-                          },
                         ),
                       ),
                     ),
+                    // GestureDetector(
+                    //   child: AbsorbPointer(
+                    //     child: TextFormField(
+                    //       controller: oldPackQtyController,
+                    //       readOnly: true,
+                    //       decoration: InputDecoration(
+                    //         border: OutlineInputBorder(
+                    //             borderSide: BorderSide(color: Colors.black)),
+                    //         filled: true,
+                    //         fillColor: Colors.grey[300],
+                    //         labelText: 'จำนวนที่จ่าย',
+                    //         labelStyle: TextStyle(
+                    //           color: Colors.black87,
+                    //         ),
+                    //         contentPadding:
+                    //             EdgeInsets.symmetric(horizontal: 16.0),
+                    //       ),
+                    //       keyboardType: TextInputType.number,
+                    //       textAlign: TextAlign.right,
+                    //       onChanged: (value) {
+                    //         // CheckDataPackQty = value;
+                    //       },
+                    //     ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 8.0),
                     TextFormField(
                       controller: packQtyController,
@@ -1090,6 +1115,9 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                           onPressed: () async {
                             if (mounted) {
                               // setState(() async {
+                              setState(() {
+                                isCheckDisEdit = false;
+                              });
                               int A = int.tryParse(packQtyController.text) ?? 0;
                               int B = int.tryParse(oldPackQTY.toString()) ?? 0;
                               print('$A & $B');
