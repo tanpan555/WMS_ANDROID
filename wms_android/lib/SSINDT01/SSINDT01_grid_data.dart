@@ -232,8 +232,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   Future<void> updateReceiveQty(String rowid, String receiveQty,
       String rcvlot_supplier, String rcvlot_size) async {
-    final url = Uri.parse(
-        '${gb.IP_API}/apex/wms/SSINDT01/Step_3_WMS_PO_RECEIVE_DET');
+    final url =
+        Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_3_WMS_PO_RECEIVE_DET');
     final response = await http.put(
       url,
       headers: {
@@ -261,8 +261,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   }
 
   Future<void> deleteReceiveQty(String recNo, String recSeq) async {
-    final url =
-        Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_3_del_po');
+    final url = Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_3_del_po');
     final response = await http.delete(
       url,
       headers: {
@@ -289,8 +288,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     }
   }
 
-  Future<void> getLotList(
-      String poReceiveNo, String recSeq) async {
+  Future<void> getLotList(String poReceiveNo, String recSeq) async {
     final url =
         '${gb.IP_API}/apex/wms/SSINDT01/Step_3_get_lot/$poReceiveNo/$recSeq/${gb.P_ERP_OU_CODE}';
 
@@ -448,8 +446,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   Future<void> deleteLot(String recNo, String pOu, String recSeq, String PoNo,
       String lotSeq, String PoSeq) async {
-    final url =
-        Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_3_del_lot');
+    final url = Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_3_del_lot');
     print('recNo $recNo');
     print('pOu $pOu');
     print('recSeq $recSeq');
@@ -561,8 +558,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
   Future<void> updateLot(String lot_qty, String lot_supplier, String mfg_date,
       String OU_CODE, String RECEIVE_NO, String REC_SEQ, String lot_seq) async {
-    final url = Uri.parse(
-        '${gb.IP_API}/apex/wms/SSINDT01/Step_3_save_lot_det');
+    final url = Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_3_save_lot_det');
     final response = await http.put(
       url,
       headers: {
@@ -599,8 +595,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   }
 
   Future<void> updateOkLot(String v_rec_no, String v_rec_seq) async {
-    final url = Uri.parse(
-        '${gb.IP_API}/apex/wms/SSINDT01/Step_3_update_ok_lot');
+    final url =
+        Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_3_update_ok_lot');
     final response = await http.put(
       url,
       headers: {
@@ -1492,186 +1488,227 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                         ),
                       ),
                     ),
-                    ...dataList.map((data) {
-                      return InkWell(
-                        child: Card(
-                          elevation: 8,
-                          margin:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          color: Color.fromRGBO(204, 235, 252, 1.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Center(
-                                  child: Text(
-                                    '${data['item']?.toString() ?? ''}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: const Color.fromARGB(255, 0, 0, 0),
+                    dataList.isNotEmpty
+                        ? Column(
+                            children: dataList.map((data) {
+                              return InkWell(
+                                child: Card(
+                                  elevation: 8,
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 8, horizontal: 1),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  color: Color.fromRGBO(204, 235, 252, 1.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Center(
+                                          child: Text(
+                                            '${data['item']?.toString() ?? ''}',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                              color: const Color.fromARGB(
+                                                  255, 0, 0, 0),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: 12),
+                                        Divider(
+                                            color: const Color.fromARGB(
+                                                255, 0, 0, 0)),
+                                        _buildInfoRow2({
+                                          'จำนวนรับ:':
+                                              data['receive_qty']?.toString() ??
+                                                  '-',
+                                          'ค้างรับ:':
+                                              data['pending_qty']?.toString() ??
+                                                  '-',
+                                        }),
+                                        _buildInfoRow2({
+                                          'จำนวนรวม:': data['lot_total_nb']
+                                                  ?.toString() ??
+                                              '-',
+                                          'UOM:':
+                                              data['UOM']?.toString() ?? '-',
+                                        }),
+                                        _buildInfoRow3({
+                                          'Locator:':
+                                              data['locator_det']?.toString() ??
+                                                  '-',
+                                        }),
+                                        const SizedBox(height: 8),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            IconButton(
+                                              iconSize: 20.0,
+                                              icon: Image.asset(
+                                                'assets/images/bin.png',
+                                                width: 30,
+                                                height: 30,
+                                              ),
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return DialogStyles
+                                                        .alertMessageCheckDialog(
+                                                      context: context,
+                                                      content: const Text(
+                                                          'ยืนยันที่จะลบหรือไม่?'),
+                                                      onClose: () {
+                                                        Navigator.of(context)
+                                                            .pop(); // Close the dialog
+                                                      },
+                                                      onConfirm: () async {
+                                                        Navigator.of(context)
+                                                            .pop(); // Close the dialog
+                                                        await deleteReceiveQty(
+                                                          data['receive_no'],
+                                                          data['rec_seq']
+                                                              .toString(),
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                            FutureBuilder<String?>(
+                                              future: fetchvResultStatus(
+                                                  data['item']?.toString() ??
+                                                      ''),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return CircularProgressIndicator();
+                                                } else if (snapshot.hasError) {
+                                                  return Text('Error');
+                                                } else if (snapshot.data ==
+                                                    '1') {
+                                                  return ElevatedButton(
+                                                    onPressed: () async {
+                                                      final result =
+                                                          await Navigator.push<
+                                                              Map<String,
+                                                                  String>>(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              LotDialog(
+                                                            item: data['item']
+                                                                    ?.toString() ??
+                                                                '',
+                                                            itemDesc: data[
+                                                                        'item_desc']
+                                                                    ?.toString() ??
+                                                                '',
+                                                            recSeq: data[
+                                                                        'rec_seq']
+                                                                    ?.toString() ??
+                                                                '',
+                                                            lotQTY: data[
+                                                                        'lot_qty']
+                                                                    ?.toString() ??
+                                                                '',
+                                                            lotSize: data[
+                                                                        'lot_Size']
+                                                                    ?.toString() ??
+                                                                '',
+                                                            rowid: data['rowid']
+                                                                    ?.toString() ??
+                                                                '',
+                                                            lotSupp: [
+                                                              'lot_supplier'
+                                                            ].toString(),
+                                                            ouCode: data[
+                                                                        'ou_code']
+                                                                    ?.toString() ??
+                                                                '',
+                                                            poReceiveNo: widget
+                                                                .poReceiveNo,
+                                                            poPONO:
+                                                                widget.poPONO ??
+                                                                    '',
+                                                          ),
+                                                          fullscreenDialog:
+                                                              true,
+                                                        ),
+                                                      );
+                                                      if (result == null) {
+                                                        Timer(
+                                                            Duration(
+                                                                seconds: 1),
+                                                            () {
+                                                          sendGetRequestlineWMS();
+                                                        });
+                                                      }
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          const Color.fromARGB(
+                                                              255, 45, 68, 116),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                      ),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 20),
+                                                    ),
+                                                    child: Text(
+                                                      'LOT',
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.white),
+                                                    ),
+                                                  );
+                                                } else {
+                                                  return IconButton(
+                                                    iconSize: 20.0,
+                                                    icon: Image.asset(
+                                                      'assets/images/edit.png',
+                                                      width: 30,
+                                                      height: 30,
+                                                    ),
+                                                    onPressed: () async {
+                                                      _showDetailsDialog(data);
+                                                    },
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 12),
-                                Divider(
-                                    color: const Color.fromARGB(255, 0, 0, 0)),
-                                _buildInfoRow2({
-                                  'จำนวนรับ:':
-                                      data['receive_qty']?.toString() ?? '-',
-                                  'ค้างรับ:':
-                                      data['pending_qty']?.toString() ?? '-',
-                                }),
-                                _buildInfoRow2({
-                                  'จำนวนรวม:':
-                                      data['lot_total_nb']?.toString() ?? '-',
-                                  'UOM:': data['UOM']?.toString() ?? '-',
-                                }),
-                                _buildInfoRow3({
-                                  'Locator:':
-                                      data['locator_det']?.toString() ?? '-',
-                                }),
-                                const SizedBox(height: 8),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    IconButton(
-                                      iconSize: 20.0,
-                                      icon: Image.asset(
-                                        'assets/images/bin.png',
-                                        width: 30,
-                                        height: 30,
-                                      ),
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return DialogStyles
-                                                .alertMessageCheckDialog(
-                                              context: context,
-                                              content: const Text(
-                                                  'ยืนยันที่จะลบหรือไม่?'),
-                                              onClose: () {
-                                                Navigator.of(context)
-                                                    .pop(); // Close the dialog
-                                              },
-                                              onConfirm: () async {
-                                                Navigator.of(context)
-                                                    .pop(); // Close the dialog
-                                                // await fetchGetPo(); // Call the fetchGetPo function after confirming
-                                                await deleteReceiveQty(
-                                                  data['receive_no'],
-                                                  data['rec_seq'].toString(),
-                                                );
-                                              },
-                                            );
-                                          },
-                                        );
-                                      },
-                                    ),
-                                    FutureBuilder<String?>(
-                                      future: fetchvResultStatus(
-                                          data['item']?.toString() ?? ''),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return CircularProgressIndicator();
-                                        } else if (snapshot.hasError) {
-                                          return Text('Error');
-                                        } else if (snapshot.data == '1') {
-                                          return ElevatedButton(
-                                            onPressed: () async {
-                                              final result = await Navigator
-                                                  .push<Map<String, String>>(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      LotDialog(
-                                                    item: data['item']
-                                                            ?.toString() ??
-                                                        '',
-                                                    itemDesc: data['item_desc']
-                                                            ?.toString() ??
-                                                        '',
-                                                    recSeq: data['rec_seq']
-                                                            ?.toString() ??
-                                                        '',
-                                                    lotQTY: data['lot_qty']
-                                                            ?.toString() ??
-                                                        '',
-                                                    lotSize: data['lot_Size']
-                                                            ?.toString() ??
-                                                        '',
-                                                    rowid: data['rowid']
-                                                            ?.toString() ??
-                                                        '',
-                                                    lotSupp: ['lot_supplier']
-                                                            .toString(),
-                                                    ouCode: data['ou_code']
-                                                            ?.toString() ??
-                                                        '',
-                                                    poReceiveNo:
-                                                        widget.poReceiveNo,
-                                                    poPONO: widget.poPONO ?? '',
-                                                  ),
-                                                  fullscreenDialog: true,
-                                                ),
-                                              );
-                                              if (result == null) {
-                                                Timer(Duration(seconds: 1), () {
-                                                  sendGetRequestlineWMS();
-                                                });
-                                              }
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  const Color.fromARGB(
-                                                      255, 45, 68, 116),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 20),
-                                            ),
-                                            child: Text(
-                                              'LOT',
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.white),
-                                            ),
-                                          );
-                                        } else {
-                                          return IconButton(
-                                            iconSize: 20.0,
-                                            icon: Image.asset(
-                                              'assets/images/edit.png',
-                                              width: 30,
-                                              height: 30,
-                                            ),
-                                            onPressed: () async {
-                                              _showDetailsDialog(data);
-                                            },
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ],
+                              );
+                            }).toList(),
+                          )
+                        : Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 100),
+                              child: Text(
+                                'No data found',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    }).toList(),
                     const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

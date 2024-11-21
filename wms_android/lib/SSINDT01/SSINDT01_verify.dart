@@ -281,7 +281,6 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ', showExitWarning: false),
       body: Column(
         children: [
@@ -408,7 +407,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
           Expanded(
             child: dataList.isEmpty
                 ? Center(
-                    child: Text('No data available',
+                    child: Text('No data found',
                         style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.normal,

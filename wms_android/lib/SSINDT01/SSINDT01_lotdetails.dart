@@ -56,17 +56,12 @@ class _LotDialogState extends State<LotDialog> {
 
   // Add these methods for pagination control
   void updatePaginatedLotList() {
-    int startIndex = (currentPage - 1) * itemsPerPage;
-    int endIndex = startIndex + itemsPerPage;
-    if (endIndex > dataLotList.length) {
-      endIndex = dataLotList.length;
-    }
-    
-    setState(() {
-      paginatedLotList = dataLotList.sublist(startIndex, endIndex);
-      totalItems = dataLotList.length;
-    });
-  }
+  final startIndex = (currentPage - 1) * itemsPerPage;
+  final endIndex = (startIndex + itemsPerPage).clamp(0, dataLotList.length);
+  setState(() {
+    paginatedLotList = dataLotList.sublist(startIndex, endIndex);
+  });
+}
 
   void _loadNextPage() {
     if (currentPage < (dataLotList.length / itemsPerPage).ceil()) {
@@ -74,6 +69,7 @@ class _LotDialogState extends State<LotDialog> {
         currentPage++;
         updatePaginatedLotList();
       });
+      _scrollToTop();
     }
   }
 
@@ -83,6 +79,14 @@ class _LotDialogState extends State<LotDialog> {
         currentPage--;
         updatePaginatedLotList();
       });
+      _scrollToTop();
+    }
+  }
+
+  final ScrollController _scrollController = ScrollController();
+  void _scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0); // เลื่อนไปยังตำแหน่งเริ่มต้น (index 0)
     }
   }
 
@@ -274,35 +278,34 @@ class _LotDialogState extends State<LotDialog> {
     }
   }
 
-  Future<void> getLotList(
-      String poReceiveNo, String recSeq) async {
-    final url =
-        '${gb.IP_API}/apex/wms/SSINDT01/Step_3_get_lot/$poReceiveNo/$recSeq/${gb.P_ERP_OU_CODE}';
-    print(url);
-    final headers = {
-      'Content-Type': 'application/json; charset=UTF-8',
-    };
+  Future<void> getLotList(String poReceiveNo, String recSeq) async {
+  final url =
+      '${gb.IP_API}/apex/wms/SSINDT01/Step_3_get_lot/$poReceiveNo/$recSeq/${gb.P_ERP_OU_CODE}';
+  print(url);
+  final headers = {
+    'Content-Type': 'application/json; charset=UTF-8',
+  };
 
-    try {
-      final response = await http.get(Uri.parse(url), headers: headers);
+  try {
+    final response = await http.get(Uri.parse(url), headers: headers);
 
-      if (response.statusCode == 200) {
-        final responseBody = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(responseBody);
+    if (response.statusCode == 200) {
+      final responseBody = utf8.decode(response.bodyBytes);
+      final responseData = jsonDecode(responseBody);
 
-        setState(() {
-          dataLotList =
-              List<Map<String, dynamic>>.from(responseData['items'] ?? []);
-          currentPage = 1; // Reset to first page when new data is loaded
-          updatePaginatedLotList();
-        });
-      } else {
-        print('Failed to get data. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
+      setState(() {
+        dataLotList =
+            List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+        updatePaginatedLotList(); // Update pagination list
+      });
+    } else {
+      print('Failed to get data. Status code: ${response.statusCode}');
     }
+  } catch (e) {
+    print('Error: $e');
   }
+}
+
 
   Future<void> sendGetRequestlineWMS() async {
     final url =
@@ -993,44 +996,61 @@ class _LotDialogState extends State<LotDialog> {
   }
 
   Future<void> deleteLot(String recNo, String pOu, String recSeq, String PoNo,
-      String lotSeq, String PoSeq) async {
-    final url =
-        Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_3_del_lot');
-    print('recNo $recNo');
-    print('pOu $pOu');
-    print('recSeq $recSeq');
-    print('PoNo $PoNo');
-    print('lotSeq $lotSeq');
-    print('PoSeq $PoSeq');
-    final response = await http.delete(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'p_receive_no': recNo,
-        'p_rec_seq': recSeq,
-        'p_po_no': recNo,
-        'p_po_seq': PoSeq,
-        'p_lot_seq': lotSeq,
-        'p_ou': pOu,
-        'APP_USER': gb.APP_USER,
-      }),
-    );
+    String lotSeq, String PoSeq) async {
+  final url = Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_3_del_lot');
+  print('recNo $recNo');
+  print('pOu $pOu');
+  print('recSeq $recSeq');
+  print('PoNo $PoNo');
+  print('lotSeq $lotSeq');
+  print('PoSeq $PoSeq');
 
-    if (response.statusCode == 200) {
-      if (response.body.isNotEmpty) {
-        final responseBody = jsonDecode(response.body);
-        final poStatus = responseBody['po_status'];
-        final poMessage = responseBody['po_message'];
-        print('Status: $poStatus');
-        print('Message: $poMessage');
-      }
-      await getLotList(widget.poReceiveNo, recSeq);
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
+  final response = await http.delete(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode({
+      'p_receive_no': recNo,
+      'p_rec_seq': recSeq,
+      'p_po_no': recNo,
+      'p_po_seq': PoSeq,
+      'p_lot_seq': lotSeq,
+      'p_ou': pOu,
+      'APP_USER': gb.APP_USER,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    if (response.body.isNotEmpty) {
+      final responseBody = jsonDecode(response.body);
+      final poStatus = responseBody['po_status'];
+      final poMessage = responseBody['po_message'];
+      print('Status: $poStatus');
+      print('Message: $poMessage');
     }
+
+    // Store current page before reloading
+    final prevPage = currentPage;
+    await getLotList(widget.poReceiveNo, recSeq);
+
+    // Check if current page is empty
+    setState(() {
+      final startIndex = (prevPage - 1) * itemsPerPage;
+      if (startIndex >= dataLotList.length && dataLotList.isNotEmpty) {
+        // Move to the last page that has data
+        currentPage = ((dataLotList.length - 1) ~/ itemsPerPage) + 1;
+      } else {
+        currentPage = prevPage; // Stay on the current page
+      }
+      updatePaginatedLotList();
+    });
+  } else {
+    print('Request failed with status: ${response.statusCode}.');
   }
+}
+
+
 
   Widget _buildDialogButton({
     required String label,
@@ -1113,7 +1133,6 @@ class _LotDialogState extends State<LotDialog> {
     bool hasPrevPage = currentPage > 1;
 
     return Scaffold(
-      // backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(
         title: 'LOT Details',
         showExitWarning: checkUpdateData,
@@ -1121,6 +1140,7 @@ class _LotDialogState extends State<LotDialog> {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
+          controller: _scrollController,
           child: Column(
             children: <Widget>[
               // OK Button
@@ -1243,12 +1263,6 @@ class _LotDialogState extends State<LotDialog> {
                             style:
                                 TextStyle(color: Colors.white, fontSize: 14)),
                         onPressed: () async {
-                          // await genLot(
-                          //     widget.poReceiveNo,
-                          //     widget.poPONO.toString(),
-                          //     widget.recSeq,
-                          //     lotCountController.text,
-                          //     widget.ouCode);
                           await genLot(
                             widget.poReceiveNo,
                             widget.poPONO,
@@ -1371,7 +1385,7 @@ class _LotDialogState extends State<LotDialog> {
                   padding: const EdgeInsets.only(top: 100),
                   child: const Center(
                     child: Text(
-                      'No Data available',
+                      'No data found',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.white,
