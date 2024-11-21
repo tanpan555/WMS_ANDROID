@@ -92,7 +92,7 @@ class _LotDialogState extends State<LotDialog> {
     }
     int startIndex = ((currentPage - 1) * itemsPerPage) + 1;
     int endIndex = startIndex + paginatedLotList.length - 1;
-    return '$startIndex-$endIndex';
+    return '$startIndex - $endIndex';
   }
 
   @override
@@ -400,129 +400,6 @@ class _LotDialogState extends State<LotDialog> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // TextFormField(
-                  //   controller: mfgDateController,
-                  //   decoration: InputDecoration(
-                  //     filled: true,
-                  //     fillColor: Colors.white,
-                  //     labelText: 'MFG Date',
-                  //     border: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.circular(1.0),
-                  //     ),
-                  //     contentPadding:
-                  //         EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                  //     suffixIcon: Row(
-                  //       mainAxisSize: MainAxisSize.min,
-                  //       children: [
-                  //         IconButton(
-                  //           icon: Icon(Icons.calendar_today_outlined,
-                  //               color: Colors.black),
-                  //           onPressed: () async {
-                  //             DateTime? initialDate;
-                  //             if (initialDateString != null) {
-                  //               try {
-                  //                 initialDate = DateFormat('dd/MM/yyyy')
-                  //                     .parseStrict(initialDateString);
-                  //               } catch (e) {
-                  //                 initialDate = DateTime.now();
-                  //               }
-                  //             } else {
-                  //               initialDate = DateTime.now();
-                  //             }
-
-                  //             final DateTime? picked = await showDatePicker(
-                  //               context: context,
-                  //               initialDate: initialDate,
-                  //               firstDate: DateTime(2000),
-                  //               lastDate: DateTime(2101),
-                  //               initialEntryMode:
-                  //                   DatePickerEntryMode.calendarOnly,
-                  //             );
-                  //             if (picked != null) {
-                  //               String formattedDate =
-                  //                   displayFormat.format(picked);
-                  //               setState(() {
-                  //                 mfgDateController.text = formattedDate;
-                  //                 isMfgDateValid = true;
-                  //                 check = true;
-                  //                 checkUpdateData = true;
-                  //               });
-                  //             }
-                  //           },
-                  //         ),
-                  //       ],
-                  //     ),
-                  //     errorText: !isMfgDateValid
-                  //         ? 'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024'
-                  //         : null,
-                  //     errorStyle: TextStyle(
-                  //       fontSize: 10,
-                  //       color: Colors.red,
-                  //     ),
-                  //   ),
-                  //   onChanged: (value) {
-                  //     setState(() {
-                  //       check = true;
-                  //     });
-
-                  //     String numbersOnly = value.replaceAll('/', '');
-
-                  //     if (numbersOnly.length > 8) {
-                  //       numbersOnly = numbersOnly.substring(0, 8);
-                  //     }
-
-                  //     String formattedDate = '';
-                  //     int cursorPos = mfgDateController.selection.baseOffset;
-
-                  //     // Format the date as the user types
-                  //     for (int i = 0; i < numbersOnly.length; i++) {
-                  //       if (i == 2 || i == 4) {
-                  //         formattedDate += '/';
-                  //       }
-                  //       formattedDate += numbersOnly[i];
-                  //     }
-
-                  //     // Determine if the entered date is valid
-                  //     bool isValidDate = false;
-                  //     if (numbersOnly.length == 8) {
-                  //       try {
-                  //         final day = int.parse(numbersOnly.substring(0, 2));
-                  //         final month = int.parse(numbersOnly.substring(2, 4));
-                  //         final year = int.parse(numbersOnly.substring(4, 8));
-
-                  //         final date = DateTime(year, month, day);
-
-                  //         if (date.year == year &&
-                  //             date.month == month &&
-                  //             date.day == day) {
-                  //           isValidDate = true;
-                  //         }
-                  //       } catch (e) {
-                  //         isValidDate = false;
-                  //       }
-                  //     }
-
-                  //     setState(() {
-                  //       isMfgDateValid = numbersOnly.isEmpty || isValidDate;
-
-                  //       // Create a new TextEditingValue with the updated date and position
-                  //       final newSelection = TextSelection.collapsed(
-                  //           offset: cursorPos +
-                  //               formattedDate.length -
-                  //               value.length); // Adjust cursor position
-
-                  //       mfgDateController.value = TextEditingValue(
-                  //         text: formattedDate,
-                  //         selection: newSelection,
-                  //       );
-                  //     });
-                  //   },
-                  //   keyboardType: TextInputType.number,
-                  //   inputFormatters: [
-                  //     FilteringTextInputFormatter.digitsOnly,
-                  //     LengthLimitingTextInputFormatter(8),
-                  //   ],
-                  // )
                   CustomTextFormField(
   controller: mfgDateController,
   labelText: 'MFG Date',
@@ -1520,8 +1397,8 @@ class _LotDialogState extends State<LotDialog> {
         iconSize: 20.0,
         icon: Image.asset(
           'assets/images/bin.png',
-          width: 45.0,
-          height: 45.0,
+          width: 30,
+          height: 30,
         ),
         onPressed: () {
           showDialog(
@@ -1562,8 +1439,8 @@ class _LotDialogState extends State<LotDialog> {
         iconSize: 20.0,
         icon: Image.asset(
           'assets/images/edit.png',
-          width: 45.0,
-          height: 45.0,
+          width: 30,
+          height: 30,
         ),
         onPressed: () {
           showDetailsLotDialog(

@@ -89,7 +89,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
 
     int startIndex = ((currentPage - 1) * itemsPerPage) + 1;
     int endIndex = startIndex + paginatedData.length - 1;
-    return '$startIndex-$endIndex';
+    return '$startIndex - $endIndex';
   }
 
   String? poStatus;

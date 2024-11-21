@@ -51,9 +51,6 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
     super.initState();
     sendGetRequestlineWMS();
 
-    // chk_sub();
-    // fetchPDFData();
-
     reportServer = '${gb.IP_API}/jri/report?&_repName=/$reportname'
         '&_repFormat=pdf&_dataSource=wms'
         '&_outFilename=$erp_doc_no.pdf'
@@ -149,8 +146,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
 
         revNo = data['P_RECEIVE_NO'];
 
-        reportServer =
-            '${gb.IP_API}/jri/report?&_repName=/$reportname'
+        reportServer = '${gb.IP_API}/jri/report?&_repName=/$reportname'
             '&_repFormat=pdf&_dataSource=wms'
             '&_outFilename=${widget.poReceiveNo}.pdf'
             '&_repLocale=en_US';
@@ -191,8 +187,6 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
         LH_CUR_CODE = data['LH_CUR_CODE'];
         LH_RATE = data['LH_RATE'];
         P_RECEIVE_NO = data['P_RECEIVE_NO'];
-        // P_ERP_OU_CODE =  data['P_ERP_OU_CODE'];
-        //  P_OU_CODE = data['P_OU_CODE'];
         P_LIN_ID = data['P_LIN_ID'];
         V_DS_PDF = data['V_DS_PDF'];
         LH_PONO = data['LH_PONO'];
@@ -325,28 +319,31 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                     await chk_sub();
                     if (poStatus == '1') {
                       showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return DialogStyles.alertMessageDialog(
-                      context: context,
-                      content:Text(poMessage ?? ''),
-                      onClose: () {
-                        Navigator.of(context).pop();
-                        setState(() {
+                        context: context,
+                        builder: (BuildContext context) {
+                          return DialogStyles.alertMessageDialog(
+                            context: context,
+                            content: Text(poMessage ?? ''),
+                            onClose: () {
+                              Navigator.of(context).pop();
+                              setState(() {
                                 isDialogShowing =
                                     false; // Reset the flag when the first dialog is closed
                               });
-                      },
-                      onConfirm: () async {
-                        Navigator.of(context).pop();
-                        setState(() {
+                            },
+                            onConfirm: () async {
+                              Navigator.of(context).pop();
+                              setState(() {
                                 isDialogShowing =
                                     false; // Reset the flag when the first dialog is closed
                               });
-                      },
-                    );
-                  },
-                );
+                            },
+                          );
+                        },
+                      );
+                      setState(() {
+                        isDialogShowing = false; // รีเซ็ตสถานะหลังจากปิด dialog
+                      });
                     } else if (poStatus == '0') {
                       showDialog(
                         context: context,
@@ -369,6 +366,9 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                           );
                         },
                       );
+                      setState(() {
+                        isDialogShowing = false; // รีเซ็ตสถานะหลังจากปิด dialog
+                      });
                     }
                   },
                   style: AppStyles.ConfirmbuttonStyle(),

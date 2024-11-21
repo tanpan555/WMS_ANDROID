@@ -230,9 +230,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               receiveNoController.text = receiveNo;
               erpReceiveNoController.text = erpReceiveNo;
               pkWareCodeController.text = pkWareCode;
-              crDateController.text = crDate.isNotEmpty
-                  ? displayFormat.format(apiFormat.parse(crDate))
-                  : '';
+              crDateController.text = crDate;
               poTypeCodeController.text = poTypeCode;
 
               wareCodeController.text = wareCode;
@@ -748,11 +746,12 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                           '', // You can add a subtitle if needed
                       // subtitleText: (item) => item['po_type_desc'].toString(),
                       onTap: (item) {
+                        final poTypeCode = '${item['po_type_code'] ?? ''}';
                         Navigator.of(context).pop();
                         setState(() {
                           selectedPoType = poTypeCode;
                           print(selectedPoType);
-                          poTypeCodeController.text = poTypeCode;
+                          poTypeCodeController.text = selectedPoType ?? '';
                           print(poTypeCodeController.text);
                         });
                       },
@@ -782,7 +781,10 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                       color: Color.fromARGB(255, 113, 113, 113),
                     ),
                   ),
-                  controller: poTypeCodeController,
+                  controller: poTypeCodeController.text.isNotEmpty
+                  ? poTypeCodeController
+                  :TextEditingController(
+                                              text: selectedPoType),
                 ),
               ),
             ),
@@ -1246,9 +1248,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                   labelText: 'เลขที่ใบรับคลัง',
                   labelStyle: const TextStyle(
                     color: Colors.black87,
-                  ),
-                  // floatingLabelBehavior: FloatingLabelBehavior
-                  //     .always, // Prevents the label from shrinking
+                  ),// Prevents the label from shrinking
                   border: InputBorder.none,
                 ),
                 readOnly: true, // To keep it read-only
