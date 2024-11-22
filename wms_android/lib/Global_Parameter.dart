@@ -17,7 +17,6 @@ String P_SUBINV_NAME = '';
 String IP_API = 'http://172.16.0.82:8888';
 String ATTR1 = '';
 String P_WARE_CODE = '';
-//////
 String APP_SESSION = '';
 int sessionid = 0;
 String FLAG = '1';
