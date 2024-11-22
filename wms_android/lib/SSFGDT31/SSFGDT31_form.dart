@@ -431,8 +431,8 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
 
   Future<void> chkCust(
       String custCode, String arCode, int testChk, String checkWhere) async {
-    // cutuCode ---------------- mo do no
-    // acCode ---------------------- ref no
+    print(
+        '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_2_CheckCust/$custCode/$arCode');
     print('custCode  in chkCust  : $custCode type : ${custCode.runtimeType}');
     print('arCode  in chkCust  : $arCode type : ${arCode.runtimeType}');
     try {
@@ -781,9 +781,15 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                                       returnStatusLovDocType.isNotEmpty &&
                                       returnStatusLovDocType != '' &&
                                       returnStatusLovDocType != 'null') {
+                                    print(
+                                        '*******************************************************************************');
                                     chkCust(
-                                      returnStatusLovMoDoNo,
-                                      returnStatusLovRefNo,
+                                      returnStatusLovMoDoNo.isEmpty
+                                          ? 'null'
+                                          : returnStatusLovMoDoNo,
+                                      returnStatusLovRefNo.isEmpty
+                                          ? 'null'
+                                          : returnStatusLovRefNo,
                                       testChk = 1,
                                       checkWhere,
                                     );
