@@ -11,6 +11,7 @@ import 'SSFGDT04_MENU.dart';
 import '../styles.dart';
 import '../loading.dart';
 import '../TextFormFieldCheckDate.dart';
+import '../Global_API.dart' as api;
 
 class SSFGDT04_FORM extends StatefulWidget {
   // final String pReceiveNo; // ware code ที่มาจากเลือ lov
@@ -460,43 +461,91 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   }
 
   Future<void> changeRefReceiveItems(
-    String? oder, String? moDoNo, String? note, String? refReceive) async {
-  if (refReceive == null || refReceive.isEmpty) {
-    print('Error: refReceive is null or empty');
-    return;
-  }
+      String? oder, String? moDoNo, String? note, String? refReceive) async {
+    // try {
+    //   final response = await http.get(Uri.parse(
+    //       '${gb.IP_API}/apex/wms/SSFGDT04/Step_2_CHANGE_REF_RECEIVE]/${gb.ATTR1}/${widget.pWareCode}/$refReceive'));
+    //   print(Uri.parse(
+    //       '${gb.IP_API}/apex/wms/SSFGDT04/Step_2_CHANGE_REF_RECEIVE/${gb.ATTR1}/${widget.pWareCode}/$refReceive'));
 
-  try {
-    final url =
-        '${gb.IP_API}/apex/wms/SSFGDT04/Step_2_CHANGE_REF_RECEIVE/${gb.ATTR1}/${widget.pWareCode}/$refReceive';
-    print('Requesting URL: $url');
-    final response = await http.get(Uri.parse(url));
+    //   if (response.statusCode == 200) {
+    //     final responseBody = utf8.decode(response.bodyBytes);
+    //     final data = jsonDecode(responseBody);
 
-    if (response.statusCode == 200) {
-      final responseBody = utf8.decode(response.bodyBytes);
-
-      if (responseBody.isEmpty) {
-        print('Error 1: Empty response body');
-        return;
+    //     if (mounted) {
+    //       // ตรวจสอบว่า widget ยังคงอยู่ใน tree
+    //       setState(() {
+    //         changeRefReceive =
+    //             List<Map<String, dynamic>>.from(data ?? [0]);
+    //       });
+    //     }
+    //   } else {
+    //     throw Exception('Failed to load CHANGE REF RECEIVE items');
+    //   }
+    // } catch (e) {
+    //   // จัดการกับข้อผิดพลาด
+    //   print('Error fetching CHANGE REF RECEIVE items: $e');
+    // }
+    List<dynamic> get_ref_rec =
+        await api.apiget2('SSFGDT04/Step_2_CHANGE_REF_RECEIVE', {
+      'P_ATTR1': gb.ATTR1,
+      'P_WARE_CODE': widget.pWareCode,
+      'P_REF_RECEIVE': refReceive
+    });
+    setState(() {
+      _moDoNoController.text = get_ref_rec[0]['P_MO_DO_NO'] ?? '';
+      _oderNoController.text = get_ref_rec[0]['P_ORDER_NO'] ?? '';
+      _noteController.text = get_ref_rec[0]['P_NOTE'] ?? '';
+  });
       }
+  // Future<void> changeRefReceiveItems(String? oder, String? moDoNo, String? note, String? refReceive) async \{
+  //   List<dynamic> get_ref_rec =
+  //       await api.apiget2('SSFGDT04/Step_2_CHANGE_REF_RECEIVE', \{
+  //     'P_ATTR1': gb.ATTR1,\
+  //     'P_WARE_CODE': widget.pWareCode,\
+  //     'P_REF_RECEIVE': refReceive
+  //   \});
+  //   setState(\{() =>
+  //         _moDoNoController.text = get_ref_rec[0]['MO_DO_NO'] ?? '',
+  //         _oderNoController.text = get_ref_rec[0]['ORDER_NO'] ?? '',
+  //         _noteController.text = get_ref_rec[0]['NOTE'] ?? ''
+  //       \});
+  // \}\
+  // Future<void> changeRefReceiveItems(String? oder, String? moDoNo, String? note, String? refReceive) async \{
+  //   List<dynamic> get_ref_rec =
+  //       await api.apiget2('SSFGDT04/Step_2_CHANGE_REF_RECEIVE', \{
 
-      final data = jsonDecode(responseBody);
 
-      if (mounted) {
-        setState(() {
-          changeRefReceive =
-              List<Map<String, dynamic>>.from(data['items'] ?? []);
-        });
-      }
-    } else {
-      print('Error 2: ${response.statusCode}, ${response.body}');
-      throw Exception('Failed to load CHANGE REF RECEIVE items');
-    }
-  } catch (e) {
-    print('Error fetching CHANGE REF RECEIVE items: $e');
-  }
-}
 
+  // Future<void> _selectDate(BuildContext context) async {
+  //   DateTime? pickedDate = await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime(2000),
+  //     lastDate: DateTime(2101),
+  //     initialEntryMode: DatePickerEntryMode.calendarOnly,
+  //   );
+
+  //   if (pickedDate != null) {
+  //     // Format the date as dd-MM-yyyy for internal use
+  //     String formattedDateForSearch =
+  //         DateFormat('dd-MM-yyyy').format(pickedDate);
+  //     // Format the date as dd/MM/yyyy for display
+  //     String formattedDateForDisplay =
+  //         DateFormat('dd/MM/yyyy').format(pickedDate);
+
+  //     if (mounted) {
+  //       setState(() {
+  //         _docDateController.text = formattedDateForDisplay;
+  //         selectedDate = formattedDateForSearch;
+
+  //         // Set validation flag to false since the date is picked from the calendar
+  //         chkDate = false;
+  //         noDate = false; // Also ensure no error flag is set
+  //       });
+  //     }
+  //   }
+  // }
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
@@ -518,6 +567,23 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
       }
     }
   }
+
+  // String formatDate(String input) {
+  //   if (input.length == 8) {
+  //     // Attempt to parse the input string as a date in ddMMyyyy format
+  //     final day = int.tryParse(input.substring(0, 2));
+  //     final month = int.tryParse(input.substring(2, 4));
+  //     final year = int.tryParse(input.substring(4, 8));
+  //     if (day != null && month != null && year != null) {
+  //       final date = DateTime(year, month, day);
+  //       if (date.year == year && date.month == month && date.day == day) {
+  //         // Return the formatted date if valid
+  //         return DateFormat('dd/MM/yyyy').format(date);
+  //       }
+  //     }
+  //   }
+  //   return input; // Return original input if invalid
+  // }
 
   @override
   void dispose() {
