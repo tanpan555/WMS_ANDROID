@@ -457,10 +457,12 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
 
                   barCode = '';
                   locatorForm = '';
+                  locatorFormChk = '';
                   itemCode = '';
                   lotNo = '';
                   quantity = '';
                   locatorTo = '';
+                  locatorToChk = '';
                   lotQty = '';
                   lotUnit = '';
 
@@ -470,10 +472,12 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
 
                   barcodeController.clear();
                   locatorFormController.clear();
+                  locatorFormChkController.clear();
                   itemCodeController.clear();
                   lotNoController.clear();
                   quantityController.clear();
                   locatorToController.clear();
+                  locatorToChkController.clear();
                   lotQtyController.clear();
                   lotUnitController.clear();
 
@@ -788,10 +792,12 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
             Navigator.of(context).pop();
             barCode = '';
             locatorForm = '';
+            locatorFormChk = '';
             itemCode = '';
             lotNo = '';
             quantity = '';
             locatorTo = '';
+            locatorToChk = '';
             lotQty = '';
             lotUnit = '';
 
@@ -801,10 +807,12 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
 
             barcodeController.clear();
             locatorFormController.clear();
+            locatorFormChkController.clear();
             itemCodeController.clear();
             lotNoController.clear();
             quantityController.clear();
             locatorToController.clear();
+            locatorToChkController.clear();
             lotQtyController.clear();
             lotUnitController.clear();
 
@@ -815,10 +823,12 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
 
             barCode = '';
             locatorForm = '';
+            locatorFormChk = '';
             itemCode = '';
             lotNo = '';
             quantity = '';
             locatorTo = '';
+            locatorToChk = '';
             lotQty = '';
             lotUnit = '';
 
@@ -828,10 +838,12 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
 
             barcodeController.clear();
             locatorFormController.clear();
+            locatorFormChkController.clear();
             itemCodeController.clear();
             lotNoController.clear();
             quantityController.clear();
             locatorToController.clear();
+            locatorToChkController.clear();
             lotQtyController.clear();
             lotUnitController.clear();
 
@@ -904,10 +916,12 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
 
                           barCode = '';
                           locatorForm = '';
+                          locatorFormChk = '';
                           itemCode = '';
                           lotNo = '';
                           quantity = '';
                           locatorTo = '';
+                          locatorToChk = '';
                           lotQty = '';
                           lotUnit = '';
 
@@ -917,10 +931,12 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
 
                           barcodeController.clear();
                           locatorFormController.clear();
+                          locatorFormChkController.clear();
                           itemCodeController.clear();
                           lotNoController.clear();
                           quantityController.clear();
                           locatorToController.clear();
+                          locatorToChkController.clear();
                           lotQtyController.clear();
                           lotUnitController.clear();
 
@@ -955,10 +971,12 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
 
                         barCode = '';
                         locatorForm = '';
+                        locatorFormChk = '';
                         itemCode = '';
                         lotNo = '';
                         quantity = '';
                         locatorTo = '';
+                        locatorToChk = '';
                         lotQty = '';
                         lotUnit = '';
 
@@ -968,10 +986,12 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
 
                         barcodeController.clear();
                         locatorFormController.clear();
+                        locatorFormChkController.clear();
                         itemCodeController.clear();
                         lotNoController.clear();
                         quantityController.clear();
                         locatorToController.clear();
+                        locatorToChkController.clear();
                         lotQtyController.clear();
                         lotUnitController.clear();
 

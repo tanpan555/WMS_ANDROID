@@ -143,10 +143,6 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
               dataCard = [];
             }
             isLoading = false;
-            print('dataCard : $dataCard');
-            print('ATTR1 : ${globals.ATTR1}');
-            print(
-                'URL : ${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_DataCard/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${globals.ATTR1}/${widget.pWareCode}/${widget.pStatusDESC}/${widget.pDocDate}/${widget.pSoNo}/${globals.BROWSER_LANGUAGE}');
           });
         }
       } else {
@@ -171,13 +167,6 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
   int totalPages() {
     return (dataCard.length / itemsPerPage).ceil(); // คำนวณจำนวนหน้าทั้งหมด
   }
-
-  // List<dynamic> getCurrentData() {
-  //   return dataCard
-  //       .skip(currentPage * itemsPerPage)
-  //       .take(itemsPerPage)
-  //       .toList(); // รายการที่จะแสดงในหน้า
-  // }
 
   void loadNextPage() {
     if (currentPage < totalPages() - 1) {
@@ -520,189 +509,298 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
       appBar: CustomAppBar(
           title: 'รับคืนจากการเบิกเพื่อผลผลิต', showExitWarning: false),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: isLoading
-            ? Center(child: LoadingIndicator())
-            : dataCard.isEmpty
-                ? const Center(child: CenteredMessage())
-                : ListView.builder(
-                    controller: _scrollController,
-                    itemCount: getCurrentData().length + 1,
-                    itemBuilder: (context, index) {
-                      if (index < getCurrentData().length) {
-                        var item = getCurrentData()[index];
-                        Color cardColor;
-                        String statusText;
-                        // String iconImageYorN;
-                        // print(item['card_status_desc']);
-                        switch (item['card_status_desc']) {
-                          case 'ระหว่างบันทึก':
-                            cardColor = Color.fromRGBO(246, 250, 112, 1.0);
-                            statusText = 'ระหว่างบันทึก';
-                            break;
-                          case 'ยืนยันการรับ':
-                            cardColor = Color.fromRGBO(146, 208, 80, 1.0);
-                            statusText = 'ยืนยันการรับ';
-                            break;
-                          case 'ยกเลิก':
-                            cardColor = Color.fromRGBO(208, 206, 206, 1.0);
-                            statusText = 'ยกเลิก';
-                            break;
-                          case 'ยืนยันการจ่าย':
-                            cardColor = Color.fromRGBO(255, 255, 255, 1.0);
-                            statusText = 'ยืนยันการจ่าย';
-                            break;
-                          case 'ปกติ':
-                            cardColor = Color.fromRGBO(255, 255, 255, 1.0);
-                            statusText = 'ยืนยันการจ่าย';
-                            break;
-                          case 'อ้างอิงแล้ว':
-                            cardColor = Color.fromRGBO(255, 255, 255, 1.0);
-                            statusText = 'อ้างอิงแล้ว';
-                            break;
-                          default:
-                            cardColor = Color.fromRGBO(255, 255, 255, 1.0);
-                            statusText = 'Unknown';
-                        }
+          padding: EdgeInsets.all(16.0),
+          child: isLoading
+              ? Center(child: LoadingIndicator())
+              : dataCard.isEmpty
+                  ? const Center(child: CenteredMessage())
+                  : Column(
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            controller: _scrollController,
+                            child: ListView.builder(
+                              controller: _scrollController,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: getCurrentData().length + 1,
+                              itemBuilder: (context, index) {
+                                if (index < getCurrentData().length) {
+                                  var item = getCurrentData()[index];
+                                  Color cardColor;
+                                  String statusText;
+                                  // String iconImageYorN;
+                                  // print(item['card_status_desc']);
+                                  switch (item['card_status_desc']) {
+                                    case 'ระหว่างบันทึก':
+                                      cardColor =
+                                          Color.fromRGBO(246, 250, 112, 1.0);
+                                      statusText = 'ระหว่างบันทึก';
+                                      break;
+                                    case 'ยืนยันการรับ':
+                                      cardColor =
+                                          Color.fromRGBO(146, 208, 80, 1.0);
+                                      statusText = 'ยืนยันการรับ';
+                                      break;
+                                    case 'ยกเลิก':
+                                      cardColor =
+                                          Color.fromRGBO(208, 206, 206, 1.0);
+                                      statusText = 'ยกเลิก';
+                                      break;
+                                    case 'ยืนยันการจ่าย':
+                                      cardColor =
+                                          Color.fromRGBO(255, 255, 255, 1.0);
+                                      statusText = 'ยืนยันการจ่าย';
+                                      break;
+                                    case 'ปกติ':
+                                      cardColor =
+                                          Color.fromRGBO(255, 255, 255, 1.0);
+                                      statusText = 'ยืนยันการจ่าย';
+                                      break;
+                                    case 'อ้างอิงแล้ว':
+                                      cardColor =
+                                          Color.fromRGBO(255, 255, 255, 1.0);
+                                      statusText = 'อ้างอิงแล้ว';
+                                      break;
+                                    default:
+                                      cardColor =
+                                          Color.fromRGBO(255, 255, 255, 1.0);
+                                      statusText = 'Unknown';
+                                  }
 
-                        // switch (item['qc_yn']) {
-                        //   case 'Y':
-                        //     iconImageYorN = 'assets/images/rt_machine_on.png';
-                        //     break;
-                        //   case 'N':
-                        //     iconImageYorN = 'assets/images/rt_machine_off.png';
-                        //     break;
-                        //   default:
-                        //     iconImageYorN = 'assets/images/rt_machine_off.png';
-                        // }
+                                  // switch (item['qc_yn']) {
+                                  //   case 'Y':
+                                  //     iconImageYorN = 'assets/images/rt_machine_on.png';
+                                  //     break;
+                                  //   case 'N':
+                                  //     iconImageYorN = 'assets/images/rt_machine_off.png';
+                                  //     break;
+                                  //   default:
+                                  //     iconImageYorN = 'assets/images/rt_machine_off.png';
+                                  // }
 
-                        return CardStyles.cardPage(
-                          showON: item['qc_yn'] == 'Y'
-                              ? true
-                              : item['qc_yn'] == 'N'
-                                  ? false
-                                  : false,
-                          headerText: item['ap_name'],
-                          isShowPrint:
-                              item['show_btn'] == 'block' ? true : false,
-                          colorStatus: cardColor,
-                          statusCard: statusText,
-                          onCard: isCardDisabled
-                              ? null
-                              : () async {
-                                  setState(() {
-                                    isCardDisabled = true;
-                                  });
-                                  checkStatusCard(
-                                      item['po_no'] ?? '',
-                                      item['doc_no'] ?? '',
-                                      item['doc_type'] ?? '');
+                                  return CardStyles.cardPage(
+                                    showON: item['qc_yn'] == 'Y'
+                                        ? true
+                                        : item['qc_yn'] == 'N'
+                                            ? false
+                                            : false,
+                                    headerText: item['ap_name'],
+                                    isShowPrint: item['show_btn'] == 'block'
+                                        ? true
+                                        : false,
+                                    colorStatus: cardColor,
+                                    statusCard: statusText,
+                                    onCard: isCardDisabled
+                                        ? null
+                                        : () async {
+                                            setState(() {
+                                              isCardDisabled = true;
+                                            });
+                                            checkStatusCard(
+                                                item['po_no'] ?? '',
+                                                item['doc_no'] ?? '',
+                                                item['doc_type'] ?? '');
 
-                                  print(
-                                      'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
-                                  print(
-                                      'doc_no in Card : ${item['doc_no']} Type : ${item['doc_no'].runtimeType}');
-                                  print(
-                                      'doc_type in Card : ${item['doc_type']} Type : ${item['doc_type'].runtimeType}');
-                                },
-                          onPrint: isPrintDisabled
-                              ? null
-                              : () async {
-                                  setState(() {
-                                    isPrintDisabled = true;
-                                  });
-                                  DateTime parsedDate = DateFormat('dd/MM/yyyy')
-                                      .parse(item['po_date']);
-                                  String formattedDate =
-                                      DateFormat('dd-MM-yyyy')
-                                          .format(parsedDate);
+                                            print(
+                                                'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
+                                            print(
+                                                'doc_no in Card : ${item['doc_no']} Type : ${item['doc_no'].runtimeType}');
+                                            print(
+                                                'doc_type in Card : ${item['doc_type']} Type : ${item['doc_type'].runtimeType}');
+                                          },
+                                    onPrint: isPrintDisabled
+                                        ? null
+                                        : () async {
+                                            setState(() {
+                                              isPrintDisabled = true;
+                                            });
+                                            DateTime parsedDate =
+                                                DateFormat('dd/MM/yyyy')
+                                                    .parse(item['po_date']);
+                                            String formattedDate =
+                                                DateFormat('dd-MM-yyyy')
+                                                    .format(parsedDate);
 
-                                  formattedDateDocDate = formattedDate;
-                                  await getPDF(
-                                    item['doc_no'],
-                                    item['doc_type'],
-                                    formattedDate,
+                                            formattedDateDocDate =
+                                                formattedDate;
+                                            await getPDF(
+                                              item['doc_no'],
+                                              item['doc_type'],
+                                              formattedDate,
+                                            );
+
+                                            setState(() {
+                                              isPrintDisabled = false;
+                                            });
+                                          },
+                                    titleText:
+                                        '${item['po_date'] ?? ''} ${item['po_no'] ?? ''} ${item['item_stype_desc'] ?? ''}',
                                   );
-
-                                  setState(() {
-                                    isPrintDisabled = false;
-                                  });
-                                },
-                          titleText:
-                              '${item['po_date'] ?? ''} ${item['po_no'] ?? ''} ${item['item_stype_desc'] ?? ''}',
-                        );
-                      } else {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                currentPage > 0
-                                    ? ElevatedButton(
-                                        onPressed: currentPage > 0
-                                            ? () {
-                                                loadPrevPage();
-                                              }
-                                            : null,
-                                        style: ButtonStyles.previousButtonStyle,
-                                        child:
-                                            ButtonStyles.previousButtonContent,
-                                      )
-                                    : ElevatedButton(
-                                        onPressed: null,
-                                        style: DisableButtonStyles
-                                            .disablePreviousButtonStyle,
-                                        child: DisableButtonStyles
-                                            .disablePreviousButtonContent,
-                                      )
-                              ],
+                                } else {
+                                  return getCurrentData().length > 3
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                currentPage > 0
+                                                    ? ElevatedButton(
+                                                        onPressed:
+                                                            currentPage > 0
+                                                                ? () {
+                                                                    loadPrevPage();
+                                                                  }
+                                                                : null,
+                                                        style: ButtonStyles
+                                                            .previousButtonStyle,
+                                                        child: ButtonStyles
+                                                            .previousButtonContent,
+                                                      )
+                                                    : ElevatedButton(
+                                                        onPressed: null,
+                                                        style: DisableButtonStyles
+                                                            .disablePreviousButtonStyle,
+                                                        child: DisableButtonStyles
+                                                            .disablePreviousButtonContent,
+                                                      )
+                                              ],
+                                            ),
+                                            // const SizedBox(width: 30),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Center(
+                                                  child: Text(
+                                                    '${(currentPage * itemsPerPage) + 1} : ${((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length)}',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            // const SizedBox(width: 30),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                currentPage < totalPages() - 1
+                                                    ? ElevatedButton(
+                                                        onPressed: currentPage <
+                                                                totalPages() - 1
+                                                            ? () {
+                                                                loadNextPage();
+                                                              }
+                                                            : null,
+                                                        style: ButtonStyles
+                                                            .nextButtonStyle,
+                                                        child: ButtonStyles
+                                                            .nextButtonContent(),
+                                                      )
+                                                    : ElevatedButton(
+                                                        onPressed: null,
+                                                        style: DisableButtonStyles
+                                                            .disableNextButtonStyle,
+                                                        child: DisableButtonStyles
+                                                            .disablePreviousButtonContent,
+                                                      ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox.shrink();
+                                }
+                              },
                             ),
-                            // const SizedBox(width: 30),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Center(
-                                  child: Text(
-                                    '${(currentPage * itemsPerPage) + 1} : ${((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length)}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            // const SizedBox(width: 30),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                currentPage < totalPages() - 1
-                                    ? ElevatedButton(
-                                        onPressed:
-                                            currentPage < totalPages() - 1
-                                                ? () {
-                                                    loadNextPage();
-                                                  }
-                                                : null,
-                                        style: ButtonStyles.nextButtonStyle,
-                                        child: ButtonStyles.nextButtonContent(),
-                                      )
-                                    : ElevatedButton(
-                                        onPressed: null,
-                                        style: DisableButtonStyles
-                                            .disableNextButtonStyle,
-                                        child: DisableButtonStyles
-                                            .disablePreviousButtonContent,
+                          ),
+                        ),
+                        !isLoading && getCurrentData().length > 0
+                            ? getCurrentData().length <= 3
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          currentPage > 0
+                                              ? ElevatedButton(
+                                                  onPressed: currentPage > 0
+                                                      ? () {
+                                                          loadPrevPage();
+                                                        }
+                                                      : null,
+                                                  style: ButtonStyles
+                                                      .previousButtonStyle,
+                                                  child: ButtonStyles
+                                                      .previousButtonContent,
+                                                )
+                                              : ElevatedButton(
+                                                  onPressed: null,
+                                                  style: DisableButtonStyles
+                                                      .disablePreviousButtonStyle,
+                                                  child: DisableButtonStyles
+                                                      .disablePreviousButtonContent,
+                                                )
+                                        ],
                                       ),
-                              ],
-                            ),
-                          ],
-                        );
-                      }
-                    },
-                  ),
-      ),
+                                      // const SizedBox(width: 30),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Center(
+                                            child: Text(
+                                              '${(currentPage * itemsPerPage) + 1} - ${dataCard.isNotEmpty ? ((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length) : 0}',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      // const SizedBox(width: 30),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          currentPage < totalPages() - 1
+                                              ? ElevatedButton(
+                                                  onPressed: currentPage <
+                                                          totalPages() - 1
+                                                      ? () {
+                                                          loadNextPage();
+                                                        }
+                                                      : null,
+                                                  style: ButtonStyles
+                                                      .nextButtonStyle,
+                                                  child: ButtonStyles
+                                                      .nextButtonContent(),
+                                                )
+                                              : ElevatedButton(
+                                                  onPressed: null,
+                                                  style: DisableButtonStyles
+                                                      .disableNextButtonStyle,
+                                                  child: DisableButtonStyles
+                                                      .disablePreviousButtonContent,
+                                                ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox.shrink()
+                            : const SizedBox.shrink(),
+                      ],
+                    )),
       bottomNavigationBar: BottomBar(
         currentPage: 'show',
       ),

@@ -44,13 +44,11 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
   String poMessageSubmit = '';
   String flag = '1';
 
-  bool isLoading = false;
   bool checkComfrim = false;
-  String? nextLink = '';
-  String? prevLink = '';
-
-  String urlLoad = '';
-  int showRecordRRR = 0;
+  int currentPage = 0;
+  final int itemsPerPage = 5;
+  bool isLoading = true;
+  ScrollController _scrollController = ScrollController();
 
 // ---------------------------- P ---------------------------- \\
   String? V_DS_PDF;
@@ -134,18 +132,6 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
             } else {
               dataCard = [];
             }
-
-            List<dynamic> links = parsedResponse['links'] ?? [];
-            nextLink = getLink(links, 'next');
-            prevLink = getLink(links, 'prev');
-            urlLoad = url ??
-                '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_6_GridCard/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}';
-            if (url.toString().isNotEmpty) {
-              extractLastNumberFromUrl(url.toString() ==
-                      '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_6_GridCard/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}'
-                  ? 'null'
-                  : url.toString());
-            }
             isLoading = false;
           });
         }
@@ -169,58 +155,39 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
     }
   }
 
-  String? getLink(List<dynamic> links, String rel) {
-    final link =
-        links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
-    return link != null ? link['href'] : null;
+  int totalPages() {
+    return (dataCard.length / itemsPerPage).ceil(); // คำนวณจำนวนหน้าทั้งหมด
   }
 
   void loadNextPage() {
-    if (nextLink != '') {
+    if (currentPage < totalPages() - 1) {
       setState(() {
-        showRecordRRR = 0;
-        print('nextLink $nextLink');
-        isLoading = true;
+        currentPage++;
+        scrollToTop();
       });
-      fetchData(nextLink);
     }
   }
 
   void loadPrevPage() {
-    if (prevLink != '') {
+    if (currentPage > 0) {
       setState(() {
-        showRecordRRR = 0;
-        isLoading = true;
+        currentPage--;
+        scrollToTop();
       });
-      fetchData(prevLink);
     }
   }
 
-  void extractLastNumberFromUrl(String url) {
-    // Regular Expression สำหรับจับค่าหลัง offset=
-    RegExp regExp = RegExp(r'offset=(\d+)$');
-    RegExpMatch? match = regExp.firstMatch(url);
+  List<dynamic> getCurrentData() {
+    final start = currentPage * itemsPerPage;
+    final end = start + itemsPerPage;
 
-    // ตัวแปรสำหรับเก็บผลลัพธ์
-    int showRecord = 0; // ตั้งค่าเริ่มต้นเป็น 0
+    return dataCard.sublist(start, end.clamp(0, dataCard.length));
+  }
 
-    if (match != null) {
-      // แปลงค่าที่จับคู่ได้จาก String ไปเป็น int
-      showRecordRRR =
-          int.parse(match.group(1)!); // group(1) หมายถึงค่าหลัง offset=
-      print('ตัวเลขท้ายสุดคือ: $showRecord');
-      print('$showRecordRRR');
-      print('$showRecordRRR + 1 = ${showRecordRRR + 1}');
-      print('${dataCard.length}');
-      print(
-          '${dataCard.length} + $showRecordRRR = ${dataCard.length + showRecordRRR}');
-    } else {
-      // ถ้าไม่พบค่า ให้ผลลัพธ์เป็น 0
-      print('ไม่พบตัวเลขท้ายสุด, ส่งกลับเป็น 0');
+  void scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0); // เลื่อนไปยังตำแหน่งเริ่มต้น (index 0)
     }
-
-    // พิมพ์ค่าที่ได้
-    print('ผลลัพธ์: $showRecord');
   }
 
   Future<void> submitData() async {
@@ -418,375 +385,404 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(
-                  // flex: 5,
-                  child: Container(
-                    padding: const EdgeInsets.all(12.0),
-                    decoration: BoxDecoration(
-                      color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
-                      border: Border.all(
-                        color: Colors.black, // ขอบสีดำ
-                        width: 2.0, // ความกว้างของขอบ 2.0
-                      ),
-                      borderRadius: BorderRadius.circular(
-                          8.0), // เพิ่มมุมโค้งให้กับ Container
-                    ),
-                    child: Center(
-                      child: Text(
-                        widget.docNo,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+            isLoading
+                ? const SizedBox.shrink()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        // flex: 5,
+                        child: Container(
+                          padding: const EdgeInsets.all(12.0),
+                          decoration: BoxDecoration(
+                            color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
+                            border: Border.all(
+                              color: Colors.black, // ขอบสีดำ
+                              width: 2.0, // ความกว้างของขอบ 2.0
+                            ),
+                            borderRadius: BorderRadius.circular(
+                                8.0), // เพิ่มมุมโค้งให้กับ Container
+                          ),
+                          child: Center(
+                            child: Text(
+                              widget.docNo,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      const SizedBox(width: 4.0),
+                      ElevatedButton(
+                        onPressed: checkComfrim
+                            ? null
+                            : () async {
+                                setState(() {
+                                  checkComfrim = true;
+                                });
+                                await submitData();
+                                setState(() {
+                                  checkComfrim = false;
+                                });
+                              },
+                        style: AppStyles.ConfirmbuttonStyle(),
+                        child: Text(
+                          'ยืนยัน',
+                          style: AppStyles.ConfirmbuttonTextStyle(),
+                        ),
+                      ),
+                      // --------------------------------------------------------------------
+                    ],
                   ),
-                ),
-                const SizedBox(width: 4.0),
-                ElevatedButton(
-                  onPressed: checkComfrim
-                      ? null
-                      : () async {
-                          setState(() {
-                            checkComfrim = true;
-                          });
-                          await submitData();
-                          setState(() {
-                            checkComfrim = false;
-                          });
-                        },
-                  style: AppStyles.ConfirmbuttonStyle(),
-                  child: Text(
-                    'ยืนยัน',
-                    style: AppStyles.ConfirmbuttonTextStyle(),
-                  ),
-                ),
-                // --------------------------------------------------------------------
-              ],
-            ),
             const SizedBox(height: 10),
-            // Row(
-            //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     Expanded(
-            //       // flex: 5,
-            //       child: Container(
-            //         padding: const EdgeInsets.all(12.0),
-            //         decoration: BoxDecoration(
-            //           color: Colors.yellow[200], // พื้นหลังสีเหลืองอ่อน
-            //           border: Border.all(
-            //             color: Colors.black, // ขอบสีดำ
-            //             width: 2.0, // ความกว้างของขอบ 2.0
-            //           ),
-            //           borderRadius: BorderRadius.circular(
-            //               8.0), // เพิ่มมุมโค้งให้กับ Container
-            //         ),
-            //         child: Center(
-            //           child: Text(
-            //             widget.docNo,
-            //             style: const TextStyle(
-            //               color: Colors.black,
-            //               fontWeight: FontWeight.bold,
-            //               fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            // Expanded(
-            //   flex: 3,
-            //   child: Container(
-            //     padding: const EdgeInsets.all(12.0),
-            //     decoration: BoxDecoration(
-            //       color: Colors.lightBlue[100], // พื้นหลังสีเหลืองอ่อน
-            //       border: Border.all(
-            //         color: Colors.black, // ขอบสีดำ
-            //         width: 2.0, // ความกว้างของขอบ 2.0
-            //       ),
-            //       borderRadius: BorderRadius.circular(
-            //           8.0), // เพิ่มมุมโค้งให้กับ Container
-            //     ),
-            //     child: Center(
-            //       child: Text(
-            //         widget.moDoNo,
-            //         style: TextStyle(
-            //           color: Colors.black,
-            //           fontWeight: FontWeight.bold,
-            //           fontSize: 14, // ปรับขนาดตัวอักษรตามที่ต้องการ
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            //   ],
-            // ),
-
-            // const SizedBox(height: 4),
-            // --------------------------------------------------------------------
             Expanded(
               child: ListView(
+                controller: _scrollController,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(3.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 2.0,
-                      ),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 65,
-                          padding: const EdgeInsets.only(
-                              top: 10.0, right: 5.0, left: 5.0),
+                  isLoading
+                      ? const SizedBox.shrink()
+                      : Container(
+                          padding: const EdgeInsets.all(3.0),
                           decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            // border: Border.all(
-                            //   color: Colors.black,
-                            //   width: 2.0,
-                            // ),
+                            color: Colors.grey[100],
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2.0,
+                            ),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
-                          child: Stack(
+                          child: Column(
                             children: [
-                              const Positioned(
-                                top: 0,
-                                left: 0,
-                                child: Text(
-                                  'เลขที่เอกสารอ้างอิง',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    // fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
+                              Container(
+                                height: 65,
+                                padding: const EdgeInsets.only(
+                                    top: 10.0, right: 5.0, left: 5.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  // border: Border.all(
+                                  //   color: Colors.black,
+                                  //   width: 2.0,
+                                  // ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    const Positioned(
+                                      top: 0,
+                                      left: 0,
+                                      child: Text(
+                                        'เลขที่เอกสารอ้างอิง',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          // fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Text(
+                                        widget.refNo == 'null'
+                                            ? ''
+                                            : widget.refNo,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          // fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Center(
-                                child: Text(
-                                  widget.refNo == 'null' ? '' : widget.refNo,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    // fontWeight: FontWeight.bold,
-                                    fontSize: 14,
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    // flex: 5,
+                                    child: Container(
+                                      height: 65,
+                                      padding: const EdgeInsets.only(
+                                          top: 10.0, right: 5.0, left: 5.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[300],
+                                        // border: Border.all(
+                                        //   color: Colors.black,
+                                        //   width: 2.0,
+                                        // ),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                      child: Stack(
+                                        children: [
+                                          const Positioned(
+                                            top: 0,
+                                            left: 0,
+                                            child: Text(
+                                              'เลขที่คำสั่งผลิต',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                // fontWeight: FontWeight.bold,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ),
+                                          Center(
+                                            child: Text(
+                                              widget.moDoNo == 'null'
+                                                  ? ''
+                                                  : widget.moDoNo,
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                // fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    // flex: 5,
+                                    child: Container(
+                                      height: 65,
+                                      padding: const EdgeInsets.only(
+                                          top: 10.0, right: 5.0, left: 5.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[300],
+                                        // border: Border.all(
+                                        //   color: Colors.black,
+                                        //   width: 2.0,
+                                        // ),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                      child: Stack(
+                                        children: [
+                                          const Positioned(
+                                            top: 0,
+                                            left: 0,
+                                            child: Text(
+                                              'วันที่บันทึก',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                // fontWeight: FontWeight.bold,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ),
+                                          Center(
+                                            child: Text(
+                                              widget.docDate,
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                // fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            Expanded(
-                              // flex: 5,
-                              child: Container(
-                                height: 65,
-                                padding: const EdgeInsets.only(
-                                    top: 10.0, right: 5.0, left: 5.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  // border: Border.all(
-                                  //   color: Colors.black,
-                                  //   width: 2.0,
-                                  // ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    const Positioned(
-                                      top: 0,
-                                      left: 0,
-                                      child: Text(
-                                        'เลขที่คำสั่งผลิต',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          // fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ),
-                                    Center(
-                                      child: Text(
-                                        widget.moDoNo == 'null'
-                                            ? ''
-                                            : widget.moDoNo,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          // fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              // flex: 5,
-                              child: Container(
-                                height: 65,
-                                padding: const EdgeInsets.only(
-                                    top: 10.0, right: 5.0, left: 5.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  // border: Border.all(
-                                  //   color: Colors.black,
-                                  //   width: 2.0,
-                                  // ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    const Positioned(
-                                      top: 0,
-                                      left: 0,
-                                      child: Text(
-                                        'วันที่บันทึก',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          // fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ),
-                                    Center(
-                                      child: Text(
-                                        widget.docDate,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          // fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
                   isLoading
                       ? Center(child: LoadingIndicator())
                       : dataCard.isEmpty
                           ? const Center(child: CenteredMessage())
                           : ListView.builder(
+                              controller: _scrollController,
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              itemCount: dataCard.length,
+                              itemCount: getCurrentData().length + 1,
                               itemBuilder: (context, index) {
-                                final item = dataCard[index];
-
-                                return CardStyles.cardGridPageSSFGDT31(
-                                    isCanDeleteCard: false,
-                                    isCanEditDetail: false,
-                                    // lableHeader: 'Item',
-                                    dataHeaderCard: item['item_code'] ?? '',
-                                    labelDetail1: 'Lot No',
-                                    dataDetail1: item['lots_no'] ?? '',
-                                    labelDetail2: 'จำนวนรับ',
-                                    dataDetail2: item['pack_qty'],
-                                    labelDetail3: 'จำนวนจ่าย',
-                                    dataDetail3: int.tryParse(
-                                            item['old_pack_qty'] ?? '0') ??
-                                        0,
-                                    labelDetail4: 'Pack',
-                                    dataDetail4: item['pack_code'] ?? '',
-                                    labelDetail5: 'Location',
-                                    dataDetail5: item['location_code'] ?? '',
-                                    labelDetail6: 'PD Location',
-                                    dataDetail6: item['ATTRIBUTE1'] ?? '',
-                                    labelDetail7: 'Reason',
-                                    dataDetail7: item['ATTRIBUTE2'] ?? '',
-                                    labelDetail8: 'ใช้แทนจุด',
-                                    dataDetail8: item['ATTRIBUTE3'] ?? '',
-                                    labelDetail9: 'Replace Lot#',
-                                    dataDetail9: item['attribute4'] ?? '',
-                                    onTapDelete: null,
-                                    onTapEditDetail: null);
+                                if (index < getCurrentData().length) {
+                                  var item = getCurrentData()[index];
+                                  return CardStyles.cardGridPageSSFGDT31(
+                                      isCanDeleteCard: false,
+                                      isCanEditDetail: false,
+                                      // lableHeader: 'Item',
+                                      dataHeaderCard: item['item_code'] ?? '',
+                                      labelDetail1: 'Lot No',
+                                      dataDetail1: item['lots_no'] ?? '',
+                                      labelDetail2: 'จำนวนรับ',
+                                      dataDetail2: item['pack_qty'],
+                                      labelDetail3: 'จำนวนจ่าย',
+                                      dataDetail3: int.tryParse(
+                                              item['old_pack_qty'] ?? '0') ??
+                                          0,
+                                      labelDetail4: 'Pack',
+                                      dataDetail4: item['pack_code'] ?? '',
+                                      labelDetail5: 'Location',
+                                      dataDetail5: item['location_code'] ?? '',
+                                      labelDetail6: 'PD Location',
+                                      dataDetail6: item['ATTRIBUTE1'] ?? '',
+                                      labelDetail7: 'Reason',
+                                      dataDetail7: item['ATTRIBUTE2'] ?? '',
+                                      labelDetail8: 'ใช้แทนจุด',
+                                      dataDetail8: item['ATTRIBUTE3'] ?? '',
+                                      labelDetail9: 'Replace Lot#',
+                                      dataDetail9: item['attribute4'] ?? '',
+                                      onTapDelete: null,
+                                      onTapEditDetail: null);
+                                } else {
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          currentPage > 0
+                                              ? ElevatedButton(
+                                                  onPressed: currentPage > 0
+                                                      ? () {
+                                                          loadPrevPage();
+                                                        }
+                                                      : null,
+                                                  style: ButtonStyles
+                                                      .previousButtonStyle,
+                                                  child: ButtonStyles
+                                                      .previousButtonContent,
+                                                )
+                                              : ElevatedButton(
+                                                  onPressed: null,
+                                                  style: DisableButtonStyles
+                                                      .disablePreviousButtonStyle,
+                                                  child: DisableButtonStyles
+                                                      .disablePreviousButtonContent,
+                                                )
+                                        ],
+                                      ),
+                                      // const SizedBox(width: 30),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Center(
+                                            child: Text(
+                                              '${(currentPage * itemsPerPage) + 1} : ${((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length)}',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      // const SizedBox(width: 30),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          currentPage < totalPages() - 1
+                                              ? ElevatedButton(
+                                                  onPressed: currentPage <
+                                                          totalPages() - 1
+                                                      ? () {
+                                                          loadNextPage();
+                                                        }
+                                                      : null,
+                                                  style: ButtonStyles
+                                                      .nextButtonStyle,
+                                                  child: ButtonStyles
+                                                      .nextButtonContent(),
+                                                )
+                                              : ElevatedButton(
+                                                  onPressed: null,
+                                                  style: DisableButtonStyles
+                                                      .disableNextButtonStyle,
+                                                  child: DisableButtonStyles
+                                                      .disablePreviousButtonContent,
+                                                ),
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                                }
                               },
                             ),
-                  // =======================================================  dataCard.length > 1
-                  dataCard.isNotEmpty
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                prevLink != null
-                                    ? ElevatedButton(
-                                        onPressed: prevLink != null
-                                            ? loadPrevPage
-                                            : null,
-                                        style: ButtonStyles.previousButtonStyle,
-                                        child:
-                                            ButtonStyles.previousButtonContent,
-                                      )
-                                    : ElevatedButton(
-                                        onPressed: prevLink != null
-                                            ? loadPrevPage
-                                            : null,
-                                        style: DisableButtonStyles
-                                            .disablePreviousButtonStyle,
-                                        child: DisableButtonStyles
-                                            .disablePreviousButtonContent,
-                                      )
-                              ],
-                            ),
-                            // const SizedBox(width: 30),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Center(
-                                  child: Text(
-                                    '${showRecordRRR == 0 ? '1' : showRecordRRR + 1} - ${showRecordRRR == 0 ? dataCard.length : showRecordRRR + dataCard.length}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            // const SizedBox(width: 30),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                nextLink != null
-                                    ? ElevatedButton(
-                                        onPressed: nextLink != null
-                                            ? loadNextPage
-                                            : null,
-                                        style: ButtonStyles.nextButtonStyle,
-                                        child: ButtonStyles.nextButtonContent(),
-                                      )
-                                    : ElevatedButton(
-                                        onPressed: null,
-                                        style: DisableButtonStyles
-                                            .disableNextButtonStyle,
-                                        child: DisableButtonStyles
-                                            .disablePreviousButtonContent,
-                                      ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
-                  // =======================================================  dataCard.length > 1
                 ],
               ),
             ),
+            // !isLoading && getCurrentData().length > 0
+            //     ? getCurrentData().length <= 3
+            //         ? Row(
+            //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //             children: [
+            //               Row(
+            //                 mainAxisAlignment: MainAxisAlignment.start,
+            //                 children: [
+            //                   currentPage > 0
+            //                       ? ElevatedButton(
+            //                           onPressed: currentPage > 0
+            //                               ? () {
+            //                                   loadPrevPage();
+            //                                 }
+            //                               : null,
+            //                           style: ButtonStyles.previousButtonStyle,
+            //                           child: ButtonStyles.previousButtonContent,
+            //                         )
+            //                       : ElevatedButton(
+            //                           onPressed: null,
+            //                           style: DisableButtonStyles
+            //                               .disablePreviousButtonStyle,
+            //                           child: DisableButtonStyles
+            //                               .disablePreviousButtonContent,
+            //                         )
+            //                 ],
+            //               ),
+            //               // const SizedBox(width: 30),
+            //               Row(
+            //                 mainAxisAlignment: MainAxisAlignment.center,
+            //                 children: [
+            //                   Center(
+            //                     child: Text(
+            //                       '${(currentPage * itemsPerPage) + 1} - ${dataCard.isNotEmpty ? ((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length) : 0}',
+            //                       style: const TextStyle(
+            //                         color: Colors.white,
+            //                         fontWeight: FontWeight.bold,
+            //                       ),
+            //                     ),
+            //                   )
+            //                 ],
+            //               ),
+            //               // const SizedBox(width: 30),
+            //               Row(
+            //                 mainAxisAlignment: MainAxisAlignment.end,
+            //                 children: [
+            //                   currentPage < totalPages() - 1
+            //                       ? ElevatedButton(
+            //                           onPressed: currentPage < totalPages() - 1
+            //                               ? () {
+            //                                   loadNextPage();
+            //                                 }
+            //                               : null,
+            //                           style: ButtonStyles.nextButtonStyle,
+            //                           child: ButtonStyles.nextButtonContent(),
+            //                         )
+            //                       : ElevatedButton(
+            //                           onPressed: null,
+            //                           style: DisableButtonStyles
+            //                               .disableNextButtonStyle,
+            //                           child: DisableButtonStyles
+            //                               .disablePreviousButtonContent,
+            //                         ),
+            //                 ],
+            //               ),
+            //             ],
+            //           )
+            //         : const SizedBox.shrink()
+            //     : const SizedBox.shrink(),
           ],
         ),
       ),
