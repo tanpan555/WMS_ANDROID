@@ -232,12 +232,12 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
               returnStatusLovDocType = item['doc_type_r'] ?? '';
               returnStatusLovDocTypeForCheck = item['doc_type_r'] ?? '';
               // -----------------------------
-              selectLovRefNo = item['ref_no'] ?? '--No Value Set--';
-              returnStatusLovRefNo = item['ref_no'] ?? 'null';
+              selectLovRefNo = item['ref_no'] ?? '';
+              returnStatusLovRefNo = item['ref_no'] ?? '';
               returnStatusLovRefNoForCheck = item['ref_no'] ?? '';
               // -----------------------------
-              selectLovMoDoNo = item['mo_do_no'] ?? '--No Value Set--';
-              returnStatusLovMoDoNo = item['mo_do_no'] ?? 'null';
+              selectLovMoDoNo = item['mo_do_no'] ?? '';
+              returnStatusLovMoDoNo = item['mo_do_no'] ?? '';
               returnStatusLovMoDoNoForCheck = item['mo_do_no'] ?? '';
               // -----------------------------
               ouCodeController.text = ouCode;

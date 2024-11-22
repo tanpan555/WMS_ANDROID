@@ -230,10 +230,9 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
               returnStatusLovDocType = item['doc_type_r'] ?? '';
               returnStatusLovDocTypeForCheck = item['doc_type_r'] ?? '';
               // -----------------------------
-              selectLovRefNo = item['ref_no'] ?? '--No Value Set--';
-              returnStatusLovRefNo = item['ref_no'] ?? 'null';
-              returnStatusLovRefNoForCheck =
-                  item['ref_no'] ?? '--No Value Set--';
+              selectLovRefNo = item['ref_no'] ?? '';
+              returnStatusLovRefNo = item['ref_no'] ?? '';
+              returnStatusLovRefNoForCheck = item['ref_no'] ?? '';
               // -----------------------------
               selectLovMoDoNo = item['mo_do_no'] ?? '';
               returnStatusLovMoDoNo = item['mo_do_no'].toString();
