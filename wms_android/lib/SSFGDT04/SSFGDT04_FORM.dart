@@ -38,6 +38,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   List<Map<String, dynamic>> refReceiveItems = [];
   List<Map<String, dynamic>> refNoItems = [];
   List<Map<String, dynamic>> cancelItems = [];
+  List<Map<String, dynamic>> changeRefReceive = [];
   String? selectedDocType;
   String? selectedSaffCode;
   String? selectedRefReceive;
@@ -458,35 +459,44 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
     }
   }
 
-  // Future<void> _selectDate(BuildContext context) async {
-  //   DateTime? pickedDate = await showDatePicker(
-  //     context: context,
-  //     initialDate: DateTime.now(),
-  //     firstDate: DateTime(2000),
-  //     lastDate: DateTime(2101),
-  //     initialEntryMode: DatePickerEntryMode.calendarOnly,
-  //   );
+  Future<void> changeRefReceiveItems(
+    String? oder, String? moDoNo, String? note, String? refReceive) async {
+  if (refReceive == null || refReceive.isEmpty) {
+    print('Error: refReceive is null or empty');
+    return;
+  }
 
-  //   if (pickedDate != null) {
-  //     // Format the date as dd-MM-yyyy for internal use
-  //     String formattedDateForSearch =
-  //         DateFormat('dd-MM-yyyy').format(pickedDate);
-  //     // Format the date as dd/MM/yyyy for display
-  //     String formattedDateForDisplay =
-  //         DateFormat('dd/MM/yyyy').format(pickedDate);
+  try {
+    final url =
+        '${gb.IP_API}/apex/wms/SSFGDT04/Step_2_CHANGE_REF_RECEIVE/${gb.ATTR1}/${widget.pWareCode}/$refReceive';
+    print('Requesting URL: $url');
+    final response = await http.get(Uri.parse(url));
 
-  //     if (mounted) {
-  //       setState(() {
-  //         _docDateController.text = formattedDateForDisplay;
-  //         selectedDate = formattedDateForSearch;
+    if (response.statusCode == 200) {
+      final responseBody = utf8.decode(response.bodyBytes);
 
-  //         // Set validation flag to false since the date is picked from the calendar
-  //         chkDate = false;
-  //         noDate = false; // Also ensure no error flag is set
-  //       });
-  //     }
-  //   }
-  // }
+      if (responseBody.isEmpty) {
+        print('Error 1: Empty response body');
+        return;
+      }
+
+      final data = jsonDecode(responseBody);
+
+      if (mounted) {
+        setState(() {
+          changeRefReceive =
+              List<Map<String, dynamic>>.from(data['items'] ?? []);
+        });
+      }
+    } else {
+      print('Error 2: ${response.statusCode}, ${response.body}');
+      throw Exception('Failed to load CHANGE REF RECEIVE items');
+    }
+  } catch (e) {
+    print('Error fetching CHANGE REF RECEIVE items: $e');
+  }
+}
+
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
@@ -508,23 +518,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
       }
     }
   }
-
-  // String formatDate(String input) {
-  //   if (input.length == 8) {
-  //     // Attempt to parse the input string as a date in ddMMyyyy format
-  //     final day = int.tryParse(input.substring(0, 2));
-  //     final month = int.tryParse(input.substring(2, 4));
-  //     final year = int.tryParse(input.substring(4, 8));
-  //     if (day != null && month != null && year != null) {
-  //       final date = DateTime(year, month, day);
-  //       if (date.year == year && date.month == month && date.day == day) {
-  //         // Return the formatted date if valid
-  //         return DateFormat('dd/MM/yyyy').format(date);
-  //       }
-  //     }
-  //   }
-  //   return input; // Return original input if invalid
-  // }
 
   @override
   void dispose() {
@@ -1145,8 +1138,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                           item['doc']?.toString() ?? 'No code',
                                       subtitleText: (item) =>
                                           '', // Optional: Add more details if needed
-                                      onTap: (item) {
-                                        // When an item is tapped
+                                      onTap: (item) async {
                                         final doc = item['doc'].toString();
                                         Navigator.of(context)
                                             .pop(); // Close the dialog
@@ -1154,7 +1146,19 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                           selectedRefReceive = doc;
                                           _refReceiveController.text =
                                               selectedRefReceive!;
-                                          fetchRefReceiveItems();
+                                        });
+
+                                        // Fetch additional data and make the API call
+                                        await changeRefReceiveItems(
+                                          oder,
+                                          moDoNo,
+                                          note,
+                                          selectedRefReceive,
+                                        );
+
+                                        // Additional logic to handle updates if needed
+                                        setState(() {
+                                          fetchRefReceiveItems(); // Re-fetch items if necessary
                                           if (selectedRefReceive !=
                                               _refReceiveController.text) {
                                             checkUpdateData = true;
@@ -1364,7 +1368,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 0),
                             child: TextField(
-                              minLines: 2,
+                              minLines: 1,
                               maxLines: 5,
                               decoration: InputDecoration(
                                 labelText: 'หมายเหตุ',
@@ -1372,8 +1376,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                 fillColor: Colors.white,
                                 labelStyle: TextStyle(color: Colors.black),
                                 border: InputBorder.none,
-                                floatingLabelBehavior: FloatingLabelBehavior
-                                    .always, // บังคับให้ label อยู่ขอบบนเสมอ
+                                // floatingLabelBehavior: FloatingLabelBehavior.always, // บังคับให้ label อยู่ขอบบนเสมอ
                               ),
                               controller: _noteController,
                               onChanged: (value) {

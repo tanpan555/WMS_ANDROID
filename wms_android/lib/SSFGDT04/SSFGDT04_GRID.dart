@@ -66,7 +66,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
 
     return showDialog<void>(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false, // ปิด Popup ได้เฉพาะปุ่ม Icon
       builder: (BuildContext context) {
         return AlertDialog(
           content: Stack(
@@ -78,7 +78,36 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                 child: IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
+                    // Check if quantity has been modified
+                    final currentQuantity = item['pack_qty']?.toString() ?? '';
+                    final editedQuantity =
+                        quantityController.text.replaceAll(',', '');
+
+                    if (currentQuantity != editedQuantity) {
+                      // Show confirmation dialog
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return DialogStyles.warningNotSaveDialog(
+                            context: context,
+                            textMessage:
+                                'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?',
+                            onCloseDialog: () {
+                              Navigator.of(context)
+                                  .pop(); // Close only the confirmation dialog
+                            },
+                            onConfirmDialog: () {
+                              Navigator.of(context)
+                                  .pop(); // Close confirmation dialog
+                              Navigator.of(context).pop(); // Close edit dialog
+                            },
+                          );
+                        },
+                      );
+                    } else {
+                      Navigator.of(context)
+                          .pop(); // Close the edit dialog directly
+                    }
                   },
                 ),
               ),
@@ -149,14 +178,12 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                             border: OutlineInputBorder(),
                           ),
                           validator: (value) {
-                            // Check if the field is empty
                             if (value == null || value.isEmpty) {
                               return 'กรุณากรอกจำนวนรับ';
                             }
                             return null;
                           },
                           onChanged: (value) {
-                            // Clear the value from the card when empty
                             if (value.isEmpty) {
                               setState(() {
                                 item['pack_qty'] = null;
@@ -187,10 +214,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                     setState(() {
                       item['pack_qty'] = null; // Clear the quantity on card
                     });
-                    Navigator.of(context).pop();
-                    return;
+                    return; // ลบ Navigator.pop เพื่อไม่ปิด Popup
                   }
-
                   if (formKey.currentState?.validate() ?? false) {
                     final String cleanedText =
                         quantityController.text.replaceAll(',', '');
@@ -205,7 +230,6 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                       setState(() {
                         fetchGridItems();
                       });
-                      Navigator.of(context).pop();
                     } catch (e) {
                       print('Error parsing quantity: $e');
                     }
@@ -221,251 +245,284 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
     );
   }
 
-  Widget _buildInfoRow1(Map<String, String> info) {
+  Widget _buildInfoRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(
+          vertical: 4.0), // Optional padding for better spacing
       child: Row(
-        children: info.entries.map((entry) {
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Key
-                  Container(
-                    height: 30,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      entry.key,
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 14,
-                      ),
-                      softWrap: false,
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  SizedBox(width: 18),
-
-                  Container(
-                    constraints: BoxConstraints(
-                      minWidth: 80,
-                      maxWidth: 160,
-                    ),
-                    height: 30,
-                    child: TextField(
-                      enabled: false,
-                      controller: TextEditingController(text: entry.value),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: const Color.fromARGB(255, 255, 255, 255),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                          horizontal: 10.0,
-                        ),
-                      ),
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 14,
-                      ),
-                      textAlign: TextAlign.right,
-                      readOnly: true,
-                    ),
-                  ),
-                ],
+        crossAxisAlignment: CrossAxisAlignment
+            .center, // Align both label and value to the center
+        children: [
+          Text(
+            label,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(width: 8),
+          Flexible(
+            // Flexible allows the value to take only the necessary space
+            child: CustomContainerStyles.styledContainer(
+              value, // Pass the value to determine the container style
+              padding:
+                  5.0, // Adjust padding for better spacing inside the container
+              child: Text(
+                value,
+                style: TextStyle(
+                    overflow: TextOverflow.ellipsis), // Ellipsis for long text
+                softWrap: true,
+                maxLines: 2, // Limit to two lines if necessary
               ),
             ),
-          );
-        }).toList(),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildInfoRow2(Map<String, String> info) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: info.entries.map((entry) {
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Key
-                  Container(
-                    height: 30,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      entry.key,
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 14,
-                      ),
-                      softWrap: false,
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  SizedBox(width: 18),
+  // Widget _buildInfoRow1(Map<String, String> info) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 4.0),
+  //     child: Row(
+  //       children: info.entries.map((entry) {
+  //         return Expanded(
+  //           child: Padding(
+  //             padding: const EdgeInsets.symmetric(horizontal: 40),
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.start,
+  //               crossAxisAlignment: CrossAxisAlignment.center,
+  //               children: [
+  //                 // Key
+  //                 Container(
+  //                   height: 30,
+  //                   alignment: Alignment.centerLeft,
+  //                   child: Text(
+  //                     entry.key,
+  //                     style: TextStyle(
+  //                       color: const Color.fromARGB(255, 0, 0, 0),
+  //                       fontSize: 14,
+  //                     ),
+  //                     softWrap: false,
+  //                     textAlign: TextAlign.left,
+  //                   ),
+  //                 ),
+  //                 SizedBox(width: 18),
 
-                  Container(
-                    constraints: BoxConstraints(
-                      minWidth: 80,
-                      maxWidth: 160,
-                    ),
-                    height: 30,
-                    child: TextField(
-                      enabled: false,
-                      controller: TextEditingController(text: entry.value),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: const Color.fromARGB(255, 255, 255, 255),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                          horizontal: 10.0,
-                        ),
-                      ),
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 14,
-                      ),
-                      textAlign: TextAlign.left,
-                      readOnly: true,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
+  //                 Container(
+  //                   constraints: BoxConstraints(
+  //                     minWidth: 80,
+  //                     maxWidth: 160,
+  //                   ),
+  //                   height: 30,
+  //                   child: TextField(
+  //                     enabled: false,
+  //                     controller: TextEditingController(text: entry.value),
+  //                     decoration: InputDecoration(
+  //                       filled: true,
+  //                       fillColor: const Color.fromARGB(255, 255, 255, 255),
+  //                       border: InputBorder.none,
+  //                       contentPadding: const EdgeInsets.symmetric(
+  //                         vertical: 16,
+  //                         horizontal: 10.0,
+  //                       ),
+  //                     ),
+  //                     style: TextStyle(
+  //                       color: const Color.fromARGB(255, 0, 0, 0),
+  //                       fontSize: 14,
+  //                     ),
+  //                     textAlign: TextAlign.right,
+  //                     readOnly: true,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       }).toList(),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildInfoRow3(Map<String, String> info) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: info.entries.map((entry) {
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Key
-                  Container(
-                    height: 30,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      entry.key,
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 14,
-                      ),
-                      softWrap: false,
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  SizedBox(width: 18),
+  // Widget _buildInfoRow2(Map<String, String> info) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 4.0),
+  //     child: Row(
+  //       children: info.entries.map((entry) {
+  //         return Expanded(
+  //           child: Padding(
+  //             padding: const EdgeInsets.symmetric(horizontal: 15),
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.start,
+  //               crossAxisAlignment: CrossAxisAlignment.center,
+  //               children: [
+  //                 // Key
+  //                 Container(
+  //                   height: 30,
+  //                   alignment: Alignment.centerLeft,
+  //                   child: Text(
+  //                     entry.key,
+  //                     style: TextStyle(
+  //                       color: const Color.fromARGB(255, 0, 0, 0),
+  //                       fontSize: 14,
+  //                     ),
+  //                     softWrap: false,
+  //                     textAlign: TextAlign.left,
+  //                   ),
+  //                 ),
+  //                 SizedBox(width: 18),
 
-                  Container(
-                    constraints: BoxConstraints(
-                      minWidth: 80,
-                      maxWidth: 160,
-                    ),
-                    height: 30,
-                    child: TextField(
-                      enabled: false,
-                      controller: TextEditingController(text: entry.value),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: const Color.fromARGB(255, 255, 255, 255),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 18,
-                          horizontal: 10.0,
-                        ),
-                      ),
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 14,
-                      ),
-                      textAlign: TextAlign.left,
-                      readOnly: true,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
+  //                 Container(
+  //                   constraints: BoxConstraints(
+  //                     minWidth: 80,
+  //                     maxWidth: 160,
+  //                   ),
+  //                   height: 30,
+  //                   child: TextField(
+  //                     enabled: false,
+  //                     controller: TextEditingController(text: entry.value),
+  //                     decoration: InputDecoration(
+  //                       filled: true,
+  //                       fillColor: const Color.fromARGB(255, 255, 255, 255),
+  //                       border: InputBorder.none,
+  //                       contentPadding: const EdgeInsets.symmetric(
+  //                         vertical: 16,
+  //                         horizontal: 10.0,
+  //                       ),
+  //                     ),
+  //                     style: TextStyle(
+  //                       color: const Color.fromARGB(255, 0, 0, 0),
+  //                       fontSize: 14,
+  //                     ),
+  //                     textAlign: TextAlign.left,
+  //                     readOnly: true,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       }).toList(),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildInfoRow4(Map<String, String> info) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: info.entries.map((entry) {
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Key
-                  Container(
-                    height: 30,
-                    // alignment: Alignment.centerLeft,
-                    child: Text(
-                      entry.key,
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 14,
-                      ),
-                      softWrap: false,
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  SizedBox(width: 18),
+  // Widget _buildInfoRow3(Map<String, String> info) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 4.0),
+  //     child: Row(
+  //       children: info.entries.map((entry) {
+  //         return Expanded(
+  //           child: Padding(
+  //             padding: const EdgeInsets.symmetric(horizontal: 32),
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.start,
+  //               crossAxisAlignment: CrossAxisAlignment.center,
+  //               children: [
+  //                 // Key
+  //                 Container(
+  //                   height: 30,
+  //                   alignment: Alignment.centerLeft,
+  //                   child: Text(
+  //                     entry.key,
+  //                     style: TextStyle(
+  //                       color: const Color.fromARGB(255, 0, 0, 0),
+  //                       fontSize: 14,
+  //                     ),
+  //                     softWrap: false,
+  //                     textAlign: TextAlign.left,
+  //                   ),
+  //                 ),
+  //                 SizedBox(width: 18),
 
-                  Container(
-                    constraints: BoxConstraints(
-                      minWidth: 80,
-                      maxWidth: 160,
-                    ),
-                    height: 50,
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    color: const Color.fromARGB(255, 255, 255, 255),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        entry.value,
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 14,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
+  //                 Container(
+  //                   constraints: BoxConstraints(
+  //                     minWidth: 80,
+  //                     maxWidth: 160,
+  //                   ),
+  //                   height: 30,
+  //                   child: TextField(
+  //                     enabled: false,
+  //                     controller: TextEditingController(text: entry.value),
+  //                     decoration: InputDecoration(
+  //                       filled: true,
+  //                       fillColor: const Color.fromARGB(255, 255, 255, 255),
+  //                       border: InputBorder.none,
+  //                       contentPadding: const EdgeInsets.symmetric(
+  //                         vertical: 18,
+  //                         horizontal: 10.0,
+  //                       ),
+  //                     ),
+  //                     style: TextStyle(
+  //                       color: const Color.fromARGB(255, 0, 0, 0),
+  //                       fontSize: 14,
+  //                     ),
+  //                     textAlign: TextAlign.left,
+  //                     readOnly: true,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       }).toList(),
+  //     ),
+  //   );
+  // }
+
+  // Widget _buildInfoRow4(Map<String, String> info) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 4.0),
+  //     child: Row(
+  //       children: info.entries.map((entry) {
+  //         return Expanded(
+  //           child: Padding(
+  //             padding: const EdgeInsets.symmetric(horizontal: 28),
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.start,
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 // Key
+  //                 Container(
+  //                   height: 30,
+  //                   // alignment: Alignment.centerLeft,
+  //                   child: Text(
+  //                     entry.key,
+  //                     style: TextStyle(
+  //                       color: const Color.fromARGB(255, 0, 0, 0),
+  //                       fontSize: 14,
+  //                     ),
+  //                     softWrap: false,
+  //                     textAlign: TextAlign.left,
+  //                   ),
+  //                 ),
+  //                 SizedBox(width: 18),
+
+  //                 Container(
+  //                   constraints: BoxConstraints(
+  //                     minWidth: 80,
+  //                     maxWidth: 160,
+  //                   ),
+  //                   height: 50,
+  //                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
+  //                   color: const Color.fromARGB(255, 255, 255, 255),
+  //                   child: Align(
+  //                     alignment: Alignment.centerLeft,
+  //                     child: Text(
+  //                       entry.value,
+  //                       style: TextStyle(
+  //                         color: const Color.fromARGB(255, 0, 0, 0),
+  //                         fontSize: 14,
+  //                       ),
+  //                       textAlign: TextAlign.left,
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       }).toList(),
+  //     ),
+  //   );
+  // }
 
   Future<void> fetchUpdate(String? itemCode, String? poPackCode,
       String? poPackQty, String? rowid) async {
@@ -894,6 +951,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
             const SizedBox(height: 16),
             Expanded(
               child: SingleChildScrollView(
+                controller: _scrollController,
                 // child: _buildCards(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -954,7 +1012,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             // itemCount: gridItems.length,
-                            controller: _scrollController,
+                            // controller: _scrollController,
                             itemCount:
                                 itemsPerPage + 1, // +1 for the pagination row
                             itemBuilder: (context, index) {
@@ -969,137 +1027,258 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
 
                                 final item = dataCard[actualIndex];
 
-                                return Card(
-                                  elevation: 8.0,
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                return
+                                    // Card(
+                                    //   elevation: 8.0,
+                                    //   margin:
+                                    //       const EdgeInsets.symmetric(vertical: 8.0),
+                                    //   shape: RoundedRectangleBorder(
+                                    //     borderRadius: BorderRadius.circular(15.0),
+                                    //   ),
+                                    //   color: Colors.lightBlue[100],
+                                    //   child: InkWell(
+                                    //     borderRadius: BorderRadius.circular(15.0),
+                                    //     child: Stack(
+                                    //       children: [
+                                    //         Padding(
+                                    //           padding: const EdgeInsets.all(8),
+                                    //           child: Column(
+                                    //             mainAxisSize: MainAxisSize.min,
+                                    //             mainAxisAlignment:
+                                    //                 MainAxisAlignment.start,
+                                    //             children: [
+                                    //               Center(
+                                    //                 child: Text(
+                                    //                   item['item_code'] ?? '',
+                                    //                   style: const TextStyle(
+                                    //                     fontWeight: FontWeight.bold,
+                                    //                     fontSize: 20,
+                                    //                   ),
+                                    //                   textAlign: TextAlign.center,
+                                    //                 ),
+                                    //               ),
+                                    //               const Divider(
+                                    //                   color: Colors.black26,
+                                    //                   thickness: 1),
+                                    //               const SizedBox(height: 8),
+                                    //               _buildInfoRow1({
+                                    //                 'จำนวนรับ :': item[
+                                    //                             'pack_qty'] !=
+                                    //                         null
+                                    //                     ? NumberFormat('#,###')
+                                    //                         .format(
+                                    //                             item['pack_qty'])
+                                    //                     : '',
+                                    //               }),
+                                    //               _buildInfoRow2({
+                                    //                 'จำนวน Pallet :':
+                                    //                     item['count_qty'] ?? '',
+                                    //               }),
+                                    //               _buildInfoRow3({
+                                    //                 'จำนวนรวม :':
+                                    //                     item['count_qty_in'] ?? '',
+                                    //               }),
+                                    //               _buildInfoRow4({
+                                    //                 'Item Desc :':
+                                    //                     item['nb_item_name'] ?? '',
+                                    //               }),
+                                    //               const SizedBox(height: 8),
+                                    //               // Row with delete and edit buttons
+                                    //               Row(
+                                    //                 mainAxisAlignment: MainAxisAlignment
+                                    //                     .spaceBetween, // Align buttons
+                                    //                 children: [
+                                    //                   // Delete button as image
+                                    //                   IconButton(
+                                    //                     icon: Image.asset(
+                                    //                       'assets/images/bin.png', // Delete image path
+                                    //                       width: 30,
+                                    //                       height: 30,
+                                    //                     ),
+                                    //                     onPressed: () async {
+                                    //                       showDialog(
+                                    //                         context: context,
+                                    //                         builder: (BuildContext
+                                    //                             context) {
+                                    //                           return DialogStyles
+                                    //                               .alertMessageCheckDialog(
+                                    //                             context: context,
+                                    //                             content: const Text(
+                                    //                                 'ต้องการลบรายการหรือไม่?'),
+                                    //                             onClose: () {
+                                    //                               Navigator.of(
+                                    //                                       context)
+                                    //                                   .pop(); // Close the dialog
+                                    //                             },
+                                    //                             onConfirm:
+                                    //                                 () async {
+                                    //                               Navigator.of(
+                                    //                                       context)
+                                    //                                   .pop(); // Close the dialog
+                                    //                               // await fetchGetPo(); // Call the fetchGetPo function after confirming
+                                    //                               final poItemCode =
+                                    //                                   item[
+                                    //                                       'item_code'];
+                                    //                               final poSeq =
+                                    //                                   item['seq'];
+                                    //                               await delete(
+                                    //                                   widget
+                                    //                                       .po_doc_no,
+                                    //                                   widget
+                                    //                                       .po_doc_type,
+                                    //                                   poSeq,
+                                    //                                   poItemCode);
+                                    //                               if (mounted) {
+                                    //                                 setState(() {
+                                    //                                   gridItems.removeWhere((item) =>
+                                    //                                       item['item_code'] ==
+                                    //                                           poItemCode &&
+                                    //                                       item['seq'] ==
+                                    //                                           poSeq);
+                                    //                                 });
+                                    //                               }
+                                    //                             },
+                                    //                           );
+                                    //                         },
+                                    //                       );
+                                    //                     },
+                                    //                   ),
+                                    //                   // Edit button as image
+                                    //                   IconButton(
+                                    //                     icon: Image.asset(
+                                    //                       'assets/images/edit.png', // Edit image path
+                                    //                       width: 30,
+                                    //                       height: 30,
+                                    //                     ),
+                                    //                     onPressed: () {
+                                    //                       _showEditDialog(
+                                    //                           context, item);
+                                    //                     },
+                                    //                   ),
+                                    //                 ],
+                                    //               ),
+                                    //             ],
+                                    //           ),
+                                    //         ),
+                                    //       ],
+                                    //     ),
+                                    //   ),
+                                    // );
+                                    Card(
+                                  elevation: 4.0,
+                                  margin: EdgeInsets.symmetric(vertical: 8.0),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15.0),
                                   ),
-                                  color: Colors.lightBlue[100],
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    child: Stack(
+                                  color: Color.fromRGBO(204, 235, 252, 1.0),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Center(
-                                                child: Text(
-                                                  item['item_code'] ?? '',
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                              const Divider(
-                                                  color: Colors.black26,
-                                                  thickness: 1),
-                                              const SizedBox(height: 8),
-                                              _buildInfoRow1({
-                                                'จำนวนรับ :': item[
-                                                            'pack_qty'] !=
-                                                        null
-                                                    ? NumberFormat('#,###')
-                                                        .format(
-                                                            item['pack_qty'])
-                                                    : '',
-                                              }),
-                                              _buildInfoRow2({
-                                                'จำนวน Pallet :':
-                                                    item['count_qty'] ?? '',
-                                              }),
-                                              _buildInfoRow3({
-                                                'จำนวนรวม :':
-                                                    item['count_qty_in'] ?? '',
-                                              }),
-                                              _buildInfoRow4({
-                                                'Item Desc :':
-                                                    item['nb_item_name'] ?? '',
-                                              }),
-                                              const SizedBox(height: 8),
-                                              // Row with delete and edit buttons
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment
-                                                    .spaceBetween, // Align buttons
-                                                children: [
-                                                  // Delete button as image
-                                                  IconButton(
-                                                    icon: Image.asset(
-                                                      'assets/images/bin.png', // Delete image path
-                                                      width: 30,
-                                                      height: 30,
-                                                    ),
-                                                    onPressed: () async {
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (BuildContext
-                                                            context) {
-                                                          return DialogStyles
-                                                              .alertMessageCheckDialog(
-                                                            context: context,
-                                                            content: const Text(
-                                                                'ต้องการลบรายการหรือไม่?'),
-                                                            onClose: () {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop(); // Close the dialog
-                                                            },
-                                                            onConfirm:
-                                                                () async {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop(); // Close the dialog
-                                                              // await fetchGetPo(); // Call the fetchGetPo function after confirming
-                                                              final poItemCode =
-                                                                  item[
-                                                                      'item_code'];
-                                                              final poSeq =
-                                                                  item['seq'];
-                                                              await delete(
-                                                                  widget
-                                                                      .po_doc_no,
-                                                                  widget
-                                                                      .po_doc_type,
-                                                                  poSeq,
-                                                                  poItemCode);
-                                                              if (mounted) {
-                                                                setState(() {
-                                                                  gridItems.removeWhere((item) =>
-                                                                      item['item_code'] ==
-                                                                          poItemCode &&
-                                                                      item['seq'] ==
-                                                                          poSeq);
-                                                                });
-                                                              }
-                                                            },
-                                                          );
-                                                        },
-                                                      );
-                                                    },
-                                                  ),
-                                                  // Edit button as image
-                                                  IconButton(
-                                                    icon: Image.asset(
-                                                      'assets/images/edit.png', // Edit image path
-                                                      width: 30,
-                                                      height: 30,
-                                                    ),
-                                                    onPressed: () {
-                                                      _showEditDialog(
-                                                          context, item);
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                        Center(
+                                          child: Text(
+                                            item['item_code'] ?? '',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                            ),
+                                            textAlign: TextAlign.center,
                                           ),
+                                        ),
+                                        const Divider(
+                                            color: Colors.black26,
+                                            thickness: 1),
+                                        const SizedBox(height: 4),
+                                        _buildInfoRow(
+                                          'จำนวนรับ :',
+                                          item['pack_qty'] != null
+                                              ? NumberFormat('#,###')
+                                                  .format(item['pack_qty'])
+                                              : '',
+                                        ),
+                                        SizedBox(height: 4),
+                                        _buildInfoRow(
+                                          'จำนวน Pallet :',
+                                          item['count_qty'] ?? '',
+                                        ),
+                                        SizedBox(height: 4),
+                                        _buildInfoRow(
+                                          'จำนวนรวม :',
+                                          item['count_qty_in'] ?? '',
+                                        ),
+                                        SizedBox(height: 4),
+                                        _buildInfoRow(
+                                          'Item Desc :',
+                                          item['nb_item_name'] ?? '',
+                                        ),
+                                        SizedBox(height: 8),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment
+                                              .spaceBetween, // Align buttons
+                                          children: [
+                                            // Delete button as image
+                                            IconButton(
+                                              icon: Image.asset(
+                                                'assets/images/bin.png', // Delete image path
+                                                width: 30,
+                                                height: 30,
+                                              ),
+                                              onPressed: () async {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return DialogStyles
+                                                        .alertMessageCheckDialog(
+                                                      context: context,
+                                                      content: const Text(
+                                                          'ต้องการลบรายการหรือไม่?'),
+                                                      onClose: () {
+                                                        Navigator.of(context)
+                                                            .pop(); // Close the dialog
+                                                      },
+                                                      onConfirm: () async {
+                                                        Navigator.of(context)
+                                                            .pop(); // Close the dialog
+                                                        // await fetchGetPo(); // Call the fetchGetPo function after confirming
+                                                        final poItemCode =
+                                                            item['item_code'];
+                                                        final poSeq =
+                                                            item['seq'];
+                                                        await delete(
+                                                            widget.po_doc_no,
+                                                            widget.po_doc_type,
+                                                            poSeq,
+                                                            poItemCode);
+                                                        if (mounted) {
+                                                          setState(() {
+                                                            gridItems.removeWhere((item) =>
+                                                                item['item_code'] ==
+                                                                    poItemCode &&
+                                                                item['seq'] ==
+                                                                    poSeq);
+                                                          });
+                                                        }
+                                                      },
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                            // Edit button as image
+                                            IconButton(
+                                              icon: Image.asset(
+                                                'assets/images/edit.png', // Edit image path
+                                                width: 30,
+                                                height: 30,
+                                              ),
+                                              onPressed: () {
+                                                _showEditDialog(context, item);
+                                              },
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
