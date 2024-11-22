@@ -51,6 +51,8 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
   bool isLoading = true;
   ScrollController _scrollController = ScrollController();
   int showRecordRRR = 0;
+  bool isPrintDisabled = false;
+  bool isCardDisabled = false;
 
   // ---------------------------- P ---------------------------- \\
   String? V_DS_PDF;
@@ -213,7 +215,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
     print('po_status $pReceiveNo Type: ${pReceiveNo.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_check_ISSDirect_validate/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/$pReceiveNo'));
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_CheckGoToStep/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/$pReceiveNo'));
 
       if (response.statusCode == 200) {
         // ถอดรหัสข้อมูล JSON จาก response
@@ -225,25 +227,20 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
         //
         print('Fetched data: $jsonDecode');
         if (mounted) {
-          setState(() {
-            // statusCard = dataStatusCard['po_status'] ?? '';
-            // messageCard = dataStatusCard['po_message'] ?? '';
-            // goToStep = dataStatusCard['po_goto_step'] ?? '';
-            checkGoTostep(
-              dataStatusCard['po_status'] ?? '',
-              dataStatusCard['po_message'] ?? '',
-              dataStatusCard['po_goto_step'] ?? '',
-              pDocNo,
-              pDocType,
-            );
+          checkGoTostep(
+            dataStatusCard['po_status'] ?? '',
+            dataStatusCard['po_message'] ?? '',
+            dataStatusCard['po_goto_step'] ?? '',
+            pDocNo,
+            pDocType,
+          );
 
-            print(
-                'po_status : ${dataStatusCard['po_status']} Type: ${dataStatusCard['po_status'.runtimeType]}');
-            print(
-                'po_message : ${dataStatusCard['po_message']} Type: ${dataStatusCard['po_message'.runtimeType]}');
-            print(
-                'po_goto_step : ${dataStatusCard['po_goto_step']} Type: ${dataStatusCard['po_goto_step'.runtimeType]}');
-          });
+          print(
+              'po_status : ${dataStatusCard['po_status']} Type: ${dataStatusCard['po_status'.runtimeType]}');
+          print(
+              'po_message : ${dataStatusCard['po_message']} Type: ${dataStatusCard['po_message'.runtimeType]}');
+          print(
+              'po_goto_step : ${dataStatusCard['po_goto_step']} Type: ${dataStatusCard['po_goto_step'.runtimeType]}');
         }
         // } else {
         //   print('No items found.');
@@ -268,6 +265,11 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
     print('goToStep : $goToStep Type : ${goToStep.runtimeType}');
     if (statusCard == '1') {
       showMessageStatusCard(context, messageCard);
+      if (mounted) {
+        setState(() {
+          isCardDisabled = false;
+        });
+      }
     }
     if (statusCard == '0') {
       getInhead(
@@ -284,7 +286,8 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
     print('pDocType $pDocType Type: ${pDocType.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT09L/SSFGDT09L_Step_1_GET_INHEAD/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/$sessionID/$pDocNo/$pDocType/${globals.APP_USER}'));
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_GetERPDoc/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}'
+          '/${globals.APP_USER}/${globals.APP_SESSION}/$pDocType/$pDocNo'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> dataGetInHead =
@@ -380,6 +383,9 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
   }
 
   Future<void> getPDF(String docNo, String docType, String docDate) async {
+    print('${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_GET_PDF/'
+        '${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${globals.APP_USER}/${widget.pWareCode}/'
+        '${globals.APP_SESSION}/$docType/${globals.BROWSER_LANGUAGE}/${globals.P_DS_PDF}');
     try {
       final response = await http.get(Uri.parse(
           '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_1_GET_PDF/'
@@ -406,7 +412,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
             PROGRAM_ID = dataPDF['PROGRAM_ID'] ?? '';
             P_WARE = dataPDF['P_WARE'] ?? '';
             P_SESSION = dataPDF['P_SESSION'] ?? '';
-            v_filename = dataPDF['v_filename'] ?? '';
+            // v_filename = dataPDF['v_filename'] ?? '';
             FLAG = dataPDF['FLAG'] ?? '';
 
             LH_PAGE = dataPDF['LH_PAGE'] ?? '';
@@ -444,10 +450,10 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
           });
         }
       } else {
-        print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+        print('ดึงข้อมูล PDF ล้มเหลว !!! รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error in submit Data: $e');
+      print('Error in PDF Data: $e');
     }
   }
 
@@ -527,7 +533,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
                         var item = getCurrentData()[index];
                         Color cardColor;
                         String statusText;
-                        String iconImageYorN;
+                        // String iconImageYorN;
                         // print(item['card_status_desc']);
                         switch (item['card_status_desc']) {
                           case 'ระหว่างบันทึก':
@@ -559,123 +565,71 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
                             statusText = 'Unknown';
                         }
 
-                        switch (item['qc_yn']) {
-                          case 'Y':
-                            iconImageYorN = 'assets/images/rt_machine_on.png';
-                            break;
-                          case 'N':
-                            iconImageYorN = 'assets/images/rt_machine_off.png';
-                            break;
-                          default:
-                            iconImageYorN = 'assets/images/rt_machine_off.png';
-                        }
-                        return Card(
-                          elevation: 8.0,
-                          margin: EdgeInsets.symmetric(vertical: 8.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          color: Color.fromRGBO(204, 235, 252, 1.0),
-                          child: InkWell(
-                            onTap: () {
-                              checkStatusCard(
-                                  item['po_no'] ?? '',
-                                  item['p_doc_no'] ?? '',
-                                  item['p_doc_type'] ?? '');
+                        // switch (item['qc_yn']) {
+                        //   case 'Y':
+                        //     iconImageYorN = 'assets/images/rt_machine_on.png';
+                        //     break;
+                        //   case 'N':
+                        //     iconImageYorN = 'assets/images/rt_machine_off.png';
+                        //     break;
+                        //   default:
+                        //     iconImageYorN = 'assets/images/rt_machine_off.png';
+                        // }
 
-                              print(
-                                  'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
-                              print(
-                                  'p_doc_no in Card : ${item['p_doc_no']} Type : ${item['p_doc_no'].runtimeType}');
-                              print(
-                                  'p_doc_type in Card : ${item['p_doc_type']} Type : ${item['p_doc_type'].runtimeType}');
-                            },
-                            borderRadius: BorderRadius.circular(15.0),
-                            child: Stack(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            DateTime parsedDate =
-                                                DateFormat('dd/MM/yyyy')
-                                                    .parse(item['po_date']);
-                                            String formattedDate =
-                                                DateFormat('dd-MM-yyyy')
-                                                    .format(parsedDate);
+                        return CardStyles.cardPage(
+                          showON: item['qc_yn'] == 'Y'
+                              ? true
+                              : item['qc_yn'] == 'N'
+                                  ? false
+                                  : false,
+                          headerText: item['ap_name'],
+                          isShowPrint:
+                              item['show_btn'] == 'block' ? true : false,
+                          colorStatus: cardColor,
+                          statusCard: statusText,
+                          onCard: isCardDisabled
+                              ? null
+                              : () async {
+                                  setState(() {
+                                    isCardDisabled = true;
+                                  });
+                                  checkStatusCard(
+                                      item['po_no'] ?? '',
+                                      item['doc_no'] ?? '',
+                                      item['doc_type'] ?? '');
 
-                                            formattedDateDocDate =
-                                                formattedDate;
-                                            getPDF(
-                                              item['p_doc_no'],
-                                              item['p_doc_type'],
-                                              formattedDate,
-                                            );
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 100,
-                                          height: 40,
-                                          // color: cardColor, // เปลี่ยนสีพื้นหลังที่นี่
-                                          child: Image.asset(
-                                            'assets/images/printer.png',
-                                            fit: BoxFit.contain,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(height: 20.0),
-                                      Text(
-                                        '${item['po_date']} ${item['po_no']} ${item['item_stype_desc']}',
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                // Positioned สำหรับสถานะ
-                                if (statusText != 'Unknown')
-                                  Positioned(
-                                    top: 8.0,
-                                    right: 8.0,
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 12.0, vertical: 6.0),
-                                          decoration: BoxDecoration(
-                                            color: cardColor,
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                            border: Border.all(
-                                                color: cardColor, width: 2.0),
-                                          ),
-                                          child: Text(
-                                            statusText,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        // SizedBox(height: 5.0),
-                                        SizedBox(
-                                          width: 100,
-                                          height: 40,
-                                          child: Image.asset(
-                                            iconImageYorN,
-                                            fit: BoxFit.contain,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
+                                  print(
+                                      'po_no in Card : ${item['po_no']} Type : ${item['po_no'].runtimeType}');
+                                  print(
+                                      'doc_no in Card : ${item['doc_no']} Type : ${item['doc_no'].runtimeType}');
+                                  print(
+                                      'doc_type in Card : ${item['doc_type']} Type : ${item['doc_type'].runtimeType}');
+                                },
+                          onPrint: isPrintDisabled
+                              ? null
+                              : () async {
+                                  setState(() {
+                                    isPrintDisabled = true;
+                                  });
+                                  DateTime parsedDate = DateFormat('dd/MM/yyyy')
+                                      .parse(item['po_date']);
+                                  String formattedDate =
+                                      DateFormat('dd-MM-yyyy')
+                                          .format(parsedDate);
+
+                                  formattedDateDocDate = formattedDate;
+                                  await getPDF(
+                                    item['doc_no'],
+                                    item['doc_type'],
+                                    formattedDate,
+                                  );
+
+                                  setState(() {
+                                    isPrintDisabled = false;
+                                  });
+                                },
+                          titleText:
+                              '${item['po_date'] ?? ''} ${item['po_no'] ?? ''} ${item['item_stype_desc'] ?? ''}',
                         );
                       } else {
                         return Row(
