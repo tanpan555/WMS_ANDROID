@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:wms_android/ICON.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_grid_data.dart';
 import 'dart:convert';
 import 'dart:ui';
@@ -40,6 +39,8 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   bool isLoading = true;
   String errorMessage = '';
   TextEditingController searchController = TextEditingController();
+  final ScrollController _singleChildScrollController = ScrollController();
+  final ScrollController _listViewScrollController = ScrollController();
   String searchQuery = '';
 
   String? ATTR = gb.Raw_Material;
@@ -53,23 +54,15 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   String? _selectedValue;
   String? fixedValue;
 
-  String? nextLink;
-  String? prevLink;
-  int showRecordRRR = 0;
-
-  int pageSize = 15; // Number of records per page
-  int currentPage = 1; // Current page number
-  int totalRecords = 0; // Total number of records
+  int itemsPerPage = 15; // Number of records per page
+  int currentPage = 0; // Total number of records
 
   @override
   void initState() {
     super.initState();
-
-    // Initialize values
     _selectedValue = 'ทั้งหมด';
     selectedwhCode = widget.pWareCode;
     selectedApCode = widget.apCode;
-    // Use a variable to hold the documentNumber with default value
     String documentNumber = widget.documentNumber;
 
     // Debug statements
@@ -89,10 +82,14 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
       selectedApCode = widget.apCode;
       fetchWareCodes();
     }
-
-    // fetchWareCodes();
-
     print('Document Number (with default if null): $documentNumber');
+  }
+
+  @override
+  void dispose() {
+    _singleChildScrollController.dispose();
+    _listViewScrollController.dispose();
+    super.dispose();
   }
 
   final Map<String, String> valueMapping = {
@@ -102,100 +99,86 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   };
 
   Future<void> fetchWareCodes([String? url]) async {
+    if (!mounted) return;
     if (mounted) {
       setState(() {
         isLoading = true;
       });
     }
-
-    // Reset currentPage if this is a new search (no url provided)
-    if (url == null) {
-      currentPage = 1;
-    }
-
+    print('URL : $url ');
     final String requestUrl = url ??
         '${gb.IP_API}/apex/wms/SSINDT01/Step_1_Card_list/$selectedApCode/$ATTR/${widget.documentNumber}/$fixedValue/${gb.BROWSER_LANGUAGE}';
-
+    print('URL : $requestUrl ');
     try {
       final response = await http.get(Uri.parse(requestUrl));
 
       if (response.statusCode == 200) {
-        print(requestUrl);
         final responseBody = utf8.decode(response.bodyBytes);
         final parsedResponse = json.decode(responseBody);
+
         if (mounted) {
           setState(() {
             if (parsedResponse is Map && parsedResponse.containsKey('items')) {
               data = parsedResponse['items'];
-              totalRecords = parsedResponse['total_count'] ??
-                  (currentPage * pageSize + data.length);
             } else {
               data = [];
-              totalRecords = 0;
             }
-
-            List<dynamic> links = parsedResponse['links'] ?? [];
-            nextLink = getLink(links, 'next');
-            prevLink = getLink(links, 'prev');
             isLoading = false;
           });
         }
       } else {
         if (mounted) {
           setState(() {
-            isLoading = false;
-            errorMessage = 'Failed to load data: ${response.statusCode}';
+            print('Failed to load data: ${response.statusCode}');
           });
         }
+        print('HTTP Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
       if (mounted) {
+        isLoading = false;
         setState(() {
-          isLoading = false;
-          errorMessage = 'Error occurred: $e';
+          print('Error occurred: $e');
         });
       }
+      print('Exception: $e');
     }
   }
 
-  String? getLink(List<dynamic> links, String rel) {
-    final link =
-        links.firstWhere((item) => item['rel'] == rel, orElse: () => null);
-    return link != null ? link['href'] : null;
-  }
-
-  void _loadNextPage() {
-    if (nextLink != null) {
-      if (mounted) {
-        setState(() {
-          currentPage++;
-          // isLoading = true;
-        });
-      }
-      fetchWareCodes(nextLink);
-    }
+  int totalPages() {
+    return (data.length / itemsPerPage).ceil(); // คำนวณจำนวนหน้าทั้งหมด
   }
 
   void _loadPrevPage() {
-    if (prevLink != null) {
-      if (mounted) {
-        setState(() {
-          currentPage--;
-          // isLoading = true;
-        });
-      }
-      fetchWareCodes(prevLink);
+    if (currentPage > 0) {
+      setState(() {
+        currentPage--;
+      });
+      _scrollToTop();
     }
   }
 
-  String _getPageIndicatorText() {
-    final startRecord = ((currentPage - 1) * pageSize) + 1;
-    final endRecord = startRecord +
-        data.length -
-        1; // Use actual data length instead of page size
-    return '$startRecord - $endRecord';
+  void _loadNextPage() {
+    if ((currentPage + 1) * itemsPerPage < data.length) {
+      setState(() {
+        currentPage++;
+      });
+      _scrollToTop();
+    }
   }
 
+  List<dynamic> getCurrentData() {
+    final start = currentPage * itemsPerPage;
+    final end = start + itemsPerPage;
+
+    return data.sublist(start, end.clamp(0, data.length));
+  }
+
+  void _scrollToTop() {
+    if (_singleChildScrollController.hasClients) {
+      _singleChildScrollController.jumpTo(0); // Scroll to the top
+    }
+  }
 
   String? poStatus;
   String? poMessage;
@@ -283,8 +266,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
 
   Future<void> sendPostRequest(
       String poNo, String receiveNo, String selectedwhCode) async {
-    final url =
-        '${gb.IP_API}/apex/wms/SSINDT01/Step_1_create_inhead_wms';
+    final url = '${gb.IP_API}/apex/wms/SSINDT01/Step_1_create_inhead_wms';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -332,377 +314,509 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
     }
   }
 
-  bool isNavigating = false; // Flag to track navigation
-
-void handleTap(BuildContext context, Map<String, dynamic> item) async {
-  // Prevent double-tapping
-  if (isNavigating) return; // If already navigating, do nothing.
-  
-  isNavigating = true; // Set flag to true when navigation starts
-  
-  if (selectedwhCode == null) { 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return DialogStyles.alertMessageDialog(
-        context: context,
-        content: const Text('โปรดเลือกคลังสินค้า'),
-        onClose: () {
-          Navigator.of(context).pop();
-        },
-        onConfirm: () {
-          Navigator.of(context).pop();
-        },
-      );
-    },
-  );
-    isNavigating = false; // Reset flag when the alert is shown
-    return;
-  }
-
-  final pPoNo = item['po_no'] ?? '';
-  final vReceiveNo = item['receive_no'] ?? 'null';
-
-  await fetchPoStatus(pPoNo, vReceiveNo);
-  await fetchPoStatusconform(vReceiveNo);
-
-  if (poStatus == '0' && poStep == '2') {
-    // Navigate to Form page
-    await sendPostRequest(pPoNo, vReceiveNo, selectedwhCode ?? '');
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => Ssindt01Form(
-          poReceiveNo: poReceiveNo ?? '',
-          pWareCode: widget.pWareCode,
-          pWareName: widget.pWareName,
-          p_ou_code: widget.p_ou_code,
-        ),
-      ),
-    );
-  } else if (poStatus == '0' && poStep == '4') {
-    // Navigate to Grid page
-    await sendPostRequest(pPoNo, vReceiveNo, selectedwhCode ?? '');
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => Ssindt01Grid(
-          poReceiveNo: poReceiveNo ?? '',
-          poPONO: pPoNo,
-          pWareCode: widget.pWareCode,
-          pWareName: widget.pWareName,
-          p_ou_code: widget.p_ou_code,
-        ),
-      ),
-    );
-  } else if (poStatus == '0') {
-    // Original flow - Navigate to Form page
-    await sendPostRequest(pPoNo, vReceiveNo, selectedwhCode ?? '');
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => Ssindt01Form(
-          poReceiveNo: poReceiveNo ?? '',
-          pWareCode: widget.pWareCode,
-          pWareName: widget.pWareName,
-          p_ou_code: widget.p_ou_code,
-        ),
-      ),
-    );
-  } else if (poStatus == '1' && poStep == '9') {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return DialogStyles.alertMessageDialog(
-          context: context,
-          content: Text('${poMessage ?? 'No message available'}'),
-          onClose: () {
-            Navigator.of(context).pop();
-          },
-          onConfirm: () async {
-            Navigator.of(context).pop();
-            if (poStatusconform == '1') {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return DialogStyles.alertMessageDialog(
-                    context: context,
-                    content: Text('${poMessageconform ?? 'No message available'}'),
-                    onClose: () {
-                      Navigator.of(context).pop();
-                    },
-                    onConfirm: () async {
-                      await fetchPoStatusconform(vReceiveNo);
-                      Navigator.of(context).pop();
-                    },
-                  );
-                },
-              );
-            }
-          },
-        );
-      },
-    );
-  } else if (poStatus == '1' && poStep == '') {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return DialogStyles.alertMessageDialog(
-          context: context,
-          content: Text('${poMessageconform ?? 'No message available'}'),
-          onClose: () {
-            Navigator.of(context).pop();
-          },
-          onConfirm: () async {
-            await fetchPoStatusconform(vReceiveNo);
-            Navigator.of(context).pop();
-          },
-        );
-      },
-    );
-  }
-
-  isNavigating = false; // Reset the flag when navigation is complete
-}
-
-Widget buildListTile(BuildContext context, Map<String, dynamic> item) {
-  // Define a map for status values to background colors
-  Map<String, Color> statusColors = {
-    'ตรวจรับบางส่วน': const Color.fromARGB(255, 17, 109, 110),
-    'บันทึก': const Color.fromARGB(255, 118, 113, 113),
-    'รอยืนยัน': const Color.fromARGB(255, 246, 250, 112),
-    'ปกติ': const Color.fromARGB(255, 186, 186, 186),
-    'อนุมัติ': const Color.fromARGB(255, 146, 208, 80),
-  };
-
-  Color statusColor = statusColors[item['status_desc']] ?? Colors.white;
-
-  TextStyle statusStyle = TextStyle(
-    color: Colors.white,
-    fontWeight: FontWeight.bold,
-  );
-
-  BoxDecoration statusDecoration = BoxDecoration(
-    color: statusColor, // Set background color from statusColors
-    borderRadius: BorderRadius.circular(12.0),
-  );
-
-  // Determine the content for card_qc
-  Widget cardQcWidget;
-  if (item['card_qc'] == '#APP_IMAGES#rt_machine_on.png') {
-    cardQcWidget = Image.asset(
-      'assets/images/rt_machine_on.png',
-      width: 64.0,
-      height: 64.0,
-    );
-  } else if (item['card_qc'] == '#APP_IMAGES#rt_machine_off.png') {
-    cardQcWidget = Image.asset(
-      'assets/images/rt_machine_off.png',
-      width: 64.0,
-      height: 64.0,
-    );
-  } else if (item['card_qc'] == 'No item') {
-    cardQcWidget = SizedBox.shrink();
-  } else {
-    cardQcWidget = Text('');
-  }
-
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-    child: Card(
-      color: const Color.fromRGBO(204, 235, 252, 1),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      elevation: 5,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            title: Text(item['ap_name'] ?? 'No Name'),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Divider(color: const Color.fromARGB(255, 0, 0, 0)),
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 12.0, vertical: 6.0),
-                      decoration: statusDecoration,
-                      child: Text(
-                        '${item['status_desc'] ?? 'No Status'}',
-                        style: statusStyle,
-                      ),
-                    ),
-                    SizedBox(width: 8.0),
-                    cardQcWidget,
-                  ],
-                ),
-                Text(
-                  '${item['po_date'] ?? ''} ${item['po_no'] ?? ''} \n${item['item_stype_desc'] ?? '\n'}'
-                  '${item['receive_date'] ?? ''} ${item['receive_no'] ?? ''} ${item['warehouse'] ?? ''}',
-                  style: TextStyle(color: Colors.black, fontSize: 12),
-                ),
-                SizedBox(height: 8.0),
-              ],
-            ),
-            contentPadding: EdgeInsets.all(16.0),
-            onTap: () => handleTap(context, item),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
+  bool isNavigating = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ', showExitWarning: false),
-      body: OrientationBuilder(
-        builder: (context, orientation) {
-          final isPortrait = orientation == Orientation.portrait;
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Expanded(
+                child: isLoading
+                    ? Center(child: LoadingIndicator())
+                    : data.isEmpty
+                        ? const Center(child: CenteredMessage())
+                        : SingleChildScrollView(
+                            controller: _singleChildScrollController,
+                            child: ListView.builder(
+                              controller: _listViewScrollController,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: getCurrentData().length + 1,
+                              itemBuilder: (context, index) {
+                                if (index < getCurrentData().length) {
+                                  var item = getCurrentData()[index];
+                                  return Card(
+                                    elevation: 8.0,
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    color: Colors.lightBlue[100],
+                                    child: InkWell(
+                                      onTap: () async {
+                                        if (isNavigating)
+                                          return; // If already navigating, do nothing.
 
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                if (isPortrait) const SizedBox(height: 4),
-                Expanded(
-                  child: isLoading
-                      ? Center(child: LoadingIndicator())
-                          : data.isEmpty
-                              ? const Center(child: CenteredMessage())
-                              : ListView(
-                                  children: [
-                                    // Build the list items
-                                    ...data
-                                        .map((item) =>
-                                            buildListTile(context, item))
-                                        .toList(),
-                                    // Add spacing
-                                    const SizedBox(height: 10),
-                                    // Navigation controls
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        // Previous Button
-                                        prevLink != null
-                                            ? ElevatedButton.icon(
-                                                onPressed: _loadPrevPage,
-                                                icon: const Icon(
-                                                  MyIcons
-                                                      .arrow_back_ios_rounded,
-                                                  color: Colors.black,
-                                                  size: 20.0,
-                                                ),
-                                                label: const Text(
-                                                  'Previous',
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13,
-                                                  ),
-                                                ),
-                                                style: AppStyles
-                                                    .PreviousButtonStyle(),
-                                              )
-                                            : ElevatedButton.icon(
-                                                onPressed: null,
-                                                icon: const Icon(
-                                                  MyIcons
-                                                      .arrow_back_ios_rounded,
-                                                  color: Color.fromARGB(
-                                                      255, 23, 21, 59),
-                                                  size: 20.0,
-                                                ),
-                                                label: const Text(
-                                                  'Previous',
-                                                  style: TextStyle(
+                                        isNavigating =
+                                            true; // Set flag to true when navigation starts
+
+                                        if (selectedwhCode == null) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return DialogStyles
+                                                  .alertMessageDialog(
+                                                context: context,
+                                                content: const Text(
+                                                    'โปรดเลือกคลังสินค้า'),
+                                                onClose: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                onConfirm: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              );
+                                            },
+                                          );
+                                          isNavigating =
+                                              false; // Reset flag when the alert is shown
+                                          return;
+                                        }
+
+                                        final pPoNo = item['po_no'] ?? '';
+                                        final vReceiveNo =
+                                            item['receive_no'] ?? 'null';
+
+                                        await fetchPoStatus(pPoNo, vReceiveNo);
+                                        await fetchPoStatusconform(vReceiveNo);
+
+                                        if (poStatus == '0' && poStep == '2') {
+                                          // Navigate to Form page
+                                          await sendPostRequest(pPoNo,
+                                              vReceiveNo, selectedwhCode ?? '');
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Ssindt01Form(
+                                                poReceiveNo: poReceiveNo ?? '',
+                                                pWareCode: widget.pWareCode,
+                                                pWareName: widget.pWareName,
+                                                p_ou_code: widget.p_ou_code,
+                                              ),
+                                            ),
+                                          );
+                                        } else if (poStatus == '0' &&
+                                            poStep == '4') {
+                                          // Navigate to Grid page
+                                          await sendPostRequest(pPoNo,
+                                              vReceiveNo, selectedwhCode ?? '');
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Ssindt01Grid(
+                                                poReceiveNo: poReceiveNo ?? '',
+                                                poPONO: pPoNo,
+                                                pWareCode: widget.pWareCode,
+                                                pWareName: widget.pWareName,
+                                                p_ou_code: widget.p_ou_code,
+                                              ),
+                                            ),
+                                          );
+                                        } else if (poStatus == '0') {
+                                          // Original flow - Navigate to Form page
+                                          await sendPostRequest(pPoNo,
+                                              vReceiveNo, selectedwhCode ?? '');
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Ssindt01Form(
+                                                poReceiveNo: poReceiveNo ?? '',
+                                                pWareCode: widget.pWareCode,
+                                                pWareName: widget.pWareName,
+                                                p_ou_code: widget.p_ou_code,
+                                              ),
+                                            ),
+                                          );
+                                        } else if (poStatus == '1' &&
+                                            poStep == '9') {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return DialogStyles
+                                                  .alertMessageDialog(
+                                                context: context,
+                                                content: Text(
+                                                    '${poMessage ?? 'No message available'}'),
+                                                onClose: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                onConfirm: () async {
+                                                  Navigator.of(context).pop();
+                                                  if (poStatusconform == '1') {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return DialogStyles
+                                                            .alertMessageDialog(
+                                                          context: context,
+                                                          content: Text(
+                                                              '${poMessageconform ?? 'No message available'}'),
+                                                          onClose: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          onConfirm: () async {
+                                                            await fetchPoStatusconform(
+                                                                vReceiveNo);
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        );
+                                                      },
+                                                    );
+                                                  }
+                                                },
+                                              );
+                                            },
+                                          );
+                                        } else if (poStatus == '1' &&
+                                            poStep == '') {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return DialogStyles
+                                                  .alertMessageDialog(
+                                                context: context,
+                                                content: Text(
+                                                    '${poMessageconform ?? 'No message available'}'),
+                                                onClose: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                onConfirm: () async {
+                                                  await fetchPoStatusconform(
+                                                      vReceiveNo);
+                                                  Navigator.of(context).pop();
+                                                },
+                                              );
+                                            },
+                                          );
+                                        }
+                                      },
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      child: Stack(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  item['ap_name'] ?? 'No Name',
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 17,
                                                     color: Color.fromARGB(
-                                                        255, 23, 21, 59),
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 13,
+                                                        255, 0, 0, 0),
                                                   ),
                                                 ),
-                                                style: AppStyles
-                                                    .DisablePreviousButtonStyle(),
-                                              ),
-                                        // Page Indicator
-                                        Text(
-                                          _getPageIndicatorText(),
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
+                                                const Divider(
+                                                    color: Colors.black26,
+                                                    thickness: 1),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 12.0,
+                                                        vertical: 6.0,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        color: (() {
+                                                          switch (item[
+                                                              'status_desc']) {
+                                                            case 'ตรวจรับบางส่วน':
+                                                              return const Color
+                                                                  .fromARGB(255,
+                                                                  17, 109, 110);
+                                                            case 'บันทึก':
+                                                              return const Color
+                                                                  .fromARGB(
+                                                                  255,
+                                                                  118,
+                                                                  113,
+                                                                  113);
+                                                            case 'รอยืนยัน':
+                                                              return const Color
+                                                                  .fromARGB(
+                                                                  255,
+                                                                  246,
+                                                                  250,
+                                                                  112);
+                                                            case 'ปกติ':
+                                                              return const Color
+                                                                  .fromARGB(
+                                                                  255,
+                                                                  186,
+                                                                  186,
+                                                                  186);
+                                                            case 'อนุมัติ':
+                                                              return const Color
+                                                                  .fromARGB(255,
+                                                                  146, 208, 80);
+                                                            case 'ทั้งหมด':
+                                                            default:
+                                                              return const Color
+                                                                  .fromARGB(
+                                                                  255,
+                                                                  255,
+                                                                  255,
+                                                                  255);
+                                                          }
+                                                        })(),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      child: Text(
+                                                        item['status_desc'],
+                                                        style: const TextStyle(
+                                                          fontSize: 15,
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 8),
+                                                    Center(
+                                                      child: (() {
+                                                        if (item['card_qc'] ==
+                                                            '#APP_IMAGES#rt_machine_on.png') {
+                                                          return Image.asset(
+                                                            'assets/images/rt_machine_on.png',
+                                                            width: 50,
+                                                            height: 50,
+                                                          );
+                                                        } else if (item[
+                                                                'card_qc'] ==
+                                                            '#APP_IMAGES#rt_machine_off.png') {
+                                                          return Image.asset(
+                                                            'assets/images/rt_machine_off.png',
+                                                            width: 50,
+                                                            height: 50,
+                                                          );
+                                                        } else if (item[
+                                                                'card_qc'] ==
+                                                            '') {
+                                                          return const SizedBox
+                                                              .shrink();
+                                                        } else {
+                                                          return const Text('');
+                                                        }
+                                                      })(),
+                                                    ),
+                                                    Center(
+                                                      child:
+                                                          item['status_desc'] !=
+                                                                  null
+                                                              ? Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: const Color
+                                                                        .fromARGB(
+                                                                        72,
+                                                                        145,
+                                                                        144,
+                                                                        144),
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(5),
+                                                                  ),
+                                                                )
+                                                              : const SizedBox
+                                                                  .shrink(),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 8.0),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      
+                                                      child: Text(
+                                                        '${item['po_date'] ?? ''} ${item['po_no'] ?? ''} \n${item['item_stype_desc'] ?? '\n'}'
+                                                        '${item['receive_date'] ?? ''} ${item['receive_no'] ?? ''} ${item['warehouse'] ?? ''}',
+                                                        style: const TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.black87,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        // Next Button
-                                        nextLink != null
-                                            ? ElevatedButton(
-                                                onPressed: _loadNextPage,
-                                                style: AppStyles
-                                                    .NextRecordDataButtonStyle(),
-                                                child: const Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Text(
-                                                      'Next',
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 13,
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return getCurrentData().length > 3
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                currentPage > 0
+                                                    ? ElevatedButton(
+                                                        onPressed:
+                                                            currentPage > 0
+                                                                ? () {
+                                                                    _loadPrevPage();
+                                                                  }
+                                                                : null,
+                                                        style: ButtonStyles
+                                                            .previousButtonStyle,
+                                                        child: ButtonStyles
+                                                            .previousButtonContent,
+                                                      )
+                                                    : ElevatedButton(
+                                                        onPressed: null,
+                                                        style: DisableButtonStyles
+                                                            .disablePreviousButtonStyle,
+                                                        child: DisableButtonStyles
+                                                            .disablePreviousButtonContent,
+                                                      )
+                                              ],
+                                            ),
+                                            // const SizedBox(width: 30),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Center(
+                                                  child: Text(
+                                                    '${(currentPage * itemsPerPage) + 1} - ${data.isNotEmpty ? ((currentPage + 1) * itemsPerPage).clamp(1, data.length) : 0}',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            // const SizedBox(width: 30),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                currentPage < totalPages() - 1
+                                                    ? ElevatedButton(
+                                                        onPressed: currentPage <
+                                                                totalPages() - 1
+                                                            ? () {
+                                                                _loadNextPage();
+                                                              }
+                                                            : null,
+                                                        style: ButtonStyles
+                                                            .nextButtonStyle,
+                                                        child: ButtonStyles
+                                                            .nextButtonContent(),
+                                                      )
+                                                    : ElevatedButton(
+                                                        onPressed: null,
+                                                        style: DisableButtonStyles
+                                                            .disableNextButtonStyle,
+                                                        child: DisableButtonStyles
+                                                            .disablePreviousButtonContent,
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 7),
-                                                    Icon(
-                                                      MyIcons
-                                                          .arrow_forward_ios_rounded,
-                                                      color: Colors.black,
-                                                      size: 20.0,
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                            : ElevatedButton(
-                                                onPressed: null,
-                                                style: AppStyles
-                                                    .DisableNextRecordDataButtonStyle(),
-                                                child: const Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Text(
-                                                      'Next',
-                                                      style: TextStyle(
-                                                        color: Color.fromARGB(
-                                                            255, 23, 21, 59),
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 13,
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 7),
-                                                    Icon(
-                                                      MyIcons
-                                                          .arrow_forward_ios_rounded,
-                                                      color: Color.fromARGB(
-                                                          255, 23, 21, 59),
-                                                      size: 20.0,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                      ],
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox.shrink();
+                                }
+                              },
+                            ))),
+            !isLoading && getCurrentData().length > 0
+                ? getCurrentData().length <= 3
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              currentPage > 0
+                                  ? ElevatedButton(
+                                      onPressed: currentPage > 0
+                                          ? () {
+                                              _loadPrevPage();
+                                            }
+                                          : null,
+                                      style: ButtonStyles.previousButtonStyle,
+                                      child: ButtonStyles.previousButtonContent,
                                     )
-                                  ],
+                                  : ElevatedButton(
+                                      onPressed: null,
+                                      style: DisableButtonStyles
+                                          .disablePreviousButtonStyle,
+                                      child: DisableButtonStyles
+                                          .disablePreviousButtonContent,
+                                    )
+                            ],
+                          ),
+                          // const SizedBox(width: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Text(
+                                  '${(currentPage * itemsPerPage) + 1} - ${data.isNotEmpty ? ((currentPage + 1) * itemsPerPage).clamp(1, data.length) : 0}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                ),
-              ],
-            ),
-          );
-        },
+                              )
+                            ],
+                          ),
+                          // const SizedBox(width: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              currentPage < totalPages() - 1
+                                  ? ElevatedButton(
+                                      onPressed: currentPage < totalPages() - 1
+                                          ? () {
+                                              _loadNextPage();
+                                            }
+                                          : null,
+                                      style: ButtonStyles.nextButtonStyle,
+                                      child: ButtonStyles.nextButtonContent(),
+                                    )
+                                  : ElevatedButton(
+                                      onPressed: null,
+                                      style: DisableButtonStyles
+                                          .disableNextButtonStyle,
+                                      child: DisableButtonStyles
+                                          .disablePreviousButtonContent,
+                                    ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : const SizedBox.shrink()
+                : const SizedBox.shrink(),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomBar(currentPage: 'not_show'),
     );

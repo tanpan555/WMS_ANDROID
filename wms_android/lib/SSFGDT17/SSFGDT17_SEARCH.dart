@@ -259,7 +259,7 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                               builder: (context) => SSFGDT17_MAIN(
                                 pWareCode: widget.pWareCode,
                                 selectedValue: selectedValue,
-                                documentNumber: docnum == '' ? 'null' :docnum,
+                                documentNumber: docnum == '' ? 'null' : docnum,
                                 dateController: formattedDate,
                                 docType: docType ?? '',
                               ),
@@ -267,7 +267,6 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                           ).then((value) async {
                             if (docnum == '') {
                                       setState(() {
-                                        // pSoNo = '';
                                         _documentNumberController.text = '';
                                       });
                                     }

@@ -45,7 +45,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
   String data_null = 'null';
   String statusCard = '';
   String messageCard = '';
-  String goToStep = '';
+  String? goToStep;
   String sessionID = gb.APP_SESSION;
   String pDocNoGetInHead = '';
   String pDocTypeGetInHead = '';
@@ -654,7 +654,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                                                         })(),
                                                         borderRadius:
                                                             BorderRadius
-                                                                .circular(5),
+                                                                .circular(10),
                                                       ),
                                                       child: Text(
                                                         item[

@@ -35,7 +35,7 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
   TextEditingController _dateController = TextEditingController();
   TextEditingController _soNoController = TextEditingController();
   TextEditingController _statusController = TextEditingController();
-  final List<dynamic> dropdownItems = [
+  final List<dynamic> statusItems = [
     'ทั้งหมด',
     'ยกเลิก',
     'ยืนยันการรับ',
@@ -128,9 +128,9 @@ class _SSFGDT04_SEARCHState extends State<SSFGDT04_SEARCH> {
                     const SizedBox(height: 10),
                     Expanded(
                       child: ListView.builder(
-                        itemCount: dropdownItems.length,
+                        itemCount: statusItems.length,
                         itemBuilder: (context, index) {
-                          var item = dropdownItems[index];
+                          var item = statusItems[index];
                           return ListTile(
                             contentPadding: EdgeInsets.zero,
                             title: Container(

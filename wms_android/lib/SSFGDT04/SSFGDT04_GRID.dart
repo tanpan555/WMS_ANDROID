@@ -874,8 +874,9 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                     side: const BorderSide(color: Colors.grey),
                                   ),
                                   child: const Text('ตกลง'),
-                                  onPressed: () {
+                                  onPressed: () async {
                                     Navigator.of(context).pop(); // ปิด dialog
+                                    // await fetchGetPo(); // เรียกใช้ fetchGetPo
                                   },
                                 ),
                               ],
