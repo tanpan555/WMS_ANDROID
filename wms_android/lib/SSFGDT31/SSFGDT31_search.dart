@@ -58,6 +58,10 @@ class _Ssfgdt31SearchState extends State<Ssfgdt31Search> {
       'd': 'ยกเลิก',
       'r': 'ยกเลิก',
     },
+    {
+      'd': 'รับเข้าคลังแล้ว',
+      'r': 'รับเข้าคลังแล้ว',
+    },
   ];
   final dateInputFormatter = DateInputFormatter();
   bool isDateInvalid = false;
@@ -247,6 +251,7 @@ class _Ssfgdt31SearchState extends State<Ssfgdt31Search> {
                         ElevatedButton(
                           onPressed: () {
                             if (isDateInvalid == false) {
+                              String pSoNoRP = pSoNo.replaceAll(' ', '');
                               if (selectedDate.isNotEmpty) {
                                 if (selectedDate != '') {
                                   String modifiedDate =
@@ -264,32 +269,53 @@ class _Ssfgdt31SearchState extends State<Ssfgdt31Search> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Ssfgdt31Card(
-                                            pWareCode: widget.pWareCode,
-                                            pStatusDESC: statusDESC,
-                                            pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                                            pDocDate: formattedDate == ''
-                                                ? 'null'
-                                                : formattedDate)),
-                                  ).then((value) async {});
+                                      builder: (context) => Ssfgdt31Card(
+                                          pWareCode: widget.pWareCode,
+                                          pStatusDESC: statusDESC,
+                                          pSoNo:
+                                              pSoNoRP == '' ? 'null' : pSoNoRP,
+                                          pDocDate: formattedDate == ''
+                                              ? 'null'
+                                              : formattedDate),
+                                    ),
+                                  ).then(
+                                    (value) async {
+                                      if (pSoNoRP == '') {
+                                        setState(() {
+                                          pSoNo = '';
+                                          pSoNoController.text = '';
+                                        });
+                                      }
+                                    },
+                                  );
                                 }
                               } else {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Ssfgdt31Card(
-                                          pWareCode: widget.pWareCode,
-                                          pStatusDESC: statusDESC,
-                                          pSoNo: pSoNo == '' ? 'null' : pSoNo,
-                                          pDocDate: 'null')),
-                                ).then((value) async {});
+                                    builder: (context) => Ssfgdt31Card(
+                                        pWareCode: widget.pWareCode,
+                                        pStatusDESC: statusDESC,
+                                        pSoNo: pSoNoRP == '' ? 'null' : pSoNoRP,
+                                        pDocDate: 'null'),
+                                  ),
+                                ).then(
+                                  (value) async {
+                                    if (pSoNoRP == '') {
+                                      setState(() {
+                                        pSoNo = '';
+                                        pSoNoController.text = '';
+                                      });
+                                    }
+                                  },
+                                );
                               }
                             }
                           },
                           style: AppStyles.SearchButtonStyle(),
                           child: Image.asset(
-                            'assets/images/search_color.png', // ใส่ภาพจากไฟล์ asset
-                            width: 50, // กำหนดขนาดภาพ
+                            'assets/images/search_color.png',
+                            width: 50,
                             height: 25,
                           ),
                         ),

@@ -562,6 +562,16 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
                                           Color.fromRGBO(255, 255, 255, 1.0);
                                       statusText = 'อ้างอิงแล้ว';
                                       break;
+                                    case 'ยืนยันการตรวจรับ':
+                                      cardColor =
+                                          Color.fromRGBO(255, 255, 255, 1.0);
+                                      statusText = 'ยืนยันการตรวจรับ';
+                                      break;
+                                    case 'รับเข้าคลังแล้ว':
+                                      cardColor =
+                                          Color.fromRGBO(255, 255, 255, 1.0);
+                                      statusText = 'รับเข้าคลังแล้ว';
+                                      break;
                                     default:
                                       cardColor =
                                           Color.fromRGBO(255, 255, 255, 1.0);
@@ -676,7 +686,7 @@ class _Ssfgdt31CardState extends State<Ssfgdt31Card> {
                                               children: [
                                                 Center(
                                                   child: Text(
-                                                    '${(currentPage * itemsPerPage) + 1} : ${((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length)}',
+                                                    '${(currentPage * itemsPerPage) + 1} - ${((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length)}',
                                                     style: const TextStyle(
                                                       color: Colors.white,
                                                       fontWeight:

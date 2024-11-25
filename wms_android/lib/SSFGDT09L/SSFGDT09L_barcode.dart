@@ -1094,6 +1094,10 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
           context: context,
           onCloseDialog: () {
             Navigator.of(context).pop();
+            setState(() {
+              locatorFormChk = '';
+              locatorFormChkController.clear();
+            });
           },
           onConfirmDialog: checkDislocatorF
               ? null
@@ -1130,6 +1134,10 @@ class _Ssfgdt09lBarcodeState extends State<Ssfgdt09lBarcode> {
           context: context,
           onCloseDialog: () {
             Navigator.of(context).pop();
+            setState(() {
+              locatorToChk = '';
+              locatorToChkController.clear();
+            });
           },
           onConfirmDialog: checkDislocatorT
               ? null

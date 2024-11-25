@@ -1531,14 +1531,18 @@ class CardStyles {
                         // mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           isShowPrint
-                              ? InkWell(
-                                  onTap: onPrint,
-                                  child: Container(
-                                    width: 30,
-                                    height: 30,
+                              ? Container(
+                                  decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromARGB(72, 145, 144, 144),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: onPrint,
                                     child: Image.asset(
                                       'assets/images/printer.png',
-                                      // fit: BoxFit.contain,
+                                      width: 30,
+                                      height: 30,
                                     ),
                                   ),
                                 )

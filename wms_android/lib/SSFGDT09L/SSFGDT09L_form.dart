@@ -423,6 +423,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
   Future<void> chkCust(
       String custCode, String arCode, int testChk, String checkWhere) async {
+    print('checkWhere  in chkCust  : $checkWhere');
     print('custCode  in chkCust  : $custCode');
     print('arCode  in chkCust  : $arCode');
     try {
@@ -789,7 +790,9 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                           String checkWhere = 'NEXT';
                                           chkCust(
                                               returnStatusLovMoDoNo,
-                                              returnStatusLovRefNo,
+                                              returnStatusLovRefNo.isEmpty
+                                                  ? 'null'
+                                                  : returnStatusLovRefNo,
                                               testChk = 1,
                                               checkWhere);
                                         } else {

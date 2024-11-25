@@ -238,12 +238,13 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 ElevatedButton(
                   onPressed: () {
                     if (isDateInvalid == false) {
+                      String pSoNoRP = pDocNo.replaceAll(' ', '');
                       if (selectedDate.isNotEmpty) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => Ssfgdt12Card(
-                              docNo: pDocNo,
+                              docNo: pSoNoRP,
                               date: selectedDate,
                               status: status,
                               pWareCode: widget.pWareCode,
@@ -253,13 +254,20 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                               p_attr1: widget.p_attr1,
                             ),
                           ),
-                        ).then((value) async {});
+                        ).then((value) async {
+                          if (pSoNoRP == '') {
+                            setState(() {
+                              pDocNo = '';
+                              controller.text = '';
+                            });
+                          }
+                        });
                       } else {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => Ssfgdt12Card(
-                              docNo: pDocNo,
+                              docNo: pSoNoRP,
                               date: selectedDate,
                               status: status,
                               pWareCode: widget.pWareCode,
@@ -269,7 +277,14 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                               p_attr1: widget.p_attr1,
                             ),
                           ),
-                        ).then((value) async {});
+                        ).then((value) async {
+                          if (pSoNoRP == '') {
+                            setState(() {
+                              pDocNo = '';
+                              controller.text = '';
+                            });
+                          }
+                        });
                       }
                     }
                   },

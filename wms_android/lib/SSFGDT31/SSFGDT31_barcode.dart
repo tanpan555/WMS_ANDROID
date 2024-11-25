@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
-import 'package:wms_android/icon.dart';
 import 'package:wms_android/styles.dart';
 
 class Ssfgdt31Barcode extends StatefulWidget {
@@ -36,6 +35,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
   String itemCode = '';
   String lotNo = '';
   String quantity = '';
+  String quantityDisplay = '';
   String locatorTo = '';
   String controlLot = '';
   String lotQty = '';
@@ -62,15 +62,19 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
   String dataLocatorForSaveDataTo = '';
 
   bool chkShowDialogcomfirmMessage = false;
+  bool checkDis = false;
+  bool checkDislocatorF = false;
+  bool checkDislocatorT = false;
 
   FocusNode barcodeFocusNode = FocusNode();
-  // FocusNode lotNumberFocusNode = FocusNode();
+  FocusNode lotNumberFocusNode = FocusNode();
   FocusNode quantityFocusNode = FocusNode();
   TextEditingController barcodeController = TextEditingController();
   TextEditingController locatorFormController = TextEditingController();
   TextEditingController itemCodeController = TextEditingController();
   TextEditingController lotNoController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
+  TextEditingController quantityDisPlayController = TextEditingController();
   TextEditingController locatorToController = TextEditingController();
   TextEditingController lotQtyController = TextEditingController();
   TextEditingController lotUnitController = TextEditingController();
@@ -274,7 +278,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
         lotUnitController.text = lotUnit;
 
         if (chkShowDialogcomfirmMessage == false) {
-          showDialogcomfirmMessage();
+          showDialogcomfirmMessage(context);
         }
       });
     }
@@ -402,6 +406,49 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
               }
               // Navigator.of(context).pop();
             }
+          });
+        }
+      } else {
+        // จัดการกรณีที่ response status code ไม่ใช่ 200
+        print('ดึงข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> selectLocatorBarcode(String locatorName, String textForm) async {
+    try {
+      final response = await http.get(Uri.parse(
+          '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_5_SelectLocatorBarcode/${globals.P_ERP_OU_CODE}/$locatorName'));
+
+      if (response.statusCode == 200) {
+        // ถอดรหัสข้อมูล JSON จาก response
+        final Map<String, dynamic> dataChkLocatorName = jsonDecode(utf8
+            .decode(response.bodyBytes)); // ถอดรหัส response body เป็น UTF-8
+        print(
+            'dataChkLocatorName : $dataChkLocatorName type : ${dataChkLocatorName.runtimeType}');
+        if (mounted) {
+          setState(() {
+            if (dataChkLocatorName['po_status'] == '1') {
+              showDialogAlert(context, dataChkLocatorName['po_message']);
+            } else if (dataChkLocatorName['po_status'] == '0') {
+              if (textForm == 'F') {
+                locatorFormChk = dataChkLocatorName['po_locator_barcode'];
+                locatorFormChkController.text =
+                    dataChkLocatorName['po_locator_barcode'];
+              }
+              if (textForm == 'T') {
+                locatorToChk = dataChkLocatorName['po_locator_barcode'];
+                locatorToChkController.text =
+                    dataChkLocatorName['po_locator_barcode'];
+              }
+            }
+            print('locator po_status : ${dataChkLocatorName['po_status']}');
+            print('locatorFormChk : $locatorFormChk');
+            print('locatorFormChkController : $locatorFormChkController');
+            print('locatorToChk : $locatorToChk');
+            print('locatorToChkController : $locatorToChkController');
           });
         }
       } else {
@@ -603,7 +650,19 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
             TextFormField(
               controller: locatorFormController,
               readOnly: true,
-              onTap: () => showDialogLocatorForm(context),
+              onTap: checkDis
+                  ? null
+                  : () async {
+                      setState(() {
+                        checkDis = true;
+                      });
+                      if (locatorForm.isNotEmpty) {
+                        await selectLocatorBarcode(locatorForm, 'F');
+                        showDialogLocatorForm();
+                      } else {
+                        showDialogLocatorForm();
+                      }
+                    },
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 filled: true,
@@ -709,7 +768,12 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
             TextFormField(
               controller: locatorToController,
               readOnly: true,
-              onTap: () => showDialogLocatorTo(context),
+              onTap: () {
+                if (locatorTo.isNotEmpty) {
+                  selectLocatorBarcode(locatorTo, 'T');
+                }
+                showDialogLocatorTo();
+              },
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 filled: true,
@@ -778,12 +842,12 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
   }
 
   void showDialogAlertMessage(
-    ///เรียกฝช้โดย API chk status barcode
     BuildContext context,
     String messageDelete,
   ) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return DialogStyles.alertMessageDialog(
           context: context,
@@ -860,6 +924,7 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
   ) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return DialogStyles.alertMessageDialog(
           context: context,
@@ -874,188 +939,102 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
   }
 
   void showDialogcomfirmMessage(
-      // BuildContext context,
-      // String messageDelete,
-      ) {
-    print('11111111111111111111111111111111');
-    print('pErpOuCode : ${globals.P_ERP_OU_CODE}');
-    print('pDocNo : ${widget.pDocNo}');
+    BuildContext context,
+    // String messageAlert,
+  ) {
     if (chkShowDialogcomfirmMessage == false) {
       chkShowDialogcomfirmMessage = true;
+
       showDialog(
         context: context,
-        barrierDismissible: false,
         builder: (BuildContext context) {
-          return AlertDialog(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.notification_important,
-                        color: Colors.red,
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        'แจ้งเตือน',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.close),
-                        onPressed: () {
-                          // Navigator.of(context).pop();
-                          chkShowDialogcomfirmMessage = false;
-                          Navigator.of(context).pop();
+          return DialogStyles.alertMessageCheckDialog(
+            context: context,
+            content: Text('รายการไม่ตรงกับระบบการจอง ต้องการยืนยัน ?'),
+            onClose: () {
+              chkShowDialogcomfirmMessage = false;
+              Navigator.of(context).pop();
 
-                          barCode = '';
-                          locatorForm = '';
-                          locatorFormChk = '';
-                          itemCode = '';
-                          lotNo = '';
-                          quantity = '';
-                          locatorTo = '';
-                          locatorToChk = '';
-                          lotQty = '';
-                          lotUnit = '';
+              barCode = '';
+              locatorForm = '';
+              locatorFormChk = '';
+              itemCode = '';
+              lotNo = '';
+              quantity = '';
+              quantityDisplay = '';
+              locatorTo = '';
+              locatorToChk = '';
+              lotQty = '';
+              lotUnit = '';
 
-                          statusFetchDataBarcode = '';
-                          messageFetchDataBarcode = '';
-                          valIDFetchDataBarcode = '';
+              statusFetchDataBarcode = '';
+              messageFetchDataBarcode = '';
+              valIDFetchDataBarcode = '';
 
-                          barcodeController.clear();
-                          locatorFormController.clear();
-                          locatorFormChkController.clear();
-                          itemCodeController.clear();
-                          lotNoController.clear();
-                          quantityController.clear();
-                          locatorToController.clear();
-                          locatorToChkController.clear();
-                          lotQtyController.clear();
-                          lotUnitController.clear();
+              barcodeController.clear();
+              locatorFormController.clear();
+              locatorFormChkController.clear();
+              itemCodeController.clear();
+              lotNoController.clear();
+              quantityController.clear();
+              quantityDisPlayController.clear();
+              locatorToController.clear();
+              locatorToChkController.clear();
+              lotQtyController.clear();
+              lotUnitController.clear();
 
-                          barcodeFocusNode.requestFocus();
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              content: SingleChildScrollView(
-                child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(children: [
-                      const SizedBox(height: 10),
-                      const Text(
-                        'รายการไม่ตรงกับระบบการจอง ต้องการยืนยัน ?',
-                        // style:  TextStyle(color: Colors.red),
-                      ),
-                      const SizedBox(height: 10),
-                    ])),
-              ),
-              actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        // Navigator.of(context).pop();
-                        chkShowDialogcomfirmMessage = false;
-                        Navigator.of(context).pop();
+              barcodeFocusNode.requestFocus();
+            },
+            onConfirm: () {
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //       builder: (context) => Ssfgdt09lReason(
+              //             pOuCode: widget.pOuCode,
+              //             pErpOuCode: globals.P_ERP_OU_CODE,
+              //             pDocNo: widget.pDocNo,
+              //             pMoDoNO: widget.pMoDoNO,
+              //             pItemCode: itemCode,
+              //             pQty: quantity,
+              //             pBarcode: barCode,
+              //             pLotNo: lotNo,
+              //           )),
+              // ).then((value) {
+              //   // เมื่อกลับมาหน้าเดิม เรียก fetchData
+              //   Navigator.of(context).pop();
+              //   chkShowDialogcomfirmMessage = false;
+              //   barCode = '';
+              //   locatorForm = '';
+              //   locatorFormChk = '';
+              //   itemCode = '';
+              //   lotNo = '';
+              //   quantity = '';
+              //   quantityDisplay = '';
+              //   locatorTo = '';
+              //   locatorToChk = '';
+              //   lotQty = '';
+              //   lotUnit = '';
 
-                        barCode = '';
-                        locatorForm = '';
-                        locatorFormChk = '';
-                        itemCode = '';
-                        lotNo = '';
-                        quantity = '';
-                        locatorTo = '';
-                        locatorToChk = '';
-                        lotQty = '';
-                        lotUnit = '';
+              //   statusFetchDataBarcode = '';
+              //   messageFetchDataBarcode = '';
+              //   valIDFetchDataBarcode = '';
 
-                        statusFetchDataBarcode = '';
-                        messageFetchDataBarcode = '';
-                        valIDFetchDataBarcode = '';
+              //   barcodeController.clear();
+              //   locatorFormController.clear();
+              //   locatorFormChkController.clear();
+              //   itemCodeController.clear();
+              //   lotNoController.clear();
+              //   quantityController.clear();
+              //   quantityDisPlayController.clear();
+              //   locatorToController.clear();
+              //   locatorToChkController.clear();
+              //   lotQtyController.clear();
+              //   lotUnitController.clear();
 
-                        barcodeController.clear();
-                        locatorFormController.clear();
-                        locatorFormChkController.clear();
-                        itemCodeController.clear();
-                        lotNoController.clear();
-                        quantityController.clear();
-                        locatorToController.clear();
-                        locatorToChkController.clear();
-                        lotQtyController.clear();
-                        lotUnitController.clear();
-
-                        barcodeFocusNode.requestFocus();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.grey),
-                      ),
-                      child: const Text('Cancel'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) => Ssfgdt09lReason(
-                        //             pOuCode: widget.pOuCode,
-                        //             pErpOuCode: globals.P_ERP_OU_CODE,
-                        //             pDocNo: widget.pDocNo,
-                        //             pMoDoNO: widget.pMoDoNO,
-                        //             pItemCode: itemCode,
-                        //             pQty: quantity,
-                        //             pBarcode: barCode,
-                        //             pLotNo: lotNo,
-                        //           )),
-                        // ).then((value) {
-                        //   // เมื่อกลับมาหน้าเดิม เรียก fetchData
-                        //   Navigator.of(context).pop();
-                        //   chkShowDialogcomfirmMessage = false;
-                        //   barCode = '';
-                        //   locatorForm = '';
-                        //   itemCode = '';
-                        //   lotNo = '';
-                        //   quantity = '';
-                        //   locatorTo = '';
-                        //   lotQty = '';
-                        //   lotUnit = '';
-
-                        //   statusFetchDataBarcode = '';
-                        //   messageFetchDataBarcode = '';
-                        //   valIDFetchDataBarcode = '';
-
-                        //   barcodeController.clear();
-                        //   locatorFormController.clear();
-                        //   itemCodeController.clear();
-                        //   lotNoController.clear();
-                        //   quantityController.clear();
-                        //   locatorToController.clear();
-                        //   lotQtyController.clear();
-                        //   lotUnitController.clear();
-
-                        //   barcodeFocusNode.requestFocus();
-                        // });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.grey),
-                      ),
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ),
-              ]);
+              //   barcodeFocusNode.requestFocus();
+              // });
+            },
+          );
         },
       );
     }
@@ -1132,7 +1111,8 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop(true);
+                      Navigator.of(context).pop();
+                      submitAddLine();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -1144,244 +1124,104 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
               )
             ]);
       },
-    ).then((value) {
-      if (value == true) {
-        Future.delayed(const Duration(milliseconds: 100), () {
-          submitAddLine();
-        });
-      } else if (value == false) {
-        //
-      } else if (value == null) {
-        Future.delayed(const Duration(milliseconds: 300), () {
-          showDialogLocatorForm(context);
-        });
-      }
-    });
-  }
-
-  void showDialogLocatorForm(
-    BuildContext context,
-  ) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Row(
-                children: [
-                  Text(
-                    'Locator ตัดจ่าย',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(MyIcons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      if (locatorForm.isNotEmpty &&
-                          locatorFormChk.isEmpty &&
-                          dataLocatorForSaveDataForm.isNotEmpty) {
-                        setState(() {
-                          locatorFormChk = dataLocatorForSaveDataForm;
-                        });
-                      }
-                      // locatorFormChkController.clear();
-                      // locatorFormChk = '';
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: locatorFormChkController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: 'Current Locator',
-                      labelStyle: TextStyle(
-                        color: Colors.black87,
-                      ),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        locatorFormChk = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          if (locatorForm.isNotEmpty &&
-                              locatorFormChk.isEmpty &&
-                              dataLocatorForSaveDataForm.isNotEmpty) {
-                            setState(() {
-                              locatorFormChk = dataLocatorForSaveDataForm;
-                            });
-                          }
-                          // locatorFormChkController.clear();
-                          // locatorFormChk = '';
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('Cancel'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          String textForm = 'F';
-                          chkLocatorForm(locatorFormChk, textForm);
-                          // Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
     );
     // .then((value) {
     //   if (value == true) {
-    //     Future.delayed(Duration(milliseconds: 100), () {
-    //       FocusScope.of(context).requestFocus(lotNumberFocusNode);
+    //     Future.delayed(const Duration(milliseconds: 100), () {
+    //       submitAddLine();
     //     });
-    //     // FocusScope.of(context).requestFocus(lotNumberFocusNode);
+    //   } else if (value == false) {
+    //     //
+    //   } else if (value == null) {
+    //     Future.delayed(const Duration(milliseconds: 300), () {
+    //       showDialogLocatorForm(context);
+    //     });
     //   }
     // });
   }
 
-  void showDialogLocatorTo(
-    BuildContext context,
-  ) {
+  void showDialogLocatorForm() {
+    if (mounted) {
+      setState(() {
+        checkDis = false;
+      });
+    }
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Current Locator',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: const Icon(MyIcons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      if (locatorTo.isNotEmpty &&
-                          locatorToChk.isEmpty &&
-                          dataLocatorForSaveDataTo.isNotEmpty) {
-                        setState(() {
-                          locatorToChk = dataLocatorForSaveDataTo;
-                        });
-                      }
-                      // locatorToChkController.clear();
-                      // locatorToChk = '';
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: locatorToChkController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black)),
-                      filled: true,
-                      fillColor: Colors.white,
-                      labelText: 'Locator ปลายทาง',
-                      labelStyle: TextStyle(
-                        color: Colors.black87,
-                      ),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        locatorToChk = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          if (locatorTo.isNotEmpty &&
-                              locatorToChk.isEmpty &&
-                              dataLocatorForSaveDataTo.isNotEmpty) {
-                            setState(() {
-                              locatorToChk = dataLocatorForSaveDataTo;
-                            });
-                          }
-                          // locatorToChkController.clear();
-                          // locatorToChk = '';
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('Cancel'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          String textForm = 'T';
-                          chkLocatorForm(locatorToChk, textForm);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
+        return DialogStyles.displayTextFormField(
+          context: context,
+          onCloseDialog: () {
+            Navigator.of(context).pop();
+            setState(() {
+              locatorFormChkController.clear();
+              locatorFormChk = '';
+            });
+          },
+          onConfirmDialog: checkDislocatorF
+              ? null
+              : () {
+                  () async {
+                    setState(() {
+                      checkDislocatorF = true;
+                    });
+                    String textForm = 'F';
+                    await chkLocatorForm(locatorFormChk, textForm);
+                    setState(() {
+                      checkDislocatorF = false;
+                    });
+                  }();
+                },
+          onChanged: (value) {
+            setState(() {
+              locatorFormChk = value;
+            });
+          },
+          controller: locatorFormChkController,
+          headTextDialog: 'Locator ตัดจ่าย',
+          labelText: 'Current Locator',
+        );
+      },
+    );
+  }
+
+  void showDialogLocatorTo() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return DialogStyles.displayTextFormField(
+          context: context,
+          onCloseDialog: () {
+            Navigator.of(context).pop();
+            setState(() {
+              locatorToChk = '';
+              locatorToChkController.clear();
+            });
+          },
+          onConfirmDialog: checkDislocatorT
+              ? null
+              : () {
+                  () async {
+                    setState(() {
+                      checkDislocatorT = true;
+                    });
+                    String textForm = 'T';
+                    chkLocatorForm(locatorToChk, textForm);
+                    setState(() {
+                      checkDislocatorT = false;
+                    });
+                  }();
+                },
+          onChanged: (value) {
+            setState(() {
+              locatorToChk = value;
+            });
+          },
+          controller: locatorToChkController,
+          headTextDialog: 'Current Locator',
+          labelText: 'Locator ปลายทาง',
         );
       },
     );

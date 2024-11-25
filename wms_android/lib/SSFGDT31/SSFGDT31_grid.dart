@@ -264,7 +264,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
 
       if (multiplication >= limitPage) {
         lastURL =
-            '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_3_DataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}';
+            '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_3_DataGrid/${globals.P_OU_CODE}/${globals.P_ERP_OU_CODE}/${widget.docNo}/${widget.docType}?offset=$multiplication';
 
         if (lastURL != '') {
           print(
@@ -1237,6 +1237,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
       String messageAlert, String seqS, String item) async {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return DialogStyles.alertMessageCheckDialog(
           context: context,
