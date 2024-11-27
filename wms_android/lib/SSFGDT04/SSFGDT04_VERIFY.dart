@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import '../styles.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'SSFGDT04_MENU.dart';
-// import 'package:wms_android/custom_drawer.dart';
 
 class SSFGDT04_VERIFY extends StatefulWidget {
   final String pWareCode;
@@ -331,6 +330,39 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
   void dispose() {
     _docNoController.dispose();
     super.dispose();
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          vertical: 4.0), // Optional padding for better spacing
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment
+            .center, // Align both label and value to the center
+        children: [
+          Text(
+            label,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(width: 8),
+          Flexible(
+            // Flexible allows the value to take only the necessary space
+            child: CustomContainerStyles.styledContainer(
+              value, // Pass the value to determine the container style
+              padding:
+                  5.0, // Adjust padding for better spacing inside the container
+              child: Text(
+                value,
+                style: TextStyle(
+                    overflow: TextOverflow.ellipsis), // Ellipsis for long text
+                softWrap: true,
+                maxLines: 2, // Limit to two lines if necessary
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildInfoRow1(Map<String, String> info) {
@@ -798,19 +830,18 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
 
                                 final item = gridItems[actualIndex];
                                 return Card(
-                                  elevation: 8,
+                                  elevation: 4,
                                   margin:
                                       const EdgeInsets.symmetric(vertical: 8.0),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15.0),
                                   ),
-                                  color: Colors.lightBlue[100],
+                                  color: Color.fromRGBO(204, 235, 252, 1.0),
                                   child: InkWell(
-                                    borderRadius: BorderRadius.circular(15.0),
                                     child: Stack(
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.all(8),
+                                          padding: const EdgeInsets.all(20),
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
@@ -827,28 +858,29 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                               const Divider(
                                                   color: Colors.black26,
                                                   thickness: 1),
-                                              const SizedBox(height: 8),
-                                              _buildInfoRow1({
-                                                'จำนวนรับ :': item[
-                                                            'pack_qty'] !=
-                                                        null
-                                                    ? NumberFormat('#,###')
-                                                        .format(
-                                                            item['pack_qty'])
-                                                    : '',
-                                              }),
-                                              _buildInfoRow2({
-                                                'จำนวน Pallet :':
-                                                    item['count_qty'] ?? '',
-                                              }),
-                                              _buildInfoRow3({
-                                                'จำนวนรวม :':
-                                                    item['count_qty_in'] ?? '',
-                                              }),
-                                              _buildInfoRow4({
-                                                'Item Desc :':
-                                                    item['nb_item_name'] ?? '',
-                                              }),
+                                              const SizedBox(height: 4),
+                                        _buildInfoRow(
+                                          'จำนวนรับ :',
+                                          item['pack_qty'] != null
+                                              ? NumberFormat('#,###')
+                                                  .format(item['pack_qty'])
+                                              : '',
+                                        ),
+                                        SizedBox(height: 4),
+                                        _buildInfoRow(
+                                          'จำนวน Pallet :',
+                                          item['count_qty'] ?? '',
+                                        ),
+                                        SizedBox(height: 4),
+                                        _buildInfoRow(
+                                          'จำนวนรวม :',
+                                          item['count_qty_in'] ?? '',
+                                        ),
+                                        SizedBox(height: 4),
+                                        _buildInfoRow(
+                                          'Item Desc :',
+                                          item['nb_item_name'] ?? '',
+                                        ),
                                               // Column(
                                               //   children: [
                                               //     Row(

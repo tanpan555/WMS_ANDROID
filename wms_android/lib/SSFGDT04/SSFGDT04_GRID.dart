@@ -78,13 +78,13 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                 child: IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () {
-                    // Check if quantity has been modified
+                    // ตรวจสอบการแก้ไข
                     final currentQuantity = item['pack_qty']?.toString() ?? '';
                     final editedQuantity =
                         quantityController.text.replaceAll(',', '');
 
                     if (currentQuantity != editedQuantity) {
-                      // Show confirmation dialog
+                      // แสดง dialog ยืนยัน
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -93,20 +93,17 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                             textMessage:
                                 'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?',
                             onCloseDialog: () {
-                              Navigator.of(context)
-                                  .pop(); // Close only the confirmation dialog
+                              Navigator.of(context).pop(); // ปิด dialog ยืนยัน
                             },
                             onConfirmDialog: () {
-                              Navigator.of(context)
-                                  .pop(); // Close confirmation dialog
-                              Navigator.of(context).pop(); // Close edit dialog
+                              Navigator.of(context).pop(); // ปิด dialog ยืนยัน
+                              Navigator.of(context).pop(); // ปิด popup หลัก
                             },
                           );
                         },
                       );
                     } else {
-                      Navigator.of(context)
-                          .pop(); // Close the edit dialog directly
+                      Navigator.of(context).pop(); // ปิด popup หลักโดยตรง
                     }
                   },
                 ),
@@ -210,26 +207,27 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                   padding: const EdgeInsets.all(0),
                 ),
                 onPressed: () async {
-                  if (quantityController.text.isEmpty) {
-                    setState(() {
-                      item['pack_qty'] = null; // Clear the quantity on card
-                    });
-                    return; // ลบ Navigator.pop เพื่อไม่ปิด Popup
-                  }
                   if (formKey.currentState?.validate() ?? false) {
                     final String cleanedText =
                         quantityController.text.replaceAll(',', '');
                     try {
                       final newQuantity = double.parse(cleanedText).toString();
+
+                      // อัปเดตค่าที่การ์ด
                       await fetchUpdate(
                         item['item_code'], // itemCode
                         item['pack_code'], // poPackCode
                         newQuantity, // poPackQty
                         item['rowid'], // ratio
                       );
+
+                      // อัปเดต state ของรายการ
                       setState(() {
+                        item['pack_qty'] = double.parse(cleanedText);
                         fetchGridItems();
                       });
+
+                      Navigator.of(context).pop(); // ปิด Popup
                     } catch (e) {
                       print('Error parsing quantity: $e');
                     }
@@ -926,7 +924,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                     height: 30, // Adjust height
                   ),
                 ),
-                ElevatedButton(
+                ElevatedButtonStyle.nextpage(
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -940,12 +938,6 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                       ),
                     );
                   },
-                  style: AppStyles.NextButtonStyle(),
-                  child: Image.asset(
-                    'assets/images/right.png', // เปลี่ยนเป็นเส้นทางของรูปภาพของคุณ
-                    width: 20, // ปรับขนาดตามที่ต้องการ
-                    height: 20, // ปรับขนาดตามที่ต้องการ
-                  ),
                 ),
               ],
             ),
@@ -1173,7 +1165,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                   ),
                                   color: Color.fromRGBO(204, 235, 252, 1.0),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
+                                    padding: const EdgeInsets.all(20),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
