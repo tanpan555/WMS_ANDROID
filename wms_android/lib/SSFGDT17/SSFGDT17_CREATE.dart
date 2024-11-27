@@ -481,7 +481,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
           headerText: 'เลือก Location ต้นทาง',
           searchController: _searchController,
           data: items,
-          docString: (item) => item['location_code'] ?? '',
+          docString: (item) => '${item['location_code'] ?? ''} ${item['location_name'] ?? ''}',
           titleText: (item) => item['location_code'] ?? '',
           subtitleText: (item) => item['location_name'] ?? '',
           onTap: (item) {
@@ -510,7 +510,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
           headerText: 'เลือกคลังปลายทาง',
           searchController: _searchController,
           data: items,
-          docString: (item) => item['ware_name'] ?? '',
+          docString: (item) => '${item['ware_code'] ?? ''} ${item['ware_name'] ?? ''}',
           titleText: (item) => item['ware_name'] ?? '',
           subtitleText: (item) => item['ware_code'] ?? '',
           onTap: (item) {
@@ -591,7 +591,7 @@ class _SSFGDT17_CREATEState extends State<SSFGDT17_CREATE> {
           headerText: 'เลือก Location ปลายทาง',
           searchController: _searchController,
           data: items,
-          docString: (item) => item['location_code'] ?? '',
+          docString: (item) => '${item['location_code'] ?? ''} ${item['location_name'] ?? ''}',
           titleText: (item) => item['location_code'] ?? '',
           subtitleText: (item) => item['location_name'] ?? '',
           onTap: (item) {
