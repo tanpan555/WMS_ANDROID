@@ -5,10 +5,12 @@ import '../styles.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
-// import 'SSFGPC04_WARE.dart';
+import '../loading.dart';
+import '../centered_message.dart';
 
 class SSFGPC04_WAREHOUSE extends StatefulWidget {
-  const SSFGPC04_WAREHOUSE({super.key, required List<Map<String, dynamic>> selectedItems});
+  const SSFGPC04_WAREHOUSE(
+      {super.key, required List<Map<String, dynamic>> selectedItems});
 
   @override
   _SSFGPC04_WAREHOUSEState createState() => _SSFGPC04_WAREHOUSEState();
@@ -60,6 +62,8 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
     try {
       final response = await http.get(Uri.parse(
           '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_IN_WAREHOUSE/${gb.APP_SESSION}/${gb.P_ERP_OU_CODE}'));
+      print(Uri.parse(
+          '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_IN_WAREHOUSE/${gb.APP_SESSION}/${gb.P_ERP_OU_CODE}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -106,8 +110,8 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
   }
 
   Future<void> fetchCheck(String? wareCode) async {
-    final url =
-        '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
+    final url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
+    print('post : $url');
 
     final headers = {
       'Content-Type': 'application/json',
@@ -153,8 +157,8 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
 
   String message = '';
   Future<void> deleteData(String? wareCode) async {
-    final String url =
-        '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
+    final String url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
+    print('delete : $url');
 
     try {
       final response = await http.delete(
@@ -197,8 +201,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
+      appBar: CustomAppBar(title: 'เลือกคลังสินค้า', showExitWarning: false),
       backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -285,15 +288,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
     if (filteredWhItems.isEmpty) {
       return Padding(
         padding: const EdgeInsets.only(top: 100),
-        child: const Center(
-          child: Text(
-            'No data found',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-            ),
-          ),
-        ),
+        child: const Center(child: CenteredMessage()),
       );
     } else {
       return Container(
@@ -341,7 +336,6 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
                       ],
                     ),
                   ),
-
                   const SizedBox(width: 10),
                   Text(
                     row['ware_code'] ?? '',

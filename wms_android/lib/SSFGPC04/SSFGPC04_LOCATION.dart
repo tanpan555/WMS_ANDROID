@@ -109,9 +109,8 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
   }
 
   Future<void> fetchCheck(String? loc, String? wareCode) async {
-    final url =
-        '${gb.IP_API}/apex/wms/SSFGPC04/Step_2_PU_INS_TMP_LOC_SEL';
-
+    final url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_2_PU_INS_TMP_LOC_SEL';
+print('post loc : $url');
     final headers = {
       'Content-Type': 'application/json',
     };
@@ -159,6 +158,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
   Future<void> deleteData(String? wareCode) async {
     final String url =
         '${gb.IP_API}/apex/wms/SSFGPC04/Step_2_PU_INS_TMP_LOC_SEL';
+    print('delete loc : $url');
 
     try {
       final response = await http.delete(
@@ -172,6 +172,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
           'WARE_CODE': wareCode,
         }),
       );
+      
 
       if (response.statusCode == 200) {
         // หากการลบสำเร็จ
@@ -203,7 +204,6 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
     return Scaffold(
       appBar:
           CustomAppBar(title: 'เลือกตำแหน่งที่จัดเก็บ', showExitWarning: false),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -227,7 +227,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
                   onPressed: () {
                     _selectAll(true); // เลือกทั้งหมด (ติ๊กถูกทุกแถว)
                     for (var row in filteredLocItems) {
-                      fetchCheck(row['location_code'],
+                      deleteData(
                           row['ware_code']); // ส่งคำขอ POST สำหรับทุกแถวที่เลือก
                     }
                   },
@@ -245,8 +245,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
                   onPressed: () {
                     _deselectAll(); // ยกเลิกการเลือกทั้งหมด (ติ๊กออกทุกแถว)
                     for (var row in filteredLocItems) {
-                      deleteData(row[
-                          'ware_code']); // ส่งคำขอ DELETE สำหรับทุกแถวที่ติ๊กออก
+                      deleteData(row['ware_code']); // ส่งคำขอ DELETE สำหรับทุกแถวที่ติ๊กออก
                     }
                   },
                   child: const Text(
@@ -321,7 +320,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
                     if (row["selected"]!) {
                       fetchCheck(row['location_code'], row['ware_code']);
                     } else {
-                      deleteData(row['ware_code']);
+                      deleteData( row['ware_code']);
                     }
                   },
                   child: Row(

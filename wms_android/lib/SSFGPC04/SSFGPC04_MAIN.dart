@@ -40,6 +40,8 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
     _docNoController = TextEditingController(
       text: widget.v_nb_doc_no ?? 'AUTO',
     );
+    final now = DateTime.now();
+  _dateController.text = DateFormat('dd/MM/yyyy').format(now);
   }
 
   @override

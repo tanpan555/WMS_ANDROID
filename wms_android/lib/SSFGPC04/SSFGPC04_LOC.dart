@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGPC04_BTN_PROCESS.dart';
+import '../centered_message.dart';
+import '../loading.dart';
 
 class SSFGPC04_LOC extends StatefulWidget {
   final List<Map<String, dynamic>> selectedItems;
@@ -30,12 +32,57 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
   bool isLoading = true;
   int currentPage = 0;
   final int itemsPerPage = 15;
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController _singleChildScrollController = ScrollController();
+  final ScrollController _listViewScrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     fetchData();
+  }
+
+  @override
+  void dispose() {
+    _singleChildScrollController.dispose();
+    _listViewScrollController.dispose();
+    super.dispose();
+  }
+
+  int totalPages() {
+    return (tmpLocItems.length / itemsPerPage).ceil(); // คำนวณจำนวนหน้าทั้งหมด
+  }
+
+  void _loadPrevPage() {
+    if (currentPage > 0) {
+      setState(() {
+        currentPage--;
+        // No need to call fetchData here, just update the UI
+      });
+      _scrollToTop();
+    }
+  }
+
+  void _loadNextPage() {
+    if ((currentPage + 1) * itemsPerPage < tmpLocItems.length) {
+      setState(() {
+        currentPage++;
+        // No need to call fetchData here, just update the UI
+      });
+      _scrollToTop();
+    }
+  }
+
+  List<dynamic> getCurrentData() {
+    final start = currentPage * itemsPerPage;
+    final end = start + itemsPerPage;
+
+    return tmpLocItems.sublist(start, end.clamp(0, tmpLocItems.length));
+  }
+
+  void _scrollToTop() {
+    if (_singleChildScrollController.hasClients) {
+      _singleChildScrollController.jumpTo(0); // Scroll to the top
+    }
   }
 
   Future<void> fetchData() async {
@@ -71,27 +118,11 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
     }
   }
 
-  List<Map<String, dynamic>> getCurrentPageItems() {
-    final startIndex = currentPage * itemsPerPage;
-    final endIndex = startIndex + itemsPerPage;
-    return tmpLocItems.sublist(startIndex,
-        endIndex > tmpLocItems.length ? tmpLocItems.length : endIndex);
-  }
-
-  void _scrollToTop() {
-    if (_scrollController.hasClients) {
-      _scrollController.jumpTo(0); // เลื่อนไปยังตำแหน่งเริ่มต้น (index 0)
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final totalPages = (widget.selectedItems.length / itemsPerPage).ceil();
-    final currentPageItems = getCurrentPageItems();
     return Scaffold(
       appBar:
           CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -133,7 +164,7 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                               .map((item) => Map<String, dynamic>.from(item))
                               .toList(),
                           date: widget.date,
-                          note: widget.note, // เพิ่ม ',' ตรงนี้
+                          note: widget.note,
                           docNo: widget.docNo,
                         ),
                       ),
@@ -141,102 +172,209 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                   },
                   style: AppStyles.NextButtonStyle(),
                   child: Image.asset(
-                    'assets/images/right.png', // เปลี่ยนเป็นเส้นทางของรูปภาพของคุณ
-                    width: 20, // ปรับขนาดตามที่ต้องการ
-                    height: 20, // ปรับขนาดตามที่ต้องการ
+                    'assets/images/right.png',
+                    width: 20,
+                    height: 20,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: widget.selectedItems.isEmpty
-                  ? Center(
-                      child: Text(
-                        'No data found',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white, // Change to your preferred color
-                        ),
-                      ),
-                    )
-                  : ListView.builder(
-                      controller: _scrollController, // ใช้ scrollController
-                      itemCount: currentPageItems.length +
-                          1, // +1 เพื่อรองรับปุ่มถัดไป/ย้อนกลับ
-                      itemBuilder: (context, index) {
-                        if (index < currentPageItems.length) {
-                          final item = tmpLocItems[index];
-                          return Card(
-                            color: Colors.lightBlue[100],
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Center(
-                                    child: Text(
-                                      item['ware_code'] ?? '',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                        color: Color.fromARGB(255, 0, 0, 0),
+              child: isLoading
+                  ? Center(child: LoadingIndicator())
+                  : widget.selectedItems.isEmpty
+                      ? const Center(child: CenteredMessage())
+                      : SingleChildScrollView(
+                          controller: _singleChildScrollController,
+                          child: ListView.builder(
+                            controller: _listViewScrollController,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            // itemCount: tmpLocItems.length,
+                            // itemBuilder: (context, index) {
+                            //   final item = tmpLocItems[index];
+                            itemCount: getCurrentData().length + 1,
+                              itemBuilder: (context, index) {
+                                if (index < getCurrentData().length) {
+                                  var item = getCurrentData()[index];
+                              return Card(
+                                color: Colors.lightBlue[100],
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Center(
+                                        child: Text(
+                                          item['ware_code'] ?? '',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color: Color.fromARGB(255, 0, 0, 0),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      const Divider(
+                                          color: Colors.black26, thickness: 1),
+                                      Text(item['location_code'] ?? ''),
+                                      Text(item['nb_location_name'] ?? ''),
+                                    ],
                                   ),
-                                  const Divider(
-                                      color: Colors.black26,
-                                      thickness: 1), // เส้นแบ่ง
-                                  Text(
-                                    item['location_code'] ?? '',
-                                  ),
-                                  Text(
-                                    item['nb_location_name'] ?? '',
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        } else {
-                          // แสดงปุ่มถัดไปและย้อนกลับในท้ายรายการ
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ElevatedButton(
-                                onPressed: currentPage > 0
-                                    ? () {
-                                        setState(() {
-                                          currentPage--;
-                                          _scrollToTop(); // เลื่อนไปยังจุดเริ่มต้นเมื่อกดย้อนกลับ
-                                        });
-                                      }
-                                    : null,
-                                child: const Text('Previous'),
-                              ),
-                              // ตรวจสอบว่าจำนวน Card ใน currentPageItems ถึง 15 หรือไม่
-                              if (currentPageItems.length == itemsPerPage) ...[
-                                Text(
-                                  'Page ${currentPage + 1} of $totalPages',
-                                  style: const TextStyle(color: Colors.white),
                                 ),
-                              ],
-                              ElevatedButton(
-                                onPressed: currentPage < totalPages - 1
-                                    ? () {
-                                        setState(() {
-                                          currentPage++;
-                                          _scrollToTop(); // เลื่อนไปยังจุดเริ่มต้นเมื่อกดถัดไป
-                                        });
-                                      }
-                                    : null,
-                                child: const Text('Next'),
-                              ),
-                            ],
-                          );
-                        }
-                      },
-                    ),
+                              );} else {
+                                  return getCurrentData().length > 3
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                currentPage > 0
+                                                    ? ElevatedButton(
+                                                        onPressed:
+                                                            currentPage > 0
+                                                                ? () {
+                                                                    _loadPrevPage();
+                                                                  }
+                                                                : null,
+                                                        style: ButtonStyles
+                                                            .previousButtonStyle,
+                                                        child: ButtonStyles
+                                                            .previousButtonContent,
+                                                      )
+                                                    : ElevatedButton(
+                                                        onPressed: null,
+                                                        style: DisableButtonStyles
+                                                            .disablePreviousButtonStyle,
+                                                        child: DisableButtonStyles
+                                                            .disablePreviousButtonContent,
+                                                      )
+                                              ],
+                                            ),
+                                            // const SizedBox(width: 30),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Center(
+                                                  child: Text(
+                                                    '${(currentPage * itemsPerPage) + 1} - ${widget.selectedItems.isNotEmpty ? ((currentPage + 1) * itemsPerPage).clamp(1, widget.selectedItems.length) : 0}',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            // const SizedBox(width: 30),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                currentPage < totalPages() - 1
+                                                    ? ElevatedButton(
+                                                        onPressed: currentPage <
+                                                                totalPages() - 1
+                                                            ? () {
+                                                                _loadNextPage();
+                                                              }
+                                                            : null,
+                                                        style: ButtonStyles
+                                                            .nextButtonStyle,
+                                                        child: ButtonStyles
+                                                            .nextButtonContent(),
+                                                      )
+                                                    : ElevatedButton(
+                                                        onPressed: null,
+                                                        style: DisableButtonStyles
+                                                            .disableNextButtonStyle,
+                                                        child: DisableButtonStyles
+                                                            .disablePreviousButtonContent,
+                                                      ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox.shrink();
+                                }
+                            },
+                          )),
             ),
+            !isLoading && getCurrentData().length > 0
+                ? getCurrentData().length <= 3
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              currentPage > 0
+                                  ? ElevatedButton(
+                                      onPressed: currentPage > 0
+                                          ? () {
+                                              _loadPrevPage();
+                                            }
+                                          : null,
+                                      style: ButtonStyles.previousButtonStyle,
+                                      child: ButtonStyles.previousButtonContent,
+                                    )
+                                  : ElevatedButton(
+                                      onPressed: null,
+                                      style: DisableButtonStyles
+                                          .disablePreviousButtonStyle,
+                                      child: DisableButtonStyles
+                                          .disablePreviousButtonContent,
+                                    )
+                            ],
+                          ),
+                          // const SizedBox(width: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Text(
+                                  '${(currentPage * itemsPerPage) + 1} - ${widget.selectedItems.isNotEmpty ? ((currentPage + 1) * itemsPerPage).clamp(1, widget.selectedItems.length) : 0}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          // const SizedBox(width: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              currentPage < totalPages() - 1
+                                  ? ElevatedButton(
+                                      onPressed: currentPage < totalPages() - 1
+                                          ? () {
+                                              _loadNextPage();
+                                            }
+                                          : null,
+                                      style: ButtonStyles.nextButtonStyle,
+                                      child: ButtonStyles.nextButtonContent(),
+                                    )
+                                  : ElevatedButton(
+                                      onPressed: null,
+                                      style: DisableButtonStyles
+                                          .disableNextButtonStyle,
+                                      child: DisableButtonStyles
+                                          .disablePreviousButtonContent,
+                                    ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : const SizedBox.shrink()
+                : const SizedBox.shrink(),
           ],
         ),
       ),
