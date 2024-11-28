@@ -208,8 +208,8 @@ class _Ssfgdt31SelectDocTypeState extends State<Ssfgdt31SelectDocType> {
                           await chkCreateCard();
                         },
                   style: AppStyles.ConfirmbuttonStyle(),
-                  child: Text('CONFIRM',
-                      style: AppStyles.ConfirmbuttonTextStyle()),
+                  child:
+                      Text('ยืนยัน', style: AppStyles.ConfirmbuttonTextStyle()),
                 ),
               ],
             ),

@@ -1578,8 +1578,8 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           onPressed: () async {
                             setState(() {
                               selectedRadio = '1';
-                              displayLovDate = 'ทั้งหมด';
-                              displayLovDocNo = 'ทั้งหมด';
+                              displayLovDate = '';
+                              displayLovDocNo = '';
                               displayStartWareCode = 'ทั้งหมด';
                               displayEndWareCode = 'ทั้งหมด';
                               displayStartLoc = 'ทั้งหมด';
@@ -1592,8 +1592,8 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                               displayEndSubCategory = 'ทั้งหมด';
                               displayStartItem = 'ทั้งหมด';
                               displayEndItem = 'ทั้งหมด';
-                              returnLovDate = 'null';
-                              returnLovDocNo = 'null';
+                              returnLovDate = '';
+                              returnLovDocNo = '';
                               returnStartWareCode = 'null';
                               returnEndWareCode = 'null';
                               returnStartLoc = 'null';
@@ -1607,8 +1607,8 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                               returnStartItem = 'null';
                               returnEndItem = 'null';
 
-                              dateController.text = 'ทั้งหมด';
-                              docNoController.text = 'ทั้งหมด';
+                              dateController.text = '';
+                              docNoController.text = '';
                               startWareCodeController.text = 'ทั้งหมด';
                               endWareCodeController.text = 'ทั้งหมด';
                               startLocController.text = 'ทั้งหมด';

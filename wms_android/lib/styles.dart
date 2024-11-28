@@ -624,8 +624,10 @@ class DialogStyles {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ยกเลิก',
-                        style: TextStyle(color: Colors.black)),
+                    child: const Text(
+                      'ยกเลิก',
+                      // style: TextStyle(color: Colors.black)
+                    ),
                   ),
                   ElevatedButton(
                     onPressed: onConfirmDialog,
@@ -633,8 +635,10 @@ class DialogStyles {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ตกลง',
-                        style: TextStyle(color: Colors.black)),
+                    child: const Text(
+                      'ตกลง',
+                      // style: TextStyle(color: Colors.black)
+                    ),
                   ),
                 ],
               ),
@@ -724,8 +728,10 @@ class DialogStyles {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ยกเลิก',
-                        style: TextStyle(color: Colors.black)),
+                    child: const Text(
+                      'ยกเลิก',
+                      // style: TextStyle(color: Colors.black)
+                    ),
                   ),
                   ElevatedButton(
                     onPressed: onConfirmDialog,
@@ -733,8 +739,10 @@ class DialogStyles {
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
                     ),
-                    child: const Text('ตกลง',
-                        style: TextStyle(color: Colors.black)),
+                    child: const Text(
+                      'ตกลง',
+                      // style: TextStyle(color: Colors.black)
+                    ),
                   ),
                 ],
               ),
