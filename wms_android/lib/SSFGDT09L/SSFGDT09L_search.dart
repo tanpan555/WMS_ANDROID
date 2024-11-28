@@ -150,11 +150,9 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                     ),
                     //////////////////////////////////////////////////////////////
                     const SizedBox(height: 8),
-
                     CustomTextFormField(
                       controller: dateController,
-                      labelText: 'วันที่สอบ',
-                      // hintText: 'DD/MM/YYYY',
+                      labelText: 'วันที่เบิกจ่าย',
                       keyboardType: TextInputType.number,
                       onChanged: (value) {
                         selectedDate = value;
@@ -225,10 +223,12 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                                     ),
                                   ).then((value) async {
                                     if (pSoNoRP == '') {
-                                      setState(() {
-                                        pSoNo = '';
-                                        pSoNoController.text = '';
-                                      });
+                                      if (mounted) {
+                                        setState(() {
+                                          pSoNo = '';
+                                          pSoNoController.text = '';
+                                        });
+                                      }
                                     }
                                   });
                                 }
@@ -250,10 +250,12 @@ class _Ssfgdt09lSearchState extends State<Ssfgdt09lSearch> {
                                   ),
                                 ).then((value) async {
                                   if (pSoNoRP == '') {
-                                    setState(() {
-                                      pSoNo = '';
-                                      pSoNoController.text = '';
-                                    });
+                                    if (mounted) {
+                                      setState(() {
+                                        pSoNo = '';
+                                        pSoNoController.text = '';
+                                      });
+                                    }
                                   }
                                 });
                               }

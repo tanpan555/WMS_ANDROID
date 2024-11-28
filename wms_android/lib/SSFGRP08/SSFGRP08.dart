@@ -1,1229 +1,551 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
-import 'package:wms_android/SSINDT01/SSINDT01_search.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'dart:convert';
-import 'package:wms_android/bottombar.dart';
+// import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:wms_android/styles.dart';
+import 'package:wms_android/loading.dart';
+import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:wms_android/custom_appbar.dart';
-import 'package:wms_android/Global_Parameter.dart' as gb;
+import 'package:wms_android/bottombar.dart';
 
 class SSFGRP08_MAIN extends StatefulWidget {
-  const SSFGRP08_MAIN({Key? key}) : super(key: key);
+//////
+  SSFGRP08_MAIN({
+    Key? key,
 
+    ///
+  }) : super(key: key);
   @override
   _SSFGRP08_MAINState createState() => _SSFGRP08_MAINState();
 }
 
 class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
-  // Controller for the text field
-  final TextEditingController _F_eDateController = TextEditingController();
-  String F_eDate = '';
-  String SendF_eDate = 'null';
-  final TextEditingController _Doc_NoController = TextEditingController();
-  final TextEditingController _E_Doc_NoController = TextEditingController();
-  final TextEditingController _selectedController4 = TextEditingController();
-  final TextEditingController _selectedController5 = TextEditingController();
-  final TextEditingController _selectedController6 = TextEditingController();
-  final TextEditingController _selectedController7 = TextEditingController();
-  final TextEditingController _selectedController8 = TextEditingController();
-  final TextEditingController _selectedController9 = TextEditingController();
-  final TextEditingController _selectedController10 = TextEditingController();
-  final TextEditingController _selectedController11 = TextEditingController();
-  final TextEditingController _selectedController12 = TextEditingController();
-  final TextEditingController _selectedController13 = TextEditingController();
-  final TextEditingController _selectedController14 = TextEditingController();
-  final TextEditingController _selectedController15 = TextEditingController();
-  final TextEditingController _selectedController16 = TextEditingController();
-  final TextEditingController _selectedController17 = TextEditingController();
-
-  final DateFormat displayFormat = DateFormat("dd/MM/yyyy");
-  final DateFormat apiFormat = DateFormat("MM/dd/yyyy");
+  // --------------------------------- data list
+  List<dynamic> dataLovDocDate = [];
+  List<dynamic> dataLovStartDocNo = [];
+  List<dynamic> dataLovEndDocNo = [];
+  // --------------------------------- Doc Date
+  String? displayDocDate;
+  String returnDocDate = '';
+  TextEditingController docDateController = TextEditingController();
+  // --------------------------------- Start Doc No
+  String? displayStartDocNo;
+  String returnStartDocNo = '';
+  TextEditingController startDocNoController = TextEditingController();
+  // --------------------------------- End Doc No
+  String? displayEndDocNo;
+  String returnEndDocNo = '';
+  TextEditingController endDocNoController = TextEditingController();
+  // ---------------------------------
+  String selectedRadio = '1';
+  bool isLoading = false;
+  bool isFirstLoad = true;
+  bool checkUpdateData = false;
+  // --------------------------------- Search Controller
+  TextEditingController searchController1 = TextEditingController();
+  TextEditingController searchController2 = TextEditingController();
+  TextEditingController searchController3 = TextEditingController();
+  TextEditingController searchController4 = TextEditingController();
+  TextEditingController searchController5 = TextEditingController();
+  TextEditingController searchController6 = TextEditingController();
+  TextEditingController searchController7 = TextEditingController();
+  TextEditingController searchController8 = TextEditingController();
+  TextEditingController searchController9 = TextEditingController();
+  TextEditingController searchController10 = TextEditingController();
+  TextEditingController searchController11 = TextEditingController();
+  TextEditingController searchController12 = TextEditingController();
+  TextEditingController searchController13 = TextEditingController();
+  TextEditingController searchController14 = TextEditingController();
+  TextEditingController searchController15 = TextEditingController();
+  // ---------------------------------
 
   @override
   void initState() {
     super.initState();
-    fetch_F_DATE();
-    fetch_DOC_NO();
-    fetch_E_DOC_NO();
+    firstLoadData();
+    setDataFirstLoad();
   }
 
-  Widget _showDialog1() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: DropdownSearch<String>(
-        popupProps: PopupProps.dialog(
-          showSearchBox: true,
-          showSelectedItems: true,
-          itemBuilder: (context, item, isSelected) {
-            final itemData = prepareDatesItem.firstWhere(
-              (element) => '${element['prepare_date']}' == item,
-              orElse: () => {'prepare_date': ''},
-            );
-
-            return ListTile(
-              title: Text(item),
-              selected: isSelected,
-            );
-          },
-          searchFieldProps: TextFieldProps(
-            decoration: InputDecoration(
-              hintText: 'วันที่เตรียมการตรวจนับ',
-              hintStyle: TextStyle(color: Colors.grey),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-            ),
-          ),
-        ),
-        items: prepareDatesItem
-            .map((item) => '${item['prepare_date']}'.toString())
-            .toList(),
-        dropdownDecoratorProps: DropDownDecoratorProps(
-          dropdownSearchDecoration: InputDecoration(
-            border: InputBorder.none,
-            filled: true,
-            fillColor: Colors.white,
-            labelText: "วันที่เตรียมการตรวจนับ",
-            hintStyle: TextStyle(fontSize: 12.0),
-          ),
-        ),
-        onChanged: (String? value) async {
-          setState(() {
-            selectedprepareDates = value;
-            SendF_eDate = (selectedprepareDates ?? '').replaceAll('/', '-');
-
-            if (value == '') {
-              _F_eDateController.text = 'null';
-            } else {
-              final selectedItem = prepareDatesItem.firstWhere(
-                (element) => '${element['prepare_date']}' == value,
-                orElse: () => {'prepare_date': ''},
-              );
-
-              _F_eDateController.text = value ?? 'null';
-            }
-          });
-
-          await fetch_DOC_NO();
-        },
-        selectedItem: selectedprepareDates ?? '',
-      ),
-    );
+  @override
+  void dispose() {
+    docDateController.dispose();
+    searchController1.dispose();
+    searchController2.dispose();
+    searchController3.dispose();
+    searchController4.dispose();
+    searchController5.dispose();
+    searchController6.dispose();
+    searchController7.dispose();
+    searchController8.dispose();
+    searchController9.dispose();
+    searchController10.dispose();
+    searchController11.dispose();
+    searchController12.dispose();
+    searchController13.dispose();
+    searchController14.dispose();
+    searchController15.dispose();
+    super.dispose();
   }
 
-  List<Map<String, dynamic>> prepareDatesItem = [];
-  String? selectedprepareDates;
-  Future<void> fetch_F_DATE() async {
-    final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_F_DATE/${gb.P_ERP_OU_CODE}');
-    try {
-      final response = await http.get(url);
+  Future<void> firstLoadData() async {
+    await selectLovDocDate();
+    await selectLovStartDocNo();
+    await selectLovEndDocNO();
+  }
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data =
-            jsonDecode(utf8.decode(response.bodyBytes));
-        final List<dynamic> items = data['items'] ?? [];
-        print(items);
+  Future<void> setDataFirstLoad() async {
+    // ----------------------------
+    displayDocDate = '';
+    returnDocDate = '';
+    docDateController.text = '';
+    // ----------------------------
+    displayStartDocNo = '';
+    returnStartDocNo = '';
+    startDocNoController.text = '';
+    // ----------------------------
+    displayEndDocNo = '';
+    returnEndDocNo = '';
+    endDocNoController.text = '';
+    // ----------------------------
+  }
 
-        if (items.isNotEmpty) {
-          setState(() {
-            prepareDatesItem = List<Map<String, dynamic>>.from(items);
-            if (prepareDatesItem.isNotEmpty) {
-              selectedprepareDates = '';
-            }
-          });
-        } else {
-          print('No items found.');
-        }
-      } else {
-        print('Failed to load data. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
+  void checkUpdateDataALL(bool check) {
+    if (mounted) {
+      setState(() {
+        checkUpdateData = check;
+        print('check in checkUpdateDataALL : $check');
+        print('checkUpdateData in checkUpdateDataALL : $checkUpdateData');
+      });
     }
   }
 
-  List<Map<String, dynamic>> doc_noItem = [];
-  String? selecteddoc_no;
-  Future<void> fetch_DOC_NO() async {
-    final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_DOC_NO/${gb.P_ERP_OU_CODE}/$SendF_eDate');
-
+  Future<void> selectLovDocDate() async {
+    if (isFirstLoad == true) {
+      //   if (mounted) {
+      //     setState(() {
+      //       isLoading = true;
+      //     });
+      //   }
+      // } else if (isFirstLoad == false) {
+      //   if (mounted) {
+      //     isLoading = true;
+      //   }
+    }
     try {
-      final response = await http.get(url);
-      print(url);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data =
-            jsonDecode(utf8.decode(response.bodyBytes));
-        final List<dynamic> items = data['items'] ?? [];
-        print(items);
+      final response = await http.get(Uri.parse(
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectDocDate/${globals.P_ERP_OU_CODE}'));
 
-        if (items.isNotEmpty) {
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        print('Fetched data: $jsonDecode');
+        if (mounted) {
           setState(() {
-            doc_noItem = List<Map<String, dynamic>>.from(items);
-            if (doc_noItem.isNotEmpty) {
-              selecteddoc_no = '';
+            dataLovDocDate =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
             }
           });
-        } else {
-          print('No items found.');
         }
+        print('dataLovDocDate : $dataLovDocDate');
       } else {
-        print('Failed to load data. Status code: ${response.statusCode}');
+        throw Exception('dataLovDocDate Failed to load fetchData');
       }
     } catch (e) {
-      print('Error: $e');
+      print('dataLovDocDate ERROR IN Fetch Data : $e');
     }
   }
 
-  Widget _showDialog2() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: DropdownSearch<String>(
-        popupProps: PopupProps.dialog(
-          showSearchBox: true,
-          showSelectedItems: true,
-          itemBuilder: (context, item, isSelected) {
-            final itemData = doc_noItem.firstWhere(
-              (element) => '${element['doc_no']}' == item,
-              orElse: () => {'doc_no': ''},
-            );
-
-            return ListTile(
-              title: Text(item),
-              subtitle: Text(itemData['prepare_date'] ?? ''),
-              selected: isSelected,
-            );
-          },
-          searchFieldProps: TextFieldProps(
-            decoration: InputDecoration(
-              hintText: 'จาก เลขที่เอกสาร',
-              hintStyle: TextStyle(color: Colors.grey),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-            ),
-          ),
-        ),
-        items:
-            doc_noItem.map((item) => '${item['doc_no']}'.toString()).toList(),
-        dropdownDecoratorProps: DropDownDecoratorProps(
-          dropdownSearchDecoration: InputDecoration(
-            border: InputBorder.none,
-            filled: true,
-            fillColor: Colors.white,
-            labelText: "จาก เลขที่เอกสาร",
-            hintStyle: TextStyle(fontSize: 12.0),
-          ),
-        ),
-        onChanged: (String? value) async {
-          setState(() {
-            selecteddoc_no = value;
-            print(selecteddoc_no);
-            if (value == '') {
-              _F_eDateController.text = 'null';
-            } else {
-              final selectedItem = doc_noItem.firstWhere(
-                (element) => '${element['doc_no']}' == value,
-                orElse: () => {'doc_no': ''},
-              );
-
-              _Doc_NoController.text = value ?? '';
-              fetch_E_DOC_NO();
-            }
-          });
-        },
-        selectedItem: selecteddoc_no ?? '',
-      ),
-    );
-  }
-
-  List<Map<String, dynamic>> e_doc_noItem = [];
-  String? selected_e_doc_no;
-  Future<void> fetch_E_DOC_NO() async {
-    final String sendDate = selecteddoc_no ?? 'null';
-    final url = Uri.parse(
-        'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_E_DOC_NO/${gb.P_ERP_OU_CODE}/$SendF_eDate/$sendDate');
-
+  Future<void> selectLovStartDocNo() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
     try {
-      final response = await http.get(url);
-      print('===============================');
-      print('fetch_E_DOC_NO : $url');
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data =
-            jsonDecode(utf8.decode(response.bodyBytes));
-        final List<dynamic> items = data['items'] ?? [];
-        print(items);
+      final response = await http.get(Uri.parse(
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartDocNo/'
+          '${globals.P_ERP_OU_CODE}/${returnStartDocNo.isEmpty ? 'null' : returnStartDocNo}'));
 
-        if (items.isNotEmpty) {
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        print('Fetched data: $jsonDecode');
+        if (mounted) {
           setState(() {
-            e_doc_noItem = List<Map<String, dynamic>>.from(items);
-            if (e_doc_noItem.isNotEmpty) {
-              selected_e_doc_no = '';
+            dataLovStartDocNo =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
             }
           });
-        } else {
-          print('No items found.');
         }
+        print('dataLovStartDocNo : $dataLovStartDocNo');
       } else {
-        print('Failed to load data. Status code: ${response.statusCode}');
+        throw Exception(
+            'dataLovStartDocNo Failed to load fetchData ||  Status Code: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
+      print('dataLovStartDocNo ERROR IN Fetch Data : $e');
     }
   }
 
-  String? display_doc_date;
+  Future<void> selectLovEndDocNO() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
+    try {
+      final response = await http.get(Uri.parse(
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovEndDocNo/${globals.P_ERP_OU_CODE}'
+          '/${returnDocDate.isEmpty ? 'null' : returnDocDate}/${returnStartDocNo.isEmpty ? 'null' : returnStartDocNo}'));
 
-  Widget _showDialog3() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: DropdownSearch<String>(
-        popupProps: PopupProps.dialog(
-          showSearchBox: true,
-          showSelectedItems: true,
-          itemBuilder: (context, item, isSelected) {
-            final itemData = e_doc_noItem.firstWhere(
-              (element) => '${element['doc_no']}' == item,
-              orElse: () => {'doc_no': '', 'doc_date': ''},
-            );
-
-            return ListTile(
-              title: Text(item),
-              subtitle: Text(itemData['doc_date'] ?? ''),
-              selected: isSelected,
-            );
-          },
-          searchFieldProps: TextFieldProps(
-            decoration: InputDecoration(
-              hintText: 'จาก เลขที่เอกสาร',
-              hintStyle: TextStyle(color: Colors.grey),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-            ),
-          ),
-        ),
-        items: e_doc_noItem.map((item) => '${item['doc_no']}').toList(),
-        dropdownDecoratorProps: DropDownDecoratorProps(
-          dropdownSearchDecoration: InputDecoration(
-            border: InputBorder.none,
-            filled: true,
-            fillColor: Colors.white,
-            labelText: "ถึง เลขที่เอกสาร",
-            hintStyle: TextStyle(fontSize: 12.0),
-          ),
-        ),
-        onChanged: (String? value) {
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        print('Fetched data: $jsonDecode');
+        if (mounted) {
           setState(() {
-            if (value == null || value.isEmpty) {
-              selected_e_doc_no = null;
-              _F_eDateController.text = 'null';
-            } else {
-              final selectedItem = e_doc_noItem.firstWhere(
-                (element) => '${element['doc_no']}' == value,
-                orElse: () => {'doc_no': '', 'doc_date': ''},
-              );
+            dataLovEndDocNo =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
 
-              selected_e_doc_no = '${selectedItem['doc_no']}';
-
-              display_doc_date = '${selectedItem['doc_date']}';
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
             }
-            print(selected_e_doc_no);
           });
-        },
-        selectedItem: display_doc_date ?? '',
-      ),
-    );
-  }
-
-  void _showDialog4() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Seller'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Add your selection or any content here
-                ListTile(
-                  title: Text('Seller 1'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController4.text = 'Seller 1';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: Text('Seller 2'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController4.text = 'Seller 2';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDialog5() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Seller'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Add your selection or any content here
-                ListTile(
-                  title: Text('Seller 1'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController5.text = 'Seller 1';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: Text('Seller 2'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController5.text = 'Seller 2';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDialog6() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Seller'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Add your selection or any content here
-                ListTile(
-                  title: Text('Seller 1'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController6.text = 'Seller 1';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: Text('Seller 2'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController6.text = 'Seller 2';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDialog7() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Seller'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Add your selection or any content here
-                ListTile(
-                  title: Text('Seller 1'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController7.text = 'Seller 1';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: Text('Seller 2'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController7.text = 'Seller 2';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDialog8() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Seller'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Add your selection or any content here
-                ListTile(
-                  title: Text('Seller 1'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController8.text = 'Seller 1';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: Text('Seller 2'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController8.text = 'Seller 2';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDialog9() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Seller'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Add your selection or any content here
-                ListTile(
-                  title: Text('Seller 1'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController9.text = 'Seller 1';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: Text('Seller 2'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController9.text = 'Seller 2';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDialog10() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Seller'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Add your selection or any content here
-                ListTile(
-                  title: Text('Seller 1'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController10.text = 'Seller 1';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: Text('Seller 2'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController10.text = 'Seller 2';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDialog11() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Seller'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Add your selection or any content here
-                ListTile(
-                  title: Text('Seller 1'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController11.text = 'Seller 1';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: Text('Seller 2'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController11.text = 'Seller 2';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDialog12() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Seller'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Add your selection or any content here
-                ListTile(
-                  title: Text('Seller 1'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController12.text = 'Seller 1';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: Text('Seller 2'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController12.text = 'Seller 2';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDialog13() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Seller'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Add your selection or any content here
-                ListTile(
-                  title: Text('Seller 1'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController13.text = 'Seller 1';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: Text('Seller 2'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController13.text = 'Seller 2';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDialog14() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Seller'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Add your selection or any content here
-                ListTile(
-                  title: Text('Seller 1'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController14.text = 'Seller 1';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: Text('Seller 2'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController14.text = 'Seller 2';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDialog15() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Seller'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Add your selection or any content here
-                ListTile(
-                  title: Text('Seller 1'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController15.text = 'Seller 1';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: Text('Seller 2'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController15.text = 'Seller 2';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDialog16() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Seller'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Add your selection or any content here
-                ListTile(
-                  title: Text('Seller 1'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController16.text = 'Seller 1';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-                ListTile(
-                  title: Text('Seller 2'),
-                  onTap: () {
-                    setState(() {
-                      _selectedController16.text = 'Seller 2';
-                    });
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+        }
+        print('dataLovEndDocNo : $dataLovEndDocNo');
+      } else {
+        throw Exception(
+            'dataLovEndDocNo Failed to load fetchData ||  Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('dataLovEndDocNo ERROR IN Fetch Data : $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          CustomAppBar(title: 'รายงานเตรียมการตรวจนับ', showExitWarning: false),
+      appBar: CustomAppBar(
+          title: 'วันที่เตียมการตรวตนับ', showExitWarning: checkUpdateData),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            Column(children: [
-              _showDialog1(),
-              SizedBox(
-                height: 8,
-              ),
-              _showDialog2(),
-              SizedBox(
-                height: 8,
-              ),
-              _showDialog3(),
-              SizedBox(
-                height: 8,
-              ),
-              GestureDetector(
-                onTap: _showDialog4,
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: _selectedController4,
-                    decoration: InputDecoration(
-                      labelText: '4st',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(color: Colors.black),
-                      suffixIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                      ),
+        child: isLoading
+            ? Column(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: LoadingIndicator(),
                     ),
                   ),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              GestureDetector(
-                onTap: _showDialog5,
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: _selectedController5,
-                    decoration: InputDecoration(
-                      labelText: '5st',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(color: Colors.black),
-                      suffixIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
+                ],
+              )
+            : SingleChildScrollView(
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: docDateController,
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchDocDate(),
+                      minLines: 1,
+                      maxLines: 3,
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        filled: true,
+                        fillColor: Colors.white,
+                        labelText: 'วันที่เตรียมการตรวจนับ',
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              GestureDetector(
-                onTap: _showDialog6,
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: _selectedController6,
-                    decoration: InputDecoration(
-                      labelText: '6st',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(color: Colors.black),
-                      suffixIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                      ),
+                    const SizedBox(height: 8),
+                    // -----------------------------------------------
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: docDateController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchStartDocNo(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'จาก เลขที่เอกสาร',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: docDateController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchEndDocNo(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'ถึง เลขที่เอกสาร',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              GestureDetector(
-                onTap: _showDialog7,
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: _selectedController7,
-                    decoration: InputDecoration(
-                      labelText: '7st',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(color: Colors.black),
-                      suffixIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                      ),
+                    const SizedBox(height: 8),
+                    // -----------------------------------------------
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: docDateController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchStartDocNo(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'จาก เลขที่เอกสาร',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: docDateController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchEndDocNo(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'ถึง เลขที่เอกสาร',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  ),
+                    const SizedBox(height: 8),
+                    // -----------------------------------------------
+                  ],
                 ),
               ),
-              SizedBox(
-                height: 8,
-              ),
-              GestureDetector(
-                onTap: _showDialog8,
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: _selectedController8,
-                    decoration: InputDecoration(
-                      labelText: '8st',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(color: Colors.black),
-                      suffixIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              GestureDetector(
-                onTap: _showDialog9,
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: _selectedController9,
-                    decoration: InputDecoration(
-                      labelText: '9st',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(color: Colors.black),
-                      suffixIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              GestureDetector(
-                onTap: _showDialog10,
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: _selectedController10,
-                    decoration: InputDecoration(
-                      labelText: '10st',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(color: Colors.black),
-                      suffixIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              GestureDetector(
-                onTap: _showDialog11,
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: _selectedController11,
-                    decoration: InputDecoration(
-                      labelText: '11st',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(color: Colors.black),
-                      suffixIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              GestureDetector(
-                onTap: _showDialog12,
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: _selectedController12,
-                    decoration: InputDecoration(
-                      labelText: '12st',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(color: Colors.black),
-                      suffixIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              GestureDetector(
-                onTap: _showDialog13,
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: _selectedController13,
-                    decoration: InputDecoration(
-                      labelText: '13st',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(color: Colors.black),
-                      suffixIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              GestureDetector(
-                onTap: _showDialog14,
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: _selectedController14,
-                    decoration: InputDecoration(
-                      labelText: '14st',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(color: Colors.black),
-                      suffixIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              GestureDetector(
-                onTap: _showDialog15,
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: _selectedController15,
-                    decoration: InputDecoration(
-                      labelText: '15st',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(color: Colors.black),
-                      suffixIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              GestureDetector(
-                onTap: _showDialog16,
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: _selectedController16,
-                    decoration: InputDecoration(
-                      labelText: '16st',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(color: Colors.black),
-                      suffixIcon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 113, 113, 113),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ]),
-          ],
-        ),
       ),
-      bottomNavigationBar: BottomBar(currentPage: 'not_show'),
+      bottomNavigationBar: BottomBar(
+        currentPage: checkUpdateData == true ? 'show' : 'not_show',
+      ),
+    );
+  }
+
+  // --------------------------------- ||
+  var maskFormatter = MaskTextInputFormatter(
+    mask: '##/##/####',
+    filter: {"#": RegExp(r'[0-9]')}, // อนุญาตเฉพาะตัวเลข
+  );
+  // --------------------------------- ||
+
+  void showDialogDropdownSearchDocDate() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'วันที่เตรียมการตรวจนับ',
+          searchController: searchController4,
+          data: dataLovDocDate,
+          docString: (item) => '${item['prepare_date'] ?? ''}',
+          titleText: (item) => '${item['prepare_date'] ?? ''}',
+          subtitleText: (item) => null,
+          onTap: (item) {
+            isLoading = true;
+            Navigator.of(context).pop();
+            setState(() {
+              returnDocDate = '${item['prepare_date'] ?? ''}';
+              displayDocDate = '${item['prepare_date'] ?? ''}' == 'null'
+                  ? 'ทั้งหมด'
+                  : '${item['prepare_date'] ?? ''}';
+              print('prepare_date : ${item['prepare_date'] ?? ''}');
+              docDateController.text = displayDocDate.toString();
+              // if (returnStartLoc.isNotEmpty) {
+              //   selectLovStartLoc('1');
+              //   searchController5.clear;
+              //   // displayStartLoc = '--';
+              //   // returnStartLoc = 'null';
+              //   // startLocController.text = '--';
+              //   selectLovEndLoc('1');
+              //   searchController6.clear;
+              //   // displayEndLoc = '--';
+              //   // returnEndLoc = 'null';
+              //   // endLocController.text = '--';
+              // }
+              isLoading = false;
+              // -----------------------------------------
+            });
+            if (returnDocDate != 'null') {
+              checkUpdateDataALL(true);
+            }
+          },
+        );
+      },
+    );
+  }
+
+  void showDialogDropdownSearchStartDocNo() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'จาก เลขที่เอกสาร',
+          searchController: searchController4,
+          data: dataLovDocDate,
+          docString: (item) => '${item['doc_no'] ?? ''}',
+          titleText: (item) => '${item['doc_no'] ?? ''}',
+          subtitleText: (item) => null,
+          onTap: (item) {
+            isLoading = true;
+            Navigator.of(context).pop();
+            setState(() {
+              returnStartDocNo = '${item['doc_no'] ?? ''}';
+              displayStartDocNo = '${item['doc_no'] ?? ''}' == 'null'
+                  ? 'ทั้งหมด'
+                  : '${item['doc_no'] ?? ''}';
+              print('doc_no : ${item['doc_no'] ?? ''}');
+              startDocNoController.text = displayStartDocNo.toString();
+              // if (returnStartLoc.isNotEmpty) {
+              //   selectLovStartLoc('1');
+              //   searchController5.clear;
+              //   // displayStartLoc = '--';
+              //   // returnStartLoc = 'null';
+              //   // startLocController.text = '--';
+              //   selectLovEndLoc('1');
+              //   searchController6.clear;
+              //   // displayEndLoc = '--';
+              //   // returnEndLoc = 'null';
+              //   // endLocController.text = '--';
+              // }
+              isLoading = false;
+              // -----------------------------------------
+            });
+            if (returnDocDate != 'null') {
+              checkUpdateDataALL(true);
+            }
+          },
+        );
+      },
+    );
+  }
+
+  void showDialogDropdownSearchEndDocNo() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'ถึง เลขที่เอกสาร',
+          searchController: searchController4,
+          data: dataLovDocDate,
+          docString: (item) => '${item['doc_no'] ?? ''}',
+          titleText: (item) => '${item['doc_no'] ?? ''}',
+          subtitleText: (item) => null,
+          onTap: (item) {
+            isLoading = true;
+            Navigator.of(context).pop();
+            setState(() {
+              returnStartDocNo = '${item['doc_no'] ?? ''}';
+              displayStartDocNo = '${item['doc_no'] ?? ''}' == 'null'
+                  ? 'ทั้งหมด'
+                  : '${item['doc_no'] ?? ''}';
+              print('doc_no : ${item['doc_no'] ?? ''}');
+              startDocNoController.text = displayStartDocNo.toString();
+              // if (returnStartLoc.isNotEmpty) {
+              //   selectLovStartLoc('1');
+              //   searchController5.clear;
+              //   // displayStartLoc = '--';
+              //   // returnStartLoc = 'null';
+              //   // startLocController.text = '--';
+              //   selectLovEndLoc('1');
+              //   searchController6.clear;
+              //   // displayEndLoc = '--';
+              //   // returnEndLoc = 'null';
+              //   // endLocController.text = '--';
+              // }
+              isLoading = false;
+              // -----------------------------------------
+            });
+            if (returnDocDate != 'null') {
+              checkUpdateDataALL(true);
+            }
+          },
+        );
+      },
     );
   }
 }

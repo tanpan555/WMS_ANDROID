@@ -63,7 +63,7 @@ class _Ssfgdt31SearchState extends State<Ssfgdt31Search> {
       'r': 'รับเข้าคลังแล้ว',
     },
   ];
-  final dateInputFormatter = DateInputFormatter();
+  final ValueNotifier<bool> isDateInvalidNotifier = ValueNotifier<bool>(false);
   bool isDateInvalid = false;
 
   bool isLoading = false;
@@ -173,56 +173,18 @@ class _Ssfgdt31SearchState extends State<Ssfgdt31Search> {
                     ),
                     //////////////////////////////////////////////////////////////
                     const SizedBox(height: 8),
-
-                    TextFormField(
+                    CustomTextFormField(
                       controller: dateController,
+                      labelText: 'วันที่รับคืน',
                       keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(8),
-                        dateInputFormatter,
-                      ],
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'วันที่รับคืน',
-                        hintText: 'DD/MM/YYYY',
-                        hintStyle: const TextStyle(color: Colors.grey),
-                        labelStyle: isDateInvalid
-                            ? const TextStyle(color: Colors.red)
-                            : const TextStyle(color: Colors.black87),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.calendar_today),
-                          onPressed: () {
-                            _selectDate(context);
-                          },
-                        ),
-                      ),
                       onChanged: (value) {
-                        setState(() {
-                          selectedDate = value;
-                          isDateInvalid =
-                              dateInputFormatter.noDateNotifier.value;
-                        });
-                        print('isDateInvalid : $isDateInvalid');
+                        selectedDate = value;
+                        print('วันที่ที่กรอก: $selectedDate');
                       },
+                      isDateInvalidNotifier: isDateInvalidNotifier,
                     ),
-                    if (isDateInvalid == true)
-                      const Padding(
-                        padding: EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    const SizedBox(height: 20),
-
                     //////////////////////////////////////////////////////////////
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

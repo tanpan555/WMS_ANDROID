@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:wms_android/Global_Parameter.dart' as globals;
 import 'package:wms_android/loading.dart';
@@ -97,7 +96,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
   String deleteStatus = '';
   String deleteMessage = '';
 
-  final dateInputFormatter = DateInputFormatter();
+  final ValueNotifier<bool> isDateInvalidNotifier = ValueNotifier<bool>(false);
   bool isDateInvalid = false;
   bool isLoading = false;
   bool isFirstLoad = true;
@@ -714,27 +713,6 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
     }
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-    );
-
-    if (pickedDate != null) {
-      String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
-      if (mounted) {
-        setState(() {
-          isDateInvalid = false;
-          crDateController.text = formattedDate;
-          crDate = crDateController.text;
-        });
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -767,13 +745,13 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             onPressed: isNextDisabled
                                 ? null
                                 : () async {
-                                    if (isDateInvalid == false) {
+                                    if (isDateInvalidNotifier.value == false) {
                                       setState(() {
                                         isNextDisabled = true;
                                         isFirstLoad = true;
                                       });
                                       if (crDate.isEmpty) {
-                                        isDateInvalid = true;
+                                        isDateInvalidNotifier.value = true;
                                       } else {
                                         if (docNo.isNotEmpty &&
                                             docNo != '' &&
@@ -809,57 +787,6 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                     }
                                   },
                           ),
-                          // ElevatedButton(
-                          //   onPressed: isNextDisabled
-                          //       ? null
-                          //       : () async {
-                          //           if (isDateInvalid == false) {
-                          //             setState(() {
-                          //               isNextDisabled = true;
-                          //               isFirstLoad = true;
-                          //             });
-                          //             if (crDate.isEmpty) {
-                          //               isDateInvalid = true;
-                          //             } else {
-                          //               if (docNo.isNotEmpty &&
-                          //                   docNo != '' &&
-                          //                   docNo != 'null' &&
-                          //                   returnStatusLovDocType.isNotEmpty &&
-                          //                   returnStatusLovDocType != '' &&
-                          //                   returnStatusLovDocType != 'null' &&
-                          //                   crDate.isNotEmpty &&
-                          //                   crDate != '' &&
-                          //                   crDate != 'null' &&
-                          //                   returnStatusLovMoDoNo.isNotEmpty &&
-                          //                   returnStatusLovMoDoNo != '' &&
-                          //                   returnStatusLovMoDoNo != 'null') {
-                          //                 chkCust(
-                          //                   shidForChk,
-                          //                   returnStatusLovRefNo.isNotEmpty
-                          //                       ? soNoForChk
-                          //                       : 'null',
-                          //                   testChk = 1,
-                          //                 );
-                          //               } else {
-                          //                 setState(() {
-                          //                   isLoading = false;
-                          //                 });
-                          //                 await showDialogErrorCHK(context,
-                          //                     'ต้องระบุเลขที่คำสั่งผลผลิต * !!!');
-                          //                 setState(() {
-                          //                   isNextDisabled = false;
-                          //                 });
-                          //               }
-                          //             }
-                          //           }
-                          //         },
-                          //   style: AppStyles.NextButtonStyle(),
-                          //   child: Image.asset(
-                          //     'assets/images/right.png',
-                          //     width: 25,
-                          //     height: 25,
-                          //   ),
-                          // ),
                         ],
                       ),
             const SizedBox(height: 10),
@@ -867,14 +794,6 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
             Expanded(
               child: isLoading
                   ? Center(child: LoadingIndicator())
-                  // :
-                  //  dataForm.isEmpty
-                  //     ? const Center(
-                  //         child: Text(
-                  //           'No data found',
-                  //           style: TextStyle(color: Colors.white),
-                  //         ),
-                  //       )
                   : SingleChildScrollView(
                       child: Column(
                         children: [
@@ -956,128 +875,22 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
 
                           const SizedBox(height: 8),
                           // -----------------------------
-                          TextFormField(
-                            controller: crDateController,
+                          CustomTextFormField(
+                            controller: docDateController,
+                            labelText: 'วันที่บันทึก',
                             keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                              LengthLimitingTextInputFormatter(8),
-                              dateInputFormatter,
-                            ],
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              filled: true,
-                              fillColor: Colors.white,
-                              label: RichText(
-                                text: TextSpan(
-                                  text: 'วันที่บันทึก', // ชื่อ label
-                                  style: isDateInvalid == true
-                                      ? const TextStyle(color: Colors.red)
-                                      : const TextStyle(color: Colors.black87),
-                                  children: [
-                                    TextSpan(
-                                      text: ' *', // เพิ่มเครื่องหมาย *
-                                      style: TextStyle(
-                                        color: Colors.red, // สีแดงสำหรับ *
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              hintText: 'DD/MM/YYYY',
-                              hintStyle: TextStyle(color: Colors.grey),
-                              labelStyle: isDateInvalid == true
-                                  ? const TextStyle(color: Colors.red)
-                                  : const TextStyle(color: Colors.black87),
-                              suffixIcon: IconButton(
-                                icon: const Icon(Icons.calendar_today),
-                                onPressed: () async {
-                                  _selectDate(context);
-                                },
-                              ),
-                            ),
+                            showAsterisk: true,
                             onChanged: (value) {
-                              setState(() {
-                                crDate = value;
-                                isDateInvalid =
-                                    dateInputFormatter.noDateNotifier.value;
-                                print('crDate : $crDate');
-                                if (crDate != crDateForCheck) {
-                                  checkUpdateData = true;
-                                }
-                              });
+                              docDate = value;
+                              print('วันที่ที่กรอก: $docDate');
+                              if (crDate != docDateForCheck) {
+                                checkUpdateData = true;
+                              }
                             },
+                            isDateInvalidNotifier: isDateInvalidNotifier,
                           ),
-                          isDateInvalid == true
-                              ? const Padding(
-                                  padding: EdgeInsets.only(top: 4.0),
-                                  child: Text(
-                                    'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ))
-                              : const SizedBox.shrink(),
                           const SizedBox(height: 8),
                           // -----------------------------
-                          // DropdownSearch<String>(
-                          //   popupProps: PopupProps.menu(
-                          //     showSearchBox: true,
-                          //     showSelectedItems: true,
-                          //     itemBuilder: (context, item, isSelected) {
-                          //       return ListTile(
-                          //         title: Text(item),
-                          //         selected: isSelected,
-                          //       );
-                          //     },
-                          //     constraints: BoxConstraints(
-                          //       maxHeight: 250,
-                          //     ),
-                          //   ),
-                          //   items: dataLovRefNo
-                          //       .map<String>((item) =>
-                          //           '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}')
-                          //       .toList(),
-                          //   dropdownDecoratorProps: DropDownDecoratorProps(
-                          //     dropdownSearchDecoration: InputDecoration(
-                          //       border: InputBorder.none,
-                          //       filled: true,
-                          //       fillColor: Colors.white,
-                          //       labelText: 'เลขที่เอกสารอ้างอิง',
-                          //       labelStyle: const TextStyle(
-                          //         color: Colors.black87,
-                          //       ),
-                          //     ),
-                          //   ),
-                          //   onChanged: (String? value) {
-                          //     setState(() {
-                          //       selectLovRefNo = value;
-
-                          //       // Find the selected item
-                          //       var selectedItem = dataLovRefNo.firstWhere(
-                          //         (item) =>
-                          //             '${item['so_no']} ${item['so_date']} ${item['so_remark']} ${item['ar_name']} ${item['ar_code']}' ==
-                          //             value,
-                          //         orElse: () => <String, dynamic>{}, // แก้ไข orElse
-                          //       );
-                          //       // Update variables based on selected item
-                          //       if (selectedItem.isNotEmpty) {
-                          //         returnStatusLovRefNo = selectedItem['so_no'] ?? '';
-                          //         soNoForChk = selectedItem['so_no'].toString();
-                          //       }
-                          //     });
-                          //     print(
-                          //         'dataLovRefNo in body: $dataLovRefNo type: ${dataLovRefNo.runtimeType}');
-                          //     // print(selectedItem);
-                          //     print(
-                          //         'returnStatusLovRefNo in body: $returnStatusLovRefNo type: ${returnStatusLovRefNo.runtimeType}');
-                          //   },
-                          //   selectedItem: selectLovRefNo,
-                          // ),
-
-                          ///
                           TextFormField(
                             controller: refNoController,
                             readOnly: true,

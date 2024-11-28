@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
 import 'dart:ui';
-import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/bottombar.dart';
@@ -64,7 +61,7 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
     },
   ];
   final dateInputFormatter = DateInputFormatter();
-  bool isDateInvalid = false;
+  final ValueNotifier<bool> isDateInvalidNotifier = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -74,29 +71,6 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
         'pWareCode in search page : ${widget.pWareCode} Type : ${widget.pWareCode.runtimeType}');
     print(
         'pWareName in search page : ${widget.pWareName} Type : ${widget.pWareName.runtimeType}');
-  }
-
-  Future<void> _selectDate(
-    BuildContext context,
-  ) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-    );
-
-    if (pickedDate != null) {
-      String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
-      if (mounted) {
-        setState(() {
-          isDateInvalid = false;
-          dateController.text = formattedDate;
-          selectedDate = dateController.text;
-        });
-      }
-    }
   }
 
   void setData() {
@@ -141,51 +115,16 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
             ),
             const SizedBox(height: 8),
             //////////////////////////////////////////////////////////////////////////////////////
-            TextFormField(
+            CustomTextFormField(
               controller: dateController,
+              labelText: 'วันที่รับคืน',
               keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(8),
-                dateInputFormatter,
-              ],
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                filled: true,
-                fillColor: Colors.white,
-                labelText: 'วันที่เบิกจ่าย',
-                hintText: 'DD/MM/YYYY',
-                hintStyle: const TextStyle(color: Colors.grey),
-                labelStyle: isDateInvalid
-                    ? const TextStyle(color: Colors.red)
-                    : const TextStyle(color: Colors.black87),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.calendar_today),
-                  onPressed: () {
-                    _selectDate(context);
-                  },
-                ),
-              ),
               onChanged: (value) {
-                setState(() {
-                  selectedDate = value;
-                  isDateInvalid = dateInputFormatter.noDateNotifier.value;
-                });
-                print('isDateInvalid : $isDateInvalid');
+                selectedDate = value;
+                print('วันที่ที่กรอก: $selectedDate');
               },
+              isDateInvalidNotifier: isDateInvalidNotifier,
             ),
-            if (isDateInvalid == true)
-              const Padding(
-                padding: EdgeInsets.only(top: 4.0),
-                child: Text(
-                  'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
             // ------------------------------------------
             const SizedBox(height: 8),
             TextFormField(
@@ -222,7 +161,7 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                       selectedItem = 'รอตรวจนับ';
                       status = 'N';
                       dataLovStatusController.text = 'รอตรวจนับ';
-                      isDateInvalid = false;
+                      isDateInvalidNotifier.value = false;
                     });
                   },
                   style: AppStyles.EraserButtonStyle(),
@@ -237,7 +176,7 @@ class _Ssfgdt12SearchState extends State<Ssfgdt12Search> {
                 /// //////////////////////////////////////////////////////
                 ElevatedButton(
                   onPressed: () {
-                    if (isDateInvalid == false) {
+                    if (isDateInvalidNotifier.value == false) {
                       String pSoNoRP = pDocNo.replaceAll(' ', '');
                       if (selectedDate.isNotEmpty) {
                         Navigator.push(

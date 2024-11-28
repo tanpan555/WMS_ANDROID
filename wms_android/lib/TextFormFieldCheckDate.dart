@@ -48,10 +48,12 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
     if (pickedDate != null) {
       String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
-      setState(() {
-        widget.controller?.text = formattedDate;
-        widget.isDateInvalidNotifier.value = false;
-      });
+      if (mounted) {
+        setState(() {
+          widget.controller?.text = formattedDate;
+          widget.isDateInvalidNotifier.value = false;
+        });
+      }
     }
   }
 

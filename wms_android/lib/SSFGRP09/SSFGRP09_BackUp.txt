@@ -40,59 +40,73 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
 
   // ----------------------------- Date
   String? displayLovDate;
+  String? displayLovDateBackup;
   String returnLovDate = '';
   String updatedStringLovDate = '';
   TextEditingController dateController = TextEditingController();
   // ----------------------------- Doc No
   String? displayLovDocNo;
+  String? displayLovDocNoBackup;
   String returnLovDocNo = '';
   TextEditingController docNoController = TextEditingController();
   // ----------------------------- Start Ware Code
   String? displayStartWareCode;
+  String? displayStartWareCodeBackup;
   String returnStartWareCode = '';
   TextEditingController startWareCodeController = TextEditingController();
   // ----------------------------- End Ware Code
   String? displayEndWareCode;
+  String displayEndWareCodeBackup = '';
   String returnEndWareCode = '';
   TextEditingController endWareCodeController = TextEditingController();
   // ----------------------------- Start Loc
   String? displayStartLoc;
+  String? displayStartLocBackup;
   String returnStartLoc = '';
   TextEditingController startLocController = TextEditingController();
   // ----------------------------- End Loc
   String? displayEndLoc;
+  String displayEndLocBackup = '';
   String returnEndLoc = '';
   TextEditingController endLocController = TextEditingController();
   // ----------------------------- Start Group
   String? displayStartGroup;
+  String displayStartGroupBackup = '';
   String returnStartGroup = '';
   TextEditingController startGroupController = TextEditingController();
   // ----------------------------- End Group
   String? displayEndGroup;
+  String displayEndGroupBackup = '';
   String returnEndGroup = '';
   TextEditingController endGroupController = TextEditingController();
   // ----------------------------- Start Category
   String? displayStartCategory;
+  String displayStartCategoryBackup = '';
   String returnStartCategory = '';
   TextEditingController startCategoryController = TextEditingController();
   // ----------------------------- End Category
   String? displayEndCategory;
+  String displayEndCategoryBackup = '';
   String returnEndCategory = '';
   TextEditingController endCategoryController = TextEditingController();
   // ----------------------------- Start Sub Category
   String? displayStartSubCategory;
+  String displayStartSubCategoryBackup = '';
   String returnStartSubCategory = '';
   TextEditingController startSubCategoryController = TextEditingController();
   // ----------------------------- End Sub Category
   String? displayEndSubCategory;
+  String displayEndSubCategoryBackup = '';
   String returnEndSubCategory = '';
   TextEditingController endSubCategoryController = TextEditingController();
   // ----------------------------- Start Item
   String? displayStartItem;
+  String displayStartItemBackup = '';
   String returnStartItem = '';
   TextEditingController startItemController = TextEditingController();
   // ----------------------------- End Item
   String? displayEndItem;
+  String displayEndItemBackup = '';
   String returnEndItem = '';
   TextEditingController endItemController = TextEditingController();
   // ----------------------------- Radio
@@ -431,6 +445,26 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovEndWareCode =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            // if (check == '0' && displayEndWareCode != 'ทั้งหมด') {
+            //   var match = dataLovEndWareCode.firstWhere(
+            //     (element) =>
+            //         element['someKey'].toString() == displayEndWareCode,
+            //     orElse: () => {'someKey': displayStartWareCode},
+            //   );
+
+            //   displayEndWareCode = match['someKey'].toString();
+            //   returnEndWareCode = match['someKey'].toString();
+            //   endWareCodeController.text = match['someKey'].toString();
+            //   print('Match found or fallback: $displayEndWareCode');
+            //   match = null;
+            // }
+
+            // if (check == '1') {
+            //   displayEndWareCode = 'ทั้งหมด';
+            //   returnEndWareCode = 'null';
+            //   endWareCodeController.text = 'ทั้งหมด';
+            // }
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -468,6 +502,13 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovStartLoc =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            // if (check == '1') {
+            //   displayStartLoc = 'ทั้งหมด';
+            //   returnStartLoc = 'null';
+            //   startLocController.text = 'ทั้งหมด';
+            // }
+
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -507,6 +548,26 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovEndLoc =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            // if (check == '0' && displayEndLoc != 'ทั้งหมด') {
+            //   var match = dataLovEndLoc.firstWhere(
+            //     (element) => element['someKey'].toString() == displayEndLoc,
+            //     orElse: () => {'someKey': displayStartLoc},
+            //   );
+
+            //   displayEndLoc = match['someKey'].toString();
+            //   returnEndLoc = match['someKey'].toString();
+            //   endLocController.text = match['someKey'].toString();
+            //   print('Match found or fallback: $displayEndLoc');
+            //   match = null;
+            // }
+
+            // if (check == '1') {
+            //   displayEndLoc = 'ทั้งหมด';
+            //   returnEndLoc = 'null';
+            //   endLocController.text = 'ทั้งหมด';
+            // }
+
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -578,6 +639,20 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovEndGroup =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            // if (check == '0' && displayEndGroup != 'ทั้งหมด') {
+            //   var match = dataLovEndGroup.firstWhere(
+            //     (element) => element['someKey'].toString() == displayEndGroup,
+            //     orElse: () => {'someKey': displayStartGroup},
+            //   );
+
+            //   displayEndGroup = match['someKey'].toString();
+            //   returnEndGroup = match['someKey'].toString();
+            //   endGroupController.text = match['someKey'].toString();
+            //   print('Match found or fallback: $displayEndGroup');
+            //   match = null;
+            // }
+
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -615,6 +690,13 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovStartCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            // if (check == '1') {
+            //   displayStartCategory = 'ทั้งหมด';
+            //   returnStartCategory = 'null';
+            //   startCategoryController.text = 'ทั้งหมด';
+            // }
+
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -653,6 +735,27 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovEndCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            // if (check == '0' && displayEndCategory != 'ทั้งหมด') {
+            //   var match = dataLovEndCategory.firstWhere(
+            //     (element) =>
+            //         element['someKey'].toString() == displayEndCategory,
+            //     orElse: () => {'someKey': displayStartCategory},
+            //   );
+
+            //   displayEndCategory = match['someKey'].toString();
+            //   returnEndCategory = match['someKey'].toString();
+            //   endCategoryController.text = match['someKey'].toString();
+            //   print('Match found or fallback: $displayEndCategory');
+            //   match = null;
+            // }
+
+            // if (check == '1') {
+            //   displayEndCategory = 'ทั้งหมด';
+            //   returnEndCategory = 'null';
+            //   endCategoryController.text = 'ทั้งหมด';
+            // }
+
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -692,6 +795,13 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovStartSubCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            // if (check == '1') {
+            //   displayStartSubCategory = 'ทั้งหมด';
+            //   returnStartSubCategory = 'null';
+            //   startSubCategoryController.text = 'ทั้งหมด';
+            // }
+
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -732,6 +842,27 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovEndSubCategory =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            // if (check == '0' && displayEndSubCategory != 'ทั้งหมด') {
+            //   var match = dataLovEndSubCategory.firstWhere(
+            //     (element) =>
+            //         element['someKey'].toString() == displayEndSubCategory,
+            //     orElse: () => {'someKey': displayStartSubCategory},
+            //   );
+
+            //   displayEndSubCategory = match['someKey'].toString();
+            //   returnEndSubCategory = match['someKey'].toString();
+            //   endSubCategoryController.text = match['someKey'].toString();
+            //   print('Match found or fallback: $displayEndSubCategory');
+            //   match = null;
+            // }
+
+            // if (check == '1') {
+            //   displayEndSubCategory = 'ทั้งหมด';
+            //   returnEndSubCategory = 'null';
+            //   endSubCategoryController.text = 'ทั้งหมด';
+            // }
+
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -774,6 +905,13 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovStartItem =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            // if (check == '1') {
+            //   displayStartItem = 'ทั้งหมด';
+            //   returnStartItem = 'null';
+            //   startItemController.text = 'ทั้งหมด';
+            // }
+
             if (isFirstLoad == false) {
               if (mounted) {
                 isLoading = false;
@@ -817,6 +955,26 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
           setState(() {
             dataLovEndItem =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            // if (check == '0' && displayEndItem != 'ทั้งหมด') {
+            //   var match = dataLovEndItem.firstWhere(
+            //     (element) => element['someKey'].toString() == displayEndItem,
+            //     orElse: () => {'someKey': displayStartItem},
+            //   );
+
+            //   displayEndItem = match['someKey'].toString();
+            //   returnEndItem = match['someKey'].toString();
+            //   endItemController.text = match['someKey'].toString();
+            //   print('Match found or fallback: $displayEndItem');
+            //   match = null;
+            // }
+
+            // if (check == '1') {
+            //   displayEndItem = 'ทั้งหมด';
+            //   returnEndItem = 'null';
+            //   endItemController.text = 'ทั้งหมด';
+            // }
+
             if (isFirstLoad == true) {
               isFirstLoad = false;
               isLoading = false;
@@ -1536,6 +1694,283 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                         )
                       ],
                     ),
+                    // -------------------------------------------------------------------------------------------------------------//
+                    // const SizedBox(height: 8),
+                    // TextFormField(
+                    //   controller: startWareCodeController,
+                    //   readOnly: true,
+                    //   onTap: () => showDialogDropdownSearchStartWareCode(),
+                    //   minLines: 1,
+                    //   maxLines: 3,
+                    //   // overflow: TextOverflow.ellipsis,
+                    //   decoration: const InputDecoration(
+                    //     border: InputBorder.none,
+                    //     filled: true,
+                    //     fillColor: Colors.white,
+                    //     labelText: 'จาก คลังสินค้า',
+                    //     labelStyle: TextStyle(
+                    //       color: Colors.black87,
+                    //       fontSize: 12,
+                    //     ),
+                    //     suffixIcon: Icon(
+                    //       Icons.arrow_drop_down,
+                    //       color: Color.fromARGB(255, 113, 113, 113),
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
+                    // TextFormField(
+                    //   controller: endWareCodeController,
+                    //   readOnly: true,
+                    //   onTap: () => showDialogDropdownSearchEndWareCode(),
+                    //   minLines: 1,
+                    //   maxLines: 3,
+                    //   // overflow: TextOverflow.ellipsis,
+                    //   decoration: const InputDecoration(
+                    //     border: InputBorder.none,
+                    //     filled: true,
+                    //     fillColor: Colors.white,
+                    //     labelText: 'ถึง คลังสินค้า',
+                    //     labelStyle: TextStyle(
+                    //       color: Colors.black87,
+                    //       fontSize: 12,
+                    //     ),
+                    //     suffixIcon: Icon(
+                    //       Icons.arrow_drop_down,
+                    //       color: Color.fromARGB(255, 113, 113, 113),
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
+                    // TextFormField(
+                    //   controller: startLocController,
+                    //   readOnly: true,
+                    //   onTap: () => showDialogDropdownSearchStartLoc(),
+                    //   minLines: 1,
+                    //   maxLines: 3,
+                    //   // overflow: TextOverflow.ellipsis,
+                    //   decoration: const InputDecoration(
+                    //     border: InputBorder.none,
+                    //     filled: true,
+                    //     fillColor: Colors.white,
+                    //     labelText: 'จาก ตำแหน่งจัดเก็บ',
+                    //     labelStyle: TextStyle(
+                    //       color: Colors.black87,
+                    //       fontSize: 12,
+                    //     ),
+                    //     suffixIcon: Icon(
+                    //       Icons.arrow_drop_down,
+                    //       color: Color.fromARGB(255, 113, 113, 113),
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
+                    // TextFormField(
+                    //   controller: endLocController,
+                    //   readOnly: true,
+                    //   onTap: () => showDialogDropdownSearchEndLoc(),
+                    //   minLines: 1,
+                    //   maxLines: 3,
+                    //   // overflow: TextOverflow.ellipsis,
+                    //   decoration: const InputDecoration(
+                    //     border: InputBorder.none,
+                    //     filled: true,
+                    //     fillColor: Colors.white,
+                    //     labelText: 'ถึง ตำแหน่งจัดเก็บ',
+                    //     labelStyle: TextStyle(
+                    //       color: Colors.black87,
+                    //       fontSize: 12,
+                    //     ),
+                    //     suffixIcon: Icon(
+                    //       Icons.arrow_drop_down,
+                    //       color: Color.fromARGB(255, 113, 113, 113),
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
+                    // TextFormField(
+                    //   controller: startGroupController,
+                    //   readOnly: true,
+                    //   onTap: () => showDialogDropdownSearchStartGroup(),
+                    //   minLines: 1,
+                    //   maxLines: 3,
+                    //   // overflow: TextOverflow.ellipsis,
+                    //   decoration: const InputDecoration(
+                    //     border: InputBorder.none,
+                    //     filled: true,
+                    //     fillColor: Colors.white,
+                    //     labelText: 'จาก กลุ่มสินค้า',
+                    //     labelStyle: TextStyle(
+                    //       color: Colors.black87,
+                    //       fontSize: 12,
+                    //     ),
+                    //     suffixIcon: Icon(
+                    //       Icons.arrow_drop_down,
+                    //       color: Color.fromARGB(255, 113, 113, 113),
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
+                    // TextFormField(
+                    //   controller: endGroupController,
+                    //   readOnly: true,
+                    //   onTap: () => showDialogDropdownSearchEndGroup(),
+                    //   minLines: 1,
+                    //   maxLines: 3,
+                    //   // overflow: TextOverflow.ellipsis,
+                    //   decoration: const InputDecoration(
+                    //     border: InputBorder.none,
+                    //     filled: true,
+                    //     fillColor: Colors.white,
+                    //     labelText: 'ถึง กลุ่มสินค้า',
+                    //     labelStyle: TextStyle(
+                    //       color: Colors.black87,
+                    //       fontSize: 12,
+                    //     ),
+                    //     suffixIcon: Icon(
+                    //       Icons.arrow_drop_down,
+                    //       color: Color.fromARGB(255, 113, 113, 113),
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
+                    // TextFormField(
+                    //   controller: startCategoryController,
+                    //   readOnly: true,
+                    //   onTap: () => showDialogDropdownSearchStartCategory(),
+                    //   minLines: 1,
+                    //   maxLines: 3,
+                    //   // overflow: TextOverflow.ellipsis,
+                    //   decoration: const InputDecoration(
+                    //     border: InputBorder.none,
+                    //     filled: true,
+                    //     fillColor: Colors.white,
+                    //     labelText: 'จาก Category',
+                    //     labelStyle: TextStyle(
+                    //       color: Colors.black87,
+                    //       fontSize: 12,
+                    //     ),
+                    //     suffixIcon: Icon(
+                    //       Icons.arrow_drop_down,
+                    //       color: Color.fromARGB(255, 113, 113, 113),
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
+                    // TextFormField(
+                    //   controller: endCategoryController,
+                    //   readOnly: true,
+                    //   onTap: () => showDialogDropdownSearchEndCategory(),
+                    //   minLines: 1,
+                    //   maxLines: 3,
+                    //   // overflow: TextOverflow.ellipsis,
+                    //   decoration: const InputDecoration(
+                    //     border: InputBorder.none,
+                    //     filled: true,
+                    //     fillColor: Colors.white,
+                    //     labelText: 'ถึง Category',
+                    //     labelStyle: TextStyle(
+                    //       color: Colors.black87,
+                    //       fontSize: 12,
+                    //     ),
+                    //     suffixIcon: Icon(
+                    //       Icons.arrow_drop_down,
+                    //       color: Color.fromARGB(255, 113, 113, 113),
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
+                    // TextFormField(
+                    //   controller: startSubCategoryController,
+                    //   readOnly: true,
+                    //   onTap: () => showDialogDropdownSearchStartSubCategory(),
+                    //   minLines: 1,
+                    //   maxLines: 3,
+                    //   // overflow: TextOverflow.ellipsis,
+                    //   decoration: const InputDecoration(
+                    //     border: InputBorder.none,
+                    //     filled: true,
+                    //     fillColor: Colors.white,
+                    //     labelText: 'จาก Sub Category',
+                    //     labelStyle: TextStyle(
+                    //       color: Colors.black87,
+                    //       fontSize: 12,
+                    //     ),
+                    //     suffixIcon: Icon(
+                    //       Icons.arrow_drop_down,
+                    //       color: Color.fromARGB(255, 113, 113, 113),
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
+                    // TextFormField(
+                    //   controller: endSubCategoryController,
+                    //   readOnly: true,
+                    //   onTap: () => showDialogDropdownSearchEndSubCategory(),
+                    //   minLines: 1,
+                    //   maxLines: 3,
+                    //   // overflow: TextOverflow.ellipsis,
+                    //   decoration: const InputDecoration(
+                    //     border: InputBorder.none,
+                    //     filled: true,
+                    //     fillColor: Colors.white,
+                    //     labelText: 'ถึง Sub Category',
+                    //     labelStyle: TextStyle(
+                    //       color: Colors.black87,
+                    //       fontSize: 12,
+                    //     ),
+                    //     suffixIcon: Icon(
+                    //       Icons.arrow_drop_down,
+                    //       color: Color.fromARGB(255, 113, 113, 113),
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
+                    // TextFormField(
+                    //   controller: startItemController,
+                    //   readOnly: true,
+                    //   onTap: () => showDialogDropdownSearchStartItem(),
+                    //   minLines: 1,
+                    //   maxLines: 3,
+                    //   // overflow: TextOverflow.ellipsis,
+                    //   decoration: const InputDecoration(
+                    //     border: InputBorder.none,
+                    //     filled: true,
+                    //     fillColor: Colors.white,
+                    //     labelText: 'จาก รหัสสินค้า',
+                    //     labelStyle: TextStyle(
+                    //       color: Colors.black87,
+                    //       fontSize: 12,
+                    //     ),
+                    //     suffixIcon: Icon(
+                    //       Icons.arrow_drop_down,
+                    //       color: Color.fromARGB(255, 113, 113, 113),
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 8),
+                    // TextFormField(
+                    //   controller: endItemController,
+                    //   readOnly: true,
+                    //   onTap: () => showDialogDropdownSearchEndItem(),
+                    //   minLines: 1,
+                    //   maxLines: 3,
+                    //   // overflow: TextOverflow.ellipsis,
+                    //   decoration: const InputDecoration(
+                    //     border: InputBorder.none,
+                    //     filled: true,
+                    //     fillColor: Colors.white,
+                    //     labelText: 'ถึง รหัสสินค้า',
+                    //     labelStyle: TextStyle(
+                    //       color: Colors.black87,
+                    //       fontSize: 12,
+                    //     ),
+                    //     suffixIcon: Icon(
+                    //       Icons.arrow_drop_down,
+                    //       color: Color.fromARGB(255, 113, 113, 113),
+                    //     ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 8),
                     Container(
                       color: Colors.white,
@@ -1810,20 +2245,46 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               startWareCodeController.text = displayStartWareCode.toString();
               if (mounted) {
                 if (returnStartWareCode.isNotEmpty) {
+                  if (returnEndWareCode.isNotEmpty &&
+                      returnEndWareCode != 'null') {
+                    print('case 0');
+                    if (displayStartWareCode
+                            .toString()
+                            .compareTo(displayEndWareCode.toString()) >
+                        0) {
+                      displayEndWareCode = displayStartWareCode;
+                      displayEndWareCodeBackup = displayStartWareCode ?? '';
+                      returnEndWareCode = returnStartWareCode;
+                      endWareCodeController.text =
+                          displayStartWareCode.toString();
+                    }
+                  } else if (returnEndWareCode == 'null' &&
+                      displayEndWareCodeBackup.toString().isNotEmpty) {
+                    print('case 1');
+                    if (displayStartWareCode
+                            .toString()
+                            .compareTo(displayEndWareCodeBackup.toString()) >
+                        0) {
+                      print('case 1.1');
+                      displayEndWareCode = displayStartWareCode;
+                      displayEndWareCodeBackup = displayStartWareCode ?? '';
+                      returnEndWareCode = returnStartWareCode;
+                      endWareCodeController.text =
+                          displayStartWareCode.toString();
+                    } else {
+                      print('case 1.2');
+                      displayEndWareCode = displayEndWareCodeBackup;
+                      // displayEndWareCodeBackup = displayStartWareCode;
+                      returnEndWareCode = returnStartWareCode;
+                      endWareCodeController.text =
+                          displayEndWareCodeBackup.toString();
+                    }
+                  }
                   selectLovEndWareCode();
-                  displayEndWareCode = 'ทั้งหมด';
-                  returnEndWareCode = 'null';
-                  endWareCodeController.text = 'ทั้งหมด';
                   searchController4.clear;
                   selectLovStartLoc();
-                  displayStartLoc = 'ทั้งหมด';
-                  returnStartLoc = 'null';
-                  startLocController.text = 'ทั้งหมด';
                   searchController5.clear;
                   selectLovEndLoc();
-                  displayEndLoc = 'ทั้งหมด';
-                  returnEndLoc = 'null';
-                  endLocController.text = 'ทั้งหมด';
                   searchController6.clear;
                 }
               }
@@ -1872,19 +2333,22 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               displayEndWareCode = '${item['ware_code'] ?? ''}' == 'null'
                   ? 'ทั้งหมด'
                   : '${item['ware_code'] ?? ''}';
+              displayEndWareCodeBackup = '${item['ware_code'] ?? ''}' == 'null'
+                  ? 'ทั้งหมด'
+                  : '${item['ware_code'] ?? ''}';
               print('ware_code : ${item['ware_code'] ?? ''}');
               endWareCodeController.text = displayEndWareCode.toString();
               if (returnStartLoc.isNotEmpty) {
                 selectLovStartLoc();
-                displayStartLoc = 'ทั้งหมด';
-                returnStartLoc = 'null';
-                startLocController.text = 'ทั้งหมด';
                 searchController5.clear;
+                // displayStartLoc = '--';
+                // returnStartLoc = 'null';
+                // startLocController.text = '--';
                 selectLovEndLoc();
-                displayEndLoc = 'ทั้งหมด';
-                returnEndLoc = 'null';
-                endLocController.text = 'ทั้งหมด';
                 searchController6.clear;
+                // displayEndLoc = '--';
+                // returnEndLoc = 'null';
+                // endLocController.text = '--';
               }
               isLoading = false;
               // -----------------------------------------
@@ -1933,13 +2397,37 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                   : '${item['location_code'] ?? ''}';
               startLocController.text = displayStartLoc.toString();
               if (returnStartLoc.isNotEmpty) {
+                if (returnEndLoc.isNotEmpty && returnEndLoc != 'null') {
+                  if (displayStartLoc
+                          .toString()
+                          .compareTo(displayEndLoc.toString()) >
+                      0) {
+                    displayEndLoc = displayStartLoc;
+                    displayEndLocBackup = displayStartLoc ?? '';
+                    returnEndLoc = returnStartLoc;
+                    endLocController.text = displayStartLoc.toString();
+                  }
+                } else if (returnEndLoc == 'null' &&
+                    displayEndLocBackup.toString().isNotEmpty) {
+                  if (displayStartLoc
+                          .toString()
+                          .compareTo(displayEndLoc.toString()) >
+                      0) {
+                    displayEndLoc = displayStartLoc;
+                    displayEndLocBackup = displayStartLoc ?? '';
+                    returnEndLoc = returnStartLoc;
+                    endLocController.text = displayStartLoc.toString();
+                  } else {
+                    displayEndLoc = displayEndLocBackup;
+                    // displayEndLocBackup = displayStartLoc;
+                    returnEndLoc = returnStartLoc;
+                    endLocController.text = displayEndLocBackup.toString();
+                  }
+                }
                 selectLovEndLoc();
-                displayEndLoc = 'ทั้งหมด';
-                returnEndLoc = 'null';
-                endLocController.text = 'ทั้งหมด';
                 searchController6.clear;
+                isLoading = false;
               }
-              isLoading = false;
               // -----------------------------------------
               print(
                   'startLocController New: $startLocController Type : ${startLocController.runtimeType}');
@@ -1981,6 +2469,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
             setState(() {
               returnEndLoc = '${item['location_code'] ?? ''}';
               displayEndLoc = '${item['location_code'] ?? ''}' == 'null'
+                  ? 'ทั้งหมด'
+                  : '${item['location_code'] ?? ''}';
+              displayEndLocBackup = '${item['location_code'] ?? ''}' == 'null'
                   ? 'ทั้งหมด'
                   : '${item['location_code'] ?? ''}';
               endLocController.text = displayEndLoc.toString();
@@ -2030,40 +2521,46 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                   : '${item['group_code'] ?? ''}';
               startGroupController.text = displayStartGroup.toString();
               if (returnStartGroup.isNotEmpty) {
+                if (returnEndGroup.isNotEmpty && returnEndGroup != 'null') {
+                  if (displayStartGroup
+                          .toString()
+                          .compareTo(displayEndGroup.toString()) >
+                      0) {
+                    displayEndGroup = displayStartGroup;
+                    displayEndGroupBackup = displayStartGroup ?? '';
+                    returnEndGroup = returnStartGroup;
+                    endGroupController.text = displayStartGroup.toString();
+                  }
+                } else if (returnEndGroup == 'null' &&
+                    displayEndGroupBackup.toString().isNotEmpty) {
+                  if (displayStartGroup
+                          .toString()
+                          .compareTo(displayEndGroup.toString()) >
+                      0) {
+                    displayEndGroup = displayStartGroup;
+                    displayEndGroupBackup = displayStartGroup ?? '';
+                    returnEndGroup = returnStartGroup;
+                    endGroupController.text = displayStartGroup.toString();
+                  } else {
+                    displayEndGroup = displayEndGroupBackup;
+                    // displayEndGroupBackup = displayStartGroup;
+                    returnEndGroup = returnStartGroup;
+                    endGroupController.text = displayEndGroupBackup.toString();
+                  }
+                }
                 selectLovEndGroup();
-                displayEndGroup = 'ทั้งหมด';
-                returnEndGroup = 'null';
-                endGroupController.text = 'ทั้งหมด';
                 searchController8.clear;
                 selectLovStartCategory();
-                displayStartCategory = 'ทั้งหมด';
-                returnStartCategory = 'null';
-                startCategoryController.text = 'ทั้งหมด';
                 searchController9.clear;
                 selectLovEndCategory();
-                displayEndCategory = 'ทั้งหมด';
-                returnEndCategory = 'null';
-                endCategoryController.text = 'ทั้งหมด';
                 searchController10.clear;
                 selectLovStartSubCategory();
-                displayStartSubCategory = 'ทั้งหมด';
-                returnStartSubCategory = 'null';
-                startSubCategoryController.text = 'ทั้งหมด';
                 searchController11.clear;
                 selectLovEndSubCategory();
-                displayEndSubCategory = 'ทั้งหมด';
-                returnEndSubCategory = 'null';
-                endSubCategoryController.text = 'ทั้งหมด';
                 searchController12.clear;
                 selectLovStartItem();
-                displayStartItem = 'ทั้งหมด';
-                returnStartItem = 'null';
-                startItemController.text = 'ทั้งหมด';
                 searchController13.clear;
                 selectLovEndItem();
-                displayEndItem = 'ทั้งหมด';
-                returnEndItem = 'null';
-                endItemController.text = 'ทั้งหมด';
                 searchController14.clear;
                 isLoading = false;
               }
@@ -2111,41 +2608,25 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               displayEndGroup = '${item['group_code'] ?? ''}' == 'null'
                   ? 'ทั้งหมด'
                   : '${item['group_code'] ?? ''}';
+              displayEndGroupBackup = '${item['group_code'] ?? ''}' == 'null'
+                  ? 'ทั้งหมด'
+                  : '${item['group_code'] ?? ''}';
               endGroupController.text = displayEndGroup.toString();
               if (returnEndGroup.isNotEmpty) {
                 selectLovStartCategory();
-                displayStartCategory = 'ทั้งหมด';
-                returnStartCategory = 'null';
-                startCategoryController.text = 'ทั้งหมด';
                 searchController9.clear;
                 selectLovEndCategory();
-                displayEndCategory = 'ทั้งหมด';
-                returnEndCategory = 'null';
-                endCategoryController.text = 'ทั้งหมด';
                 searchController10.clear;
                 selectLovStartSubCategory();
-                displayStartSubCategory = 'ทั้งหมด';
-                returnStartSubCategory = 'null';
-                startSubCategoryController.text = 'ทั้งหมด';
                 searchController11.clear;
                 selectLovEndSubCategory();
-                displayEndSubCategory = 'ทั้งหมด';
-                returnEndSubCategory = 'null';
-                endSubCategoryController.text = 'ทั้งหมด';
                 searchController12.clear;
                 selectLovStartItem();
-                displayStartItem = 'ทั้งหมด';
-                returnStartItem = 'null';
-                startItemController.text = 'ทั้งหมด';
                 searchController13.clear;
                 selectLovEndItem();
-                displayEndItem = 'ทั้งหมด';
-                returnEndItem = 'null';
-                endItemController.text = 'ทั้งหมด';
                 searchController14.clear;
                 isLoading = false;
               }
-              isLoading = false;
               // -----------------------------------------
               print(
                   'endGroupController New: $endGroupController Type : ${endGroupController.runtimeType}');
@@ -2192,34 +2673,49 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                   : '${item['category_code'] ?? ''}';
               startCategoryController.text = displayStartCategory.toString();
               if (returnStartCategory.isNotEmpty) {
+                if (returnEndCategory.isNotEmpty &&
+                    returnEndCategory != 'null') {
+                  if (displayStartCategory
+                          .toString()
+                          .compareTo(displayEndCategory.toString()) >
+                      0) {
+                    displayEndCategory = displayStartCategory;
+                    displayEndCategoryBackup = displayStartCategory ?? '';
+                    returnEndCategory = returnStartCategory;
+                    endCategoryController.text =
+                        displayStartCategory.toString();
+                  }
+                } else if (returnEndCategory == 'null' &&
+                    displayEndCategoryBackup.toString().isNotEmpty) {
+                  if (displayStartCategory
+                          .toString()
+                          .compareTo(displayEndCategory.toString()) >
+                      0) {
+                    displayEndCategory = displayStartCategory;
+                    displayEndCategoryBackup = displayStartCategory ?? '';
+                    returnEndCategory = returnStartCategory;
+                    endCategoryController.text =
+                        displayStartCategory.toString();
+                  } else {
+                    displayEndCategory = displayEndCategoryBackup;
+                    // displayEndCategoryBackup = displayStartCategory;
+                    returnEndCategory = returnStartCategory;
+                    endCategoryController.text =
+                        displayEndCategoryBackup.toString();
+                  }
+                }
                 selectLovEndCategory();
-                displayEndCategory = 'ทั้งหมด';
-                returnEndCategory = 'null';
-                endCategoryController.text = 'ทั้งหมด';
                 searchController10.clear;
                 selectLovStartSubCategory();
-                displayStartSubCategory = 'ทั้งหมด';
-                returnStartSubCategory = 'null';
-                startSubCategoryController.text = 'ทั้งหมด';
                 searchController11.clear;
                 selectLovEndSubCategory();
-                displayEndSubCategory = 'ทั้งหมด';
-                returnEndSubCategory = 'null';
-                endSubCategoryController.text = 'ทั้งหมด';
                 searchController12.clear;
                 selectLovStartItem();
-                displayStartItem = 'ทั้งหมด';
-                returnStartItem = 'null';
-                startItemController.text = 'ทั้งหมด';
                 searchController13.clear;
                 selectLovEndItem();
-                displayEndItem = 'ทั้งหมด';
-                returnEndItem = 'null';
-                endItemController.text = 'ทั้งหมด';
                 searchController14.clear;
                 isLoading = false;
               }
-              isLoading = false;
               // -----------------------------------------
               print(
                   'endGroupController New: $endGroupController Type : ${endGroupController.runtimeType}');
@@ -2264,27 +2760,19 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               displayEndCategory = '${item['category_code'] ?? ''}' == 'null'
                   ? 'ทั้งหมด'
                   : '${item['category_code'] ?? ''}';
+              displayEndCategoryBackup =
+                  '${item['category_code'] ?? ''}' == 'null'
+                      ? 'ทั้งหมด'
+                      : '${item['category_code'] ?? ''}';
               endCategoryController.text = displayEndCategory.toString();
               if (returnEndCategory.isNotEmpty) {
                 selectLovStartSubCategory();
-                displayStartSubCategory = 'ทั้งหมด';
-                returnStartSubCategory = 'null';
-                startSubCategoryController.text = 'ทั้งหมด';
                 searchController11.clear;
                 selectLovEndSubCategory();
-                displayEndSubCategory = 'ทั้งหมด';
-                returnEndSubCategory = 'null';
-                endSubCategoryController.text = 'ทั้งหมด';
                 searchController12.clear;
                 selectLovStartItem();
-                displayStartItem = 'ทั้งหมด';
-                returnStartItem = 'null';
-                startItemController.text = 'ทั้งหมด';
                 searchController13.clear;
                 selectLovEndItem();
-                displayEndItem = 'ทั้งหมด';
-                returnEndItem = 'null';
-                endItemController.text = 'ทั้งหมด';
                 searchController14.clear;
                 isLoading = false;
               }
@@ -2336,24 +2824,45 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               startSubCategoryController.text =
                   displayStartSubCategory.toString();
               if (returnStartSubCategory.isNotEmpty) {
+                if (returnEndSubCategory.isNotEmpty &&
+                    returnEndSubCategory != 'null') {
+                  if (displayStartSubCategory
+                          .toString()
+                          .compareTo(displayEndSubCategory.toString()) >
+                      0) {
+                    displayEndSubCategory = displayStartSubCategory;
+                    displayEndSubCategoryBackup = displayStartSubCategory ?? '';
+                    returnEndSubCategory = returnStartCategory;
+                    endSubCategoryController.text =
+                        displayStartSubCategory.toString();
+                  }
+                } else if (returnEndSubCategory == 'null' &&
+                    displayEndSubCategoryBackup.toString().isNotEmpty) {
+                  if (displayStartSubCategory
+                          .toString()
+                          .compareTo(displayEndSubCategory.toString()) >
+                      0) {
+                    displayEndSubCategory = displayStartSubCategory;
+                    displayEndSubCategoryBackup = displayStartSubCategory ?? '';
+                    returnEndSubCategory = returnStartCategory;
+                    endSubCategoryController.text =
+                        displayStartSubCategory.toString();
+                  } else {
+                    displayEndSubCategory = displayEndSubCategoryBackup;
+                    // displayEndSubCategoryBackup = displayStartSubCategory;
+                    returnEndSubCategory = returnStartCategory;
+                    endSubCategoryController.text =
+                        displayEndSubCategoryBackup.toString();
+                  }
+                }
                 selectLovEndSubCategory();
-                displayEndSubCategory = 'ทั้งหมด';
-                returnEndSubCategory = 'null';
-                endSubCategoryController.text = 'ทั้งหมด';
                 searchController12.clear;
                 selectLovStartItem();
-                displayStartItem = 'ทั้งหมด';
-                returnStartItem = 'null';
-                startItemController.text = 'ทั้งหมด';
                 searchController13.clear;
                 selectLovEndItem();
-                displayEndItem = 'ทั้งหมด';
-                returnEndItem = 'null';
-                endItemController.text = 'ทั้งหมด';
                 searchController14.clear;
                 isLoading = false;
               }
-              isLoading = false;
               // -----------------------------------------
               print(
                   'startSubCategoryController New: $startSubCategoryController Type : ${startSubCategoryController.runtimeType}');
@@ -2398,17 +2907,15 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               displayEndSubCategory = '${item['sub_cat_code'] ?? ''}' == 'null'
                   ? 'ทั้งหมด'
                   : '${item['sub_cat_code'] ?? ''}';
+              displayEndSubCategoryBackup =
+                  '${item['sub_cat_code'] ?? ''}' == 'null'
+                      ? 'ทั้งหมด'
+                      : '${item['sub_cat_code'] ?? ''}';
               endSubCategoryController.text = displayEndSubCategory.toString();
               if (returnEndSubCategory.isNotEmpty) {
                 selectLovStartItem();
-                displayStartItem = 'ทั้งหมด';
-                returnStartItem = 'null';
-                startItemController.text = 'ทั้งหมด';
                 searchController13.clear;
                 selectLovEndItem();
-                displayEndItem = 'ทั้งหมด';
-                returnEndItem = 'null';
-                endItemController.text = 'ทั้งหมด';
                 searchController14.clear;
                 isLoading = false;
               }
@@ -2457,13 +2964,37 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                   : '${item['item_code'] ?? ''}';
               startItemController.text = displayStartItem.toString();
               if (returnStartItem.isNotEmpty) {
+                if (returnEndItem.isNotEmpty && returnEndItem != 'null') {
+                  if (displayStartItem
+                          .toString()
+                          .compareTo(displayEndItem.toString()) >
+                      0) {
+                    displayEndItem = displayStartItem;
+                    displayEndItemBackup = displayStartItem ?? '';
+                    returnEndItem = returnStartItem;
+                    endItemController.text = displayStartItem.toString();
+                  }
+                } else if (returnEndItem == 'null' &&
+                    displayEndItemBackup.toString().isNotEmpty) {
+                  if (displayStartItem
+                          .toString()
+                          .compareTo(displayEndItem.toString()) >
+                      0) {
+                    displayEndItem = displayStartItem;
+                    displayEndItemBackup = displayStartItem ?? '';
+                    returnEndItem = returnStartItem;
+                    endItemController.text = displayStartItem.toString();
+                  } else {
+                    displayEndItem = displayEndItemBackup;
+                    // displayEndItemBackup = displayStartItem;
+                    returnEndItem = returnStartItem;
+                    endItemController.text = displayEndItemBackup.toString();
+                  }
+                }
                 selectLovEndItem();
-                displayEndItem = 'ทั้งหมด';
-                returnEndItem = 'null';
-                endItemController.text = 'ทั้งหมด';
                 searchController14.clear;
+                isLoading = false;
               }
-              isLoading = false;
               // -----------------------------------------
               print(
                   'startItemController New: $startItemController Type : ${startItemController.runtimeType}');
@@ -2506,6 +3037,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               displayEndItem = '${item['item_code'] ?? ''}' == 'null'
                   ? 'ทั้งหมด'
                   : '${item['item_code'] ?? ''}';
+              displayEndItemBackup = '${item['item_code'] ?? ''}' == 'null'
+                  ? 'ทั้งหมด'
+                  : '${item['item_code'] ?? ''}';
               endItemController.text = displayEndItem.toString();
               // -----------------------------------------
               print(
@@ -2543,3 +3077,4 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
     );
   }
 }
+

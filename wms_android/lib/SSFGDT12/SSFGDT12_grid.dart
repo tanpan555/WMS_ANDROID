@@ -1883,7 +1883,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return DialogStyles.alertMessageNotIconDialog(
+        return DialogStyles.alertMessageDialog(
           context: context,
           content: Text(messageCancel),
           onClose: () {

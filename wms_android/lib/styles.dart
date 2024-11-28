@@ -1143,8 +1143,8 @@ class DialogStyles {
     required TextEditingController searchController,
     required List<dynamic> data,
     required String Function(dynamic item) docString,
-    required String Function(Map<String, dynamic> item) titleText,
-    required String Function(Map<String, dynamic> item) subtitleText,
+    required String? Function(Map<String, dynamic> item)? titleText,
+    required String? Function(Map<String, dynamic> item)? subtitleText,
     required void Function(Map<String, dynamic> item) onTap,
   }) {
     return Dialog(
@@ -1164,7 +1164,7 @@ class DialogStyles {
                   children: [
                     Text(
                       headerText.toString(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                         fontSize: 16.0,
@@ -1179,7 +1179,6 @@ class DialogStyles {
                   ],
                 ),
                 const SizedBox(height: 10),
-                // ช่องค้นหา
                 Row(
                   children: [
                     Expanded(
@@ -1197,8 +1196,7 @@ class DialogStyles {
                                   child: Container(
                                     width: 3,
                                     height: 3,
-                                    padding: EdgeInsets.all(0),
-                                    margin: EdgeInsets.all(10),
+                                    margin: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
                                       color: Colors.grey.withOpacity(0.2),
                                       borderRadius: BorderRadius.circular(20.0),
@@ -1243,14 +1241,19 @@ class DialogStyles {
 
                           return ListTile(
                             contentPadding: EdgeInsets.zero,
-                            title: Text(
-                              titleText(item),
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: Text(subtitleText(item)),
+                            title: titleText != null && titleText(item) != null
+                                ? Text(
+                                    titleText(item)!,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                : null,
+                            subtitle: subtitleText != null &&
+                                    subtitleText(item) != null
+                                ? Text(subtitleText(item)!)
+                                : null,
                             onTap: () => onTap(item),
                           );
                         },
