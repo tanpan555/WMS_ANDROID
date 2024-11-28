@@ -619,6 +619,9 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                   checkUpdateData = false;
                   isNextDisabled = false;
                   isLoading = false;
+                  selectLovRefNo = '';
+                  returnStatusLovRefNo = '';
+                  refNoController.text = '';
                 });
               });
             }
