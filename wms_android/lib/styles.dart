@@ -23,6 +23,7 @@ class CustomContainerStyles {
 // -----------------------------------------------------------------------------------
 
 class AppStyles {
+// Confirmbutton
   static ButtonStyle ConfirmbuttonStyle() {
     return ElevatedButton.styleFrom(
       backgroundColor: const Color.fromARGB(255, 212, 245, 212),
@@ -33,6 +34,7 @@ class AppStyles {
     );
   }
 
+// Confirmtext
   static TextStyle ConfirmbuttonTextStyle() {
     return TextStyle(
       fontSize: 16,
@@ -41,6 +43,7 @@ class AppStyles {
     );
   }
 
+// cancelbutton
   static ButtonStyle cancelButtonStyle() {
     return ElevatedButton.styleFrom(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
@@ -52,6 +55,7 @@ class AppStyles {
     );
   }
 
+// createbutton
   static ButtonStyle createButtonStyle() {
     return ElevatedButton.styleFrom(
       backgroundColor: Colors.white, // Green background for the button
@@ -65,6 +69,7 @@ class AppStyles {
     );
   }
 
+// ClearButton
   static ButtonStyle ClearButtonStyle() {
     return ElevatedButton.styleFrom(
       backgroundColor: Colors.white,
@@ -649,7 +654,7 @@ class DialogStyles {
     );
   }
 
-  // --------------------------- Dialog ที่มี TextFormField ที่เป็น Dropdown----
+// --------------------------- Dialog ที่มี TextFormField ที่เป็น Dropdown----
   static AlertDialog displayTextFormFieldAndDropdown({
     required BuildContext context,
     required VoidCallback onCloseDialog,
@@ -884,6 +889,32 @@ class DialogStyles {
           child: content,
         ),
       ),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              onPressed: onConfirm,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
+              child: const Text('ตกลง'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  static AlertDialog messageDialog({
+    required BuildContext context,
+    required Widget content,
+    required VoidCallback onClose,
+    required VoidCallback onConfirm,
+  }) {
+    return AlertDialog(
+      content:content,
       actions: [
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
