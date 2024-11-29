@@ -682,7 +682,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
-        minLines: 2,
+        minLines: 1,
         maxLines: 5,
         controller: controller,
         style: TextStyle(color: Colors.black),
@@ -698,7 +698,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
           filled: true,
           fillColor: readOnly ? Colors.grey[300] : Colors.white,
           border: InputBorder.none,
-          floatingLabelBehavior: FloatingLabelBehavior.always,
+          // floatingLabelBehavior: FloatingLabelBehavior.always,
         ),
       ),
     );
