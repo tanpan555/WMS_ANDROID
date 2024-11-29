@@ -649,6 +649,92 @@ class DialogStyles {
     );
   }
 
+  // --------------------------- Dialog ที่มี TextFormField ที่เป็น Dropdown----
+  static AlertDialog displayTextFormFieldAndDropdown({
+    required BuildContext context,
+    required VoidCallback onCloseDialog,
+    required VoidCallback onConfirmDialog,
+    required VoidCallback onTap,
+    required TextEditingController controller,
+    required String headTextDialog,
+    required String labelText,
+  }) {
+    return AlertDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            headTextDialog,
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 16.0,
+            ),
+          ),
+          IconButton(
+            icon: const Icon(MyIcons.close),
+            onPressed: onCloseDialog,
+          ),
+        ],
+      ),
+      content: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: controller,
+                readOnly: true,
+                onTap: onTap,
+                minLines: 1,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                  labelText: labelText,
+                  labelStyle: const TextStyle(
+                    color: Colors.black87,
+                  ),
+                  suffixIcon: const Icon(
+                    Icons.arrow_drop_down,
+                    color: Color.fromARGB(255, 113, 113, 113),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: onCloseDialog,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ยกเลิก'),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: onConfirmDialog,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.grey),
+                    ),
+                    child: const Text('ตกลง'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   static AlertDialog displayTextFormFieldAndMessage({
     required BuildContext context,
     required VoidCallback onCloseDialog,
