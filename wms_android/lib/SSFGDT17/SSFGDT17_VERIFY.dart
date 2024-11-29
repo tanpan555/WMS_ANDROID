@@ -8,7 +8,7 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:wms_android/styles.dart';
 import '../centered_message.dart';
 
-class SSFGD17_VERIFY extends StatefulWidget {
+class SSFGDT17_VERIFY extends StatefulWidget {
   final String po_doc_no;
   final String? po_doc_type;
   final String? selectedwhCode;
@@ -16,7 +16,7 @@ class SSFGD17_VERIFY extends StatefulWidget {
   final String? pWareCode;
   final String? pWareName;
 
-  const SSFGD17_VERIFY(
+  const SSFGDT17_VERIFY(
       {required this.po_doc_no,
       this.po_doc_type,
       this.selectedwhCode,
@@ -24,10 +24,10 @@ class SSFGD17_VERIFY extends StatefulWidget {
       this.pWareName});
 
   @override
-  _SSFGD17_VERIFYState createState() => _SSFGD17_VERIFYState();
+  _SSFGDT17_VERIFYState createState() => _SSFGDT17_VERIFYState();
 }
 
-class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
+class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
   String currentSessionID = '';
   String nb_ware_code = '';
   String nb_to_wh = '';
@@ -411,111 +411,111 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
+                  // Use Column to stack widgets vertically
                   children: [
-                    Flexible(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        // margin: const EdgeInsets.only(bottom: 8.0),
-                        color: const Color.fromARGB(255, 255, 242, 204),
-                        child: Center(
-                          child: Text(
-                            '${widget.po_doc_no}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 0, 0, 0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            color: const Color.fromARGB(255, 255, 242, 204),
+                            child: Center(
+                              child: Text(
+                                '${widget.po_doc_no}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (isDialogShowing) return;
+                        const SizedBox(
+                          width: 4,
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (isDialogShowing) return;
 
-                        setState(() {
-                          isDialogShowing =
-                              true; // Set flag to true when a dialog is about to be shown
-                        });
-                        await chk_validateSave();
-                        if (poStatus == '0') {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return DialogStyles.alertMessageDialog(
+                            setState(() {
+                              isDialogShowing =
+                                  true; // Set flag to true when a dialog is about to be shown
+                            });
+                            await chk_validateSave();
+                            if (poStatus == '0') {
+                              showDialog(
                                 context: context,
-                                content: Text(
-                                    'การบันทึก และส่งข้อมูลเข้า ERP สมบูรณ์'),
-                                onClose: () {
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    isDialogShowing =
-                                        false; // Reset the flag when the first dialog is closed
-                                  });
-                                },
-                                onConfirm: () async {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).pop();
+                                builder: (BuildContext context) {
+                                  return DialogStyles.alertMessageDialog(
+                                    context: context,
+                                    content: const Text(
+                                        'การบันทึก และส่งข้อมูลเข้า ERP สมบูรณ์'),
+                                    onClose: () {
+                                      Navigator.of(context).pop();
+                                      setState(() {
+                                        isDialogShowing =
+                                            false; // Reset the flag when the first dialog is closed
+                                      });
+                                    },
+                                    onConfirm: () async {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    },
+                                  );
                                 },
                               );
-                            },
-                          );
-                        }
-                      },
-                      style: AppStyles.ConfirmbuttonStyle(),
-                      child: Text(
-                        'Confirm',
-                        style: AppStyles.ConfirmbuttonTextStyle(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // const SizedBox(height: 8.0),
-              Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      // Handle the tap event here
-                    },
-                    child: AbsorbPointer(
-                      child: SizedBox(
-                        width: 300, // Set your desired width here
-                        child: TextFormField(
-                          style: const TextStyle(
-                            color: Colors.black87,
+                            }
+                          },
+                          style: AppStyles.ConfirmbuttonStyle(),
+                          child: Text(
+                            'Confirm',
+                            style: AppStyles.ConfirmbuttonTextStyle(),
                           ),
-                          controller: NB_WARE_CODEController,
-                          decoration: const InputDecoration(
-                            labelText: 'Warehouse ต้นทาง',
-                            labelStyle: TextStyle(
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8.0), // Space between the Row and the new content
+                    // Additional content goes here
+                    GestureDetector(
+                      onTap: () {
+                        // Handle the tap event here
+                      },
+                      child: AbsorbPointer(
+                        child: Container(
+                          // Makes the width expand to the parent
+                          child: TextFormField(
+                            style: const TextStyle(
                               color: Colors.black87,
                             ),
-                            border: InputBorder.none,
-                            filled: true,
-                            fillColor: Color.fromRGBO(224, 224, 224, 1),
+                            controller: NB_WARE_CODEController,
+                            decoration: const InputDecoration(
+                              labelText: 'Warehouse ต้นทาง',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                              ),
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Color.fromRGBO(
+                                  224, 224, 224, 1), // Background color
+                            ),
+                            readOnly: true,
                           ),
-                          readOnly: true,
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8.0),
+                    const SizedBox(height: 8.0),
                   GestureDetector(
                     onTap: () {
                       // Handle the tap event here
                     },
                     child: AbsorbPointer(
-                      child: SizedBox(
-                        width: 300, // Set your desired width here
+                      child: Container( // Set your desired width here
                         child: TextFormField(
                           style: const TextStyle(
                             color: Colors.black87,
@@ -541,8 +541,7 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
                       // Handle the tap event (e.g., open a date picker)
                     },
                     child: AbsorbPointer(
-                      child: SizedBox(
-                        width: 300, // Set your desired width here
+                      child: Container(
                         child: TextFormField(
                           style: const TextStyle(
                             color: Colors.black87,
@@ -564,7 +563,8 @@ class _SSFGD17_VERIFYState extends State<SSFGD17_VERIFY> {
                       ),
                     ),
                   )
-                ],
+                  ],
+                ),
               ),
               const SizedBox(height: 16.0),
               SizedBox(

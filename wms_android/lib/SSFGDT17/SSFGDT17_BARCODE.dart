@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wms_android/SSFGDT17/SSFGD17_VERIFY.dart';
+import 'package:wms_android/SSFGDT17/SSFGDT17_VERIFY.dart';
 import 'package:wms_android/custom_appbar.dart';
 import 'package:wms_android/bottombar.dart';
 import 'package:wms_android/main.dart';
@@ -239,144 +239,76 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   }
 
   void _showLocatorDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'เปลี่ยน Locator',
-                style: TextStyle(fontSize: 20),
-              ), // Dialog title
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog when pressed
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return DialogStyles.displayTextFormFieldAndDropdown(
+        context: context,
+        headTextDialog: 'เปลี่ยน Locator', // Dialog header text
+        labelText: 'เลือก Location ต้นทาง', // TextField label text
+        controller: LOCATOR_FROM, // TextField controller
+        onTap: () {
+          // Show the custom LOV search dialog
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return DialogStyles.customLovSearchDialog(
+                context: context,
+                headerText: 'เลือก Location ต้นทาง',
+                searchController: _searchController,
+                data: locCode,
+                docString: (item) => item['r'].toString(),
+                titleText: (item) => item['r'].toString(),
+                subtitleText: (item) => '${item['location_name']}',
+                onTap: (item) {
+                  final name = item['location_name']?.toString() ?? '';
+                  Navigator.of(context).pop(); // Close LOV dialog
+                  setState(() {
+                    selectedLocCode = '$name';
+                    LOCATOR_FROM.text = selectedLocCode ?? '';
+                  });
                 },
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return DialogStyles.customLovSearchDialog(
-                      context: context,
-                      headerText:
-                          'เลือก Location ต้นทาง', // Customize the header text
-                      searchController: _searchController,
-                      data: locCode, // List of items to search
-                      docString: (item) => item['r']
-                          .toString(), // Customize the docString function
-                      titleText: (item) =>
-                          item['r'].toString(), // Customize the title text
-                      subtitleText: (item) =>
-                          '${item['location_name']}', // Customize subtitle text
-                      onTap: (item) {
-                        final name = item['location_name']?.toString() ?? '';
-                        // Handle item selection
-                        Navigator.of(context).pop(); // Close the dialog
-                        setState(() {
-                          // selectedLocCode = code;
-                          selectedLocCode = '$name';
-                          LOCATOR_FROM.text = selectedLocCode ?? '';
-                        });
-                      },
-                    );
-                  },
-                ).then((_) {
-                  // Clear the search field after the dialog is closed
-                  _searchController.clear();
-                });
-              },
-              child: AbsorbPointer(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'เลือก Location ต้นทาง',
-                    filled: true,
-                    fillColor: Colors.white,
-                    labelStyle: TextStyle(color: Colors.black),
-                    // border: InputBorder.none,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(
-                            color:
-                                Colors.black)), // Set the border color to black
-                    suffixIcon: Icon(
-                      Icons.arrow_drop_down,
-                      color: Color.fromARGB(255, 113, 113, 113),
-                    ),
-                  ),
-                  controller: LOCATOR_FROM,
-                  minLines: 1,
-                  maxLines: 2,
+              );
+            },
+          ).then((_) {
+            _searchController.clear(); // Clear search input on close
+          });
+        },
+        onCloseDialog: () {
+          Navigator.of(context).pop(); // Close the main dialog
+        },
+        onConfirmDialog: () {
+          Navigator.of(context).pop(); // Close the main dialog first
+          // Show confirmation dialog
+          showDialog<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return DialogStyles.alertMessageCheckDialog(
+                context: context,
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text('ต้องการเปลี่ยนแปลง Locator ต้นทาง หรือไม่ !!!'),
+                  ],
                 ),
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                side: BorderSide(color: Colors.grey), // กำหนดสีของเส้นขอบ
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                      20), // ปรับรูปร่างมุมให้โค้งมน (ถ้าต้องการ)
-                ),
-              ),
-              child: Text('ยกเลิก'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                side: BorderSide(color: Colors.grey), // กำหนดสีของเส้นขอบ
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                      20), // ปรับรูปร่างมุมให้โค้งมน (ถ้าต้องการ)
-                ),
-              ),
-              child: Text('ตกลง'),
-              onPressed: () {
-                // First, close the current dialog
-                Navigator.of(context).pop();
-                showDialog<void>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return DialogStyles.alertMessageCheckDialog(
-                      context: context,
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text('ต้องการเปลี่ยนแปลง Locator ต้นทาง หรือไม่ !!!'),
-                        ],
-                      ),
-                      onClose: () {
-                        Navigator.of(context)
-                            .pop(); // Close the confirmation dialog
-                      },
-                      onConfirm: () {
-                        setState(() {
-                          LOCATOR_FROM.text = selectedLocCode ??
-                              ''; // Update the text controller
-                        });
-                        Navigator.of(context)
-                            .pop(); // Close the confirmation dialog
-                      },
-                    );
-                  },
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+                onClose: () {
+                  Navigator.of(context).pop(); // Close confirmation dialog
+                },
+                onConfirm: () {
+                  setState(() {
+                    LOCATOR_FROM.text = selectedLocCode ?? '';
+                  });
+                  Navigator.of(context).pop(); // Close confirmation dialog
+                },
+              );
+            },
+          );
+        },
+      );
+    },
+  );
+}
+
 
   String? poStatus;
   String? poMessage;
@@ -426,7 +358,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
                   if (poStatus == '0') {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => SSFGD17_VERIFY(
+                        builder: (context) => SSFGDT17_VERIFY(
                           po_doc_no: widget.po_doc_no,
                           po_doc_type: widget.po_doc_type,
                           selectedwhCode: widget.selectedwhCode,

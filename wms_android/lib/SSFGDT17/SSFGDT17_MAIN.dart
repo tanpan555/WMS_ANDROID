@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:wms_android/SSFGDT17/SSFGD17_VERIFY.dart';
+import 'package:wms_android/SSFGDT17/SSFGDT17_VERIFY.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_BARCODE.dart';
 import 'package:wms_android/SSFGDT17/SSFGDT17_FORM.dart';
 import 'package:wms_android/custom_appbar.dart';
@@ -390,7 +390,7 @@ print('URL : $requestUrl ');
                                                     .push(
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        SSFGD17_VERIFY(
+                                                        SSFGDT17_VERIFY(
                                                       po_doc_no: doc_no ?? '',
                                                       po_doc_type: doc_out,
                                                       selectedwhCode: '',
