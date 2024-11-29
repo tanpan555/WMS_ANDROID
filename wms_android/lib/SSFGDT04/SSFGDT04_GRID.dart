@@ -851,33 +851,17 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                         await showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return AlertDialog(
-                              content: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(poMessage ?? ''),
-                                  IconButton(
-                                    icon: const Icon(Icons.close),
-                                    onPressed: () {
-                                      Navigator.of(context).pop(); // ปิด dialog
-                                    },
-                                  ),
-                                ],
-                              ),
-                              actions: [
-                                TextButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    side: const BorderSide(color: Colors.grey),
-                                  ),
-                                  child: const Text('ตกลง'),
-                                  onPressed: () async {
-                                    Navigator.of(context).pop(); // ปิด dialog
-                                    // await fetchGetPo(); // เรียกใช้ fetchGetPo
-                                  },
-                                ),
-                              ],
+                            return DialogStyles.messageDialog(
+                              context: context,
+                              content: Text(poMessage ?? ''),
+                              onClose: () {
+                                Navigator.of(context).pop(); // ปิด dialog
+                              },
+                              onConfirm: () async {
+                                Navigator.of(context).pop(); // ปิด dialog
+                                // คุณสามารถใส่คำสั่งเพิ่มเติมได้ที่นี่
+                              },
+                              showCloseIcon: true,
                             );
                           },
                         );

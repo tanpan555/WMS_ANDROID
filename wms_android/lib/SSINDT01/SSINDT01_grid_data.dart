@@ -1282,43 +1282,25 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                       .pop(); // Close the dialog
                                 },
                                 onConfirm: () async {
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
+                                  Navigator.of(context).pop();
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        content: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text('complete'),
-                                            // Close icon
-                                            IconButton(
-                                              icon: const Icon(Icons.close),
-                                              onPressed: () {
-                                                Navigator.of(context)
-                                                    .pop(); // Close the dialog
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                        // content: Text(poMessage ?? ''),
-                                        actions: [
-                                          TextButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.white,
-                                              side: const BorderSide(
-                                                  color: Colors.grey),
-                                            ),
-                                            child: const Text('ตกลง'),
-                                            onPressed: () async {
-                                              Navigator.of(context).pop();
-                                              await sendPostRequestlineWMS();
-                                              await sendGetRequestlineWMS();
-                                            },
-                                          ),
-                                        ],
+                                      return DialogStyles.messageDialog(
+                                        context: context,
+                                        content: Text('complete'),
+                                        onClose: () {
+                                          Navigator.of(context)
+                                              .pop(); // ปิด dialog
+                                        },
+                                        onConfirm: () async {
+                                          Navigator.of(context)
+                                              .pop(); // ปิด dialog
+                                          await sendPostRequestlineWMS();
+                                          await sendGetRequestlineWMS();
+                                          // คุณสามารถใส่คำสั่งเพิ่มเติมได้ที่นี่
+                                        },
+                                        showCloseIcon: true,
                                       );
                                     },
                                   );
@@ -1330,38 +1312,19 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return AlertDialog(
-                                content: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('complete'),
-                                    // Close icon
-                                    IconButton(
-                                      icon: const Icon(Icons.close),
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                // content: Text(poMessage ?? ''),
-                                actions: [
-                                  TextButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      side:
-                                          const BorderSide(color: Colors.grey),
-                                    ),
-                                    child: const Text('ตกลง'),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      await sendPostRequestlineWMS();
-                                      await sendGetRequestlineWMS();
-                                    },
-                                  ),
-                                ],
+                              return DialogStyles.messageDialog(
+                                context: context,
+                                content: Text('complete'),
+                                onClose: () {
+                                  Navigator.of(context).pop(); // ปิด dialog
+                                },
+                                onConfirm: () async {
+                                  Navigator.of(context).pop(); // ปิด dialog
+                                  await sendPostRequestlineWMS();
+                                  await sendGetRequestlineWMS();
+                                  // คุณสามารถใส่คำสั่งเพิ่มเติมได้ที่นี่
+                                },
+                                showCloseIcon: true,
                               );
                             },
                           );

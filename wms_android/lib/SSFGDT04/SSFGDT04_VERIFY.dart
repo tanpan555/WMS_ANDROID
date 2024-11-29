@@ -645,7 +645,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return DialogStyles.alertMessageDialog(
+                          return DialogStyles.messageDialog(
                             context: context,
                             content: Text('$poErpDocNo'),
                             onClose: () {
@@ -704,6 +704,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                     false; // รีเซ็ตสถานะหลังจากปิด dialog
                               });
                             },
+                            showCloseIcon: true,
                           );
                         },
                       );

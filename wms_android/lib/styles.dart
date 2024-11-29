@@ -908,30 +908,44 @@ class DialogStyles {
   }
 
   static AlertDialog messageDialog({
-    required BuildContext context,
-    required Widget content,
-    required VoidCallback onClose,
-    required VoidCallback onConfirm,
-  }) {
-    return AlertDialog(
-      content:content,
-      actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ElevatedButton(
-              onPressed: onConfirm,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                side: const BorderSide(color: Colors.grey),
-              ),
-              child: const Text('ตกลง'),
-            ),
-          ],
-        ),
+  required BuildContext context,
+  required Widget content,
+  required VoidCallback onClose,
+  required VoidCallback onConfirm,
+  bool showCloseIcon = false, // กำหนดการแสดงไอคอน close
+}) {
+  return AlertDialog(
+    content: Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(child: content), // กำหนดให้เนื้อหาแสดงทางด้านซ้าย
+        if (showCloseIcon)
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: onClose, // กำหนดการทำงานเมื่อกดไอคอน close
+          ),
       ],
-    );
-  }
+    ),
+    actions: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ElevatedButton(
+            onPressed: onConfirm,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              side: const BorderSide(color: Colors.grey),
+            ),
+            child: const Text('ตกลง'),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+
 
   static AlertDialog alertMessageNotIconDialog({
     required BuildContext context,
