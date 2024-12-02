@@ -128,14 +128,21 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
             po_status = barCodeItems['po_status'] ?? '';
             po_message = barCodeItems['po_message'] ?? '';
             _lotNumberController.text = barCodeItems['po_lot_number'] ?? '';
-            double quantity =
-                double.tryParse(barCodeItems['po_quantity'] ?? '0') ?? 0;
-            _quantityController.text = numberFormat.format(quantity);
+            double? quantity =
+                double.tryParse(barCodeItems['po_quantity'] ?? '');
+            _quantityController.text = (quantity == null || quantity == 0)
+            // กำหนดค่าที่ต้องการได้ที่นี่ เช่น 'NaN' หรือค่าอื่น ๆ
+                ? ''
+                : numberFormat.format(quantity);
+
             _currLotController.text = barCodeItems['po_curr_loc'] ?? '';
             _balLotController.text = barCodeItems['po_bal_lot'] ?? '';
             double balQty =
-                double.tryParse(barCodeItems['po_bal_qty'] ?? '0') ?? 0;
+                double.tryParse(barCodeItems['po_bal_qty'] ?? '') ?? 0;
             _balQtyController.text = numberFormat.format(balQty);
+            // เคลียร์ค่าใน _locatorBarcodeController เมื่อมีการสแกน QR Code สำเร็จ
+            _locatorBarcodeController.clear();
+            selectedLocator = null;
           });
         }
       } else {
