@@ -679,21 +679,24 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                                     },
                                     onConfirm: () async {
                                       Navigator.of(context)
-                                          .pop(); // Close the second dialog
+                                          .pop(); // Close the second dialog; 
                                       // await fetchGetPo(); // Call the fetchGetPo function after confirming
                                       getPDF(widget.po_doc_no ?? '').then((_) {
                                         // หลังจากเรียก getPDF เสร็จแล้ว, กลับไปยังหน้า SSFGDT04_MENU
-                                        Navigator.of(context)
-                                            .pushAndRemoveUntil(
-                                          MaterialPageRoute(
-                                            builder: (context) => SSFGDT04_MENU(
-                                              pWareCode: gb.P_WARE_CODE,
-                                              pErpOuCode: gb.P_ERP_OU_CODE,
-                                            ),
-                                          ),
-                                          (Route<dynamic> route) =>
-                                              false, // ลบหน้าอื่นๆ ออกจาก stack
-                                        );
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                                Navigator.of(context).pop(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SSFGDT04_MENU(
+                                                      pWareCode: gb.P_WARE_CODE,
+                                                      pErpOuCode:
+                                                          gb.P_ERP_OU_CODE,
+                                                    ),
+                                                  ),
+                                                );
+                                                Navigator.of(context).pop();
                                       });
                                     },
                                   );
