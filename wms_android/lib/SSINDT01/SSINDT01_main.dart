@@ -347,12 +347,21 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                                     ),
                                     color: Colors.lightBlue[100],
                                     child: InkWell(
-                                      onTap: () async {
-                                        if (isNavigating)
-                                          return; // If already navigating, do nothing.
-
-                                        isNavigating =
-                                            true; // Set flag to true when navigation starts
+                                      onTap: isNavigating
+                                          ? null // Disable tap if navigating
+                                          :() async {
+                                        setState(() {
+                                                isNavigating =
+                                                    true; // Set to true to block further taps
+                                              }); 
+                                              Future.delayed(
+                                                  const Duration(seconds: 1),
+                                                  () {
+                                                setState(() {
+                                                  isNavigating =
+                                                      false; // Re-enable tap after some time (e.g., after navigation completes)
+                                                });
+                                              });// Set flag to true when navigation starts
 
                                         if (selectedwhCode == null) {
                                           showDialog(
