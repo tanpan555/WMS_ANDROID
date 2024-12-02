@@ -33,6 +33,8 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
   List<dynamic> dataLovEndLoc = [];
   List<dynamic> dataLovStartGroup = [];
   List<dynamic> dataLovEndGroup = [];
+  List<dynamic> dataLovStartCategory = [];
+  List<dynamic> dataLovEndCategory = [];
   // --------------------------------- Doc Date
   String? displayDocDate;
   String returnDocDate = '';
@@ -69,6 +71,14 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
   String? displayEndGroup;
   String returnEndGroup = '';
   TextEditingController endGroupController = TextEditingController();
+  // --------------------------------- Start Category
+  String? displayStartCategory;
+  String returnStartCategory = '';
+  TextEditingController startCategoryController = TextEditingController();
+  // --------------------------------- End Category
+  String? displayEndCategory;
+  String returnEndCategory = '';
+  TextEditingController endCategoryController = TextEditingController();
   // ---------------------------------
   String selectedRadio = '1';
   bool isLoading = false;
@@ -166,6 +176,22 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     displayEndLoc = 'ทั้งหมด';
     returnEndLoc = 'null';
     endLocController.text = 'ทั้งหมด';
+    // ----------------------------
+    displayStartGroup = 'ทั้งหมด';
+    returnStartGroup = 'null';
+    startGroupController.text = 'ทั้งหมด';
+    // ----------------------------
+    displayEndGroup = 'ทั้งหมด';
+    returnEndGroup = 'null';
+    endGroupController.text = 'ทั้งหมด';
+    // ----------------------------
+    displayStartCategory = 'ทั้งหมด';
+    returnStartCategory = 'null';
+    startCategoryController.text = 'ทั้งหมด';
+    // ----------------------------
+    displayEndCategory = 'ทั้งหมด';
+    returnEndCategory = 'null';
+    endCategoryController.text = 'ทั้งหมด';
     // ----------------------------
   }
 
@@ -520,6 +546,80 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     }
   }
 
+  Future<void> selectLovStartCategory() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartCategory'
+          '/${returnStartGroup.isEmpty ? 'null' : returnStartGroup}/${returnEndGroup.isEmpty ? 'null' : returnEndGroup}'));
+
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        print('Fetched data: $jsonDecode');
+        if (mounted) {
+          setState(() {
+            dataLovStartCategory =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
+          });
+        }
+        print('dataLovStartCategory : $dataLovStartCategory');
+      } else {
+        throw Exception(
+            'dataLovStartCategory Failed to load fetchData ||  Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('dataLovStartCategory ERROR IN Fetch Data : $e');
+    }
+  }
+
+  Future<void> selectLovEndCategory() async {
+    if (isFirstLoad == false) {
+      if (mounted) {
+        isLoading = true;
+      }
+    }
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovEndGroup'
+          '/${returnStartGroup.isEmpty ? 'null' : returnStartGroup}'));
+
+      if (response.statusCode == 200) {
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        print('Fetched data: $jsonDecode');
+        if (mounted) {
+          setState(() {
+            dataLovEndCategory =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+
+            if (isFirstLoad == false) {
+              if (mounted) {
+                isLoading = false;
+              }
+            }
+          });
+        }
+        print('dataLovEndGroup : $dataLovEndGroup');
+      } else {
+        throw Exception(
+            'dataLovEndGroup Failed to load fetchData ||  Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('dataLovEndGroup ERROR IN Fetch Data : $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -588,6 +688,10 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
                                 color: Color.fromARGB(255, 113, 113, 113),
                               ),
                             ),
+                            // style: const TextStyle(
+                            //   fontSize: 14,
+                            //   color: Colors.black,
+                            // ),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -727,6 +831,8 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
                         )
                       ],
                     ),
+                    const SizedBox(height: 8),
+                    // -----------------------------------------------
                     Row(
                       children: [
                         Expanded(
@@ -767,6 +873,61 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
                               filled: true,
                               fillColor: Colors.white,
                               labelText: 'ถึง จากกลุ่มสินค้า',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    // -----------------------------------------------
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: startGroupController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchStartGroup(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'จาก Category',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 12,
+                              ),
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Color.fromARGB(255, 113, 113, 113),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: endGroupController,
+                            readOnly: true,
+                            onTap: () => showDialogDropdownSearchEndGroup(),
+                            minLines: 1,
+                            maxLines: 3,
+                            // overflow: TextOverflow.ellipsis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'ถึง Category',
                               labelStyle: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 12,
@@ -1190,17 +1351,99 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
             isLoading = true;
             Navigator.of(context).pop();
             setState(() {
-              returnEndLoc = '${item['group_code'] ?? 'null'}';
-              displayEndLoc = '${item['group_code'] ?? 'ทั้งหมด'}';
+              returnEndGroup = '${item['group_code'] ?? 'null'}';
+              displayEndGroup = '${item['group_code'] ?? 'ทั้งหมด'}';
               print('group_code : ${item['group_code'] ?? ''}');
-              endLocController.text = displayEndLoc.toString();
-              if (returnEndLoc.isNotEmpty) {
+              endGroupController.text = displayEndGroup.toString();
+              if (returnEndGroup.isNotEmpty) {
                 searchController7.clear;
               }
               isLoading = false;
               // -----------------------------------------
             });
-            if (returnStartLoc != 'null') {
+            if (returnStartGroup != 'null') {
+              checkUpdateDataALL(true);
+            } else {
+              checkUpdateDataALL(false);
+            }
+          },
+        );
+      },
+    );
+  }
+
+  void showDialogDropdownSearchStartCategory() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'จาก ตำแหน่งจัดเก็บ',
+          searchController: searchController10,
+          data: dataLovStartCategory,
+          docString: (item) => '${item['category_code'] ?? '--No Value Set--'}',
+          titleText: (item) => '${item['category_code'] ?? '--No Value Set--'}',
+          subtitleText: (item) {
+            final catDesc = item['category_desc'] ?? '';
+            return catDesc.isNotEmpty ? catDesc : null;
+          },
+          onTap: (item) {
+            isLoading = true;
+            Navigator.of(context).pop();
+            setState(() {
+              returnStartCategory = '${item['category_code'] ?? 'null'}';
+              displayStartCategory = '${item['category_code'] ?? 'ทั้งหมด'}';
+              print('category_code : ${item['category_code'] ?? ''}');
+              startCategoryController.text = displayStartCategory.toString();
+              if (returnStartCategory.isNotEmpty) {
+                searchController7.clear;
+              }
+              isLoading = false;
+              // -----------------------------------------
+            });
+            if (returnStartCategory != 'null') {
+              checkUpdateDataALL(true);
+            } else {
+              checkUpdateDataALL(false);
+            }
+          },
+        );
+      },
+    );
+  }
+
+  void showDialogDropdownSearchEndCategory() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'จาก ตำแหน่งจัดเก็บ',
+          searchController: searchController11,
+          data: dataLovEndCategory,
+          docString: (item) => '${item['category_code'] ?? '--No Value Set--'}',
+          titleText: (item) => '${item['category_code'] ?? '--No Value Set--'}',
+          subtitleText: (item) {
+            final catDesc = item['category_desc'] ?? '';
+            return catDesc.isNotEmpty ? catDesc : null;
+          },
+          onTap: (item) {
+            isLoading = true;
+            Navigator.of(context).pop();
+            setState(() {
+              returnEndCategory = '${item['category_code'] ?? 'null'}';
+              displayEndCategory = '${item['category_code'] ?? 'ทั้งหมด'}';
+              print('category_code : ${item['category_code'] ?? ''}');
+              endCategoryController.text = displayEndCategory.toString();
+              if (returnEndCategory.isNotEmpty) {
+                searchController7.clear;
+              }
+              isLoading = false;
+              // -----------------------------------------
+            });
+            if (returnEndCategory != 'null') {
               checkUpdateDataALL(true);
             } else {
               checkUpdateDataALL(false);

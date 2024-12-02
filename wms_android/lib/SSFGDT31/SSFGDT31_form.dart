@@ -719,29 +719,6 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
     }
   }
 
-  Future<void> _selectDate(
-    BuildContext context,
-  ) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-    );
-
-    if (pickedDate != null) {
-      String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
-      if (mounted) {
-        setState(() {
-          isDateInvalid = false;
-          docDateController.text = formattedDate;
-          docDate = docDateController.text;
-        });
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
