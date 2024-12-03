@@ -2006,76 +2006,8 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                     ),
                     const SizedBox(height: 8),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // -------------------------------------------------
-                        ElevatedButton(
-                          onPressed: () async {
-                            setState(() {
-                              selectedRadio = '1';
-                              displayLovDate = 'ทั้งหมด';
-                              displayLovDocNo = 'ทั้งหมด';
-                              displayStartWareCode = 'ทั้งหมด';
-                              displayEndWareCode = 'ทั้งหมด';
-                              displayStartLoc = 'ทั้งหมด';
-                              displayEndLoc = 'ทั้งหมด';
-                              displayStartGroup = 'ทั้งหมด';
-                              displayEndGroup = 'ทั้งหมด';
-                              displayStartCategory = 'ทั้งหมด';
-                              displayEndCategory = 'ทั้งหมด';
-                              displayStartSubCategory = 'ทั้งหมด';
-                              displayEndSubCategory = 'ทั้งหมด';
-                              displayStartItem = 'ทั้งหมด';
-                              displayEndItem = 'ทั้งหมด';
-                              returnLovDate = 'null';
-                              returnLovDocNo = 'null';
-                              returnStartWareCode = 'null';
-                              returnEndWareCode = 'null';
-                              returnStartLoc = 'null';
-                              returnEndLoc = 'null';
-                              returnStartGroup = 'null';
-                              returnEndGroup = 'null';
-                              returnStartCategory = 'null';
-                              returnEndCategory = 'null';
-                              returnStartSubCategory = 'null';
-                              returnEndSubCategory = 'null';
-                              returnStartItem = 'null';
-                              returnEndItem = 'null';
-
-                              dateController.text = 'ทั้งหมด';
-                              docNoController.text = 'ทั้งหมด';
-                              startWareCodeController.text = 'ทั้งหมด';
-                              endWareCodeController.text = 'ทั้งหมด';
-                              startLocController.text = 'ทั้งหมด';
-                              endLocController.text = 'ทั้งหมด';
-                              startGroupController.text = 'ทั้งหมด';
-                              endGroupController.text = 'ทั้งหมด';
-                              startCategoryController.text = 'ทั้งหมด';
-                              endCategoryController.text = 'ทั้งหมด';
-                              startSubCategoryController.text = 'ทั้งหมด';
-                              endSubCategoryController.text = 'ทั้งหมด';
-                              startItemController.text = 'ทั้งหมด';
-                              endItemController.text = 'ทั้งหมด';
-
-                              checkUpdateData = false;
-                            });
-                          },
-                          style: AppStyles.ClearButtonStyle(),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // const Icon(
-                              //   Icons.print,
-                              //   color: Colors.black,
-                              // ),
-                              // const SizedBox(width: 8),
-                              Text(
-                                'Clear',
-                                style: AppStyles.ConfirmbuttonTextStyle(),
-                              ),
-                            ],
-                          ),
-                        ),
                         // ----------------------------------------------
                         ElevatedButton(
                           onPressed: () async {
@@ -2289,6 +2221,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                   searchController5.clear;
                   selectLovEndLoc();
                   displayEndLoc = 'ทั้งหมด';
+                  displayEndLocBackup = '';
                   returnEndLoc = 'null';
                   endLocController.text = 'ทั้งหมด';
                   searchController6.clear;
@@ -2352,6 +2285,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 searchController5.clear;
                 selectLovEndLoc();
                 displayEndLoc = 'ทั้งหมด';
+                displayEndLocBackup = '';
                 returnEndLoc = 'null';
                 endLocController.text = 'ทั้งหมด';
                 searchController6.clear;
@@ -2563,6 +2497,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 searchController9.clear;
                 selectLovEndCategory();
                 displayEndCategory = 'ทั้งหมด';
+                displayEndCategoryBackup = '';
                 returnEndCategory = 'null';
                 endCategoryController.text = 'ทั้งหมด';
                 searchController10.clear;
@@ -2573,6 +2508,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 searchController11.clear;
                 selectLovEndSubCategory();
                 displayEndSubCategory = 'ทั้งหมด';
+                displayEndSubCategoryBackup = '';
                 returnEndSubCategory = 'null';
                 endSubCategoryController.text = 'ทั้งหมด';
                 searchController12.clear;
@@ -2583,6 +2519,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 searchController13.clear;
                 selectLovEndItem();
                 displayEndItem = 'ทั้งหมด';
+                displayEndItemBackup = '';
                 returnEndItem = 'null';
                 endItemController.text = 'ทั้งหมด';
                 searchController14.clear;
@@ -2644,6 +2581,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 searchController9.clear;
                 selectLovEndCategory();
                 displayEndCategory = 'ทั้งหมด';
+                displayEndCategoryBackup = '';
                 returnEndCategory = 'null';
                 endCategoryController.text = 'ทั้งหมด';
                 searchController10.clear;
@@ -2654,6 +2592,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 searchController11.clear;
                 selectLovEndSubCategory();
                 displayEndSubCategory = 'ทั้งหมด';
+                displayEndSubCategoryBackup = '';
                 returnEndSubCategory = 'null';
                 endSubCategoryController.text = 'ทั้งหมด';
                 searchController12.clear;
@@ -2664,6 +2603,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 searchController13.clear;
                 selectLovEndItem();
                 displayEndItem = 'ทั้งหมด';
+                displayEndItemBackup = '';
                 returnEndItem = 'null';
                 endItemController.text = 'ทั้งหมด';
                 searchController14.clear;
@@ -2755,6 +2695,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 searchController11.clear;
                 selectLovEndSubCategory();
                 displayEndSubCategory = 'ทั้งหมด';
+                displayEndSubCategoryBackup = '';
                 returnEndSubCategory = 'null';
                 endSubCategoryController.text = 'ทั้งหมด';
                 searchController12.clear;
@@ -2765,6 +2706,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 searchController13.clear;
                 selectLovEndItem();
                 displayEndItem = 'ทั้งหมด';
+                displayEndItemBackup = '';
                 returnEndItem = 'null';
                 endItemController.text = 'ทั้งหมด';
                 searchController14.clear;
@@ -2827,6 +2769,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 searchController11.clear;
                 selectLovEndSubCategory();
                 displayEndSubCategory = 'ทั้งหมด';
+                displayEndSubCategoryBackup = '';
                 returnEndSubCategory = 'null';
                 endSubCategoryController.text = 'ทั้งหมด';
                 searchController12.clear;
@@ -2837,6 +2780,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 searchController13.clear;
                 selectLovEndItem();
                 displayEndItem = 'ทั้งหมด';
+                displayEndItemBackup = '';
                 returnEndItem = 'null';
                 endItemController.text = 'ทั้งหมด';
                 searchController14.clear;
@@ -2930,6 +2874,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 searchController13.clear;
                 selectLovEndItem();
                 displayEndItem = 'ทั้งหมด';
+                displayEndItemBackup = '';
                 returnEndItem = 'null';
                 endItemController.text = 'ทั้งหมด';
                 searchController14.clear;
@@ -2992,6 +2937,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                 searchController13.clear;
                 selectLovEndItem();
                 displayEndItem = 'ทั้งหมด';
+                displayEndItemBackup = '';
                 returnEndItem = 'null';
                 endItemController.text = 'ทั้งหมด';
                 searchController14.clear;
