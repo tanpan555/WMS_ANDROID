@@ -190,7 +190,6 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     try {
       final response = await http
           .get(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_GROUP'));
-      print(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_GROUP'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -227,8 +226,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     try {
       final response = await http.get(Uri.parse(
           '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_GROUP_E/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'));
-      print(Uri.parse(
-          '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_GROUP_E/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'));
+
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -268,9 +266,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           await http.get(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_CAT'
               '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
               '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'));
-      print(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_CAT'
-          '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
-          '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'));
+
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -309,10 +305,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
           '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
           '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'));
-      print(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_CAT_E'
-          '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
-          '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
-          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'));
+
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -352,9 +345,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_SUB_CAT'
           '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
           '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'));
-      print(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_SUB_CAT'
-          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
-          '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'));
+
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -393,10 +384,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
           '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
           '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'));
-      print(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_SUB_CAT_E'
-          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
-          '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
-          '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'));
+
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -517,16 +505,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           '/${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'null'}'
           '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
           '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'));
-      print(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_ITM'
-          '/${gb.BROWSER_LANGUAGE}'
-          '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
-          '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
-          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
-          '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
-          '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'
-          '/${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'null'}'
-          '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
-          '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'));
+
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -572,17 +551,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
           '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'
           '/${returnStartItem.isNotEmpty ? returnStartItem : 'null'}'));
-      print(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_ITM_E'
-          '/${gb.BROWSER_LANGUAGE}'
-          '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
-          '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
-          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
-          '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
-          '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'
-          '/${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'null'}'
-          '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
-          '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'
-          '/${returnStartItem.isNotEmpty ? returnStartItem : 'null'}'));
+
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -619,7 +588,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   String? v_alt2;
   Future<void> process() async {
     final url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_process_new';
-    print('process : $url');
+
     final headers = {
       'Content-Type': 'application/json',
     };
@@ -681,7 +650,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                           side: const BorderSide(color: Colors.grey),
                         ),
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          // Navigator.of(context).pop();
                         },
                         child: Text('ตกลง'),
                       ),
@@ -740,6 +709,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(
           title: 'ประมวลผลก่อนการตรวจนับ',
           showExitWarning: returnStartGroup.isEmpty &&
