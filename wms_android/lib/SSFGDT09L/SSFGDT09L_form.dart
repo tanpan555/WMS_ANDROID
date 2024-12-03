@@ -615,14 +615,16 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                 await lovMoDoNo();
                 await lovRefNo();
                 await lovCancel();
-                setState(() {
-                  checkUpdateData = false;
-                  isNextDisabled = false;
-                  isLoading = false;
-                  selectLovRefNo = '';
-                  returnStatusLovRefNo = '';
-                  refNoController.text = '';
-                });
+                if (mounted) {
+                  setState(() {
+                    checkUpdateData = false;
+                    isNextDisabled = false;
+                    isLoading = false;
+                    selectLovRefNo = '';
+                    returnStatusLovRefNo = '';
+                    refNoController.text = '';
+                  });
+                }
               });
             }
 
@@ -748,7 +750,8 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                             onPressed: isNextDisabled
                                 ? null
                                 : () async {
-                                    if (isDateInvalidNotifier.value == false) {
+                                    if (isDateInvalidNotifier.value == false &&
+                                        docDate.isNotEmpty) {
                                       setState(() {
                                         isNextDisabled = true;
                                         isFirstLoad = true;
@@ -787,6 +790,8 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
                                           });
                                         }
                                       }
+                                    } else if (docDate.isEmpty) {
+                                      isDateInvalidNotifier.value = true;
                                     }
                                   },
                           ),

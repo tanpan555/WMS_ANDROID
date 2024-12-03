@@ -1442,7 +1442,7 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
                             if (checkCountQTY.toString() !=
                                     count_qty.toString() ||
                                 checkRemake != remark) {
-                              showExitWarningDialog(context);
+                              showExitWarningDialog();
                             } else {
                               Navigator.of(context).pop(false);
                               fetchData(urlLoad);
@@ -1944,9 +1944,10 @@ class _Ssfgdt12GridState extends State<Ssfgdt12Grid> {
     );
   }
 
-  Future<bool> showExitWarningDialog(BuildContext context) async {
-    return await showDialog(
+  void showExitWarningDialog() {
+    showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return DialogStyles.warningNotSaveDialog(
           context: context,

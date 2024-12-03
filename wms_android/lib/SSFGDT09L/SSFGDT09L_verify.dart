@@ -191,21 +191,25 @@ class _Ssfgdt09lVerifyState extends State<Ssfgdt09lVerify> {
 
   void loadNextPage() {
     if (nextLink != '') {
-      setState(() {
-        showRecordRRR = 0;
-        print('nextLink $nextLink');
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          showRecordRRR = 0;
+          print('nextLink $nextLink');
+          isLoading = true;
+        });
+      }
       fetchData(nextLink);
     }
   }
 
   void loadPrevPage() {
     if (prevLink != '') {
-      setState(() {
-        showRecordRRR = 0;
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          showRecordRRR = 0;
+          isLoading = true;
+        });
+      }
       fetchData(prevLink);
     }
   }

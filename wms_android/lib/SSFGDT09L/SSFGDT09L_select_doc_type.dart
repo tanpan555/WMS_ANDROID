@@ -153,9 +153,11 @@ class _Ssfgdt09lSelectDocTypeState extends State<Ssfgdt09lSelectDocType> {
                   ),
                 ),
               ).then((value) async {
-                setState(() {
-                  isNextDisabled = false;
-                });
+                if (mounted) {
+                  setState(() {
+                    isNextDisabled = false;
+                  });
+                }
               });
             }
           });

@@ -149,23 +149,27 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
 
   void loadNextPage() {
     if (nextLink != '') {
-      setState(() {
-        showRecordRRR = 0;
-        // countData = 0;
-        print('nextLink $nextLink');
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          showRecordRRR = 0;
+          // countData = 0;
+          print('nextLink $nextLink');
+          isLoading = true;
+        });
+      }
       fetchData(nextLink);
     }
   }
 
   void loadPrevPage() {
     if (prevLink != '') {
-      setState(() {
-        showRecordRRR = 0;
-        // countData = 0;
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          showRecordRRR = 0;
+          // countData = 0;
+          isLoading = true;
+        });
+      }
       fetchData(prevLink);
     }
   }
@@ -665,9 +669,11 @@ class _Ssfgdt09lGridState extends State<Ssfgdt09lGrid> {
                                   onTapDelete: isCheckDisDelete
                                       ? null
                                       : () {
-                                          setState(() {
-                                            isCheckDisDelete = true;
-                                          });
+                                          if (mounted) {
+                                            setState(() {
+                                              isCheckDisDelete = true;
+                                            });
+                                          }
                                           String messageDelete =
                                               'ต้องการลบรายการหรือไม่ ?';
 

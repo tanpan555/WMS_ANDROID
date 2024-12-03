@@ -757,7 +757,9 @@ class _Ssfgdt31BarcodeState extends State<Ssfgdt31Barcode> {
                   setState(
                     () {
                       quantity = value;
-                      if (barCode.isNotEmpty && lotNo.isNotEmpty) {
+                      if (barCode.isNotEmpty &&
+                          lotNo.isNotEmpty &&
+                          quantity.isNotEmpty) {
                         chkQuantity();
                       }
                     },

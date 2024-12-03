@@ -247,19 +247,23 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
 
   void loadNextPage() {
     if (currentPage < totalPages() - 1) {
-      setState(() {
-        currentPage++;
-        scrollToTop();
-      });
+      if (mounted) {
+        setState(() {
+          currentPage++;
+          scrollToTop();
+        });
+      }
     }
   }
 
   void loadPrevPage() {
     if (currentPage > 0) {
-      setState(() {
-        currentPage--;
-        scrollToTop();
-      });
+      if (mounted) {
+        setState(() {
+          currentPage--;
+          scrollToTop();
+        });
+      }
     }
   }
 
@@ -283,9 +287,11 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
     print('messageCard : $messageCard Type : ${messageCard.runtimeType}');
     print('goToStep : $goToStep Type : ${goToStep.runtimeType}');
     if (statusCard == '1') {
-      setState(() {
-        isCardDisabled = false;
-      });
+      if (mounted) {
+        setState(() {
+          isCardDisabled = false;
+        });
+      }
       showMessageStatusCard(context, messageCard);
     }
     if (statusCard == '0') {
@@ -353,9 +359,11 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
   Future<void> getInheadStpe(String pDocNoGetInHead, String pDocTypeGetInHead,
       String poStatus, String poMessage, String goToStep) async {
     if (poStatus == '1') {
-      setState(() {
-        isCardDisabled = false;
-      });
+      if (mounted) {
+        setState(() {
+          isCardDisabled = false;
+        });
+      }
       showMessageStatusCard(context, poMessage);
     }
     if (poStatus == '0') {
@@ -375,9 +383,11 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
                   pErpOuCode: globals.P_ERP_OU_CODE),
             ),
           ).then((value) async {
-            setState(() {
-              isCardDisabled = false;
-            });
+            if (mounted) {
+              setState(() {
+                isCardDisabled = false;
+              });
+            }
           });
         case '3':
           return await Navigator.push(
@@ -400,9 +410,11 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
               ),
             ),
           ).then((value) async {
-            setState(() {
-              isCardDisabled = false;
-            });
+            if (mounted) {
+              setState(() {
+                isCardDisabled = false;
+              });
+            }
           });
         case '4':
           return await Navigator.push(
@@ -421,9 +433,11 @@ class _Ssfgdt09lCardState extends State<Ssfgdt09lCard> {
               ),
             ),
           ).then((value) async {
-            setState(() {
-              isCardDisabled = false;
-            });
+            if (mounted) {
+              setState(() {
+                isCardDisabled = false;
+              });
+            }
           });
         default:
           return null;
