@@ -5,10 +5,19 @@ import '../styles.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
-// import 'SSFGPC04_WARE.dart';
+import '../centered_message.dart';
+import 'SSFGPC04_WARE.dart';
 
 class SSFGPC04_WAREHOUSE extends StatefulWidget {
-  const SSFGPC04_WAREHOUSE({super.key, required List<Map<String, dynamic>> selectedItems});
+  final String date;
+  final String note;
+  final String docNo;
+  const SSFGPC04_WAREHOUSE({
+    Key? key,
+    required this.date,
+    required this.note,
+    required this.docNo,
+  }) : super(key: key);
 
   @override
   _SSFGPC04_WAREHOUSEState createState() => _SSFGPC04_WAREHOUSEState();
@@ -24,7 +33,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
     if (mounted) {
       setState(() {
         for (var row in filteredWhItems) {
-          row["selected"] = value;
+          row['nb_sel'] = value;
         }
       });
     }
@@ -34,18 +43,9 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
     if (mounted) {
       setState(() {
         for (var row in filteredWhItems) {
-          row["selected"] = false;
+          row['nb_sel'] = false;
         }
       });
-    }
-  }
-
-  void _navigateBackWithSelectedData() async {
-    List<Map<String, dynamic>> selectedItems =
-        whItems.where((item) => item['selected'] == true).toList();
-    gb.P_WARE_CODE = selectedItems.map((item) => item['ware_code']).join(',');
-    if (mounted) {
-      Navigator.pop(context, selectedItems);
     }
   }
 
@@ -60,19 +60,20 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
     try {
       final response = await http.get(Uri.parse(
           '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_IN_WAREHOUSE/${gb.APP_SESSION}/${gb.P_ERP_OU_CODE}'));
+      print(Uri.parse(
+          '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_IN_WAREHOUSE/${gb.APP_SESSION}/${gb.P_ERP_OU_CODE}'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
-        List<String> selectedWareCodes = gb.P_WARE_CODE.split(',');
+        print('Fetched data: $responseData');
 
         if (mounted) {
           setState(() {
             whItems =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? [])
                   ..forEach((row) {
-                    row["selected"] =
-                        selectedWareCodes.contains(row['ware_code']);
+                    row['nb_sel'] = false;
                   });
             filteredWhItems =
                 whItems; // Initialize filtered list with all items
@@ -106,8 +107,8 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
   }
 
   Future<void> fetchCheck(String? wareCode) async {
-    final url =
-        '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
+    final url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
+    print('post : $url');
 
     final headers = {
       'Content-Type': 'application/json',
@@ -153,8 +154,8 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
 
   String message = '';
   Future<void> deleteData(String? wareCode) async {
-    final String url =
-        '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
+    final String url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
+    print('delete : $url');
 
     try {
       final response = await http.delete(
@@ -197,9 +198,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          CustomAppBar(title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: false),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
+      appBar: CustomAppBar(title: 'เลือกคลังสินค้า', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -264,7 +263,21 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _navigateBackWithSelectedData,
+              // onPressed: _navigateBackWithSelectedData,
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SSFGPC04_WARE(
+                      date: widget.date,
+                          note: widget.note,
+                          docNo: widget.docNo,
+                        ),
+                  ),
+                );
+              },
               child: const Text(
                 'กลับสู่หน้าจอหลัก',
                 style: TextStyle(
@@ -285,15 +298,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
     if (filteredWhItems.isEmpty) {
       return Padding(
         padding: const EdgeInsets.only(top: 100),
-        child: const Center(
-          child: Text(
-            'No data found',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-            ),
-          ),
-        ),
+        child: const Center(child: CenteredMessage()),
       );
     } else {
       return Container(
@@ -308,11 +313,11 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        row["selected"] =
-                            !(row["selected"] ?? false); // สลับสถานะ
+                        row['nb_sel'] =
+                            !(row['nb_sel'] ?? false); // สลับสถานะ
                       });
 
-                      if (row["selected"]!) {
+                      if (row['nb_sel']!) {
                         fetchCheck(row['ware_code']);
                       } else {
                         deleteData(row['ware_code']);
@@ -321,10 +326,10 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
                     child: Row(
                       children: [
                         Checkbox(
-                          value: row["selected"] ?? false,
+                          value: row['nb_sel'] ?? false,
                           onChanged: (bool? value) {
                             setState(() {
-                              row["selected"] = value!;
+                              row['nb_sel'] = value!;
                             });
 
                             // ตรวจสอบสถานะของ Checkbox เพื่อเลือกว่าจะเรียก POST หรือ DELETE
@@ -341,7 +346,6 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
                       ],
                     ),
                   ),
-
                   const SizedBox(width: 10),
                   Text(
                     row['ware_code'] ?? '',

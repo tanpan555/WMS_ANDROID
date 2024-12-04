@@ -10,7 +10,7 @@ import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:wms_android/styles.dart';
-// import '../TextFormFieldCheckDate.dart';
+import '../TextFormFieldCheckDate.dart';
 
 class SSFGDT17_FORM extends StatefulWidget {
   final String po_doc_no;
@@ -41,6 +41,7 @@ class SSFGDT17_FORM extends StatefulWidget {
 }
 
 class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
+  String date = '';
   String currentSessionID = '';
   DateTime? selectedDate;
   final ERP_OU_CODE = gb.P_ERP_OU_CODE;
@@ -392,7 +393,9 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
               const Spacer(),
               ElevatedButtonStyle.nextpage(
                 onPressed: () async {
-                  if (CR_DATE.text.isEmpty || isDateValid == false) {
+                  if (CR_DATE.text.isEmpty || isDateInvalidNotifier.value) {
+                    isDateInvalidNotifier.value = true;
+
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -574,7 +577,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
       });
     });
   }
-  
+
   Widget _buildDropStaffdownSearch() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
@@ -618,7 +621,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
           onTap: (item) {
             setState(() {
               selectedREF_NO = item['so_no']; // Update the selected item
-              MO_DO_NO.text = item['so_no']; // Update the text controller
+              REF_NO.text = item['so_no']; // Update the text controller
             });
             Navigator.of(context).pop(); // Close the dialog
           },
@@ -647,7 +650,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                   color: Color.fromARGB(255, 113, 113, 113),
                 ),
               ),
-              controller: MO_DO_NO),
+              controller: REF_NO),
         ),
       ),
     );
@@ -705,145 +708,27 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
   }
 
   Widget _buildDateTextField(TextEditingController controller, String label) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 8.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // CustomTextFormField(
-        //           controller: controller,
-        //           labelText: 'วันที่บันทึก',
-        //          showAsterisk = ture
-        //           keyboardType: TextInputType.number,
-        //           onChanged: (value) {
-        //             try {
-        //               selectedDate = DateFormat('dd/MM/yyyy').parse(value);
-        //             } catch (e) {
-        //               selectedDate = null; // Set to null if parsing fails
-        //               print('Invalid date format: $value');
-        //             }
-        //             print('วันที่: $selectedDate');
-        //           },
-        //           isDateInvalidNotifier: isDateInvalidNotifier,
-        //         )
-        TextField(
-          controller: controller,
-          style: const TextStyle(color: Colors.black),
-          keyboardType: TextInputType.number,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-          ],
-          onChanged: (value) {
-            setState(() {
-              checkUpdateData = true;
-            });
-            
-            // Track the cursor position
-            int cursorPosition = controller.selection.baseOffset;
-
-            if (value.isNotEmpty) {
-              String numbersOnly = value.replaceAll('/', '');
-              if (numbersOnly.length > 8) {
-                numbersOnly = numbersOnly.substring(0, 8);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomTextFormField(
+            controller: controller,
+            labelText: 'วันที่บันทึก',
+            keyboardType: TextInputType.number,
+            showAsterisk: true,
+            onChanged: (value) {
+              date = value;
+              print('วันที่ที่กรอก: $date');
+              if (date != selectedDate) {
+                checkUpdateData = true;
               }
-
-              // Format the input as dd/MM/yyyy
-              String formattedValue = '';
-              int insertCursorPosition = cursorPosition;
-              for (int i = 0; i < numbersOnly.length; i++) {
-                if (i == 2 || i == 4) {
-                  formattedValue += '/';
-                  if (i < cursorPosition) {
-                    insertCursorPosition++; // Adjust cursor position for slashes
-                  }
-                }
-                formattedValue += numbersOnly[i];
-              }
-
-              // Update the controller text with the formatted value
-              controller.value = TextEditingValue(
-                text: formattedValue,
-                selection: TextSelection.collapsed(offset: insertCursorPosition),
-              );
-
-              // Validate the date
-              if (numbersOnly.length == 8) {
-                try {
-                  final day = int.parse(numbersOnly.substring(0, 2));
-                  final month = int.parse(numbersOnly.substring(2, 4));
-                  final year = int.parse(numbersOnly.substring(4, 8));
-
-                  final date = DateTime(year, month, day);
-
-                  if (date.day == day && date.month == month && date.year == year) {
-                    setState(() {
-                      isDateValid = true;
-                      selectedDate = date;
-                      CR_DATE.text = DateFormat('dd/MM/yyyy').format(date);
-                    });
-                  } else {
-                    throw Exception('Invalid date');
-                  }
-                } catch (e) {
-                  print('Error parsing date: $e');
-                  setState(() {
-                    isDateValid = false;
-                  });
-                }
-              } else {
-                setState(() {
-                  isDateValid = false;
-                });
-              }
-            } else {
-              setState(() {
-                isDateValid = false;
-              });
-            }
-          },
-          decoration: InputDecoration(
-            hintText: 'DD/MM/YYYY',
-            hintStyle: const TextStyle(color: Colors.grey),
-            label: RichText(
-              text: TextSpan(
-                text: label,
-                style: const TextStyle(color: Colors.black,fontSize: 16),
-                children: const [
-                  TextSpan(
-                    text: ' *',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ],
-              ),
-            ),
-            filled: true,
-            fillColor: Colors.white,
-            border: InputBorder.none,
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.calendar_today, color: Colors.black),
-              onPressed: () async {
-                _selectDate(context);
-              },
-            ),
+            },
+            isDateInvalidNotifier: isDateInvalidNotifier,
           ),
-        ),
-        // Show error message if the date is invalid
-        isDateValid == false
-            ? const Padding(
-                padding: EdgeInsets.only(top: 4.0),
-                child: Text(
-                  'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              )
-            : const SizedBox.shrink(),
-      ],
-    ),
-  );
-}
-
+        ],
+      ),
+    );
+  }
 }

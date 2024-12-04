@@ -712,10 +712,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                             poSeq,
                           );
                           Navigator.of(context).pop();
-                          if (refreshCallback != null) {
-                            await refreshCallback();
-                          }
-                        },
+                          await refreshCallback();
+                                                },
                       ),
                       _buildDialogButton(
                         label: 'SAVE',
@@ -732,10 +730,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                           );
                           sendGetRequestlineWMS();
                           Navigator.of(context).pop();
-                          if (refreshCallback != null) {
-                            await refreshCallback();
-                          }
-                        },
+                          await refreshCallback();
+                                                },
                       ),
                     ],
                   ),

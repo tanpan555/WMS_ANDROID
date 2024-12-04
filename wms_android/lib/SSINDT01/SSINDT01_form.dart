@@ -9,6 +9,7 @@ import 'package:wms_android/SSINDT01/SSINDT01_main.dart';
 import 'package:wms_android/SSINDT01/SSINDT01_grid_data.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import '../TextFormFieldCheckDate.dart';
 
 class Ssindt01Form extends StatefulWidget {
   final String poReceiveNo;
@@ -45,25 +46,25 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   String updBy = '';
   String updDate = '';
 
-  final TextEditingController poNoController = TextEditingController();
-  final TextEditingController receiveNoController = TextEditingController();
-  final TextEditingController erpReceiveNoController = TextEditingController();
-  final TextEditingController pkWareCodeController = TextEditingController();
-  final TextEditingController poTypeCodeController = TextEditingController();
-  final TextEditingController receiveDateController = TextEditingController();
-  final TextEditingController wareCodeController = TextEditingController();
-  final TextEditingController crByController = TextEditingController();
-  final TextEditingController invoiceNoController = TextEditingController();
-  final TextEditingController invoiceDateController = TextEditingController();
-  final TextEditingController sellerController = TextEditingController();
-  final TextEditingController poRemarkController = TextEditingController();
-  final TextEditingController ouCodeController = TextEditingController();
-  final TextEditingController updByController = TextEditingController();
-  final TextEditingController updDateController = TextEditingController();
-  final TextEditingController crDateController = TextEditingController();
+  TextEditingController poNoController = TextEditingController();
+  TextEditingController receiveNoController = TextEditingController();
+  TextEditingController erpReceiveNoController = TextEditingController();
+  TextEditingController pkWareCodeController = TextEditingController();
+  TextEditingController poTypeCodeController = TextEditingController();
+  TextEditingController receiveDateController = TextEditingController();
+  TextEditingController wareCodeController = TextEditingController();
+  TextEditingController crByController = TextEditingController();
+  TextEditingController invoiceNoController = TextEditingController();
+  TextEditingController invoiceDateController = TextEditingController();
+  TextEditingController sellerController = TextEditingController();
+  TextEditingController poRemarkController = TextEditingController();
+  TextEditingController ouCodeController = TextEditingController();
+  TextEditingController updByController = TextEditingController();
+  TextEditingController updDateController = TextEditingController();
+  TextEditingController crDateController = TextEditingController();
 
-  final TextEditingController _searchController = TextEditingController();
-  final TextEditingController _CcodeController = TextEditingController();
+  TextEditingController _searchController = TextEditingController();
+  TextEditingController _CcodeController = TextEditingController();
   bool checkUpdateData = false;
   bool check = false;
   void checkIfHasData() {
@@ -90,6 +91,10 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
 
   final DateFormat displayFormat = DateFormat("dd/MM/yyyy");
   final DateFormat apiFormat = DateFormat("MM/dd/yyyy");
+  final ValueNotifier<bool> isReceiveDateInvalidNotifier =
+      ValueNotifier<bool>(false);
+  final ValueNotifier<bool> isInvoiceDateInvalidNotifier =
+      ValueNotifier<bool>(false);
 
   final _formKey = GlobalKey<FormState>();
 
@@ -147,9 +152,6 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             poMessage = responseBody['po_message'];
             print('po_status: $poStatus');
             print('po_message: $poMessage');
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   SnackBar(content: Text('$poMessage')),
-            // );
           });
         }
       } else {
@@ -518,56 +520,42 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   }
 
   Future<void> _selectInvoiceDate(BuildContext context) async {
-    DateTime initialDate = DateTime.now();
-    if (invoiceDate.isNotEmpty) {
-      try {
-        initialDate = apiFormat.parse(invoiceDate);
-      } catch (e) {
-        print('Error parsing date: $e');
-      }
-    }
-
-    final DateTime? picked = await showDatePicker(
+    DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: initialDate,
+      initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
       initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
-    if (picked != null) {
+
+    if (pickedDate != null) {
+      String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
       if (mounted) {
         setState(() {
-          invoiceDate = apiFormat.format(picked);
-          invoiceDateController.text = DateFormat('dd/MM/yyyy').format(picked);
-          isInvoiceDateValid = true;
+          isInvoiceDateValid = false;
+          invoiceDateController.text = formattedDate;
+          invoiceDate = invoiceDateController.text;
         });
       }
     }
   }
 
   Future<void> _selectReceiveDate(BuildContext context) async {
-    DateTime initialDate = DateTime.now();
-    if (invoiceDate.isNotEmpty) {
-      try {
-        initialDate = apiFormat.parse(invoiceDate);
-      } catch (e) {
-        print('Error parsing date: $e');
-      }
-    }
-
-    final DateTime? picked = await showDatePicker(
+    DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: initialDate,
+      initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
       initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
-    if (picked != null) {
+
+    if (pickedDate != null) {
+      String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
       if (mounted) {
         setState(() {
-          receiveDate = apiFormat.format(picked);
-          receiveDateController.text = DateFormat('dd/MM/yyyy').format(picked);
-          isDateValid = true;
+          isDateValid = false;
+          receiveDateController.text = formattedDate;
+          receiveDate = receiveDateController.text;
         });
       }
     }
@@ -647,16 +635,21 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                         style: AppStyles.CancelbuttonTextStyle()),
                   ),
                   const Spacer(),
-                  ElevatedButton(
-                    style: AppStyles.NextButtonStyle(),
+                  ElevatedButtonStyle.nextpage(
                     onPressed: _isButtonDisabled
                         ? null // Disable the button when it is pressed
                         : () async {
-                            if (isDateValid == false ||
-                                isInvoiceDateValid == false) {
+                            if (invoiceDateController.text.isEmpty ||
+                                isInvoiceDateInvalidNotifier.value) {
+                              isInvoiceDateInvalidNotifier.value = true;
                               return;
                             }
 
+                            if (receiveDateController.text.isEmpty ||
+                                isReceiveDateInvalidNotifier.value) {
+                              isReceiveDateInvalidNotifier.value = true;
+                              return;
+                            }
                             setState(() {
                               _isButtonDisabled = true;
                             });
@@ -671,11 +664,6 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                               });
                             }
                           },
-                    child: Image.asset(
-                      'assets/images/right.png',
-                      width: 20,
-                      height: 20,
-                    ),
                   )
                 ],
               ),
@@ -703,6 +691,14 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
               color: Colors.black87,
             ),
             controller: poNoController,
+            onChanged: (value) => {
+              setState(() {
+                poNo = value;
+                if (poNo != poNoController) {
+                  checkUpdateData = true;
+                }
+              }),
+            },
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.grey[300],
@@ -749,10 +745,14 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                         final poTypeCode = '${item['po_type_code'] ?? ''}';
                         Navigator.of(context).pop();
                         setState(() {
+                          String poType = poTypeCodeController.text;
                           selectedPoType = poTypeCode;
                           print(selectedPoType);
                           poTypeCodeController.text = selectedPoType ?? '';
                           print(poTypeCodeController.text);
+                          if (selectedPoType != poType) {
+                            checkUpdateData = true;
+                          }
                         });
                       },
                     );
@@ -781,350 +781,106 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                       color: Color.fromARGB(255, 113, 113, 113),
                     ),
                   ),
-                  controller: poTypeCodeController.text.isNotEmpty
-                  ? poTypeCodeController
-                  :TextEditingController(
-                                              text: selectedPoType),
+                  controller: poTypeCodeController,
+                  onChanged: (value) => {
+                    setState(() {
+                      poTypeCode = value;
+                      if (poTypeCode != poTypeCodeController) {
+                        checkUpdateData = true;
+                      }
+                    }),
+                  },
                 ),
               ),
             ),
           ),
           const SizedBox(height: 8.0),
-          TextFormField(
+          CustomTextFormField(
             controller: receiveDateController,
-            decoration: InputDecoration(
-              label: RichText(
-                text: TextSpan(
-                  text: 'วันที่ตรวจรับ', // ชื่อ label
-                  style: isDateValid == false
-                      ? const TextStyle(color: Colors.red)
-                      : const TextStyle(color: Colors.black87),
-                  children: [
-                    TextSpan(
-                      text: ' *', // เพิ่มเครื่องหมาย *
-                      style: TextStyle(
-                        color: Colors.red, // สีแดงสำหรับ *
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              filled: true,
-              fillColor: Colors.white,
-              hintText: 'DD/MM/YYYY',
-              border: InputBorder.none,
-              labelStyle: TextStyle(color: Colors.black),
-              hintStyle: TextStyle(color: Colors.grey),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.calendar_today, color: Colors.black),
-                onPressed: () => _selectReceiveDate(context),
-              ),
-            ),
-            style: TextStyle(color: Colors.black),
-            readOnly: false,
-            onChanged: (value) {
-              setState(() {
-                checkUpdateData = true;
-              });
-
-              // Get current cursor position and text
-              final cursorPosition = receiveDateController.selection.start;
-              final text = value.replaceAll('/', '');
-
-              // Handle backspace/delete
-              if (value.length < receiveDateController.text.length) {
-                String newText = receiveDateController.text.replaceAll('/', '');
-                if (cursorPosition > 0) {
-                  newText = newText.substring(0, cursorPosition - 1) +
-                      newText.substring(cursorPosition);
-                }
-
-                // Format the date with slashes
-                String formattedText = '';
-                for (int i = 0; i < newText.length; i++) {
-                  if (i == 2 || i == 4) formattedText += '/';
-                  formattedText += newText[i];
-                }
-
-                // Calculate new cursor position
-                int newPosition = cursorPosition - 1;
-                if (newPosition > 2) newPosition++;
-                if (newPosition > 5) newPosition++;
-                if (newPosition > formattedText.length) {
-                  newPosition = formattedText.length;
-                }
-
-                receiveDateController.value = TextEditingValue(
-                  text: formattedText,
-                  selection: TextSelection.collapsed(offset: newPosition),
-                );
-                return;
-              }
-
-              // Format new input
-              String formattedText = '';
-              String numbers = text.replaceAll(RegExp(r'[^\d]'), '');
-
-              if (numbers.length > 8) numbers = numbers.substring(0, 8);
-
-              for (int i = 0; i < numbers.length; i++) {
-                if (i == 2 || i == 4) formattedText += '/';
-                formattedText += numbers[i];
-              }
-
-              // Calculate new cursor position
-              int newPosition = cursorPosition;
-              if (cursorPosition >= 2 && formattedText.length > 2)
-                newPosition++;
-              if (cursorPosition >= 5 && formattedText.length > 5)
-                newPosition++;
-              if (newPosition > formattedText.length) {
-                newPosition = formattedText.length;
-              }
-
-              // Validate date if complete
-              if (numbers.length == 8) {
-                try {
-                  final day = int.parse(numbers.substring(0, 2));
-                  final month = int.parse(numbers.substring(2, 4));
-                  final year = int.parse(numbers.substring(4, 8));
-                  final date = DateTime(year, month, day);
-                  setState(() {
-                    isDateValid = date.year == year &&
-                        date.month == month &&
-                        date.day == day;
-                  });
-                } catch (e) {
-                  setState(() {
-                    isDateValid = false;
-                  });
-                }
-              } else {
-                setState(() {
-                  isDateValid = false;
-                });
-              }
-
-              // Update text field
-              receiveDateController.value = TextEditingValue(
-                text: formattedText,
-                selection: TextSelection.collapsed(offset: newPosition),
-              );
-            },
+            labelText: 'วันที่ตรวจรับ',
             keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(8),
-            ],
+            showAsterisk: true,
+            onChanged: (value) {
+              receiveDate = value;
+              print('วันที่ที่กรอก: $receiveDate');
+              if (receiveDate != _selectReceiveDate) {
+                checkUpdateData = true;
+              }
+            },
+            isDateInvalidNotifier: isReceiveDateInvalidNotifier,
           ),
-          isDateValid == false
-              ? const Padding(
-                  padding: EdgeInsets.only(top: 4.0),
-                  child: Text(
-                    'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                )
-              : const SizedBox.shrink(),
           const SizedBox(height: 8.0),
           Row(
             children: [
               Expanded(
                 child: TextFormField(
-                    controller: invoiceNoController,
-                    decoration: InputDecoration(
-                      label: Row(
-                        children: [
-                          const Text(
-                            'เลขที่ใบแจ้งหนี้',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          const SizedBox(width: 2), // Add a small space
-                          Text(
-                            '*',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        ],
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: InputBorder.none,
-                      hintStyle: TextStyle(
-                        color: Colors.white70,
-                      ),
-                    ),
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'กรุณากรอกเลขที่ใบแจ้งหนี้';
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      setState(() {
+                  controller: invoiceNoController,
+                  onChanged: (value) => {
+                    setState(() {
+                      invoiceNo = value;
+                      if (invoiceNo != invoiceNoController) {
                         checkUpdateData = true;
-                      });
-                      print('=======================');
-                      print(checkUpdateData);
+                      }
                     }),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8.0),
-          TextFormField(
-            controller: invoiceDateController,
-            decoration: InputDecoration(
-              label: RichText(
-                text: TextSpan(
-                  text: 'วันที่ใบแจ้งหนี้', // ชื่อ label
-                  style: isInvoiceDateValid == false
-                      ? const TextStyle(color: Colors.red)
-                      : const TextStyle(color: Colors.black87),
-                  children: [
-                    TextSpan(
-                      text: ' *', // เพิ่มเครื่องหมาย *
-                      style: TextStyle(
-                        color: Colors.red, // สีแดงสำหรับ *
-                      ),
+                  },
+                  decoration: InputDecoration(
+                    label: Row(
+                      children: [
+                        const Text(
+                          'เลขที่ใบแจ้งหนี้',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        const SizedBox(width: 2), // Add a small space
+                        Text(
+                          '*',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              filled: true,
-              fillColor: Colors.white,
-              hintText: 'DD/MM/YYYY',
-              border: InputBorder.none,
-              labelStyle: TextStyle(color: Colors.black),
-              hintStyle: TextStyle(color: Colors.grey),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.calendar_today, color: Colors.black),
-                onPressed: () => _selectInvoiceDate(context),
-              ),
-            ),
-            style: TextStyle(color: Colors.black),
-            readOnly: false,
-            onChanged: (value) {
-              setState(() {
-                checkUpdateData = true;
-              });
-
-              // Get current cursor position and text
-              final cursorPosition = invoiceDateController.selection.start;
-              final text = value.replaceAll('/', '');
-
-              // Handle backspace/delete
-              if (value.length < invoiceDateController.text.length) {
-                String newText = invoiceDateController.text.replaceAll('/', '');
-                if (cursorPosition > 0) {
-                  newText = newText.substring(0, cursorPosition - 1) +
-                      newText.substring(cursorPosition);
-                }
-
-                // Format the date with slashes
-                String formattedText = '';
-                for (int i = 0; i < newText.length; i++) {
-                  if (i == 2 || i == 4) formattedText += '/';
-                  formattedText += newText[i];
-                }
-
-                // Calculate new cursor position
-                int newPosition = cursorPosition - 1;
-                if (newPosition > 2) newPosition++;
-                if (newPosition > 5) newPosition++;
-                if (newPosition > formattedText.length) {
-                  newPosition = formattedText.length;
-                }
-
-                invoiceDateController.value = TextEditingValue(
-                  text: formattedText,
-                  selection: TextSelection.collapsed(offset: newPosition),
-                );
-                return;
-              }
-
-              // Format new input
-              String formattedText = '';
-              String numbers = text.replaceAll(RegExp(r'[^\d]'), '');
-
-              if (numbers.length > 8) numbers = numbers.substring(0, 8);
-
-              for (int i = 0; i < numbers.length; i++) {
-                if (i == 2 || i == 4) formattedText += '/';
-                formattedText += numbers[i];
-              }
-
-              // Calculate new cursor position
-              int newPosition = cursorPosition;
-              if (cursorPosition >= 2 && formattedText.length > 2)
-                newPosition++;
-              if (cursorPosition >= 5 && formattedText.length > 5)
-                newPosition++;
-              if (newPosition > formattedText.length) {
-                newPosition = formattedText.length;
-              }
-
-              // Validate date if complete
-              if (numbers.length == 8) {
-                try {
-                  final day = int.parse(numbers.substring(0, 2));
-                  final month = int.parse(numbers.substring(2, 4));
-                  final year = int.parse(numbers.substring(4, 8));
-                  final date = DateTime(year, month, day);
-                  setState(() {
-                    isInvoiceDateValid = date.year == year &&
-                        date.month == month &&
-                        date.day == day;
-                  });
-                } catch (e) {
-                  setState(() {
-                    isInvoiceDateValid = false;
-                  });
-                }
-              } else {
-                setState(() {
-                  isInvoiceDateValid = false;
-                });
-              }
-
-              // Update text field
-              invoiceDateController.value = TextEditingValue(
-                text: formattedText,
-                selection: TextSelection.collapsed(offset: newPosition),
-              );
-            },
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(8),
-            ],
-          ),
-          isInvoiceDateValid == false
-              ? const Padding(
-                  padding: EdgeInsets.only(top: 4.0),
-                  child: Text(
-                    'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: InputBorder.none,
+                    hintStyle: TextStyle(
+                      color: Colors.white70,
                     ),
                   ),
-                )
-              : const SizedBox.shrink(),
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'กรุณากรอกเลขที่ใบแจ้งหนี้';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8.0),
+          CustomTextFormField(
+            controller: invoiceDateController,
+            labelText: 'วันที่ใบแจ้งหนี้',
+            keyboardType: TextInputType.number,
+            showAsterisk: true,
+            onChanged: (value) {
+              invoiceDate = value;
+              print('วันที่ที่กรอก: $invoiceDate');
+              if (invoiceDate != _selectInvoiceDate) {
+                checkUpdateData = true;
+              }
+            },
+            isDateInvalidNotifier: isInvoiceDateInvalidNotifier,
+          ),
           const SizedBox(height: 8.0),
           TextFormField(
             onChanged: (value) {
               setState(() {
-                checkUpdateData = true;
+                poRemark = value;
+                if (poRemark != poRemarkController) {
+                  checkUpdateData = true;
+                }
               });
-              print('=======================');
-              print(checkUpdateData);
             },
             controller: poRemarkController,
             decoration: InputDecoration(
@@ -1248,7 +1004,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                   labelText: 'เลขที่ใบรับคลัง',
                   labelStyle: const TextStyle(
                     color: Colors.black87,
-                  ),// Prevents the label from shrinking
+                  ), // Prevents the label from shrinking
                   border: InputBorder.none,
                 ),
                 readOnly: true, // To keep it read-only

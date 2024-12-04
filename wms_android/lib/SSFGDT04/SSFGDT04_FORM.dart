@@ -95,8 +95,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
   // เพิ่ม DateFormat สำหรับฟอร์แมทวันที่
   final DateFormat _dateTimeFormatter = DateFormat('dd/MM/yyyy');
   // Regular expression to validate dd/MM/yyyy format
-  final dateRegExp =
-      RegExp(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$");
+  final ValueNotifier<bool> isDateInvalidNotifier = ValueNotifier<bool>(false);
 
   bool dateColorCheck = false;
   bool monthColorCheck = false;
@@ -463,8 +462,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
       _moDoNoController.text = get_ref_rec[0]['P_MO_DO_NO'] ?? '';
       _oderNoController.text = get_ref_rec[0]['P_ORDER_NO'] ?? '';
       _noteController.text = get_ref_rec[0]['P_NOTE'] ?? '';
-  });
-      }
+    });
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
@@ -688,10 +687,9 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                               ? null // ปิดปุ่มหากวันที่ไม่ถูกต้อง
                               : () async {
                                   if (_docDateController.text.isEmpty ||
-                                      isDateInvalid) {
-                                    setState(() {
-                                      chkDate = true;
-                                    });
+                                      isDateInvalidNotifier.value) {
+                                    isDateInvalidNotifier.value =
+                                        true; // แสดงข้อความแจ้งเตือน
                                     return;
                                   }
 
@@ -700,7 +698,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
 
                                   setState(() {
                                     isNextDisabled = true;
-                                    isNavigating = true; // กำหนดสถานะกำลังนำทาง
+                                    isNavigating = true;
                                   });
 
                                   try {
@@ -821,28 +819,26 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                       headerText: 'ประเภทการรับ',
                                       searchController: _searchController,
                                       data: docTypeItems,
-                                      docString: (item) {
-                                        final typeString =
-                                            item['doc_type'].toString();
-                                        final docString =
-                                            item['doc_desc'].toString();
-                                        return '$typeString $docString';
-                                      },
+                                      docString: (item) =>
+                                          '${item['doc_type']} ${item['doc_desc']}',
                                       titleText: (item) =>
-                                          item['doc_type']?.toString() ??
-                                          'No code',
+                                          '${item['doc_type']}',
                                       subtitleText: (item) =>
-                                          item['doc_desc']?.toString() ??
-                                          'No description',
+                                          '${item['doc_desc'] ?? ''}',
                                       onTap: (item) {
-                                        final doc = item['doc_desc'].toString();
+                                        final doc = '${item['doc_desc']}';
 
                                         Navigator.of(context).pop();
                                         setState(() {
+                                          String docType =
+                                              _docTypeController.text;
                                           selectedDocType = doc;
                                           _docTypeController.text =
-                                              selectedDocType!;
+                                              selectedDocType ?? '';
                                           fetchRefReceiveItems();
+                                          if (selectedDocType != docType) {
+                                            checkUpdateData = true;
+                                          }
                                         });
                                       },
                                     );
@@ -906,73 +902,20 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                TextFormField(
+                                CustomTextFormField(
                                   controller: _docDateController,
+                                  labelText: 'วันที่บันทึก',
                                   keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                    LengthLimitingTextInputFormatter(8),
-                                    dateInputFormatter, // ใช้ตัวจัดรูปแบบวันที่ที่คุณสร้าง
-                                  ],
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    label: RichText(
-                                      text: TextSpan(
-                                        text: 'วันที่บันทึก',
-                                        style: isDateInvalid
-                                            ? const TextStyle(color: Colors.red)
-                                            : const TextStyle(
-                                                color: Colors.black87),
-                                        children: [
-                                          TextSpan(
-                                            text: ' *',
-                                            style: const TextStyle(
-                                                color: Colors.red),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    hintText: 'DD/MM/YYYY',
-                                    hintStyle:
-                                        const TextStyle(color: Colors.grey),
-                                    labelStyle: isDateInvalid
-                                        ? const TextStyle(color: Colors.red)
-                                        : const TextStyle(
-                                            color: Colors.black87),
-                                    suffixIcon: IconButton(
-                                      icon: const Icon(Icons.calendar_today),
-                                      onPressed: () async {
-                                        _selectDate(context);
-                                      },
-                                    ),
-                                  ),
+                                  showAsterisk: true,
                                   onChanged: (value) {
-                                    setState(() {
-                                      docDate = value;
-                                      isDateInvalid = dateInputFormatter
-                                          .noDateNotifier
-                                          .value; // ตรวจสอบจาก formatter
-                                      if (docDate != _docDateController.text) {
-                                        checkUpdateData = true;
-                                      }
-                                    });
+                                    docDate = value;
+                                    print('วันที่ที่กรอก: $docDate');
+                                    if (docDate != _selectDate) {
+                                      checkUpdateData = true;
+                                    }
                                   },
+                                  isDateInvalidNotifier: isDateInvalidNotifier,
                                 ),
-
-                                isDateInvalid == true
-                                    ? const Padding(
-                                        padding: EdgeInsets.only(top: 4.0),
-                                        child: Text(
-                                          'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12,
-                                          ),
-                                        ))
-                                    : const SizedBox.shrink(),
                               ],
                             ),
                           ),
@@ -1001,9 +944,16 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                         Navigator.of(context)
                                             .pop(); // Close the dialog
                                         setState(() {
+                                          String refReceive =
+                                              _refReceiveController.text;
                                           selectedRefReceive = doc;
                                           _refReceiveController.text =
-                                              selectedRefReceive!;
+                                              selectedRefReceive ?? '';
+                                          fetchRefReceiveItems();
+                                          if (selectedRefReceive !=
+                                              refReceive) {
+                                            checkUpdateData = true;
+                                          }
                                         });
 
                                         // Fetch additional data and make the API call
@@ -1013,15 +963,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                           note,
                                           selectedRefReceive,
                                         );
-
-                                        // Additional logic to handle updates if needed
-                                        setState(() {
-                                          fetchRefReceiveItems(); // Re-fetch items if necessary
-                                          if (selectedRefReceive !=
-                                              _refReceiveController.text) {
-                                            checkUpdateData = true;
-                                          }
-                                        });
                                       },
                                     );
                                   },
@@ -1071,14 +1012,15 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                           '${item['so_date_disp']} ${item['so_remark']}', // Customize subtitle text
                                       onTap: (item) {
                                         // Handle item selection
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
+                                        final soNo = '${item['so_no'] ?? ''}';
+                                        Navigator.of(context).pop();
                                         setState(() {
-                                          selectedRefNo =
-                                              item['so_no'].toString();
-                                          fetchRefNoItems();
-                                          if (selectedRefNo !=
-                                              _refNoController) {
+                                          String refNo = _refNoController.text;
+                                          selectedRefNo = soNo;
+                                          _refNoController.text =
+                                              selectedSaffCode ?? '';
+                                          fetchSaffCodeItems();
+                                          if (selectedRefNo != refNo) {
                                             checkUpdateData = true;
                                           }
                                         });
@@ -1162,12 +1104,13 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                         Navigator.of(context).pop();
 
                                         setState(() {
+                                          String staffCode =
+                                              _staffCodeController.text;
                                           selectedSaffCode = empId;
                                           _staffCodeController.text =
                                               selectedSaffCode ?? '';
                                           fetchSaffCodeItems();
-                                          if (selectedSaffCode !=
-                                              _staffCodeController.text) {
+                                          if (selectedSaffCode != staffCode) {
                                             checkUpdateData = true;
                                           }
                                         });

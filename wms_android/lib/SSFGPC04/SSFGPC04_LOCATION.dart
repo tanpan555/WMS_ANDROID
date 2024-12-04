@@ -5,9 +5,19 @@ import '../styles.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
+import 'SSFGPC04_LOC.dart';
 
 class SSFGPC04_LOCATION extends StatefulWidget {
-  const SSFGPC04_LOCATION({super.key});
+  final String date;
+  final String note;
+  final String docNo;
+  const SSFGPC04_LOCATION({
+    Key? key,
+    // required this.selectedItems,
+    required this.date,
+    required this.note,
+    required this.docNo,
+  }) : super(key: key);
 
   @override
   _SSFGPC04_LOCATIONState createState() => _SSFGPC04_LOCATIONState();
@@ -23,7 +33,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
     if (mounted) {
       setState(() {
         for (var row in filteredLocItems) {
-          row["selected"] = value;
+          row["nb_sel"] = value;
         }
       });
     }
@@ -33,20 +43,17 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
     if (mounted) {
       setState(() {
         for (var row in filteredLocItems) {
-          row["selected"] = false;
+          row["nb_sel"] = false;
         }
       });
     }
   }
 
-  void _navigateBackWithSelectedData() async {
-    List<Map<String, dynamic>> selectedItems =
-        locItems.where((item) => item['selected'] == true).toList();
-    gb.P_WARE_CODE = selectedItems.map((item) => item['ware_code']).join(',');
-    if (mounted) {
-      Navigator.pop(context, selectedItems);
-    }
-  }
+  // void _navigateBackWithSelectedData() async {
+  //   if (mounted) {
+  //     Navigator.pop(context);
+  //   }
+  // }
 
   @override
   void initState() {
@@ -64,15 +71,13 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
         print('Fetched data: $responseData');
-        List<String> selectedWareCodes = gb.P_WARE_CODE.split(',');
 
         if (mounted) {
           setState(() {
             locItems =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? [])
                   ..forEach((row) {
-                    row["selected"] =
-                        selectedWareCodes.contains(row['ware_code']);
+                    row["nb_sel"] = false;
                   });
             filteredLocItems = locItems;
             isLoading = false;
@@ -109,9 +114,8 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
   }
 
   Future<void> fetchCheck(String? loc, String? wareCode) async {
-    final url =
-        '${gb.IP_API}/apex/wms/SSFGPC04/Step_2_PU_INS_TMP_LOC_SEL';
-
+    final url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_2_PU_INS_TMP_LOC_SEL';
+print('post loc : $url');
     final headers = {
       'Content-Type': 'application/json',
     };
@@ -159,6 +163,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
   Future<void> deleteData(String? wareCode) async {
     final String url =
         '${gb.IP_API}/apex/wms/SSFGPC04/Step_2_PU_INS_TMP_LOC_SEL';
+    print('delete loc : $url');
 
     try {
       final response = await http.delete(
@@ -172,6 +177,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
           'WARE_CODE': wareCode,
         }),
       );
+      
 
       if (response.statusCode == 200) {
         // หากการลบสำเร็จ
@@ -203,7 +209,6 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
     return Scaffold(
       appBar:
           CustomAppBar(title: 'เลือกตำแหน่งที่จัดเก็บ', showExitWarning: false),
-      backgroundColor: const Color.fromARGB(255, 17, 0, 56),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -227,7 +232,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
                   onPressed: () {
                     _selectAll(true); // เลือกทั้งหมด (ติ๊กถูกทุกแถว)
                     for (var row in filteredLocItems) {
-                      fetchCheck(row['location_code'],
+                      deleteData(
                           row['ware_code']); // ส่งคำขอ POST สำหรับทุกแถวที่เลือก
                     }
                   },
@@ -245,8 +250,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
                   onPressed: () {
                     _deselectAll(); // ยกเลิกการเลือกทั้งหมด (ติ๊กออกทุกแถว)
                     for (var row in filteredLocItems) {
-                      deleteData(row[
-                          'ware_code']); // ส่งคำขอ DELETE สำหรับทุกแถวที่ติ๊กออก
+                      deleteData(row['ware_code']); // ส่งคำขอ DELETE สำหรับทุกแถวที่ติ๊กออก
                     }
                   },
                   child: const Text(
@@ -268,7 +272,21 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _navigateBackWithSelectedData,
+              // onPressed: _navigateBackWithSelectedData,
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SSFGPC04_LOC(
+                      date: widget.date,
+                          note: widget.note,
+                          docNo: widget.docNo,
+                        ),
+                  ),
+                );
+              },
               child: const Text(
                 'กลับสู่หน้าจอหลัก',
                 style: TextStyle(
@@ -314,23 +332,23 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      row["selected"] =
-                          !(row["selected"] ?? false); // สลับสถานะ
+                      row["nb_sel"] =
+                          !(row["nb_sel"] ?? false); // สลับสถานะ
                     });
 
-                    if (row["selected"]!) {
+                    if (row["nb_sel"]!) {
                       fetchCheck(row['location_code'], row['ware_code']);
                     } else {
-                      deleteData(row['ware_code']);
+                      deleteData( row['ware_code']);
                     }
                   },
                   child: Row(
                     children: [
                       Checkbox(
-                        value: row["selected"] ?? false,
+                        value: row["nb_sel"] ?? false,
                         onChanged: (bool? value) {
                           setState(() {
-                            row["selected"] = value!;
+                            row["nb_sel"] = value!;
                           });
 
                           // ตรวจสอบสถานะของ Checkbox เพื่อเลือกว่าจะเรียก POST หรือ DELETE

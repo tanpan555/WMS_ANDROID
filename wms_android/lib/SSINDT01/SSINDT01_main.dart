@@ -51,7 +51,6 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   List<dynamic> whCodes = [];
   String? selectedwhCode;
 
-  String? _selectedValue;
   String? fixedValue;
 
   int itemsPerPage = 15; // Number of records per page
@@ -60,7 +59,6 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   @override
   void initState() {
     super.initState();
-    _selectedValue = 'ทั้งหมด';
     selectedwhCode = widget.pWareCode;
     selectedApCode = widget.apCode;
     String documentNumber = widget.documentNumber;
@@ -224,7 +222,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
   String? poMessageconform;
 
   Future<void> fetchPoStatusconform(String? receiveNo) async {
-    final String receiveNoParam = receiveNo ?? 'null';
+    // final String receiveNoParam = receiveNo ?? 'null';
     final String apiUrl =
         '${gb.IP_API}/apex/wms/SSINDT01/Step_1_conform_reciveIN_refPO/${receiveNo}/${gb.P_ERP_OU_CODE}/${gb.APP_SESSION}';
 

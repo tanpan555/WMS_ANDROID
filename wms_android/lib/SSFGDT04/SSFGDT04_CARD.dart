@@ -586,7 +586,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
 
                                               // Simulate some action (e.g., navigating or loading data)
                                               Future.delayed(
-                                                  const Duration(seconds: 2),
+                                                  const Duration(seconds: 1),
                                                   () {
                                                 setState(() {
                                                   isNavigating =

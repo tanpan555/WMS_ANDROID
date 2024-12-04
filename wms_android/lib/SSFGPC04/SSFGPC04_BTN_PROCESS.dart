@@ -127,8 +127,8 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     await selectLovStartSubCategory();
     await selectLovEndSubCategory();
 
-    // await selectLovStartBrand();
-    // await selectLovEndBrand();
+    await selectLovStartBrand();
+    await selectLovEndBrand();
 
     await selectLovStartItem();
     await selectLovEndItem();
@@ -190,6 +190,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     try {
       final response = await http
           .get(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_GROUP'));
+      print(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_GROUP'));
 
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
@@ -226,7 +227,8 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
     try {
       final response = await http.get(Uri.parse(
           '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_GROUP_E/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'));
-
+      print(Uri.parse(
+          '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_GROUP_E/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -266,7 +268,9 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           await http.get(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_CAT'
               '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
               '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'));
-
+      print(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_CAT'
+          '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
+          '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -305,7 +309,10 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
           '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
           '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'));
-
+      print(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_CAT_E'
+          '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
+          '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
+          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -345,7 +352,9 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_SUB_CAT'
           '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
           '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'));
-
+      print(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_SUB_CAT'
+          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
+          '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -384,7 +393,10 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
           '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
           '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'));
-
+      print(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_SUB_CAT_E'
+          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
+          '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
+          '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -505,7 +517,16 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           '/${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'null'}'
           '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
           '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'));
-
+      print(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_ITM'
+          '/${gb.BROWSER_LANGUAGE}'
+          '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
+          '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
+          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
+          '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
+          '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'
+          '/${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'null'}'
+          '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
+          '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -551,7 +572,17 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
           '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'
           '/${returnStartItem.isNotEmpty ? returnStartItem : 'null'}'));
-
+      print(Uri.parse('${gb.IP_API}/apex/wms/SSFGPC04/Step_3_ITM_E'
+          '/${gb.BROWSER_LANGUAGE}'
+          '/${returnStartGroup.isNotEmpty ? returnStartGroup : 'null'}'
+          '/${returnEndGroup.isNotEmpty ? returnEndGroup : 'null'}'
+          '/${returnStartCategory.isNotEmpty ? returnStartCategory : 'null'}'
+          '/${returnEndCategory.isNotEmpty ? returnEndCategory : 'null'}'
+          '/${returnStartSubCategory.isNotEmpty ? returnStartSubCategory : 'null'}'
+          '/${returnEndSubCategory.isNotEmpty ? returnEndSubCategory : 'null'}'
+          '/${returnStartBrand.isNotEmpty ? returnStartBrand : 'null'}'
+          '/${returnEndBrand.isNotEmpty ? returnEndBrand : 'null'}'
+          '/${returnStartItem.isNotEmpty ? returnStartItem : 'null'}'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -588,22 +619,22 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   String? v_alt2;
   Future<void> process() async {
     final url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_3_process_new';
-
+    print('process : $url');
     final headers = {
       'Content-Type': 'application/json',
     };
 
     final body = jsonEncode({
-      'P_s_group_code': startGroupController.text,
-      'P_e_group_code': endGroupController.text,
-      'P_s_cat_code': startCategoryController.text,
-      'P_e_cat_code': endCategoryController.text,
-      'P_s_sub_cat_code': startSubCategoryController.text,
-      'P_e_sub_cat_code': endSubCategoryController.text,
-      'P_s_brand_code': startBrandController.text,
-      'P_e_brand_code': endBrandController.text,
-      'P_s_item_code': startItemController.text,
-      'P_e_item_code': endItemController.text,
+      'P_s_group_code': displayStartGroup,
+      'P_e_group_code': displayEndGroup,
+      'P_s_cat_code': displayStartCategory,
+      'P_e_cat_code': displayEndCategory,
+      'P_s_sub_cat_code': displayStartSubCategory,
+      'P_e_sub_cat_code': displayEndSubCategory,
+      'P_s_brand_code': displayStartBrand,
+      'P_e_brand_code': displayEndBrand,
+      'P_s_item_code': displayStartItem,
+      'P_e_item_code': displayEndItem,
       'P_NB_DATE': widget.date,
       'P_NOTE': widget.note,
       'P_EMP_ID': gb.P_EMP_ID,
@@ -640,21 +671,18 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return AlertDialog(
+                  return DialogStyles.messageDialog(
+                    context: context,
                     content: Text(
                         v_alt ?? 'ไม่พบข้อมูลสำหรับการสร้างเอกสารใบตรวจนับ'),
-                    actions: [
-                      TextButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        onPressed: () {
-                          // Navigator.of(context).pop();
-                        },
-                        child: Text('ตกลง'),
-                      ),
-                    ],
+                    onClose: () {
+                      Navigator.of(context).pop(); // ปิด dialog
+                    },
+                    onConfirm: () async {
+                      Navigator.of(context).pop(); // ปิด dialog
+                      // คุณสามารถใส่คำสั่งเพิ่มเติมได้ที่นี่
+                    },
+                    showCloseIcon: false,
                   );
                 },
               );
@@ -662,29 +690,28 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return AlertDialog(
+                  return DialogStyles.messageDialog(
+                    context: context,
                     content: Text(v_alt ?? 'ประมวลผลเสร็จสิ้น เลขที่ใบตรวจนับ'),
-                    actions: [
-                      TextButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
+                    onClose: () {
+                      Navigator.of(context).pop(); // ปิด dialog
+                    },
+                    onConfirm: () async {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              SSFGPC04_MAIN(
+                                v_nb_doc_no: v_nb_doc_no,
+                                note: widget.note),
                         ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  SSFGPC04_MAIN(v_nb_doc_no: v_nb_doc_no),
-                            ),
-                          );
-                        },
-                        child: Text('OK'),
-                      ),
-                    ],
+                      );
+                      // ปิด dialog
+                    },
+                    showCloseIcon: false,
                   );
                 },
               );
@@ -706,24 +733,21 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   }
 
 //----------------------------------------------------------------------------//
+  void checkUpdateDataALL(bool check) {
+    if (mounted) {
+      setState(() {
+        checkUpdateData = check;
+        print('check in checkUpdateDataALL : $check');
+        print('checkUpdateData in checkUpdateDataALL : $checkUpdateData');
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(
-          title: 'ประมวลผลก่อนการตรวจนับ',
-          showExitWarning: returnStartGroup.isEmpty &&
-                  returnEndGroup.isEmpty &&
-                  returnStartCategory.isEmpty &&
-                  returnEndCategory.isEmpty &&
-                  returnStartSubCategory.isEmpty &&
-                  returnEndSubCategory.isEmpty &&
-                  returnStartBrand.isEmpty &&
-                  returnEndBrand.isEmpty &&
-                  returnStartItem.isEmpty &&
-                  returnEndItem.isEmpty
-              ? false
-              : true),
+          title: 'ประมวลผลก่อนการตรวจนับ', showExitWarning: checkUpdateData),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: isLoading
@@ -746,7 +770,11 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                       children: [
                         Expanded(
                           child: TextFormField(
-                            controller: startGroupController,
+                            // controller: startGroupController,
+                            controller: startGroupController.text.isNotEmpty
+                                ? startGroupController
+                                : TextEditingController(
+                                    text: displayStartGroup ?? 'ทั้งหมด'),
                             readOnly: true,
                             onTap: () => showDialogDropdownSearchStartGroup(),
                             minLines: 1,
@@ -771,7 +799,11 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: TextFormField(
-                            controller: endGroupController,
+                            // controller: endGroupController,
+                            controller: endGroupController.text.isNotEmpty
+                                ? endGroupController
+                                : TextEditingController(
+                                    text: displayEndGroup ?? 'ทั้งหมด'),
                             readOnly: true,
                             onTap: () => showDialogDropdownSearchEndGroup(),
                             minLines: 1,
@@ -802,7 +834,11 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                       children: [
                         Expanded(
                           child: TextFormField(
-                            controller: startCategoryController,
+                            // controller: startCategoryController,
+                            controller: startCategoryController.text.isNotEmpty
+                                ? startCategoryController
+                                : TextEditingController(
+                                    text: displayStartCategory ?? 'ทั้งหมด'),
                             readOnly: true,
                             onTap: () =>
                                 showDialogDropdownSearchStartCategory(),
@@ -828,7 +864,11 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: TextFormField(
-                            controller: endCategoryController,
+                            // controller: endCategoryController,
+                            controller: endCategoryController.text.isNotEmpty
+                                ? endCategoryController
+                                : TextEditingController(
+                                    text: displayEndCategory ?? 'ทั้งหมด'),
                             readOnly: true,
                             onTap: () => showDialogDropdownSearchEndCategory(),
                             minLines: 1,
@@ -860,7 +900,12 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                       children: [
                         Expanded(
                           child: TextFormField(
-                            controller: startSubCategoryController,
+                            // controller: startSubCategoryController,
+                            controller: startSubCategoryController
+                                    .text.isNotEmpty
+                                ? startSubCategoryController
+                                : TextEditingController(
+                                    text: displayStartSubCategory ?? 'ทั้งหมด'),
                             readOnly: true,
                             onTap: () =>
                                 showDialogDropdownSearchStartSubCategory(),
@@ -886,7 +931,11 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: TextFormField(
-                            controller: endSubCategoryController,
+                            // controller: endSubCategoryController,
+                            controller: endSubCategoryController.text.isNotEmpty
+                                ? endSubCategoryController
+                                : TextEditingController(
+                                    text: displayEndSubCategory ?? 'ทั้งหมด'),
                             readOnly: true,
                             onTap: () =>
                                 showDialogDropdownSearchEndSubCategory(),
@@ -918,7 +967,11 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                       children: [
                         Expanded(
                           child: TextFormField(
-                            controller: searchStartBrandController,
+                            // controller: startBrandController,
+                            controller: startBrandController.text.isNotEmpty
+                                ? startBrandController
+                                : TextEditingController(
+                                    text: displayStartBrand ?? 'ทั้งหมด'),
                             readOnly: true,
                             onTap: () => showDialogDropdownSearchStartBrand(),
                             minLines: 1,
@@ -943,7 +996,11 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: TextFormField(
-                            controller: searchEndBrandController,
+                            // controller: endBrandController,
+                            controller: endBrandController.text.isNotEmpty
+                                ? endBrandController
+                                : TextEditingController(
+                                    text: displayEndBrand ?? 'ทั้งหมด'),
                             readOnly: true,
                             onTap: () => showDialogDropdownSearchEndBrand(),
                             minLines: 1,
@@ -974,7 +1031,11 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                       children: [
                         Expanded(
                           child: TextFormField(
-                            controller: startItemController,
+                            // controller: startItemController,
+                            controller: startItemController.text.isNotEmpty
+                                ? startItemController
+                                : TextEditingController(
+                                    text: displayStartItem ?? 'ทั้งหมด'),
                             readOnly: true,
                             onTap: () => showDialogDropdownSearchStartItem(),
                             minLines: 1,
@@ -999,7 +1060,12 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: TextFormField(
-                            controller: endItemController,
+                            // controller: endItemController,
+                            controller: endItemController.text.isNotEmpty
+                                ? endItemController
+                                : TextEditingController(
+                                    text: displayEndItem ?? 'ทั้งหมด'),
+
                             readOnly: true,
                             onTap: () => showDialogDropdownSearchEndItem(),
                             minLines: 1,
@@ -1025,7 +1091,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                     ),
 //----------------------------------------------------------------------------//
 // ประมวลผล
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -1067,6 +1133,10 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
 //----------------------------------------------------------------------------//
 // จากกลุ่มสินค้า
   void showDialogDropdownSearchStartGroup() {
+    final List<Map<String, dynamic>> dataStartGroup = [
+      {'group_code': 'ทั้งหมด', 'group_name': ''},
+      ...dataLovStartGroup, // เพิ่มข้อมูลเดิมทั้งหมด
+    ];
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -1075,57 +1145,78 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           context: context,
           headerText: 'จาก กลุ่มสินค้า',
           searchController: searchStartGroupController,
-          data: dataLovStartGroup,
+          data: dataStartGroup,
           docString: (item) =>
               '${item['group_code'] ?? ''} ${item['group_name'] ?? ''}',
           titleText: (item) => '${item['group_code'] ?? ''}',
           subtitleText: (item) => '${item['group_name'] ?? ''}',
           onTap: (item) {
-            final returnCode = '${item['group_code'] ?? ''}';
-            final doc = '${item['group_code'] ?? ''}';
-
+            isLoading = true;
             Navigator.of(context).pop();
             setState(() {
-              returnStartGroup = returnCode;
-              displayStartGroup = doc;
-              startGroupController.text = displayStartGroup.toString();
-              if (returnStartGroup.isNotEmpty) {
+              returnStartGroup = '${item['group_code'] ?? ''}';
+              displayStartGroup = '${item['group_code'] ?? ''}' == 'ทั้งหมด'
+                  ? null
+                  : '${item['group_code'] ?? ''}';
+              startGroupController.text = displayStartGroup ?? 'ทั้งหมด';
+              if (returnStartGroup != 'ทั้งหมด') {
                 selectLovEndGroup();
-                displayEndGroup = '';
+                displayEndGroup = null;
                 returnEndGroup = '';
-                endGroupController.clear();
+                endGroupController.text = '';
+                searchEndGroupController.clear;
                 selectLovStartCategory();
-                displayStartCategory = '';
+                displayStartCategory = null;
                 returnStartCategory = '';
-                startCategoryController.clear();
+                startCategoryController.text = '';
+                searchStartCatController.clear;
                 selectLovEndCategory();
-                displayEndCategory = '';
+                displayEndCategory = null;
                 returnEndCategory = '';
-                endCategoryController.clear();
+                endCategoryController.text = '';
+                searchEndCatController.clear;
                 selectLovStartSubCategory();
-                displayStartSubCategory = '';
+                displayStartSubCategory = null;
                 returnStartSubCategory = '';
-                startSubCategoryController.clear();
+                startSubCategoryController.text = '';
+                searchStartSubCatController.clear;
                 selectLovEndSubCategory();
-                displayEndSubCategory = '';
+                displayEndSubCategory = null;
                 returnEndSubCategory = '';
-                endSubCategoryController.clear();
+                endSubCategoryController.text = '';
+                searchEndSubCatController.clear;
+                selectLovStartBrand();
+                displayStartBrand = null;
+                returnStartBrand = '';
+                startBrandController.text = '';
+                searchStartBrandController.clear;
+                selectLovEndBrand();
+                displayEndBrand = null;
+                returnEndBrand= '';
+                endBrandController.text = '';
+                searchEndBrandController.clear;
                 selectLovStartItem();
-                displayStartItem = '';
+                displayStartItem = null;
                 returnStartItem = '';
-                startItemController.clear();
+                startItemController.text = '';
+                searchStartItemController.clear;
                 selectLovEndItem();
-                displayEndItem = '';
+                displayEndItem = null;
                 returnEndItem = '';
-                endItemController.clear();
+                endItemController.text = '';
+                searchEndItemController.clear;
+                isLoading = false;
               }
               searchStartGroupController.clear();
+              isLoading = false;
             });
+            if (returnStartGroup != 'ทั้งหมด') {
+              checkUpdateDataALL(true);
+            }
 
             // Debug log
             print(
                 'startGroupController New: $startGroupController Type : ${startGroupController.runtimeType}');
-            print('doc New: $doc Type : ${doc.runtimeType}');
             print(
                 'displayStartGroup New: $displayStartGroup Type : ${displayStartGroup.runtimeType}');
             print(
@@ -1139,153 +1230,89 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
 //----------------------------------------------------------------------------//
 // ถึงกลุ่มสินค้า
   void showDialogDropdownSearchEndGroup() {
+    final List<Map<String, dynamic>> dataEndGroup = [
+      {'group_code': 'ทั้งหมด', 'group_name': ''},
+      ...dataLovEndGroup, // เพิ่มข้อมูลเดิมทั้งหมด
+    ];
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'ถึง กลุ่มสินค้า',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            searchEndGroupController.clear();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    // ช่องค้นหา
-                    TextField(
-                      controller: searchEndGroupController,
-                      decoration: const InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final filteredItems = dataLovEndGroup.where((item) {
-                            final docString =
-                                '${item['group_code'] ?? ''} ${item['group_name'] ?? ''}'
-                                    .toLowerCase();
-                            final searchQuery = searchEndGroupController.text
-                                .trim()
-                                .toLowerCase();
-                            return docString.contains(searchQuery);
-                          }).toList();
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'ถึง กลุ่มสินค้า',
+          searchController: searchEndGroupController,
+          data: dataEndGroup,
+          docString: (item) =>
+              '${item['group_code'] ?? ''} ${item['group_name'] ?? ''}', // ฟังก์ชันสำหรับสร้างข้อความที่ใช้กรอง
+          titleText: (item) => '${item['group_code'] ?? ''}',
+          subtitleText: (item) => '${item['group_name'] ?? ''}',
+          onTap: (item) {
+            isLoading = true;
+            Navigator.of(context).pop();
+            setState(() {
+              returnEndGroup = '${item['group_code'] ?? ''}';
+              displayEndGroup = '${item['group_code'] ?? ''}' == 'ทั้งหมด'
+                  ? null
+                  : '${item['group_code'] ?? ''}';
+              endGroupController.text = displayEndGroup ?? 'ทั้งหมด';
 
-                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-                          if (filteredItems.isEmpty) {
-                            return const Center(
-                              child: Text('No data found'),
-                            );
-                          }
-
-                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final doc = '${item['group_code'] ?? ''}';
-                              final returnCode = '${item['group_code'] ?? ''}';
-
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  '${item['group_code'] ?? ''}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text('${item['group_name'] ?? ''}'),
-                                onTap: () {
-                                  isLoading = true;
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    returnEndGroup = returnCode;
-                                    displayEndGroup = doc;
-                                    endGroupController.text =
-                                        displayEndGroup.toString();
-                                    if (returnEndGroup.isNotEmpty) {
-                                      selectLovStartCategory();
-                                      displayStartCategory = '';
-                                      returnStartCategory = '';
-                                      startCategoryController.clear();
-                                      selectLovEndCategory();
-                                      displayEndCategory = '';
-                                      returnEndCategory = '';
-                                      endCategoryController.clear();
-                                      selectLovStartSubCategory();
-                                      displayStartSubCategory = '';
-                                      returnStartSubCategory = '';
-                                      startSubCategoryController.clear();
-                                      selectLovEndSubCategory();
-                                      displayEndSubCategory = '';
-                                      returnEndSubCategory = '';
-                                      endSubCategoryController.clear();
-                                      selectLovStartItem();
-                                      displayStartItem = '';
-                                      returnStartItem = '';
-                                      startItemController.clear();
-                                      selectLovEndItem();
-                                      displayEndItem = '';
-                                      returnEndItem = '';
-                                      endItemController.clear();
-                                      isLoading = false;
-                                    }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
-                                    // -----------------------------------------
-                                    print(
-                                        'endGroupController New: $endGroupController Type : ${endGroupController.runtimeType}');
-                                    print(
-                                        'doc New: $doc Type : ${doc.runtimeType}');
-                                    print(
-                                        'displayEndGroup New: $displayEndGroup Type : ${displayEndGroup.runtimeType}');
-                                    print(
-                                        'returnEndGroup New: $returnEndGroup Type : ${returnEndGroup.runtimeType}');
-                                  });
-                                  searchEndGroupController.clear();
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+              // รีเซ็ตค่าอื่น ๆ ที่เกี่ยวข้อง
+              if (returnEndGroup != 'ทั้งหมด') {
+                selectLovStartCategory();
+                displayStartCategory = null;
+                returnStartCategory = '';
+                startCategoryController.text = '';
+                searchStartCatController.clear();
+                selectLovEndCategory();
+                displayEndCategory = null;
+                returnEndCategory = '';
+                endCategoryController.text = '';
+                searchEndCatController.clear;
+                selectLovStartSubCategory();
+                displayStartSubCategory = null;
+                returnStartSubCategory = '';
+                startSubCategoryController.text = '';
+                searchStartSubCatController.clear;
+                selectLovEndSubCategory();
+                displayEndSubCategory = null;
+                returnEndSubCategory = '';
+                endSubCategoryController.text = '';
+                searchEndSubCatController.clear;
+                selectLovStartBrand();
+                displayStartBrand = null;
+                returnStartBrand = '';
+                startBrandController.text = '';
+                searchStartBrandController.clear;
+                selectLovEndBrand();
+                displayEndBrand = null;
+                returnEndBrand= '';
+                endBrandController.text = '';
+                searchEndBrandController.clear;
+                selectLovStartItem();
+                displayStartItem = null;
+                returnStartItem = '';
+                startItemController.text = '';
+                searchStartItemController.clear;
+                selectLovEndItem();
+                displayEndItem = null;
+                returnEndItem = '';
+                endItemController.text = '';
+                searchEndItemController.clear;
+                isLoading = false;
+              }
+              isLoading = false;
+              print(
+                  'endGroupController New: $endGroupController Type : ${endGroupController.runtimeType}');
+              print(
+                  'displayEndGroup New: $displayEndGroup Type : ${displayEndGroup.runtimeType}');
+              print(
+                  'returnEndGroup New: $returnEndGroup Type : ${returnEndGroup.runtimeType}');
+            });
+            if (returnStartGroup != 'ทั้งหมด') {
+              checkUpdateDataALL(true);
+            }
+          },
         );
       },
     );
@@ -1294,152 +1321,81 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
 //----------------------------------------------------------------------------//
 // จาก Category
   void showDialogDropdownSearchStartCategory() {
+    final List<Map<String, dynamic>> dataStartCategory = [
+      {'category_code': 'ทั้งหมด', 'category_desc': ''},
+      ...dataLovStartCategory, // เพิ่มข้อมูลเดิมทั้งหมด
+    ];
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'จาก Category',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            searchStartCatController.clear();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    // ช่องค้นหา
-                    TextField(
-                      controller: searchStartCatController,
-                      decoration: const InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final filteredItems =
-                              dataLovStartCategory.where((item) {
-                            final docString =
-                                '${item['category_code'] ?? ''} ${item['category_desc'] ?? ''}'
-                                    .toLowerCase();
-                            final searchQuery = searchStartCatController.text
-                                .trim()
-                                .toLowerCase();
-                            return docString.contains(searchQuery);
-                          }).toList();
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'จาก Category',
+          searchController: searchStartCatController,
+          data: dataStartCategory,
+          docString: (item) =>
+              '${item['category_code'] ?? ''} ${item['category_desc'] ?? ''}',
+          titleText: (item) => '${item['category_code'] ?? ''}',
+          subtitleText: (item) => '${item['category_desc'] ?? ''}',
+          onTap: (item) {
+            // final returnCode = '${item['category_code'] ?? ''}';
+            // final doc = '${item['category_code'] ?? ''}';
 
-                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-                          if (filteredItems.isEmpty) {
-                            return const Center(
-                              child: Text('No data found'),
-                            );
-                          }
-
-                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final doc = '${item['category_code'] ?? ''}';
-                              final returnCode =
-                                  '${item['category_code'] ?? ''}';
-
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  '${item['category_code'] ?? ''}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle:
-                                    Text('${item['category_desc'] ?? ''}'),
-                                onTap: () {
-                                  isLoading = true;
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    returnStartCategory = returnCode;
-                                    displayStartCategory = doc;
-                                    startCategoryController.text =
-                                        displayStartCategory.toString();
-                                    if (returnStartCategory.isNotEmpty) {
-                                      selectLovEndCategory();
-                                      displayEndCategory = '';
-                                      returnEndCategory = '';
-                                      endCategoryController.clear();
-                                      selectLovStartSubCategory();
-                                      displayStartSubCategory = '';
-                                      returnStartSubCategory = '';
-                                      startSubCategoryController.clear();
-                                      selectLovEndSubCategory();
-                                      displayEndSubCategory = '';
-                                      returnEndSubCategory = '';
-                                      endSubCategoryController.clear();
-                                      selectLovStartItem();
-                                      displayStartItem = '';
-                                      returnStartItem = '';
-                                      startItemController.clear();
-                                      selectLovEndItem();
-                                      displayEndItem = '';
-                                      returnEndItem = '';
-                                      endItemController.clear();
-                                      isLoading = false;
-                                    }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
-                                    // -----------------------------------------
-                                    print(
-                                        'endGroupController New: $endGroupController Type : ${endGroupController.runtimeType}');
-                                    print(
-                                        'doc New: $doc Type : ${doc.runtimeType}');
-                                    print(
-                                        'displayStartCategory New: $displayStartCategory Type : ${displayStartCategory.runtimeType}');
-                                    print(
-                                        'returnStartCategory New: $returnStartCategory Type : ${returnStartCategory.runtimeType}');
-                                  });
-                                  searchStartCatController.clear();
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+            isLoading = true;
+            Navigator.of(context).pop();
+            setState(() {
+              returnStartCategory = '${item['category_code'] ?? ''}';
+              displayStartCategory =
+                  '${item['category_code'] ?? ''}' == 'ทั้งหมด'
+                      ? null
+                      : '${item['category_code'] ?? ''}';
+              startCategoryController.text = displayStartCategory ?? 'ทั้งหมด';
+              if (returnStartCategory != 'ทั้งหมด') {
+                selectLovEndCategory();
+                displayEndCategory = null;
+                returnEndCategory = '';
+                endCategoryController.text = '';
+                searchEndCatController.clear;
+                selectLovStartSubCategory();
+                displayStartSubCategory = null;
+                returnStartSubCategory = '';
+                startSubCategoryController.text = '';
+                searchStartSubCatController.clear;
+                selectLovEndSubCategory();
+                displayEndSubCategory = null;
+                returnEndSubCategory = '';
+                endSubCategoryController.text = '';
+                searchEndSubCatController.clear;
+                selectLovStartBrand();
+                displayStartBrand = null;
+                returnStartBrand = '';
+                startBrandController.text = '';
+                searchStartBrandController.clear;
+                selectLovEndBrand();
+                displayEndBrand = null;
+                returnEndBrand= '';
+                endBrandController.text = '';
+                searchEndBrandController.clear;
+                selectLovStartItem();
+                displayStartItem = null;
+                returnStartItem = '';
+                startItemController.text = '';
+                searchStartItemController.clear;
+                selectLovEndItem();
+                displayEndItem = null;
+                returnEndItem = '';
+                endItemController.text = '';
+                searchEndItemController.clear;
+                isLoading = false;
+              }
+              isLoading = false;
+            });
+            searchStartCatController.clear();
+            if (returnStartCategory != 'ทั้งหมด') {
+              checkUpdateDataALL(true);
+            }
+          },
         );
       },
     );
@@ -1448,148 +1404,71 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
 //----------------------------------------------------------------------------//
 // ถึง Category
   void showDialogDropdownSearchEndCategory() {
+    final List<Map<String, dynamic>> dataEndCategory = [
+      {'category_code': 'ทั้งหมด', 'category_desc': ''},
+      ...dataLovEndCategory,
+    ];
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'ถึง Category',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            searchEndCatController.clear();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    // ช่องค้นหา
-                    TextField(
-                      controller: searchEndCatController,
-                      decoration: const InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final filteredItems =
-                              dataLovEndCategory.where((item) {
-                            final docString =
-                                '${item['category_code'] ?? ''} ${item['category_desc'] ?? ''}'
-                                    .toLowerCase();
-                            final searchQuery = searchEndCatController.text
-                                .trim()
-                                .toLowerCase();
-                            return docString.contains(searchQuery);
-                          }).toList();
-
-                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-                          if (filteredItems.isEmpty) {
-                            return const Center(
-                              child: Text('No data found'),
-                            );
-                          }
-
-                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final doc = '${item['category_code'] ?? ''}';
-                              final returnCode =
-                                  '${item['category_code'] ?? ''}';
-
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  '${item['category_code'] ?? ''}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle:
-                                    Text('${item['category_desc'] ?? ''}'),
-                                onTap: () {
-                                  isLoading = true;
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    returnEndCategory = returnCode;
-                                    displayEndCategory = doc;
-                                    endCategoryController.text =
-                                        displayEndCategory.toString();
-                                    if (returnEndCategory.isNotEmpty) {
-                                      selectLovStartSubCategory();
-                                      displayStartSubCategory = '';
-                                      returnStartSubCategory = '';
-                                      startSubCategoryController.clear();
-                                      selectLovEndSubCategory();
-                                      displayEndSubCategory = '';
-                                      returnEndSubCategory = '';
-                                      endSubCategoryController.clear();
-                                      selectLovStartItem();
-                                      displayStartItem = '';
-                                      returnStartItem = '';
-                                      startItemController.clear();
-                                      selectLovEndItem();
-                                      displayEndItem = '';
-                                      returnEndItem = '';
-                                      endItemController.clear();
-                                      isLoading = false;
-                                    }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
-                                    // -----------------------------------------
-                                    print(
-                                        'endCategoryController New: $endCategoryController Type : ${endCategoryController.runtimeType}');
-                                    print(
-                                        'doc New: $doc Type : ${doc.runtimeType}');
-                                    print(
-                                        'displayEndCategory New: $displayEndCategory Type : ${displayEndCategory.runtimeType}');
-                                    print(
-                                        'returnEndCategory New: $returnEndCategory Type : ${returnEndCategory.runtimeType}');
-                                  });
-                                  searchEndCatController.clear();
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'ถึง Category',
+          searchController: searchEndCatController,
+          data: dataEndCategory,
+          docString: (item) =>
+              '${item['category_code'] ?? ''} ${item['category_desc'] ?? ''}',
+          titleText: (item) => '${item['category_code'] ?? ''}',
+          subtitleText: (item) => '${item['category_desc'] ?? ''}',
+          onTap: (item) {
+            isLoading = true;
+            Navigator.of(context).pop();
+            setState(() {
+              returnEndCategory = '${item['category_code'] ?? ''}';
+              displayEndCategory = '${item['category_code'] ?? ''}' == 'ทั้งหมด'
+                  ? null
+                  : '${item['category_code'] ?? ''}';
+              endCategoryController.text = displayEndCategory ?? 'ทั้งหมด';
+              if (returnEndCategory != 'ทั้งหมด') {
+                selectLovStartSubCategory();
+                displayStartSubCategory = null;
+                returnStartSubCategory = '';
+                startSubCategoryController.text = '';
+                searchStartSubCatController.clear;
+                selectLovEndSubCategory();
+                displayEndSubCategory = null;
+                returnEndSubCategory = '';
+                endSubCategoryController.text = '';
+                searchEndSubCatController.clear;
+                selectLovStartBrand();
+                displayStartBrand = null;
+                returnStartBrand = '';
+                startBrandController.text = '';
+                searchStartBrandController.clear;
+                selectLovEndBrand();
+                displayEndBrand = null;
+                returnEndBrand= '';
+                endBrandController.text = '';
+                searchEndBrandController.clear;
+                selectLovStartItem();
+                displayStartItem = null;
+                returnStartItem = '';
+                startItemController.text = '';
+                searchStartItemController.clear;
+                selectLovEndItem();
+                displayEndItem = null;
+                returnEndItem = '';
+                endItemController.text = '';
+                searchEndItemController.clear;
+                isLoading = false;
+              }
+            });
+            searchEndCatController.clear();
+            if (returnEndCategory != 'ทั้งหมด') {
+              checkUpdateDataALL(true);
+            }
+          },
         );
       },
     );
@@ -1598,152 +1477,69 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
 //----------------------------------------------------------------------------//
 // จาก Sub Category
   void showDialogDropdownSearchStartSubCategory() {
+    final List<Map<String, dynamic>> dataStartSubCategory = [
+      {'sub_cat_code': 'ทั้งหมด', 'sub_cat_desc': ''},
+      ...dataLovStartSubCategory, // เพิ่มข้อมูลเดิมทั้งหมด
+    ];
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'จาก Sub Category',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            searchStartSubCatController.clear();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    // ช่องค้นหา
-                    TextField(
-                      controller: searchStartSubCatController,
-                      decoration: const InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final filteredItems =
-                              dataLovStartSubCategory.where((item) {
-                            final docString =
-                                '${item['sub_cat_code'] ?? ''} ${item['sub_cat_desc'] ?? ''}'
-                                    .toLowerCase();
-                            final searchQuery = searchStartSubCatController.text
-                                .trim()
-                                .toLowerCase();
-                            return docString.contains(searchQuery);
-                          }).toList();
-
-                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-                          if (filteredItems.isEmpty) {
-                            return const Center(
-                              child: Text('No data found'),
-                            );
-                          }
-
-                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final doc = '${item['sub_cat_code'] ?? ''}';
-                              final returnCode =
-                                  '${item['sub_cat_code'] ?? ''}';
-
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  '${item['sub_cat_code'] ?? ''}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text('${item['sub_cat_desc'] ?? ''}'),
-                                onTap: () {
-                                  isLoading = true;
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    // String dataCheck = returnCode;
-                                    returnStartSubCategory = returnCode;
-                                    displayStartSubCategory = doc;
-                                    startSubCategoryController.text =
-                                        displayStartSubCategory.toString();
-                                    if (returnStartSubCategory.isNotEmpty) {
-                                      // selectLovStartBrand();
-                                      // displayStartBrand = '';
-                                      // returnStartBrand = '';
-                                      // startBrandController.clear();
-                                      // selectLovEndBrand();
-                                      // displayEndBrand = '';
-                                      // returnEndBrand = '';
-                                      // endBrandController.clear();
-                                      selectLovEndSubCategory();
-                                      displayEndSubCategory = '';
-                                      returnEndSubCategory = '';
-                                      endSubCategoryController.clear();
-                                      selectLovStartItem();
-                                      displayStartItem = '';
-                                      returnStartItem = '';
-                                      startItemController.clear();
-                                      selectLovEndItem();
-                                      displayEndItem = '';
-                                      returnEndItem = '';
-                                      endItemController.clear();
-                                      isLoading = false;
-                                    }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
-                                    // -----------------------------------------
-                                    print(
-                                        'startSubCategoryController New: $startSubCategoryController Type : ${startSubCategoryController.runtimeType}');
-                                    print(
-                                        'doc New: $doc Type : ${doc.runtimeType}');
-                                    print(
-                                        'displayStartSubCategory New: $displayStartSubCategory Type : ${displayStartSubCategory.runtimeType}');
-                                    print(
-                                        'returnStartSubCategory New: $returnStartSubCategory Type : ${returnStartSubCategory.runtimeType}');
-                                  });
-                                  searchStartSubCatController.clear();
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'จาก Sub Category',
+          searchController: searchStartSubCatController,
+          data: dataStartSubCategory,
+          docString: (item) =>
+              '${item['sub_cat_code'] ?? ''} ${item['sub_cat_desc'] ?? ''}',
+          titleText: (item) => '${item['sub_cat_code'] ?? ''}',
+          subtitleText: (item) => '${item['sub_cat_desc'] ?? ''}',
+          onTap: (item) {
+            isLoading = true;
+            Navigator.of(context).pop();
+            setState(() {
+              returnStartSubCategory = '${item['sub_cat_code'] ?? ''}';
+              displayStartSubCategory =
+                  '${item['sub_cat_code'] ?? ''}' == 'ทั้งหมด'
+                      ? null
+                      : '${item['sub_cat_code'] ?? ''}';
+              startSubCategoryController.text =
+                  displayStartSubCategory.toString();
+              if (returnStartSubCategory != 'ทั้งหมด') {
+                selectLovEndSubCategory();
+                displayEndSubCategory = null;
+                returnEndSubCategory = '';
+                endSubCategoryController.text = '';
+                searchEndSubCatController.clear;
+                selectLovStartBrand();
+                displayStartBrand = null;
+                returnStartBrand = '';
+                startBrandController.text = '';
+                searchStartBrandController.clear;
+                selectLovEndBrand();
+                displayEndBrand = null;
+                returnEndBrand= '';
+                endBrandController.text = '';
+                searchEndBrandController.clear;
+                selectLovStartItem();
+                displayStartItem = null;
+                returnStartItem = '';
+                startItemController.text = '';
+                searchStartItemController.clear;
+                selectLovEndItem();
+                displayEndItem = null;
+                returnEndItem = '';
+                endItemController.text = '';
+                searchEndItemController.clear;
+                isLoading = false;
+              }
+              isLoading = false;
+            });
+            searchStartSubCatController.clear();
+            if (returnStartSubCategory != 'ทั้งหมด') {
+              checkUpdateDataALL(true);
+            }
+          },
         );
       },
     );
@@ -1752,140 +1548,63 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
 //----------------------------------------------------------------------------//
 // ถึง Sub Category
   void showDialogDropdownSearchEndSubCategory() {
+    final List<Map<String, dynamic>> dataEndSubCategory = [
+      {'sub_cat_code': 'ทั้งหมด', 'sub_cat_desc': ''},
+      ...dataLovEndSubCategory, // เพิ่มข้อมูลเดิมทั้งหมด
+    ];
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'ถึง Sub Category',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            searchEndSubCatController.clear();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    // ช่องค้นหา
-                    TextField(
-                      controller: searchEndSubCatController,
-                      decoration: const InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final filteredItems =
-                              dataLovEndSubCategory.where((item) {
-                            final docString =
-                                '${item['sub_cat_code'] ?? ''} ${item['sub_cat_desc'] ?? ''}'
-                                    .toLowerCase();
-                            final searchQuery = searchEndSubCatController.text
-                                .trim()
-                                .toLowerCase();
-                            return docString.contains(searchQuery);
-                          }).toList();
-
-                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-                          if (filteredItems.isEmpty) {
-                            return const Center(
-                              child: Text('No data found'),
-                            );
-                          }
-
-                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final doc = '${item['sub_cat_code'] ?? ''}';
-                              final returnCode =
-                                  '${item['sub_cat_code'] ?? ''}';
-
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  '${item['sub_cat_code'] ?? ''}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text('${item['sub_cat_desc'] ?? ''}'),
-                                onTap: () {
-                                  isLoading = true;
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    // String dataCheck = returnCode;
-                                    returnEndSubCategory = returnCode;
-                                    displayEndSubCategory = doc;
-                                    endSubCategoryController.text =
-                                        displayEndSubCategory.toString();
-                                    if (returnEndSubCategory.isNotEmpty) {
-                                      // selectLovStartBrand();
-                                      // displayStartBrand = '';
-                                      // returnStartBrand = '';
-                                      // startBrandController.clear();
-                                      selectLovStartItem();
-                                      displayStartItem = '';
-                                      returnStartItem = '';
-                                      startItemController.clear();
-                                      selectLovEndItem();
-                                      displayEndItem = '';
-                                      returnEndItem = '';
-                                      endItemController.clear();
-                                      isLoading = false;
-                                    }
-                                    print(
-                                        'endSubCategoryController New: $endSubCategoryController Type : ${endSubCategoryController.runtimeType}');
-                                    print(
-                                        'doc New: $doc Type : ${doc.runtimeType}');
-                                    print(
-                                        'displayEndSubCategory New: $displayEndSubCategory Type : ${displayEndSubCategory.runtimeType}');
-                                    print(
-                                        'returnEndSubCategory New: $returnEndSubCategory Type : ${returnEndSubCategory.runtimeType}');
-                                  });
-                                  searchEndSubCatController.clear();
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'ถึง Sub Category',
+          searchController: searchEndSubCatController,
+          data: dataEndSubCategory,
+          docString: (item) =>
+              '${item['sub_cat_code'] ?? ''} ${item['sub_cat_desc'] ?? ''}',
+          titleText: (item) => '${item['sub_cat_code'] ?? ''}',
+          subtitleText: (item) => '${item['sub_cat_desc'] ?? ''}',
+          onTap: (item) {
+            isLoading = true;
+            Navigator.of(context).pop();
+            setState(() {
+              returnEndSubCategory = '${item['sub_cat_code'] ?? ''}';
+              displayEndSubCategory =
+                  '${item['sub_cat_code'] ?? ''}' == 'ทั้งหมด'
+                      ? null
+                      : '${item['sub_cat_code'] ?? ''}';
+              endSubCategoryController.text =
+                  displayEndSubCategory ?? 'ทั้งหมด';
+              if (returnEndSubCategory != 'ทั้งหมด') {
+                selectLovStartBrand();
+                displayStartBrand = null;
+                returnStartBrand = '';
+                startBrandController.text = '';
+                searchStartBrandController.clear;
+                selectLovEndBrand();
+                displayEndBrand = null;
+                returnEndBrand= '';
+                endBrandController.text = '';
+                searchEndBrandController.clear;
+                selectLovStartItem();
+                displayStartItem = null;
+                returnStartItem = '';
+                startItemController.text = '';
+                searchStartItemController.clear;
+                selectLovEndItem();
+                displayEndItem = null;
+                returnEndItem = '';
+                endItemController.text = '';
+                searchEndItemController.clear;
+                isLoading = false;
+              }
+            });
+            searchEndSubCatController.clear();
+            if (returnEndSubCategory != 'ทั้งหมด') {
+              checkUpdateDataALL(true);
+            }
+          },
         );
       },
     );
@@ -1894,142 +1613,55 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
 //----------------------------------------------------------------------------//
 // จาก Brand
   void showDialogDropdownSearchStartBrand() {
+    final List<Map<String, dynamic>> dataStartBrand = [
+      {'brand_code': 'ทั้งหมด', 'brand_name': ''},
+      ...dataLovStartBrand, // เพิ่มข้อมูลเดิมทั้งหมด
+    ];
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'จาก Brand',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            searchStartBrandController.clear();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    // ช่องค้นหา
-                    TextField(
-                      controller: searchStartBrandController,
-                      decoration: const InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final filteredItems = dataLovStartBrand.where((item) {
-                            final docString =
-                                '${item['brand_code'] ?? ''} ${item['brand_name'] ?? ''}'
-                                    .toLowerCase();
-                            final searchQuery = searchStartBrandController.text
-                                .trim()
-                                .toLowerCase();
-                            return docString.contains(searchQuery);
-                          }).toList();
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'จาก Brand',
+          searchController: searchStartBrandController,
+          data: dataStartBrand,
+          docString: (item) =>
+              '${item['brand_code'] ?? ''} ${item['brand_name'] ?? ''}',
+          titleText: (item) => '${item['brand_code'] ?? ''}',
+          subtitleText: (item) => '${item['brand_name'] ?? ''}',
+          onTap: (item) {
 
-                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-                          if (filteredItems.isEmpty) {
-                            return const Center(
-                              child: Text('No data found'),
-                            );
-                          }
-
-                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final doc = '${item['brand_code'] ?? ''}';
-                              final returnCode = '${item['brand_code'] ?? ''}';
-
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  '${item['brand_code'] ?? ''}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text('${item['brand_name'] ?? ''}'),
-                                onTap: () {
-                                  isLoading = true;
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    // String dataCheck = returnCode;
-                                    returnStartBrand = returnCode;
-                                    displayStartBrand = doc;
-                                    startBrandController.text =
-                                        displayStartBrand.toString();
-                                    if (returnStartBrand.isNotEmpty) {
-                                      selectLovEndBrand();
-                                      displayEndBrand = '';
-                                      returnEndBrand = '';
-                                      endBrandController.clear();
-                                      selectLovStartItem();
-                                      displayStartItem = '';
-                                      returnStartItem = '';
-                                      startItemController.clear();
-                                      selectLovEndItem();
-                                      displayEndItem = '';
-                                      returnEndItem = '';
-                                      endItemController.clear();
-                                      isLoading = false;
-                                    }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
-                                    // -----------------------------------------
-                                    print(
-                                        'startBrandController New: $startBrandController Type : ${startBrandController.runtimeType}');
-                                    print(
-                                        'doc New: $doc Type : ${doc.runtimeType}');
-                                    print(
-                                        'displayStartBrand New: $displayStartSubCategory Type : ${displayStartSubCategory.runtimeType}');
-                                    print(
-                                        'returnStartBrand New: $returnStartBrand Type : ${returnStartBrand.runtimeType}');
-                                  });
-                                  searchStartBrandController.clear();
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+            isLoading = true;
+            Navigator.of(context).pop();
+            setState(() {
+              returnStartBrand = '${item['brand_code'] ?? ''}';
+              displayStartBrand = '${item['brand_code'] ?? ''}' == 'ทั้งหมด'
+              ? null
+              :'${item['brand_code'] ?? ''}';
+              startBrandController.text = displayStartBrand ?? 'ทั้งหมด';
+              if (returnStartBrand != 'ทั้งหมด') {
+                selectLovEndBrand();
+                displayEndBrand = null;
+                returnEndBrand= '';
+                endBrandController.text = '';
+                searchEndBrandController.clear;
+                selectLovStartItem();
+                displayStartItem = null;
+                returnStartItem = '';
+                startItemController.text = '';
+                searchStartItemController.clear;
+                selectLovEndItem();
+                displayEndItem = null;
+                returnEndItem = '';
+                endItemController.text = '';
+                searchEndItemController.clear;
+                isLoading = false;
+              }
+              isLoading = false;
+            });
+            searchStartBrandController.clear();
+          },
         );
       },
     );
@@ -2038,134 +1670,49 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
 //----------------------------------------------------------------------------//
 // ถึง Brand
   void showDialogDropdownSearchEndBrand() {
+    final List<Map<String, dynamic>> dataEndBrand = [
+      {'brand_code': 'ทั้งหมด', 'brand_name': ''},
+      ...dataLovEndBrand, // เพิ่มข้อมูลเดิมทั้งหมด
+    ];
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'ถึง Brand',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            searchEndBrandController.clear();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    // ช่องค้นหา
-                    TextField(
-                      controller: searchEndBrandController,
-                      decoration: const InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final filteredItems = dataLovEndBrand.where((item) {
-                            final docString =
-                                '${item['brand_code'] ?? ''} ${item['brand_name'] ?? ''}'
-                                    .toLowerCase();
-                            final searchQuery = searchEndBrandController.text
-                                .trim()
-                                .toLowerCase();
-                            return docString.contains(searchQuery);
-                          }).toList();
-
-                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-                          if (filteredItems.isEmpty) {
-                            return const Center(
-                              child: Text('No data found'),
-                            );
-                          }
-
-                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final doc = '${item['brand_code'] ?? ''}';
-                              final returnCode = '${item['brand_code'] ?? ''}';
-
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  '${item['brand_code'] ?? ''}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text('${item['brand_name'] ?? ''}'),
-                                onTap: () {
-                                  isLoading = true;
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    // String dataCheck = returnCode;
-                                    returnEndBrand = returnCode;
-                                    displayEndBrand = doc;
-                                    endBrandController.text =
-                                        displayEndBrand.toString();
-                                    if (returnEndBrand.isNotEmpty) {
-                                      selectLovStartItem();
-                                      displayStartItem = '';
-                                      returnStartItem = '';
-                                      startItemController.clear();
-                                      selectLovEndItem();
-                                      displayEndItem = '';
-                                      returnEndItem = '';
-                                      endItemController.clear();
-                                      isLoading = false;
-                                    }
-                                    print(
-                                        'endBrandController New: $endBrandController Type : ${endBrandController.runtimeType}');
-                                    print(
-                                        'doc New: $doc Type : ${doc.runtimeType}');
-                                    print(
-                                        'displayEndBrand New: $displayEndBrand Type : ${displayEndBrand.runtimeType}');
-                                    print(
-                                        'returnEndBrand New: $returnEndBrand Type : ${returnEndBrand.runtimeType}');
-                                  });
-                                  searchEndBrandController.clear();
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'ถึง Brand',
+          searchController: searchEndBrandController,
+          data: dataEndBrand,
+          docString: (item) =>
+              '${item['brand_code'] ?? ''} ${item['brand_name'] ?? ''}',
+          titleText: (item) => '${item['brand_code'] ?? ''}',
+          subtitleText: (item) => '${item['brand_name'] ?? ''}',
+          onTap: (item) {
+            isLoading = true;
+            Navigator.of(context).pop();
+            setState(() {
+              returnEndBrand = '${item['brand_code'] ?? ''}';
+              displayEndBrand = '${item['brand_code'] ?? ''}' == 'ทั้งหมด'
+              ? null
+              :'${item['brand_code'] ?? ''}';
+              endBrandController.text = displayEndBrand ?? 'ทั้งหมด';
+              if (returnEndBrand != 'ทั้งหมด') {
+                selectLovStartItem();
+                displayStartItem = null;
+                returnStartItem = '';
+                startItemController.text = '';
+                searchStartItemController.clear;
+                selectLovEndItem();
+                displayEndItem = null;
+                returnEndItem = '';
+                endItemController.text = '';
+                searchEndItemController.clear;
+                isLoading = false;
+              }
+              isLoading = false;
+            });
+            searchEndBrandController.clear();
+          },
         );
       },
     );
@@ -2174,134 +1721,47 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
 //----------------------------------------------------------------------------//
 // จาก item
   void showDialogDropdownSearchStartItem() {
+    final List<Map<String, dynamic>> dataStartItem = [
+      {'item_code': 'ทั้งหมด', 'itm_name': ''},
+      ...dataLovStartItem, // เพิ่มข้อมูลเดิมทั้งหมด
+    ];
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'จาก รหัสสินค้า',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            searchStartItemController.clear();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    // ช่องค้นหา
-                    TextField(
-                      controller: searchStartItemController,
-                      decoration: const InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final filteredItems = dataLovStartItem.where((item) {
-                            final docString =
-                                '${item['item_code'] ?? ''} ${item['itm_name'] ?? ''}'
-                                    .toLowerCase();
-                            final searchQuery = searchStartItemController.text
-                                .trim()
-                                .toLowerCase();
-                            return docString.contains(searchQuery);
-                          }).toList();
-
-                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-                          if (filteredItems.isEmpty) {
-                            return const Center(
-                              child: Text('No data found'),
-                            );
-                          }
-
-                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final doc = '${item['item_code'] ?? ''}';
-                              final returnCode = '${item['item_code'] ?? ''}';
-
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  '${item['item_code'] ?? ''}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text('${item['itm_name'] ?? ''}'),
-                                onTap: () {
-                                  isLoading = true;
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    // String dataCheck = returnCode;
-                                    returnStartItem = returnCode;
-                                    displayStartItem = doc;
-                                    startItemController.text =
-                                        displayStartItem.toString();
-                                    if (returnStartItem.isNotEmpty) {
-                                      selectLovEndItem();
-                                      displayEndItem = '';
-                                      returnEndItem = '';
-                                      endItemController.clear();
-                                      isLoading = false;
-                                    }
-                                    // if (dataCheck != '') {
-                                    //   checkUpdateData = true;
-                                    // }
-                                    // -----------------------------------------
-                                    print(
-                                        'startItemController New: $startItemController Type : ${startItemController.runtimeType}');
-                                    print(
-                                        'doc New: $doc Type : ${doc.runtimeType}');
-                                    print(
-                                        'displayEndSubCategory New: $displayEndSubCategory Type : ${displayEndSubCategory.runtimeType}');
-                                    print(
-                                        'returnStartItem New: $returnStartItem Type : ${returnStartItem.runtimeType}');
-                                  });
-                                  searchStartItemController.clear();
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'จาก รหัสสินค้า',
+          searchController: searchStartItemController,
+          data: dataStartItem,
+          docString: (item) =>
+              '${item['item_code'] ?? ''} ${item['itm_name'] ?? ''}',
+          titleText: (item) => '${item['item_code'] ?? ''}',
+          subtitleText: (item) => '${item['itm_name'] ?? ''}',
+          onTap: (item) {
+            isLoading = true;
+            Navigator.of(context).pop();
+            setState(() {
+              returnStartItem = '${item['item_code'] ?? ''}';
+              displayStartItem = '${item['item_code'] ?? ''}' == 'ทั้งหมด'
+                  ? null
+                  : '${item['item_code'] ?? ''}';
+              startItemController.text = displayStartItem ?? 'ทั้งหมด';
+              if (returnStartItem != 'ทั้งหมด') {
+                selectLovEndItem();
+                displayEndItem = null;
+                returnEndItem = '';
+                endItemController.text = '';
+                searchEndItemController.clear;
+                // isLoading = false;
+              }
+              isLoading = false;
+            });
+            searchStartItemController.clear();
+            if (returnStartItem != 'ทั้งหมด') {
+              checkUpdateDataALL(true);
+            }
+          },
         );
       },
     );
@@ -2310,177 +1770,39 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
 //----------------------------------------------------------------------------//
 // ถึง Item
   void showDialogDropdownSearchEndItem() {
+    // เพิ่มตัวเลือก "ทั้งหมด" เข้าไปใน `dataLovEndItem`
+    final List<Map<String, dynamic>> dataEndItem = [
+      {'item_code': 'ทั้งหมด', 'itm_name': ''},
+      ...dataLovEndItem, // เพิ่มข้อมูลเดิมทั้งหมด
+    ];
+
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                height: 300, // ปรับความสูงของ Popup ตามต้องการ
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'ถึง รหัสสินค้า',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            searchEndItemController.clear();
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    // ช่องค้นหา
-                    TextField(
-                      controller: searchEndItemController,
-                      decoration: const InputDecoration(
-                        hintText: 'ค้นหา',
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (query) {
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final filteredItems = dataLovEndItem.where((item) {
-                            final docString =
-                                '${item['item_code'] ?? ''} ${item['itm_name'] ?? ''}'
-                                    .toLowerCase();
-                            final searchQuery = searchEndItemController.text
-                                .trim()
-                                .toLowerCase();
-                            return docString.contains(searchQuery);
-                          }).toList();
-
-                          // แสดงข้อความ No data found หากไม่มีข้อมูลที่ค้นหา
-                          if (filteredItems.isEmpty) {
-                            return const Center(
-                              child: Text('No data found'),
-                            );
-                          }
-
-                          // แสดง ListView เมื่อมีข้อมูลที่กรองได้
-                          return ListView.builder(
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-                              final doc = '${item['item_code'] ?? ''}';
-                              final returnCode = '${item['item_code'] ?? ''}';
-
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(
-                                  '${item['item_code'] ?? ''}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text('${item['itm_name'] ?? ''}'),
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  setState(() {
-                                    // String dataCheck = returnCode;
-                                    returnEndItem = returnCode;
-                                    displayEndItem = doc;
-                                    endItemController.text =
-                                        displayEndItem.toString();
-                                    print(
-                                        'endItemController New: $endItemController Type : ${endItemController.runtimeType}');
-                                    print(
-                                        'doc New: $doc Type : ${doc.runtimeType}');
-                                    print(
-                                        'displayEndItem New: $displayEndItem Type : ${displayEndItem.runtimeType}');
-                                    print(
-                                        'returnEndItem New: $returnEndItem Type : ${returnEndItem.runtimeType}');
-                                  });
-                                  searchEndItemController.clear();
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  void showDialogAlert(
-    BuildContext context,
-    String messageAlert,
-  ) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Row(
-            children: [
-              Icon(
-                Icons.notification_important,
-                color: Colors.red,
-              ),
-              SizedBox(width: 10),
-              Text(
-                'แจ้งเตือน',
-                style: TextStyle(color: Colors.black),
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    messageAlert,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.grey),
-                        ),
-                        child: const Text('ย้อนกลับ'),
-                      ),
-                    ],
-                  )
-                ])),
-          ),
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'ถึง รหัสสินค้า',
+          searchController: searchEndItemController,
+          data: dataEndItem,
+          docString: (item) =>
+              '${item['item_code'] ?? ''} ${item['itm_name'] ?? ''}',
+          titleText: (item) => '${item['item_code'] ?? ''}',
+          subtitleText: (item) => '${item['itm_name'] ?? ''}',
+          onTap: (item) {
+            Navigator.of(context).pop();
+            setState(() {
+              // หากค่า item_code คือ 'ทั้งหมด' จะตั้งค่าเป็น null
+              displayEndItem =
+                  item['item_code'] == 'ทั้งหมด' ? null : item['item_code'];
+              endItemController.text = displayEndItem ??
+                  'ทั้งหมด'; // แสดงข้อความ 'ทั้งหมด' หาก displayEndItem เป็น null
+            });
+            searchEndItemController.clear();
+            if (item['item_code'] != 'ทั้งหมด') {
+              checkUpdateDataALL(true);
+            }
+          },
         );
       },
     );
