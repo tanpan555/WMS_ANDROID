@@ -107,7 +107,8 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
   String returnEndItem = '';
   TextEditingController endItemController = TextEditingController();
   // --------------------------------- Radio Group
-  String selectedRadio = '1';
+  String selectedRadio1 = 'S';
+  String selectedRadio2 = '1';
   // ---------------------------------
   bool isLoading = false;
   bool isFirstLoad = true;
@@ -1288,6 +1289,117 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
                     ),
                     const SizedBox(height: 8),
                     // -----------------------------------------------
+                    Container(
+                      color: Colors.white,
+                      child: Column(
+                        children: <Widget>[
+                          RadioListTile<String>(
+                            title: const Text('แสดงจำนวน'),
+                            value: 'S',
+                            groupValue: selectedRadio1,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedRadio1 = value.toString();
+                                print('selectedRadio1 : $selectedRadio1');
+                              });
+                            },
+                          ),
+                          RadioListTile<String>(
+                            title: const Text('Blank Forms (Blind Count)'),
+                            value: 'B',
+                            groupValue: selectedRadio1,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedRadio1 = value.toString();
+                                print('selectedRadio1 : $selectedRadio1');
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // -----------------------------------------------
+                    Container(
+                      color: Colors.white,
+                      child: Column(
+                        children: <Widget>[
+                          RadioListTile<String>(
+                            title: const Text('คลังสินค้า'),
+                            value: '1',
+                            groupValue: selectedRadio2,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedRadio2 = value.toString();
+                                print('selectedRadio2 : $selectedRadio2');
+                              });
+                            },
+                          ),
+                          RadioListTile<String>(
+                            title: const Text('กลุ่มสินค้า'),
+                            value: '2',
+                            groupValue: selectedRadio2,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedRadio2 = value.toString();
+                                print('selectedRadio2 : $selectedRadio2');
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // -----------------------------------------------
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (returnDocDate.isNotEmpty) {
+                              //
+                            } else {
+                              String message =
+                                  'กรุณาระบุข้อมูล วันที่เตรียมการตรวจนับ';
+                              showDialogAlert(context, message);
+                            }
+                          },
+                          style: AppStyles.ConfirmbuttonStyle(),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'พิมพ์บัตร',
+                                style: AppStyles.ConfirmbuttonTextStyle(),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (returnDocDate.isNotEmpty) {
+                              //
+                            } else {
+                              String message =
+                                  'กรุณาระบุข้อมูล วันที่เตรียมการตรวจนับ';
+                              showDialogAlert(context, message);
+                            }
+                          },
+                          style: AppStyles.ConfirmbuttonStyle(),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'พิมพ์ใบตรวจนับ',
+                                style: AppStyles.ConfirmbuttonTextStyle(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    // -----------------------------------------------
                   ],
                 ),
               ),
@@ -1422,12 +1534,18 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
               returnEndDocNo = '${item['doc_no'] ?? 'null'}';
               displayEndDocNo = '${item['doc_date'] ?? 'ทั้งหมด'}';
               print('doc_date : ${item['doc_date'] ?? ''}');
+              if (displayEndDocNo.toString().isNotEmpty &&
+                  displayEndDocNo != 'ทั้งหมด' &&
+                  displayEndDocNo != 'null') {
+                displayEndDocNoBackup = '${item['doc_date']}';
+              }
               endDocNoController.text = displayEndDocNo.toString();
               if (returnEndDocNo.isNotEmpty) {
                 //
               }
               isLoading = false;
               // -----------------------------------------
+              print('displayEndDocNoBackup : $displayEndDocNoBackup');
             });
             if (returnEndDocNo != 'null') {
               checkUpdateDataALL(true);
@@ -1964,6 +2082,25 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
             } else {
               checkUpdateDataALL(false);
             }
+          },
+        );
+      },
+    );
+  }
+
+  void showDialogAlert(
+    BuildContext context,
+    String messageAlert,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () => Navigator.of(context).pop(),
+          onConfirm: () {
+            Navigator.of(context).pop();
           },
         );
       },

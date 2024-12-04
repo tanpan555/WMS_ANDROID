@@ -2272,9 +2272,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               displayEndWareCode = '${item['ware_code'] ?? ''}' == 'null'
                   ? 'ทั้งหมด'
                   : '${item['ware_code'] ?? ''}';
-              displayEndWareCodeBackup = '${item['ware_code'] ?? ''}' == 'null'
-                  ? 'ทั้งหมด'
-                  : '${item['ware_code'] ?? ''}';
+              if (displayEndWareCode.toString().isNotEmpty &&
+                  displayEndWareCode != 'ทั้งหมด' &&
+                  returnEndWareCode != 'null') {
+                displayEndWareCodeBackup = '${item['ware_code']}';
+              }
               print('ware_code : ${item['ware_code'] ?? ''}');
               endWareCodeController.text = displayEndWareCode.toString();
               if (returnStartLoc.isNotEmpty) {
@@ -2411,9 +2413,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               displayEndLoc = '${item['location_code'] ?? ''}' == 'null'
                   ? 'ทั้งหมด'
                   : '${item['location_code'] ?? ''}';
-              displayEndLocBackup = '${item['location_code'] ?? ''}' == 'null'
-                  ? 'ทั้งหมด'
-                  : '${item['location_code'] ?? ''}';
+              if (displayEndLoc.toString().isNotEmpty &&
+                  displayEndLoc != 'ทั้งหมด' &&
+                  returnEndLoc != 'null') {
+                displayEndLocBackup = '${item['location_code']}';
+              }
               endLocController.text = displayEndLoc.toString();
               // -----------------------------------------
               print(
@@ -2569,9 +2573,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               displayEndGroup = '${item['group_code'] ?? ''}' == 'null'
                   ? 'ทั้งหมด'
                   : '${item['group_code'] ?? ''}';
-              displayEndGroupBackup = '${item['group_code'] ?? ''}' == 'null'
-                  ? 'ทั้งหมด'
-                  : '${item['group_code'] ?? ''}';
+              if (displayEndGroup.toString().isNotEmpty &&
+                  displayEndGroup != 'ทั้งหมด' &&
+                  returnEndGroup != 'null') {
+                displayEndGroupBackup = '${item['group_code']}';
+              }
               endGroupController.text = displayEndGroup.toString();
               if (returnEndGroup.isNotEmpty) {
                 selectLovStartCategory();
@@ -2756,10 +2762,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               displayEndCategory = '${item['category_code'] ?? ''}' == 'null'
                   ? 'ทั้งหมด'
                   : '${item['category_code'] ?? ''}';
-              displayEndCategoryBackup =
-                  '${item['category_code'] ?? ''}' == 'null'
-                      ? 'ทั้งหมด'
-                      : '${item['category_code'] ?? ''}';
+              if (displayEndCategory.toString().isNotEmpty &&
+                  displayEndCategory != 'ทั้งหมด' &&
+                  returnEndCategory != 'null') {
+                displayEndCategoryBackup = '${item['category_code']}';
+              }
               endCategoryController.text = displayEndCategory.toString();
               if (returnEndCategory.isNotEmpty) {
                 selectLovStartSubCategory();
@@ -2924,10 +2931,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               displayEndSubCategory = '${item['sub_cat_code'] ?? ''}' == 'null'
                   ? 'ทั้งหมด'
                   : '${item['sub_cat_code'] ?? ''}';
-              displayEndSubCategoryBackup =
-                  '${item['sub_cat_code'] ?? ''}' == 'null'
-                      ? 'ทั้งหมด'
-                      : '${item['sub_cat_code'] ?? ''}';
+              if (displayEndSubCategory.toString().isNotEmpty &&
+                  displayEndSubCategory != 'ทั้งหมด' &&
+                  returnEndSubCategory != 'null') {
+                displayEndSubCategoryBackup = '${item['sub_cat_code']}';
+              }
               endSubCategoryController.text = displayEndSubCategory.toString();
               if (returnEndSubCategory.isNotEmpty) {
                 selectLovStartItem();
@@ -3061,9 +3069,11 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
               displayEndItem = '${item['item_code'] ?? ''}' == 'null'
                   ? 'ทั้งหมด'
                   : '${item['item_code'] ?? ''}';
-              displayEndItemBackup = '${item['item_code'] ?? ''}' == 'null'
-                  ? 'ทั้งหมด'
-                  : '${item['item_code'] ?? ''}';
+              if (displayEndItem.toString().isNotEmpty &&
+                  displayEndItem != 'ทั้งหมด' &&
+                  returnEndItem != 'null') {
+                displayEndItemBackup = '${item['item_code']}';
+              }
               endItemController.text = displayEndItem.toString();
               // -----------------------------------------
               print(
