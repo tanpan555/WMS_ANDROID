@@ -52,6 +52,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         setState(() {
           widget.controller?.text = formattedDate;
           widget.isDateInvalidNotifier.value = false;
+
+          if (widget.onChanged != null) {
+            widget.onChanged!(formattedDate);
+          }
         });
       }
     }
