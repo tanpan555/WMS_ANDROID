@@ -524,7 +524,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
       'p_mo_do_no': returnStatusLovMoDoNo,
       'p_note': note,
       'p_app_user': globals.APP_USER,
-      'p_cr_date': crDate,
+      'p_cr_date': docDate,
     });
     print('Request body: $body');
     try {
