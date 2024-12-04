@@ -90,7 +90,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
   }
 
   final DateFormat displayFormat = DateFormat("dd/MM/yyyy");
-  final DateFormat apiFormat = DateFormat("MM/dd/yyyy");
+  final DateFormat apiFormat = DateFormat("dd/MM/yyyy");
   final ValueNotifier<bool> isReceiveDateInvalidNotifier =
       ValueNotifier<bool>(false);
   final ValueNotifier<bool> isInvoiceDateInvalidNotifier =
