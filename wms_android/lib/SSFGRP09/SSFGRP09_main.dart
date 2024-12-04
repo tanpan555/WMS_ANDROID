@@ -2191,7 +2191,7 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                           displayStartWareCode.toString();
                     }
                   } else if (returnEndWareCode == 'null' &&
-                      displayEndWareCodeBackup.toString().isNotEmpty) {
+                      displayEndWareCodeBackup.isNotEmpty) {
                     print('case 1');
                     if (displayStartWareCode
                             .toString()
@@ -2203,10 +2203,9 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                       returnEndWareCode = returnStartWareCode;
                       endWareCodeController.text =
                           displayStartWareCode.toString();
-                    } else {
+                    } else if (displayEndWareCodeBackup.isNotEmpty) {
                       print('case 1.2');
                       displayEndWareCode = displayEndWareCodeBackup;
-                      // displayEndWareCodeBackup = displayStartWareCode;
                       returnEndWareCode = returnStartWareCode;
                       endWareCodeController.text =
                           displayEndWareCodeBackup.toString();
@@ -2276,6 +2275,8 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                   displayEndWareCode != 'ทั้งหมด' &&
                   returnEndWareCode != 'null') {
                 displayEndWareCodeBackup = '${item['ware_code']}';
+              } else {
+                displayEndWareCodeBackup = '';
               }
               print('ware_code : ${item['ware_code'] ?? ''}');
               endWareCodeController.text = displayEndWareCode.toString();
