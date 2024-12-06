@@ -639,17 +639,17 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                     onPressed: _isButtonDisabled
                         ? null // Disable the button when it is pressed
                         : () async {
+                            if (receiveDateController.text.isEmpty ||
+                                isReceiveDateInvalidNotifier.value) {
+                              isReceiveDateInvalidNotifier.value = true;
+                              // return;
+                            }
                             if (invoiceDateController.text.isEmpty ||
                                 isInvoiceDateInvalidNotifier.value) {
                               isInvoiceDateInvalidNotifier.value = true;
                               return;
                             }
 
-                            if (receiveDateController.text.isEmpty ||
-                                isReceiveDateInvalidNotifier.value) {
-                              isReceiveDateInvalidNotifier.value = true;
-                              return;
-                            }
                             setState(() {
                               _isButtonDisabled = true;
                             });

@@ -347,11 +347,11 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                                     child: InkWell(
                                       onTap: isNavigating
                                           ? null // Disable tap if navigating
-                                          :() async {
-                                        setState(() {
+                                          : () async {
+                                              setState(() {
                                                 isNavigating =
                                                     true; // Set to true to block further taps
-                                              }); 
+                                              });
                                               Future.delayed(
                                                   const Duration(seconds: 1),
                                                   () {
@@ -359,153 +359,187 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                                                   isNavigating =
                                                       false; // Re-enable tap after some time (e.g., after navigation completes)
                                                 });
-                                              });// Set flag to true when navigation starts
+                                              }); // Set flag to true when navigation starts
 
-                                        if (selectedwhCode == null) {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return DialogStyles
-                                                  .alertMessageDialog(
-                                                context: context,
-                                                content: const Text(
-                                                    'โปรดเลือกคลังสินค้า'),
-                                                onClose: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                onConfirm: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              );
-                                            },
-                                          );
-                                          isNavigating =
-                                              false; // Reset flag when the alert is shown
-                                          return;
-                                        }
-
-                                        final pPoNo = item['po_no'] ?? '';
-                                        final vReceiveNo =
-                                            item['receive_no'] ?? 'null';
-
-                                        await fetchPoStatus(pPoNo, vReceiveNo);
-                                        await fetchPoStatusconform(vReceiveNo);
-
-                                        if (poStatus == '0' && poStep == '2') {
-                                          // Navigate to Form page
-                                          await sendPostRequest(pPoNo,
-                                              vReceiveNo, selectedwhCode ?? '');
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Ssindt01Form(
-                                                poReceiveNo: poReceiveNo ?? '',
-                                                pWareCode: widget.pWareCode,
-                                                pWareName: widget.pWareName,
-                                                p_ou_code: widget.p_ou_code,
-                                              ),
-                                            ),
-                                          );
-                                        } else if (poStatus == '0' &&
-                                            poStep == '4') {
-                                          // Navigate to Grid page
-                                          await sendPostRequest(pPoNo,
-                                              vReceiveNo, selectedwhCode ?? '');
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Ssindt01Grid(
-                                                poReceiveNo: poReceiveNo ?? '',
-                                                poPONO: pPoNo,
-                                                pWareCode: widget.pWareCode,
-                                                pWareName: widget.pWareName,
-                                                p_ou_code: widget.p_ou_code,
-                                              ),
-                                            ),
-                                          );
-                                        } else if (poStatus == '0') {
-                                          // Original flow - Navigate to Form page
-                                          await sendPostRequest(pPoNo,
-                                              vReceiveNo, selectedwhCode ?? '');
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Ssindt01Form(
-                                                poReceiveNo: poReceiveNo ?? '',
-                                                pWareCode: widget.pWareCode,
-                                                pWareName: widget.pWareName,
-                                                p_ou_code: widget.p_ou_code,
-                                              ),
-                                            ),
-                                          );
-                                        } else if (poStatus == '1' &&
-                                            poStep == '9') {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return DialogStyles
-                                                  .alertMessageDialog(
-                                                context: context,
-                                                content: Text(
-                                                    '${poMessage ?? 'No message available'}'),
-                                                onClose: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                onConfirm: () async {
-                                                  Navigator.of(context).pop();
-                                                  if (poStatusconform == '1') {
-                                                    showDialog(
+                                              if (selectedwhCode == null) {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return DialogStyles
+                                                        .alertMessageDialog(
                                                       context: context,
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return DialogStyles
-                                                            .alertMessageDialog(
-                                                          context: context,
-                                                          content: Text(
-                                                              '${poMessageconform ?? 'No message available'}'),
-                                                          onClose: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                          onConfirm: () async {
-                                                            await fetchPoStatusconform(
-                                                                vReceiveNo);
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                        );
+                                                      content: const Text(
+                                                          'โปรดเลือกคลังสินค้า'),
+                                                      onClose: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      onConfirm: () {
+                                                        Navigator.of(context)
+                                                            .pop();
                                                       },
                                                     );
-                                                  }
-                                                },
-                                              );
+                                                  },
+                                                );
+                                                isNavigating =
+                                                    false; // Reset flag when the alert is shown
+                                                return;
+                                              }
+
+                                              final pPoNo = item['po_no'] ?? '';
+                                              final vReceiveNo =
+                                                  item['receive_no'] ?? 'null';
+
+                                              await fetchPoStatus(
+                                                  pPoNo, vReceiveNo);
+                                              await fetchPoStatusconform(
+                                                  vReceiveNo);
+
+                                              if (poStatus == '0' &&
+                                                  poStep == '2') {
+                                                // Navigate to Form page
+                                                await sendPostRequest(
+                                                    pPoNo,
+                                                    vReceiveNo,
+                                                    selectedwhCode ?? '');
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Ssindt01Form(
+                                                      poReceiveNo:
+                                                          poReceiveNo ?? '',
+                                                      pWareCode:
+                                                          widget.pWareCode,
+                                                      pWareName:
+                                                          widget.pWareName,
+                                                      p_ou_code:
+                                                          widget.p_ou_code,
+                                                    ),
+                                                  ),
+                                                );
+                                              } else if (poStatus == '0' &&
+                                                  poStep == '4') {
+                                                // Navigate to Grid page
+                                                await sendPostRequest(
+                                                    pPoNo,
+                                                    vReceiveNo,
+                                                    selectedwhCode ?? '');
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Ssindt01Grid(
+                                                      poReceiveNo:
+                                                          poReceiveNo ?? '',
+                                                      poPONO: pPoNo,
+                                                      pWareCode:
+                                                          widget.pWareCode,
+                                                      pWareName:
+                                                          widget.pWareName,
+                                                      p_ou_code:
+                                                          widget.p_ou_code,
+                                                    ),
+                                                  ),
+                                                );
+                                              } else if (poStatus == '0') {
+                                                // Original flow - Navigate to Form page
+                                                await sendPostRequest(
+                                                    pPoNo,
+                                                    vReceiveNo,
+                                                    selectedwhCode ?? '');
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Ssindt01Form(
+                                                      poReceiveNo:
+                                                          poReceiveNo ?? '',
+                                                      pWareCode:
+                                                          widget.pWareCode,
+                                                      pWareName:
+                                                          widget.pWareName,
+                                                      p_ou_code:
+                                                          widget.p_ou_code,
+                                                    ),
+                                                  ),
+                                                );
+                                              } else if (poStatus == '1' &&
+                                                  poStep == '9') {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return DialogStyles
+                                                        .alertMessageDialog(
+                                                      context: context,
+                                                      content: Text(
+                                                          '${poMessage ?? 'No message available'}'),
+                                                      onClose: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      onConfirm: () async {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        if (poStatusconform ==
+                                                            '1') {
+                                                          showDialog(
+                                                            context: context,
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                              return DialogStyles
+                                                                  .alertMessageDialog(
+                                                                context:
+                                                                    context,
+                                                                content: Text(
+                                                                    '${poMessageconform ?? 'No message available'}'),
+                                                                onClose: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                                onConfirm:
+                                                                    () async {
+                                                                  await fetchPoStatusconform(
+                                                                      vReceiveNo);
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                              );
+                                                            },
+                                                          );
+                                                        }
+                                                      },
+                                                    );
+                                                  },
+                                                );
+                                              } else if (poStatus == '1' &&
+                                                  poStep == '') {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return DialogStyles
+                                                        .alertMessageDialog(
+                                                      context: context,
+                                                      content: Text(
+                                                          '${poMessageconform ?? 'No message available'}'),
+                                                      onClose: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      onConfirm: () async {
+                                                        await fetchPoStatusconform(
+                                                            vReceiveNo);
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    );
+                                                  },
+                                                );
+                                              }
                                             },
-                                          );
-                                        } else if (poStatus == '1' &&
-                                            poStep == '') {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return DialogStyles
-                                                  .alertMessageDialog(
-                                                context: context,
-                                                content: Text(
-                                                    '${poMessageconform ?? 'No message available'}'),
-                                                onClose: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                onConfirm: () async {
-                                                  await fetchPoStatusconform(
-                                                      vReceiveNo);
-                                                  Navigator.of(context).pop();
-                                                },
-                                              );
-                                            },
-                                          );
-                                        }
-                                      },
                                       borderRadius: BorderRadius.circular(15.0),
                                       child: Stack(
                                         children: [
@@ -651,17 +685,21 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,
                                                   children: [
-                                                    Container(
-                                                      
+                                                    Expanded(
+                                                      // เพิ่ม Expanded เพื่อให้ข้อความสามารถขยายเต็มพื้นที่
                                                       child: Text(
-                                                        '${item['po_date'] ?? ''} ${item['po_no'] ?? ''} \n${item['item_stype_desc'] ?? '\n'}'
-                                                        '${item['receive_date'] ?? ''} ${item['receive_no'] ?? ''} ${item['warehouse'] ?? ''}',
+                                                        '${item['po_date'] ?? ''} ${item['po_no'] ?? ''} ${item['item_stype_desc'] ?? ''}'
+                                                        '\n${item['receive_date'] ?? ''} ${item['receive_no'] ?? ''} ${item['warehouse'] ?? ''}',
                                                         style: const TextStyle(
                                                           fontSize: 12,
                                                           color: Colors.black87,
                                                         ),
+                                                        softWrap:
+                                                            true, // อนุญาตให้ข้อความตัดบรรทัด
+                                                        overflow: TextOverflow
+                                                            .visible, // ทำให้ข้อความสามารถมองเห็นได้
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ],
@@ -672,7 +710,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                                     ),
                                   );
                                 } else {
-                                  return getCurrentData().length > 3
+                                  return getCurrentData().length > 0
                                       ? Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -754,7 +792,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                               },
                             ))),
             !isLoading && getCurrentData().length > 0
-                ? getCurrentData().length <= 3
+                ? getCurrentData().length <= 0
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

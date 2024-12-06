@@ -1241,7 +1241,6 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     bool hasNextPage = currentPage < (dataList.length / itemsPerPage).ceil();
     bool hasPrevPage = currentPage > 1;
     return Scaffold(
-      backgroundColor: Color(0xFF17153B),
       appBar: CustomAppBar(title: 'รับจากการสั่งซื้อ', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -1411,10 +1410,10 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
             ),
             const SizedBox(height: 8.0),
             Expanded(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  await sendGetRequestlineWMS();
-                },
+              // child: RefreshIndicator(
+                // onRefresh: () async {
+                //   await sendGetRequestlineWMS();
+                // },
                 child: ListView(
                   children: [
                     Container(
@@ -1712,7 +1711,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                     ),
                   ],
                 ),
-              ),
+              // ),
             )
           ],
         ),
