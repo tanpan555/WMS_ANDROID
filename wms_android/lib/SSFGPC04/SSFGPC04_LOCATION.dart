@@ -33,7 +33,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
     if (mounted) {
       setState(() {
         for (var row in filteredLocItems) {
-          row["nb_sel"] = value;
+          row['nb_sel'] = value;
         }
       });
     }
@@ -43,7 +43,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
     if (mounted) {
       setState(() {
         for (var row in filteredLocItems) {
-          row["nb_sel"] = false;
+          row['nb_sel'] = false;
         }
       });
     }
@@ -77,7 +77,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
             locItems =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? [])
                   ..forEach((row) {
-                    row["nb_sel"] = false;
+                    row['nb_sel'] = (row['nb_sel'] == 'Y') ? true : false;
                   });
             filteredLocItems = locItems;
             isLoading = false;
@@ -332,11 +332,11 @@ print('post loc : $url');
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      row["nb_sel"] =
-                          !(row["nb_sel"] ?? false); // สลับสถานะ
+                      row['nb_sel'] =
+                          !(row['nb_sel'] ?? false); // สลับสถานะ
                     });
 
-                    if (row["nb_sel"]!) {
+                    if (row['nb_sel']!) {
                       fetchCheck(row['location_code'], row['ware_code']);
                     } else {
                       deleteData( row['ware_code']);
@@ -345,10 +345,10 @@ print('post loc : $url');
                   child: Row(
                     children: [
                       Checkbox(
-                        value: row["nb_sel"] ?? false,
+                        value: row['nb_sel'] ?? false,
                         onChanged: (bool? value) {
                           setState(() {
-                            row["nb_sel"] = value!;
+                            row['nb_sel'] = value!;
                           });
 
                           // ตรวจสอบสถานะของ Checkbox เพื่อเลือกว่าจะเรียก POST หรือ DELETE

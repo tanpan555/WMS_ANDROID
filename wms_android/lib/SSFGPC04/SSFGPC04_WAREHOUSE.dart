@@ -73,7 +73,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
             whItems =
                 List<Map<String, dynamic>>.from(responseData['items'] ?? [])
                   ..forEach((row) {
-                    row['nb_sel'] = false;
+                    row['nb_sel'] = (row['nb_sel'] == 'Y') ? true : false;
                   });
             filteredWhItems =
                 whItems; // Initialize filtered list with all items
