@@ -1977,7 +1977,15 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                       child: Column(
                         children: <Widget>[
                           RadioListTile<String>(
-                            title: const Text('แสดงข้อมูลทั้งหมด'),
+                            title: Text(
+                              'แสดงข้อมูลทั้งหมด',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: selectedRadio == '1'
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
+                            ),
                             value: '1',
                             groupValue: selectedRadio,
                             onChanged: (String? value) {
@@ -1989,8 +1997,15 @@ class _SSFGRP09_MAINState extends State<SSFGRP09_MAIN> {
                             },
                           ),
                           RadioListTile<String>(
-                            title:
-                                const Text('แสดงข้อมูลเฉพาะข้อมูลที่มีผลต่าง'),
+                            title: Text(
+                              'แสดงข้อมูลเฉพาะข้อมูลที่มีผลต่าง',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: selectedRadio == '0'
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
+                            ),
                             value: '0',
                             groupValue: selectedRadio,
                             onChanged: (String? value) {
