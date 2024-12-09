@@ -37,6 +37,7 @@ class Ssfgdt12Form extends StatefulWidget {
 class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   //
   List<dynamic> dataForm = [];
+  List<dynamic> dataEMP = [];
 
   String staffCode = '';
   String docDate = '';
@@ -74,10 +75,14 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   String docNoForCheck = '';
   String statuForCHKForCheck = '';
 
+  String displayNBCountStaff = '';
+  String returnNBCountStaff = '';
+
   bool checkUpdateData = false;
   // ------------------------------------\\
 
-  final FocusNode _focusNode = FocusNode();
+  // final FocusNode _focusNode = FocusNode();
+  final TextEditingController searchEMPController = TextEditingController();
   final TextEditingController staffCodeController = TextEditingController();
   final TextEditingController docDateController = TextEditingController();
   final TextEditingController nbStaffNameController = TextEditingController();
@@ -97,18 +102,20 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   void initState() {
     super.initState();
     fetchData();
-    _focusNode.addListener(() {
-      if (!_focusNode.hasFocus) {
-        selectNbCountStaff(
-          nbCountStaff,
-        );
-      }
-    });
+    selectLovEMP();
+    // _focusNode.addListener(() {
+    //   if (!_focusNode.hasFocus) {
+    //     selectNbCountStaff(
+    //       nbCountStaff,
+    //     );
+    //   }
+    // });
   }
 
   @override
   void dispose() {
-    _focusNode.dispose();
+    // _focusNode.dispose();
+    searchEMPController.dispose();
     staffCodeController.dispose();
     docDateController.dispose();
     nbStaffNameController.dispose();
@@ -149,7 +156,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
               nbStaffName = item['nb_staff_name'] ?? '';
               nbStaffCountName = item['nb_staff_count_name'] ?? '';
               countStaff = item['count_staff'] ?? '';
-              nbCountStaff = item['nb_count_staff'] ?? '';
+              displayNBCountStaff = item['nb_count_staff'] ?? '';
               updBy = item['upd_by'] ?? '';
               updDate = item['upd_date'] ?? '';
               remark = item['remark'] ?? '';
@@ -164,7 +171,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
               nbStaffNameController.text = nbStaffName;
               nbStaffCountNameController.text = nbStaffCountName;
               countStaffController.text = countStaff;
-              nbCountStaffController.text = nbCountStaff;
+              nbCountStaffController.text = displayNBCountStaff;
               updByController.text = updBy;
               updDateController.text = updDate;
               remarkController.text = remark;
@@ -189,42 +196,66 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
     }
   }
 
-  Future<void> selectNbCountStaff(String nbStaffCountName) async {
+  Future<void> selectLovEMP() async {
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_2_Select_nbCountStaffName/${globals.P_ERP_OU_CODE}/${widget.docNo}/$nbStaffCountName'));
+          '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_2_SelectLovEMP/${globals.P_ERP_OU_CODE}/${globals.BROWSER_LANGUAGE}'));
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data =
-            jsonDecode(utf8.decode(response.bodyBytes));
-        final List<dynamic> items = data['items'];
-        print(items);
-        if (items.isNotEmpty) {
-          final Map<String, dynamic> item = items[0];
-          //
-
-          //
-          print('Fetched data: $jsonDecode');
-          if (mounted) {
-            setState(() {
-              nbStaffCountName = item['nb_staff_count_name'] ?? '';
-
-              nbStaffCountNameController.text = nbStaffCountName;
-            });
-          }
-        } else {
-          print('No items found.');
+        final responseBody = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(responseBody);
+        print('Fetched data: $jsonDecode');
+        if (mounted) {
+          setState(() {
+            dataEMP =
+                List<Map<String, dynamic>>.from(responseData['items'] ?? []);
+          });
         }
+        print('dataEMP : $dataEMP');
       } else {
-        print(
-            '999999 Failed to load data. Status code: ${response.statusCode}');
-        print(
-            'nbStaffCountName : $nbStaffCountName type : ${nbStaffCountName.runtimeType}');
+        throw Exception('dataEMP Failed to load fetchData');
       }
     } catch (e) {
-      print('Error: $e');
+      print('dataEMP ERROR IN Fetch Data : $e');
     }
   }
+
+  // Future<void> selectNbCountStaff(String nbStaffCountName) async {
+  //   try {
+  //     final response = await http.get(Uri.parse(
+  //         '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_2_Select_nbCountStaffName/${globals.P_ERP_OU_CODE}/${widget.docNo}/$nbStaffCountName'));
+
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> data =
+  //           jsonDecode(utf8.decode(response.bodyBytes));
+  //       final List<dynamic> items = data['items'];
+  //       print(items);
+  //       if (items.isNotEmpty) {
+  //         final Map<String, dynamic> item = items[0];
+  //         //
+
+  //         //
+  //         print('Fetched data: $jsonDecode');
+  //         if (mounted) {
+  //           setState(() {
+  //             nbStaffCountName = item['nb_staff_count_name'] ?? '';
+
+  //             nbStaffCountNameController.text = nbStaffCountName;
+  //           });
+  //         }
+  //       } else {
+  //         print('No items found.');
+  //       }
+  //     } else {
+  //       print(
+  //           '999999 Failed to load data. Status code: ${response.statusCode}');
+  //       print(
+  //           'nbStaffCountName : $nbStaffCountName type : ${nbStaffCountName.runtimeType}');
+  //     }
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
@@ -272,7 +303,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => Ssfgdt12Grid(
-                                  nbCountStaff: nbCountStaff,
+                                  nbCountStaff: returnNBCountStaff,
                                   nbCountDate: nbCountDate,
                                   docNo: docNo,
                                   status: status,
@@ -447,22 +478,20 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                     //////////////////////////////////////////////////////////////////////////////////////
                     TextFormField(
                       controller: nbCountStaffController,
-                      focusNode: _focusNode,
-                      // readOnly: true,
-                      decoration: InputDecoration(
+                      readOnly: true,
+                      onTap: () => showDialogDropdownSearchEMP(),
+                      minLines: 1,
+                      maxLines: 3,
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
                         filled: true,
                         fillColor: Colors.white,
                         labelText: 'ผู้ทำการตรวจนับ',
-                        labelStyle: const TextStyle(
-                          color: Colors.black87,
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 113, 113, 113),
                         ),
                       ),
-                      onChanged: (value) {
-                        setState(() {
-                          nbCountStaff = value;
-                        });
-                      },
                     ),
                     const SizedBox(height: 8),
                     //////////////////////////////////////////////////////////////////////////////////////
@@ -594,6 +623,39 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
           },
           onConfirm: () {
             Navigator.of(context).pop();
+          },
+        );
+      },
+    );
+  }
+
+  void showDialogDropdownSearchEMP() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'ผู้ทำการตรวจนับ',
+          searchController: searchEMPController,
+          data: dataEMP,
+          docString: (item) =>
+              '${item['emp_id'] ?? ''} ${item['emp_name'] ?? '--No Value Set--'}',
+          titleText: (item) => '${item['emp_name'] ?? '--No Value Set--'}',
+          subtitleText: (item) {
+            final empNo = item['emp_id'] ?? '';
+            return empNo.isNotEmpty ? empNo : null;
+          },
+          onTap: (item) {
+            isLoading = true;
+            Navigator.of(context).pop();
+            setState(() {
+              returnNBCountStaff = '${item['emp_id'] ?? ''}';
+              displayNBCountStaff = '${item['emp_name'] ?? '--No Value Set--'}';
+              nbCountStaffController.text = displayNBCountStaff;
+              isLoading = false;
+              // -----------------------------------------
+            });
           },
         );
       },
