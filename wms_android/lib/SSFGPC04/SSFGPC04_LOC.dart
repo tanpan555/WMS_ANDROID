@@ -227,7 +227,7 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                                   ),
                                 );
                               } else {
-                                return getCurrentData().length > 3
+                                return getCurrentData().length > 4
                                     ? Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -308,7 +308,7 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                           )),
             ),
             !isLoading && getCurrentData().length > 0
-                ? getCurrentData().length <= 3
+                ? getCurrentData().length <= 4
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
