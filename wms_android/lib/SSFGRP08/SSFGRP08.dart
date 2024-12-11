@@ -109,47 +109,6 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
   // --------------------------------- Radio Group
   String selectedRadio1 = 'S';
   String selectedRadio2 = '1';
-  // --------------------------------- PDF Card
-  String p_ou_name = '';
-  //
-  String? P_USER_ID;
-  String? P_OU_CODE;
-  String? P_OU_NAME;
-  String? LIN_ID;
-  String? P_PROGRAM_NAME;
-  String? P_PROGRAM_ID;
-  String? P_DATE;
-  String? P_E_CAT;
-  String? P_E_GRP;
-  String? P_E_ITEM;
-  String? P_E_LOC;
-  String? P_E_LOT;
-  String? P_E_SUB_CAT;
-  String? P_E_WARE;
-  String? P_S_CAT;
-  String? P_S_GRP;
-  String? P_S_ITEM;
-  String? P_S_LOC;
-  String? P_S_LOT;
-  String? P_S_SUB_CAT;
-  String? P_S_WARE;
-  String? LB_COUNT_QTY;
-  String? LB_DIFF_QTY;
-  String? LB_ITEM_CODE_EN;
-  String? LB_ITEM_CODE_TH;
-  String? LB_ITEM_NAME_EN;
-  String? LB_ITEM_NAME_TH;
-  String? LB_REMARK;
-  String? LB_SYS_QTY;
-  String? LH_DATE_EN;
-  String? LH_DATE_TH;
-  String? LH_LOCATION;
-  String? LH_NO;
-  String? LH_TAG_NAME_EN;
-  String? LH_TAG_NAME_TH;
-  String? LT_SIGN1;
-  String? LT_SIGN2;
-  String? LT_SIGN3;
   // ---------------------------------
   bool isLoading = false;
   bool isFirstLoad = true;
@@ -899,7 +858,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     try {
       final response = await http.get(Uri.parse(
           'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_GETPDFCard'
-          '/${p_ou_name.isEmpty ? '888' : p_ou_name}/:${globals.P_ERP_OU_CODE}'
+          '/${globals.P_OU_NAME}/${globals.P_ERP_OU_CODE}'
           '/${globals.BROWSER_LANGUAGE}/${globals.APP_USER}/${globals.P_DS_PDF}'));
 
       print('Response body: ${response.body}');
@@ -910,136 +869,316 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
         print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
         if (mounted) {
           setState(() {
-            LIN_ID = dataPDF['LIN_ID'] ?? '';
-            // V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
-            P_OU_NAME = dataPDF['P_OU_NAME'] ?? '';
-            P_PROGRAM_ID = dataPDF['P_PROGRAM_ID'] ?? '';
-            P_USER_ID = dataPDF['P_USER_ID'] ?? '';
-            P_OU_CODE = dataPDF['P_OU_CODE'] ?? '';
-            // V_SYSDATE = dataPDF['V_SYSDATE'] ?? '';
-
-            LB_COUNT_QTY = dataPDF['LB_COUNT_QTY'] ?? '';
-            LB_DIFF_QTY = dataPDF['LB_DIFF_QTY'] ?? '';
-            LB_ITEM_CODE_EN = dataPDF['LB_ITEM_CODE_EN'] ?? '';
-            LB_ITEM_CODE_TH = dataPDF['LB_ITEM_CODE_TH'] ?? '';
-            LB_ITEM_NAME_EN = dataPDF['LB_ITEM_NAME_EN'] ?? '';
-            LB_ITEM_NAME_TH = dataPDF['LB_ITEM_NAME_TH'] ?? '';
-            LB_REMARK = dataPDF['LB_REMARK'] ?? '';
-            LB_SYS_QTY = dataPDF['LB_SYS_QTY'] ?? '';
-            LH_DATE_EN = dataPDF['LH_DATE_EN'] ?? '';
-            LH_DATE_TH = dataPDF['LH_DATE_TH'] ?? '';
-            LH_LOCATION = dataPDF['LH_LOCATION'] ?? '';
-            LH_NO = dataPDF['LH_NO'] ?? '';
-            LH_TAG_NAME_EN = dataPDF['LH_TAG_NAME_EN'] ?? '';
-            LH_TAG_NAME_TH = dataPDF['LH_TAG_NAME_TH'] ?? '';
-            LT_SIGN1 = dataPDF['LT_SIGN1'] ?? '';
-            LT_SIGN2 = dataPDF['LT_SIGN2'] ?? '';
-            LT_SIGN3 = dataPDF['LT_SIGN3'] ?? '';
+            String? LIN_ID = dataPDF['LIN_ID'] ?? '';
+            String? P_OU_NAME = dataPDF['P_OU_NAME'] ?? '';
+            String? P_PROGRAM_ID = dataPDF['P_PROGRAM_ID'] ?? '';
+            String? P_USER_ID = dataPDF['P_USER_ID'] ?? '';
+            String? P_OU_CODE = dataPDF['P_OU_CODE'] ?? '';
+            String? V_SYSDATE = dataPDF['V_SYSDATE'] ?? '';
+            String? LB_COUNT_QTY = dataPDF['LB_COUNT_QTY'] ?? '';
+            String? LB_DIFF_QTY = dataPDF['LB_DIFF_QTY'] ?? '';
+            String? LB_ITEM_CODE_EN = dataPDF['LB_ITEM_CODE_EN'] ?? '';
+            String? LB_ITEM_CODE_TH = dataPDF['LB_ITEM_CODE_TH'] ?? '';
+            String? LB_ITEM_NAME_EN = dataPDF['LB_ITEM_NAME_EN'] ?? '';
+            String? LB_ITEM_NAME_TH = dataPDF['LB_ITEM_NAME_TH'] ?? '';
+            String? LB_REMARK = dataPDF['LB_REMARK'] ?? '';
+            String? LB_SYS_QTY = dataPDF['LB_SYS_QTY'] ?? '';
+            String? LH_DATE_EN = dataPDF['LH_DATE_EN'] ?? '';
+            String? LH_DATE_TH = dataPDF['LH_DATE_TH'] ?? '';
+            String? LH_LOCATION = dataPDF['LH_LOCATION'] ?? '';
+            String? LH_NO = dataPDF['LH_NO'] ?? '';
+            String? LH_TAG_NAME_EN = dataPDF['LH_TAG_NAME_EN'] ?? '';
+            String? LH_TAG_NAME_TH = dataPDF['LH_TAG_NAME_TH'] ?? '';
+            String? LT_SIGN1 = dataPDF['LT_SIGN1'] ?? '';
+            String? LT_SIGN2 = dataPDF['LT_SIGN2'] ?? '';
+            String? LT_SIGN3 = dataPDF['LT_SIGN3'] ?? '';
 
             isLoading = false;
-            // _launchUrlCard();
+            _launchUrlCard(
+                LIN_ID,
+                P_OU_NAME,
+                P_PROGRAM_ID,
+                P_USER_ID,
+                P_OU_CODE,
+                V_SYSDATE,
+                LB_COUNT_QTY,
+                LB_DIFF_QTY,
+                LB_ITEM_CODE_EN,
+                LB_ITEM_CODE_TH,
+                LB_ITEM_NAME_EN,
+                LB_ITEM_NAME_TH,
+                LB_REMARK,
+                LB_SYS_QTY,
+                LH_DATE_EN,
+                LH_DATE_TH,
+                LH_LOCATION,
+                LH_NO,
+                LH_TAG_NAME_EN,
+                LH_TAG_NAME_TH,
+                LT_SIGN1,
+                LT_SIGN2,
+                LT_SIGN3);
           });
         }
       } else {
-        print('โพสต์ข้อมูลล้มเหลว. รหัสสถานะ: ${response.statusCode}');
+        print(' getPDFCard รหัสสถานะ: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error in submit Data: $e');
+      print('Error in getPDFCard : $e');
     }
   }
 
-  // Future<void> _launchUrlCard() async {
-  //   final uri = Uri.parse('${globals.IP_API}/jri/report?'
-  //       '&_repName=/WMS_SSFGRP08_2'
-  //       '&_repFormat=pdf'
-  //       '&_dataSource=${globals.P_DS_PDF}'
-  //       '&_outFilename=SSFGRP09_$V_SYSDATE.pdf'
-  //       '&_repLocale=en_US'
-  //       '&V_DS_PDF=${globals.P_DS_PDF}'
-  //       '&P_USER_ID=$P_USER_ID'
-  //       '&PROGRAM_ID=$PROGRAM_ID'
-  //       '&PROGRAM_NAME=$PROGRAM_NAME'
-  //       '&P_LIN_ID=$P_LIN_ID'
-  //       '&P_OU_NAME=$P_OU_NAME'
-  //       '&P_OU_CODE=$P_OU_CODE'
-  //       //
-  //       '&P_E_CAT=$returnEndCategory'
-  //       '&P_E_GRP=$returnEndGroup'
-  //       '&P_E_ITEM=$returnEndItem'
-  //       '&P_E_LOC=$returnEndLoc'
-  //       '&P_E_SUB_CAT=$returnEndSubCategory'
-  //       '&P_E_WARE=$returnEndWareCode'
-  //       '&P_F_DOC_NO=$returnLovDocNo'
-  //       '&P_F_P_DATE=$returnLovDate'
-  //       '&P_I_E_WARE=$P_I_E_WARE'
-  //       '&P_I_S_WARE=$P_I_S_WARE'
-  //       '&P_SHOW_MODE=$P_SHOW_MODE'
-  //       '&P_S_CAT=$returnStartCategory'
-  //       '&P_S_GRP=$returnStartGroup'
-  //       '&P_S_ITEM=$returnStartItem'
-  //       '&P_S_LOC=$returnStartLoc'
-  //       '&P_S_SUB_CAT=$returnStartSubCategory'
-  //       '&P_S_WARE=$returnStartWareCode'
-  //       //
-  //       '&P_E_CAT=${returnEndCategory}'
-  //       '&P_E_GRP=${returnEndGroup}'
-  //       '&P_E_ITEM=${returnEndItem}'
-  //       '&P_E_LOC=${returnEndLoc}'
-  //       '&P_E_SUB_CAT=${returnEndSubCategory}'
-  //       '&P_E_WARE=${returnEndWareCode}'
-  //       '&P_F_DOC_NO=$returnLovDocNo'
-  //       '&P_F_P_DATE=$returnLovDate'
-  //       '&P_I_E_WARE=$P_I_E_WARE'
-  //       '&P_I_S_WARE=$P_I_S_WARE'
-  //       '&P_SHOW_MODE=$P_SHOW_MODE'
-  //       '&P_S_CAT=${returnStartCategory}'
-  //       '&P_S_GRP=${returnStartGroup}'
-  //       '&P_S_ITEM=${returnStartItem}'
-  //       '&P_S_LOC=${returnStartLoc}'
-  //       '&P_S_SUB_CAT=$returnStartSubCategory'
-  //       '&P_S_WARE=${returnStartWareCode}'
-  //       //
-  //       '&LH_PROGRAM_ID=$LH_PROGRAM_ID'
-  //       '&LH_WARE=$LH_WARE'
-  //       '&LH_GRP=$LH_GRP'
-  //       '&LH_SUB_CAT=$LH_SUB_CAT'
-  //       '&LH_DOC_NO=$LH_DOC_NO'
-  //       '&LH_LOC=$LH_LOC'
-  //       '&LH_CAT=$LH_CAT'
-  //       '&LH_ITEM=$LH_ITEM'
-  //       '&LH_PREPARE=$LH_PREPARE'
-  //       '&LH_PAGE=$LH_PAGE'
-  //       '&LH_DATE=$LH_DATE'
-  //       //
-  //       '&LB_SEQ=$LB_SEQ'
-  //       '&LB_ITEM=$LB_ITEM'
-  //       '&LB_ITEM_DESC=$LB_ITEM_DESC'
-  //       '&LB_UMS=$LB_UMS'
-  //       '&LB_LOC=$LB_LOC'
-  //       '&LB_LOC1=$LB_LOC1'
-  //       '&LB_WARE=$LB_WARE'
-  //       '&LB_SYS_BAL=$LB_SYS_BAL'
-  //       '&LB_PHY_BAL=$LB_PHY_BAL'
-  //       '&LB_DIFF_BAL=$LB_DIFF_BAL'
-  //       '&LB_IN=$LB_IN'
-  //       '&LB_RE=$LB_RE'
-  //       '&LB_UNIT=$LB_UNIT'
-  //       '&LB_UNIT1=$LB_UNIT1'
-  //       '&LB_RIGHT=$LB_RIGHT'
-  //       '&LB_TOTAL=$LB_TOTAL'
-  //       //
-  //       '&H_WARE=$H_WARE'
-  //       '&H_LOC=$H_LOC'
-  //       '&H_GRP=$H_GRP'
-  //       '&H_CAT=$H_CAT'
-  //       '&H_SEB=$H_SEB'
-  //       '&H_ITEM=$H_ITEM');
+  Future<void> _launchUrlCard(
+    String? LIN_ID,
+    String? P_OU_NAME,
+    String? P_PROGRAM_ID,
+    String? P_USER_ID,
+    String? P_OU_CODE,
+    String? V_SYSDATE,
+    String? LB_COUNT_QTY,
+    String? LB_DIFF_QTY,
+    String? LB_ITEM_CODE_EN,
+    String? LB_ITEM_CODE_TH,
+    String? LB_ITEM_NAME_EN,
+    String? LB_ITEM_NAME_TH,
+    String? LB_REMARK,
+    String? LB_SYS_QTY,
+    String? LH_DATE_EN,
+    String? LH_DATE_TH,
+    String? LH_LOCATION,
+    String? LH_NO,
+    String? LH_TAG_NAME_EN,
+    String? LH_TAG_NAME_TH,
+    String? LT_SIGN1,
+    String? LT_SIGN2,
+    String? LT_SIGN3,
+  ) async {
+    final uri = Uri.parse('${globals.IP_API}/jri/report?'
+        '&_repName=WMS/WMS_SSFGRP08_2'
+        '&_repFormat=pdf'
+        '&_dataSource=${globals.P_DS_PDF}'
+        '&_outFilename=SSFGRP08_2_$V_SYSDATE.pdf'
+        '&_repLocale=en_US'
+        '&P_USER_ID=$P_USER_ID'
+        '&P_OU_CODE=$P_OU_CODE'
+        '&P_OU_NAME=$P_OU_NAME'
+        '&LIN_ID=$LIN_ID'
+        '&P_PROGRAM_NAME=$P_PROGRAM_ID'
+        '&P_PROGRAM_ID=SSFGRP08'
+        '&P_DATE=$returnDocDate'
+        '&P_E_CAT=${returnEndCategory == 'null' ? null : returnEndCategory}'
+        '&P_E_GRP=${returnEndGroup == 'null' ? null : returnEndGroup}'
+        '&P_E_ITEM=${returnEndItem == 'null' ? null : returnEndItem}'
+        '&P_E_LOC=${returnEndLoc == 'null' ? null : returnEndLoc}'
+        '&P_E_LOT=${returnEndDocNo == 'null' ? null : returnEndDocNo}'
+        '&P_E_SUB_CAT=${returnEndSubCategory == 'null' ? null : returnEndSubCategory}'
+        '&P_E_WARE=${returnEndWare == 'null' ? null : returnEndWare}'
+        '&P_S_CAT=${returnStartCategory == 'null' ? null : returnStartCategory}'
+        '&P_S_GRP=${returnStartGroup == 'null' ? null : returnStartGroup}'
+        '&P_S_ITEM=${returnStartItem == 'null' ? null : returnStartItem}'
+        '&P_S_LOC=${returnStartLoc == 'null' ? null : returnStartLoc}'
+        '&P_S_LOT=${returnStartDocNo == 'null' ? null : returnStartDocNo}'
+        '&P_S_SUB_CAT=${returnStartSubCategory == 'null' ? null : returnStartSubCategory}'
+        '&P_S_WARE=${returnStartWare == 'null' ? null : returnStartWare}'
+        '&LB_COUNT_QTY=$LB_COUNT_QTY'
+        '&LB_DIFF_QTY=$LB_DIFF_QTY'
+        '&LB_ITEM_CODE_EN=$LB_ITEM_CODE_EN'
+        '&LB_ITEM_CODE_TH=$LB_ITEM_CODE_TH'
+        '&LB_ITEM_NAME_EN=$LB_ITEM_NAME_EN'
+        '&LB_ITEM_NAME_TH=$LB_ITEM_NAME_TH'
+        '&LB_REMARK=$LB_REMARK'
+        '&LB_SYS_QTY=$LB_SYS_QTY'
+        '&LH_DATE_EN=$LH_DATE_EN'
+        '&LH_DATE_TH=$LH_DATE_TH'
+        '&LH_LOCATION=$LH_LOCATION'
+        '&LH_NO=$LH_NO'
+        '&LH_TAG_NAME_EN=$LH_TAG_NAME_EN'
+        '&LH_TAG_NAME_TH=$LH_TAG_NAME_TH'
+        '&LT_SIGN1=$LT_SIGN1'
+        '&LT_SIGN2=$LT_SIGN2'
+        '&LT_SIGN3=$LT_SIGN3'
+        //
+        );
 
-  //   print(uri);
-  //   if (!await launchUrl(uri)) {
-  //     throw Exception('Could not launch $uri');
-  //   }
-  // }
+    print(uri);
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch $uri');
+    }
+  }
+
+  Future<void> getPDFSheet() async {
+    isLoading = true;
+    try {
+      final response = await http.get(Uri.parse(
+          'http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_GETPDFSheet'
+          '/${globals.P_DS_PDF}/${globals.P_OU_NAME}'
+          '/${globals.APP_USER}/${globals.BROWSER_LANGUAGE}'
+          '/${globals.P_ERP_OU_CODE}'));
+
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> dataPDF =
+            jsonDecode(utf8.decode(response.bodyBytes));
+        print('dataPDF : $dataPDF type : ${dataPDF.runtimeType}');
+        if (mounted) {
+          setState(() {
+            String? LIN_ID = dataPDF['LIN_ID'] ?? '';
+            String? V_DS_PDF = dataPDF['V_DS_PDF'] ?? '';
+            String? V_SYSDATE = dataPDF['V_SYSDATE'] ?? '';
+            String? P_OU_NAME = dataPDF['P_OU_NAME'] ?? '';
+            String? P_PROGRAM_ID = dataPDF['P_PROGRAM_ID'] ?? '';
+            String? P_USER_ID = dataPDF['P_USER_ID'] ?? '';
+            String? P_OU_CODE = dataPDF['P_OU_CODE'] ?? '';
+            String? P_PROGRAM_NAME = dataPDF['P_PROGRAM_NAME'] ?? '';
+
+            String? LH_DESC = dataPDF['LH_DESC'] ?? '';
+            String? LH_DOC_NO = dataPDF['LH_DOC_NO'] ?? '';
+            String? LH_DOC_DATE = dataPDF['LH_DOC_DATE'] ?? '';
+            String? LB_WARE = dataPDF['LB_WARE'] ?? '';
+            String? LB_SEQ = dataPDF['LB_SEQ'] ?? '';
+            String? LB_ITEM_CODE = dataPDF['LB_ITEM_CODE'] ?? '';
+            String? LB_DETAIL = dataPDF['LB_DETAIL'] ?? '';
+            String? LB_LOC = dataPDF['LB_LOC'] ?? '';
+            String? LB_BAL = dataPDF['LB_BAL'] ?? '';
+            String? LB_UMS = dataPDF['LB_UMS'] ?? '';
+            String? LB_COUNT = dataPDF['LB_COUNT'] ?? '';
+            String? LB_REMARK = dataPDF['LB_REMARK'] ?? '';
+            String? LT_SIGN1 = dataPDF['LT_SIGN1'] ?? '';
+            String? LT_SIGN2 = dataPDF['LT_SIGN2'] ?? '';
+            String? LT_SIGN3 = dataPDF['LT_SIGN3'] ?? '';
+            String? LT_SIGN4 = dataPDF['LT_SIGN4'] ?? '';
+            String? LT_DATE = dataPDF['LT_DATE'] ?? '';
+            String? LT_PAGE = dataPDF['LT_PAGE'] ?? '';
+            String? LT_PAGE1 = dataPDF['LT_PAGE1'] ?? '';
+
+            isLoading = false;
+            _launchUrlSheet(
+                LIN_ID,
+                V_DS_PDF,
+                V_SYSDATE,
+                P_OU_NAME,
+                P_PROGRAM_ID,
+                P_USER_ID,
+                P_OU_CODE,
+                P_PROGRAM_NAME,
+                LH_DESC,
+                LH_DOC_NO,
+                LH_DOC_DATE,
+                LB_WARE,
+                LB_SEQ,
+                LB_ITEM_CODE,
+                LB_DETAIL,
+                LB_LOC,
+                LB_BAL,
+                LB_UMS,
+                LB_COUNT,
+                LB_REMARK,
+                LT_SIGN1,
+                LT_SIGN2,
+                LT_SIGN3,
+                LT_SIGN4,
+                LT_DATE,
+                LT_PAGE,
+                LT_PAGE1
+                //
+                );
+          });
+        }
+      } else {
+        print(' getPDFCard รหัสสถานะ: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error in getPDFCard : $e');
+    }
+  }
+
+  Future<void> _launchUrlSheet(
+      String? LIN_ID,
+      String? V_DS_PDF,
+      String? V_SYSDATE,
+      String? P_OU_NAME,
+      String? P_PROGRAM_ID,
+      String? P_USER_ID,
+      String? P_OU_CODE,
+      String? P_PROGRAM_NAME,
+      String? LH_DESC,
+      String? LH_DOC_NO,
+      String? LH_DOC_DATE,
+      String? LB_WARE,
+      String? LB_SEQ,
+      String? LB_ITEM_CODE,
+      String? LB_DETAIL,
+      String? LB_LOC,
+      String? LB_BAL,
+      String? LB_UMS,
+      String? LB_COUNT,
+      String? LB_REMARK,
+      String? LT_SIGN1,
+      String? LT_SIGN2,
+      String? LT_SIGN3,
+      String? LT_SIGN4,
+      String? LT_DATE,
+      String? LT_PAGE,
+      String? LT_PAGE1) async {
+    final uri = Uri.parse('${globals.IP_API}/jri/report?'
+        '&_repName=WMS/WMS_SSFGRP08_1'
+        '&_repFormat=pdf'
+        '&_dataSource=${globals.P_DS_PDF}'
+        '&_outFilename=SSFGRP08_1_$V_SYSDATE.pdf'
+        '&_repLocale=en_US'
+        //
+        '&P_USER_ID=$P_USER_ID'
+        '&P_OU_CODE=$P_OU_CODE'
+        '&LIN_ID=$LIN_ID'
+        '&P_OU_NAME=$P_OU_NAME'
+        '&P_PROGRAM_NAME=$P_PROGRAM_ID'
+        //
+        '&P_DATE=$returnDocDate'
+        '&P_E_CAT=${returnEndCategory == 'null' ? null : returnEndCategory}'
+        '&P_E_GRP=${returnEndGroup == 'null' ? null : returnEndGroup}'
+        '&P_E_ITEM=${returnEndItem == 'null' ? null : returnEndItem}'
+        '&P_E_LOC=${returnEndLoc == 'null' ? null : returnEndLoc}'
+        '&P_E_LOT=${returnEndDocNo == 'null' ? null : returnEndDocNo}'
+        '&P_E_SUB_CAT=${returnEndSubCategory == 'null' ? null : returnEndSubCategory}'
+        '&P_E_WARE=${returnEndWare == 'null' ? null : returnEndWare}'
+        '&P_S_CAT=${returnStartCategory == 'null' ? null : returnStartCategory}'
+        '&P_S_GRP=${returnStartGroup == 'null' ? null : returnStartGroup}'
+        '&P_S_ITEM=${returnStartItem == 'null' ? null : returnStartItem}'
+        '&P_S_LOC=${returnStartLoc == 'null' ? null : returnStartLoc}'
+        '&P_S_LOT=${returnStartDocNo == 'null' ? null : returnStartDocNo}'
+        '&P_S_SUB_CAT=${returnStartSubCategory == 'null' ? null : returnStartSubCategory}'
+        '&P_S_WARE=${returnStartWare == 'null' ? null : returnStartWare}'
+        '&P_COND=$selectedRadio1'
+        '&P_GROUP=$selectedRadio2'
+        //
+        '&LH_DESC=$LH_DESC'
+        '&LH_DOC_NO=$LH_DOC_NO'
+        '&LH_DOC_DATE=$LH_DOC_DATE'
+        '&LB_WARE=$LB_WARE'
+        '&LB_SEQ=$LB_SEQ'
+        '&LB_ITEM_CODE=$LB_ITEM_CODE'
+        '&LB_DETAIL=$LB_DETAIL'
+        '&LB_LOC=$LB_LOC'
+        '&LB_BAL=$LB_BAL'
+        '&LB_UMS=$LB_UMS'
+        '&LB_COUNT=$LB_COUNT'
+        '&LB_REMARK=$LB_REMARK'
+        '&LT_SIGN1=$LT_SIGN1'
+        '&LT_SIGN2=$LT_SIGN2'
+        '&LT_SIGN3=$LT_SIGN3'
+        '&LT_SIGN4=$LT_SIGN4'
+        '&LT_DATE=$LT_DATE'
+        '&LT_PAGE=$LT_PAGE'
+        '&LT_PAGE1=$LT_PAGE1'
+        //
+        );
+
+    print(uri);
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch $uri');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1606,7 +1745,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
                         ElevatedButton(
                           onPressed: () async {
                             if (returnDocDate.isNotEmpty) {
-                              //
+                              getPDFCard();
                             } else {
                               String message =
                                   'กรุณาระบุข้อมูล วันที่เตรียมการตรวจนับ';
@@ -1627,7 +1766,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
                         ElevatedButton(
                           onPressed: () async {
                             if (returnDocDate.isNotEmpty) {
-                              //
+                              getPDFSheet();
                             } else {
                               String message =
                                   'กรุณาระบุข้อมูล วันที่เตรียมการตรวจนับ';
