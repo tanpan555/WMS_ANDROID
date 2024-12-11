@@ -433,8 +433,8 @@ class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
                                 builder: (BuildContext context) {
                                   return DialogStyles.alertMessageDialog(
                                     context: context,
-                                    content: const Text(
-                                        'การบันทึก และส่งข้อมูลเข้า ERP สมบูรณ์'),
+                                    // content: const Text('การบันทึก และส่งข้อมูลเข้า ERP สมบูรณ์'),
+                                    content: Text('การบันทึก และส่งข้อมูลเข้า ERP สมบูรณ์\n' 'เลชที่เอกสาร: ' '${widget.po_doc_no}'),
                                     onClose: () {
                                       Navigator.of(context).pop();
                                       setState(() {
