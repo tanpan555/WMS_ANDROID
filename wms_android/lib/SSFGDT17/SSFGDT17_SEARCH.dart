@@ -252,7 +252,8 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                           String formattedDate = _selectedDate != null
                               ? DateFormat('dd-MM-yyyy').format(_selectedDate!)
                               : 'null';
-                          String docnum = _documentNumberController.text.replaceAll(' ', '');
+                          String docnum = _documentNumberController.text
+                              .replaceAll(' ', '');
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -266,10 +267,10 @@ class _SSFGDT17_SEARCHState extends State<SSFGDT17_SEARCH> {
                             ),
                           ).then((value) async {
                             if (docnum == '') {
-                                      setState(() {
-                                        _documentNumberController.text = '';
-                                      });
-                                    }
+                              setState(() {
+                                _documentNumberController.text = '';
+                              });
+                            }
                             print('documentNumber $documentNumber');
                             print('docType $docType');
                             print('isDateInvalid $isDateInvalid');

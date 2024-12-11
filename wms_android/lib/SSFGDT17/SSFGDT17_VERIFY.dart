@@ -12,10 +12,8 @@ class SSFGDT17_VERIFY extends StatefulWidget {
   final String po_doc_no;
   final String? po_doc_type;
   final String? selectedwhCode;
-
   final String? pWareCode;
   final String? pWareName;
-
   const SSFGDT17_VERIFY(
       {required this.po_doc_no,
       this.po_doc_type,
@@ -32,7 +30,6 @@ class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
   String nb_ware_code = '';
   String nb_to_wh = '';
   String cr_date = '';
-
   String? item_code = '';
   String? lots_no = '';
   String? location_code = '';
@@ -40,9 +37,7 @@ class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
   String? to_loc = '';
   int? req;
   bool isDialogShowing = false;
-
   List<Map<String, dynamic>> items = [];
-
   final TextEditingController NB_WARE_CODEController = TextEditingController();
   final TextEditingController NB_TO_WHController = TextEditingController();
   final TextEditingController CR_DATEController = TextEditingController();
@@ -54,7 +49,6 @@ class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
     print('VERIFY  =============================');
     print('pWareCode: ${widget.pWareCode}');
     print('pWareName: ${widget.pWareName}');
-
     fetchData();
     getList();
   }
@@ -101,7 +95,6 @@ class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
               }).toList();
             });
           }
-
           print(items);
         } else {
           print('No items found.');
@@ -117,10 +110,8 @@ class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
   Future<void> fetchData() async {
     final url = Uri.parse(
         "${gb.IP_API}/apex/wms/SSFGDT17/Step_4_verify_form/${gb.P_OU_CODE}/${gb.P_ERP_OU_CODE}/${widget.po_doc_no}/${widget.po_doc_type}");
-
     try {
       final http.Response response = await http.get(url);
-
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
             jsonDecode(utf8.decode(response.bodyBytes));
@@ -133,7 +124,6 @@ class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
               nb_ware_code = item['nb_ware_code'] ?? '';
               nb_to_wh = item['nb_to_wh'] ?? '';
               cr_date = item['cr_date'] ?? '';
-
               NB_WARE_CODEController.text = nb_ware_code;
               NB_TO_WHController.text = nb_to_wh;
               CR_DATEController.text = cr_date;
@@ -271,7 +261,6 @@ class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
     rowid = item['rowid'] ?? '';
     Doc_type = item['doc_type'] ?? '';
     doc_no = item['doc_no'] ?? '';
-
     req = item['seq'] ?? '';
 
     showDialog(
@@ -403,7 +392,6 @@ class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: const Color(0xFF17153B),
       appBar: CustomAppBar(title: 'Move Locator', showExitWarning: false),
       body: Center(
         child: SingleChildScrollView(
@@ -412,7 +400,6 @@ class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
-                  // Use Column to stack widgets vertically
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -439,11 +426,6 @@ class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
                         ElevatedButton(
                           onPressed: () async {
                             if (isDialogShowing) return;
-
-                            setState(() {
-                              isDialogShowing =
-                                  true; // Set flag to true when a dialog is about to be shown
-                            });
                             await chk_validateSave();
                             if (poStatus == '0') {
                               showDialog(
@@ -480,12 +462,9 @@ class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8.0), // Space between the Row and the new content
-                    // Additional content goes here
+                    const SizedBox(height: 8.0),
                     GestureDetector(
-                      onTap: () {
-                        // Handle the tap event here
-                      },
+                      onTap: () {},
                       child: AbsorbPointer(
                         child: Container(
                           // Makes the width expand to the parent
@@ -510,59 +489,56 @@ class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
                       ),
                     ),
                     const SizedBox(height: 8.0),
-                  GestureDetector(
-                    onTap: () {
-                      // Handle the tap event here
-                    },
-                    child: AbsorbPointer(
-                      child: Container( // Set your desired width here
-                        child: TextFormField(
-                          style: const TextStyle(
-                            color: Colors.black87,
-                          ),
-                          controller: NB_TO_WHController,
-                          decoration: const InputDecoration(
-                            labelText: 'Warehouse ปลายทาง',
-                            labelStyle: TextStyle(
+                    GestureDetector(
+                      onTap: () {
+                        // Handle the tap event here
+                      },
+                      child: AbsorbPointer(
+                        child: Container(
+                          // Set your desired width here
+                          child: TextFormField(
+                            style: const TextStyle(
                               color: Colors.black87,
                             ),
-                            border: InputBorder.none,
-                            filled: true,
-                            fillColor: Color.fromRGBO(224, 224, 224, 1),
+                            controller: NB_TO_WHController,
+                            decoration: const InputDecoration(
+                              labelText: 'Warehouse ปลายทาง',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                              ),
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Color.fromRGBO(224, 224, 224, 1),
+                            ),
+                            readOnly: true,
                           ),
-                          readOnly: true,
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  GestureDetector(
-                    onTap: () {
-                      // Handle the tap event (e.g., open a date picker)
-                    },
-                    child: AbsorbPointer(
-                      child: Container(
-                        child: TextFormField(
-                          style: const TextStyle(
-                            color: Colors.black87,
-                          ),
-                          controller: CR_DATEController,
-                          decoration: const InputDecoration(
-                            labelText: 'วันที่บันทึกโอน',
-                            labelStyle: TextStyle(
+                    const SizedBox(height: 8.0),
+                    GestureDetector(
+                      onTap: () {},
+                      child: AbsorbPointer(
+                        child: Container(
+                          child: TextFormField(
+                            style: const TextStyle(
                               color: Colors.black87,
                             ),
-                            // suffixIcon:
-                            //     Icon(Icons.calendar_today, color: Colors.black),
-                            border: InputBorder.none,
-                            filled: true,
-                            fillColor: Color.fromRGBO(224, 224, 224, 1),
+                            controller: CR_DATEController,
+                            decoration: const InputDecoration(
+                              labelText: 'วันที่บันทึกโอน',
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                              ),
+                              border: InputBorder.none,
+                              filled: true,
+                              fillColor: Color.fromRGBO(224, 224, 224, 1),
+                            ),
+                            readOnly: true,
                           ),
-                          readOnly: true,
                         ),
                       ),
-                    ),
-                  )
+                    )
                   ],
                 ),
               ),

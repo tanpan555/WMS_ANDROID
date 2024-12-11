@@ -44,9 +44,10 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   late final TextEditingController DOC_NO =
       TextEditingController(text: widget.po_doc_no);
   late final TextEditingController BARCODE = TextEditingController();
+  late final TextEditingController LOCATOR = TextEditingController(text: widget.LocCode ?? '');
 
   late final TextEditingController LOCATOR_FROM =
-      TextEditingController(text: widget.LocCode ?? ' ');
+      TextEditingController();
 
   late final TextEditingController ITEM_CODE = TextEditingController();
 
@@ -73,7 +74,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
     print('pWareName: ${widget.pWareName}');
     print(widget.LocCode);
     if (widget.LocCode == 'null') {
-      LOCATOR_FROM.text = '';
+      LOCATOR.text = '';
     }
 
     // Add this condition for LOCATOR_TO
@@ -112,6 +113,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   void dispose() {
     DOC_NO.dispose();
     BARCODE.dispose();
+    LOCATOR.dispose();
     LOCATOR_FROM.dispose();
     ITEM_CODE.dispose();
     LOT_NUMBER.dispose();
@@ -239,76 +241,77 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
   }
 
   void _showLocatorDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return DialogStyles.displayTextFormFieldAndDropdown(
-        context: context,
-        headTextDialog: 'เปลี่ยน Locator', // Dialog header text
-        labelText: 'เลือก Location ต้นทาง', // TextField label text
-        controller: LOCATOR_FROM, // TextField controller
-        onTap: () {
-          // Show the custom LOV search dialog
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return DialogStyles.customLovSearchDialog(
-                context: context,
-                headerText: 'เลือก Location ต้นทาง',
-                searchController: _searchController,
-                data: locCode,
-                docString: (item) => item['r'].toString(),
-                titleText: (item) => item['r'].toString(),
-                subtitleText: (item) => '${item['location_name']}',
-                onTap: (item) {
-                  final name = item['location_name']?.toString() ?? '';
-                  Navigator.of(context).pop(); // Close LOV dialog
-                  setState(() {
-                    selectedLocCode = '$name';
-                    LOCATOR_FROM.text = selectedLocCode ?? '';
-                  });
-                },
-              );
-            },
-          ).then((_) {
-            _searchController.clear(); // Clear search input on close
-          });
-        },
-        onCloseDialog: () {
-          Navigator.of(context).pop(); // Close the main dialog
-        },
-        onConfirmDialog: () {
-          Navigator.of(context).pop(); // Close the main dialog first
-          // Show confirmation dialog
-          showDialog<void>(
-            context: context,
-            builder: (BuildContext context) {
-              return DialogStyles.alertMessageCheckDialog(
-                context: context,
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text('ต้องการเปลี่ยนแปลง Locator ต้นทาง หรือไม่ !!!'),
-                  ],
-                ),
-                onClose: () {
-                  Navigator.of(context).pop(); // Close confirmation dialog
-                },
-                onConfirm: () {
-                  setState(() {
-                    LOCATOR_FROM.text = selectedLocCode ?? '';
-                  });
-                  Navigator.of(context).pop(); // Close confirmation dialog
-                },
-              );
-            },
-          );
-        },
-      );
-    },
-  );
-}
-
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.displayTextFormFieldAndDropdown(
+          context: context,
+          headTextDialog: 'เปลี่ยน Locator', // Dialog header text
+          labelText: 'เลือก Location ต้นทาง', // TextField label text
+          controller: LOCATOR_FROM, // TextField controller
+          onTap: () {
+            // Show the custom LOV search dialog
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return DialogStyles.customLovSearchDialog(
+                  context: context,
+                  headerText: 'เลือก Location ต้นทาง',
+                  searchController: _searchController,
+                  data: locCode,
+                  docString: (item) => item['r'].toString(),
+                  titleText: (item) => item['r'].toString(),
+                  subtitleText: (item) => '${item['location_name']}',
+                  onTap: (item) {
+                    final name = item['location_name']?.toString() ?? '';
+                    final code = item['r']?.toString() ?? '';
+                    Navigator.of(context).pop(); // Close LOV dialog
+                    setState(() {
+                      selectedLocCode = '$name';
+                      LOCATOR_FROM.text = selectedLocCode ?? '';
+                      LOCATOR.text = code;
+                    });
+                  },
+                );
+              },
+            ).then((_) {
+              _searchController.clear(); // Clear search input on close
+            });
+          },
+          onCloseDialog: () {
+            Navigator.of(context).pop(); // Close the main dialog
+          },
+          onConfirmDialog: () {
+            Navigator.of(context).pop(); // Close the main dialog first
+            // Show confirmation dialog
+            showDialog<void>(
+              context: context,
+              builder: (BuildContext context) {
+                return DialogStyles.alertMessageCheckDialog(
+                  context: context,
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text('ต้องการเปลี่ยนแปลง Locator ต้นทาง หรือไม่ !!!'),
+                    ],
+                  ),
+                  onClose: () {
+                    Navigator.of(context).pop(); // Close confirmation dialog
+                  },
+                  onConfirm: () {
+                    setState(() {
+                      LOCATOR_FROM.text = selectedLocCode ?? '';
+                    });
+                    Navigator.of(context).pop(); // Close confirmation dialog
+                  },
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
 
   String? poStatus;
   String? poMessage;
@@ -392,7 +395,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
                   _buildBarcodeTextField(),
                   GestureDetector(
                       child: AbsorbPointer(
-                    child: _buildTextField(LOCATOR_FROM, 'Locator ต้นทาง',
+                    child: _buildTextField(LOCATOR, 'Locator ต้นทาง',
                         readOnly: true),
                   )),
                   GestureDetector(

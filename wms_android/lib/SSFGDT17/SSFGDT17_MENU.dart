@@ -52,7 +52,7 @@ class _SSFGDT17_MENUState extends State<SSFGDT17_MENU> {
           final isPortrait = orientation == Orientation.portrait;
 
           return isLoading
-          ? Center(child: LoadingIndicator())
+              ? Center(child: LoadingIndicator())
               // ? const Center(child: CircularProgressIndicator())
               : errorMessage.isNotEmpty
                   ? Center(

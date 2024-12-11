@@ -179,7 +179,7 @@ class _SSFGDT17_MAINState extends State<SSFGDT17_MAIN> {
     final String statusValue = valueMapping[_selectedStatusValue] ?? '0';
     final String requestUrl = url ??
         '${gb.IP_API}/apex/wms/SSFGDT17/Step_1_Card_List/$selectedwhCode/$statusValue/${gb.P_ERP_OU_CODE}/${widget.docType}/$DateSend/${widget.documentNumber}/${gb.BROWSER_LANGUAGE}';
-print('URL : $requestUrl ');
+    print('URL : $requestUrl ');
     try {
       final response = await http.get(Uri.parse(requestUrl));
 
@@ -413,73 +413,109 @@ print('URL : $requestUrl ');
                                             padding: const EdgeInsets.all(16.0),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  item['doc_number'] ?? 'No doc_number',
+                                                  item['doc_number'] ??
+                                                      'No doc_number',
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 17,
-                                                    color: Color.fromARGB(255, 0, 0, 0),
+                                                    color: Color.fromARGB(
+                                                        255, 0, 0, 0),
                                                   ),
                                                 ),
                                                 const Divider(
-                                                    color: Colors.black26,thickness: 1),
+                                                    color: Colors.black26,
+                                                    thickness: 1),
                                                 Row(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
                                                   children: [
                                                     Container(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0,
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 12.0,
+                                                        vertical: 6.0,
                                                       ),
                                                       decoration: BoxDecoration(
                                                         color: (() {
                                                           switch (item[
                                                               'status_desc']) {
                                                             case 'ปกติ':
-                                                              return const Color.fromRGBO(246,250, 112, 1);
+                                                              return const Color
+                                                                  .fromRGBO(246,
+                                                                  250, 112, 1);
                                                             case 'รับโอนแล้ว':
-                                                              return const Color.fromRGBO(146, 208, 80, 1);
+                                                              return const Color
+                                                                  .fromRGBO(146,
+                                                                  208, 80, 1);
                                                             case 'ยกเลิก':
-                                                              return const Color.fromRGBO(208, 206, 206, 1);
+                                                              return const Color
+                                                                  .fromRGBO(208,
+                                                                  206, 206, 1);
                                                             case 'ทั้งหมด':
                                                             default:
-                                                              return const Color.fromARGB(255,255,255,255);
+                                                              return const Color
+                                                                  .fromARGB(
+                                                                  255,
+                                                                  255,
+                                                                  255,
+                                                                  255);
                                                           }
                                                         })(),
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(5),
                                                       ),
-                                                      child: Text(item['status_desc'],
+                                                      child: Text(
+                                                        item['status_desc'],
                                                         style: const TextStyle(
                                                           fontSize: 15,
                                                           color: Colors.black,
-                                                          fontWeight: FontWeight.bold,
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                         ),
                                                       ),
                                                     ),
                                                     const SizedBox(width: 8),
                                                     Center(
                                                       child:
-                                                          item['status_desc'] != null
+                                                          item['status_desc'] !=
+                                                                  null
                                                               ? Container(
                                                                   decoration:
-                                                                      BoxDecoration(color: const Color.fromARGB(72, 145, 144, 144),
-                                                                    borderRadius: BorderRadius.circular(5),
+                                                                      BoxDecoration(
+                                                                    color: const Color
+                                                                        .fromARGB(
+                                                                        72,
+                                                                        145,
+                                                                        144,
+                                                                        144),
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(5),
                                                                   ),
                                                                 )
-                                                              : const SizedBox.shrink(),
+                                                              : const SizedBox
+                                                                  .shrink(),
                                                     ),
                                                   ],
                                                 ),
                                                 // const Spacer(),
                                                 Row(
-                                                  mainAxisAlignment:MainAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
                                                   children: [
                                                     Container(
-                                                      padding: const EdgeInsets.symmetric( horizontal: 12.0,vertical: 6.0,
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 12.0,
+                                                        vertical: 6.0,
                                                       ),
-                                                      child: Text('${item['doc_date'] ?? 'No doc_date'} ${item['from_warehouse'] ?? 'No WAREHOUSE'} ${item['staff_name'] ?? ''}',
+                                                      child: Text(
+                                                        '${item['doc_date'] ?? 'No doc_date'} ${item['from_warehouse'] ?? 'No WAREHOUSE'} ${item['staff_name'] ?? ''}',
                                                         style: const TextStyle(
                                                           fontSize: 12,
                                                           color: Colors.black87,
@@ -498,10 +534,12 @@ print('URL : $requestUrl ');
                                 } else {
                                   return getCurrentData().length > 3
                                       ? Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 currentPage > 0
                                                     ? ElevatedButton(
@@ -511,25 +549,32 @@ print('URL : $requestUrl ');
                                                                     _loadPrevPage();
                                                                   }
                                                                 : null,
-                                                        style: ButtonStyles.previousButtonStyle,
-                                                        child: ButtonStyles.previousButtonContent,
+                                                        style: ButtonStyles
+                                                            .previousButtonStyle,
+                                                        child: ButtonStyles
+                                                            .previousButtonContent,
                                                       )
                                                     : ElevatedButton(
                                                         onPressed: null,
-                                                        style: DisableButtonStyles.disablePreviousButtonStyle,
-                                                        child: DisableButtonStyles.disablePreviousButtonContent,
+                                                        style: DisableButtonStyles
+                                                            .disablePreviousButtonStyle,
+                                                        child: DisableButtonStyles
+                                                            .disablePreviousButtonContent,
                                                       )
                                               ],
                                             ),
                                             // const SizedBox(width: 30),
                                             Row(
-                                              mainAxisAlignment:MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Center(
-                                                  child: Text('${(currentPage * itemsPerPage) + 1} - ${data.isNotEmpty ? ((currentPage + 1) * itemsPerPage).clamp(1, data.length) : 0}',
+                                                  child: Text(
+                                                    '${(currentPage * itemsPerPage) + 1} - ${data.isNotEmpty ? ((currentPage + 1) * itemsPerPage).clamp(1, data.length) : 0}',
                                                     style: const TextStyle(
                                                       color: Colors.white,
-                                                      fontWeight:FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
                                                   ),
                                                 )
@@ -537,7 +582,8 @@ print('URL : $requestUrl ');
                                             ),
                                             // const SizedBox(width: 30),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
                                               children: [
                                                 currentPage < totalPages() - 1
                                                     ? ElevatedButton(
@@ -547,13 +593,17 @@ print('URL : $requestUrl ');
                                                                 _loadNextPage();
                                                               }
                                                             : null,
-                                                        style: ButtonStyles.nextButtonStyle,
-                                                        child: ButtonStyles.nextButtonContent(),
+                                                        style: ButtonStyles
+                                                            .nextButtonStyle,
+                                                        child: ButtonStyles
+                                                            .nextButtonContent(),
                                                       )
                                                     : ElevatedButton(
                                                         onPressed: null,
-                                                        style: DisableButtonStyles.disableNextButtonStyle,
-                                                        child: DisableButtonStyles.disablePreviousButtonContent,
+                                                        style: DisableButtonStyles
+                                                            .disableNextButtonStyle,
+                                                        child: DisableButtonStyles
+                                                            .disablePreviousButtonContent,
                                                       ),
                                               ],
                                             ),
@@ -583,8 +633,10 @@ print('URL : $requestUrl ');
                                     )
                                   : ElevatedButton(
                                       onPressed: null,
-                                      style: DisableButtonStyles.disablePreviousButtonStyle,
-                                      child: DisableButtonStyles.disablePreviousButtonContent,
+                                      style: DisableButtonStyles
+                                          .disablePreviousButtonStyle,
+                                      child: DisableButtonStyles
+                                          .disablePreviousButtonContent,
                                     )
                             ],
                           ),
@@ -619,8 +671,10 @@ print('URL : $requestUrl ');
                                     )
                                   : ElevatedButton(
                                       onPressed: null,
-                                      style: DisableButtonStyles.disableNextButtonStyle,
-                                      child: DisableButtonStyles.disablePreviousButtonContent,
+                                      style: DisableButtonStyles
+                                          .disableNextButtonStyle,
+                                      child: DisableButtonStyles
+                                          .disablePreviousButtonContent,
                                     ),
                             ],
                           ),
