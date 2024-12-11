@@ -309,6 +309,7 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
   }
 
   Future<void> selectLovStartDocNo() async {
+    String dateCheck = returnDocDate.replaceAll('/', '-');
     if (isFirstLoad == false) {
       if (mounted) {
         isLoading = true;
@@ -316,9 +317,9 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
     }
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartDocNo/${globals.P_ERP_OU_CODE}/${returnDocDate.isNotEmpty ? returnDocDate : 'null'}'));
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartDocNo/${globals.P_ERP_OU_CODE}/${dateCheck.isNotEmpty ? dateCheck : 'null'}'));
       print(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartDocNo/${globals.P_ERP_OU_CODE}/${returnDocDate.isNotEmpty ? returnDocDate : 'null'}'));
+          '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovStartDocNo/${globals.P_ERP_OU_CODE}/${dateCheck.isNotEmpty ? dateCheck : 'null'}'));
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
         final responseData = jsonDecode(responseBody);
@@ -346,15 +347,20 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
   }
 
   Future<void> selectLovEndDocNO() async {
+    String dateCheck = returnDocDate.replaceAll('/', '-');
     if (isFirstLoad == false) {
       if (mounted) {
         isLoading = true;
       }
     }
+    print(
+        '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovEndDocNo/${globals.P_ERP_OU_CODE}'
+        '/${dateCheck.isEmpty ? 'null' : dateCheck}'
+        '/${returnStartDocNo.isEmpty ? 'null' : returnStartDocNo}');
     try {
       final response = await http.get(Uri.parse(
           '${globals.IP_API}/apex/wms/SSFGRP08/SSFGRP08_Step_1_SelectLovEndDocNo/${globals.P_ERP_OU_CODE}'
-          '/${returnDocDate.isEmpty ? 'null' : returnDocDate}'
+          '/${dateCheck.isEmpty ? 'null' : dateCheck}'
           '/${returnStartDocNo.isEmpty ? 'null' : returnStartDocNo}'));
 
       if (response.statusCode == 200) {
@@ -854,6 +860,9 @@ class _SSFGRP08_MAINState extends State<SSFGRP08_MAIN> {
   }
 
   Future<void> getPDFCard() async {
+    print('http://172.16.0.82:8888/apex/wms/SSFGRP08/SSFGRP08_Step_1_GETPDFCard'
+        '/${globals.P_OU_NAME}/${globals.P_ERP_OU_CODE}'
+        '/${globals.BROWSER_LANGUAGE}/${globals.APP_USER}/${globals.P_DS_PDF}');
     isLoading = true;
     try {
       final response = await http.get(Uri.parse(
