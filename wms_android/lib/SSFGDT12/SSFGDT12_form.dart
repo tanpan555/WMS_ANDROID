@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-// import 'dart:ui';
-import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:wms_android/styles.dart';
 import 'package:wms_android/loading.dart';
@@ -54,7 +52,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   String docNo = '';
   String statuForCHK = '';
 
-  final dateInputFormatter = DateInputFormatter();
+  final ValueNotifier<bool> isDateInvalidNotifier = ValueNotifier<bool>(false);
   bool isDateInvalid = false;
   bool isLoading = false;
   bool isCardDisabled = false;
@@ -257,26 +255,6 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   //   }
   // }
 
-  Future<void> _selectDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-    );
-
-    if (pickedDate != null) {
-      String formattedDate = new DateFormat('dd/MM/yyyy').format(pickedDate);
-      if (mounted) {
-        setState(() {
-          nbCountDateController.text = formattedDate;
-          nbCountDate = nbCountDateController.text;
-        });
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -298,29 +276,37 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                           setState(() {
                             isCardDisabled = true;
                           });
-                          if (isDateInvalid != true) {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Ssfgdt12Grid(
-                                  nbCountStaff: returnNBCountStaff,
-                                  nbCountDate: nbCountDate,
-                                  docNo: docNo,
-                                  status: status,
-                                  wareCode: widget.wareCode,
-                                  pErpOuCode: widget.pErpOuCode,
-                                  pWareCode: widget.pWareCode,
-                                  docDate: docDate,
-                                  countStaff: countStaff,
-                                  p_attr1: widget.p_attr1,
-                                  statuForCHK: statuForCHK,
+                          if (isDateInvalidNotifier.value != true) {
+                            if (returnNBCountStaff.isNotEmpty) {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Ssfgdt12Grid(
+                                    nbCountStaff: returnNBCountStaff,
+                                    nbCountDate: nbCountDate,
+                                    docNo: docNo,
+                                    status: status,
+                                    wareCode: widget.wareCode,
+                                    pErpOuCode: widget.pErpOuCode,
+                                    pWareCode: widget.pWareCode,
+                                    docDate: docDate,
+                                    countStaff: countStaff,
+                                    p_attr1: widget.p_attr1,
+                                    statuForCHK: statuForCHK,
+                                  ),
                                 ),
-                              ),
-                            ).then((value) async {
+                              ).then((value) async {
+                                setState(() {
+                                  isCardDisabled = false;
+                                });
+                              });
+                            } else {
                               setState(() {
                                 isCardDisabled = false;
                               });
-                            });
+                              String meaaage = 'ต้องระบุผู้ทำการตรวจนับ * !!!';
+                              showDialogAlert(context, meaaage);
+                            }
                           }
                         },
                   style: AppStyles.NextButtonStyle(),
@@ -385,55 +371,20 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
 
                     const SizedBox(height: 8),
                     //////////////////////////////////////////////////////////////////////////////////////
-                    TextFormField(
-                      controller: nbCountDateController,
+                    CustomTextFormField(
+                      controller: docDateController,
+                      labelText: 'วันที่บันทึก',
                       keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(8),
-                        dateInputFormatter,
-                      ],
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'วันที่ตรวจนับ',
-                        hintText: 'DD/MM/YYYY',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        labelStyle: isDateInvalid == true
-                            ? const TextStyle(color: Colors.red)
-                            : const TextStyle(color: Colors.black87),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.calendar_today),
-                          onPressed: () async {
-                            _selectDate(context);
-                          },
-                        ),
-                      ),
+                      showAsterisk: true,
                       onChanged: (value) {
-                        setState(() {
-                          nbCountDate = value;
-                          isDateInvalid =
-                              dateInputFormatter.noDateNotifier.value;
-                          print('nbCountDate : $nbCountDate');
-                          if (nbCountDate != nbCountDateForCheck) {
-                            checkUpdateData = true;
-                          }
-                        });
+                        nbCountDate = value;
+                        print('วันที่ที่กรอก: $docDate');
+                        if (nbCountDate != nbCountDateForCheck) {
+                          checkUpdateData = true;
+                        }
                       },
+                      isDateInvalidNotifier: isDateInvalidNotifier,
                     ),
-                    isDateInvalid == true
-                        ? const Padding(
-                            padding: EdgeInsets.only(top: 4.0),
-                            child: Text(
-                              'กรุณาระบุรูปแบบวันที่ให้ถูกต้อง เช่น 31/01/2024',
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
-                            ))
-                        : const SizedBox.shrink(),
                     const SizedBox(height: 8),
                     //////////////////////////////////////////////////////////////////////////////////////
                     GestureDetector(
@@ -482,12 +433,29 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                       onTap: () => showDialogDropdownSearchEMP(),
                       minLines: 1,
                       maxLines: 3,
-                      decoration: const InputDecoration(
+                      // overflow: TextOverflow.ellipsis,
+                      decoration: InputDecoration(
                         border: InputBorder.none,
                         filled: true,
                         fillColor: Colors.white,
-                        labelText: 'ผู้ทำการตรวจนับ',
-                        suffixIcon: Icon(
+                        label: RichText(
+                          text: const TextSpan(
+                            text: 'ผู้ทำการตรวจนับ',
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: ' *',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        suffixIcon: const Icon(
                           Icons.arrow_drop_down,
                           color: Color.fromARGB(255, 113, 113, 113),
                         ),
@@ -634,7 +602,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return DialogStyles.customLovSearchDialog(
+        return DialogStyles.customRequiredLovSearchDialog(
           context: context,
           headerText: 'ผู้ทำการตรวจนับ',
           searchController: searchEMPController,
