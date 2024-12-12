@@ -134,7 +134,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
     isLoading = true;
     try {
       final response = await http.get(Uri.parse(
-          '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_2_SelectDataForm/${globals.P_ERP_OU_CODE}/${widget.docNo}/${globals.BROWSER_LANGUAGE}'));
+          '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_2_SelectDataForm/${globals.P_ERP_OU_CODE}/${widget.docNo}/${globals.BROWSER_LANGUAGE}/${globals.P_EMP_ID}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data =
