@@ -276,7 +276,8 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                           setState(() {
                             isCardDisabled = true;
                           });
-                          if (isDateInvalidNotifier.value != true) {
+                          if (isDateInvalidNotifier.value != true &&
+                              nbCountDate.isNotEmpty) {
                             if (returnNBCountStaff.isNotEmpty) {
                               await Navigator.push(
                                 context,
@@ -307,6 +308,11 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
                               String meaaage = 'ต้องระบุผู้ทำการตรวจนับ * !!!';
                               showDialogAlert(context, meaaage);
                             }
+                          } else {
+                            setState(() {
+                              isCardDisabled = false;
+                              isDateInvalidNotifier.value = true;
+                            });
                           }
                         },
                   style: AppStyles.NextButtonStyle(),
