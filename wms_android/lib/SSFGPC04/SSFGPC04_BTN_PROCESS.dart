@@ -703,10 +703,8 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                       Navigator.of(context).pop();
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (context) =>
-                              SSFGPC04_MAIN(
-                                v_nb_doc_no: v_nb_doc_no,
-                                note: widget.note),
+                          builder: (context) => SSFGPC04_MAIN(
+                              v_nb_doc_no: v_nb_doc_no, note: widget.note),
                         ),
                       );
                       // ปิด dialog
@@ -1192,7 +1190,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                 searchStartBrandController.clear;
                 selectLovEndBrand();
                 displayEndBrand = null;
-                returnEndBrand= '';
+                returnEndBrand = '';
                 endBrandController.text = '';
                 searchEndBrandController.clear;
                 selectLovStartItem();
@@ -1286,7 +1284,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                 searchStartBrandController.clear;
                 selectLovEndBrand();
                 displayEndBrand = null;
-                returnEndBrand= '';
+                returnEndBrand = '';
                 endBrandController.text = '';
                 searchEndBrandController.clear;
                 selectLovStartItem();
@@ -1374,7 +1372,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                 searchStartBrandController.clear;
                 selectLovEndBrand();
                 displayEndBrand = null;
-                returnEndBrand= '';
+                returnEndBrand = '';
                 endBrandController.text = '';
                 searchEndBrandController.clear;
                 selectLovStartItem();
@@ -1448,7 +1446,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                 searchStartBrandController.clear;
                 selectLovEndBrand();
                 displayEndBrand = null;
-                returnEndBrand= '';
+                returnEndBrand = '';
                 endBrandController.text = '';
                 searchEndBrandController.clear;
                 selectLovStartItem();
@@ -1518,7 +1516,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                 searchStartBrandController.clear;
                 selectLovEndBrand();
                 displayEndBrand = null;
-                returnEndBrand= '';
+                returnEndBrand = '';
                 endBrandController.text = '';
                 searchEndBrandController.clear;
                 selectLovStartItem();
@@ -1584,7 +1582,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                 searchStartBrandController.clear;
                 selectLovEndBrand();
                 displayEndBrand = null;
-                returnEndBrand= '';
+                returnEndBrand = '';
                 endBrandController.text = '';
                 searchEndBrandController.clear;
                 selectLovStartItem();
@@ -1631,19 +1629,18 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
           titleText: (item) => '${item['brand_code'] ?? ''}',
           subtitleText: (item) => '${item['brand_name'] ?? ''}',
           onTap: (item) {
-
             isLoading = true;
             Navigator.of(context).pop();
             setState(() {
               returnStartBrand = '${item['brand_code'] ?? ''}';
               displayStartBrand = '${item['brand_code'] ?? ''}' == 'ทั้งหมด'
-              ? null
-              :'${item['brand_code'] ?? ''}';
+                  ? null
+                  : '${item['brand_code'] ?? ''}';
               startBrandController.text = displayStartBrand ?? 'ทั้งหมด';
               if (returnStartBrand != 'ทั้งหมด') {
                 selectLovEndBrand();
                 displayEndBrand = null;
-                returnEndBrand= '';
+                returnEndBrand = '';
                 endBrandController.text = '';
                 searchEndBrandController.clear;
                 selectLovStartItem();
@@ -1693,8 +1690,8 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
             setState(() {
               returnEndBrand = '${item['brand_code'] ?? ''}';
               displayEndBrand = '${item['brand_code'] ?? ''}' == 'ทั้งหมด'
-              ? null
-              :'${item['brand_code'] ?? ''}';
+                  ? null
+                  : '${item['brand_code'] ?? ''}';
               endBrandController.text = displayEndBrand ?? 'ทั้งหมด';
               if (returnEndBrand != 'ทั้งหมด') {
                 selectLovStartItem();

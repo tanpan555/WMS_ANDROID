@@ -83,8 +83,7 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
   }
 
   int totalPages() {
-    return (tmpWhItems.length / itemsPerPage)
-        .ceil(); // คำนวณจำนวนหน้าทั้งหมด
+    return (tmpWhItems.length / itemsPerPage).ceil(); // คำนวณจำนวนหน้าทั้งหมด
   }
 
   void _loadPrevPage() {
@@ -111,8 +110,7 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
     final start = currentPage * itemsPerPage;
     final end = start + itemsPerPage;
 
-    return tmpWhItems
-        .sublist(start, end.clamp(0, tmpWhItems.length));
+    return tmpWhItems.sublist(start, end.clamp(0, tmpWhItems.length));
   }
 
   void _scrollToTop() {

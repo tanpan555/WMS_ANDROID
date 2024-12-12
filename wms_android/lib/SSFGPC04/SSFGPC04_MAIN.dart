@@ -63,36 +63,36 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
 
   String message = '';
   Future<void> deleteData() async {
-  final String url = 'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_1_clear_temp';
-  // final String url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_clear_temp';
-  print('Sending DELETE to: $url');
-  try {
-    final response = await http.delete(
-      Uri.parse(url),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'APP_SESSION': gb.APP_SESSION}),
-      
-    );
-    print(gb.APP_SESSION);
+    final String url =
+        'http://172.16.0.82:8888/apex/wms/SSFGPC04/Step_1_clear_temp';
+    // final String url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_clear_temp';
+    print('Sending DELETE to: $url');
+    try {
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'APP_SESSION': gb.APP_SESSION}),
+      );
+      print(gb.APP_SESSION);
 
-    if (response.statusCode == 200) {
-      print('Delete successful: ${response.body}');
+      if (response.statusCode == 200) {
+        print('Delete successful: ${response.body}');
+        setState(() {
+          message = 'Data deleted successfully.';
+        });
+      } else {
+        print('Delete failed with status: ${response.statusCode}');
+        setState(() {
+          message = 'Failed to delete. Status: ${response.statusCode}';
+        });
+      }
+    } catch (e) {
+      print('Delete error: $e');
       setState(() {
-        message = 'Data deleted successfully.';
-      });
-    } else {
-      print('Delete failed with status: ${response.statusCode}');
-      setState(() {
-        message = 'Failed to delete. Status: ${response.statusCode}';
+        message = 'Error deleting data: $e';
       });
     }
-  } catch (e) {
-    print('Delete error: $e');
-    setState(() {
-      message = 'Error deleting data: $e';
-    });
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +124,8 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
                   isDateInvalidNotifier: isDateInvalidNotifier,
                 ),
                 const SizedBox(height: 8),
-                TextField(
+                AbsorbPointer(
+            child: TextField(
                   readOnly: true,
                   decoration: InputDecoration(
                     labelText: 'เลขที่เอกสาร',
@@ -139,6 +140,7 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
                       ? _docNoController
                       : TextEditingController(text: 'AUTO'),
                   style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 ),
                 const SizedBox(height: 8),
                 TextField(

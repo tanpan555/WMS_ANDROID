@@ -115,7 +115,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
 
   Future<void> fetchCheck(String? loc, String? wareCode) async {
     final url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_2_PU_INS_TMP_LOC_SEL';
-print('post loc : $url');
+    print('post loc : $url');
     final headers = {
       'Content-Type': 'application/json',
     };
@@ -177,7 +177,6 @@ print('post loc : $url');
           'WARE_CODE': wareCode,
         }),
       );
-      
 
       if (response.statusCode == 200) {
         // หากการลบสำเร็จ
@@ -232,8 +231,8 @@ print('post loc : $url');
                   onPressed: () {
                     _selectAll(true); // เลือกทั้งหมด (ติ๊กถูกทุกแถว)
                     for (var row in filteredLocItems) {
-                      deleteData(
-                          row['ware_code']); // ส่งคำขอ POST สำหรับทุกแถวที่เลือก
+                      deleteData(row[
+                          'ware_code']); // ส่งคำขอ POST สำหรับทุกแถวที่เลือก
                     }
                   },
                   child: const Text(
@@ -250,7 +249,8 @@ print('post loc : $url');
                   onPressed: () {
                     _deselectAll(); // ยกเลิกการเลือกทั้งหมด (ติ๊กออกทุกแถว)
                     for (var row in filteredLocItems) {
-                      deleteData(row['ware_code']); // ส่งคำขอ DELETE สำหรับทุกแถวที่ติ๊กออก
+                      deleteData(row[
+                          'ware_code']); // ส่งคำขอ DELETE สำหรับทุกแถวที่ติ๊กออก
                     }
                   },
                   child: const Text(
@@ -281,9 +281,9 @@ print('post loc : $url');
                   MaterialPageRoute(
                     builder: (context) => SSFGPC04_LOC(
                       date: widget.date,
-                          note: widget.note,
-                          docNo: widget.docNo,
-                        ),
+                      note: widget.note,
+                      docNo: widget.docNo,
+                    ),
                   ),
                 );
               },
@@ -332,14 +332,13 @@ print('post loc : $url');
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      row['nb_sel'] =
-                          !(row['nb_sel'] ?? false); // สลับสถานะ
+                      row['nb_sel'] = !(row['nb_sel'] ?? false); // สลับสถานะ
                     });
 
                     if (row['nb_sel']!) {
                       fetchCheck(row['location_code'], row['ware_code']);
                     } else {
-                      deleteData( row['ware_code']);
+                      deleteData(row['ware_code']);
                     }
                   },
                   child: Row(
@@ -350,7 +349,6 @@ print('post loc : $url');
                           setState(() {
                             row['nb_sel'] = value!;
                           });
-
                           // ตรวจสอบสถานะของ Checkbox เพื่อเลือกว่าจะเรียก POST หรือ DELETE
                           if (value == true) {
                             // ถ้าเลือก (ติ๊กถูก) => รัน .post
@@ -361,7 +359,6 @@ print('post loc : $url');
                           }
                         },
                       ),
-                      // เพิ่มเนื้อหาที่เหลือของ Row ที่นี่
                     ],
                   ),
                 ),

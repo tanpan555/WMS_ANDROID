@@ -272,9 +272,9 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
                   MaterialPageRoute(
                     builder: (context) => SSFGPC04_WARE(
                       date: widget.date,
-                          note: widget.note,
-                          docNo: widget.docNo,
-                        ),
+                      note: widget.note,
+                      docNo: widget.docNo,
+                    ),
                   ),
                 );
               },
@@ -313,8 +313,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        row['nb_sel'] =
-                            !(row['nb_sel'] ?? false); // สลับสถานะ
+                        row['nb_sel'] = !(row['nb_sel'] ?? false); // สลับสถานะ
                       });
 
                       if (row['nb_sel']!) {
