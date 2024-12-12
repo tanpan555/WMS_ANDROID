@@ -131,7 +131,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
             double? quantity =
                 double.tryParse(barCodeItems['po_quantity'] ?? '');
             _quantityController.text = (quantity == null || quantity == 0)
-            // กำหนดค่าที่ต้องการได้ที่นี่ เช่น 'NaN' หรือค่าอื่น ๆ
+                // กำหนดค่าที่ต้องการได้ที่นี่ เช่น 'NaN' หรือค่าอื่น ๆ
                 ? ''
                 : numberFormat.format(quantity);
 

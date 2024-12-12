@@ -713,7 +713,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                           );
                           Navigator.of(context).pop();
                           await refreshCallback();
-                                                },
+                        },
                       ),
                       _buildDialogButton(
                         label: 'SAVE',
@@ -731,7 +731,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                           sendGetRequestlineWMS();
                           Navigator.of(context).pop();
                           await refreshCallback();
-                                                },
+                        },
                       ),
                     ],
                   ),
@@ -1410,307 +1410,296 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
             ),
             const SizedBox(height: 8.0),
             Expanded(
-              // child: RefreshIndicator(
-                // onRefresh: () async {
-                //   await sendGetRequestlineWMS();
-                // },
-                child: ListView(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      margin: const EdgeInsets.only(bottom: 10.0),
-                      color: const Color.fromARGB(255, 255, 242, 204),
-                      child: Center(
-                        child: Text(
-                          '${widget.poPONO}',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 0, 0, 0),
-                          ),
+              child: ListView(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    color: const Color.fromARGB(255, 255, 242, 204),
+                    child: Center(
+                      child: Text(
+                        '${widget.poPONO}',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 0, 0, 0),
                         ),
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      margin: const EdgeInsets.only(bottom: 10.0),
-                      color: const Color.fromARGB(255, 244, 244, 244),
-                      child: Center(
-                        child: Text(
-                          '${widget.poReceiveNo}',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 0, 0, 0),
-                          ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    color: const Color.fromARGB(255, 244, 244, 244),
+                    child: Center(
+                      child: Text(
+                        '${widget.poReceiveNo}',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 0, 0, 0),
                         ),
                       ),
                     ),
-                    dataList.isNotEmpty
-                        ? Column(
-                            children: dataList.map((data) {
-                              return InkWell(
-                                child: Card(
-                                  elevation: 8,
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 1),
-                                  shape: RoundedRectangleBorder(
+                  ),
+                  dataList.isNotEmpty
+                      ? Column(
+                          children: dataList.map((data) {
+                            return InkWell(
+                              child: Card(
+                                elevation: 8,
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                color: Color.fromRGBO(204, 235, 252, 1.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
-                                  color: Color.fromRGBO(204, 235, 252, 1.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Center(
-                                          child: Text(
-                                            '${data['item']?.toString() ?? ''}',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18,
-                                              color: const Color.fromARGB(
-                                                  255, 0, 0, 0),
-                                            ),
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Center(
+                                        child: Text(
+                                          '${data['item']?.toString() ?? ''}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                            color: const Color.fromARGB(
+                                                255, 0, 0, 0),
                                           ),
                                         ),
-                                        SizedBox(height: 12),
-                                        Divider(
-                                            color: const Color.fromARGB(
-                                                255, 0, 0, 0)),
-                                        _buildInfoRow2({
-                                          'จำนวนรับ:':
-                                              data['receive_qty']?.toString() ??
-                                                  '-',
-                                          'ค้างรับ:':
-                                              data['pending_qty']?.toString() ??
-                                                  '-',
-                                        }),
-                                        _buildInfoRow2({
-                                          'จำนวนรวม:': data['lot_total_nb']
-                                                  ?.toString() ??
-                                              '-',
-                                          'UOM:':
-                                              data['UOM']?.toString() ?? '-',
-                                        }),
-                                        _buildInfoRow3({
-                                          'Locator:':
-                                              data['locator_det']?.toString() ??
-                                                  '-',
-                                        }),
-                                        const SizedBox(height: 8),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            IconButton(
-                                              iconSize: 20.0,
-                                              icon: Image.asset(
-                                                'assets/images/bin.png',
-                                                width: 30,
-                                                height: 30,
-                                              ),
-                                              onPressed: () {
-                                                showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return DialogStyles
-                                                        .alertMessageCheckDialog(
-                                                      context: context,
-                                                      content: const Text(
-                                                          'ยืนยันที่จะลบหรือไม่?'),
-                                                      onClose: () {
-                                                        Navigator.of(context)
-                                                            .pop(); // Close the dialog
-                                                      },
-                                                      onConfirm: () async {
-                                                        Navigator.of(context)
-                                                            .pop(); // Close the dialog
-                                                        await deleteReceiveQty(
-                                                          data['receive_no'],
-                                                          data['rec_seq']
-                                                              .toString(),
-                                                        );
-                                                      },
+                                      ),
+                                      SizedBox(height: 12),
+                                      Divider(
+                                          color: const Color.fromARGB(
+                                              255, 0, 0, 0)),
+                                      _buildInfoRow2({
+                                        'จำนวนรับ:':
+                                            data['receive_qty']?.toString() ??
+                                                '-',
+                                        'ค้างรับ:':
+                                            data['pending_qty']?.toString() ??
+                                                '-',
+                                      }),
+                                      _buildInfoRow2({
+                                        'จำนวนรวม:':
+                                            data['lot_total_nb']?.toString() ??
+                                                '-',
+                                        'UOM:': data['UOM']?.toString() ?? '-',
+                                      }),
+                                      _buildInfoRow3({
+                                        'Locator:':
+                                            data['locator_det']?.toString() ??
+                                                '-',
+                                      }),
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          IconButton(
+                                            iconSize: 20.0,
+                                            icon: Image.asset(
+                                              'assets/images/bin.png',
+                                              width: 30,
+                                              height: 30,
+                                            ),
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return DialogStyles
+                                                      .alertMessageCheckDialog(
+                                                    context: context,
+                                                    content: const Text(
+                                                        'ยืนยันที่จะลบหรือไม่?'),
+                                                    onClose: () {
+                                                      Navigator.of(context)
+                                                          .pop(); // Close the dialog
+                                                    },
+                                                    onConfirm: () async {
+                                                      Navigator.of(context)
+                                                          .pop(); // Close the dialog
+                                                      await deleteReceiveQty(
+                                                        data['receive_no'],
+                                                        data['rec_seq']
+                                                            .toString(),
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          ),
+                                          FutureBuilder<String?>(
+                                            future: fetchvResultStatus(
+                                                data['item']?.toString() ?? ''),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return CircularProgressIndicator();
+                                              } else if (snapshot.hasError) {
+                                                return Text('Error');
+                                              } else if (snapshot.data == '1') {
+                                                return ElevatedButton(
+                                                  onPressed: () async {
+                                                    final result =
+                                                        await Navigator.push<
+                                                            Map<String,
+                                                                String>>(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            LotDialog(
+                                                          item: data['item']
+                                                                  ?.toString() ??
+                                                              '',
+                                                          itemDesc: data[
+                                                                      'item_desc']
+                                                                  ?.toString() ??
+                                                              '',
+                                                          recSeq: data[
+                                                                      'rec_seq']
+                                                                  ?.toString() ??
+                                                              '',
+                                                          lotQTY: data[
+                                                                      'lot_qty']
+                                                                  ?.toString() ??
+                                                              '',
+                                                          lotSize: data[
+                                                                      'lot_Size']
+                                                                  ?.toString() ??
+                                                              '',
+                                                          rowid: data['rowid']
+                                                                  ?.toString() ??
+                                                              '',
+                                                          lotSupp: [
+                                                            'lot_supplier'
+                                                          ].toString(),
+                                                          ouCode: data[
+                                                                      'ou_code']
+                                                                  ?.toString() ??
+                                                              '',
+                                                          poReceiveNo: widget
+                                                              .poReceiveNo,
+                                                          poPONO:
+                                                              widget.poPONO ??
+                                                                  '',
+                                                        ),
+                                                        fullscreenDialog: true,
+                                                      ),
                                                     );
+                                                    if (result == null) {
+                                                      Timer(
+                                                          Duration(seconds: 1),
+                                                          () {
+                                                        sendGetRequestlineWMS();
+                                                      });
+                                                    }
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        const Color.fromARGB(
+                                                            255, 45, 68, 116),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                    ),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 20),
+                                                  ),
+                                                  child: Text(
+                                                    'LOT',
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.white),
+                                                  ),
+                                                );
+                                              } else {
+                                                return IconButton(
+                                                  iconSize: 20.0,
+                                                  icon: Image.asset(
+                                                    'assets/images/edit.png',
+                                                    width: 30,
+                                                    height: 30,
+                                                  ),
+                                                  onPressed: () async {
+                                                    _showDetailsDialog(data);
                                                   },
                                                 );
-                                              },
-                                            ),
-                                            FutureBuilder<String?>(
-                                              future: fetchvResultStatus(
-                                                  data['item']?.toString() ??
-                                                      ''),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return CircularProgressIndicator();
-                                                } else if (snapshot.hasError) {
-                                                  return Text('Error');
-                                                } else if (snapshot.data ==
-                                                    '1') {
-                                                  return ElevatedButton(
-                                                    onPressed: () async {
-                                                      final result =
-                                                          await Navigator.push<
-                                                              Map<String,
-                                                                  String>>(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              LotDialog(
-                                                            item: data['item']
-                                                                    ?.toString() ??
-                                                                '',
-                                                            itemDesc: data[
-                                                                        'item_desc']
-                                                                    ?.toString() ??
-                                                                '',
-                                                            recSeq: data[
-                                                                        'rec_seq']
-                                                                    ?.toString() ??
-                                                                '',
-                                                            lotQTY: data[
-                                                                        'lot_qty']
-                                                                    ?.toString() ??
-                                                                '',
-                                                            lotSize: data[
-                                                                        'lot_Size']
-                                                                    ?.toString() ??
-                                                                '',
-                                                            rowid: data['rowid']
-                                                                    ?.toString() ??
-                                                                '',
-                                                            lotSupp: [
-                                                              'lot_supplier'
-                                                            ].toString(),
-                                                            ouCode: data[
-                                                                        'ou_code']
-                                                                    ?.toString() ??
-                                                                '',
-                                                            poReceiveNo: widget
-                                                                .poReceiveNo,
-                                                            poPONO:
-                                                                widget.poPONO ??
-                                                                    '',
-                                                          ),
-                                                          fullscreenDialog:
-                                                              true,
-                                                        ),
-                                                      );
-                                                      if (result == null) {
-                                                        Timer(
-                                                            Duration(
-                                                                seconds: 1),
-                                                            () {
-                                                          sendGetRequestlineWMS();
-                                                        });
-                                                      }
-                                                    },
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      backgroundColor:
-                                                          const Color.fromARGB(
-                                                              255, 45, 68, 116),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15),
-                                                      ),
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 20),
-                                                    ),
-                                                    child: Text(
-                                                      'LOT',
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.white),
-                                                    ),
-                                                  );
-                                                } else {
-                                                  return IconButton(
-                                                    iconSize: 20.0,
-                                                    icon: Image.asset(
-                                                      'assets/images/edit.png',
-                                                      width: 30,
-                                                      height: 30,
-                                                    ),
-                                                    onPressed: () async {
-                                                      _showDetailsDialog(data);
-                                                    },
-                                                  );
-                                                }
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              );
-                            }).toList(),
-                          )
-                        : Center(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 100),
-                              child: Text(
-                                'No data found',
-                                style: TextStyle(color: Colors.white),
                               ),
+                            );
+                          }).toList(),
+                        )
+                      : Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 100),
+                            child: Text(
+                              'No data found',
+                              style: TextStyle(color: Colors.white),
                             ),
                           ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Previous Button
-                        hasPrevPage
-                            ? ElevatedButton(
-                                onPressed: _loadPrevPage,
-                                style: ButtonStyles.previousButtonStyle,
-                                child: ButtonStyles.previousButtonContent,
-                              )
-                            : ElevatedButton(
-                                onPressed: null,
-                                style: ButtonStyles.disablePreviousButtonStyle,
-                                child:
-                                    ButtonStyles.disablePreviousButtonContent,
-                              ),
-
-                        // Page Indicator
-                        Text(
-                          _getPageIndicatorText(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
                         ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Previous Button
+                      hasPrevPage
+                          ? ElevatedButton(
+                              onPressed: _loadPrevPage,
+                              style: ButtonStyles.previousButtonStyle,
+                              child: ButtonStyles.previousButtonContent,
+                            )
+                          : ElevatedButton(
+                              onPressed: null,
+                              style: ButtonStyles.disablePreviousButtonStyle,
+                              child: ButtonStyles.disablePreviousButtonContent,
+                            ),
 
-                        // Next Button
-                        hasNextPage
-                            ? ElevatedButton(
-                                onPressed: _loadNextPage,
-                                style: ButtonStyles.nextButtonStyle,
-                                child: ButtonStyles.nextButtonContent(),
-                              )
-                            : ElevatedButton(
-                                onPressed: null,
-                                style: ButtonStyles.disableNextButtonStyle,
-                                child:
-                                    ButtonStyles.disablePreviousButtonContent,
-                              ),
-                      ],
-                    ),
-                  ],
-                ),
+                      // Page Indicator
+                      Text(
+                        _getPageIndicatorText(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      // Next Button
+                      hasNextPage
+                          ? ElevatedButton(
+                              onPressed: _loadNextPage,
+                              style: ButtonStyles.nextButtonStyle,
+                              child: ButtonStyles.nextButtonContent(),
+                            )
+                          : ElevatedButton(
+                              onPressed: null,
+                              style: ButtonStyles.disableNextButtonStyle,
+                              child: ButtonStyles.disablePreviousButtonContent,
+                            ),
+                    ],
+                  ),
+                ],
+              ),
               // ),
             )
           ],

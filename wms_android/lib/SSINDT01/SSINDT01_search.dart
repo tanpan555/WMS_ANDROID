@@ -165,15 +165,13 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                               ),
                             ),
                             onTap: () {
-                                        setState(() {
-                                          _selectedValue =
-                                              item; // Update the selection
-                                          _selectedProductTypeController.text =
-                                              item; // Update the controller
-                                        });
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
-                                      },
+                              setState(() {
+                                _selectedValue = item; // Update the selection
+                                _selectedProductTypeController.text =
+                                    item; // Update the controller
+                              });
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
                           );
                         },
                       ),
@@ -189,31 +187,31 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
   }
 
   void _showDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return DialogStyles.customLovSearchDialog(
-        context: context,
-        headerText: 'เลือกผู้ขาย', // Dialog title
-        searchController: _searchController,
-        data: apCodes,
-        docString: (item) => '${item['ap_code']} ${item['ap_name']}',
-        titleText: (item) => item['ap_code'],
-        subtitleText: (item) => item['ap_name'],
-        onTap: (item) {
-          setState(() {
-            selectedApCode = item['ap_code']; // Update selected code
-            _selectedApCodeController.text = item['ap_name']; // Update display text
-          });
-          Navigator.of(context).pop(); // Close the dialog after selection
-        },
-      );
-    },
-  ).then((_) {
-    _searchController.clear(); // Clear search field after closing
-  });
-}
-
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.customLovSearchDialog(
+          context: context,
+          headerText: 'เลือกผู้ขาย', // Dialog title
+          searchController: _searchController,
+          data: apCodes,
+          docString: (item) => '${item['ap_code']} ${item['ap_name']}',
+          titleText: (item) => item['ap_code'],
+          subtitleText: (item) => item['ap_name'],
+          onTap: (item) {
+            setState(() {
+              selectedApCode = item['ap_code']; // Update selected code
+              _selectedApCodeController.text =
+                  item['ap_name']; // Update display text
+            });
+            Navigator.of(context).pop(); // Close the dialog after selection
+          },
+        );
+      },
+    ).then((_) {
+      _searchController.clear(); // Clear search field after closing
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -278,10 +276,10 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                   ),
                   style: const TextStyle(color: Colors.black),
                   onChanged: (value) {
-                        setState(() {
-                          documentNumber = value.toUpperCase();
-                        });
-                      },
+                    setState(() {
+                      documentNumber = value.toUpperCase();
+                    });
+                  },
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -304,7 +302,8 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                         print('selectedApCode $selectedApCode');
                         print(_selectedValue);
                         print(documentNumber);
-                        String docNum = _documentNumberController.text.replaceAll(' ', '');
+                        String docNum =
+                            _documentNumberController.text.replaceAll(' ', '');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -314,16 +313,16 @@ class _SSINDT01_SEARCHState extends State<SSINDT01_SEARCH> {
                               p_ou_code: widget.p_ou_code,
                               selectedValue: _selectedValue ?? 'ทั้งหมด',
                               apCode: selectedApCode ?? '',
-                              documentNumber: docNum  == '' ? 'null' : docNum,
+                              documentNumber: docNum == '' ? 'null' : docNum,
                             ),
                           ),
                         ).then((value) async {
-                                    if (docNum == '') {
-                                      setState(() {
-                                        _documentNumberController.text = '';
-                                      });
-                                    }
-                                  });
+                          if (docNum == '') {
+                            setState(() {
+                              _documentNumberController.text = '';
+                            });
+                          }
+                        });
                       },
                       style: AppStyles.SearchButtonStyle(),
                       child: Image.asset('assets/images/search_color.png',

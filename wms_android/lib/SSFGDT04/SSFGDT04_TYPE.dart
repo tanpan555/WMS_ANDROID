@@ -38,8 +38,8 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
   }
 
   Future<void> fetchStatusItems() async {
-    final response = await http.get(Uri.parse(
-        '${gb.IP_API}/apex/wms/SSFGDT04/Step_1_TYPE/${gb.ATTR1}'));
+    final response = await http.get(
+        Uri.parse('${gb.IP_API}/apex/wms/SSFGDT04/Step_1_TYPE/${gb.ATTR1}'));
 
     if (response.statusCode == 200) {
       final responseBody = utf8.decode(response.bodyBytes);
@@ -69,8 +69,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
   String? po_doc_type;
 
   Future<void> create_NewINXfer_WMS(String? pDocType) async {
-    final url =
-        '${gb.IP_API}/apex/wms/SSFGDT04/Step_1_Create_NewINHead';
+    final url = '${gb.IP_API}/apex/wms/SSFGDT04/Step_1_Create_NewINHead';
 
     final headers = {
       'Content-Type': 'application/json',
@@ -268,87 +267,89 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                   ElevatedButton(
-  onPressed: () async {
-    // Check if navigation is already in progress
-    if (isNavigating) return;
-    
-    setState(() {
-      isNavigating = true; // Set the flag to true to indicate navigation is happening
-    });
+                    ElevatedButton(
+                      onPressed: () async {
+                        // Check if navigation is already in progress
+                        if (isNavigating) return;
 
-    try {
-      // Call function to create a new document
-      await create_NewINXfer_WMS(selectedDocType ?? '');
+                        setState(() {
+                          isNavigating =
+                              true; // Set the flag to true to indicate navigation is happening
+                        });
 
-      // Check if form is validated
-      if (_formKey.currentState!.validate()) {
-        _formKey.currentState!.save();
+                        try {
+                          // Call function to create a new document
+                          await create_NewINXfer_WMS(selectedDocType ?? '');
 
-        // Check poStatus for form navigation
-        if (poStatus == '0') {
-          await create_NewINXfer_WMS(selectedDocType);
+                          // Check if form is validated
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SSFGDT04_FORM(
-                po_doc_no: po_doc_no, // Pass po_doc_no
-                po_doc_type: po_doc_type, // Pass po_doc_type
-                pWareCode: widget.pWareCode,
-              ),
-            ),
-          );
-        } else if (poStatus == '1') {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return DialogStyles.alertMessageDialog(
-                context: context,
-                content: Text('$poMessage'),
-                onClose: () {
-                  Navigator.of(context).pop();
-                },
-                onConfirm: () async {
-                  // Handle confirmation actions
-                  Navigator.of(context).pop();
-                },
-              );
-            },
-          );
-        }
-      } else {
-        // Show alert message if form is not valid
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return DialogStyles.alertMessageDialog(
-              context: context,
-              content: Text('$poMessage'),
-              onClose: () {
-                Navigator.of(context).pop();
-              },
-              onConfirm: () async {
-                // Handle confirmation actions
-                Navigator.of(context).pop();
-              },
-            );
-          },
-        );
-      }
-    } finally {
-      setState(() {
-        isNavigating = false; // Reset the flag when navigation is done
-      });
-    }
-  },
-  style: AppStyles.ConfirmbuttonStyle(),
-  child: Text(
-    'CONFIRM',
-    style: AppStyles.ConfirmbuttonTextStyle(),
-  ),
-)
+                            // Check poStatus for form navigation
+                            if (poStatus == '0') {
+                              await create_NewINXfer_WMS(selectedDocType);
 
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SSFGDT04_FORM(
+                                    po_doc_no: po_doc_no, // Pass po_doc_no
+                                    po_doc_type:
+                                        po_doc_type, // Pass po_doc_type
+                                    pWareCode: widget.pWareCode,
+                                  ),
+                                ),
+                              );
+                            } else if (poStatus == '1') {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return DialogStyles.alertMessageDialog(
+                                    context: context,
+                                    content: Text('$poMessage'),
+                                    onClose: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    onConfirm: () async {
+                                      // Handle confirmation actions
+                                      Navigator.of(context).pop();
+                                    },
+                                  );
+                                },
+                              );
+                            }
+                          } else {
+                            // Show alert message if form is not valid
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return DialogStyles.alertMessageDialog(
+                                  context: context,
+                                  content: Text('$poMessage'),
+                                  onClose: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  onConfirm: () async {
+                                    // Handle confirmation actions
+                                    Navigator.of(context).pop();
+                                  },
+                                );
+                              },
+                            );
+                          }
+                        } finally {
+                          setState(() {
+                            isNavigating =
+                                false; // Reset the flag when navigation is done
+                          });
+                        }
+                      },
+                      style: AppStyles.ConfirmbuttonStyle(),
+                      child: Text(
+                        'CONFIRM',
+                        style: AppStyles.ConfirmbuttonTextStyle(),
+                      ),
+                    )
                   ],
                 ),
               ],

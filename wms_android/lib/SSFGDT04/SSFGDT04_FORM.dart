@@ -763,7 +763,8 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                           // เลขที่ใบเบิก WMS* //
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: TextField(
+                            child: AbsorbPointer(
+                            child: TextFormField(
                               readOnly: true,
                               decoration: InputDecoration(
                                 // labelText: 'เลขที่เอกสาร WMS*',
@@ -802,6 +803,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                   }
                                 }),
                               },
+                            ),
                             ),
                           ),
 

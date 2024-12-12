@@ -74,7 +74,7 @@ class _SSFGDT04_MAINState extends State<SSFGDT04_MAIN> {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: isLoading
-        ? Center(child: LoadingIndicator())
+            ? Center(child: LoadingIndicator())
             // ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [

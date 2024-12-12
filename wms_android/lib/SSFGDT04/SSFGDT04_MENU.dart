@@ -20,9 +20,8 @@ class SSFGDT04_MENU extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {});
 
     return Scaffold(
-      appBar: CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
-      // backgroundColor: const Color.fromARGB(255, 17, 0, 56),
-      // endDrawer:CustomDrawer(),
+      appBar:
+          CustomAppBar(title: 'รับตรง (ไม่อ้าง PO)', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(

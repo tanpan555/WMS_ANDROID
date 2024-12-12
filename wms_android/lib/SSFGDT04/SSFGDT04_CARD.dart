@@ -571,8 +571,6 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                                                 isNavigating =
                                                     true; // Set to true to block further taps
                                               });
-
-                                              // Perform navigation or any other action
                                               checkRCV(
                                                   item['po_no'] ?? '',
                                                   item['doc_no'] ?? '',
@@ -583,8 +581,6 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                                                   'p_doc_no in Card : ${item['doc_no']} Type : ${item['doc_no'].runtimeType}');
                                               print(
                                                   'p_doc_type in Card : ${item['doc_type']} Type : ${item['doc_type'].runtimeType}');
-
-                                              // Simulate some action (e.g., navigating or loading data)
                                               Future.delayed(
                                                   const Duration(seconds: 1),
                                                   () {
@@ -602,7 +598,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                                             child: Column(
                                               mainAxisSize: MainAxisSize.min,
                                               mainAxisAlignment:
-                                                MainAxisAlignment.start,
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   item['ap_name'] ?? 'No Name',
@@ -623,9 +619,8 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
                                                     Container(
                                                       padding: const EdgeInsets
                                                           .symmetric(
-                                                        horizontal: 12.0,
-                                                        vertical: 6.0,
-                                                      ),
+                                                          horizontal: 12.0,
+                                                          vertical: 6.0),
                                                       decoration: BoxDecoration(
                                                         color: (() {
                                                           switch (item[

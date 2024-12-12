@@ -686,42 +686,44 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextFormField(
-            style: const TextStyle(
-              color: Colors.black87,
-            ),
-            controller: poNoController,
-            onChanged: (value) => {
-              setState(() {
-                poNo = value;
-                if (poNo != poNoController) {
-                  checkUpdateData = true;
-                }
-              }),
-            },
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[300],
-              label: Row(
-                children: [
-                  const Text(
-                    'เลขที่อ้างอิง (PO)',
-                    style: TextStyle(
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(width: 2), // Add a small space
-                  Text(
-                    '*',
-                    style: TextStyle(
-                      color: Colors.red, // Change asterisk color to red
-                    ),
-                  ),
-                ],
+          AbsorbPointer(
+            child: TextFormField(
+              style: const TextStyle(
+                color: Colors.black87,
               ),
-              border: InputBorder.none,
+              controller: poNoController,
+              onChanged: (value) => {
+                setState(() {
+                  poNo = value;
+                  if (poNo != poNoController) {
+                    checkUpdateData = true;
+                  }
+                }),
+              },
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[300],
+                label: Row(
+                  children: [
+                    const Text(
+                      'เลขที่อ้างอิง (PO)',
+                      style: TextStyle(
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(width: 2), // Add a small space
+                    Text(
+                      '*',
+                      style: TextStyle(
+                        color: Colors.red, // Change asterisk color to red
+                      ),
+                    ),
+                  ],
+                ),
+                border: InputBorder.none,
+              ),
+              readOnly: true,
             ),
-            readOnly: true,
           ),
           const SizedBox(height: 8.0),
           Padding(
@@ -897,93 +899,101 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
           Row(
             children: [
               Expanded(
-                child: TextFormField(
-                  style: const TextStyle(
-                    color: Colors.black87,
-                  ),
-                  controller: sellerController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color.fromRGBO(224, 224, 224, 1),
-                    labelText: 'ผู้ขาย',
-                    labelStyle: const TextStyle(
+                child: AbsorbPointer(
+                  child: TextFormField(
+                    style: const TextStyle(
                       color: Colors.black87,
                     ),
-                    border: InputBorder.none,
+                    controller: sellerController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: const Color.fromRGBO(224, 224, 224, 1),
+                      labelText: 'ผู้ขาย',
+                      labelStyle: const TextStyle(
+                        color: Colors.black87,
+                      ),
+                      border: InputBorder.none,
+                    ),
+                    readOnly: true,
                   ),
-                  readOnly: true,
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: TextFormField(
-                  style: const TextStyle(
-                    color: Colors.black87,
-                  ),
-                  controller: crByController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.grey[300],
-                    labelText: 'ผู้รับ',
-                    labelStyle: const TextStyle(
+                child: AbsorbPointer(
+                  child: TextFormField(
+                    style: const TextStyle(
                       color: Colors.black87,
                     ),
-                    border: InputBorder.none,
+                    controller: crByController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.grey[300],
+                      labelText: 'ผู้รับ',
+                      labelStyle: const TextStyle(
+                        color: Colors.black87,
+                      ),
+                      border: InputBorder.none,
+                    ),
+                    readOnly: true,
                   ),
-                  readOnly: true,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 8.0),
-          TextFormField(
-            style: const TextStyle(
-              color: Colors.black87,
-            ),
-            controller: receiveNoController,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[300],
-              label: Row(
-                children: [
-                  const Text(
-                    'เลขที่เอกสาร WMS',
-                    style: TextStyle(
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(width: 2), // Add a small space
-                  Text(
-                    '*',
-                    style: TextStyle(
-                      color: Colors.red, // Change asterisk color to red
-                    ),
-                  ),
-                ],
-              ),
-              labelStyle: const TextStyle(
+          AbsorbPointer(
+            child: TextFormField(
+              style: const TextStyle(
                 color: Colors.black87,
               ),
-              border: InputBorder.none,
+              controller: receiveNoController,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[300],
+                label: Row(
+                  children: [
+                    const Text(
+                      'เลขที่เอกสาร WMS',
+                      style: TextStyle(
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(width: 2), // Add a small space
+                    Text(
+                      '*',
+                      style: TextStyle(
+                        color: Colors.red, // Change asterisk color to red
+                      ),
+                    ),
+                  ],
+                ),
+                labelStyle: const TextStyle(
+                  color: Colors.black87,
+                ),
+                border: InputBorder.none,
+              ),
+              readOnly: true,
             ),
-            readOnly: true,
           ),
           const SizedBox(height: 8),
-          TextFormField(
-            style: const TextStyle(
-              color: Colors.black87,
-            ),
-            controller: wareCodeController,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[300],
-              labelText: 'รับเข้าคลัง',
-              labelStyle: const TextStyle(
+          AbsorbPointer(
+            child: TextFormField(
+              style: const TextStyle(
                 color: Colors.black87,
               ),
-              border: InputBorder.none,
+              controller: wareCodeController,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[300],
+                labelText: 'รับเข้าคลัง',
+                labelStyle: const TextStyle(
+                  color: Colors.black87,
+                ),
+                border: InputBorder.none,
+              ),
+              readOnly: true,
             ),
-            readOnly: true,
           ),
           const SizedBox(height: 8),
           GestureDetector(
@@ -1012,21 +1022,23 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
             ),
           ),
           const SizedBox(height: 8),
-          TextFormField(
-            style: const TextStyle(
-              color: Colors.black87,
-            ),
-            controller: crDateController,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[300],
-              labelText: 'วันที่บันทึก',
-              labelStyle: const TextStyle(
+          AbsorbPointer(
+            child: TextFormField(
+              style: const TextStyle(
                 color: Colors.black87,
               ),
-              border: InputBorder.none,
+              controller: crDateController,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[300],
+                labelText: 'วันที่บันทึก',
+                labelStyle: const TextStyle(
+                  color: Colors.black87,
+                ),
+                border: InputBorder.none,
+              ),
+              readOnly: true,
             ),
-            readOnly: true,
           ),
         ],
       ),
