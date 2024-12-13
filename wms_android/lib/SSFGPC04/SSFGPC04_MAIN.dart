@@ -211,7 +211,7 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
                             },
                       style: AppStyles.ConfirmbuttonStyle(),
                       child: Text(
-                        'NEXT',
+                        'ถัดไป',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

@@ -346,7 +346,7 @@ class _SSFGDT04_TYPEState extends State<SSFGDT04_TYPE> {
                       },
                       style: AppStyles.ConfirmbuttonStyle(),
                       child: Text(
-                        'CONFIRM',
+                        'ยืนยัน',
                         style: AppStyles.ConfirmbuttonTextStyle(),
                       ),
                     )

@@ -372,7 +372,7 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                   },
                   style: AppStyles.ConfirmbuttonStyle(),
                   child: Text(
-                    'Confirm',
+                    'ยืนยัน',
                     style: AppStyles.CancelbuttonTextStyle(),
                   ),
                 ),

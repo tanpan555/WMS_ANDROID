@@ -431,8 +431,29 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                   return DialogStyles.alertMessageDialog(
                     context: context,
                     content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
-                    onClose: () {
-                      Navigator.of(context).pop(); // Close dialog on close
+                    onClose: () async {
+                      await cancel_from(selectedcCode!).then((_) {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop(
+                          MaterialPageRoute(
+                            builder: (context) => SSINDT01_MAIN(
+                              pWareCode: widget.pWareCode,
+                              pWareName: widget.pWareName,
+                              p_ou_code: widget.p_ou_code,
+                              selectedValue: 'ทั้งหมด',
+                              apCode: 'ทั้งหมด',
+                              documentNumber: 'null',
+                            ),
+                          ),
+                        );
+                        Navigator.of(context).pop();
+                      }).catchError((error) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('An error occurred: $error'),
+                          ),
+                        );
+                      });
                     },
                     onConfirm: () async {
                       await cancel_from(selectedcCode!).then((_) {

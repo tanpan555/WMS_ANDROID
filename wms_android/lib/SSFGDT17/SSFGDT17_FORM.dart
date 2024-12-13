@@ -288,8 +288,27 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
                   return DialogStyles.alertMessageDialog(
                     context: context,
                     content: Text('ยกเลิกรายการเสร็จสมบูรณ์'),
-                    onClose: () {
-                      Navigator.of(context).pop();
+                    onClose: () async {
+                      await cancel_from(selectedcCode!).then((_) {
+                        Navigator.of(context).pop(); // Close the success dialog
+                        Navigator.of(context)
+                            .pop(); // Go back to the previous screen
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SSFGDT17_MENU(
+                              pWareCode: widget.pWareCode ?? '',
+                              pWareName: widget.pWareName ?? '',
+                              p_ou_code: gb.P_ERP_OU_CODE,
+                            ),
+                          ),
+                        );
+                      }).catchError((error) {
+                        ScaffoldMessenger.of(parentContext).showSnackBar(
+                          SnackBar(
+                            content: Text('An error occurred: $error'),
+                          ),
+                        );
+                      });
                     },
                     onConfirm: () async {
                       await cancel_from(selectedcCode!).then((_) {

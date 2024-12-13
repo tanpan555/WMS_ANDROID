@@ -629,8 +629,23 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                             context: context,
                                             content: Text(
                                                 'ยกเลิกรายการเสร็จสมบูรณ์'),
-                                            onClose: () {
-                                              Navigator.of(context).pop();
+                                            onClose: () async {
+                                              await cancel_INHeadNonePO_WMS(
+                                                      selectedCancelCode!)
+                                                  .then((_) {
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SSFGDT04_MENU(
+                                                      pWareCode: gb.P_WARE_CODE,
+                                                      pErpOuCode:
+                                                          gb.P_ERP_OU_CODE,
+                                                    ),
+                                                  ),
+                                                );
+                                                Navigator.of(context).pop();
+                                              }).catchError((error) {});
                                             },
                                             onConfirm: () async {
                                               await cancel_INHeadNonePO_WMS(
@@ -649,13 +664,6 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                                 );
                                                 Navigator.of(context).pop();
                                               }).catchError((error) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                        'An error occurred: $error'),
-                                                  ),
-                                                );
                                               });
                                             },
                                           );

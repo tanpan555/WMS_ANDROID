@@ -438,8 +438,7 @@ class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
                                     onClose: () {
                                       Navigator.of(context).pop();
                                       setState(() {
-                                        isDialogShowing =
-                                            false; // Reset the flag when the first dialog is closed
+                                        isDialogShowing = false; // Reset the flag when the first dialog is closed
                                       });
                                     },
                                     onConfirm: () async {
@@ -456,7 +455,7 @@ class _SSFGDT17_VERIFYState extends State<SSFGDT17_VERIFY> {
                           },
                           style: AppStyles.ConfirmbuttonStyle(),
                           child: Text(
-                            'Confirm',
+                            'ยืนยัน',
                             style: AppStyles.ConfirmbuttonTextStyle(),
                           ),
                         ),
