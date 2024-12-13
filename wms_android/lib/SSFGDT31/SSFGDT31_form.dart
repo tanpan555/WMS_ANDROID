@@ -390,7 +390,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
     }
   }
 
-  Future<void> selectCust(String pMoDoNo) async {
+  Future<void> selectCust(String pMoDoNo, String checkWhere) async {
     print('pMoDoNo in selectCust   : $pMoDoNo type : ${pMoDoNo.runtimeType}');
     try {
       final response = await http.get(Uri.parse(
@@ -403,17 +403,66 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
         print(items);
         if (items.isNotEmpty) {
           final Map<String, dynamic> item = items[0];
-          //
-
-          //
-          print('Fetched data: $jsonDecode');
-          if (mounted) {
-            setState(() {
-              custName = item['cust'] ?? '';
-
-              custNameController.text = custName;
-            });
+          if (custName.isEmpty) {
+            if (mounted) {
+              setState(() {
+                custName = item['cust'] ?? '';
+                custNameController.text = custName;
+              });
+            }
+          } else if (custName.isNotEmpty) {
+            if (checkWhere == 'MODONO') {
+              String custNameTest = item['cust'] ?? '';
+              if (custNameTest == custName) {
+                if (mounted) {
+                  setState(() {
+                    custName = item['cust'] ?? '';
+                    custNameController.text = custName;
+                  });
+                }
+              } else if (returnStatusLovMoDoNo.isNotEmpty &&
+                  returnStatusLovMoDoNo != 'null' &&
+                  returnStatusLovRefNo.isEmpty &&
+                  returnStatusLovRefNo == 'null') {
+                if (mounted) {
+                  setState(() {
+                    custName = item['cust'] ?? '';
+                    custNameController.text = custName;
+                  });
+                }
+              } else {
+                selectLovMoDoNo = '';
+                returnStatusLovMoDoNo = '';
+                moDoNoController.clear();
+              }
+            }
+            if (checkWhere == 'REFNO') {
+              String custNameTest = item['cust'] ?? '';
+              if (custNameTest == custName) {
+                if (mounted) {
+                  setState(() {
+                    custName = item['cust'] ?? '';
+                    custNameController.text = custName;
+                  });
+                }
+              } else if (returnStatusLovRefNo.isNotEmpty &&
+                  returnStatusLovRefNo != 'null' &&
+                  returnStatusLovMoDoNo.isEmpty &&
+                  returnStatusLovMoDoNo == 'null') {
+                if (mounted) {
+                  setState(() {
+                    custName = item['cust'] ?? '';
+                    custNameController.text = custName;
+                  });
+                }
+              } else {
+                selectLovRefNo = '';
+                returnStatusLovRefNo = '';
+                refNoController.clear();
+              }
+            }
           }
+          print('custName : $custName');
         } else {
           print('No items found.');
         }
@@ -484,7 +533,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
     }
   }
 
-  Future<void> changeRefNo(String soNoForChk) async {
+  Future<void> changeRefNo(String soNoForChk, String checkWhere) async {
     try {
       final response = await http.get(Uri.parse(
           '${globals.IP_API}/apex/wms/SSFGDT31/SSFGDT31_Step_2_ChangeRefNo/$soNoForChk'));
@@ -496,16 +545,65 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
         print(items);
         if (items.isNotEmpty) {
           final Map<String, dynamic> item = items[0];
-          //
-
-          //
           print('Fetched data: $jsonDecode');
-          if (mounted) {
-            setState(() {
-              custName = item['ar_code_name'] ?? '';
-
-              custNameController.text = custName;
-            });
+          if (custName.isEmpty) {
+            if (mounted) {
+              setState(() {
+                custName = item['ar_code_name'] ?? '';
+                custNameController.text = custName;
+              });
+            }
+          } else if (custName.isNotEmpty) {
+            if (checkWhere == 'MODONO') {
+              String custNameTest = item['ar_code_name'] ?? '';
+              if (custNameTest == custName) {
+                if (mounted) {
+                  setState(() {
+                    custName = item['ar_code_name'] ?? '';
+                    custNameController.text = custName;
+                  });
+                }
+              } else if (returnStatusLovMoDoNo.isNotEmpty &&
+                  returnStatusLovMoDoNo != 'null' &&
+                  returnStatusLovRefNo.isEmpty &&
+                  returnStatusLovRefNo == 'null') {
+                if (mounted) {
+                  setState(() {
+                    custName = item['ar_code_name'] ?? '';
+                    custNameController.text = custName;
+                  });
+                }
+              } else {
+                selectLovMoDoNo = '';
+                returnStatusLovMoDoNo = '';
+                moDoNoController.clear();
+              }
+            }
+            if (checkWhere == 'REFNO') {
+              String custNameTest = item['ar_code_name'] ?? '';
+              if (custNameTest == custName) {
+                if (mounted) {
+                  setState(() {
+                    custName = item['ar_code_name'] ?? '';
+                    custNameController.text = custName;
+                  });
+                }
+              } else if (returnStatusLovRefNo.isNotEmpty &&
+                  returnStatusLovRefNo != 'null' &&
+                  returnStatusLovMoDoNo.isEmpty &&
+                  returnStatusLovMoDoNo == 'null') {
+                if (mounted) {
+                  setState(() {
+                    custName = item['ar_code_name'] ?? '';
+                    custNameController.text = custName;
+                  });
+                }
+              } else {
+                selectLovRefNo = '';
+                returnStatusLovRefNo = '';
+                refNoController.clear();
+              }
+            }
           }
         } else {
           print('No items found.');
@@ -702,9 +800,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
             if (deleteStatus == '0') {
               if (mounted) {
                 setState(() async {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  showDialogErrorForDEL(context, deleteMessage);
                 });
               }
             }
@@ -1109,6 +1205,33 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
     );
   }
 
+  Future<void> showDialogErrorForDEL(
+    BuildContext context,
+    String messageAlert,
+  ) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+          onConfirm: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
+  }
+
   void showDialogDropdownSearchMoDoNo() {
     showDialog(
       context: context,
@@ -1134,6 +1257,15 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
               selectLovMoDoNo = '${item['schid'] ?? '--No Value Set--'}';
               returnStatusLovMoDoNo = '${item['schid'] ?? 'null'}';
               moDoNoController.text = selectLovMoDoNo.toString();
+              shidForChk =
+                  '${item['schid']}' == '' ? 'null' : '${item['schid']}';
+              if (returnStatusLovMoDoNo.isNotEmpty &&
+                  returnStatusLovMoDoNo != 'null') {
+                // Select ชื่อลูกค้า
+                print(
+                    'IIIYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY');
+                selectCust(returnStatusLovMoDoNo, checkWhere);
+              }
 
               if (dataCHK != returnStatusLovMoDoNoForCheck) {
                 checkUpdateData = true;
@@ -1154,12 +1286,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                   'selectLovMoDoNo New: $selectLovMoDoNo Type : ${selectLovMoDoNo.runtimeType}');
               print(
                   'moDoNoController New: $moDoNoController Type : ${moDoNoController.runtimeType}');
-              shidForChk =
-                  '${item['schid']}' == '' ? 'null' : '${item['schid']}';
-              if (returnStatusLovMoDoNo.isNotEmpty &&
-                  returnStatusLovRefNo == 'null') {
-                selectCust(returnStatusLovMoDoNo);
-              }
+
               print('shidForChk : $shidForChk');
               print(
                   'returnStatusLovMoDoNoForCheck : $returnStatusLovMoDoNoForCheck');
@@ -1222,7 +1349,7 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                   'refNoController New: $refNoController Type : ${refNoController.runtimeType}');
               if (returnStatusLovRefNo.isNotEmpty &&
                   returnStatusLovRefNo != 'null') {
-                changeRefNo(returnStatusLovRefNo);
+                changeRefNo(returnStatusLovRefNo, checkWhere);
               }
               if ((returnStatusLovMoDoNo.isNotEmpty &&
                       returnStatusLovMoDoNo != 'null') &&

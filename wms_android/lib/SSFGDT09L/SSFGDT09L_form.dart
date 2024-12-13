@@ -685,9 +685,7 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
             if (deleteStatus == '0') {
               if (mounted) {
                 setState(() async {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  showDialogErrorForDEL(context, deleteMessage);
                   // Navigator.of(context).pushAndRemoveUntil(
                   //   MaterialPageRoute(
                   //       builder: (context) => SSFGDT09L_MAIN(
@@ -1154,6 +1152,33 @@ class _Ssfgdt09lFormState extends State<Ssfgdt09lForm> {
             Navigator.of(context).pop();
           },
           onConfirm: () {
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> showDialogErrorForDEL(
+    BuildContext context,
+    String messageAlert,
+  ) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogStyles.alertMessageDialog(
+          context: context,
+          content: Text(messageAlert),
+          onClose: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+          onConfirm: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
             Navigator.of(context).pop();
           },
         );

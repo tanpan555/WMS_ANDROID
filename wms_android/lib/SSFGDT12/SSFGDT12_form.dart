@@ -131,6 +131,8 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
   }
 
   Future<void> fetchData() async {
+    print(
+        '${globals.IP_API}/apex/wms/SSFGDT12/SSFGDT12_Step_2_SelectDataForm/${globals.P_ERP_OU_CODE}/${widget.docNo}/${globals.BROWSER_LANGUAGE}/${globals.P_EMP_ID}');
     isLoading = true;
     try {
       final response = await http.get(Uri.parse(
@@ -155,6 +157,7 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
               nbStaffCountName = item['nb_staff_count_name'] ?? '';
               countStaff = item['count_staff'] ?? '';
               displayNBCountStaff = item['nb_count_staff'] ?? '';
+              returnNBCountStaff = item['nb_count_staff'] ?? '';
               updBy = item['upd_by'] ?? '';
               updDate = item['upd_date'] ?? '';
               remark = item['remark'] ?? '';
@@ -615,18 +618,22 @@ class _Ssfgdt12FormState extends State<Ssfgdt12Form> {
           data: dataEMP,
           docString: (item) =>
               '${item['emp_id'] ?? ''} ${item['emp_name'] ?? '--No Value Set--'}',
-          titleText: (item) => '${item['emp_name'] ?? '--No Value Set--'}',
+          titleText: (item) => '${item['emp_id'] ?? '--No Value Set--'}',
           subtitleText: (item) {
-            final empNo = item['emp_id'] ?? '';
-            return empNo.isNotEmpty ? empNo : null;
+            // final empNo = item['emp_name'] ?? '';
+            // return empNo.isNotEmpty ? empNo : null;
+            final empNo = item['emp_name']?.toString() ?? '';
+            return empNo.isNotEmpty ? empNo : '';
           },
           onTap: (item) {
             isLoading = true;
             Navigator.of(context).pop();
             setState(() {
               returnNBCountStaff = '${item['emp_id'] ?? ''}';
-              displayNBCountStaff = '${item['emp_name'] ?? '--No Value Set--'}';
+              displayNBCountStaff = '${item['emp_id'] ?? '--No Value Set--'}';
               nbCountStaffController.text = displayNBCountStaff;
+              nbStaffCountNameController.text = '${item['emp_name'] ?? ''}';
+              nbStaffCountName = '${item['emp_name'] ?? ''}';
               isLoading = false;
               // -----------------------------------------
             });
