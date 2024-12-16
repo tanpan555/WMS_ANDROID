@@ -594,6 +594,7 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
                             ],
                           ),
                         ),
+                  const SizedBox(height: 10.0),
                   isLoading
                       ? Center(child: LoadingIndicator())
                       : dataCard.isEmpty
@@ -670,7 +671,7 @@ class _Ssfgdt31VerifyState extends State<Ssfgdt31Verify> {
                                         children: [
                                           Center(
                                             child: Text(
-                                              '${(currentPage * itemsPerPage) + 1} : ${((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length)}',
+                                              '${(currentPage * itemsPerPage) + 1} - ${((currentPage + 1) * itemsPerPage).clamp(1, dataCard.length)}',
                                               style: const TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,

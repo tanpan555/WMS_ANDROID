@@ -908,44 +908,42 @@ class DialogStyles {
   }
 
   static AlertDialog messageDialog({
-  required BuildContext context,
-  required Widget content,
-  required VoidCallback onClose,
-  required VoidCallback onConfirm,
-  bool showCloseIcon = false, // กำหนดการแสดงไอคอน close
-}) {
-  return AlertDialog(
-    content: Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(child: content), // กำหนดให้เนื้อหาแสดงทางด้านซ้าย
-        if (showCloseIcon)
-          IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: onClose, // กำหนดการทำงานเมื่อกดไอคอน close
-          ),
-      ],
-    ),
-    actions: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+    required BuildContext context,
+    required Widget content,
+    required VoidCallback onClose,
+    required VoidCallback onConfirm,
+    bool showCloseIcon = false, // กำหนดการแสดงไอคอน close
+  }) {
+    return AlertDialog(
+      content: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ElevatedButton(
-            onPressed: onConfirm,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              side: const BorderSide(color: Colors.grey),
+          Expanded(child: content), // กำหนดให้เนื้อหาแสดงทางด้านซ้าย
+          if (showCloseIcon)
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: onClose, // กำหนดการทำงานเมื่อกดไอคอน close
             ),
-            child: const Text('ตกลง'),
-          ),
         ],
       ),
-    ],
-  );
-}
-
-
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              onPressed: onConfirm,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Colors.grey),
+              ),
+              child: const Text('ตกลง'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
   static AlertDialog alertMessageNotIconDialog({
     required BuildContext context,
@@ -1994,32 +1992,52 @@ class CardStyles {
     );
   }
 
-  static Card cardGridPageSSFGDT31({
-    required bool isCanDeleteCard,
-    required bool isCanEditDetail,
-    required VoidCallback? onTapDelete,
-    required VoidCallback? onTapEditDetail,
-    // required String lableHeader,
-    required String labelDetail1,
-    required String labelDetail2,
-    required String labelDetail3,
-    required String labelDetail4,
-    required String labelDetail5,
-    required String labelDetail6,
-    required String labelDetail7,
-    required String labelDetail8,
-    required String labelDetail9,
-    required String dataHeaderCard,
-    required String dataDetail1,
-    required int dataDetail2,
-    required int dataDetail3,
-    required String dataDetail4,
-    required String dataDetail5,
-    required String dataDetail6,
-    required String dataDetail7,
-    required String dataDetail8,
-    required String dataDetail9,
-  }) {
+  static Card cardGridPageSSFGDT31(
+      {required bool isCanDeleteCard,
+      required bool isCanEditDetail,
+      required VoidCallback? onTapDelete,
+      required VoidCallback? onTapEditDetail,
+      // required String lableHeader,
+      required String? labelDetail1,
+      required String? labelDetail2,
+      required String? labelDetail3,
+      required String? labelDetail4,
+      required String? labelDetail5,
+      required String? labelDetail6,
+      required String? labelDetail7,
+      required String? labelDetail8,
+      required String? labelDetail9,
+      required String? dataHeaderCard,
+      required String? dataDetail1,
+      required String? dataDetail2,
+      required int dataDetail3,
+      required String? dataDetail4,
+      required String? dataDetail5,
+      required String? dataDetail6,
+      required String? dataDetail7,
+      required String? dataDetail8,
+      required String? dataDetail9}) {
+    print('isCanDeleteCard: $isCanDeleteCard');
+    print('isCanEditDetail: $isCanEditDetail');
+    print('labelDetail1: $labelDetail1');
+    print('labelDetail2: $labelDetail2');
+    print('labelDetail3: $labelDetail3');
+    print('labelDetail4: $labelDetail4');
+    print('labelDetail5: $labelDetail5');
+    print('labelDetail6: $labelDetail6');
+    print('labelDetail7: $labelDetail7');
+    print('labelDetail8: $labelDetail8');
+    print('labelDetail9: $labelDetail9');
+    print('dataHeaderCard: $dataHeaderCard');
+    print('dataDetail1: $dataDetail1');
+    print('dataDetail2: $dataDetail2');
+    print('dataDetail3: $dataDetail3');
+    print('dataDetail4: $dataDetail4');
+    print('dataDetail5: $dataDetail5');
+    print('dataDetail6: $dataDetail6');
+    print('dataDetail7: $dataDetail7');
+    print('dataDetail8: $dataDetail8');
+    print('dataDetail9: $dataDetail9');
     return Card(
       elevation: 8.0,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -2047,7 +2065,7 @@ class CardStyles {
                         //       fontWeight: FontWeight.bold, fontSize: 14.0),
                         // ),
                         Text(
-                          dataHeaderCard,
+                          dataHeaderCard.toString(),
                           style: const TextStyle(
                             color: Colors.black,
                             fontSize: 20.0,
@@ -2070,7 +2088,7 @@ class CardStyles {
                         CustomContainerStyles.styledContainer(
                           dataDetail1,
                           child: Text(
-                            dataDetail1,
+                            dataDetail1.toString(),
                             style: const TextStyle(fontSize: 14.0),
                           ),
                         ),
@@ -2093,10 +2111,16 @@ class CardStyles {
                                     fontSize: 14.0),
                               ),
                               CustomContainerStyles.styledContainer(
-                                dataDetail2.toString(),
+                                dataDetail2?.toString() ?? '',
                                 child: Text(
-                                  NumberFormat('#,###,###,###,###,###')
-                                      .format(dataDetail2),
+                                  (dataDetail2 != null)
+                                      ? NumberFormat('#,###,###,###,###,###')
+                                          .format(
+                                          int.tryParse(dataDetail2.replaceAll(
+                                                  ',', '')) ??
+                                              0,
+                                        )
+                                      : '',
                                   style: const TextStyle(fontSize: 14.0),
                                 ),
                               ),
@@ -2161,7 +2185,7 @@ class CardStyles {
                         CustomContainerStyles.styledContainer(
                           dataDetail4,
                           child: Text(
-                            dataDetail4,
+                            dataDetail4.toString(),
                             style: const TextStyle(fontSize: 14.0),
                           ),
                         ),
@@ -2180,7 +2204,7 @@ class CardStyles {
                         CustomContainerStyles.styledContainer(
                           dataDetail5,
                           child: Text(
-                            dataDetail5,
+                            dataDetail5.toString(),
                             style: const TextStyle(fontSize: 14.0),
                           ),
                         ),
@@ -2202,7 +2226,7 @@ class CardStyles {
                           child: CustomContainerStyles.styledContainer(
                             dataDetail6,
                             child: Text(
-                              dataDetail6,
+                              dataDetail6.toString(),
                               style: const TextStyle(fontSize: 14.0),
                               softWrap: true,
                               overflow: TextOverflow.visible,
@@ -2224,7 +2248,7 @@ class CardStyles {
                         CustomContainerStyles.styledContainer(
                           dataDetail7,
                           child: Text(
-                            dataDetail7,
+                            dataDetail7.toString(),
                             style: const TextStyle(fontSize: 14.0),
                           ),
                         ),
@@ -2243,7 +2267,7 @@ class CardStyles {
                         CustomContainerStyles.styledContainer(
                           dataDetail8,
                           child: Text(
-                            dataDetail8,
+                            dataDetail8.toString(),
                             style: const TextStyle(fontSize: 14.0),
                           ),
                         ),
@@ -2262,7 +2286,7 @@ class CardStyles {
                         CustomContainerStyles.styledContainer(
                           dataDetail9,
                           child: Text(
-                            dataDetail9,
+                            dataDetail9.toString(),
                             style: const TextStyle(fontSize: 14.0),
                           ),
                         ),

@@ -422,8 +422,8 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                 }
               } else if (returnStatusLovMoDoNo.isNotEmpty &&
                   returnStatusLovMoDoNo != 'null' &&
-                  returnStatusLovRefNo.isEmpty &&
-                  returnStatusLovRefNo == 'null') {
+                  (returnStatusLovRefNo.isEmpty ||
+                      returnStatusLovRefNo == 'null')) {
                 if (mounted) {
                   setState(() {
                     custName = item['cust'] ?? '';
@@ -434,31 +434,6 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                 selectLovMoDoNo = '';
                 returnStatusLovMoDoNo = '';
                 moDoNoController.clear();
-              }
-            }
-            if (checkWhere == 'REFNO') {
-              String custNameTest = item['cust'] ?? '';
-              if (custNameTest == custName) {
-                if (mounted) {
-                  setState(() {
-                    custName = item['cust'] ?? '';
-                    custNameController.text = custName;
-                  });
-                }
-              } else if (returnStatusLovRefNo.isNotEmpty &&
-                  returnStatusLovRefNo != 'null' &&
-                  returnStatusLovMoDoNo.isEmpty &&
-                  returnStatusLovMoDoNo == 'null') {
-                if (mounted) {
-                  setState(() {
-                    custName = item['cust'] ?? '';
-                    custNameController.text = custName;
-                  });
-                }
-              } else {
-                selectLovRefNo = '';
-                returnStatusLovRefNo = '';
-                refNoController.clear();
               }
             }
           }
@@ -554,31 +529,6 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
               });
             }
           } else if (custName.isNotEmpty) {
-            if (checkWhere == 'MODONO') {
-              String custNameTest = item['ar_code_name'] ?? '';
-              if (custNameTest == custName) {
-                if (mounted) {
-                  setState(() {
-                    custName = item['ar_code_name'] ?? '';
-                    custNameController.text = custName;
-                  });
-                }
-              } else if (returnStatusLovMoDoNo.isNotEmpty &&
-                  returnStatusLovMoDoNo != 'null' &&
-                  returnStatusLovRefNo.isEmpty &&
-                  returnStatusLovRefNo == 'null') {
-                if (mounted) {
-                  setState(() {
-                    custName = item['ar_code_name'] ?? '';
-                    custNameController.text = custName;
-                  });
-                }
-              } else {
-                selectLovMoDoNo = '';
-                returnStatusLovMoDoNo = '';
-                moDoNoController.clear();
-              }
-            }
             if (checkWhere == 'REFNO') {
               String custNameTest = item['ar_code_name'] ?? '';
               if (custNameTest == custName) {
@@ -590,8 +540,8 @@ class _Ssfgdt31FormState extends State<Ssfgdt31Form> {
                 }
               } else if (returnStatusLovRefNo.isNotEmpty &&
                   returnStatusLovRefNo != 'null' &&
-                  returnStatusLovMoDoNo.isEmpty &&
-                  returnStatusLovMoDoNo == 'null') {
+                  (returnStatusLovMoDoNo.isEmpty ||
+                      returnStatusLovMoDoNo == 'null')) {
                 if (mounted) {
                   setState(() {
                     custName = item['ar_code_name'] ?? '';

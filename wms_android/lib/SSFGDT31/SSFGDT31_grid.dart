@@ -291,7 +291,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
           data.containsKey('old_pack_qty') &&
           data.containsKey('rowid') &&
           data.containsKey('seq')) {
-        final int a = data['pack_qty'];
+        final int a = data['pack_qty'] ?? 0;
         final int b =
             int.tryParse(data['old_pack_qty']?.toString() ?? '0') ?? 0;
         // final String row = data['rowid'];
@@ -338,7 +338,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
   }
 
   Future<void> updatePackQty(
-      int packQty, String itemCode, String packCode, String rowID) async {
+      String packQty, String itemCode, String packCode, String rowID) async {
     print('packQty in updatePackQty: $packQty type : ${packQty.runtimeType}');
     print(
         'itemCode in updatePackQty: $itemCode type : ${itemCode.runtimeType}');
@@ -542,6 +542,25 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                           });
                           if (dataCard.isNotEmpty) {
                             processData(dataCard);
+                          } else if (dataCard.isEmpty) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Ssfgdt31Verify(
+                                  docNo: widget.docNo,
+                                  docType: widget.docType,
+                                  docDate: widget.docDate,
+                                  moDoNo: widget.moDoNo,
+                                  refNo: widget.refNo,
+                                  refDocNo: widget.refDocNo,
+                                  refDocType: widget.refDocType,
+                                  pWareCode: widget.pWareCode,
+                                ),
+                              ),
+                            ).then((value) async {
+                              await fetchData();
+                              isNextDisabled = false;
+                            });
                           }
                         },
                 ),
@@ -683,6 +702,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                               itemBuilder: (context, index) {
                                 final item = dataCard[
                                     index]; // ดึงข้อมูลแต่ละรายการจาก dataCard
+
                                 return CardStyles.cardGridPageSSFGDT31(
                                   isCanDeleteCard: true,
                                   isCanEditDetail: true,
@@ -691,7 +711,12 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                   labelDetail1: 'Lot No',
                                   dataDetail1: item['lots_no'] ?? '',
                                   labelDetail2: 'จำนวนรับ',
-                                  dataDetail2: item['pack_qty'],
+                                  dataDetail2:
+                                      item['pack_qty'].toString() == 'null'
+                                          ? null
+                                          : item['pack_qty'].toString() == null
+                                              ? null
+                                              : item['pack_qty'].toString(),
                                   labelDetail3: 'จำนวนจ่าย',
                                   dataDetail3: int.tryParse(
                                           item['old_pack_qty'] ?? '0') ??
@@ -731,7 +756,7 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                           showDetailsDialog(
                                             context,
                                             item['seq'],
-                                            item['pack_qty'],
+                                            item['pack_qty'] ?? null,
                                             item['old_pack_qty'] ?? 0,
                                             item['nb_item_name'] ?? '',
                                             item['rowid'] ?? '',
@@ -929,17 +954,33 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
   void showDetailsDialog(
     BuildContext context,
     int seq,
-    int packQty,
+    int? packQty,
     int oldPackQTY,
     String nbItemName,
     String rowID,
     String itemCode,
     String packCode,
   ) async {
-    String formattedSysQty =
-        NumberFormat('#,###,###,###,###,###').format(packQty);
-    TextEditingController packQtyController =
-        TextEditingController(text: formattedSysQty.toString());
+    print('seq $seq');
+    print('packQty $packQty');
+    print('oldPackQTY $oldPackQTY');
+    print('nbItemName $nbItemName');
+    print('rowID $rowID');
+    print('itemCode $itemCode');
+    print('packCode $packCode');
+
+    String formattedSysRRR = packQty != null
+        ? NumberFormat('#,###,###,###,###,###').format(packQty)
+        : ''; // ถ้า RRR เป็น null ให้คืนค่าเป็น ''
+
+    TextEditingController packQtyController = TextEditingController(
+      text: formattedSysRRR,
+    );
+
+    // String formattedSysQty =
+    //     NumberFormat('#,###,###,###,###,###').format(packQty);
+    // TextEditingController packQtyController =
+    //     TextEditingController(text: formattedSysQty.toString());
     String formattedOldPackQTY =
         NumberFormat('#,###,###,###,###,###').format(oldPackQTY);
     TextEditingController oldPackQtyController =
@@ -1125,10 +1166,10 @@ class _Ssfgdt31GridState extends State<Ssfgdt31Grid> {
                                 showDialogError(context,
                                     'จำนวนรับคืนที่ระบุไม่ถูกต้อง (มากกว่าจำนวนจ่าย) กรุณาระบุใหม่ !!!');
                               } else {
-                                int updatedPackQty = int.tryParse(
-                                        packQtyController.text
-                                            .replaceAll(',', '')) ??
-                                    packQty;
+                                String updatedPackQty = packQtyController
+                                        .text.isNotEmpty
+                                    ? packQtyController.text.replaceAll(',', '')
+                                    : 'null';
 
                                 Navigator.of(context).pop(true);
                                 await updatePackQty(
