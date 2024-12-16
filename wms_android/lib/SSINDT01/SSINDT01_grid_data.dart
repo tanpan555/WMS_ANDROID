@@ -250,6 +250,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     print('Updating receive_qty with data: ${jsonEncode({
           'rowid': rowid,
           'receive_qty': receiveQty,
+          'rcvlot_supplier': rcvlot_supplier,
+          'rcvlot_size': rcvlot_size,
         })}');
 
     if (response.statusCode == 200) {
@@ -322,123 +324,175 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     }
   }
 
-  void _showDetailsDialog(Map<String, dynamic> data) {
+  Future<void> _showDetailsDialog(
+      BuildContext context, Map<String, dynamic> data) async {
     TextEditingController receiveQtyController = TextEditingController(
       text: data['receive_qty']?.toString().replaceAll(',', '') ?? '',
     );
 
-    showGeneralDialog(
+    final formKey = GlobalKey<FormState>();
+
+    return showDialog<void>(
       context: context,
-      barrierDismissible: true,
-      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      barrierColor: Colors.black45,
-      transitionDuration: const Duration(milliseconds: 200),
-      pageBuilder: (BuildContext buildContext, Animation animation,
-          Animation secondaryAnimation) {
-        return Center(
-          child: AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
-            ),
-            titlePadding: EdgeInsets.zero, // Remove default padding
-            title: Stack(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(16.0),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      data['item'],
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close the dialog
-                    },
-                  ),
-                ),
-              ],
-            ),
-            contentPadding:
-                EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-            content: SizedBox(
-              width: 300.0,
-              height: 75.0,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: TextField(
-                        controller: receiveQtyController,
-                        decoration: InputDecoration(
-                          labelText: 'จำนวนรับ',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(1.0),
-                          ),
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 16.0),
-                        ),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                  ],
+      barrierDismissible: false, // ปิด Popup ได้เฉพาะปุ่ม Icon
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Stack(
+            clipBehavior: Clip.none, // Allow overflow
+            children: [
+              Positioned(
+                right: -10,
+                top: -10,
+                child: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    // ตรวจสอบการแก้ไข
+                    final currentQuantity =
+                        data['receive_qty']?.toString() ?? '';
+                    final editedQuantity =
+                        receiveQtyController.text.replaceAll(',', '');
+
+                    if (currentQuantity != editedQuantity) {
+                      // แสดง dialog ยืนยัน
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return DialogStyles.warningNotSaveDialog(
+                            context: context,
+                            textMessage:
+                                'คุณต้องการออกจากหน้านี้โดยไม่บันทึกหรือไม่?',
+                            onCloseDialog: () {
+                              Navigator.of(context).pop(); // ปิด dialog ยืนยัน
+                            },
+                            onConfirmDialog: () {
+                              Navigator.of(context).pop(); // ปิด dialog ยืนยัน
+                              Navigator.of(context).pop(); // ปิด popup หลัก
+                            },
+                          );
+                        },
+                      );
+                    } else {
+                      Navigator.of(context).pop(); // ปิด popup หลักโดยตรง
+                    }
+                  },
                 ),
               ),
-            ),
-            actions: <Widget>[
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      style: AppStyles.ConfirmChecRecievekButtonStyle(),
-                      onPressed: () {
-                        final updatedQty = receiveQtyController.text;
-                        updateReceiveQty(
-                            data['rowid'],
-                            updatedQty,
-                            data['rcvlot_supplier'].toString(),
-                            data['rcvlot_size'].toString());
-                        Navigator.of(context).pop(); // Close the dialog
-                      },
-                      child: Image.asset(
-                        'assets/images/check-mark.png',
-                        width: 25.0,
-                        height: 25.0,
-                      ),
-                    )
-                  ],
+                padding: const EdgeInsets.only(top: 40.0),
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: formKey,
+                    child: ListBody(
+                      children: <Widget>[
+                        Row(
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              child: Container(
+                                color: Colors.grey[300],
+                                padding: const EdgeInsets.all(2),
+                                child: TextFormField(
+                                  enabled: false,
+                                  textAlign: TextAlign.right,
+                                  decoration: const InputDecoration(
+                                    labelText: ' seq',
+                                    labelStyle: TextStyle(color: Colors.black),
+                                    border: InputBorder.none,
+                                  ),
+                                  initialValue:
+                                      data['rec_seq']?.toString() ?? '',
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                color: Colors.grey[300],
+                                padding: const EdgeInsets.all(2),
+                                child: TextFormField(
+                                  enabled: false,
+                                  textAlign: TextAlign.right,
+                                  decoration: const InputDecoration(
+                                    labelText: ' item',
+                                    labelStyle: TextStyle(color: Colors.black),
+                                    border: InputBorder.none,
+                                  ),
+                                  initialValue: data['item'] ?? '',
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          textAlign: TextAlign.right,
+                          controller: receiveQtyController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter
+                                .digitsOnly, // Allows only numbers
+                          ],
+                          decoration: const InputDecoration(
+                            labelText: 'จำนวนรับ',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'กรุณากรอกจำนวนรับ';
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            if (value.isEmpty) {
+                              setState(() {
+                                data['receive_qty'] = null;
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-        );
-      },
-      transitionBuilder: (BuildContext context, Animation<double> animation,
-          Animation<double> secondaryAnimation, Widget child) {
-        return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0.0, 1.0),
-            end: Offset.zero,
-          ).animate(animation),
-          child: FadeTransition(
-            opacity: animation,
-            child: child,
-          ),
+          actions: <Widget>[
+            Center(
+              child: ElevatedButton(
+                style: AppStyles.ConfirmChecRecievekButtonStyle(),
+                onPressed: () async {
+                  if (formKey.currentState?.validate() ?? false) {
+                    final String cleanedText =
+                        receiveQtyController.text.replaceAll(',', '');
+                    try {
+                      final newQuantity = double.parse(cleanedText).toString();
+
+                      // อัปเดตค่าที่การ์ด
+                      await updateReceiveQty(
+                          data['rowid'],
+                          newQuantity,
+                          data['rcvlot_supplier'].toString(),
+                          data['rcvlot_size'].toString());
+                      Navigator.of(context).pop(); // ปิด Popup
+                    } catch (e) {
+                      print('Error parsing quantity: $e');
+                    }
+                  }
+                },
+                child: Image.asset('assets/images/check-mark.png',
+                    width: 30, height: 30),
+              ),
+            ),
+          ],
         );
       },
     );
@@ -846,6 +900,45 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     );
   }
 
+  Widget _buildInfoRow1(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          vertical: 4.0 ,horizontal: 6), // Optional padding for better spacing
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment
+            .center, // Align both label and value to the center
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              color: const Color.fromARGB(255, 0, 0, 0),
+              fontSize: 12,
+            ),
+          ),
+          SizedBox(width: 8),
+          Flexible(
+            // Flexible allows the value to take only the necessary space
+            child: CustomContainerStyles.styledContainer(
+              value, // Pass the value to determine the container style
+              padding:
+                  5.0, // Adjust padding for better spacing inside the container
+              child: Text(
+                value,
+                style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 12,
+                ), // Ellipsis for long text
+                softWrap: true,
+                maxLines: 2, // Limit to two lines if necessary
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildInfoRow2(Map<String, String> info) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -971,6 +1064,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       ),
     );
   }
+
 
   Widget _buildDialogButton({
     required String label,
@@ -1479,24 +1573,28 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                           color: const Color.fromARGB(
                                               255, 0, 0, 0)),
                                       _buildInfoRow2({
-                                        'จำนวนรับ:':
+                                        'จำนวนรับ :':
                                             data['receive_qty']?.toString() ??
                                                 '-',
-                                        'ค้างรับ:':
+                                        'ค้างรับ :':
                                             data['pending_qty']?.toString() ??
                                                 '-',
                                       }),
                                       _buildInfoRow2({
-                                        'จำนวนรวม:':
+                                        'จำนวนรวม :':
                                             data['lot_total_nb']?.toString() ??
                                                 '-',
                                         'UOM:': data['UOM']?.toString() ?? '-',
                                       }),
                                       _buildInfoRow3({
-                                        'Locator:':
+                                        'Locator :':
                                             data['locator_det']?.toString() ??
                                                 '-',
                                       }),
+                                      _buildInfoRow1(
+                                        'Item Desc :',
+                                        data['item_desc'] ?? '-',
+                                      ),
                                       const SizedBox(height: 8),
                                       Row(
                                         mainAxisAlignment:
@@ -1634,7 +1732,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                                     height: 30,
                                                   ),
                                                   onPressed: () async {
-                                                    _showDetailsDialog(data);
+                                                    _showDetailsDialog(
+                                                        context, data);
                                                   },
                                                 );
                                               }

@@ -492,7 +492,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
     });
   }
 
-  final String updDateForm = DateFormat('MM/dd/yyyy').format(DateTime.now());
+  final String updDateForm = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
   Future<void> updateForm_REMARK(
       String receiveNo,

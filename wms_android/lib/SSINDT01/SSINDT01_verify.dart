@@ -288,22 +288,23 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Flexible(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    color: const Color.fromARGB(255, 255, 242, 204),
-                    child: Center(
-                      child: Text(
-                        '${widget.poPONO}',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: IconButton(
+                    icon: Image.asset(
+                      'assets/images/printer.png',
+                      width: 25.0,
+                      height: 25.0,
                     ),
+                    onPressed: () async {
+                      _launchUrl();
+                      // fetchPDFData();
+                    },
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -382,28 +383,46 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
           // Row for widget.poReceiveNo
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Flexible(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    color: const Color.fromARGB(255, 244, 244, 244),
-                    child: Center(
-                      child: Text(
-                        '${widget.poReceiveNo}',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                        ),
-                        overflow: TextOverflow.ellipsis,
+                Container(
+                  // ลบ Flexible และใช้ Container ธรรมดา
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  color: const Color.fromARGB(255, 255, 242, 204),
+                  child: Center(
+                    child: Text(
+                      '${widget.poPONO}',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 0, 0, 0),
                       ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.0), // ระยะห่างระหว่างข้อความ
+                Container(
+                  // ลบ Flexible และใช้ Container ธรรมดา
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  color: const Color.fromARGB(255, 244, 244, 244),
+                  child: Center(
+                    child: Text(
+                      '${widget.poReceiveNo}',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
               ],
             ),
           ),
+
           Expanded(
             child: dataList.isEmpty
                 ? Center(
@@ -417,12 +436,12 @@ class _Ssindt01VerifyState extends State<Ssindt01Verify> {
                     child: Column(
                       children: dataList.map((data) {
                         Map<String, String> info1 = {
-                          'จำนวนรับ:': data['receive_qty']?.toString() ?? '-',
-                          'ค้างรับ:': data['pending_qty']?.toString() ?? '-',
+                          'จำนวนรับ :': data['receive_qty']?.toString() ?? '-',
+                          'ค้างรับ :': data['pending_qty']?.toString() ?? '-',
                         };
                         Map<String, String> info2 = {
-                          'Locator:': data['locator_det']?.toString() ?? '-',
-                          'Lot No:': data['lot_product_no']?.toString() ?? '-',
+                          'Locator :': data['locator_det']?.toString() ?? '-',
+                          'Lot No :': data['lot_product_no']?.toString() ?? '-',
                         };
                         return Card(
                           margin: EdgeInsets.symmetric(vertical: 8.0),
