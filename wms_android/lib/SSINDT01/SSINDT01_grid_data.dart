@@ -230,8 +230,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
     }
   }
 
-  Future<void> updateReceiveQty(String rowid, String receiveQty,
-      String rcvlot_supplier, String rcvlot_size) async {
+  Future<void> updateReceiveQty(String? rowid, String? receiveQty,
+      String? rcvlot_supplier, String? rcvlot_size) async {
     final url =
         Uri.parse('${gb.IP_API}/apex/wms/SSINDT01/Step_3_WMS_PO_RECEIVE_DET');
     final response = await http.put(
@@ -465,23 +465,75 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               ),
             ],
           ),
+          // actions: <Widget>[
+          //   Center(
+          //     child: ElevatedButton(
+          //       style: AppStyles.ConfirmChecRecievekButtonStyle(),
+          //       onPressed: () async {
+          //         if (formKey.currentState?.validate() ?? false) {
+          //           final String cleanedText =
+          //               receiveQtyController.text.replaceAll(',', '');
+          //           try {
+          //             final newQuantity = double.parse(cleanedText).toString();
+
+          //             // อัปเดตค่าที่การ์ด
+          //             await updateReceiveQty(
+          //                 data['rowid'],
+          //                 newQuantity,
+          //                 data['rcvlot_supplier'].toString(),
+          //                 data['rcvlot_size'].toString());
+          //             Navigator.of(context).pop(); // ปิด Popup
+          //           } catch (e) {
+          //             print('Error parsing quantity: $e');
+          //           }
+          //         }
+          //       },
+          //       child: Image.asset('assets/images/check-mark.png',
+          //           width: 30, height: 30),
+          //     ),
+          //   ),
+          // ],
           actions: <Widget>[
             Center(
               child: ElevatedButton(
                 style: AppStyles.ConfirmChecRecievekButtonStyle(),
                 onPressed: () async {
-                  if (formKey.currentState?.validate() ?? false) {
-                    final String cleanedText =
-                        receiveQtyController.text.replaceAll(',', '');
+                  final cleanedText =
+                      receiveQtyController.text.replaceAll(',', '');
+                  if (cleanedText.isEmpty) {
+                    // อัปเดตฐานข้อมูลด้วยค่า null
+                    await updateReceiveQty(
+                      data['rowid'],
+                      null, // itemCode
+                      data['rcvlot_supplier'], // poPackQty เป็น null
+                      data['rcvlot_size'], // ratio
+                    );
+
+                    // อัปเดตสถานะใน state
+                    setState(() {
+                      data['pack_qty'] = null;
+                    });
+
+                    Navigator.of(context).pop(); // ปิด Popup
+                  } else {
                     try {
                       final newQuantity = double.parse(cleanedText).toString();
 
-                      // อัปเดตค่าที่การ์ด
+                      // อัปเดตฐานข้อมูลด้วยค่าที่กรอก
                       await updateReceiveQty(
-                          data['rowid'],
-                          newQuantity,
-                          data['rcvlot_supplier'].toString(),
-                          data['rcvlot_size'].toString());
+                        data['rowid'], // poPackCode
+                        newQuantity, // itemCode
+                        data['rcvlot_supplier'], // poPackQty
+                        data['rcvlot_size'], // ratio
+                      );
+
+                      // อัปเดตสถานะใน state
+                      setState(() {
+                        // item['pack_qty'] = double.parse(cleanedText);
+                        // fetchGridItems();
+                        sendGetRequestlineWMS();
+                      });
+
                       Navigator.of(context).pop(); // ปิด Popup
                     } catch (e) {
                       print('Error parsing quantity: $e');
@@ -903,7 +955,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
   Widget _buildInfoRow1(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(
-          vertical: 4.0 ,horizontal: 6), // Optional padding for better spacing
+          vertical: 4.0, horizontal: 6), // Optional padding for better spacing
       child: Row(
         crossAxisAlignment: CrossAxisAlignment
             .center, // Align both label and value to the center
@@ -925,7 +977,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               child: Text(
                 value,
                 style: TextStyle(
-                    overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.ellipsis,
                   color: const Color.fromARGB(255, 0, 0, 0),
                   fontSize: 12,
                 ), // Ellipsis for long text
@@ -1064,7 +1116,6 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
       ),
     );
   }
-
 
   Widget _buildDialogButton({
     required String label,

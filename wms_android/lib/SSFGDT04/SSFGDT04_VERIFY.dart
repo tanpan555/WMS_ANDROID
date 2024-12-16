@@ -807,11 +807,6 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                             ),
                           )
                         : ListView.builder(
-                            //  shrinkWrap: true, // ให้ ListView มีขนาดตามข้อมูล
-                            // physics: const NeverScrollableScrollPhysics(), // ปิดการเลื่อน
-                            // itemCount: gridItems.length,
-                            // itemBuilder: (context, index) {
-                            //   final item = gridItems[index];
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             // itemCount: gridItems.length,

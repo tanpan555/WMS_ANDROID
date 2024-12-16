@@ -174,12 +174,12 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                             labelText: 'จำนวนรับ',
                             border: OutlineInputBorder(),
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'กรุณากรอกจำนวนรับ';
-                            }
-                            return null;
-                          },
+                          // validator: (value) {
+                          //   if (value == null || value.isEmpty) {
+                          //     return 'กรุณากรอกจำนวนรับ';
+                          //   }
+                          //   return null;
+                          // },
                           onChanged: (value) {
                             if (value.isEmpty) {
                               setState(() {
@@ -198,22 +198,30 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
           actions: <Widget>[
             Center(
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  side: const BorderSide(color: Colors.green, width: 1.5),
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  minimumSize: const Size(60, 40),
-                  padding: const EdgeInsets.all(0),
-                ),
+                style: AppStyles.ConfirmChecRecievekButtonStyle(),
                 onPressed: () async {
-                  if (formKey.currentState?.validate() ?? false) {
-                    final String cleanedText =
-                        quantityController.text.replaceAll(',', '');
+                  final cleanedText =
+                      quantityController.text.replaceAll(',', '');
+                  if (cleanedText.isEmpty) {
+                    // อัปเดตฐานข้อมูลด้วยค่า null
+                    await fetchUpdate(
+                      item['item_code'], // itemCode
+                      item['pack_code'], // poPackCode
+                      null, // poPackQty เป็น null
+                      item['rowid'], // ratio
+                    );
+
+                    // อัปเดตสถานะใน state
+                    setState(() {
+                      item['pack_qty'] = null;
+                    });
+
+                    Navigator.of(context).pop(); // ปิด Popup
+                  } else {
                     try {
                       final newQuantity = double.parse(cleanedText).toString();
 
-                      // อัปเดตค่าที่การ์ด
+                      // อัปเดตฐานข้อมูลด้วยค่าที่กรอก
                       await fetchUpdate(
                         item['item_code'], // itemCode
                         item['pack_code'], // poPackCode
@@ -221,9 +229,9 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                         item['rowid'], // ratio
                       );
 
-                      // อัปเดต state ของรายการ
+                      // อัปเดตสถานะใน state
                       setState(() {
-                        item['pack_qty'] = double.parse(cleanedText);
+                        // item['pack_qty'] = double.parse(cleanedText);
                         fetchGridItems();
                       });
 
@@ -233,6 +241,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                     }
                   }
                 },
+
                 child: Image.asset('assets/images/check-mark.png',
                     width: 30, height: 30),
               ),
@@ -530,10 +539,10 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
       'Content-Type': 'application/json',
     };
     // ตรวจสอบว่า poPackQty ไม่เป็น null หรือว่าง
-    if (poPackQty == null || poPackQty.isEmpty) {
-      print('Error: poPackQty is null or empty');
-      return;
-    }
+    // if (poPackQty == null || poPackQty.isEmpty) {
+    //   print('Error: poPackQty is null or empty');
+    //   return;
+    // }
     final body = jsonEncode({
       'item_code': itemCode,
       'pack_code': poPackCode,
