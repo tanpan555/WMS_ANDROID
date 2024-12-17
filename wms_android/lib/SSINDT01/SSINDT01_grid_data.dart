@@ -1395,7 +1395,6 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
               width: double.infinity,
               child: Row(
                 children: [
-                  const SizedBox(width: 8.0),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -1801,7 +1800,7 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                         )
                       : Center(
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 100),
+                            padding: const EdgeInsets.only(top: 150),
                             child: Text(
                               'No data found',
                               style: TextStyle(color: Colors.white),
@@ -1850,7 +1849,6 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                   ),
                 ],
               ),
-              // ),
             )
           ],
         ),

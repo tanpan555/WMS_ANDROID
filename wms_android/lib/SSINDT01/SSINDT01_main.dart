@@ -607,12 +607,7 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                                                                   146, 208, 80);
                                                             case 'ทั้งหมด':
                                                             default:
-                                                              return const Color
-                                                                  .fromARGB(
-                                                                  255,
-                                                                  255,
-                                                                  255,
-                                                                  255);
+                                                              return const Color.fromARGB(255, 255, 255, 255);
                                                           }
                                                         })(),
                                                         borderRadius:
@@ -621,9 +616,19 @@ class _SSINDT01_MAINState extends State<SSINDT01_MAIN> {
                                                       ),
                                                       child: Text(
                                                         item['status_desc'],
-                                                        style: const TextStyle(
+                                                        style: TextStyle(
+                                                          color: (() {
+                                                            switch (item[
+                                                                'status_desc']) {
+                                                              case 'ตรวจรับบางส่วน':
+                                                                return Colors
+                                                                    .white; // ตัวหนังสือสีขาว
+                                                              default:
+                                                                return Colors
+                                                                    .black; // ตัวหนังสือสีดำ
+                                                            }
+                                                          })(),
                                                           fontSize: 15,
-                                                          color: Colors.white,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                         ),

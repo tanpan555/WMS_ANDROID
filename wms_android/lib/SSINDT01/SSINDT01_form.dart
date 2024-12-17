@@ -688,7 +688,7 @@ class _Ssindt01FormState extends State<Ssindt01Form> {
                   )
                 ],
               ),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 16),
               Expanded(
                 child: SingleChildScrollView(
                   child: _buildFormFields(),
