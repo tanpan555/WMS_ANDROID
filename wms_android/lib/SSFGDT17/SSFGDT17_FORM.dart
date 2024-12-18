@@ -577,7 +577,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
           searchController: _searchController,
           data: StaffItems,
           docString: (item) =>
-              item['r']?.toLowerCase() ?? '', // Document string
+              '${item['r'] ?? ''} ${item['emp_name'] ?? ''}', // Document string
           titleText: (item) => item['r'] ?? 'No code', // Title text
           subtitleText: (item) => item['emp_name'] ?? '', // Subtitle text
           onTap: (item) {
@@ -634,7 +634,7 @@ class _SSFGDT17_FORMState extends State<SSFGDT17_FORM> {
           headerText: 'เลือกเลขที่เอกสารอ้างอิง',
           searchController: _searchController,
           data: REF_NOItems,
-          docString: (item) => item['so_no'] ?? '',
+          docString: (item) => '${item['so_no'] ?? ''} ${item['ar_name'] ?? ''}',
           titleText: (item) => item['so_no'] ?? '',
           subtitleText: (item) => item['ar_name'] ?? '',
           onTap: (item) {

@@ -259,7 +259,7 @@ class _SSFGDT17_BARCODEState extends State<SSFGDT17_BARCODE> {
                   headerText: 'เลือก Location ต้นทาง',
                   searchController: _searchController,
                   data: locCode,
-                  docString: (item) => item['r'].toString(),
+                  docString: (item) => '${item['r'] ?? ''} ${item['location_name'] ?? ''}',
                   titleText: (item) => item['r'].toString(),
                   subtitleText: (item) => '${item['location_name']}',
                   onTap: (item) {
