@@ -127,8 +127,28 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
-                  onPressed: () async {
-                    final selectedItems = await Navigator.push(
+                  // onPressed: () async {
+                  //   final selectedItems = await Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => SSFGPC04_LOCATION(
+                  //         date: widget.date,
+                  //         note: widget.note,
+                  //         docNo: widget.docNo,
+                  //       ),
+                  //     ),
+                  //   ).then((value) {
+                  //     fetchData();
+                  //   });
+                  //   if (selectedItems != null) {
+                  //     setState(() {
+                  //       tmpLocItems.clear();
+                  //       tmpLocItems.addAll(selectedItems);
+                  //     });
+                  //   }
+                  // },
+                  onPressed: () {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => SSFGPC04_LOCATION(
@@ -137,13 +157,19 @@ class _SSFGPC04_LOCState extends State<SSFGPC04_LOC> {
                           docNo: widget.docNo,
                         ),
                       ),
-                    );
-                    if (selectedItems != null) {
+                    ).then((value) {
                       setState(() {
-                        tmpLocItems.clear();
-                        tmpLocItems.addAll(selectedItems);
+                        isLoading = true; // Set loading to true immediately
                       });
-                    }
+                      Future.delayed(Duration(seconds: 1), () {
+                        fetchData().then((_) {
+                          setState(() {
+                            isLoading =
+                                false; // Reset loading to false after fetchData completes
+                          });
+                        });
+                      });
+                    });
                   },
                   child: const Text(
                     'เลือกสถานที่จัดเก็บ',

@@ -188,7 +188,19 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
                           docNo: widget.docNo,
                         ),
                       ),
-                    );
+                    ).then((value) {
+                      setState(() {
+                        isLoading = true; // Set loading to true immediately
+                      });
+                      Future.delayed(Duration(seconds: 1), () {
+                        fetchData().then((_) {
+                          setState(() {
+                            isLoading =
+                                false; // Reset loading to false after fetchData completes
+                          });
+                        });
+                      });
+                    });
                   },
                   child: const Text(
                     'เลือกคลังสินค้า',
