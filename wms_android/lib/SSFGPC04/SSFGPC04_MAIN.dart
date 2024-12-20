@@ -113,7 +113,7 @@ class _SSFGPC04_MAINState extends State<SSFGPC04_MAIN> {
                   controller: _dateController,
                   labelText: 'ณ วันที่',
                   keyboardType: TextInputType.number,
-                  showAsterisk: false,
+                  showAsterisk: true,
                   onChanged: (value) {
                     docDate = value;
                     print('วันที่ที่กรอก: $docDate');

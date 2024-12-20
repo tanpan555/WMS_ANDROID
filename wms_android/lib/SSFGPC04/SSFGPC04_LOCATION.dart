@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGPC04_LOC.dart';
+import '../icon.dart';
 
 class SSFGPC04_LOCATION extends StatefulWidget {
   final String date;
@@ -52,6 +53,16 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
   // void _navigateBackWithSelectedData() async {
   //   if (mounted) {
   //     Navigator.pop(context);
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => SSFGPC04_LOC(
+  //           date: widget.date,
+  //           note: widget.note,
+  //           docNo: widget.docNo,
+  //         ),
+  //       ),
+  //     );
   //   }
   // }
 
@@ -214,14 +225,37 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
           children: [
             TextField(
               controller: searchController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'ค้นหาตำแหน่งที่จัดเก็บ',
-                suffixIcon:
-                    Icon(Icons.search), // Place the search icon at the end
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 filled: true,
-                fillColor: Colors.white, // Set the background color to white
+                fillColor: Colors.white,
+                suffixIcon: searchController.text.isNotEmpty
+                    ? GestureDetector(
+                        onTap: () {
+                          searchController.clear();
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: 3,
+                          height: 3,
+                          margin: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: const Icon(
+                            MyIcons.close,
+                            size: 15,
+                            color: Color(0xFF676767),
+                          ),
+                        ),
+                      )
+                    : null,
               ),
+              onChanged: (query) {
+                setState(() {});
+              },
             ),
             const SizedBox(height: 20),
             Row(

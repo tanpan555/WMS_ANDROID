@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import '../centered_message.dart';
 import 'SSFGPC04_WARE.dart';
+import '../icon.dart';
 
 class SSFGPC04_WAREHOUSE extends StatefulWidget {
   final String date;
@@ -95,6 +96,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
 
   void _filterItems() {
     String query = searchController.text.toLowerCase();
+    print('Search Query: $query');
     if (mounted) {
       setState(() {
         filteredWhItems = whItems.where((item) {
@@ -104,7 +106,9 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
         }).toList();
       });
     }
+    print('Filtered Items: $filteredWhItems');
   }
+
 
   Future<void> fetchCheck(String? wareCode) async {
     final url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
@@ -162,7 +166,6 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json', // เปลี่ยนได้ตามต้องการ
-          // 'Authorization': 'Bearer your_token', // ถ้าต้องการใช้ token
         },
         body: jsonEncode({
           'APP_SESSION': gb.APP_SESSION,
@@ -205,14 +208,37 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
           children: [
             TextField(
               controller: searchController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'ค้นหาคลังสินค้า',
-                suffixIcon:
-                    Icon(Icons.search), // Place the search icon at the end
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 filled: true,
-                fillColor: Colors.white, // Set the background color to white
+                fillColor: Colors.white,
+                suffixIcon: searchController.text.isNotEmpty
+                    ? GestureDetector(
+                        onTap: () {
+                          searchController.clear();
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: 3,
+                          height: 3,
+                          margin: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: const Icon(
+                            MyIcons.close,
+                            size: 15,
+                            color: Color(0xFF676767),
+                          ),
+                        ),
+                      )
+                    : null,
               ),
+              onChanged: (query) {
+                setState(() {});
+              },
             ),
             const SizedBox(height: 20),
             Row(
@@ -263,7 +289,6 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              // onPressed: _navigateBackWithSelectedData,
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();

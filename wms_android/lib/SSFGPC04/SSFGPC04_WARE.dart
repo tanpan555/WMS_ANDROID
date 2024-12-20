@@ -186,7 +186,6 @@ class _SSFGPC04_WAREState extends State<SSFGPC04_WARE> {
                           date: widget.date,
                           note: widget.note,
                           docNo: widget.docNo,
-                          // selectedItems: tmpWhItems,
                         ),
                       ),
                     );
