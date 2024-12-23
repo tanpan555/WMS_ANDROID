@@ -1650,14 +1650,8 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          IconButton(
-                                            iconSize: 20.0,
-                                            icon: Image.asset(
-                                              'assets/images/bin.png',
-                                              width: 30,
-                                              height: 30,
-                                            ),
-                                            onPressed: () {
+                                          InkWell(
+                                            onTap: () async {
                                               showDialog(
                                                 context: context,
                                                 builder:
@@ -1684,6 +1678,18 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                                 },
                                               );
                                             },
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(
+                                                  15.0), // Increase tappable area
+                                              child: Container(
+                                                width: 30,
+                                                height: 30,
+                                                child: Image.asset(
+                                                  'assets/images/bin.png', // Delete image path
+                                                  fit: BoxFit.contain,
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                           FutureBuilder<String?>(
                                             future: fetchvResultStatus(
@@ -1774,17 +1780,24 @@ class _Ssindt01GridState extends State<Ssindt01Grid> {
                                                   ),
                                                 );
                                               } else {
-                                                return IconButton(
-                                                  iconSize: 20.0,
-                                                  icon: Image.asset(
-                                                    'assets/images/edit.png',
-                                                    width: 30,
-                                                    height: 30,
-                                                  ),
-                                                  onPressed: () async {
+                                                return InkWell(
+                                                  onTap: () {
                                                     _showDetailsDialog(
                                                         context, data);
                                                   },
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .all(
+                                                        15.0), // เพิ่มพื้นที่รอบๆปุ่ม
+                                                    child: Container(
+                                                      width: 30,
+                                                      height: 30,
+                                                      child: Image.asset(
+                                                        'assets/images/edit.png',
+                                                        fit: BoxFit.contain,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 );
                                               }
                                             },

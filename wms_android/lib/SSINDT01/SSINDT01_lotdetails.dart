@@ -786,153 +786,6 @@ class _LotDialogState extends State<LotDialog> {
   }
 
   bool isInvoiceDateValid = true;
-
-//DatePicker Widget for Mfg Date
-  // Widget _buildDateField({
-  //   required TextEditingController controller,
-  //   required String labelText,
-  //   required BuildContext context,
-  //   ValueChanged<String>? onChanged,
-  // }) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(vertical: 8.0),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         TextFormField(
-  //           controller: controller,
-  //           readOnly: false,
-  //           onChanged: (value) {
-  //             String numbersOnly = value.replaceAll('/', '');
-
-  //             if (numbersOnly.length > 8) {
-  //               numbersOnly = numbersOnly.substring(0, 8);
-  //             }
-
-  //             String formattedDate = '';
-  //             for (int i = 0; i < numbersOnly.length; i++) {
-  //               if (i == 2 || i == 4) {
-  //                 formattedDate += '/';
-  //               }
-  //               formattedDate += numbersOnly[i];
-  //             }
-
-  //             controller.value = TextEditingValue(
-  //               text: formattedDate,
-  //               selection:
-  //                   TextSelection.collapsed(offset: formattedDate.length),
-  //             );
-
-  //             // Validate the date for any input length
-  //             bool isValidDate = false;
-  //             if (numbersOnly.length == 8) {
-  //               try {
-  //                 final day = int.parse(numbersOnly.substring(0, 2));
-  //                 final month = int.parse(numbersOnly.substring(2, 4));
-  //                 final year = int.parse(numbersOnly.substring(4, 8));
-
-  //                 final date = DateTime(year, month, day);
-
-  //                 if (date.year == year &&
-  //                     date.month == month &&
-  //                     date.day == day) {
-  //                   isValidDate = true;
-  //                 }
-  //               } catch (e) {
-  //                 isValidDate = false;
-  //               }
-
-  //               // Show alert dialog if date is invalid
-  //               if (!isValidDate) {
-  //                 showDialog(
-  //                   context: context,
-  //                   builder: (BuildContext context) {
-  //                     return AlertDialog(
-  //                       title: Text('วันที่ไม่ถูกต้อง'),
-  //                       content: Text(
-  //                           'กรุณากรอกวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY'),
-  //                       actions: <Widget>[
-  //                         TextButton(
-  //                           child: Text('ตกลง'),
-  //                           onPressed: () {
-  //                             Navigator.of(context).pop();
-  //                           },
-  //                         ),
-  //                       ],
-  //                     );
-  //                   },
-  //                 );
-  //               }
-  //             }
-
-  //             setState(() {
-  //               isInvoiceDateValid = numbersOnly.isEmpty || isValidDate;
-  //             });
-
-  //             if (onChanged != null) {
-  //               onChanged(formattedDate);
-  //             }
-  //           },
-  //           decoration: InputDecoration(
-  //             labelText: labelText,
-  //             border: OutlineInputBorder(
-  //               borderRadius: BorderRadius.circular(1.0),
-  //             ),
-  //             contentPadding:
-  //                 const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-  //             suffixIcon: Row(
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: [
-  //                 IconButton(
-  //                   icon: const Icon(Icons.calendar_today_outlined,
-  //                       color: Colors.black),
-  //                   onPressed: () async {
-  //                     FocusScope.of(context).unfocus();
-
-  //                     DateTime initialDate = DateTime.now();
-  //                     if (controller.text.isNotEmpty) {
-  //                       try {
-  //                         initialDate = displayFormat.parse(controller.text);
-  //                       } catch (e) {
-  //                         print('Error parsing date: $e');
-  //                       }
-  //                     }
-  //                     final DateTime? picked = await showDatePicker(
-  //                       context: context,
-  //                       initialDate: initialDate,
-  //                       firstDate: DateTime(2000),
-  //                       lastDate: DateTime(2101),
-  //                       initialEntryMode: DatePickerEntryMode.calendarOnly,
-  //                     );
-  //                     if (picked != null) {
-  //                       String formattedDate = displayFormat.format(picked);
-  //                       controller.text = formattedDate;
-  //                       setState(() {
-  //                         isInvoiceDateValid = true;
-  //                       });
-  //                       if (onChanged != null) {
-  //                         onChanged(formattedDate);
-  //                       }
-  //                     }
-  //                   },
-  //                 ),
-  //               ],
-  //             ),
-  //             errorText: !isInvoiceDateValid && controller.text.isNotEmpty
-  //                 ? 'กรุณากรองวันที่ให้ถูกต้องตามรูปแบบ DD/MM/YYYY'
-  //                 : null,
-  //           ),
-  //           keyboardType: TextInputType.number,
-  //           inputFormatters: [
-  //             FilteringTextInputFormatter.digitsOnly,
-  //             LengthLimitingTextInputFormatter(8),
-  //           ],
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   String? poreject;
   Future<void> fetchPoStatus(String recSeq) async {
     final url =
@@ -1407,14 +1260,8 @@ class _LotDialogState extends State<LotDialog> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: IconButton(
-        iconSize: 20.0,
-        icon: Image.asset(
-          'assets/images/bin.png',
-          width: 30,
-          height: 30,
-        ),
-        onPressed: () {
+      child: InkWell(
+        onTap: () async {
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -1439,6 +1286,17 @@ class _LotDialogState extends State<LotDialog> {
             },
           );
         },
+        child: Padding(
+          padding: const EdgeInsets.all(15.0), // Increase tappable area
+          child: Container(
+            width: 30,
+            height: 30,
+            child: Image.asset(
+              'assets/images/bin.png', // Delete image path
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -1449,15 +1307,9 @@ class _LotDialogState extends State<LotDialog> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: IconButton(
-        iconSize: 20.0,
-        icon: Image.asset(
-          'assets/images/edit.png',
-          width: 30,
-          height: 30,
-        ),
-        onPressed: () {
-          showDetailsLotDialog(
+      child: InkWell(
+          onTap: () {
+            showDetailsLotDialog(
             context,
             item,
             widget.recSeq,
@@ -1467,8 +1319,19 @@ class _LotDialogState extends State<LotDialog> {
               setState(() {});
             },
           );
-        },
-      ),
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(15.0), // เพิ่มพื้นที่รอบๆปุ่ม
+            child: Container(
+              width: 30,
+              height: 30,
+              child: Image.asset(
+                'assets/images/edit.png',
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+        ),
     );
   }
 
