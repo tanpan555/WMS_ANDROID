@@ -21,3 +21,6 @@ String APP_SESSION = '';
 int sessionid = 0;
 String FLAG = '1';
 String P_EMP_ID = '9999999';
+
+// SSFGDT12
+String SSFGDT12_LocBarcode = '';
