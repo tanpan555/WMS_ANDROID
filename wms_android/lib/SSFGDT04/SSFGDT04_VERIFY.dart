@@ -747,7 +747,7 @@ class _SSFGDT04_VERIFYState extends State<SSFGDT04_VERIFY> {
                 )
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             Expanded(
               child: SingleChildScrollView(
                 // child: _buildCards(),

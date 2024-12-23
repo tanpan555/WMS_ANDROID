@@ -241,7 +241,6 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                     }
                   }
                 },
-
                 child: Image.asset('assets/images/check-mark.png',
                     width: 30, height: 30),
               ),
@@ -934,7 +933,7 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             Expanded(
               child: SingleChildScrollView(
                 controller: _scrollController,
@@ -1205,13 +1204,8 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                               .spaceBetween, // Align buttons
                                           children: [
                                             // Delete button as image
-                                            IconButton(
-                                              icon: Image.asset(
-                                                'assets/images/bin.png', // Delete image path
-                                                width: 30,
-                                                height: 30,
-                                              ),
-                                              onPressed: () async {
+                                            InkWell(
+                                              onTap: () async {
                                                 showDialog(
                                                   context: context,
                                                   builder:
@@ -1228,7 +1222,6 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                                       onConfirm: () async {
                                                         Navigator.of(context)
                                                             .pop(); // Close the dialog
-                                                        // await fetchGetPo(); // Call the fetchGetPo function after confirming
                                                         final poItemCode =
                                                             item['item_code'];
                                                         final poSeq =
@@ -1252,18 +1245,38 @@ class _SSFGDT04_GRIDState extends State<SSFGDT04_GRID> {
                                                   },
                                                 );
                                               },
-                                            ),
-                                            // Edit button as image
-                                            IconButton(
-                                              icon: Image.asset(
-                                                'assets/images/edit.png', // Edit image path
-                                                width: 30,
-                                                height: 30,
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(
+                                                    15.0), // Increase tappable area
+                                                child: Container(
+                                                  width: 30,
+                                                  height: 30,
+                                                  child: Image.asset(
+                                                    'assets/images/bin.png', // Delete image path
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                ),
                                               ),
-                                              onPressed: () {
+                                            ),
+
+                                            // Edit button as image
+                                            InkWell(
+                                              onTap: () {
                                                 _showEditDialog(context, item);
                                               },
-                                            ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(
+                                                    15.0), // เพิ่มพื้นที่รอบๆปุ่ม
+                                                child: Container(
+                                                  width: 30,
+                                                  height: 30,
+                                                  child: Image.asset(
+                                                    'assets/images/edit.png',
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
                                           ],
                                         ),
                                       ],

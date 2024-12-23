@@ -7,7 +7,6 @@ import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import '../centered_message.dart';
 import 'SSFGPC04_WARE.dart';
-import '../icon.dart';
 
 class SSFGPC04_WAREHOUSE extends StatefulWidget {
   final String date;
@@ -206,40 +205,40 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                hintText: 'ค้นหาคลังสินค้า',
-                border: const OutlineInputBorder(),
-                filled: true,
-                fillColor: Colors.white,
-                suffixIcon: searchController.text.isNotEmpty
-                    ? GestureDetector(
-                        onTap: () {
-                          searchController.clear();
-                          setState(() {});
-                        },
-                        child: Container(
-                          width: 3,
-                          height: 3,
-                          margin: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: const Icon(
-                            MyIcons.close,
-                            size: 15,
-                            color: Color(0xFF676767),
-                          ),
-                        ),
-                      )
-                    : null,
-              ),
-              onChanged: (query) {
-                setState(() {});
-              },
-            ),
+            // TextField(
+            //   controller: searchController,
+            //   decoration: InputDecoration(
+            //     hintText: 'ค้นหาคลังสินค้า',
+            //     border: const OutlineInputBorder(),
+            //     filled: true,
+            //     fillColor: Colors.white,
+            //     suffixIcon: searchController.text.isNotEmpty
+            //         ? GestureDetector(
+            //             onTap: () {
+            //               searchController.clear();
+            //               setState(() {});
+            //             },
+            //             child: Container(
+            //               width: 3,
+            //               height: 3,
+            //               margin: const EdgeInsets.all(10),
+            //               decoration: BoxDecoration(
+            //                 color: Colors.grey.withOpacity(0.2),
+            //                 borderRadius: BorderRadius.circular(20.0),
+            //               ),
+            //               child: const Icon(
+            //                 MyIcons.close,
+            //                 size: 15,
+            //                 color: Color(0xFF676767),
+            //               ),
+            //             ),
+            //           )
+            //         : null,
+            //   ),
+            //   onChanged: (query) {
+            //     setState(() {});
+            //   },
+            // ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,

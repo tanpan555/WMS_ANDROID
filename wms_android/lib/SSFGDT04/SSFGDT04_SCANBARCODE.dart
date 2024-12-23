@@ -298,7 +298,7 @@ class _SSFGDT04_SCANBARCODEState extends State<SSFGDT04_SCANBARCODE> {
                 ],
               ),
             ),
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 8),
             Expanded(
               child: SingleChildScrollView(
                 child: _buildFormFields(),

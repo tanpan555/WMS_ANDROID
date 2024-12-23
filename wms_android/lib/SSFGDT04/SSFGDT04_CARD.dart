@@ -136,7 +136,7 @@ class _SSFGDT04_CARDState extends State<SSFGDT04_CARD> {
     print('URL : $url ');
     final String requestUrl = url ??
         '${gb.IP_API}/apex/wms/SSFGDT04/Step_1_card1/${gb.P_ERP_OU_CODE}/${widget.soNo}/${widget.status}/${gb.ATTR1}/${widget.pWareCode}/${gb.APP_USER}/${widget.date}/${gb.BROWSER_LANGUAGE}';
-
+print('URL : $requestUrl ');
     try {
       final response = await http.get(Uri.parse(requestUrl));
 

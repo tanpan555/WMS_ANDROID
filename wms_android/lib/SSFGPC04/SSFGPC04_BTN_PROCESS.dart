@@ -36,12 +36,14 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   // ----------------------------- End Group
   List<dynamic> dataLovEndGroup = [];
   String? displayEndGroup;
+  String endGroup = '';
   String returnEndGroup = '';
   TextEditingController endGroupController = TextEditingController();
   TextEditingController searchEndGroupController = TextEditingController();
   // ----------------------------- Start Category
   List<dynamic> dataLovStartCategory = [];
   String? displayStartCategory;
+  String endCategory = '';
   String returnStartCategory = '';
   TextEditingController startCategoryController = TextEditingController();
   TextEditingController searchStartCatController = TextEditingController();
@@ -60,6 +62,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   // ----------------------------- End Sub Category
   List<dynamic> dataLovEndSubCategory = [];
   String? displayEndSubCategory;
+  String endSubCategory = '';
   String returnEndSubCategory = '';
   TextEditingController endSubCategoryController = TextEditingController();
   TextEditingController searchEndSubCatController = TextEditingController();
@@ -72,6 +75,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   // ----------------------------- End Brand
   List<dynamic> dataLovEndBrand = [];
   String? displayEndBrand;
+  String endBrand = '';
   String returnEndBrand = '';
   TextEditingController endBrandController = TextEditingController();
   TextEditingController searchEndBrandController = TextEditingController();
@@ -84,6 +88,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
   // ----------------------------- End Item
   List<dynamic> dataLovEndItem = [];
   String? displayEndItem;
+  String endItem = '';
   String returnEndItem = '';
   TextEditingController endItemController = TextEditingController();
   TextEditingController searchEndItemController = TextEditingController();
@@ -1158,10 +1163,39 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                   : '${item['group_code'] ?? ''}';
               startGroupController.text = displayStartGroup ?? 'ทั้งหมด';
               if (returnStartGroup != 'ทั้งหมด') {
+                if (returnEndGroup.isNotEmpty &&
+                    returnEndGroup != '' &&
+                    returnStartGroup != '') {
+                  if (displayStartGroup
+                          .toString()
+                          .compareTo(displayEndGroup.toString()) >
+                      0) {
+                    displayEndGroup = displayStartGroup;
+                    endGroup = displayStartGroup ?? '';
+                    returnEndGroup = returnStartGroup;
+                    endGroupController.text = displayStartGroup.toString();
+                  }
+                } else if (returnEndGroup == '' &&
+                    endGroup.toString().isNotEmpty) {
+                  if (displayStartGroup
+                          .toString()
+                          .compareTo(displayEndGroup.toString()) >
+                      0) {
+                    displayEndGroup = displayStartGroup;
+                    endGroup = displayStartGroup ?? '';
+                    returnEndGroup = returnStartGroup;
+                    endGroupController.text = displayStartGroup.toString();
+                  } else {
+                    displayEndGroup = endGroup;
+                    // endGroup = displayStartGroup;
+                    returnEndGroup = returnStartGroup;
+                    endGroupController.text = endGroup.toString();
+                  }
+                }
                 selectLovEndGroup();
-                displayEndGroup = null;
-                returnEndGroup = '';
-                endGroupController.text = '';
+                // displayEndGroup = null;
+                // returnEndGroup = '';
+                // endGroupController.text = '';
                 searchEndGroupController.clear;
                 selectLovStartCategory();
                 displayStartCategory = null;
@@ -1253,8 +1287,14 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
               displayEndGroup = '${item['group_code'] ?? ''}' == 'ทั้งหมด'
                   ? null
                   : '${item['group_code'] ?? ''}';
+              if (displayEndGroup.toString().isNotEmpty &&
+                  displayEndGroup != 'ทั้งหมด' &&
+                  returnEndGroup != '') {
+                endGroup = '${item['group_code']}';
+              } else {
+                endGroup = '';
+              }
               endGroupController.text = displayEndGroup ?? 'ทั้งหมด';
-
               // รีเซ็ตค่าอื่น ๆ ที่เกี่ยวข้อง
               if (returnEndGroup != 'ทั้งหมด') {
                 selectLovStartCategory();
@@ -1350,10 +1390,41 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                       : '${item['category_code'] ?? ''}';
               startCategoryController.text = displayStartCategory ?? 'ทั้งหมด';
               if (returnStartCategory != 'ทั้งหมด') {
+                if (returnEndCategory.isNotEmpty &&
+                    returnEndCategory != '' &&
+                    returnStartCategory != '') {
+                  if (displayStartCategory
+                          .toString()
+                          .compareTo(displayEndCategory.toString()) >
+                      0) {
+                    displayEndCategory = displayStartCategory;
+                    endCategory = displayStartCategory ?? '';
+                    returnEndCategory = returnStartCategory;
+                    endCategoryController.text =
+                        displayStartCategory.toString();
+                  }
+                } else if (returnEndCategory == '' &&
+                    endCategory.toString().isNotEmpty) {
+                  if (displayStartCategory
+                          .toString()
+                          .compareTo(displayEndCategory.toString()) >
+                      0) {
+                    displayEndCategory = displayStartCategory;
+                    endCategory = displayStartCategory ?? '';
+                    returnEndCategory = returnStartCategory;
+                    endCategoryController.text =
+                        displayStartCategory.toString();
+                  } else {
+                    displayEndCategory = endCategory;
+                    // displayEndCategoryBackup = displayStartCategory;
+                    returnEndCategory = returnStartCategory;
+                    endCategoryController.text = endCategory.toString();
+                  }
+                }
                 selectLovEndCategory();
-                displayEndCategory = null;
-                returnEndCategory = '';
-                endCategoryController.text = '';
+                // displayEndCategory = null;
+                // returnEndCategory = '';
+                // endCategoryController.text = '';
                 searchEndCatController.clear;
                 selectLovStartSubCategory();
                 displayStartSubCategory = null;
@@ -1427,6 +1498,13 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
               displayEndCategory = '${item['category_code'] ?? ''}' == 'ทั้งหมด'
                   ? null
                   : '${item['category_code'] ?? ''}';
+              if (displayEndCategory.toString().isNotEmpty &&
+                  displayEndCategory != 'ทั้งหมด' &&
+                  returnEndCategory != '') {
+                endCategory = '${item['category_code']}';
+              } else {
+                endCategory = '';
+              }
               endCategoryController.text = displayEndCategory ?? 'ทั้งหมด';
               if (returnEndCategory != 'ทั้งหมด') {
                 selectLovStartSubCategory();
@@ -1461,6 +1539,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                 searchEndItemController.clear;
                 isLoading = false;
               }
+              isLoading = false;
             });
             searchEndCatController.clear();
             if (returnEndCategory != 'ทั้งหมด') {
@@ -1502,12 +1581,43 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                       ? null
                       : '${item['sub_cat_code'] ?? ''}';
               startSubCategoryController.text =
-                  displayStartSubCategory.toString();
+                  displayStartSubCategory ?? 'ทั้งหมด';
               if (returnStartSubCategory != 'ทั้งหมด') {
+                if (returnEndSubCategory.isNotEmpty &&
+                    returnEndSubCategory != '' &&
+                    returnStartSubCategory != '') {
+                  if (displayStartSubCategory
+                          .toString()
+                          .compareTo(displayEndSubCategory.toString()) >
+                      0) {
+                    displayEndSubCategory = displayStartSubCategory;
+                    endSubCategory = displayStartSubCategory ?? '';
+                    returnEndSubCategory = returnStartCategory;
+                    endSubCategoryController.text =
+                        displayStartSubCategory.toString();
+                  }
+                } else if (returnEndSubCategory == '' &&
+                    endSubCategory.toString().isNotEmpty) {
+                  if (displayStartSubCategory
+                          .toString()
+                          .compareTo(displayEndSubCategory.toString()) >
+                      0) {
+                    displayEndSubCategory = displayStartSubCategory;
+                    endSubCategory = displayStartSubCategory ?? '';
+                    returnEndSubCategory = returnStartCategory;
+                    endSubCategoryController.text =
+                        displayStartSubCategory.toString();
+                  } else {
+                    displayEndSubCategory = endSubCategory;
+                    // endSubCategory = displayStartSubCategory;
+                    returnEndSubCategory = returnStartCategory;
+                    endSubCategoryController.text = endSubCategory.toString();
+                  }
+                }
                 selectLovEndSubCategory();
-                displayEndSubCategory = null;
-                returnEndSubCategory = '';
-                endSubCategoryController.text = '';
+                // displayEndSubCategory = null;
+                // returnEndSubCategory = '';
+                // endSubCategoryController.text = '';
                 searchEndSubCatController.clear;
                 selectLovStartBrand();
                 displayStartBrand = null;
@@ -1572,6 +1682,13 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                   '${item['sub_cat_code'] ?? ''}' == 'ทั้งหมด'
                       ? null
                       : '${item['sub_cat_code'] ?? ''}';
+              if (displayEndSubCategory.toString().isNotEmpty &&
+                  displayEndSubCategory != '' &&
+                  returnEndSubCategory != '') {
+                endSubCategory = '${item['sub_cat_code']}';
+              } else {
+                endSubCategory = '';
+              }
               endSubCategoryController.text =
                   displayEndSubCategory ?? 'ทั้งหมด';
               if (returnEndSubCategory != 'ทั้งหมด') {
@@ -1597,6 +1714,7 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                 searchEndItemController.clear;
                 isLoading = false;
               }
+              isLoading = false;
             });
             searchEndSubCatController.clear();
             if (returnEndSubCategory != 'ทั้งหมด') {
@@ -1638,10 +1756,38 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                   : '${item['brand_code'] ?? ''}';
               startBrandController.text = displayStartBrand ?? 'ทั้งหมด';
               if (returnStartBrand != 'ทั้งหมด') {
+                if (returnEndBrand.isNotEmpty &&
+                    returnEndBrand != '' &&
+                    returnStartBrand != '') {
+                  if (displayStartBrand
+                          .toString()
+                          .compareTo(displayEndBrand.toString()) >
+                      0) {
+                    displayEndBrand = displayStartBrand;
+                    endBrand = displayStartBrand ?? '';
+                    returnEndBrand = returnStartBrand;
+                    endBrandController.text = displayStartBrand.toString();
+                  }
+                } else if (returnEndBrand == '' &&
+                    endBrand.toString().isNotEmpty) {
+                  if (displayStartBrand
+                          .toString()
+                          .compareTo(displayEndBrand.toString()) >
+                      0) {
+                    displayEndBrand = displayStartBrand;
+                    endBrand = displayStartBrand ?? '';
+                    returnEndBrand = returnStartBrand;
+                    endBrandController.text = displayStartBrand.toString();
+                  } else {
+                    displayEndBrand = endBrand;
+                    returnEndBrand = returnStartBrand;
+                    endBrandController.text = endBrand.toString();
+                  }
+                }
                 selectLovEndBrand();
-                displayEndBrand = null;
-                returnEndBrand = '';
-                endBrandController.text = '';
+                // displayEndBrand = null;
+                // returnEndBrand = '';
+                // endBrandController.text = '';
                 searchEndBrandController.clear;
                 selectLovStartItem();
                 displayStartItem = null;
@@ -1693,6 +1839,13 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                   ? null
                   : '${item['brand_code'] ?? ''}';
               endBrandController.text = displayEndBrand ?? 'ทั้งหมด';
+              if (displayEndBrand.toString().isNotEmpty &&
+                  displayEndBrand != 'ทั้งหมด' &&
+                  returnEndBrand != '') {
+                endBrand = '${item['brand_code']}';
+              } else {
+                endBrand = '';
+              }
               if (returnEndBrand != 'ทั้งหมด') {
                 selectLovStartItem();
                 displayStartItem = null;
@@ -1745,10 +1898,38 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
                   : '${item['item_code'] ?? ''}';
               startItemController.text = displayStartItem ?? 'ทั้งหมด';
               if (returnStartItem != 'ทั้งหมด') {
+                if (returnEndItem.isNotEmpty &&
+                    returnEndItem != '' &&
+                    returnStartItem != '') {
+                  if (displayStartItem
+                          .toString()
+                          .compareTo(displayEndItem.toString()) >
+                      0) {
+                    displayEndItem = displayStartItem;
+                    endItem = displayStartItem ?? '';
+                    returnEndItem = returnStartItem;
+                    endItemController.text = displayStartItem.toString();
+                  }
+                } else if (returnEndItem == '' &&
+                    endItem.toString().isNotEmpty) {
+                  if (displayStartItem
+                          .toString()
+                          .compareTo(displayEndItem.toString()) >
+                      0) {
+                    displayEndItem = displayStartItem;
+                    endItem = displayStartItem ?? '';
+                    returnEndItem = returnStartItem;
+                    endItemController.text = displayStartItem.toString();
+                  } else {
+                    displayEndItem = endItem;
+                    returnEndItem = returnStartItem;
+                    endItemController.text = endItem.toString();
+                  }
+                }
                 selectLovEndItem();
-                displayEndItem = null;
-                returnEndItem = '';
-                endItemController.text = '';
+                // displayEndItem = null;
+                // returnEndItem = '';
+                // endItemController.text = '';
                 searchEndItemController.clear;
                 // isLoading = false;
               }
@@ -1792,8 +1973,14 @@ class _SSFGPC04_BTN_PROCESSState extends State<SSFGPC04_BTN_PROCESS> {
               // หากค่า item_code คือ 'ทั้งหมด' จะตั้งค่าเป็น null
               displayEndItem =
                   item['item_code'] == 'ทั้งหมด' ? null : item['item_code'];
-              endItemController.text = displayEndItem ??
-                  'ทั้งหมด'; // แสดงข้อความ 'ทั้งหมด' หาก displayEndItem เป็น null
+              endItemController.text = displayEndItem ?? 'ทั้งหมด';
+              if (displayEndItem.toString().isNotEmpty &&
+                  displayEndItem != 'ทั้งหมด' &&
+                  returnEndItem != '') {
+                endItem = '${item['item_code']}';
+              } else {
+                endItem = '';
+              } 
             });
             searchEndItemController.clear();
             if (item['item_code'] != 'ทั้งหมด') {

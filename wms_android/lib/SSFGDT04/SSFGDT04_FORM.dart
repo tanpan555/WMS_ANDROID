@@ -1107,12 +1107,7 @@ class _SSFGDT04_FORMState extends State<SSFGDT04_FORM> {
                                           '${item['emp_name'] ?? ''}',
                                       onTap: (item) {
                                         final empId = '${item['emp_id'] ?? ''}';
-                                        // final empName =
-                                        //     '${item['emp_name'] ?? ''}';
-
-                                        // Pop the dialog
                                         Navigator.of(context).pop();
-
                                         setState(() {
                                           String staffCode =
                                               _staffCodeController.text;
