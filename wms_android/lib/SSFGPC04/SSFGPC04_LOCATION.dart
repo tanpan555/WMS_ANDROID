@@ -219,7 +219,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
       appBar:
           CustomAppBar(title: 'เลือกตำแหน่งที่จัดเก็บ', showExitWarning: false),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 8),
         child: Column(
           children: [
             // TextField(
@@ -256,7 +256,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
             //     setState(() {});
             //   },
             // ),
-            const SizedBox(height: 20),
+            // const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -297,13 +297,13 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             Expanded(
               child: SingleChildScrollView(
                 child: _buildDataTable(),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             ElevatedButton(
               // onPressed: _navigateBackWithSelectedData,
               onPressed: () {

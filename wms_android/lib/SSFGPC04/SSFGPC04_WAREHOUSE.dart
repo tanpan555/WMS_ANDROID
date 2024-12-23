@@ -201,7 +201,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
     return Scaffold(
       appBar: CustomAppBar(title: 'เลือกคลังสินค้า', showExitWarning: false),
       body: Padding(
-        padding: const EdgeInsets.only(top: 8.0, left: 16, right: 16, bottom: 8),
+        padding: const EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 8),
         child: Column(
           children: [
             // TextField(
