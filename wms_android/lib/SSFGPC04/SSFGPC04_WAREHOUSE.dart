@@ -108,7 +108,6 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
     print('Filtered Items: $filteredWhItems');
   }
 
-
   Future<void> fetchCheck(String? wareCode) async {
     final url = '${gb.IP_API}/apex/wms/SSFGPC04/Step_1_PU_INS_TMP_WH';
     print('post : $url');
@@ -202,7 +201,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
     return Scaffold(
       appBar: CustomAppBar(title: 'เลือกคลังสินค้า', showExitWarning: false),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.only(top: 8.0, left: 16, right: 16, bottom: 8),
         child: Column(
           children: [
             // TextField(
@@ -239,7 +238,7 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
             //     setState(() {});
             //   },
             // ),
-            const SizedBox(height: 20),
+            // const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -280,13 +279,13 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             Expanded(
               child: SingleChildScrollView(
                 child: _buildDataTable(),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
