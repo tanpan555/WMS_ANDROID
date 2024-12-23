@@ -1958,12 +1958,15 @@ class CardStyles {
                       isCanDeleteCard
                           ? InkWell(
                               onTap: onTapDelete,
-                              child: Container(
-                                width: 30,
-                                height: 30,
-                                child: Image.asset(
-                                  'assets/images/bin.png',
-                                  fit: BoxFit.contain,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  child: Image.asset(
+                                    'assets/images/bin.png',
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             )
@@ -1971,12 +1974,15 @@ class CardStyles {
                       isCanEditDetail
                           ? InkWell(
                               onTap: onTapEditDetail,
-                              child: Container(
-                                width: 30,
-                                height: 30,
-                                child: Image.asset(
-                                  'assets/images/edit (1).png',
-                                  fit: BoxFit.contain,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  child: Image.asset(
+                                    'assets/images/edit (1).png',
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             )
@@ -2300,12 +2306,15 @@ class CardStyles {
                       isCanDeleteCard
                           ? InkWell(
                               onTap: onTapDelete,
-                              child: Container(
-                                width: 30,
-                                height: 30,
-                                child: Image.asset(
-                                  'assets/images/bin.png',
-                                  fit: BoxFit.contain,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  child: Image.asset(
+                                    'assets/images/bin.png',
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             )
@@ -2313,12 +2322,15 @@ class CardStyles {
                       isCanEditDetail
                           ? InkWell(
                               onTap: onTapEditDetail,
-                              child: Container(
-                                width: 30,
-                                height: 30,
-                                child: Image.asset(
-                                  'assets/images/edit (1).png',
-                                  fit: BoxFit.contain,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  child: Image.asset(
+                                    'assets/images/edit (1).png',
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             )
