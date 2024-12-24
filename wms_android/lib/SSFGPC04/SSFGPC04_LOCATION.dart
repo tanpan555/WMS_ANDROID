@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import 'SSFGPC04_LOC.dart';
+import '../loading.dart';
 
 class SSFGPC04_LOCATION extends StatefulWidget {
   final String date;
@@ -28,7 +29,7 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
   List<Map<String, dynamic>> locItems = [];
   bool isLoading = true;
   TextEditingController searchController = TextEditingController();
-  bool _isAllSelected = false;
+  // bool _isAllSelected = false;
 
   void _selectAll(bool value) {
     if (mounted) {
@@ -48,6 +49,9 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
         }
       });
     }
+  }
+  bool get _isAllSelected {
+    return filteredLocItems.every((row) => row['nb_sel'] == true);
   }
 
   // void _navigateBackWithSelectedData() async {
@@ -221,7 +225,9 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
           CustomAppBar(title: 'เลือกตำแหน่งที่จัดเก็บ', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 8),
-        child: Column(
+        child: isLoading
+            ? Center(child: LoadingIndicator())
+            : Column(
           children: [
             // TextField(
             //   controller: searchController,
@@ -305,8 +311,8 @@ class _SSFGPC04_LOCATIONState extends State<SSFGPC04_LOCATION> {
                   value: _isAllSelected,
                   onChanged: (bool? value) {
                     setState(() {
-                      _isAllSelected = value ?? false;
-                      if (_isAllSelected) {
+                      final newValue = value ?? false;
+                      if (newValue) {
                         _selectAll(true);
                         for (var row in filteredLocItems) {
                           fetchCheck(row['location_code'],

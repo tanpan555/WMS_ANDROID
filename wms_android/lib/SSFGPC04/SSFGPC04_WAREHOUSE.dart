@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:wms_android/Global_Parameter.dart' as gb;
 import '../centered_message.dart';
 import 'SSFGPC04_WARE.dart';
+import '../loading.dart';
 
 class SSFGPC04_WAREHOUSE extends StatefulWidget {
   final String date;
@@ -28,7 +29,27 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
   List<Map<String, dynamic>> filteredWhItems = []; // Add a filtered list
   bool isLoading = true;
   TextEditingController searchController = TextEditingController();
-  bool _isAllSelected = false;
+  // bool _isAllSelected = false;
+
+  // void _selectAll(bool value) {
+  //   if (mounted) {
+  //     setState(() {
+  //       for (var row in filteredWhItems) {
+  //         row['nb_sel'] = value;
+  //       }
+  //     });
+  //   }
+  // }
+
+  // void _deselectAll() {
+  //   if (mounted) {
+  //     setState(() {
+  //       for (var row in filteredWhItems) {
+  //         row['nb_sel'] = false;
+  //       }
+  //     });
+  //   }
+  // }
 
   void _selectAll(bool value) {
     if (mounted) {
@@ -48,6 +69,10 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
         }
       });
     }
+  }
+
+  bool get _isAllSelected {
+    return filteredWhItems.every((row) => row['nb_sel'] == true);
   }
 
   @override
@@ -203,125 +228,125 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
       appBar: CustomAppBar(title: 'เลือกคลังสินค้า', showExitWarning: false),
       body: Padding(
         padding: const EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 8),
-        child: Column(
-          children: [
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.start,
-            //   children: [
-            //     ElevatedButton(
-            //       onPressed: () {
-            //         _selectAll(true); // เลือกทั้งหมด (ติ๊กถูกทุกแถว)
-            //         for (var row in filteredWhItems) {
-            //           fetchCheck(row[
-            //               'ware_code']); // ส่งคำขอ POST สำหรับทุกแถวที่เลือก
-            //         }
-            //       },
-            //       child: const Text(
-            //         'Select All',
-            //         style: TextStyle(
-            //           color: Color.fromARGB(255, 0, 0, 0),
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       ),
-            //       style: AppStyles.cancelButtonStyle(),
-            //     ),
-            //     const SizedBox(width: 10),
-            //     ElevatedButton(
-            //       onPressed: () {
-            //         _deselectAll(); // ยกเลิกการเลือกทั้งหมด (ติ๊กออกทุกแถว)
-            //         for (var row in filteredWhItems) {
-            //           deleteData(row[
-            //               'ware_code']); // ส่งคำขอ DELETE สำหรับทุกแถวที่ติ๊กออก
-            //         }
-            //       },
-            //       child: const Text(
-            //         'Deselect All',
-            //         style: TextStyle(
-            //           color: Color.fromARGB(255, 0, 0, 0),
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       ),
-            //       style: AppStyles.cancelButtonStyle(),
-            //     ),
-            //   ],
-            // ),
-            // Container(
-            // color: Colors.white, // Set the background color to white
-            // child:
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Checkbox(
-                  value: _isAllSelected,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      _isAllSelected = value ?? false;
-                      if (_isAllSelected) {
-                        _selectAll(true);
-                        for (var row in filteredWhItems) {
-                          fetchCheck(row['ware_code']);
-                        }
-                      } else {
-                        _deselectAll();
-                        for (var row in filteredWhItems) {
-                          deleteData(row['ware_code']);
-                        }
-                      }
-                    });
-                  },
-                  fillColor: WidgetStateProperty.resolveWith((states) {
-                    if (states.contains(WidgetState.selected)) {
-                      return Colors.deepPurple[400];
-                    }
-                    return Colors.white;
-                  }),
-                  // activeColor: Colors.deepPurple[300], // สีของ Checkbox เมื่อถูกเลือก
-                  // checkColor: Colors.white, // สีของเครื่องหมายถูก
-                ),
-                const Text(
-                  'All',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+        child: isLoading
+            ? Center(child: LoadingIndicator())
+            : Column(
+                children: [
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.start,
+                  //   children: [
+                  //     ElevatedButton(
+                  //       onPressed: () {
+                  //         _selectAll(true); // เลือกทั้งหมด (ติ๊กถูกทุกแถว)
+                  //         for (var row in filteredWhItems) {
+                  //           fetchCheck(row[
+                  //               'ware_code']); // ส่งคำขอ POST สำหรับทุกแถวที่เลือก
+                  //         }
+                  //       },
+                  //       child: const Text(
+                  //         'Select All',
+                  //         style: TextStyle(
+                  //           color: Color.fromARGB(255, 0, 0, 0),
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       ),
+                  //       style: AppStyles.cancelButtonStyle(),
+                  //     ),
+                  //     const SizedBox(width: 10),
+                  //     ElevatedButton(
+                  //       onPressed: () {
+                  //         _deselectAll(); // ยกเลิกการเลือกทั้งหมด (ติ๊กออกทุกแถว)
+                  //         for (var row in filteredWhItems) {
+                  //           deleteData(row[
+                  //               'ware_code']); // ส่งคำขอ DELETE สำหรับทุกแถวที่ติ๊กออก
+                  //         }
+                  //       },
+                  //       child: const Text(
+                  //         'Deselect All',
+                  //         style: TextStyle(
+                  //           color: Color.fromARGB(255, 0, 0, 0),
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       ),
+                  //       style: AppStyles.cancelButtonStyle(),
+                  //     ),
+                  //   ],
+                  // ),
+                  // Container(
+                  // color: Colors.white, // Set the background color to white
+                  // child:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Checkbox(
+                        value: _isAllSelected,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            final newValue = value ?? false;
+                            if (newValue) {
+                              _selectAll(true);
+                              for (var row in filteredWhItems) {
+                                fetchCheck(row['ware_code']);
+                              }
+                            } else {
+                              _deselectAll();
+                              for (var row in filteredWhItems) {
+                                deleteData(row['ware_code']);
+                              }
+                            }
+                          });
+                        },
+                        fillColor: WidgetStateProperty.resolveWith((states) {
+                          if (states.contains(WidgetState.selected)) {
+                            return Colors.deepPurple[400];
+                          }
+                          return Colors.white;
+                        }),
+                      ),
+                      const Text(
+                        'All',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            // ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: SingleChildScrollView(
-                child: _buildDataTable(),
-              ),
-            ),
-            const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SSFGPC04_WARE(
-                      date: widget.date,
-                      note: widget.note,
-                      docNo: widget.docNo,
+                  // ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: _buildDataTable(),
                     ),
                   ),
-                );
-              },
-              child: const Text(
-                'กลับสู่หน้าจอหลัก',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SSFGPC04_WARE(
+                            date: widget.date,
+                            note: widget.note,
+                            docNo: widget.docNo,
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'กลับสู่หน้าจอหลัก',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: AppStyles.cancelButtonStyle(),
+                  ),
+                ],
               ),
-              style: AppStyles.cancelButtonStyle(),
-            ),
-          ],
-        ),
       ),
       bottomNavigationBar: BottomBar(currentPage: 'show'),
     );
@@ -421,5 +446,4 @@ class _SSFGPC04_WAREHOUSEState extends State<SSFGPC04_WAREHOUSE> {
       );
     }
   }
-
 }
